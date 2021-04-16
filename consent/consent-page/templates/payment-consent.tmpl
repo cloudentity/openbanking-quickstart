@@ -1,0 +1,106 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+
+<html>
+<head>
+  {{ template "imports.tmpl" }}
+  <title>Domestic Payment Consent</title>
+</head>
+
+<body>
+<div class="header">
+  <img src="/assets/images/gobank_logo.svg"/>
+</div>
+<div id="mask_branding">
+  <img src="/assets/images/mask_branding.svg"/>
+</div>
+{{ if or .mfaRequest .mfaConfirmation }}
+<div class="content mfa-required">
+  {{ else }}
+  <div class="content">
+    {{ end }}
+    <div style="text-align: center; margin-top: 48px;">
+      <img src="/assets/images/account_access_logo.svg"/>
+    </div>
+
+    <p class="consent-title">Confirm payment</p>
+
+    <form action="?login_id={{ .login_request.ID }}&login_state={{ .login_request.State }}&consent_type={{ .login_request.ConsentType }}"
+          method="post">
+      <div class="form-block">
+        <div class="form-block-title">Payment Information</div>
+        <div class="accounts-block" style="padding: 16px 32px">
+          <div style="display: flex; align-items: center; justify-content: space-between">
+            <div class="caption">Payee Account Name</div>
+            <div class="caption">{{ .consent.Initiation.CreditorAccount.Name }}</div>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: space-between">
+            <div class="caption" style="margin-top: 12px">Sort code</div>
+            {{/*            <!-- (missing in model, fix in ACP required) <div class="caption">{{ .consent.Initiation.CreditorAccount.SortCode }}</div> -->*/}}
+            <div class="caption">N/A</div>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: space-between">
+            <div class="caption" style="margin-top: 12px">Account number</div>
+            <div class="caption">{{ .consent.Initiation.DebtorAccount.Identification }}</div>
+          </div>
+          <div style="display: flex; align-items: center; justify-content: space-between">
+            <div class="caption" style="margin-top: 12px">Payment reference</div>
+            <div class="caption">{{ .consent.Initiation.RemittanceInformation.Reference }}</div>
+          </div>
+        </div>
+
+        <div class="accounts-block" style="padding: 16px 32px">
+          <div style="display: flex; align-items: center; justify-content: space-between">
+            <div class="caption" style="margin-top: 12px">AMOUNT</div>
+            <div style="background: #1F2D48; border-radius: 12px; color: #fff; padding: 4px 8px; font-size: 12px">
+              {{ .consent.Initiation.InstructedAmount.Amount }} {{ .consent.Initiation.InstructedAmount.Currency }}
+            </div>
+          </div>
+        </div>
+
+
+        <div class="form-block-title" style="margin-top: 32px">Account Information</div>
+        <div class="accounts-block">
+          {{ range .accounts }}
+            <div class="account-row">
+              <div class="account-header">
+                <div>
+                  <div class="account-header-title">{{ .Name}}</div>
+                  <div class="caption account-header-subtitle">**** **** **** {{ .ID }}</div>
+                </div>
+              </div>
+            </div>
+          {{ end }}
+        </div>
+
+        <p class="caption" style="text-align: center; margin: 32px 0;">
+          Click confirm to proceed with payment. Once payment is completed we’ll sign you out of <strong>gobank.com</strong> and return
+          you to <strong>{{ .client_name }}</strong>
+        </p>
+
+        <div class="form-actions">
+          <button class="mdc-button mdc-button--outlined" type="submit" name="action" value="deny"
+                  style="height: 48px; padding: 12px 24px; color: #002D4C; border-color: #002D4C">
+            <div class="mdc-button__ripple"></div>
+            <span class="mdc-button__label">Cancel</span>
+          </button>
+          <button class="mdc-button mdc-button--raised" type="submit" name="action" value="confirm"
+                  style="height: 48px; padding: 12px 24px; margin-left: 8px; background: #DC1B37">
+            <div class="mdc-button__ripple"></div>
+            <span class="mdc-button__label">Confirm</span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+{{ if .mfaRequest }}
+  {{ template "mfa-request.tmpl" . }}
+{{ end }}
+
+{{ if .mfaConfirmation }}
+  {{ template "mfa-verify.tmpl" .}}
+{{ end }}
+
+</body>
+</html>

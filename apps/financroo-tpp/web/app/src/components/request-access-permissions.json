@@ -1,0 +1,39 @@
+{
+  "permissions": [
+    {
+      "value": "ReadAccountsDetail",
+      "title": "Your account details",
+      "description": "The AISP must provide the PSU with a description of the data being requested"
+    },
+    {
+      "value": "ReadAccountsBasic",
+      "title": "Your account basic",
+      "description": "Ability to read basic account information"
+    },
+    {
+      "value": "ReadBalances",
+      "title": "Your balances",
+      "description": "Ability to read all balance information"
+    },
+    {
+      "value": "ReadTransactionsBasic",
+      "title": "Your transactions basic",
+      "description": "Ability to read basic transaction information"
+    },
+    {
+      "value": "ReadTransactionsDetail",
+      "title": "Your transactions details",
+      "description": "Ability to read transaction data elements which may hold silent party details"
+    },
+    {
+      "value": "ReadTransactionsCredits",
+      "title": "Your transactions credits",
+      "description": "Ability to read only credit transactions"
+    },
+    {
+      "value": "ReadTransactionsDebits",
+      "title": "Your transactions debits",
+      "description": "Ability to read only debit transactions"
+    }
+  ]
+}

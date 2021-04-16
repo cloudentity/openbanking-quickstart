@@ -1,0 +1,74 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+
+<html>
+<head>
+  <link rel="stylesheet" href="/assets/material-components-web.min.css">
+  <script src="/assets/material-components-web.min.js"></script>
+  <link href="/assets/fonts.css" rel="stylesheet">
+  <link href="/assets/material-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <title>TPP sample app</title>
+</head>
+
+<body>
+
+<div class="aut-banner">
+  <div class="aut-banner-logo">
+    <img src="/assets/images/cloudentity-logo-short.png" alt="Cloudentity ACP">
+    <span>TPP sample app</span>
+  </div>
+  <div class="aut-banner-contact">
+    <button class="mdc-button mdc-button--raised" onclick="onLogin()">
+      <div class="mdc-button__ripple"></div>
+      <span class="mdc-button__label">Login</span>
+    </button>
+  </div>
+</div>
+
+<div class="aut-container" style="padding: 5px; width: 1024px;">
+  <div class="aut-demo-info">
+    <div class="material-icons aut-demo-info-icon">error_outline</div>
+    <div class="aut-demo-info-text">
+      <p style="color: rgba(0, 0, 0, 0.87); font-weight: 500">Intent registered</p>
+      <p style="color: rgba(0, 0, 0, 0.6);">Account access consent has been registered. Below you can find the response from POST
+        accounts-access-request endpoint. <a
+                href="https://localhost:8443/api/swagger/default/default/#/openbanking/createAccountAccessConsentRequest" target="_blank">(see
+          swagger)</a></p>
+    </div>
+  </div>
+</div>
+
+<div class="aut-container" style="width: 1024px;">
+  <pre>{{ .account_access_consent_raw }}</pre>
+
+  <p>Please note unique <strong>Data.ConsentID</strong>: <span id="intent-id">{{ .intent_id }}</span></p>
+
+  <p style="margin-top:32px">TPP should now use authorization code grant flow with PKCE to authenticate user.</p>
+  <p>TPP needs to pass signed request claim containg openbanking_intent_id essential claim.</p>
+  <p>Additionally acr essential claim is requested to enforce strong authentication.</p>
+  <p>Decoded request jwt can be found below:</p>
+
+  <pre>{{ .request_header }}</pre>
+  <pre>{{ .request_payload }}</pre>
+
+  <p style="margin-top:32px">Here's the full authorize request:</p>
+  <pre>{{ .login_url }}</pre>
+
+  <p style="margin-top:32px">After clicking Login, TPP will redirect user to ACP to start authentication process.
+  <p/>
+  <p>After authentication, ACP redirects user to bank's consent page.</p>
+  <p>The consent page uses ACP's internal APIs to accept or reject account access consent (<a
+            href="https://localhost:8443/api/swagger/default/default/#/openbanking/acceptAccountAccessConsentSystem" target="_blank">see swagger)</a>
+  </p>
+
+  <p style="margin-top:32px">Click <a href="{{ .login_url }}">Login</a> to proceed.</p>
+</div>
+
+<script>
+  function onLogin () {
+    window.location.href = {{ .login_url }};
+  }
+</script>
+
+</body>
+</html>

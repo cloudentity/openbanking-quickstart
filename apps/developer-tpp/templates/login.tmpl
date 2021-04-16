@@ -1,0 +1,100 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+
+<html>
+<head>
+  <link rel="stylesheet" href="/assets/material-components-web.min.css">
+  <script src="/assets/material-components-web.min.js"></script>
+  <link href="/assets/fonts.css" rel="stylesheet">
+  <link href="/assets/material-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <title>TPP sample app</title>
+</head>
+
+<body>
+<div class="aut-banner">
+  <div class="aut-banner-logo">
+    <img src="/assets/images/cloudentity-logo-short.png" alt="Cloudentity ACP">
+    <span>TPP sample app</span>
+  </div>
+</div>
+
+<div class="aut-container" style="padding: 5px;">
+  <div class="aut-demo-info">
+    <div class="material-icons aut-demo-info-icon">error_outline</div>
+    <div class="aut-demo-info-text">
+      <p style="color: rgba(0, 0, 0, 0.6);">TPP in order to authenticate user first needs to make a client credentials call to register a new account
+        access consent.
+        <a href="https://localhost:8443/api/swagger/default/default/#/openbanking/createAccountAccessConsentRequest" target="_blank">(see swagger)</a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<div class="mdc-card aut-container" style="padding: 16px 22px">
+
+  <form action="/login" method="post">
+    <div class="body1" style="margin-bottom: 24px">Select permissions that your TPP would like to request:</div>
+    <div class="aut-content-scopes-group">
+
+      <div class="mdc-form-field">
+        <div class="mdc-checkbox">
+          <input type="checkbox"
+                 class="mdc-checkbox__native-control"
+                 name="permissions"
+                 value="ReadAccountsBasic"
+                 checked
+          />
+          <div class="mdc-checkbox__background">
+            <svg class="mdc-checkbox__checkmark"
+                 viewBox="0 0 24 24">
+              <path class="mdc-checkbox__checkmark-path"
+                    fill="none"
+                    d="M1.73,12.91 8.1,19.28 22.79,4.59"></path>
+            </svg>
+            <div class="mdc-checkbox__mixedmark"></div>
+          </div>
+          <div class="mdc-checkbox__ripple"></div>
+        </div>
+        <div class="aut-scope">
+          <div class="aut-scope-header">
+            <label for="ReadAccountsBasic" class="aut-scope-label">ReadAccountsBasic</label>
+          </div>
+        </div>
+      </div>
+
+      <div class="mdc-form-field">
+        <div class="mdc-checkbox">
+          <input type="checkbox"
+                 class="mdc-checkbox__native-control"
+                 name="permissions"
+                 value="ReadAccountsDetail"
+          />
+          <div class="mdc-checkbox__background">
+            <svg class="mdc-checkbox__checkmark"
+                 viewBox="0 0 24 24">
+              <path class="mdc-checkbox__checkmark-path"
+                    fill="none"
+                    d="M1.73,12.91 8.1,19.28 22.79,4.59"></path>
+            </svg>
+            <div class="mdc-checkbox__mixedmark"></div>
+          </div>
+          <div class="mdc-checkbox__ripple"></div>
+        </div>
+        <div class="aut-scope">
+          <div class="aut-scope-header">
+            <label for="ReadAccountsDetail" class="aut-scope-label">ReadAccountsDetail</label>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <div class="aut-form-actions" style="padding: 0">
+      <button class="mdc-button mdc-button--raised" type="submit" name="action" value="Next" style="margin-right: 0">
+        <div class="mdc-button__ripple"></div>
+        <span class="mdc-button__label">Next</span>
+      </button>
+    </div>
+  </form>
+</div>
+</body>
+</html>
