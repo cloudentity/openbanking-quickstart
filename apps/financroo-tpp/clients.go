@@ -6,12 +6,13 @@ import (
 	"net/url"
 	"time"
 
-	acpclient "github.com/cloudentity/acp-client-go"
-	"github.com/cloudentity/acp-client-go/client/oauth2"
-	"github.com/cloudentity/acp-client-go/models"
 	obc "github.com/cloudentity/openbanking-quickstart/client"
 	payments_client "github.com/cloudentity/openbanking-quickstart/openbanking/paymentinitiation/client"
 	"github.com/pkg/errors"
+
+	acpclient "github.com/cloudentity/acp-client-go"
+	"github.com/cloudentity/acp-client-go/client/oauth2"
+	"github.com/cloudentity/acp-client-go/models"
 )
 
 type Clients struct {

@@ -5,16 +5,17 @@ import (
 	"net/http"
 	"net/url"
 
-	acpclient "github.com/cloudentity/acp-client-go"
 	"github.com/gin-gonic/gin"
+
+	acpclient "github.com/cloudentity/acp-client-go"
 )
 
 func (s *Server) CreateConsentResponse(c *gin.Context, bankID BankID, consentID string, user User, client acpclient.Client) {
 	var (
-		loginURL string
-		err      error
+		loginURL           string
+		err                error
 		encodedCookieValue string
-		app =    AppStorage{
+		app                = AppStorage{
 			BankID:   bankID,
 			IntentID: consentID,
 			Sub:      user.Sub,
