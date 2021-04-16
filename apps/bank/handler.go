@@ -102,22 +102,20 @@ func (s *Server) CreateDomesticPayment() func(*gin.Context) {
 			return
 		}
 
-		// request risk and consent risk must match
-		/*if paymentRequest.Risk.PaymentContextCode != introspectionResponse.PaymentContextCode ||
-			paymentRequest.Risk.MerchantCategoryCode != introspectionResponse.MerchantCategoryCode ||
-			paymentRequest.Risk.MerchantCustomerIdentification != introspectionResponse.MerchantCustomerIdentification ||
-			!reflect.DeepEqual(paymentRequest.Risk.DeliveryAddress, introspectionResponse.DeliveryAddress) {
-			msg := "request risk does not match consent risk"
-
-			logrus.WithField("introspect response", introspectionResponse).
-				WithField("payment risk", paymentRequest.Risk).
-				Errorf(msg)
-
-			c.JSON(http.StatusBadRequest, models.OBError1{
-				Message: &msg,
-			})
-			return
-		}*/
+		// request risk and consent risk must match nolint
+		// if paymentRequest.Risk.PaymentContextCode != introspectionResponse.PaymentContextCode ||
+		// 	paymentRequest.Risk.MerchantCategoryCode != introspectionResponse.MerchantCategoryCode ||
+		// 	paymentRequest.Risk.MerchantCustomerIdentification != introspectionResponse.MerchantCustomerIdentification ||
+		// 	!reflect.DeepEqual(paymentRequest.Risk.DeliveryAddress, introspectionResponse.DeliveryAddress) {
+		// 	msg := "request risk does not match consent risk"
+		// 	logrus.WithField("introspect response", introspectionResponse).
+		// 		WithField("payment risk", paymentRequest.Risk).
+		// 		Errorf(msg)
+		// 	c.JSON(http.StatusBadRequest, models.OBError1{
+		// 		Message: &msg,
+		// 	})
+		// 	return
+		// }
 
 		id := uuid.New().String()
 		status := string(AcceptedSettlementInProcess)
