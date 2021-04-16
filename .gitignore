@@ -11,5 +11,12 @@
 # Output of the go coverage tool, specifically when used with LiteIDE
 *.out
 
-# Dependency directories (remove the comment below to include it)
-# vendor/
+.idea
+.DS_Store
+
+data/seed.yaml.generated
+/tests/node_modules/*
+/*.iml
+/tests/debug.log
+/tests/cypress/videos/*
+tests/package-lock.json

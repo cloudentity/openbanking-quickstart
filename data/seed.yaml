@@ -1,0 +1,6076 @@
+claims:
+- authorization_server_id: system
+  id: bube15t8739jub0p4edg
+  mapping: name
+  name: name
+  scopes:
+  - profile
+  tenant_id: system
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4ee0
+  mapping: family_name
+  name: family_name
+  scopes:
+  - profile
+  tenant_id: system
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4eeg
+  mapping: given_name
+  name: given_name
+  scopes:
+  - profile
+  tenant_id: system
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4ef0
+  mapping: middle_name
+  name: middle_name
+  scopes:
+  - profile
+  tenant_id: system
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4efg
+  mapping: nickname
+  name: nickname
+  scopes:
+  - profile
+  tenant_id: system
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4eg0
+  mapping: preferred_username
+  name: preferred_username
+  scopes:
+  - profile
+  tenant_id: system
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4egg
+  mapping: profile
+  name: profile
+  scopes:
+  - profile
+  tenant_id: system
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4eh0
+  mapping: picture
+  name: picture
+  scopes:
+  - profile
+  tenant_id: system
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4ehg
+  mapping: website
+  name: website
+  scopes:
+  - profile
+  tenant_id: system
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4ei0
+  mapping: gender
+  name: gender
+  scopes:
+  - profile
+  tenant_id: system
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4eig
+  mapping: birthdate
+  name: birthdate
+  scopes:
+  - profile
+  tenant_id: system
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4ej0
+  mapping: zoneinfo
+  name: zoneinfo
+  scopes:
+  - profile
+  tenant_id: system
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4ejg
+  mapping: locale
+  name: locale
+  scopes:
+  - profile
+  tenant_id: system
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4ek0
+  mapping: updated_at
+  name: updated_at
+  scopes:
+  - profile
+  tenant_id: system
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4ekg
+  mapping: email
+  name: email
+  scopes:
+  - email
+  tenant_id: system
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4el0
+  mapping: email_verified
+  name: email_verified
+  scopes:
+  - email
+  tenant_id: system
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4elg
+  mapping: address.formatted
+  name: address.formatted
+  scopes:
+  - address
+  tenant_id: system
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4em0
+  mapping: address.street_address
+  name: address.street_address
+  scopes:
+  - address
+  tenant_id: system
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4emg
+  mapping: address.locality
+  name: address.locality
+  scopes:
+  - address
+  tenant_id: system
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4en0
+  mapping: address.region
+  name: address.region
+  scopes:
+  - address
+  tenant_id: system
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4eng
+  mapping: address.country
+  name: address.country
+  scopes:
+  - address
+  tenant_id: system
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4eo0
+  mapping: address.postal_code
+  name: address.postal_code
+  scopes:
+  - address
+  tenant_id: system
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4eog
+  mapping: phone_number
+  name: phone_number
+  scopes:
+  - phone
+  tenant_id: system
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4ep0
+  mapping: phone_number_verified
+  name: phone_number_verified
+  scopes:
+  - phone
+  tenant_id: system
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4f1g
+  mapping: name
+  name: name
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4f20
+  mapping: family_name
+  name: family_name
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4f2g
+  mapping: given_name
+  name: given_name
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4f30
+  mapping: middle_name
+  name: middle_name
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4f3g
+  mapping: nickname
+  name: nickname
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4f40
+  mapping: preferred_username
+  name: preferred_username
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4f4g
+  mapping: profile
+  name: profile
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4f50
+  mapping: picture
+  name: picture
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4f5g
+  mapping: website
+  name: website
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4f60
+  mapping: gender
+  name: gender
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4f6g
+  mapping: birthdate
+  name: birthdate
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4f70
+  mapping: zoneinfo
+  name: zoneinfo
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4f7g
+  mapping: locale
+  name: locale
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4f80
+  mapping: updated_at
+  name: updated_at
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4f8g
+  mapping: email
+  name: email
+  scopes:
+  - email
+  tenant_id: default
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4f90
+  mapping: email_verified
+  name: email_verified
+  scopes:
+  - email
+  tenant_id: default
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4f9g
+  mapping: address.formatted
+  name: address.formatted
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4fa0
+  mapping: address.street_address
+  name: address.street_address
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4fag
+  mapping: address.locality
+  name: address.locality
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4fb0
+  mapping: address.region
+  name: address.region
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4fbg
+  mapping: address.country
+  name: address.country
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4fc0
+  mapping: address.postal_code
+  name: address.postal_code
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4fcg
+  mapping: phone_number
+  name: phone_number
+  scopes:
+  - phone
+  tenant_id: default
+  type: id_token
+- authorization_server_id: system
+  id: bube15t8739jub0p4fd0
+  mapping: phone_number_verified
+  name: phone_number_verified
+  scopes:
+  - phone
+  tenant_id: default
+  type: id_token
+- authorization_server_id: admin
+  id: bube15t8739jub0p4fp0
+  mapping: name
+  name: name
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: admin
+  id: bube15t8739jub0p4fpg
+  mapping: family_name
+  name: family_name
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: admin
+  id: bube15t8739jub0p4fq0
+  mapping: given_name
+  name: given_name
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: admin
+  id: bube15t8739jub0p4fqg
+  mapping: middle_name
+  name: middle_name
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: admin
+  id: bube15t8739jub0p4fr0
+  mapping: nickname
+  name: nickname
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: admin
+  id: bube15t8739jub0p4frg
+  mapping: preferred_username
+  name: preferred_username
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: admin
+  id: bube15t8739jub0p4fs0
+  mapping: profile
+  name: profile
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: admin
+  id: bube15t8739jub0p4fsg
+  mapping: picture
+  name: picture
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: admin
+  id: bube15t8739jub0p4ft0
+  mapping: website
+  name: website
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: admin
+  id: bube15t8739jub0p4ftg
+  mapping: gender
+  name: gender
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: admin
+  id: bube15t8739jub0p4fu0
+  mapping: birthdate
+  name: birthdate
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: admin
+  id: bube15t8739jub0p4fug
+  mapping: zoneinfo
+  name: zoneinfo
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: admin
+  id: bube15t8739jub0p4fv0
+  mapping: locale
+  name: locale
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: admin
+  id: bube15t8739jub0p4fvg
+  mapping: updated_at
+  name: updated_at
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: admin
+  id: bube15t8739jub0p4g00
+  mapping: email
+  name: email
+  scopes:
+  - email
+  tenant_id: default
+  type: id_token
+- authorization_server_id: admin
+  id: bube15t8739jub0p4g0g
+  mapping: email_verified
+  name: email_verified
+  scopes:
+  - email
+  tenant_id: default
+  type: id_token
+- authorization_server_id: admin
+  id: bube15t8739jub0p4g10
+  mapping: address.formatted
+  name: address.formatted
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: admin
+  id: bube15t8739jub0p4g1g
+  mapping: address.street_address
+  name: address.street_address
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: admin
+  id: bube15t8739jub0p4g20
+  mapping: address.locality
+  name: address.locality
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: admin
+  id: bube15t8739jub0p4g2g
+  mapping: address.region
+  name: address.region
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: admin
+  id: bube15t8739jub0p4g30
+  mapping: address.country
+  name: address.country
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: admin
+  id: bube15t8739jub0p4g3g
+  mapping: address.postal_code
+  name: address.postal_code
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: admin
+  id: bube15t8739jub0p4g40
+  mapping: phone_number
+  name: phone_number
+  scopes:
+  - phone
+  tenant_id: default
+  type: id_token
+- authorization_server_id: admin
+  id: bube15t8739jub0p4g4g
+  mapping: phone_number_verified
+  name: phone_number_verified
+  scopes:
+  - phone
+  tenant_id: default
+  type: id_token
+- authorization_server_id: developer
+  id: bube15t8739jub0p4gd0
+  mapping: name
+  name: name
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: developer
+  id: bube15t8739jub0p4gdg
+  mapping: family_name
+  name: family_name
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: developer
+  id: bube15t8739jub0p4ge0
+  mapping: given_name
+  name: given_name
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: developer
+  id: bube15t8739jub0p4geg
+  mapping: middle_name
+  name: middle_name
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: developer
+  id: bube15t8739jub0p4gf0
+  mapping: nickname
+  name: nickname
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: developer
+  id: bube15t8739jub0p4gfg
+  mapping: preferred_username
+  name: preferred_username
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: developer
+  id: bube15t8739jub0p4gg0
+  mapping: profile
+  name: profile
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: developer
+  id: bube15t8739jub0p4ggg
+  mapping: picture
+  name: picture
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: developer
+  id: bube15t8739jub0p4gh0
+  mapping: website
+  name: website
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: developer
+  id: bube15t8739jub0p4ghg
+  mapping: gender
+  name: gender
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: developer
+  id: bube15t8739jub0p4gi0
+  mapping: birthdate
+  name: birthdate
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: developer
+  id: bube15t8739jub0p4gig
+  mapping: zoneinfo
+  name: zoneinfo
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: developer
+  id: bube15t8739jub0p4gj0
+  mapping: locale
+  name: locale
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: developer
+  id: bube15t8739jub0p4gjg
+  mapping: updated_at
+  name: updated_at
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: developer
+  id: bube15t8739jub0p4gk0
+  mapping: email
+  name: email
+  scopes:
+  - email
+  tenant_id: default
+  type: id_token
+- authorization_server_id: developer
+  id: bube15t8739jub0p4gkg
+  mapping: email_verified
+  name: email_verified
+  scopes:
+  - email
+  tenant_id: default
+  type: id_token
+- authorization_server_id: developer
+  id: bube15t8739jub0p4gl0
+  mapping: address.formatted
+  name: address.formatted
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: developer
+  id: bube15t8739jub0p4glg
+  mapping: address.street_address
+  name: address.street_address
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: developer
+  id: bube15t8739jub0p4gm0
+  mapping: address.locality
+  name: address.locality
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: developer
+  id: bube15t8739jub0p4gmg
+  mapping: address.region
+  name: address.region
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: developer
+  id: bube15t8739jub0p4gn0
+  mapping: address.country
+  name: address.country
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: developer
+  id: bube15t8739jub0p4gng
+  mapping: address.postal_code
+  name: address.postal_code
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: developer
+  id: bube15t8739jub0p4go0
+  mapping: phone_number
+  name: phone_number
+  scopes:
+  - phone
+  tenant_id: default
+  type: id_token
+- authorization_server_id: developer
+  id: bube15t8739jub0p4gog
+  mapping: phone_number_verified
+  name: phone_number_verified
+  scopes:
+  - phone
+  tenant_id: default
+  type: id_token
+- authorization_server_id: openbanking
+  id: bugkg8q3g9kregtu0490
+  mapping: name
+  name: name
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: openbanking
+  id: bugkg8q3g9kregtu049g
+  mapping: family_name
+  name: family_name
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: openbanking
+  id: bugkg8q3g9kregtu04a0
+  mapping: given_name
+  name: given_name
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: openbanking
+  id: bugkg8q3g9kregtu04ag
+  mapping: middle_name
+  name: middle_name
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: openbanking
+  id: bugkg8q3g9kregtu04b0
+  mapping: nickname
+  name: nickname
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: openbanking
+  id: bugkg8q3g9kregtu04bg
+  mapping: preferred_username
+  name: preferred_username
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: openbanking
+  id: bugkg8q3g9kregtu04c0
+  mapping: profile
+  name: profile
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: openbanking
+  id: bugkg8q3g9kregtu04cg
+  mapping: picture
+  name: picture
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: openbanking
+  id: bugkg8q3g9kregtu04d0
+  mapping: website
+  name: website
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: openbanking
+  id: bugkg8q3g9kregtu04dg
+  mapping: gender
+  name: gender
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: openbanking
+  id: bugkg8q3g9kregtu04e0
+  mapping: birthdate
+  name: birthdate
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: openbanking
+  id: bugkg8q3g9kregtu04eg
+  mapping: zoneinfo
+  name: zoneinfo
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: openbanking
+  id: bugkg8q3g9kregtu04f0
+  mapping: locale
+  name: locale
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: openbanking
+  id: bugkg8q3g9kregtu04fg
+  mapping: updated_at
+  name: updated_at
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: openbanking
+  id: bugkg8q3g9kregtu04g0
+  mapping: email
+  name: email
+  scopes:
+  - email
+  tenant_id: default
+  type: id_token
+- authorization_server_id: openbanking
+  id: bugkg8q3g9kregtu04gg
+  mapping: email_verified
+  name: email_verified
+  scopes:
+  - email
+  tenant_id: default
+  type: id_token
+- authorization_server_id: openbanking
+  id: bugkg8q3g9kregtu04h0
+  mapping: address.formatted
+  name: address.formatted
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: openbanking
+  id: bugkg8q3g9kregtu04hg
+  mapping: address.street_address
+  name: address.street_address
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: openbanking
+  id: bugkg8q3g9kregtu04i0
+  mapping: address.locality
+  name: address.locality
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: openbanking
+  id: bugkg8q3g9kregtu04ig
+  mapping: address.region
+  name: address.region
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: openbanking
+  id: bugkg8q3g9kregtu04j0
+  mapping: address.country
+  name: address.country
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: openbanking
+  id: bugkg8q3g9kregtu04jg
+  mapping: address.postal_code
+  name: address.postal_code
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: openbanking
+  id: bugkg8q3g9kregtu04k0
+  mapping: phone_number
+  name: phone_number
+  scopes:
+  - phone
+  tenant_id: default
+  type: id_token
+- authorization_server_id: openbanking
+  id: bugkg8q3g9kregtu04kg
+  mapping: phone_number_verified
+  name: phone_number_verified
+  scopes:
+  - phone
+  tenant_id: default
+  type: id_token
+- authorization_server_id: openbanking
+  id: buikea44qvohtsgqv7m0
+  mapping: openbanking_intent_id
+  name: openbanking_intent_id
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-customers
+  id: bv0na68mekk67nekvphg
+  mapping: phone_number
+  name: phone_number
+  scopes:
+  - phone
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-customers
+  id: bv0na68mekk67nekvpi0
+  mapping: phone_number_verified
+  name: phone_number_verified
+  scopes:
+  - phone
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-customers
+  id: bv0na68mekk67nekvpig
+  mapping: name
+  name: name
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-customers
+  id: bv0na68mekk67nekvpj0
+  mapping: family_name
+  name: family_name
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-customers
+  id: bv0na68mekk67nekvpjg
+  mapping: given_name
+  name: given_name
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-customers
+  id: bv0na68mekk67nekvpk0
+  mapping: middle_name
+  name: middle_name
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-customers
+  id: bv0na68mekk67nekvpkg
+  mapping: nickname
+  name: nickname
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-customers
+  id: bv0na68mekk67nekvpl0
+  mapping: preferred_username
+  name: preferred_username
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-customers
+  id: bv0na68mekk67nekvplg
+  mapping: profile
+  name: profile
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-customers
+  id: bv0na68mekk67nekvpm0
+  mapping: picture
+  name: picture
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-customers
+  id: bv0na68mekk67nekvpmg
+  mapping: website
+  name: website
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-customers
+  id: bv0na68mekk67nekvpn0
+  mapping: gender
+  name: gender
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-customers
+  id: bv0na68mekk67nekvpng
+  mapping: birthdate
+  name: birthdate
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-customers
+  id: bv0na68mekk67nekvpo0
+  mapping: zoneinfo
+  name: zoneinfo
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-customers
+  id: bv0na68mekk67nekvpog
+  mapping: locale
+  name: locale
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-customers
+  id: bv0na68mekk67nekvpp0
+  mapping: updated_at
+  name: updated_at
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-customers
+  id: bv0na68mekk67nekvppg
+  mapping: email
+  name: email
+  scopes:
+  - email
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-customers
+  id: bv0na68mekk67nekvpq0
+  mapping: email_verified
+  name: email_verified
+  scopes:
+  - email
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-customers
+  id: bv0na68mekk67nekvpqg
+  mapping: address.formatted
+  name: address.formatted
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-customers
+  id: bv0na68mekk67nekvpr0
+  mapping: address.street_address
+  name: address.street_address
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-customers
+  id: bv0na68mekk67nekvprg
+  mapping: address.locality
+  name: address.locality
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-customers
+  id: bv0na68mekk67nekvps0
+  mapping: address.region
+  name: address.region
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-customers
+  id: bv0na68mekk67nekvpsg
+  mapping: address.country
+  name: address.country
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-customers
+  id: bv0na68mekk67nekvpt0
+  mapping: address.postal_code
+  name: address.postal_code
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-admins
+  id: bv2f7sqed9c9is80f1n0
+  mapping: name
+  name: name
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-admins
+  id: bv2f7sqed9c9is80f1ng
+  mapping: family_name
+  name: family_name
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-admins
+  id: bv2f7sqed9c9is80f1o0
+  mapping: given_name
+  name: given_name
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-admins
+  id: bv2f7sqed9c9is80f1og
+  mapping: middle_name
+  name: middle_name
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-admins
+  id: bv2f7sqed9c9is80f1p0
+  mapping: nickname
+  name: nickname
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-admins
+  id: bv2f7sqed9c9is80f1pg
+  mapping: preferred_username
+  name: preferred_username
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-admins
+  id: bv2f7sqed9c9is80f1q0
+  mapping: profile
+  name: profile
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-admins
+  id: bv2f7sqed9c9is80f1qg
+  mapping: picture
+  name: picture
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-admins
+  id: bv2f7sqed9c9is80f1r0
+  mapping: website
+  name: website
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-admins
+  id: bv2f7sqed9c9is80f1rg
+  mapping: gender
+  name: gender
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-admins
+  id: bv2f7sqed9c9is80f1s0
+  mapping: birthdate
+  name: birthdate
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-admins
+  id: bv2f7sqed9c9is80f1sg
+  mapping: zoneinfo
+  name: zoneinfo
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-admins
+  id: bv2f7sqed9c9is80f1t0
+  mapping: locale
+  name: locale
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-admins
+  id: bv2f7sqed9c9is80f1tg
+  mapping: updated_at
+  name: updated_at
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-admins
+  id: bv2f7sqed9c9is80f1u0
+  mapping: email
+  name: email
+  scopes:
+  - email
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-admins
+  id: bv2f7sqed9c9is80f1ug
+  mapping: email_verified
+  name: email_verified
+  scopes:
+  - email
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-admins
+  id: bv2f7sqed9c9is80f1v0
+  mapping: address.formatted
+  name: address.formatted
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-admins
+  id: bv2f7sqed9c9is80f1vg
+  mapping: address.street_address
+  name: address.street_address
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-admins
+  id: bv2f7sqed9c9is80f200
+  mapping: address.locality
+  name: address.locality
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-admins
+  id: bv2f7sqed9c9is80f20g
+  mapping: address.region
+  name: address.region
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-admins
+  id: bv2f7sqed9c9is80f210
+  mapping: address.country
+  name: address.country
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-admins
+  id: bv2f7sqed9c9is80f21g
+  mapping: address.postal_code
+  name: address.postal_code
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-admins
+  id: bv2f7sqed9c9is80f220
+  mapping: phone_number
+  name: phone_number
+  scopes:
+  - phone
+  tenant_id: default
+  type: id_token
+- authorization_server_id: bank-admins
+  id: bv2f7sqed9c9is80f22g
+  mapping: phone_number_verified
+  name: phone_number_verified
+  scopes:
+  - phone
+  tenant_id: default
+  type: id_token
+- authorization_server_id: financroo
+  id: bv3p4io557ouq8rha03g
+  mapping: phone_number
+  name: phone_number
+  scopes:
+  - phone
+  tenant_id: default
+  type: id_token
+- authorization_server_id: financroo
+  id: bv3p4io557ouq8rha040
+  mapping: phone_number_verified
+  name: phone_number_verified
+  scopes:
+  - phone
+  tenant_id: default
+  type: id_token
+- authorization_server_id: financroo
+  id: bv3p4io557ouq8rha04g
+  mapping: name
+  name: name
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: financroo
+  id: bv3p4io557ouq8rha050
+  mapping: family_name
+  name: family_name
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: financroo
+  id: bv3p4io557ouq8rha05g
+  mapping: given_name
+  name: given_name
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: financroo
+  id: bv3p4io557ouq8rha060
+  mapping: middle_name
+  name: middle_name
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: financroo
+  id: bv3p4io557ouq8rha06g
+  mapping: nickname
+  name: nickname
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: financroo
+  id: bv3p4io557ouq8rha070
+  mapping: preferred_username
+  name: preferred_username
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: financroo
+  id: bv3p4io557ouq8rha07g
+  mapping: profile
+  name: profile
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: financroo
+  id: bv3p4io557ouq8rha080
+  mapping: picture
+  name: picture
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: financroo
+  id: bv3p4io557ouq8rha08g
+  mapping: website
+  name: website
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: financroo
+  id: bv3p4io557ouq8rha090
+  mapping: gender
+  name: gender
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: financroo
+  id: bv3p4io557ouq8rha09g
+  mapping: birthdate
+  name: birthdate
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: financroo
+  id: bv3p4io557ouq8rha0a0
+  mapping: zoneinfo
+  name: zoneinfo
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: financroo
+  id: bv3p4io557ouq8rha0ag
+  mapping: locale
+  name: locale
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: financroo
+  id: bv3p4io557ouq8rha0b0
+  mapping: updated_at
+  name: updated_at
+  scopes:
+  - profile
+  tenant_id: default
+  type: id_token
+- authorization_server_id: financroo
+  id: bv3p4io557ouq8rha0bg
+  mapping: email
+  name: email
+  scopes:
+  - email
+  tenant_id: default
+  type: id_token
+- authorization_server_id: financroo
+  id: bv3p4io557ouq8rha0c0
+  mapping: email_verified
+  name: email_verified
+  scopes:
+  - email
+  tenant_id: default
+  type: id_token
+- authorization_server_id: financroo
+  id: bv3p4io557ouq8rha0cg
+  mapping: address.formatted
+  name: address.formatted
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: financroo
+  id: bv3p4io557ouq8rha0d0
+  mapping: address.street_address
+  name: address.street_address
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: financroo
+  id: bv3p4io557ouq8rha0dg
+  mapping: address.locality
+  name: address.locality
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: financroo
+  id: bv3p4io557ouq8rha0e0
+  mapping: address.region
+  name: address.region
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: financroo
+  id: bv3p4io557ouq8rha0eg
+  mapping: address.country
+  name: address.country
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+- authorization_server_id: financroo
+  id: bv3p4io557ouq8rha0f0
+  mapping: address.postal_code
+  name: address.postal_code
+  scopes:
+  - address
+  tenant_id: default
+  type: id_token
+clients:
+- application_type: web
+  audience:
+  - admin
+  authorization_server_id: admin
+  client_id: admin
+  client_id_issued_at: 1603723415
+  client_name: Admin Portal
+  client_secret: ztCswN8vggHx22_mKE3kwRlvOs-0ILQfxG5T4zZC3MU
+  grant_types:
+  - authorization_code
+  id_token_signed_response_alg: ES256
+  jwks:
+    keys: []
+  privacy: {}
+  redirect_uris:
+  - https://localhost:8443/app/default/admin/callback
+  - https://localhost:8443/app/default/admin/silent
+  - http://localhost:3000/app/default/admin/callback
+  - http://localhost:3000/app/default/admin/silent
+  registration_token: {}
+  request_object_signing_alg: none
+  response_types:
+  - id_token
+  - code
+  - token
+  scopes:
+  - offline_access
+  - openid
+  - profile
+  subject_type: public
+  system: true
+  tenant_id: default
+  token_endpoint_auth_method: none
+  token_endpoint_auth_signing_alg: none
+  trusted: true
+  userinfo_signed_response_alg: none
+- application_type: web
+  audience:
+  - admin-swagger
+  authorization_server_id: admin
+  client_id: admin-swagger
+  client_id_issued_at: 1615473136
+  client_name: Admin Swagger
+  client_secret: n8HF35qzZkmsukHJzzz9LnN8m9Mf97uq
+  grant_types:
+  - client_credentials
+  id_token_signed_response_alg: ES256
+  jwks:
+    keys: []
+  privacy: {}
+  registration_token: {}
+  request_object_signing_alg: any
+  response_types:
+  - id_token
+  - code
+  - token
+  scopes:
+  - offline_access
+  - openid
+  - profile
+  subject_type: public
+  tenant_id: default
+  token_endpoint_auth_method: client_secret_basic
+  token_endpoint_auth_signing_alg: none
+  userinfo_signed_response_alg: none
+- application_type: web
+  audience:
+  - bank-admins
+  authorization_server_id: bank-admins
+  client_id: bank-admins
+  client_id_issued_at: 1606743027
+  client_name: User Portal
+  client_secret: YsJ27vKEivDFXb42OKy-OO3_RlzOhwCZIvhAxCSwRkU
+  grant_types:
+  - authorization_code
+  id_token_signed_response_alg: ES256
+  jwks:
+    keys: []
+  privacy: {}
+  redirect_uris:
+  - https://localhost:8443/app/default/bank-admins/callback
+  - https://localhost:8443/app/default/bank-admins/silent
+  registration_token: {}
+  request_object_signing_alg: none
+  response_types:
+  - id_token
+  - code
+  - token
+  scopes:
+  - introspect_tokens
+  - list_clients_with_access
+  - manage_consents
+  - offline_access
+  - openid
+  - profile
+  - revoke_client_access
+  - revoke_tokens
+  - view_consents
+  subject_type: public
+  system: true
+  tenant_id: default
+  token_endpoint_auth_method: none
+  token_endpoint_auth_signing_alg: none
+  trusted: true
+  userinfo_signed_response_alg: none
+- application_type: web
+  audience:
+  - bank-customers
+  authorization_server_id: bank-customers
+  client_id: bank-customers
+  client_id_issued_at: 1606513945
+  client_name: User Portal
+  client_secret: NFvmoDo9O1W5opLiODD3OExVt0I4NLJNz6A2k4Nu69g
+  grant_types:
+  - authorization_code
+  id_token_signed_response_alg: ES256
+  jwks:
+    keys: []
+  privacy: {}
+  redirect_uris:
+  - https://localhost:8443/app/default/bank-customers/callback
+  - https://localhost:8443/app/default/bank-customers/silent
+  registration_token: {}
+  request_object_signing_alg: none
+  response_types:
+  - id_token
+  - code
+  - token
+  scopes:
+  - introspect_tokens
+  - list_clients_with_access
+  - manage_consents
+  - offline_access
+  - openid
+  - profile
+  - revoke_client_access
+  - revoke_tokens
+  - view_consents
+  subject_type: public
+  system: true
+  tenant_id: default
+  token_endpoint_auth_method: none
+  token_endpoint_auth_signing_alg: none
+  trusted: true
+  userinfo_signed_response_alg: none
+- application_type: web
+  audience:
+  - buc3b1hhuc714r78env0
+  authorization_server_id: system
+  client_id: buc3b1hhuc714r78env0
+  client_id_issued_at: 1603810694
+  client_name: bank
+  client_secret: PBV7q0akoP603rZbU0EFdxbhZ-djxF7FIVwyKaLnBYU
+  grant_types:
+  - client_credentials
+  id_token_signed_response_alg: ES256
+  jwks:
+    keys: []
+  privacy: {}
+  registration_token: {}
+  request_object_signing_alg: none
+  response_types:
+  - token
+  scopes:
+  - introspect_tokens
+  - manage_openbanking_consents
+  - manage_scope_grants
+  - revoke_tokens
+  subject_type: public
+  tenant_id: default
+  tls_client_auth_subject_dn: CN=cid2.authorization.cloudentity.com,OU=Authorization,O=Cloudentity,L=Seattle,ST=Washinghton,C=US
+  tls_client_certificate_bound_access_tokens: true
+  token_endpoint_auth_method: client_secret_post
+  token_endpoint_auth_signing_alg: none
+  userinfo_signed_response_alg: none
+- application_type: web
+  audience:
+  - bugkgm23g9kregtu051g
+  authorization_server_id: openbanking
+  client_id: bugkgm23g9kregtu051g
+  client_id_issued_at: 1604405336
+  client_name: Financroo
+  client_secret: -TlfoycUiE0qNi-XUBFDfTxMlhHTCjVxOF6pLrWZbQA
+  client_uri: https://localhost:8090
+  grant_types:
+  - client_credentials
+  - authorization_code
+  - refresh_token
+  id_token_signed_response_alg: ES256
+  jwks:
+    keys:
+    - alg: RS256
+      e: AQAB
+      kid: "167467200346518873990055631921812347975180003245"
+      kty: RSA
+      "n": 4b_IX1bV29pw6_Ce8DdkoNx4dxJnDD9AyxmTG2z99cvlHG6BJaMF6l09ncGXGbv3dufDKrhftkwfbTBdpUEAeext_ugCmXTV06Fayva6Iq7xCNE8pA6hJT1y3Edsqq3IU8KVivYjYwd_vrSUfCe8pQRsR6K8rqnJ66ryn0yewkTEyCgPIv6pOMbgq1d5iX_2G9rZNhj74miN5y4fy0tsbI3q2RUOzt2d-htkoysqu3Xta6qPA3vEJ2FnQo3dhgw4XSCEvjz-HSGnsTC-XBv6j6jI9SD5jI2UYqnyDcYmRHPJx2sQ_c8aLYHRdZxrxqIxUzulS6g0x74E2m0gBMKF5w
+      use: sig
+      x5c:
+      - MIIEVjCCAz6gAwIBAgIUHVV9LeNtt81MoMzosAABgejAp60wDQYJKoZIhvcNAQELBQAwVzELMAkGA1UEBhMCVVMxEzARBgNVBAgTCldhc2hpbmd0b24xEDAOBgNVBAcTB1NlYXR0bGUxFDASBgNVBAoTC0Nsb3VkZW50aXR5MQswCQYDVQQLEwJDQTAeFw0yMTAxMjAwOTQ4MDBaFw0yNjAxMTkwOTQ4MDBaMIGQMQswCQYDVQQGEwJVUzEUMBIGA1UECBMLV2FzaGluZ2h0b24xEDAOBgNVBAcTB1NlYXR0bGUxFDASBgNVBAoTC0Nsb3VkZW50aXR5MRYwFAYDVQQLEw1BdXRob3JpemF0aW9uMSswKQYDVQQDEyJjaWQxLmF1dGhvcml6YXRpb24uY2xvdWRlbnRpdHkuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA4b/IX1bV29pw6/Ce8DdkoNx4dxJnDD9AyxmTG2z99cvlHG6BJaMF6l09ncGXGbv3dufDKrhftkwfbTBdpUEAeext/ugCmXTV06Fayva6Iq7xCNE8pA6hJT1y3Edsqq3IU8KVivYjYwd/vrSUfCe8pQRsR6K8rqnJ66ryn0yewkTEyCgPIv6pOMbgq1d5iX/2G9rZNhj74miN5y4fy0tsbI3q2RUOzt2d+htkoysqu3Xta6qPA3vEJ2FnQo3dhgw4XSCEvjz+HSGnsTC+XBv6j6jI9SD5jI2UYqnyDcYmRHPJx2sQ/c8aLYHRdZxrxqIxUzulS6g0x74E2m0gBMKF5wIDAQABo4HfMIHcMA4GA1UdDwEB/wQEAwIFoDAdBgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwDAYDVR0TAQH/BAIwADAdBgNVHQ4EFgQUt+G5I2aokd3gFFMty1rsIT8yMuwwHwYDVR0jBBgwFoAUylkHhGQUSf1DtT8uxH02jqlbo20wXQYDVR0RBFYwVIIJbG9jYWxob3N0giJjaWQxLmF1dGhvcml6YXRpb24uY2xvdWRlbnRpdHkuY29tgh1hdXRob3JpemF0aW9uLmNsb3VkZW50aXR5LmNvbYcEfwAAATANBgkqhkiG9w0BAQsFAAOCAQEAjKXSkhqkL7tpjk5KbQe8OIvpsR0EjO3Za2KsvzUGDQzE+3tqL3jDvAhqWpICGGzv0kkroveb0kXc2Ltc5a+EQtm5l100N0kMB8f11/B1tcLFWQQnqEPB4RTkesGv70e1C3LbjmgJbE62cLR8X2dXr20HxUMZAzmlDdRZS/80YnXSDgjcWxDiFVitFbFeUyYF/oh4RmO5HQKvMEd3XIO/hWKp0Jv2G4B5IwtWm2ZodaM6zwMgX0BBp1LUsSF5OYDjuJ2Tq8daEGmUj5Y/+CroeW7nFDgAwt+1x3M76uT8fo+rP+UHweR8TCSq28dY3+N8UYrD5YIBZD/0ro2b2KVvgg==
+      x5t: XaOtIp7yC5-VnZ0XYKJ1KZzsEG8
+      x5t#S256: nyJ-boWc-MUQgAe7c2Fpy23enSim5-eKaGgC8dHmYX4
+  privacy: {}
+  redirect_uris:
+  - https://localhost:8090/callback
+  - https://localhost:8091/api/callback
+  - https://localhost:8091/api/domestic/callback
+  registration_token: {}
+  request_object_signing_alg: RS256
+  response_types:
+  - token
+  - code
+  scopes:
+  - accounts
+  - payments
+  - introspect_tokens
+  - offline_access
+  - openid
+  - revoke_tokens
+  subject_type: pairwise
+  tenant_id: default
+  tls_client_auth_subject_dn: CN=cid1.authorization.cloudentity.com,OU=Authorization,O=Cloudentity,L=Seattle,ST=Washinghton,C=US
+  tls_client_certificate_bound_access_tokens: true
+  token_endpoint_auth_method: tls_client_auth
+  token_endpoint_auth_signing_alg: none
+  userinfo_signed_response_alg: none
+- application_type: web
+  audience:
+  - bukj5p6k7qdmm5ppbi4g
+  authorization_server_id: openbanking
+  client_id: bukj5p6k7qdmm5ppbi4g
+  client_id_issued_at: 1604924132
+  client_name: bank
+  client_secret: 8DPOMd3ZOvsjuUnU9goRMHTIUUXtSkgwQeo8v_S74aE
+  description: bank resource server app used to introspect tokens
+  grant_types:
+  - client_credentials
+  id_token_signed_response_alg: ES256
+  jwks:
+    keys: []
+  privacy: {}
+  registration_token: {}
+  request_object_signing_alg: none
+  response_types:
+  - token
+  scopes:
+  - introspect_openbanking_tokens
+  - introspect_tokens
+  - revoke_tokens
+  subject_type: pairwise
+  system: true
+  tenant_id: default
+  tls_client_auth_subject_dn: CN=cid2.authorization.cloudentity.com,OU=Authorization,O=Cloudentity,L=Seattle,ST=Washinghton,C=US
+  tls_client_certificate_bound_access_tokens: true
+  token_endpoint_auth_method: tls_client_auth
+  token_endpoint_auth_signing_alg: none
+  userinfo_signed_response_alg: none
+- application_type: web
+  audience:
+  - bv0nab0mekk67nekvq7g
+  authorization_server_id: bank-customers
+  client_id: bv0nab0mekk67nekvq7g
+  client_id_issued_at: 1606513964
+  client_name: Consent self service
+  client_secret: 5j1RFwfeLQRci7jaouPr-O5qejBWql7waFkfR_x7H6A
+  grant_types:
+  - authorization_code
+  id_token_signed_response_alg: ES256
+  jwks:
+    keys: []
+  privacy: {}
+  redirect_uris:
+  - https://localhost:8085/callback
+  - http://localhost:3000/callback
+  registration_token: {}
+  request_object_signing_alg: none
+  response_types:
+  - code
+  - token
+  scopes:
+  - email
+  - introspect_tokens
+  - openid
+  - profile
+  - revoke_tokens
+  subject_type: public
+  tenant_id: default
+  token_endpoint_auth_method: none
+  token_endpoint_auth_signing_alg: none
+  trusted: true
+  userinfo_signed_response_alg: none
+- application_type: web
+  audience:
+  - bv0ocudfotn6edhsiu7g
+  authorization_server_id: system
+  client_id: bv0ocudfotn6edhsiu7g
+  client_id_issued_at: 1606518393
+  client_name: custom server consent
+  client_secret: pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0
+  grant_types:
+  - client_credentials
+  id_token_signed_response_alg: ES256
+  jwks:
+    keys: []
+  privacy: {}
+  registration_token: {}
+  request_object_signing_alg: none
+  response_types:
+  - code
+  scopes:
+  - manage_openbanking_consents
+  subject_type: public
+  tenant_id: default
+  token_endpoint_auth_method: client_secret_basic
+  token_endpoint_auth_signing_alg: none
+  userinfo_signed_response_alg: none
+- application_type: web
+  audience:
+  - bv2dkff8mll9cf6pvd6g
+  authorization_server_id: bank-customers
+  client_id: bv2dkff8mll9cf6pvd6g
+  client_id_issued_at: 1606736445
+  client_name: Consent self service backend
+  client_secret: KThGH68f-gMC4cscGLFeOpIU4EYriYhKspOV9IwHbnw
+  grant_types:
+  - client_credentials
+  id_token_signed_response_alg: ES256
+  jwks:
+    keys: []
+  privacy: {}
+  registration_token: {}
+  request_object_signing_alg: none
+  response_types:
+  - token
+  scopes:
+  - introspect_tokens
+  - revoke_tokens
+  subject_type: public
+  tenant_id: default
+  token_endpoint_auth_method: client_secret_post
+  token_endpoint_auth_signing_alg: none
+  userinfo_signed_response_alg: none
+- application_type: web
+  audience:
+  - bv2f80aed9c9is80f2d0
+  authorization_server_id: bank-admins
+  client_id: bv2f80aed9c9is80f2d0
+  client_id_issued_at: 1606743041
+  client_name: Consent admin web app
+  client_secret: zE8acaD6__5VACBk8PUk-QU6_kBKSZGAXHgNfrzubOk
+  grant_types:
+  - authorization_code
+  id_token_signed_response_alg: ES256
+  jwks:
+    keys: []
+  privacy: {}
+  redirect_uris:
+  - http://localhost:3000/callback
+  - https://localhost:8086/callback
+  registration_token: {}
+  request_object_signing_alg: none
+  response_types:
+  - id_token
+  - code
+  - token
+  scopes:
+  - introspect_tokens
+  - revoke_tokens
+  subject_type: public
+  tenant_id: default
+  token_endpoint_auth_method: none
+  token_endpoint_auth_signing_alg: none
+  userinfo_signed_response_alg: none
+- application_type: web
+  audience:
+  - bv2fddlpfc67lmeti32g
+  authorization_server_id: bank-admins
+  client_id: bv2fddlpfc67lmeti32g
+  client_id_issued_at: 1606743734
+  client_name: Consent admin backend
+  client_secret: RkAIOVRlP6ZLhDvYixT1wBb8DG3bVkXAouoIrX7cwzA
+  grant_types:
+  - client_credentials
+  id_token_signed_response_alg: ES256
+  jwks:
+    keys: []
+  privacy: {}
+  registration_token: {}
+  request_object_signing_alg: none
+  response_types:
+  - token
+  scopes:
+  - introspect_tokens
+  - revoke_tokens
+  subject_type: public
+  tenant_id: default
+  token_endpoint_auth_method: client_secret_post
+  token_endpoint_auth_signing_alg: none
+  userinfo_signed_response_alg: none
+- application_type: web
+  audience:
+  - bv2fe0tpfc67lmeti340
+  authorization_server_id: system
+  client_id: bv2fe0tpfc67lmeti340
+  client_id_issued_at: 1606743811
+  client_name: consent admin
+  client_secret: v6yYaApda9juR_DrlI5mpdsdm9u2-D0rQIG9ynakyDE
+  grant_types:
+  - client_credentials
+  id_token_signed_response_alg: ES256
+  jwks:
+    keys: []
+  privacy: {}
+  registration_token: {}
+  request_object_signing_alg: none
+  response_types:
+  - token
+  scopes:
+  - introspect_tokens
+  - manage_openbanking_consents
+  - revoke_tokens
+  - view_clients
+  subject_type: public
+  tenant_id: default
+  token_endpoint_auth_method: client_secret_post
+  token_endpoint_auth_signing_alg: none
+  userinfo_signed_response_alg: none
+- application_type: web
+  audience:
+  - bv3p4uo557ouq8rha2bg
+  authorization_server_id: financroo
+  client_id: bv3p4uo557ouq8rha2bg
+  client_id_issued_at: 1606914683
+  client_name: Financroo App
+  client_secret: t4v9poj45-iFsIXzfSbQY8THZ3J5MP3iHzlLk6fKlr4
+  grant_types:
+  - authorization_code
+  id_token_signed_response_alg: ES256
+  jwks:
+    keys: []
+  privacy: {}
+  redirect_uris:
+  - https://localhost:8091/callback
+  registration_token: {}
+  request_object_signing_alg: none
+  response_types:
+  - code
+  - token
+  scopes:
+  - introspect_tokens
+  - revoke_tokens
+  subject_type: public
+  tenant_id: default
+  token_endpoint_auth_method: none
+  token_endpoint_auth_signing_alg: none
+  userinfo_signed_response_alg: none
+- application_type: web
+  audience:
+  - developer-developer
+  authorization_server_id: developer
+  client_id: developer-developer
+  client_id_issued_at: 1603723415
+  client_name: Developer Portal
+  client_secret: flux99MKFQR4jz651JMv28HC68XpAgFvFV7eM2hkqMs
+  grant_types:
+  - authorization_code
+  id_token_signed_response_alg: ES256
+  jwks:
+    keys: []
+  privacy: {}
+  redirect_uris:
+  - https://localhost:8443/app/default/developer/developer/callback
+  - https://localhost:8443/app/default/developer/developer/silent
+  registration_token: {}
+  request_object_signing_alg: none
+  response_types:
+  - id_token
+  - code
+  - token
+  scopes:
+  - offline_access
+  - openid
+  - profile
+  subject_type: public
+  system: true
+  tenant_id: default
+  token_endpoint_auth_method: none
+  token_endpoint_auth_signing_alg: none
+  trusted: true
+  userinfo_signed_response_alg: none
+- application_type: web
+  audience:
+  - financroo
+  authorization_server_id: financroo
+  client_id: financroo
+  client_id_issued_at: 1606914635
+  client_name: User Portal
+  client_secret: mPt-s_qdGRSnnISwILkcw6uhau4Z9mot9nQYiyY7lVY
+  grant_types:
+  - authorization_code
+  id_token_signed_response_alg: ES256
+  jwks:
+    keys: []
+  privacy: {}
+  redirect_uris:
+  - https://localhost:8443/app/default/financroo/callback
+  - https://localhost:8443/app/default/financroo/silent
+  registration_token: {}
+  request_object_signing_alg: none
+  response_types:
+  - id_token
+  - code
+  - token
+  scopes:
+  - introspect_tokens
+  - list_clients_with_access
+  - manage_consents
+  - offline_access
+  - openid
+  - profile
+  - revoke_client_access
+  - revoke_tokens
+  - view_consents
+  subject_type: public
+  system: true
+  tenant_id: default
+  token_endpoint_auth_method: none
+  token_endpoint_auth_signing_alg: none
+  trusted: true
+  userinfo_signed_response_alg: none
+- application_type: web
+  audience:
+  - openbanking
+  authorization_server_id: openbanking
+  client_id: openbanking
+  client_id_issued_at: 1604405283
+  client_name: User Portal
+  client_secret: YRd2pnXhuaXvGznhRRlN1C1zOxJESNT4kQyMNfMo6fM
+  grant_types:
+  - authorization_code
+  id_token_signed_response_alg: ES256
+  jwks:
+    keys: []
+  privacy: {}
+  redirect_uris:
+  - https://localhost:8443/app/default/openbanking/callback
+  - https://localhost:8443/app/default/openbanking/silent
+  - http://localhost:3000/app/default/openbanking/callback
+  - http://localhost:3000/app/default/openbanking/silent
+  registration_token: {}
+  request_object_signing_alg: none
+  response_types:
+  - id_token
+  - code
+  - token
+  scopes:
+  - introspect_tokens
+  - list_clients_with_access
+  - manage_consents
+  - offline_access
+  - openid
+  - profile
+  - revoke_client_access
+  - revoke_tokens
+  - view_consents
+  subject_type: pairwise
+  system: true
+  tenant_id: default
+  token_endpoint_auth_method: none
+  token_endpoint_auth_signing_alg: none
+  trusted: true
+  userinfo_signed_response_alg: none
+- application_type: web
+  audience:
+  - openbanking-demo
+  authorization_server_id: openbanking
+  client_id: openbanking-demo
+  client_id_issued_at: 1604405283
+  client_name: Demo Portal
+  client_secret: n8HF35qzZkmsukHJzzz9LnN8m9Mf97uq
+  grant_types:
+  - authorization_code
+  id_token_signed_response_alg: ES256
+  jwks:
+    keys: []
+  privacy: {}
+  redirect_uris:
+  - https://localhost:8443/default/openbanking/demo
+  registration_token: {}
+  request_object_signing_alg: none
+  response_types:
+  - id_token
+  - code
+  - token
+  scopes:
+  - email
+  - introspect_tokens
+  - list_clients_with_access
+  - manage_consents
+  - offline_access
+  - openid
+  - profile
+  - revoke_client_access
+  - revoke_tokens
+  - view_consents
+  subject_type: pairwise
+  system: true
+  tenant_id: default
+  token_endpoint_auth_method: client_secret_basic
+  token_endpoint_auth_signing_alg: none
+  userinfo_signed_response_alg: none
+- application_type: web
+  audience:
+  - system
+  authorization_server_id: system
+  client_id: system
+  client_id_issued_at: 1603723415
+  client_name: System
+  client_secret: n8HF35qzZkmsukHJzzz9LnN8m9Mf97uq
+  grant_types:
+  - client_credentials
+  id_token_signed_response_alg: ES256
+  jwks:
+    keys: []
+  privacy: {}
+  registration_token: {}
+  request_object_signing_alg: none
+  response_types:
+  - code
+  subject_type: public
+  system: true
+  tenant_id: system
+  token_endpoint_auth_method: client_secret_basic
+  token_endpoint_auth_signing_alg: none
+  userinfo_signed_response_alg: none
+- application_type: web
+  audience:
+  - system-swagger
+  authorization_server_id: system
+  client_id: system-swagger
+  client_id_issued_at: 1615473636
+  client_name: System Swagger
+  client_secret: n8HF35qzZkmsukHJzzz9LnN8m9Mf97uq
+  grant_types:
+  - client_credentials
+  id_token_signed_response_alg: ES256
+  jwks:
+    keys: []
+  privacy: {}
+  registration_token: {}
+  request_object_signing_alg: any
+  response_types:
+  - code
+  scopes:
+  - manage_consents
+  - manage_logins
+  - manage_openbanking_consents
+  - manage_scope_grants
+  - read_gateway_configuration
+  - view_clients
+  - view_consents
+  subject_type: public
+  tenant_id: default
+  token_endpoint_auth_method: client_secret_basic
+  token_endpoint_auth_signing_alg: none
+  userinfo_signed_response_alg: none
+idps:
+- authorization_server_id: openbanking
+  config: {}
+  credentials:
+    azure: {}
+    azureb2c: {}
+    cognito: {}
+    custom: {}
+    github: {}
+    intelli_trust: {}
+    oidc: {}
+    okta:
+      supervisor_client: {}
+    saml: {}
+    static:
+      users:
+      - authentication_context:
+          name: user
+          mobile_verified: "+48123456789"
+        password: p@ssw0rd!
+        username: user
+      - authentication_context:
+          name: user2
+        password: p@ssw0rd!
+        username: user2
+      - authentication_context:
+          name: user3
+        password: p@ssw0rd!
+        username: user3
+  id: bugkgai3g9kregtu04u0
+  mappings:
+  - source: .
+    target: .
+    type: any
+  method: static
+  name: Mock IDP
+  settings:
+    azure: {}
+    azureb2c: {}
+    cognito: {}
+    custom: {}
+    github: {}
+    intelli_trust: {}
+    oidc: {}
+    okta: {}
+    saml: {}
+    static: {}
+  tenant_id: default
+  transformer: {}
+- authorization_server_id: bank-customers
+  config: {}
+  credentials:
+    azure: {}
+    azureb2c: {}
+    cognito: {}
+    custom: {}
+    github: {}
+    intelli_trust: {}
+    oidc: {}
+    okta:
+      supervisor_client: {}
+    saml: {}
+    static:
+      users:
+      - authentication_context:
+          name: user
+        password: p@ssw0rd!
+        username: user
+      - authentication_context:
+          name: user2
+        password: p@ssw0rd!
+        username: user2
+      - authentication_context:
+          name: user3
+        password: p@ssw0rd!
+        username: user3
+  id: bv0na7omekk67nekvq5g
+  mappings:
+  - source: .
+    target: .
+    type: any
+  method: static
+  name: Mock IDP
+  settings:
+    azure: {}
+    azureb2c: {}
+    cognito: {}
+    custom: {}
+    github: {}
+    intelli_trust: {}
+    oidc: {}
+    okta: {}
+    saml: {}
+    static: {}
+  tenant_id: default
+  transformer: {}
+- authorization_server_id: bank-admins
+  config: {}
+  credentials:
+    azure: {}
+    azureb2c: {}
+    cognito: {}
+    custom: {}
+    github: {}
+    intelli_trust: {}
+    oidc: {}
+    okta:
+      supervisor_client: {}
+    saml: {}
+    static:
+      users:
+      - authentication_context:
+          name: admin
+        password: p@ssw0rd!
+        username: admin
+  id: bv2f7uaed9c9is80f2b0
+  mappings:
+  - source: .
+    target: .
+    type: any
+  method: static
+  name: test
+  settings:
+    azure: {}
+    azureb2c: {}
+    cognito: {}
+    custom: {}
+    github: {}
+    intelli_trust: {}
+    oidc: {}
+    okta: {}
+    saml: {}
+    static: {}
+  tenant_id: default
+  transformer: {}
+- authorization_server_id: financroo
+  config: {}
+  credentials:
+    azure: {}
+    azureb2c: {}
+    cognito: {}
+    custom: {}
+    github: {}
+    intelli_trust: {}
+    oidc: {}
+    okta:
+      supervisor_client: {}
+    saml: {}
+    static:
+      users:
+      - authentication_context:
+          name: test
+        password: p@ssw0rd!
+        username: test
+  id: bv3p4qg557ouq8rha1o0
+  mappings:
+  - source: .
+    target: .
+    type: any
+  method: static
+  name: Mock IDP
+  settings:
+    azure: {}
+    azureb2c: {}
+    cognito: {}
+    custom: {}
+    github: {}
+    intelli_trust: {}
+    oidc: {}
+    okta: {}
+    saml: {}
+    static: {}
+  tenant_id: default
+  transformer: {}
+- authorization_server_id: admin
+  config: {}
+  credentials:
+    azure: {}
+    azureb2c: {}
+    cognito: {}
+    custom: {}
+    github: {}
+    intelli_trust: {}
+    oidc: {}
+    okta:
+      supervisor_client: {}
+    saml: {}
+    static:
+      users:
+      - authentication_context:
+          name: Administrator
+        password: p@ssw0rd!
+        username: admin
+  id: default
+  mappings:
+  - source: .
+    target: .
+    type: any
+  method: static
+  name: Default
+  settings:
+    azure: {}
+    azureb2c: {}
+    cognito: {}
+    custom: {}
+    github: {}
+    intelli_trust: {}
+    oidc: {}
+    okta: {}
+    saml: {}
+    static: {}
+  tenant_id: default
+  transformer: {}
+- authorization_server_id: developer
+  config: {}
+  credentials:
+    azure: {}
+    azureb2c: {}
+    cognito: {}
+    custom: {}
+    github: {}
+    intelli_trust: {}
+    oidc: {}
+    okta:
+      supervisor_client: {}
+    saml: {}
+    static:
+      users:
+      - authentication_context:
+          name: Developer
+        password: p@ssw0rd!
+        username: developer
+  id: default
+  mappings:
+  - source: .
+    target: .
+    type: any
+  method: static
+  name: Default
+  settings:
+    azure: {}
+    azureb2c: {}
+    cognito: {}
+    custom: {}
+    github: {}
+    intelli_trust: {}
+    oidc: {}
+    okta: {}
+    saml: {}
+    static: {}
+  tenant_id: default
+  transformer: {}
+policies:
+- id: block_admin_api
+  language: cloudentity
+  policy_name: Block API
+  server_id: admin
+  tenant_id: default
+  type: api
+  validators:
+  - name: "false"
+- id: block_admin_dcr
+  language: cloudentity
+  policy_name: Block DCR
+  server_id: admin
+  tenant_id: default
+  type: dcr
+  validators:
+  - name: "false"
+- id: block_admin_developer
+  language: cloudentity
+  policy_name: Block Developer
+  server_id: admin
+  tenant_id: default
+  type: developer
+  validators:
+  - name: "false"
+- id: block_admin_machine
+  language: cloudentity
+  policy_name: Block Machine
+  server_id: admin
+  tenant_id: default
+  type: machine
+  validators:
+  - name: "false"
+- id: block_admin_user
+  language: cloudentity
+  policy_name: Block User
+  server_id: admin
+  tenant_id: default
+  type: user
+  validators:
+  - name: "false"
+- id: block_bank-admins_api
+  language: cloudentity
+  policy_name: Block API
+  server_id: bank-admins
+  tenant_id: default
+  type: api
+  validators:
+  - name: "false"
+- id: block_bank-admins_dcr
+  language: cloudentity
+  policy_name: Block DCR
+  server_id: bank-admins
+  tenant_id: default
+  type: dcr
+  validators:
+  - name: "false"
+- id: block_bank-admins_developer
+  language: cloudentity
+  policy_name: Block Developer
+  server_id: bank-admins
+  tenant_id: default
+  type: developer
+  validators:
+  - name: "false"
+- id: block_bank-admins_machine
+  language: cloudentity
+  policy_name: Block Machine
+  server_id: bank-admins
+  tenant_id: default
+  type: machine
+  validators:
+  - name: "false"
+- id: block_bank-admins_user
+  language: cloudentity
+  policy_name: Block User
+  server_id: bank-admins
+  tenant_id: default
+  type: user
+  validators:
+  - name: "false"
+- id: block_bank-customers_api
+  language: cloudentity
+  policy_name: Block API
+  server_id: bank-customers
+  tenant_id: default
+  type: api
+  validators:
+  - name: "false"
+- id: block_bank-customers_dcr
+  language: cloudentity
+  policy_name: Block DCR
+  server_id: bank-customers
+  tenant_id: default
+  type: dcr
+  validators:
+  - name: "false"
+- id: block_bank-customers_developer
+  language: cloudentity
+  policy_name: Block Developer
+  server_id: bank-customers
+  tenant_id: default
+  type: developer
+  validators:
+  - name: "false"
+- id: block_bank-customers_machine
+  language: cloudentity
+  policy_name: Block Machine
+  server_id: bank-customers
+  tenant_id: default
+  type: machine
+  validators:
+  - name: "false"
+- id: block_bank-customers_user
+  language: cloudentity
+  policy_name: Block User
+  server_id: bank-customers
+  tenant_id: default
+  type: user
+  validators:
+  - name: "false"
+- id: block_developer_api
+  language: cloudentity
+  policy_name: Block API
+  server_id: developer
+  tenant_id: default
+  type: api
+  validators:
+  - name: "false"
+- id: block_developer_dcr
+  language: cloudentity
+  policy_name: Block DCR
+  server_id: developer
+  tenant_id: default
+  type: dcr
+  validators:
+  - name: "false"
+- id: block_developer_developer
+  language: cloudentity
+  policy_name: Block Developer
+  server_id: developer
+  tenant_id: default
+  type: developer
+  validators:
+  - name: "false"
+- id: block_developer_machine
+  language: cloudentity
+  policy_name: Block Machine
+  server_id: developer
+  tenant_id: default
+  type: machine
+  validators:
+  - name: "false"
+- id: block_developer_user
+  language: cloudentity
+  policy_name: Block User
+  server_id: developer
+  tenant_id: default
+  type: user
+  validators:
+  - name: "false"
+- id: block_financroo_api
+  language: cloudentity
+  policy_name: Block API
+  server_id: financroo
+  tenant_id: default
+  type: api
+  validators:
+  - name: "false"
+- id: block_financroo_dcr
+  language: cloudentity
+  policy_name: Block DCR
+  server_id: financroo
+  tenant_id: default
+  type: dcr
+  validators:
+  - name: "false"
+- id: block_financroo_developer
+  language: cloudentity
+  policy_name: Block Developer
+  server_id: financroo
+  tenant_id: default
+  type: developer
+  validators:
+  - name: "false"
+- id: block_financroo_machine
+  language: cloudentity
+  policy_name: Block Machine
+  server_id: financroo
+  tenant_id: default
+  type: machine
+  validators:
+  - name: "false"
+- id: block_financroo_user
+  language: cloudentity
+  policy_name: Block User
+  server_id: financroo
+  tenant_id: default
+  type: user
+  validators:
+  - name: "false"
+- id: block_openbanking_api
+  language: cloudentity
+  policy_name: Block API
+  server_id: openbanking
+  tenant_id: default
+  type: api
+  validators:
+  - name: "false"
+- id: block_openbanking_dcr
+  language: cloudentity
+  policy_name: Block DCR
+  server_id: openbanking
+  tenant_id: default
+  type: dcr
+  validators:
+  - name: "false"
+- id: block_openbanking_developer
+  language: cloudentity
+  policy_name: Block Developer
+  server_id: openbanking
+  tenant_id: default
+  type: developer
+  validators:
+  - name: "false"
+- id: block_openbanking_machine
+  language: cloudentity
+  policy_name: Block Machine
+  server_id: openbanking
+  tenant_id: default
+  type: machine
+  validators:
+  - name: "false"
+- id: block_openbanking_user
+  language: cloudentity
+  policy_name: Block User
+  server_id: openbanking
+  tenant_id: default
+  type: user
+  validators:
+  - name: "false"
+- id: block_system_api
+  language: cloudentity
+  policy_name: Block API
+  server_id: system
+  tenant_id: system
+  type: api
+  validators:
+  - name: "false"
+- id: block_system_api
+  language: cloudentity
+  policy_name: Block API
+  server_id: system
+  tenant_id: default
+  type: api
+  validators:
+  - name: "false"
+- id: block_system_dcr
+  language: cloudentity
+  policy_name: Block DCR
+  server_id: system
+  tenant_id: default
+  type: dcr
+  validators:
+  - name: "false"
+- id: block_system_dcr
+  language: cloudentity
+  policy_name: Block DCR
+  server_id: system
+  tenant_id: system
+  type: dcr
+  validators:
+  - name: "false"
+- id: block_system_developer
+  language: cloudentity
+  policy_name: Block Developer
+  server_id: system
+  tenant_id: system
+  type: developer
+  validators:
+  - name: "false"
+- id: block_system_developer
+  language: cloudentity
+  policy_name: Block Developer
+  server_id: system
+  tenant_id: default
+  type: developer
+  validators:
+  - name: "false"
+- id: block_system_machine
+  language: cloudentity
+  policy_name: Block Machine
+  server_id: system
+  tenant_id: system
+  type: machine
+  validators:
+  - name: "false"
+- id: block_system_machine
+  language: cloudentity
+  policy_name: Block Machine
+  server_id: system
+  tenant_id: default
+  type: machine
+  validators:
+  - name: "false"
+- id: block_system_user
+  language: cloudentity
+  policy_name: Block User
+  server_id: system
+  tenant_id: system
+  type: user
+  validators:
+  - name: "false"
+- id: block_system_user
+  language: cloudentity
+  policy_name: Block User
+  server_id: system
+  tenant_id: default
+  type: user
+  validators:
+  - name: "false"
+- id: nist-aal-1_admin_api
+  language: cloudentity
+  policy_name: NIST-AAL-1 API
+  server_id: admin
+  tenant_id: default
+  type: api
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - pwd
+    name: identity-context
+- id: nist-aal-1_admin_user
+  language: cloudentity
+  policy_name: NIST-AAL-1 User
+  server_id: admin
+  tenant_id: default
+  type: user
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - pwd
+    name: identity-context
+- id: nist-aal-1_bank-admins_api
+  language: cloudentity
+  policy_name: NIST-AAL-1 API
+  server_id: bank-admins
+  tenant_id: default
+  type: api
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - pwd
+    name: identity-context
+- id: nist-aal-1_bank-admins_user
+  language: cloudentity
+  policy_name: NIST-AAL-1 User
+  server_id: bank-admins
+  tenant_id: default
+  type: user
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - pwd
+    name: identity-context
+- id: nist-aal-1_bank-customers_api
+  language: cloudentity
+  policy_name: NIST-AAL-1 API
+  server_id: bank-customers
+  tenant_id: default
+  type: api
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - pwd
+    name: identity-context
+- id: nist-aal-1_bank-customers_user
+  language: cloudentity
+  policy_name: NIST-AAL-1 User
+  server_id: bank-customers
+  tenant_id: default
+  type: user
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - pwd
+    name: identity-context
+- id: nist-aal-1_developer_api
+  language: cloudentity
+  policy_name: NIST-AAL-1 API
+  server_id: developer
+  tenant_id: default
+  type: api
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - pwd
+    name: identity-context
+- id: nist-aal-1_developer_user
+  language: cloudentity
+  policy_name: NIST-AAL-1 User
+  server_id: developer
+  tenant_id: default
+  type: user
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - pwd
+    name: identity-context
+- id: nist-aal-1_financroo_api
+  language: cloudentity
+  policy_name: NIST-AAL-1 API
+  server_id: financroo
+  tenant_id: default
+  type: api
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - pwd
+    name: identity-context
+- id: nist-aal-1_financroo_user
+  language: cloudentity
+  policy_name: NIST-AAL-1 User
+  server_id: financroo
+  tenant_id: default
+  type: user
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - pwd
+    name: identity-context
+- id: nist-aal-1_openbanking_api
+  language: cloudentity
+  policy_name: NIST-AAL-1 API
+  server_id: openbanking
+  tenant_id: default
+  type: api
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - pwd
+    name: identity-context
+- id: nist-aal-1_openbanking_user
+  language: cloudentity
+  policy_name: NIST-AAL-1 User
+  server_id: openbanking
+  tenant_id: default
+  type: user
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - pwd
+    name: identity-context
+- id: nist-aal-1_system_api
+  language: cloudentity
+  policy_name: NIST-AAL-1 API
+  server_id: system
+  tenant_id: default
+  type: api
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - pwd
+    name: identity-context
+- id: nist-aal-1_system_api
+  language: cloudentity
+  policy_name: NIST-AAL-1 API
+  server_id: system
+  tenant_id: system
+  type: api
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - pwd
+    name: identity-context
+- id: nist-aal-1_system_user
+  language: cloudentity
+  policy_name: NIST-AAL-1 User
+  server_id: system
+  tenant_id: system
+  type: user
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - pwd
+    name: identity-context
+- id: nist-aal-1_system_user
+  language: cloudentity
+  policy_name: NIST-AAL-1 User
+  server_id: system
+  tenant_id: default
+  type: user
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - pwd
+    name: identity-context
+- id: nist-aal-2_admin_api
+  language: cloudentity
+  policy_name: NIST-AAL-2 API
+  server_id: admin
+  tenant_id: default
+  type: api
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+    name: identity-context
+- id: nist-aal-2_admin_user
+  language: cloudentity
+  policy_name: NIST-AAL-2 User
+  server_id: admin
+  tenant_id: default
+  type: user
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+    name: identity-context
+- id: nist-aal-2_bank-admins_api
+  language: cloudentity
+  policy_name: NIST-AAL-2 API
+  server_id: bank-admins
+  tenant_id: default
+  type: api
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+    name: identity-context
+- id: nist-aal-2_bank-admins_user
+  language: cloudentity
+  policy_name: NIST-AAL-2 User
+  server_id: bank-admins
+  tenant_id: default
+  type: user
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+    name: identity-context
+- id: nist-aal-2_bank-customers_api
+  language: cloudentity
+  policy_name: NIST-AAL-2 API
+  server_id: bank-customers
+  tenant_id: default
+  type: api
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+    name: identity-context
+- id: nist-aal-2_bank-customers_user
+  language: cloudentity
+  policy_name: NIST-AAL-2 User
+  server_id: bank-customers
+  tenant_id: default
+  type: user
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+    name: identity-context
+- id: nist-aal-2_developer_api
+  language: cloudentity
+  policy_name: NIST-AAL-2 API
+  server_id: developer
+  tenant_id: default
+  type: api
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+    name: identity-context
+- id: nist-aal-2_developer_user
+  language: cloudentity
+  policy_name: NIST-AAL-2 User
+  server_id: developer
+  tenant_id: default
+  type: user
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+    name: identity-context
+- id: nist-aal-2_financroo_api
+  language: cloudentity
+  policy_name: NIST-AAL-2 API
+  server_id: financroo
+  tenant_id: default
+  type: api
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+    name: identity-context
+- id: nist-aal-2_financroo_user
+  language: cloudentity
+  policy_name: NIST-AAL-2 User
+  server_id: financroo
+  tenant_id: default
+  type: user
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+    name: identity-context
+- id: nist-aal-2_openbanking_api
+  language: cloudentity
+  policy_name: NIST-AAL-2 API
+  server_id: openbanking
+  tenant_id: default
+  type: api
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+    name: identity-context
+- id: nist-aal-2_openbanking_user
+  language: cloudentity
+  policy_name: NIST-AAL-2 User
+  server_id: openbanking
+  tenant_id: default
+  type: user
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+    name: identity-context
+- id: nist-aal-2_system_api
+  language: cloudentity
+  policy_name: NIST-AAL-2 API
+  server_id: system
+  tenant_id: default
+  type: api
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+    name: identity-context
+- id: nist-aal-2_system_api
+  language: cloudentity
+  policy_name: NIST-AAL-2 API
+  server_id: system
+  tenant_id: system
+  type: api
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+    name: identity-context
+- id: nist-aal-2_system_user
+  language: cloudentity
+  policy_name: NIST-AAL-2 User
+  server_id: system
+  tenant_id: system
+  type: user
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+    name: identity-context
+- id: nist-aal-2_system_user
+  language: cloudentity
+  policy_name: NIST-AAL-2 User
+  server_id: system
+  tenant_id: default
+  type: user
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+    name: identity-context
+- id: nist-aal-3_admin_api
+  language: cloudentity
+  policy_name: NIST-AAL-3 API
+  server_id: admin
+  tenant_id: default
+  type: api
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+      - comparator: contains_any
+        field: amr
+        value:
+        - face
+        - retina
+        - sc
+        - vbm
+    name: identity-context
+- id: nist-aal-3_admin_user
+  language: cloudentity
+  policy_name: NIST-AAL-3 User
+  server_id: admin
+  tenant_id: default
+  type: user
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+      - comparator: contains_any
+        field: amr
+        value:
+        - face
+        - retina
+        - sc
+        - vbm
+    name: identity-context
+- id: nist-aal-3_bank-admins_api
+  language: cloudentity
+  policy_name: NIST-AAL-3 API
+  server_id: bank-admins
+  tenant_id: default
+  type: api
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+      - comparator: contains_any
+        field: amr
+        value:
+        - face
+        - retina
+        - sc
+        - vbm
+    name: identity-context
+- id: nist-aal-3_bank-admins_user
+  language: cloudentity
+  policy_name: NIST-AAL-3 User
+  server_id: bank-admins
+  tenant_id: default
+  type: user
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+      - comparator: contains_any
+        field: amr
+        value:
+        - face
+        - retina
+        - sc
+        - vbm
+    name: identity-context
+- id: nist-aal-3_bank-customers_api
+  language: cloudentity
+  policy_name: NIST-AAL-3 API
+  server_id: bank-customers
+  tenant_id: default
+  type: api
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+      - comparator: contains_any
+        field: amr
+        value:
+        - face
+        - retina
+        - sc
+        - vbm
+    name: identity-context
+- id: nist-aal-3_bank-customers_user
+  language: cloudentity
+  policy_name: NIST-AAL-3 User
+  server_id: bank-customers
+  tenant_id: default
+  type: user
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+      - comparator: contains_any
+        field: amr
+        value:
+        - face
+        - retina
+        - sc
+        - vbm
+    name: identity-context
+- id: nist-aal-3_developer_api
+  language: cloudentity
+  policy_name: NIST-AAL-3 API
+  server_id: developer
+  tenant_id: default
+  type: api
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+      - comparator: contains_any
+        field: amr
+        value:
+        - face
+        - retina
+        - sc
+        - vbm
+    name: identity-context
+- id: nist-aal-3_developer_user
+  language: cloudentity
+  policy_name: NIST-AAL-3 User
+  server_id: developer
+  tenant_id: default
+  type: user
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+      - comparator: contains_any
+        field: amr
+        value:
+        - face
+        - retina
+        - sc
+        - vbm
+    name: identity-context
+- id: nist-aal-3_financroo_api
+  language: cloudentity
+  policy_name: NIST-AAL-3 API
+  server_id: financroo
+  tenant_id: default
+  type: api
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+      - comparator: contains_any
+        field: amr
+        value:
+        - face
+        - retina
+        - sc
+        - vbm
+    name: identity-context
+- id: nist-aal-3_financroo_user
+  language: cloudentity
+  policy_name: NIST-AAL-3 User
+  server_id: financroo
+  tenant_id: default
+  type: user
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+      - comparator: contains_any
+        field: amr
+        value:
+        - face
+        - retina
+        - sc
+        - vbm
+    name: identity-context
+- id: nist-aal-3_openbanking_api
+  language: cloudentity
+  policy_name: NIST-AAL-3 API
+  server_id: openbanking
+  tenant_id: default
+  type: api
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+      - comparator: contains_any
+        field: amr
+        value:
+        - face
+        - retina
+        - sc
+        - vbm
+    name: identity-context
+- id: nist-aal-3_openbanking_user
+  language: cloudentity
+  policy_name: NIST-AAL-3 User
+  server_id: openbanking
+  tenant_id: default
+  type: user
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+      - comparator: contains_any
+        field: amr
+        value:
+        - face
+        - retina
+        - sc
+        - vbm
+    name: identity-context
+- id: nist-aal-3_system_api
+  language: cloudentity
+  policy_name: NIST-AAL-3 API
+  server_id: system
+  tenant_id: default
+  type: api
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+      - comparator: contains_any
+        field: amr
+        value:
+        - face
+        - retina
+        - sc
+        - vbm
+    name: identity-context
+- id: nist-aal-3_system_api
+  language: cloudentity
+  policy_name: NIST-AAL-3 API
+  server_id: system
+  tenant_id: system
+  type: api
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+      - comparator: contains_any
+        field: amr
+        value:
+        - face
+        - retina
+        - sc
+        - vbm
+    name: identity-context
+- id: nist-aal-3_system_user
+  language: cloudentity
+  policy_name: NIST-AAL-3 User
+  server_id: system
+  tenant_id: system
+  type: user
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+      - comparator: contains_any
+        field: amr
+        value:
+        - face
+        - retina
+        - sc
+        - vbm
+    name: identity-context
+- id: nist-aal-3_system_user
+  language: cloudentity
+  policy_name: NIST-AAL-3 User
+  server_id: system
+  tenant_id: default
+  type: user
+  validators:
+  - conf:
+      fields:
+      - comparator: contains_all
+        field: amr
+        value:
+        - mfa
+        - pwd
+      - comparator: contains_any
+        field: amr
+        value:
+        - face
+        - retina
+        - sc
+        - vbm
+    name: identity-context
+policy_execution_points:
+- server_id: admin
+  target_fk: admin
+  tenant_id: default
+  type: server_client_assignment
+- server_id: admin
+  target_fk: admin
+  tenant_id: default
+  type: server_dynamic_client_registration
+- server_id: admin
+  target_fk: admin
+  tenant_id: default
+  type: server_machine_token
+- server_id: admin
+  target_fk: admin
+  tenant_id: default
+  type: server_user_token
+- policy_id: block_admin_developer
+  server_id: admin
+  target_fk: bube15t8739jub0p4g90
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_admin_dcr
+  server_id: admin
+  target_fk: bube15t8739jub0p4g90
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_admin_developer
+  server_id: admin
+  target_fk: bube15t8739jub0p4g9g
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_admin_dcr
+  server_id: admin
+  target_fk: bube15t8739jub0p4g9g
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_admin_developer
+  server_id: admin
+  target_fk: bube15t8739jub0p4gag
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_admin_dcr
+  server_id: admin
+  target_fk: bube15t8739jub0p4gag
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_admin_developer
+  server_id: admin
+  target_fk: bube15t8739jub0p4gb0
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_admin_dcr
+  server_id: admin
+  target_fk: bube15t8739jub0p4gb0
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_admin_developer
+  server_id: admin
+  target_fk: bube15t8739jub0p4gbg
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_admin_dcr
+  server_id: admin
+  target_fk: bube15t8739jub0p4gbg
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_admin_developer
+  server_id: admin
+  target_fk: bube15t8739jub0p4gc0
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_admin_dcr
+  server_id: admin
+  target_fk: bube15t8739jub0p4gc0
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_admin_developer
+  server_id: admin
+  target_fk: bube15t8739jub0p4gcg
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_admin_dcr
+  server_id: admin
+  target_fk: bube15t8739jub0p4gcg
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_bank-admins_developer
+  server_id: bank-admins
+  target_fk: bv2f7sqed9c9is80f270
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_bank-admins_dcr
+  server_id: bank-admins
+  target_fk: bv2f7sqed9c9is80f270
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_bank-admins_developer
+  server_id: bank-admins
+  target_fk: bv2f7sqed9c9is80f27g
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_bank-admins_dcr
+  server_id: bank-admins
+  target_fk: bv2f7sqed9c9is80f27g
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_bank-admins_developer
+  server_id: bank-admins
+  target_fk: bv2f7sqed9c9is80f28g
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_bank-admins_dcr
+  server_id: bank-admins
+  target_fk: bv2f7sqed9c9is80f28g
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_bank-admins_developer
+  server_id: bank-admins
+  target_fk: bv2f7sqed9c9is80f290
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_bank-admins_dcr
+  server_id: bank-admins
+  target_fk: bv2f7sqed9c9is80f290
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_bank-admins_developer
+  server_id: bank-admins
+  target_fk: bv2f7sqed9c9is80f29g
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_bank-admins_dcr
+  server_id: bank-admins
+  target_fk: bv2f7sqed9c9is80f29g
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_bank-admins_developer
+  server_id: bank-admins
+  target_fk: bv2f7sqed9c9is80f2a0
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_bank-admins_dcr
+  server_id: bank-admins
+  target_fk: bv2f7sqed9c9is80f2a0
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_bank-admins_developer
+  server_id: bank-admins
+  target_fk: bv2f7sqed9c9is80f2ag
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_bank-admins_dcr
+  server_id: bank-admins
+  target_fk: bv2f7sqed9c9is80f2ag
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- server_id: bank-admins
+  target_fk: bv2f80aed9c9is80f2d0
+  tenant_id: default
+  type: client_machine_token
+- server_id: bank-admins
+  target_fk: bv2f80aed9c9is80f2d0
+  tenant_id: default
+  type: client_user_token
+- policy_id: block_bank-customers_developer
+  server_id: bank-customers
+  target_fk: bv0na68mekk67nekvq1g
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_bank-customers_dcr
+  server_id: bank-customers
+  target_fk: bv0na68mekk67nekvq1g
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_bank-customers_developer
+  server_id: bank-customers
+  target_fk: bv0na68mekk67nekvq20
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_bank-customers_dcr
+  server_id: bank-customers
+  target_fk: bv0na68mekk67nekvq20
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_bank-customers_developer
+  server_id: bank-customers
+  target_fk: bv0na68mekk67nekvq30
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_bank-customers_dcr
+  server_id: bank-customers
+  target_fk: bv0na68mekk67nekvq30
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_bank-customers_developer
+  server_id: bank-customers
+  target_fk: bv0na68mekk67nekvq3g
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_bank-customers_dcr
+  server_id: bank-customers
+  target_fk: bv0na68mekk67nekvq3g
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_bank-customers_developer
+  server_id: bank-customers
+  target_fk: bv0na68mekk67nekvq40
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_bank-customers_dcr
+  server_id: bank-customers
+  target_fk: bv0na68mekk67nekvq40
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_bank-customers_developer
+  server_id: bank-customers
+  target_fk: bv0na68mekk67nekvq4g
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_bank-customers_dcr
+  server_id: bank-customers
+  target_fk: bv0na68mekk67nekvq4g
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_bank-customers_developer
+  server_id: bank-customers
+  target_fk: bv0na68mekk67nekvq50
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_bank-customers_dcr
+  server_id: bank-customers
+  target_fk: bv0na68mekk67nekvq50
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- server_id: bank-customers
+  target_fk: bv0nab0mekk67nekvq7g
+  tenant_id: default
+  type: client_machine_token
+- server_id: bank-customers
+  target_fk: bv0nab0mekk67nekvq7g
+  tenant_id: default
+  type: client_user_token
+- policy_id: block_developer_developer
+  server_id: developer
+  target_fk: bube15t8739jub0p4gt0
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_developer_dcr
+  server_id: developer
+  target_fk: bube15t8739jub0p4gt0
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_developer_developer
+  server_id: developer
+  target_fk: bube15t8739jub0p4gtg
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_developer_dcr
+  server_id: developer
+  target_fk: bube15t8739jub0p4gtg
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_developer_developer
+  server_id: developer
+  target_fk: bube15t8739jub0p4gug
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_developer_dcr
+  server_id: developer
+  target_fk: bube15t8739jub0p4gug
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_developer_developer
+  server_id: developer
+  target_fk: bube15t8739jub0p4gv0
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_developer_dcr
+  server_id: developer
+  target_fk: bube15t8739jub0p4gv0
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_developer_developer
+  server_id: developer
+  target_fk: bube15t8739jub0p4gvg
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_developer_dcr
+  server_id: developer
+  target_fk: bube15t8739jub0p4gvg
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_developer_developer
+  server_id: developer
+  target_fk: bube15t8739jub0p4h00
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_developer_dcr
+  server_id: developer
+  target_fk: bube15t8739jub0p4h00
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_developer_developer
+  server_id: developer
+  target_fk: bube15t8739jub0p4h0g
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_developer_dcr
+  server_id: developer
+  target_fk: bube15t8739jub0p4h0g
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_financroo_developer
+  server_id: financroo
+  target_fk: bv3p4io557ouq8rha0jg
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_financroo_dcr
+  server_id: financroo
+  target_fk: bv3p4io557ouq8rha0jg
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_financroo_developer
+  server_id: financroo
+  target_fk: bv3p4io557ouq8rha0k0
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_financroo_dcr
+  server_id: financroo
+  target_fk: bv3p4io557ouq8rha0k0
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_financroo_developer
+  server_id: financroo
+  target_fk: bv3p4io557ouq8rha0l0
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_financroo_dcr
+  server_id: financroo
+  target_fk: bv3p4io557ouq8rha0l0
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_financroo_developer
+  server_id: financroo
+  target_fk: bv3p4io557ouq8rha0lg
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_financroo_dcr
+  server_id: financroo
+  target_fk: bv3p4io557ouq8rha0lg
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_financroo_developer
+  server_id: financroo
+  target_fk: bv3p4io557ouq8rha0m0
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_financroo_dcr
+  server_id: financroo
+  target_fk: bv3p4io557ouq8rha0m0
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_financroo_developer
+  server_id: financroo
+  target_fk: bv3p4io557ouq8rha0mg
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_financroo_dcr
+  server_id: financroo
+  target_fk: bv3p4io557ouq8rha0mg
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_financroo_developer
+  server_id: financroo
+  target_fk: bv3p4io557ouq8rha0n0
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_financroo_dcr
+  server_id: financroo
+  target_fk: bv3p4io557ouq8rha0n0
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- server_id: financroo
+  target_fk: bv3p4uo557ouq8rha2bg
+  tenant_id: default
+  type: client_machine_token
+- server_id: financroo
+  target_fk: bv3p4uo557ouq8rha2bg
+  tenant_id: default
+  type: client_user_token
+- policy_id: block_openbanking_developer
+  server_id: openbanking
+  target_fk: bugkg8q3g9kregtu04p0
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_openbanking_dcr
+  server_id: openbanking
+  target_fk: bugkg8q3g9kregtu04p0
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_openbanking_developer
+  server_id: openbanking
+  target_fk: bugkg8q3g9kregtu04pg
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_openbanking_dcr
+  server_id: openbanking
+  target_fk: bugkg8q3g9kregtu04pg
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_openbanking_developer
+  server_id: openbanking
+  target_fk: bugkg8q3g9kregtu04qg
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_openbanking_dcr
+  server_id: openbanking
+  target_fk: bugkg8q3g9kregtu04qg
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_openbanking_developer
+  server_id: openbanking
+  target_fk: bugkg8q3g9kregtu04r0
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_openbanking_dcr
+  server_id: openbanking
+  target_fk: bugkg8q3g9kregtu04r0
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_openbanking_developer
+  server_id: openbanking
+  target_fk: bugkg8q3g9kregtu04rg
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_openbanking_dcr
+  server_id: openbanking
+  target_fk: bugkg8q3g9kregtu04rg
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_openbanking_developer
+  server_id: openbanking
+  target_fk: bugkg8q3g9kregtu04s0
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_openbanking_dcr
+  server_id: openbanking
+  target_fk: bugkg8q3g9kregtu04s0
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_openbanking_developer
+  server_id: openbanking
+  target_fk: bugkg8q3g9kregtu04sg
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_openbanking_dcr
+  server_id: openbanking
+  target_fk: bugkg8q3g9kregtu04sg
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_openbanking_developer
+  server_id: openbanking
+  target_fk: bugkg8q3g9kregtu04tg
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_openbanking_dcr
+  server_id: openbanking
+  target_fk: bugkg8q3g9kregtu04tg
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- server_id: openbanking
+  target_fk: bugkgm23g9kregtu051g
+  tenant_id: default
+  type: client_machine_token
+- server_id: openbanking
+  target_fk: bugkgm23g9kregtu051g
+  tenant_id: default
+  type: client_user_token
+- policy_id: block_openbanking_developer
+  server_id: openbanking
+  target_fk: bukj5c6k7qdmm5ppbi40
+  tenant_id: default
+  type: scope_client_assignment
+- server_id: openbanking
+  target_fk: bukj5c6k7qdmm5ppbi40
+  tenant_id: default
+  type: scope_machine_grant
+- server_id: openbanking
+  target_fk: bukj5c6k7qdmm5ppbi40
+  tenant_id: default
+  type: scope_user_grant
+- server_id: openbanking
+  target_fk: bukj5p6k7qdmm5ppbi4g
+  tenant_id: default
+  type: client_machine_token
+- server_id: openbanking
+  target_fk: bukj5p6k7qdmm5ppbi4g
+  tenant_id: default
+  type: client_user_token
+- server_id: openbanking
+  target_fk: openbanking
+  tenant_id: default
+  type: server_client_assignment
+- server_id: openbanking
+  target_fk: openbanking
+  tenant_id: default
+  type: server_dynamic_client_registration
+- server_id: openbanking
+  target_fk: openbanking
+  tenant_id: default
+  type: server_machine_token
+- server_id: openbanking
+  target_fk: openbanking
+  tenant_id: default
+  type: server_user_token
+- policy_id: block_system_developer
+  server_id: system
+  target_fk: bube15t8739jub0p4fhg
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_system_dcr
+  server_id: system
+  target_fk: bube15t8739jub0p4fhg
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_system_developer
+  server_id: system
+  target_fk: bube15t8739jub0p4fi0
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_system_dcr
+  server_id: system
+  target_fk: bube15t8739jub0p4fi0
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_system_developer
+  server_id: system
+  target_fk: bube15t8739jub0p4fj0
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_system_dcr
+  server_id: system
+  target_fk: bube15t8739jub0p4fj0
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_system_developer
+  server_id: system
+  target_fk: bube15t8739jub0p4fjg
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_system_dcr
+  server_id: system
+  target_fk: bube15t8739jub0p4fjg
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_system_developer
+  server_id: system
+  target_fk: bube15t8739jub0p4fk0
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_system_dcr
+  server_id: system
+  target_fk: bube15t8739jub0p4fk0
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_system_developer
+  server_id: system
+  target_fk: bube15t8739jub0p4fkg
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_system_dcr
+  server_id: system
+  target_fk: bube15t8739jub0p4fkg
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_system_developer
+  server_id: system
+  target_fk: bube15t8739jub0p4fl0
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_system_dcr
+  server_id: system
+  target_fk: bube15t8739jub0p4fl0
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_system_developer
+  server_id: system
+  target_fk: bube15t8739jub0p4fm0
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_system_dcr
+  server_id: system
+  target_fk: bube15t8739jub0p4fm0
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- policy_id: block_system_developer
+  server_id: system
+  target_fk: bube15t8739jub0p4fmg
+  tenant_id: default
+  type: scope_client_assignment
+- policy_id: block_system_dcr
+  server_id: system
+  target_fk: bube15t8739jub0p4fmg
+  tenant_id: default
+  type: scope_dynamic_client_registration
+- server_id: system
+  target_fk: buc3b1hhuc714r78env0
+  tenant_id: default
+  type: client_machine_token
+- server_id: system
+  target_fk: buc3b1hhuc714r78env0
+  tenant_id: default
+  type: client_user_token
+- policy_id: block_system_developer
+  server_id: system
+  target_fk: bui20p1jkpv9e38d5jlg
+  tenant_id: default
+  type: scope_client_assignment
+- server_id: system
+  target_fk: bui20p1jkpv9e38d5jlg
+  tenant_id: default
+  type: scope_machine_grant
+- server_id: system
+  target_fk: bui20p1jkpv9e38d5jlg
+  tenant_id: default
+  type: scope_user_grant
+- policy_id: block_system_developer
+  server_id: system
+  target_fk: bv340hrjknue62vugvf0
+  tenant_id: default
+  type: scope_client_assignment
+- server_id: system
+  target_fk: bv340hrjknue62vugvf0
+  tenant_id: default
+  type: scope_machine_grant
+- server_id: system
+  target_fk: bv340hrjknue62vugvf0
+  tenant_id: default
+  type: scope_user_grant
+- server_id: system
+  target_fk: system
+  tenant_id: default
+  type: server_client_assignment
+- server_id: system
+  target_fk: system
+  tenant_id: default
+  type: server_dynamic_client_registration
+- server_id: system
+  target_fk: system
+  tenant_id: default
+  type: server_machine_token
+- server_id: system
+  target_fk: system
+  tenant_id: default
+  type: server_user_token
+- policy_id: block_system_developer
+  server_id: system
+  target_fk: bube15t8739jub0p4etg
+  tenant_id: system
+  type: scope_client_assignment
+- policy_id: block_system_dcr
+  server_id: system
+  target_fk: bube15t8739jub0p4etg
+  tenant_id: system
+  type: scope_dynamic_client_registration
+- policy_id: block_system_developer
+  server_id: system
+  target_fk: bube15t8739jub0p4eu0
+  tenant_id: system
+  type: scope_client_assignment
+- policy_id: block_system_dcr
+  server_id: system
+  target_fk: bube15t8739jub0p4eu0
+  tenant_id: system
+  type: scope_dynamic_client_registration
+- policy_id: block_system_developer
+  server_id: system
+  target_fk: bube15t8739jub0p4ev0
+  tenant_id: system
+  type: scope_client_assignment
+- policy_id: block_system_dcr
+  server_id: system
+  target_fk: bube15t8739jub0p4ev0
+  tenant_id: system
+  type: scope_dynamic_client_registration
+- policy_id: block_system_developer
+  server_id: system
+  target_fk: bube15t8739jub0p4evg
+  tenant_id: system
+  type: scope_client_assignment
+- policy_id: block_system_dcr
+  server_id: system
+  target_fk: bube15t8739jub0p4evg
+  tenant_id: system
+  type: scope_dynamic_client_registration
+- policy_id: block_system_developer
+  server_id: system
+  target_fk: bube15t8739jub0p4f00
+  tenant_id: system
+  type: scope_client_assignment
+- policy_id: block_system_dcr
+  server_id: system
+  target_fk: bube15t8739jub0p4f00
+  tenant_id: system
+  type: scope_dynamic_client_registration
+- policy_id: block_system_developer
+  server_id: system
+  target_fk: bube15t8739jub0p4f0g
+  tenant_id: system
+  type: scope_client_assignment
+- policy_id: block_system_dcr
+  server_id: system
+  target_fk: bube15t8739jub0p4f0g
+  tenant_id: system
+  type: scope_dynamic_client_registration
+- policy_id: block_system_developer
+  server_id: system
+  target_fk: bube15t8739jub0p4f10
+  tenant_id: system
+  type: scope_client_assignment
+- policy_id: block_system_dcr
+  server_id: system
+  target_fk: bube15t8739jub0p4f10
+  tenant_id: system
+  type: scope_dynamic_client_registration
+scope_grants:
+- client_id: admin
+  given_at: "2020-10-27T13:21:26.234338Z"
+  granted_scope_name: offline_access
+  language: en
+  scope_name: offline_access
+  server_id: admin
+  subject: admin
+  tenant_id: default
+- client_id: admin
+  given_at: "2020-10-27T13:21:26.234363Z"
+  granted_scope_name: openid
+  language: en
+  scope_name: openid
+  server_id: admin
+  subject: admin
+  tenant_id: default
+- client_id: admin
+  given_at: "2020-10-27T13:21:26.234462Z"
+  granted_scope_name: profile
+  language: en
+  scope_name: profile
+  server_id: admin
+  subject: admin
+  tenant_id: default
+- client_id: bugkgm23g9kregtu051g
+  given_at: "2020-11-05T10:06:18.801269Z"
+  granted_scope_name: accounts
+  language: en
+  scope_name: accounts
+  server_id: openbanking
+  subject: user
+  tenant_id: default
+- client_id: bugkgm23g9kregtu051g
+  given_at: "2020-11-05T10:06:18.80125Z"
+  granted_scope_name: openid
+  language: en
+  scope_name: openid
+  server_id: openbanking
+  subject: user
+  tenant_id: default
+server_consents:
+- custom: {}
+  oidc: {}
+  server_id: admin
+  tenant_id: default
+  type: oidc
+- custom: {}
+  oidc: {}
+  server_id: bank-admins
+  tenant_id: default
+  type: oidc
+- custom: {}
+  oidc: {}
+  server_id: bank-customers
+  tenant_id: default
+  type: oidc
+- custom: {}
+  oidc: {}
+  server_id: developer
+  tenant_id: default
+  type: oidc
+- custom: {}
+  oidc: {}
+  server_id: financroo
+  tenant_id: default
+  type: oidc
+- client_id: bv0ocudfotn6edhsiu7g
+  custom:
+    server_consent_url: https://localhost:8080
+  oidc: {}
+  server_id: openbanking
+  tenant_id: default
+  type: custom
+- custom: {}
+  oidc: {}
+  server_id: system
+  tenant_id: default
+  type: oidc
+servers:
+- access_token_strategy: jwt
+  access_token_ttl: 1h0m0s
+  authorization_code_ttl: 10m0s
+  color: '#EC5348'
+  cookie_max_age: 1h0m0s
+  dynamic_client_registration:
+    initial_access_token: {}
+    payload:
+      format: json
+      jws_payload:
+        jwks:
+          keys: null
+    software_statement:
+      jwks:
+        keys: null
+  grant_types:
+  - client_credentials
+  - authorization_code
+  id: admin
+  id_token_ttl: 1h0m0s
+  issuer_url: https://localhost:8443/default/admin
+  jwks:
+    keys:
+    - alg: RSA-OAEP-256
+      d: rQCgUVr4CO9X9PDdAkV8fY7gTjn-SEY3_ED7DoaqvcP2ZjXnJNKh3p5ZO1T-USbvIA6NK-mL9_kj5NBK_Rb1VIhucgqnLSVNpY9dUZFnKTOczNK4zuJHkVZo_B683oR0cE5mVuMFZzCVp_B5-u5IB08czQXleSO9C_1kXUmqxsT3oA9Cbd-aEb3au7ZcL_ThB8-lCc8njtNL0kmV7pV8zwOD37PYnuKlGLhl0k-FVIiUO3MKJ4DnXPxZSqVl-BQPQGFjt58mNPUZN8aJUl03PrR2EMUTAH2HwcxSJaHlO9K1DJrlEA8witLZiSnj2Pf4mzugP-IJ-8L39LG1XcP40Q
+      dp: Z4KCU0-YqJi4sTgpeDVGNpi2S2RpvcuFUSfGasJzI02TQiYp1Rxo-jpwTJQkI7_XrjuqYz3gqxdP1KObtUCAL8inZykuuZAfzaitZkdsshGe-OCU9ExOB-3KA8gjMENcWdU_p7-QHcTnUmDaTCCX-pOWAiV0m_TSTkC8ln0cjaE
+      dq: ukE3OO1-RjhZxeX0llzekB_XXhISb_mJBA4wS2yla9muC_M4m6NG7IfYXKWSmU1aeyS6XLOiw-ubarUP4VwOU3gFTIXQhtZeBNJfcy60U4hljJfH4Qr6O0Y0nvHZAXuzfMMABUD6buv4qklADAFpLiNYh3FwDnfXNyFvb68ZzT0
+      e: AQAB
+      kid: c0i6nsjsie7t0um22890
+      kty: RSA
+      "n": r1lS-ep3tYiQMbLiELOlfVQ6E9YtZZwywCJtHOCJm04ji860rPmtDWoe-7OD7ZY-ZH2K0XuKn-Au_sP2XGYf4JI3T733QeHr3fiRcqL-eWIhzBXgfcmEA1lwXwz5Yp7KURA6LFkdOjk4pl9wgF-J4WZunqme6tTGRjKlqY46wX-BgL8DEfVe_S4h9sm6PhuIT6vzfz5rFrIP77Cl5NQMKbJ4Op3Ig11A0bz6jHmkp2NTnyI6jOtq7Zckkx1DR_SMtu4v4dHRzwq0yKKCXNA_I2dWwM9khMG3oWErabZ8nlTGT3LbhhdJsnal-nk9Ph61tLT2-VDqskfd6WDCC06AsQ
+      p: 4K-iTgYSHOiKdnFe9_wwIEd4GTBXHZ6ebbp30FIx-TkI85lEeIYFWOO8Ohowf9SMZaQ6U6PH6SPofuBB32iCGu_H-AAvgYzmVys8OfhK1PragoGKsOr93YFw4vxlab0Wodyr_3NhyrnngaEkVSeDayNHIxlKffom04cUI8Mct2c
+      q: x8lvjg1SIYfqNGhB4n3nmgaVpBPhIwDIkraeNDpcmdGzPwf4wUI0RgSYkWaXyk0HIilv2oQu_jmZ6HRKm9V2P3aJvFHPTFyz8sLizWK0qjvjS1mXo6GN-YQGsSnB2eyhKmvnZb7aTE0pP1GbCxN4vsfj9JyJMlaONDXCi8FS8Cc
+      qi: Cy8BEY5XDQcKFCV3qKnd_xGo9T-83GASg2jWkRnh3LfNhLFL0lTOe6Vqg4XHJzRCzEeHJ3HIDaq82dy5FykUwAMkvGreIJOkcTHCzwQRiRLYAIpAYalIz8wTS_fDgCS8PdQbsRq-iV39J4_x57wHIlAW8uVTKMJ_q1-tuevihds
+      use: enc
+    - alg: ES256
+      crv: P-256
+      d: STzYNgPGgrRI58L6d1oUEBMRHBzi8V1N-xqCdA5Y7FA
+      kid: "283246254291715724525323622448251404606"
+      kty: EC
+      use: sig
+      x: 6xI6TmqUYk7AhRPYJfsVsXPDXs_l8szPqJCPSt3xF-A
+      x5c:
+      - MIIBxDCCAWqgAwIBAgIRANUXPoj59A6Vk7ZgkrTyAT4wCgYIKoZIzj0EAwIwLDEUMBIGA1UEChMLQ2xvdWRlbnRpdHkxFDASBgNVBAMTC0Nsb3VkZW50aXR5MB4XDTIwMTAyNjE0NDMzNVoXDTIwMTEyNjE0NDMzNVowLDEUMBIGA1UEChMLQ2xvdWRlbnRpdHkxFDASBgNVBAMTC0Nsb3VkZW50aXR5MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE6xI6TmqUYk7AhRPYJfsVsXPDXs/l8szPqJCPSt3xF+BRYKPQ/zMbcGjPl1wwqccBjyfWrAq7lhSq252eYfdaIKNtMGswDgYDVR0PAQH/BAQDAgKkMBMGA1UdJQQMMAoGCCsGAQUFBwMBMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFObZsZ9wXZK1/FTNIFUsXzdUP7VRMBQGA1UdEQQNMAuCCWxvY2FsaG9zdDAKBggqhkjOPQQDAgNIADBFAiAdbve8NyEJkWWnvk+nLhOfU+ukPlwIBF6Nx+CukoBeHAIhAOaQr/2uvNyCAypeCgujMRVVSNNBw0CsgRPVnHOGz+im
+      x5t: lhjLNP_dADbzeyvcRHo5elbkglU
+      x5t#S256: uMvJ9epp1STxa__2IkiznO2j40DFPF-bCahLsgzLdJU
+      "y": UWCj0P8zG3Boz5dcMKnHAY8n1qwKu5YUqtudnmH3WiA
+  key_type: ecdsa
+  name: Admin
+  profile: default
+  refresh_token_ttl: 720h0m0s
+  secret: uNbJLd3sREiOAnM2UOJD34HY85OFT5K7RQN3_v4p-qo
+  subject_identifier_algorithm_salt: bTreL3Qxj4ZHI6i5Sx7bXvbeSSiNwqlhpdZ1YBCgQqU
+  subject_identifier_types:
+  - public
+  - pairwise
+  tenant_id: default
+  token_endpoint_authn_methods:
+  - none
+  - client_secret_basic
+  - client_secret_post
+  - client_secret_jwt
+  - private_key_jwt
+  - tls_client_auth
+  - self_signed_tls_client_auth
+  type: admin
+- access_token_strategy: jwt
+  access_token_ttl: 1h0m0s
+  authorization_code_ttl: 10m0s
+  color: '#EC5348'
+  cookie_max_age: 1h0m0s
+  dynamic_client_registration:
+    initial_access_token: {}
+    payload:
+      format: json
+      jws_payload:
+        jwks:
+          keys: null
+    software_statement:
+      jwks:
+        keys: null
+  grant_types:
+  - authorization_code
+  - implicit
+  - client_credentials
+  - refresh_token
+  id: bank-admins
+  id_token_ttl: 1h0m0s
+  issuer_url: https://localhost:8443/default/bank-admins
+  jwks:
+    keys:
+    - alg: RSA-OAEP-256
+      d: m4dj89Xp81T7WCPJqyTlG-b5fjjiz5EKuyhxpC0JumzHQvxVKfo9YIwB9fIiLNeY0flpbctam23KSbCRZTtU_ay1AHaJtjNxy4_D27SAIRpyebU_VxIeF4LIEQb3LW4sLZXQWMFKUf-ObXcBnY3Qmq9ASKFA6OkeZ0_SuNczUsZ1TC6v46W_b1IeD9dh3ziPmR3j6WdxUHsR2IFHwzTbpTzyQwriUTIM9xqC51GDXCGLxT7c6qYRg-UEp7VYuMgs17uh4EoaY73642-fbHUabxq-JQYzBoEMHDTUjDyxWDdQy7z00S8h1L4Ghrdk_ZLwMjxd6BX_GR2UrZidXd3VoQ
+      dp: rrhKrzg1Wu9nNLnOl4EH611Lfc9j7-zcfeabReoDLBINxk8hzc5P3UqIZJNg035T4a9lrGqntwkg2d5POW9-s35VDkQ3o97TTCFF554gQJqEf370iK2bcAHQ_hdmkLUIM8nDHAtIXAbclplHga_b64z7QYcCA67HmROtSUA5cVk
+      dq: InASq6tGAgp9J1c_pIEhGglfCZhgW_BEmFXrq2a3VL5WAS5nOrqWdh1AQs3-qmFz3z7wZK5F0lsQ2qayyUtBEl0zR0fze0iAe0zYoZ5O3vLj7UQjQmt6oqpM1m9Wy5rEWhEXeVfY3QJIZXDPRuUm04psiKuXI7w6jeyhiL719UE
+      e: AQAB
+      kid: c0i6nsjsie7t0um2289g
+      kty: RSA
+      "n": vVitw3r8lPnx1XZdR43xxnVaryrOAw_WXInu8KlwdNOvubYUpmcijrXwkDUShc9oBUK-8MRZNUOOSHzp__wEE1WmgaI7LnBEx4L71OXEhn-xkouW53fm78Jdwl0YaERMEYKFJfAcs3a8_WaZ325vDbu5gN0BrypgyWXka8nh_hMxybME4zDuUPPPCOt973m--LEpShbcahpInlvNLTvmfa0DE1O6yx_cq5fYHq2eEmeA4ZdsbCa9WjpfdBD27rHL82T3u7PcfKZG3gprtlSqSWFdFMYBiWf3GVIuNQMl6-CNpjJm2RXqlc8XPUZES8o_-jXjbLldv40MdVWEtMCVYQ
+      p: w974csd1xohSIl8OxZ3fFrTVL7WZPyZK122spHc4aVShC8ZfPW4UVao69K752MuARYTSqsjt8rnzt3qi1HdtKCbae5mpMJnS9g2i9SPa7hfPNWMbaUyvyFs6oGFpJoizZ6_yJw3f6D6bE-gZe0tKuMPueisSCTeO8xHgfgk5sBs
+      q: 93j1Gf3NLHojiDUxSMeRYU3z9Prj043wErWO27AiAYGmKXFqP9OR_A_l89MhBWSN8UICy91DYtT5bHNaRgIWY6ghXGKo9gGtd9c9fJoQF2dhA9HBTo-i-r_C8J9cYJryNn8lHvhtRe1J33jySyC41V5RYMoZlMETJe2SHafvgDM
+      qi: DGwRCoYbzT7AKQibc-fP2jX7y_RauF9H99DaKcLxSint4z6K1agx23lVauFdopy_RlbUitMsda_D0m_p8vvbVQstNwLy-oKfPSfSLH5Wr0CiJQb1KX00fVvDh0pNeXM5Y-YKHGFEqUSGST1h4z4LPt4obJXIEPgtTtg9PDXWyz4
+      use: enc
+    - alg: ES256
+      crv: P-256
+      d: t8VbJ8XmoYpk0iO7rW-PjoLnxHygRvzq2Hew_hG2F4o
+      kid: "11265745483673079371912066546056855922"
+      kty: EC
+      use: sig
+      x: fTjB-uTSNSg3Bm3Lg4qC6E3jRlWbdg3H2dfG468_KqU
+      x5c:
+      - MIIBxDCCAWmgAwIBAgIQCHm0IuJDM+ziR9d4e4iBcjAKBggqhkjOPQQDAjAsMRQwEgYDVQQKEwtDbG91ZGVudGl0eTEUMBIGA1UEAxMLQ2xvdWRlbnRpdHkwHhcNMjAxMTMwMTMzMDI3WhcNMjAxMjMxMTMzMDI3WjAsMRQwEgYDVQQKEwtDbG91ZGVudGl0eTEUMBIGA1UEAxMLQ2xvdWRlbnRpdHkwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAAR9OMH65NI1KDcGbcuDioLoTeNGVZt2DcfZ18bjrz8qpXdqvvb+50JWsSHkeIspo6gClyK1icMu1NXoL6csfLSAo20wazAOBgNVHQ8BAf8EBAMCAqQwEwYDVR0lBAwwCgYIKwYBBQUHAwEwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUGUnz+5yLK4d3ejUUg4+5RhvlfhgwFAYDVR0RBA0wC4IJbG9jYWxob3N0MAoGCCqGSM49BAMCA0kAMEYCIQCWIcjtAeLFX8K0G+fsipmfs6M6TuOPuVi62gM0OsfGugIhAI1D7I8+RjfJHuObh98Zk0z+khxlXaFbAD/Hop1emVF0
+      x5t: fPOef7iEO0bXQKL2bB7tge0oE4E
+      x5t#S256: afxIYjJxVGdKa0CLDCamYkJFvuSEfOxesoUJmOsw_e8
+      "y": d2q-9v7nQlaxIeR4iymjqAKXIrWJwy7U1egvpyx8tIA
+  key_type: ecdsa
+  name: bank-admins
+  profile: default
+  refresh_token_ttl: 720h0m0s
+  secret: p4U_2xL4UR0jygKmwLTbtJOEkazIQcBUAsWqjbLOSNM
+  subject_identifier_algorithm_salt: 5d1QoTQQrGexqPVR8w36q-wpBEEtrrTnVMCDQlZtqN8
+  subject_identifier_types:
+  - public
+  - pairwise
+  tenant_id: default
+  token_endpoint_authn_methods:
+  - client_secret_basic
+  - client_secret_post
+  - client_secret_jwt
+  - private_key_jwt
+  - self_signed_tls_client_auth
+  - tls_client_auth
+  - none
+  type: regular
+- access_token_strategy: jwt
+  access_token_ttl: 1h0m0s
+  authorization_code_ttl: 10m0s
+  color: '#C4C4C4'
+  cookie_max_age: 1h0m0s
+  dynamic_client_registration:
+    initial_access_token: {}
+    payload:
+      format: json
+      jws_payload:
+        jwks:
+          keys: null
+    software_statement:
+      jwks:
+        keys: null
+  grant_types:
+  - authorization_code
+  - implicit
+  - client_credentials
+  - refresh_token
+  id: bank-customers
+  id_token_ttl: 1h0m0s
+  issuer_url: https://localhost:8443/default/bank-customers
+  jwks:
+    keys:
+    - alg: RSA-OAEP-256
+      d: RPqZZCo84ioKCLdvlj80s5kID8iOXp6AlPJcaFcNXX0pcf3w6uiJYi47CJ8SB3mKGvrF9ZiZHhtzhriR-EmVz_298_JyWA3Bmqb9CFDqTq-y4isDioWV_LTS6otUoJhNiWuRcfYipRpUiAg2wVgr5Xqu7gRyE-lijk-dAdBo5SRncmyW4fVlc4jm-VHpuICVNbLIH3pLUmCc3asAqfvlveh9_EN9boyD96iLCLC526T6lADJZCo8Ayhzyw2GWWKHE8pc9zPWISsm4Foxo13zlYkEfIjYhyEvODTtBwY97-eEjtNAEeTJdf5mg19k_Czo_UrmVlmqvKZP73Sp8FowQQ
+      dp: Dpm0VMogFKz4emNj_xsjf4pLKy7ur8mwQ-YHdqmrqPqAttRoQ4ho1lJnJPVxkMqxVx8f_p15fUWWHXFz5iiI--uSCIJvmlskRBJi8HfsZAcFxHRid_mGKfWZr4XRwDFlETK9VG4VjEvscuRupnhGp6MGCcqusucZiyw9dMm2EDE
+      dq: gmXDj50iqvYzIHyX9Ue73PKcMEEqkM55dB7pp2IGCRkkk9dhbJKfQhvbVMENUwvTCNuKGXHkI0Rn4Z-usc5M7_IFd2ZjxpzAVj52co8MXTUJUFkCyy2LLBBGv5lQhIR4WJisCKKiDReejyvQWDDiSuixmybS1ac1KCsE11GE-lk
+      e: AQAB
+      kid: c0i6nsjsie7t0um228a0
+      kty: RSA
+      "n": qI5SOpp89-8C91jZTRMoE_wj-UlALGmF7oqbpjuKJF82PxF56xdK-WQe6kufY7km8vNfCOHdA6u2j8AXrhlB4FgZ03xC1vT7TsWeev9zzCuKbAfX4xHpV7oz19FCW1_t_sns9mmmsEnbSv5Yvwt3SqEWV55CSOGhxIkZeuDVGZmDDNJnQXMTtyhR0vs2ciNLpWJymSGufM1ymg5keS2e52Q1kUzq_bKN0TA9-1KkhbXpAkaXEZWP_mhToGF4XVidChI_ydcDR8BK8iH7YQIciHYIh7QBH-uLDZHGE7KWVzfsCZQDOzBzdk3DEMWghNVRyh3A0aXn4PmPKsiBkmofWQ
+      p: xtmjkGj1FVYIelqRQ2l5pu57SmEjC0xmBCpQQ044vv9znzwsr2JVeoh70QCPVY9UJy4hgJwzpN8yK2NzGtYIUs8o3LMvSLYVqfThuKarTW2wK_OZqWO0bZSENZl_XLxlbm8BBRN4XAIq7EGf99s-xZGlLV1yJVX-2BaXJMU0qcU
+      q: 2P_Kre4ZgiGbmUqWvoM89ymY3qleGZ5TgiduHoYgSdbtnDSBdljfcAXOyF8uCWTjISfrOyQPymNSMQ_66dBh9o36hdsfyyr8raG45FS05UrWG3JqPolN7LQAkjvvSvTWfsPZXrPfFHy6X10fPbkcA_i_tbCaiAc_Ksl3ysow_IU
+      qi: G8-lccuw0pUHJ6kOUpkVmKnozEPwjSEQMTCmBAPb-j85X4wTzLuCDrQ7kscaft7W_FKGhyrM9arDSoJHlG_s6mK3P4qDw4g4E0z7oE-GyDe5YYhjw9m0Z4Jqkty_NQGMrnmP2c-byU8CMCmOerX_ifsHEB0yTzIUPmFDZpXBIz8
+      use: enc
+    - alg: ES256
+      crv: P-256
+      d: r7o6NAEZirX6f-bKU_vAYctKV7i2iKhFVPVpxpeuws8
+      kid: "245473820095557679938505935102608207053"
+      kty: EC
+      use: sig
+      x: A_u5jPEON7J9IBPgRULfC0GY6gW1s1gVjDgM_bThWgA
+      x5c:
+      - MIIBxDCCAWqgAwIBAgIRALisib7btx27fMzBIMok7M0wCgYIKoZIzj0EAwIwLDEUMBIGA1UEChMLQ2xvdWRlbnRpdHkxFDASBgNVBAMTC0Nsb3VkZW50aXR5MB4XDTIwMTEyNzIxNTIyNVoXDTIwMTIyODIxNTIyNVowLDEUMBIGA1UEChMLQ2xvdWRlbnRpdHkxFDASBgNVBAMTC0Nsb3VkZW50aXR5MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAEA/u5jPEON7J9IBPgRULfC0GY6gW1s1gVjDgM/bThWgALRSr3ejuuW7nh7XJ1N6vJFS49m2i1D2ogfgs2/Mc9BaNtMGswDgYDVR0PAQH/BAQDAgKkMBMGA1UdJQQMMAoGCCsGAQUFBwMBMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFLjB7aHNOeaqH9vncw4ZSfOhOYYBMBQGA1UdEQQNMAuCCWxvY2FsaG9zdDAKBggqhkjOPQQDAgNIADBFAiEA2EstoDVXqH8w9yYcfLF9Knpi4D8SnkwhwePS5lOrMAkCICpQ7xzV80xsfxy2FOvsGcGw/FsI5ys+VEoBaC6QBHXc
+      x5t: 4HeWfUFn4DRFH0JGsLAfOUH5Jjc
+      x5t#S256: -QMI8kqGYOFW_SKrpWQLl7p0LYpd41O9UXMA5T3dLAk
+      "y": C0Uq93o7rlu54e1ydTeryRUuPZtotQ9qIH4LNvzHPQU
+  key_type: ecdsa
+  name: bank-customers
+  profile: default
+  refresh_token_ttl: 720h0m0s
+  secret: MX2sNhfVkASo7RsIkGEe4el6xDohYU4vSs_t9jckCnk
+  subject_identifier_algorithm_salt: 9TGAp9QL-s6es_nXwK3nvEY9Csjj1DRkiSh3hkyUNKk
+  subject_identifier_types:
+  - public
+  - pairwise
+  tenant_id: default
+  token_endpoint_authn_methods:
+  - client_secret_basic
+  - client_secret_post
+  - client_secret_jwt
+  - private_key_jwt
+  - self_signed_tls_client_auth
+  - tls_client_auth
+  - none
+  type: regular
+- access_token_strategy: jwt
+  access_token_ttl: 1h0m0s
+  authorization_code_ttl: 10m0s
+  color: '#76B141'
+  cookie_max_age: 1h0m0s
+  dynamic_client_registration:
+    initial_access_token: {}
+    payload:
+      format: json
+      jws_payload:
+        jwks:
+          keys: null
+    software_statement:
+      jwks:
+        keys: null
+  grant_types:
+  - authorization_code
+  id: developer
+  id_token_ttl: 1h0m0s
+  issuer_url: https://localhost:8443/default/developer
+  jwks:
+    keys:
+    - alg: RSA-OAEP-256
+      d: ONvota599OZ61Xx5VXPgQZ4Crh0xJa8cuigQrjLVlZwhMda5A2E4MexCNuObyToJSwTv4OewLiGgNTYD9OVcouy6cytu1LIFgijvjWnlDkKvEfnYhRzoyJhpn-KM_iCYg55SHZJRHLpc4mzhQM9o1lPYRQeqFPzscR8StUTJ5iWElJM5luIp6s_VhMA2wwl7nse1CwmxZ8Okvf1VAT09MXJ_n2KkpVQ0pmD25AN2qJi-YhoNDans9L54E5MMgd1dRnx31tb7g0YFIIiCsQ6t9T-ZhDUorrhmudHsXUGS_2WlRKatxVGGKoIwqUQpoWQzvaQ3awze-rU3CxhjlNxJ8Q
+      dp: G8XneTTnXThMeB2c5gMw0oawbwCZEBj99wEwMK8J8mqu8pxhKkRB2ECwRDSvTI1D4Bk-cL7GUioV5rNx7XIUSvU4flYoXiyHkFb8pe4qvaA_9TvGg-XInqhAoP0qAeDkpTEGk7s_3yQmyjf1pHJm9hAd5nR_ha45L1XYDOLTrxs
+      dq: GDIYvib4l2OSwUBsXA3V98BGhpo_ieUJY5Y6BrD1bpq22kiHs8gOpQlp_8UOIT6KApRlAQwpQJciLGOyNKlbBp0VhsdX_wKGysVwPxNFx3lunemrhhWSA0ikcRg0EDU9Cz5cMwaFJv1Y2jfjzgb_C6v-BNIDBxseRF_FUdJ_IsU
+      e: AQAB
+      kid: c0i6nsrsie7t0um228ag
+      kty: RSA
+      "n": 5SVVcTyqMgEQ-DZi9Fab7zkWAnQqfH5agZo5Vlqr-ZqqDAaX-h228U3M2xjyQSN1rInSUEdMQKJu_u7b_wNkmOjxjAp7_N1u7Cv6r0PjSePPllpGEWbjuBu9wuxF5_iMXGuD4vpoEpFLaurebsXPqtBXil-Cg2aBHk_XhDH79Ai8g6fsYRwisrRWza0XyEUAsvqzGaVlcpeT_nH0HTkSxCdyGkFyZqynjd9ODKdRHJeKEXg9YJp_uajN8RCOjL56tX56coisxojAxcMZetLUFwJUXC36kYWZA7DoGJwW5bwWM9uq5aMxOCNrUl2aV_bYfu_09MzF6ZTLyF4TfR81Hw
+      p: -HyH_VtpPDR7dCNDiv6YpYAe9DA7TCfGH-niW-NvFU5MTbPfqPUQnlYzr4LdsEQ8KNv8kxtm9QFdg_qR6E4RBXhPP5g6Bs-5_jOwWUmpHCscvqvek9gJYbZfdCCtUAd_Ukr99uhBgfm08WH05oYc4kvWbk_2Sly26BiVHftWN2M
+      q: 7BMXhlW0ZiWpDyzrZkM7GKr7bABi8eHdMG0QAQdIvVjlKzvfsVO_tU1ehoANp9VwNP3PzgqHyNQCa8bHMDH9yc7-NBgxVKrPwuBxmBZxTE8MXIwnx6K0dLmFHbbK2V2dALOQTsRv9IJWf41Icr-X05nFahFME5hjEo_mcwQJzhU
+      qi: LKeOLpmVnRu3I8LrV-pvG928bQj_LLOKehJqQ2tDzoPbRkKYkBF3asDri0eeCuBZIsliQ7qzsPVPJkni2uz5enNfdsWVvFcBDVdeeYlPYfRks173fUoAIgTGyxuHw-KRkSb69CH8Zf7k45l_OIDNyRq_UjwP7bj-_Ntn7nqZjCE
+      use: enc
+    - alg: ES256
+      crv: P-256
+      d: dwFFAzuzzid-gLq7EVENmibGsH-Xu8P5dTpMRHSSCU0
+      kid: "35670397700397517212591576830336369527"
+      kty: EC
+      use: sig
+      x: iqBb9pNTUTzYwjUmdnD6oj9Rx_ptKD2R4qyjH2cwtZ0
+      x5c:
+      - MIIBwzCCAWmgAwIBAgIQGtXeY4Mw7ZOVI1wNsn0DdzAKBggqhkjOPQQDAjAsMRQwEgYDVQQKEwtDbG91ZGVudGl0eTEUMBIGA1UEAxMLQ2xvdWRlbnRpdHkwHhcNMjAxMDI2MTQ0MzM1WhcNMjAxMTI2MTQ0MzM1WjAsMRQwEgYDVQQKEwtDbG91ZGVudGl0eTEUMBIGA1UEAxMLQ2xvdWRlbnRpdHkwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAASKoFv2k1NRPNjCNSZ2cPqiP1HH+m0oPZHirKMfZzC1nS3yjVgp+99aD0MVRZQPIHgXl1zWGQCtnDSoKpeyipkIo20wazAOBgNVHQ8BAf8EBAMCAqQwEwYDVR0lBAwwCgYIKwYBBQUHAwEwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQU/0qysPbbE+rPDLhtr880w/4wSlgwFAYDVR0RBA0wC4IJbG9jYWxob3N0MAoGCCqGSM49BAMCA0gAMEUCICRccSpDGnK1GcCZe7MAFIvAxqPOSKpbmzOGrdV/Q54xAiEAgJafEMueilK5NbbyyR8YZbf4Fv7zYwwe6yrxQ5QBkrI=
+      x5t: A6M0Y-P4A3gHJ1FbCNTLon1zsuE
+      x5t#S256: D8JJEoE0rdlXCKYDCh51_U0AZ6aXAOdR2wItZ2lvnoU
+      "y": LfKNWCn731oPQxVFlA8geBeXXNYZAK2cNKgql7KKmQg
+  key_type: ecdsa
+  name: Developer
+  profile: default
+  refresh_token_ttl: 720h0m0s
+  secret: qr3vYt3lVNHw42wkuYAK2PYRou_k60tVsN2NMmOlBAI
+  subject_identifier_algorithm_salt: QopSJQZe1-PuUPrHCiRr0g6sIzjXQgrh6QwC8RGQovY
+  subject_identifier_types:
+  - public
+  - pairwise
+  tenant_id: default
+  token_endpoint_authn_methods:
+  - client_secret_basic
+  - client_secret_post
+  - client_secret_jwt
+  - private_key_jwt
+  - self_signed_tls_client_auth
+  - tls_client_auth
+  - none
+  type: developer
+- access_token_strategy: jwt
+  access_token_ttl: 1h0m0s
+  authorization_code_ttl: 10m0s
+  color: '#C4C4C4'
+  cookie_max_age: 1h0m0s
+  dynamic_client_registration:
+    initial_access_token: {}
+    payload:
+      format: json
+      jws_payload:
+        jwks:
+          keys: null
+    software_statement:
+      jwks:
+        keys: null
+  grant_types:
+  - authorization_code
+  - implicit
+  - client_credentials
+  - refresh_token
+  id: financroo
+  id_token_ttl: 1h0m0s
+  issuer_url: https://localhost:8443/default/financroo
+  jwks:
+    keys:
+    - alg: RSA-OAEP-256
+      d: VwGmoDPONzw1-ztktHFiMeg1UQIXT3qC-J4ISqkThO9oSImCfA1DJSkVWUQb4BzWJrYXz3MA_Hr5PZSt1erdDO3nfDQMDda8vmJiO7JMtv8MBIU2UWC0TKsF0BJDux6zlttv5vcrc4mE8GjV9Xa8skJUzD13WVUdv20AlAlJNt09cbgH2BeHYZVcrsc906QkMV5n9eSpr3HBUnUF0cZqjEF168B5aPXfhUNASCwmG1qdxHOkOVmpErTyucOkxfL-iLCDV5GuL7cTDxYKiWZIJhwmcVwebhV5YHhVdBcyDKF2UDva-xZUQ7PQjrMFYp5Ci02UHLt9gFSHli3zlB50oQ
+      dp: c9jDN6HcQSrmvg5fkQBwBOgfqa57lNM4Nx91hl8VWtF9kNjUTtRx3J66rkC1iXZNNLi_g9ZBqdWBOMbkb6heg8n7u7c3sWf3jIs4LZLV7nMUrSo8XPLWLgP3uElKA_Zicsp_SnVKEYJ0JhSsGSBpi-o4KXwauq_6SQWeSgEy05M
+      dq: g6edBecqZZmYp6x6LKE4VXl-UX3BeK6_1CUgXozjXgHqzinbYMcGpxVPxHxOYsiqsottANhjsqtqZNZ985VPSJVwUiqLq3F5KXwZpV8qmZzy4oByvUhBjaROVddDan2OA_5ob0Tx0qwfofsBKiRziUTFEzAQPJRS7KM74uEGrMU
+      e: AQAB
+      kid: c0i6nsrsie7t0um228b0
+      kty: RSA
+      "n": t0Ebj2evALYHwxBKHCeLqRLqlg-JJStciIPoPs1FpvjV-X-t55RQlNmMxYhRpjrTxDTGKJEy1yBlj-T6EJeJuRJ_krR5x3wv9TLZg3GBxXPl1Wz8RQkH6NOPaRRWEZfuRloHdQzST78sR1Qimzzuuxz8NCWLwU_c4_N-nCLcbS-0iEjBRLhjPaCvMVKIgv4FEM3gNsJ7b_jO4LGF9ohDOJTX3xQVHPPvplpdiDZQl-w7WYExNcqmFkZs3vK3ae7fEBKJBFHRYh8aZghLt1BD9Cig5vbyGcng4tglunADr1ORc0SoivhvkKFilYim8-0LGXMVedUpwq8A9nP--VX0Bw
+      p: yvPRxQEyYV--XaonyFK6fQcPLxNsSkFHO-Wd5MgYbggsakdbGic-esI4kr4zU2JZaFNMRbQ6VSpqPKVXfrjvDOAnrNxZbqIDoWPh7CJSjWcTAWU6s-55qmDDFvrSW2pJIqBoKUFWGcZ8nqH3wmL8V1GNQ389CmLWUxAf-BzwZVM
+      q: 5yc6MH1RKNrZrXmTftcYyKi9h3j-dbsv8FeZCnewyu6wN8a64SWyOkET03LuPNOhS4uK-MKkeC3LGMV7xboNHMMHbMITQg9obJ3mUaIVCGz-4NoTQZtFW3tjO90IAIAd26Ph1b-iq2cFTVv1CNn37sYnDQgfhnJ9Ob29F1TTy_0
+      qi: qg268FRdSrsiJrWcwnioppIETYs_RBdXAd5nt6LUFLXoIqoJqqkPbL_l4zoNMdaMBlvAJFpOCiWsDyWk4bse7XOf1G8Jxo2LGap3QaI_4dtmAQ9DtTd4482lRhvTIvJ4wj0DYZg7B0pOUfeA3qkJnly0vtlgDD9oyEA1dKPaaq0
+      use: enc
+    - alg: ES256
+      crv: P-256
+      d: vV0_FUymz5bQ-dpJvRhlXPWsv_Yk7Xeca_KXcMDMG3s
+      kid: "6942400084637495725307890853887052548"
+      kty: EC
+      use: sig
+      x: 19vI66CiWYNE7ypRTnydNZmtE0fZinS-ZTKbKPRKGWA
+      x5c:
+      - MIIBwzCCAWmgAwIBAgIQBTkOwD4moogWlrvx8huLBDAKBggqhkjOPQQDAjAsMRQwEgYDVQQKEwtDbG91ZGVudGl0eTEUMBIGA1UEAxMLQ2xvdWRlbnRpdHkwHhcNMjAxMjAyMTMxMDM1WhcNMjEwMTAyMTMxMDM1WjAsMRQwEgYDVQQKEwtDbG91ZGVudGl0eTEUMBIGA1UEAxMLQ2xvdWRlbnRpdHkwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAATX28jroKJZg0TvKlFOfJ01ma0TR9mKdL5lMpso9EoZYMOq+uUny2M9m1QcxXclbgrIxEPybGdjAVuzuNsKE+Jro20wazAOBgNVHQ8BAf8EBAMCAqQwEwYDVR0lBAwwCgYIKwYBBQUHAwEwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUcy2V45/Rf71Y4rag/nvrio5+guswFAYDVR0RBA0wC4IJbG9jYWxob3N0MAoGCCqGSM49BAMCA0gAMEUCIQDu1sFafA1/hjuXbVtIZWQhZYzkl8Fi0uOOSzVzAHKwrgIgXVbCO+z6QyTDpgdRf8q3ipb6+mhk8jlNXV2YA2wR1+Y=
+      x5t: vb_AsiJE4ZRw1pgBk-aDGeV3lSI
+      x5t#S256: 0Bh0uxrOkD7OECtudpp0LNs8mCHWEyUuZEMHHKUb4ro
+      "y": w6r65SfLYz2bVBzFdyVuCsjEQ_JsZ2MBW7O42woT4ms
+  key_type: ecdsa
+  name: financroo
+  profile: default
+  refresh_token_ttl: 720h0m0s
+  secret: cPbSE1cY1vN_XO8DVEeNgBRQOFvB9NC6QZ2ED73mkxY
+  subject_identifier_algorithm_salt: qVEkFjPTpiGl3pxERby1Zm1bLNvCxq6NZsVv_UnvMJQ
+  subject_identifier_types:
+  - public
+  - pairwise
+  tenant_id: default
+  token_endpoint_authn_methods:
+  - client_secret_basic
+  - client_secret_post
+  - client_secret_jwt
+  - private_key_jwt
+  - self_signed_tls_client_auth
+  - tls_client_auth
+  - none
+  type: regular
+- access_token_strategy: opaque
+  access_token_ttl: 1h0m0s
+  authorization_code_ttl: 10m0s
+  color: '#EC5348'
+  cookie_max_age: 1h0m0s
+  dynamic_client_registration:
+    initial_access_token: {}
+    payload:
+      format: jws
+      jws_payload:
+        jwks:
+          keys: null
+    software_statement:
+      jwks:
+        keys: null
+      required: true
+  enforce_pkce: true
+  enforce_pkce_for_public_clients: true
+  grant_types:
+  - client_credentials
+  - authorization_code
+  - refresh_token
+  id: openbanking
+  id_token_ttl: 1h0m0s
+  issuer_url: https://localhost:8443/default/openbanking
+  jwks:
+    keys:
+    - alg: RSA-OAEP-256
+      d: DFr-OHO8DzpbNxBo05hw6l315sdCAqrr5AIyG8lRqV-NSJUPH1LWDV1n9OaBrCIiVNxz2-djE6o7cW__c3Zw3uO02vc1UXMB-Qdwn38ogw71xxy7OH2HJSx2c9PckjmuuLHPsvbGyWesxRowsRRwS0ycgSI-JGHo7mOlNsbigiOveU8KKh124GY3d4yH9ZAbGIE-37Dy1nuTQGULam6LZJ-5XzT4SMlk-X0uc8RAkV9oPW7byertNqlpdUk3R8RTrLx4TyEK5BEwGW89RoqTGlAkyWbquePLvze4N7JfdtMHzkX_pzayF6_Xpsluzg1r0Y7i49r68LQc9RoTDPYASQ
+      dp: vDnlfH8Wd6_acxeXbE0cmleGA8iUMT2Zyei27RogDMrJZA8Ai_O6P6ZQNs5-uvAwfVWhGTgLZ80XR7yXNSQW2uvM9u6hFlLri7aMdEmQ93Xkl1iF4z0GNY6Hl-ga1mt9MdSRkgCPHnbyKweLdx_o7tbCkCSaywORO2iCCyx_zkE
+      dq: yzqe_Ytlt9ocoou32mmaeWYLIMUavhFMRskLlGJHYbtVUI5K53OwvOShLiW6RZe0yPvk9w4GJu_Na4cS2fsJr_lKh72wO5ON8mWkSklvBEzQvTYS_xCtUqLJDE9f0m8YP4nUrexUmFDGSJPr-A1aYZxZPCzteozw7Cs1Ga8Sot0
+      e: AQAB
+      kid: c0i6nsrsie7t0um228bg
+      kty: RSA
+      "n": wRIaVdGkIhXhFB7B3Kymr_g0DQLbIKbqkiJPt3M1g08luwvS2qQoiuSc4_M3dobtBDLUMgGlmoKR_IwzfAac1LJ20vToepZdwlBtzmwppGiNAX77jsGYZcpDKUgsUe479sEnPBeLyq35NgSBHX11i9X-JzunCt5Dpm3Y1p8GiGGNYRZQpuMfmTPBxRplhfNuJ7t7sproOPy-lzoN0BWZyKqhtCdw-5_LhjkE6paYwWxAhUBCqH5BDHwutU4frtp4S6RllMTmnOskkLxMt9ILQTOD3NbEOBF60704KZBLiJ9wrS4_WCMxuT9uoaTpNa0XY9460Z6dcr0QA7JfoHKksQ
+      p: y20pbsuHdWwD7hvfmCIUs1o-QfyWvKn-I_H0NDe2rI8Fd2O3tEx9Cs9MczpzaJ_czEkUDm0J_wXOGo_eb9YsCTKOzdy1C26mBdFcLcERs5ESkEQ1v7VVdPFDTZv5x47gG10XzdJ6hk6xp5-BAfB28Ys39RZ4tBI4vAWpwlL-OL8
+      q: 8vfM7f6KHcs2bV9-dtSLjbfcPa6zz00rLd_5j-QvNFN1MD0_yn5yHmrb-Ex6VQWbE0C-n9vSjlnHGPye5Z-Sgw3YH37YrNhSS2P6gfvEBtFCFwbicbjn3x-rowzhZrm_argcbgem4XlUUYeg7_gqb6T3jLxgdggROmdTMg3Jjo8
+      qi: Au_2_iOCHvDxev2FSmPWKhF6A-QTD3MxV98DwTCMVoC5wJcxGrRvtFdwDwX3SK0_ONAg9bcOg533Q1EMTYiEN61c0CsIyirNbYMAwtB4p-TrhVrCwdFVhYE8CTmDhLnuYXBtUneLJOlorHRMBbAcvsoCDrEtqGwo8ZdoM0F8bWs
+      use: enc
+    - alg: ES256
+      crv: P-256
+      d: AigfBVg_bcfSMMc89d0m4G9CTq2Otw-jUKEdrGqKv5M
+      kid: "151136668987367002690608146737220824812"
+      kty: EC
+      use: sig
+      x: p8_3uL69G-EsHMrxWVe_cpLzFrLDndzMaWkLsNoHsLM
+      x5c:
+      - MIIBwzCCAWmgAwIBAgIQcbPdGCbCaw6jdpB8cyQu7DAKBggqhkjOPQQDAjAsMRQwEgYDVQQKEwtDbG91ZGVudGl0eTEUMBIGA1UEAxMLQ2xvdWRlbnRpdHkwHhcNMjAxMTAzMTIwODAzWhcNMjAxMjA0MTIwODAzWjAsMRQwEgYDVQQKEwtDbG91ZGVudGl0eTEUMBIGA1UEAxMLQ2xvdWRlbnRpdHkwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAASnz/e4vr0b4SwcyvFZV79ykvMWssOd3MxpaQuw2gews7U1ix5NKw2Cmi7SZmdxPKxM/rD1pFW93Bw0dFv4DqQbo20wazAOBgNVHQ8BAf8EBAMCAqQwEwYDVR0lBAwwCgYIKwYBBQUHAwEwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUgbcHzX4qnmsPbb7z80LxrVmqcOMwFAYDVR0RBA0wC4IJbG9jYWxob3N0MAoGCCqGSM49BAMCA0gAMEUCIQDsBkpwdl6VC6h+hCoeaA8KIFzEpPBBhWEu0ohR7Ij4PQIgCv/wmO0+IP68a4sli0fhW48b1TmEq+Dsnv79JKMS7aI=
+      x5t: cFzyROuLqLpayrYdZDLrGdDC2gM
+      x5t#S256: kALY_L8dUUuHdq9rN9h33CNmiWch8X2VbVVTafrNAsg
+      "y": tTWLHk0rDYKaLtJmZ3E8rEz-sPWkVb3cHDR0W_gOpBs
+  key_type: ecdsa
+  name: openbanking
+  profile: openbanking_uk
+  refresh_token_ttl: 720h0m0s
+  root_cas: |
+    -----BEGIN CERTIFICATE-----
+    MIIDfjCCAmagAwIBAgIUHOLlcMhX8uJyFafYYNXYBMBJr2swDQYJKoZIhvcNAQEL
+    BQAwVzELMAkGA1UEBhMCVVMxEzARBgNVBAgTCldhc2hpbmd0b24xEDAOBgNVBAcT
+    B1NlYXR0bGUxFDASBgNVBAoTC0Nsb3VkZW50aXR5MQswCQYDVQQLEwJDQTAeFw0y
+    MTAxMjAwOTQ4MDBaFw0yNjAxMTkwOTQ4MDBaMFcxCzAJBgNVBAYTAlVTMRMwEQYD
+    VQQIEwpXYXNoaW5ndG9uMRAwDgYDVQQHEwdTZWF0dGxlMRQwEgYDVQQKEwtDbG91
+    ZGVudGl0eTELMAkGA1UECxMCQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEK
+    AoIBAQDKJroMoumr9jY129z7uf0WrvMxmzexP72ogINlQlM/p910YfnLYSWOUEIH
+    kQ5eyq3ATuesPzamNxjq4JkafopsMBeieCeVzir4VTmsxLxbBZG2GjdsGpyXmrXb
+    LXTb5dgNcolYh6LLPb11cBeb9TAy2D97Vx4t1Hr2SeLG1VvkNyNnoog6tZdmJUis
+    ufW9GOyXgiAv46rtgvvpzYn+LbE7oiXlQHICHNpeTh7140HG7eWMPubINuilGZBY
+    W80IGTpGUf2Vmuwo2LA17z5/3IB0dqlY5eT321TYVoqH1TYZrMllSLc+2x750e+l
+    E9sHil8QPptAS74UWUsq2PgIvyZbAgMBAAGjQjBAMA4GA1UdDwEB/wQEAwIBBjAP
+    BgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBTKWQeEZBRJ/UO1Py7EfTaOqVujbTAN
+    BgkqhkiG9w0BAQsFAAOCAQEAsg5ker9FPcq1u5E+y4Qq1yjUeuOT0kap+aIE1mp2
+    LSQoEA+tb40s/iNmTMdvCGReeoRoVYKz66+3zGoFYg5W1c5Ct9whjiLhKP1Pzc4I
+    JbPGklSrnnAwD72ypLF4yrTMTD65gTMsr2ao0MOe6vy/Z8R2uz48QJHhhi71VGhi
+    FstSiWvb4AgNhN39Ag5ufLtrGCbuZw5TSeW0J7PTBoYV1Z/0jrsdqxk8MjnbR8Qe
+    VyZGyIRnGkXUtC239/Lz0v0PXVwAPUF8ITb0JYcG/ojIc5VfTOkQOeOHHBaS+dXt
+    HBJjBbnwpN4tNFhczJkbga16hL+vV0I4z61mJG8OkDr25Q==
+    -----END CERTIFICATE-----
+  secret: mEPU_dqAKxKZ3Yt4kdEjFe2HEBcdFHc2majkvPgq-50
+  subject_identifier_algorithm_salt: NCb8R3X-LM8ICq_QXtgbroDoBbomb6T1YqZ2HWuhw7c
+  subject_identifier_types:
+  - pairwise
+  tenant_id: default
+  token_endpoint_authn_methods:
+  - tls_client_auth
+  type: regular
+- access_token_strategy: jwt
+  access_token_ttl: 1h0m0s
+  authorization_code_ttl: 10m0s
+  color: '#393954'
+  cookie_max_age: 1h0m0s
+  dynamic_client_registration:
+    initial_access_token: {}
+    payload:
+      format: json
+      jws_payload:
+        jwks:
+          keys: null
+    software_statement:
+      jwks:
+        keys: null
+  grant_types:
+  - client_credentials
+  id: system
+  id_token_ttl: 1h0m0s
+  issuer_url: https://localhost:8443/default/system
+  jwks:
+    keys:
+    - alg: RSA-OAEP-256
+      d: jS-J1uYuPittNaYBKbaJxSIq8osRQx_1mjt22OevoUyQzwwtR6d0ZQvs6it-__tgjEzigVphguCPt4vNNWkW1uIIqp_XUkrloGZSSHCZZmO2N8r1xOIjf6fQgSlH0U47rXeNl0xcPjz8bZwC05f3XBpyd7UDTxUxCHPT0UaocRiXcg3xn2najYSJnkPEIFKysjucWSNfUzvPmFW8QNKe2tmUKNRpPxF9UqW08daoQNX-RqpfJrmgDUTVOhxpS4faIXMbCrYsbOYBCmkGs76PoIQdBUSStiTZo8NqOirqvJFWyUphy8MoEQrEjv6j2QJm43mBOWQBR6WbHv3YdiZKDQ
+      dp: Q4jL1u8vwGIQvbMkj1nlUodd4PJ2t6DUAqYIvSLwMqdUHgwQ27Tz8sM88nVwm2cGu5DdZwHJcWa-g6ePfayPGqaY1T103YoIFDUwtYnU2jXdc9NGkV_i90CrxwWWQF2u5QSKbV4hDaVReXcTJZuBrHyWoIuBqer2ocInZAgfFCU
+      dq: MfE-ZIfD6MVO1FvTiQtH8wmyrykAf4iY8jxxasIs_re8VJr03n8OqHSP5V4UmjaI0H5dMblUxXebb-4D9ym690Y0f029vFWwAj3J7v57mBgGZsYp-3oyzfUKvq79CAqOPRacbWgwkDmKoLA47wbOTLhfeI7hyY8u5nUUZ6sk6T8
+      e: AQAB
+      kid: c0i6nsrsie7t0um228c0
+      kty: RSA
+      "n": we-mqhoCDTKcWYmd7OLQQpkVBWG-q0RbVb5G1tJTP3BiRmRJGb4vchdfXS_wAfHDLyJUDHP6QTmf8eWCLqlECqDvPyPj9bs5CdA_3azlaGe7VrAvC4p-m0Rli2oL3zdaEkVv4i1xytVG6P03stXsIwPfJwLCDeDThbYCYKYAKOCGspz47Jnf2BU5bxCPFADavzTCG7kBB6zVSRjcup122E7nFCYfNLx_s9E_L4Z08N0zQEEsPC6bYjEl5cDOLg_GsNb1U7udz-UDIxyArSVTq4Suj2k7ukn5Av4w9Iw01xBHGrPr904cts84ubicFDe9pcRJSfaxLKfNjTmXCaj_OQ
+      p: 5x9oIl6usG4rJjRhPxqO4mmBwWNf0vhSZO4a8GiOhpWL4D1fNHQ-qoNg1bVW_ALqgw5RHb8kzhX54fnkiBahGjKUAos3n_LQW--z_5suwyhk3zRNK20CJ3U5xeS--gl0a0_amD5vU7CHKZUQIZASgF1MPYWhesE0LBJo8UMEGB8
+      q: 1s-RV-xiMfy73ZGMDX0AOUlD8RND5xXdzoboahwNysCgbHTk21r23ma6fgI3ne8Dsl1XnqmiINX-0O49RumsYWZD3l40fP3FbgcX0gn0yVbakEPBU1H6UuUDIyB40Wc_hPZUx3lr_QLajdEEeSp6m3TBOsJ_IBb95NC4FiuGXac
+      qi: O-eEALDl11QqgzmMjIDaz3hWW-VdR3tzZSaPkzCHitbld0QcUkUFaGE0ClB-AajLmCXWalQv8cXa2hhxbSwGe-lx97jcvdzLfcjYbqtOICeAm91y2QogdIFqwt9o886u8-1PFJvr9nxu9qpIM4pTmdtqJq1vDxYp6gChNbaZViY
+      use: enc
+    - alg: ES256
+      crv: P-256
+      d: KB7hXvxMgvDaSBJHdtkTnmixNabKBjStxEttqVikwkw
+      kid: "305704867708789308774885275018584042937"
+      kty: EC
+      use: sig
+      x: 2wrwP9bulax6TDLJb-rogQN2k_XfYOv3MbzGVXg1ERw
+      x5c:
+      - MIIBxTCCAWqgAwIBAgIRAOX8naq9VqFhuCt05ekSrbkwCgYIKoZIzj0EAwIwLDEUMBIGA1UEChMLQ2xvdWRlbnRpdHkxFDASBgNVBAMTC0Nsb3VkZW50aXR5MB4XDTIwMTAyNjE0NDMzNVoXDTIwMTEyNjE0NDMzNVowLDEUMBIGA1UEChMLQ2xvdWRlbnRpdHkxFDASBgNVBAMTC0Nsb3VkZW50aXR5MFkwEwYHKoZIzj0CAQYIKoZIzj0DAQcDQgAE2wrwP9bulax6TDLJb+rogQN2k/XfYOv3MbzGVXg1ERwCkND8yd21ik/kUVWjq9MsND1Auxz54hKukmpjF6uE4aNtMGswDgYDVR0PAQH/BAQDAgKkMBMGA1UdJQQMMAoGCCsGAQUFBwMBMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFOADTOvchihhtEzqs1nBJ5xDr6xpMBQGA1UdEQQNMAuCCWxvY2FsaG9zdDAKBggqhkjOPQQDAgNJADBGAiEAkDHRfF8fhjZNMVEm9bNUvuIuf9XTbudsRJKfeAkwk4YCIQDdjHfDhpEyU5fYz/3FkYY6KTIqEsPcbiY7s8TrI4wswg==
+      x5t: XB50MJ86v-4uGGtk_8tCqvtMJhA
+      x5t#S256: stfdC-8PE6oVRNrVY4tUu67mtpc-tPr3WGgp19ukfiQ
+      "y": ApDQ_MndtYpP5FFVo6vTLDQ9QLsc-eISrpJqYxerhOE
+  key_type: ecdsa
+  name: System
+  profile: default
+  refresh_token_ttl: 720h0m0s
+  root_cas: |-
+    -----BEGIN CERTIFICATE-----
+    MIIDfjCCAmagAwIBAgIUOUpaw12GID2Nezfy0NxbPsoUFCYwDQYJKoZIhvcNAQEL
+    BQAwVzELMAkGA1UEBhMCVVMxEzARBgNVBAgTCldhc2hpbmd0b24xEDAOBgNVBAcT
+    B1NlYXR0bGUxFDASBgNVBAoTC0Nsb3VkZW50aXR5MQswCQYDVQQLEwJDQTAeFw0y
+    MDAxMjEwODE2MDBaFw0yNTAxMTkwODE2MDBaMFcxCzAJBgNVBAYTAlVTMRMwEQYD
+    VQQIEwpXYXNoaW5ndG9uMRAwDgYDVQQHEwdTZWF0dGxlMRQwEgYDVQQKEwtDbG91
+    ZGVudGl0eTELMAkGA1UECxMCQ0EwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEK
+    AoIBAQCgKWd2cs6yjLR+Q+eF0c76/WDT33rX6s9bbxJCKUKqDa6ZQ5v4xomkj7Df
+    d/UZrScgih4LHrIMp5eVPR2WzFJi5poKMjw8nSqLQetEKBYxhT2ewyZPV4mYpmUI
+    BCp15/oyM31RsaOrq3OeFQ1hWUbDOvStDY8iN2DqmVucaLDBntowpuWocZf8BzjN
+    bhz8FzFq5sUqkG9UzcvFMnwEvmaM5Y0DlNTZ63PfdE1VMnb+YRnebpXq3sl2ZCkO
+    XPs5iNgxKDxokXyCm4CnQk0aS2KSNJkSwf3VytlXeyZSNvFRmj3aF4pAJjzhIc20
+    EKKGHQqXBm2ZSyEoIHvvOHCUQrkrAgMBAAGjQjBAMA4GA1UdDwEB/wQEAwIBBjAP
+    BgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBSyk7SH5VPdAnGsGS7qjNiJw4f9FTAN
+    BgkqhkiG9w0BAQsFAAOCAQEAEof8imuaaTk+09PiQ9mnrwrGwMQ908lr883OTpm3
+    Cm6RHoyYKziDk2OhhyQQL5PwcZc5M8t2s192KDt27F3fgVQzfdsRmWK8XzUFPLC+
+    0VYUQVMDuLqFHm53JaSf+hAGOD+V636RDXPsA65ZRwq7R1Bjnv5AC1MtjeuoCASf
+    OVWiscJ2KhX28j54nMXDE1S86fm9Q2ruFYbygEh0nx27q5rIEmkbeAkXK7pIKU1x
+    dmYY2gZKjhM/+6d07eCfhHvCdSTyqP8/5s8z8YTlyMM6tQs2nUZKIS8UmAw919QH
+    uPvsY1RKD0+ullEX65YLpfdEfTb6klv424GtRMFyP0omRQ==
+    -----END CERTIFICATE-----
+  secret: 6Kz4iMgGQLCcKK9p30AbIPsZl5QX_Dh_f8syrceLp6I
+  subject_identifier_algorithm_salt: TXrrBgQgAk2exlQs-wHLIuRaIzWqjJDLjGuNItH60B8
+  subject_identifier_types:
+  - public
+  - pairwise
+  tenant_id: default
+  token_endpoint_authn_methods:
+  - none
+  - client_secret_basic
+  - client_secret_post
+  - client_secret_jwt
+  - private_key_jwt
+  - tls_client_auth
+  - self_signed_tls_client_auth
+  type: system
+- access_token_strategy: jwt
+  access_token_ttl: 1h0m0s
+  authorization_code_ttl: 10m0s
+  color: '#393954'
+  cookie_max_age: 1h0m0s
+  dynamic_client_registration:
+    initial_access_token: {}
+    payload:
+      format: json
+      jws_payload:
+        jwks:
+          keys: null
+    software_statement:
+      jwks:
+        keys: null
+  grant_types:
+  - client_credentials
+  id: system
+  id_token_ttl: 1h0m0s
+  issuer_url: https://localhost:8443/system/system
+  jwks:
+    keys:
+    - alg: RSA-OAEP-256
+      d: 2TgiReXlAwjfwIOfCtRJ0q1LLa68WDqik4-4MG8OpwOMg3A3i88kVs3ehovhJZH2lMY0PcsPmR9J9hcqah6bggf5ppg9XI0rhK4ELNnPR6Fu5AagF1ItWlR1iG-P2sE-MIv8VQQAWHCAmdXYOerWGHwbn5JMzk6hPw3AuxWdFpR9pfbQ0LUxsJiIorm9TfyUr97o9xhs1EbcMkZueZUv3tifOJkXIzeqeAvmVaOI8uPizsEuysDfjVH0qimErAQr23jkhcgUAgF4oqyRa0dHNQibyrOKgoAlCY-MBoQ62lX2C17bfViWTrAP7ZXTdGCejA7EO6ZbG-P16LfbLsvoZQ
+      dp: tDWfHWnW87ApOuzByUMQUuvJARpGZbru1b6F60xUeXy0bGl8jNdO9KDkgqCtlaWK2WFV1TiCXzigbpUHvKE5h3SVzG54dJOd5LHe575TcJLpIeSZrHcgHOiJoWOhUEC8Mh0RSWUeSnIvchogfKryGemRTrWiOq4OxGutrJe8PiE
+      dq: FRPnVC0OnxgSk0FniNFno-oveO1pqFVSfD78WEqeJdzN1lSdEN9NSyH-4PnBseRu8gmIcNqzOMu0JXy7HKhHWZOoZRuLVC_p2c_BXrgVA7jx9OK5rzfjQKmDWM9_vgiNKbJPHHAfkOjaXgB8LMn2QXdpDNMj1eFTu9o0LX1mIbs
+      e: AQAB
+      kid: c0i6nsrsie7t0um228cg
+      kty: RSA
+      "n": 5AxM-XOWk8v2aNdxtUUwduxPliNyzyqIsVVPeO3RHloLzF08ACzQwuKEBtmmqcyRHkOQD63W81X9C3d5ZYn1IpsFjyA0UIk7x0x7SRMCIEb0zm4gadiLL_Wh3wIrqvv0zbo_NzhjnxL4lTOYDIMdXSlVaJf7T6ARxaf8MqGiaNul2kLCm9GJJ2E1q92O1jpYJ65K5OA-DZtwBeJSQ0V85ARfFLbIzWhQBiDWfbrgDG-5ymNuhzf7K75fabAgFKgrtm7JzTfE_3z4t9MOVG3GawMBi6zbL44DbE_0m-uRtMhAEa5bYHWToKoOEyqaMZ8N7g94MephVK2FiwZIUk4W4Q
+      p: 7PdOQPh2Kpt5cPM-p4OKwXBSvgYevIjbrbiklK46DRK6G-51eNQsxNPVHlon5Cfxh78nUTAyvyHGgknAJwAyLRvYjrEMGLeG_LYi0BK2hdOWv46QkLp0o2yY6U2tQv1aFlG1FRJdxL-ejZF6KKg45USuMDHj0Ba7JLUPVBnZ0Kc
+      q: 9l2dqHJ0EUpE6WYUdu8sZLY8UX4tdoZzxFj3nJpACIkj--lTkyuE1jDx768I4xrWywOJlTbWeX2OAK3j2OO9D1dXSS-MkPkEJGqeLaHXuK58ulAEeMoZrzjAmM7C1_jXPUskmwRWbjxTaLscgKsUYfcTJB-f-9pE_wnRUwf5BTc
+      qi: xRXkMa8i-GLjz93hZW9vF4YhedfNNrmhIkC3t0xx-pdQ5hr4dDN1z1R4DdMiPRQiS9zTB1AQpC3ubY_wmb4U3TtjBtTnHHUnX8OUIXkPshzpdyHFqVQGZPRogRm0qqPiF_J6yrMI7YJe0jW6dqfv91oUisIOtY6C4gbHjIad5JU
+      use: enc
+    - alg: ES256
+      crv: P-256
+      d: yk5vE5Mv5-vVnxcfcHzU2HKTA8bvlsUGtwu22ELZSsQ
+      kid: "20633649247157965333760408779074266381"
+      kty: EC
+      use: sig
+      x: zkMB1zhirYa2onm9056CcfEzJWj7Ar1_SDVgFhRzDmo
+      x5c:
+      - MIIBwzCCAWmgAwIBAgIQD4Xlc5HscbAPiE6oPANlDTAKBggqhkjOPQQDAjAsMRQwEgYDVQQKEwtDbG91ZGVudGl0eTEUMBIGA1UEAxMLQ2xvdWRlbnRpdHkwHhcNMjAxMDI2MTQ0MzM1WhcNMjAxMTI2MTQ0MzM1WjAsMRQwEgYDVQQKEwtDbG91ZGVudGl0eTEUMBIGA1UEAxMLQ2xvdWRlbnRpdHkwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAATOQwHXOGKthraieb3TnoJx8TMlaPsCvX9INWAWFHMOakz+4K7eIemnuFP+9enx9rGwspL5d26fPbdK3YF8Tjx3o20wazAOBgNVHQ8BAf8EBAMCAqQwEwYDVR0lBAwwCgYIKwYBBQUHAwEwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQU/zbJJGTnGPvprXl4AyqzVOpkjmAwFAYDVR0RBA0wC4IJbG9jYWxob3N0MAoGCCqGSM49BAMCA0gAMEUCIQDG7+1FUS4sjUccCysOPdMmBU93Tlt+GrLW/rsxJITLBgIgI8LMsUbDXK6ECJ3r5pYX5GeczE5kHl5tWb6+xha+mrs=
+      x5t: 735PBNIKobM8jbZ3ViFrdaTnXP8
+      x5t#S256: Xj7CZ9ZDpA8RaO1k-0jxdOaRPaHMY1IrR7MRBhKujlM
+      "y": TP7grt4h6ae4U_716fH2sbCykvl3bp89t0rdgXxOPHc
+  key_type: ecdsa
+  name: System
+  profile: default
+  refresh_token_ttl: 720h0m0s
+  secret: TkDsdkrxV_oIFfP-MXAitsyxyL5_gPLSWuJjW4qQOHU
+  subject_identifier_algorithm_salt: pje-WVsdzxIafWIA5ru20RbYrUu4trzS6UlEJrUHr98
+  subject_identifier_types:
+  - public
+  - pairwise
+  tenant_id: system
+  token_endpoint_authn_methods:
+  - client_secret_basic
+  - client_secret_post
+  - client_secret_jwt
+  - private_key_jwt
+  - self_signed_tls_client_auth
+  - tls_client_auth
+  - none
+  type: system
+services:
+- audience: spiffe://localhost/system/system/bube15t8739jub0p4epg
+  authorization_server_id: system
+  id: bube15t8739jub0p4epg
+  name: Profile
+  scopes:
+  - authorization_server_id: system
+    description: This scope value requests access to the email and email_verified
+      claims.
+    display_name: Email
+    id: bube15t8739jub0p4eq0
+    name: email
+    tenant_id: system
+  - authorization_server_id: system
+    description: This scope value requests access to the phone_number and phone_number_verified
+      claims.
+    display_name: Phone
+    id: bube15t8739jub0p4eqg
+    name: phone
+    tenant_id: system
+  - authorization_server_id: system
+    description: This scope value requests access to the address claim.
+    display_name: Address
+    id: bube15t8739jub0p4er0
+    name: address
+    tenant_id: system
+  - authorization_server_id: system
+    description: 'This scope value requests access to the end-user''s default profile
+      claims, which are: name, family_name, given_name, middle_name, nickname, preferred_username,
+      profile, picture, website, gender, birthdate, zoneinfo, locale, and updated_at.'
+    display_name: Profile
+    id: bube15t8739jub0p4erg
+    name: profile
+    tenant_id: system
+  - authorization_server_id: system
+    description: This scope value requests access to the sub claim which uniquely
+      identifies the user.
+    display_name: OpenID
+    id: bube15t8739jub0p4es0
+    name: openid
+    tenant_id: system
+  - authorization_server_id: system
+    description: This scope value requests offline access using refresh token.
+    display_name: Offline access
+    id: bube15t8739jub0p4esg
+    name: offline_access
+    tenant_id: system
+  system: true
+  tenant_id: system
+- audience: spiffe://localhost/system/system/bube15t8739jub0p4et0
+  authorization_server_id: system
+  id: bube15t8739jub0p4et0
+  name: User Privacy & Consent
+  scopes:
+  - authorization_server_id: system
+    display_name: View consents
+    id: bube15t8739jub0p4etg
+    name: view_consents
+    tenant_id: system
+  - authorization_server_id: system
+    display_name: Manage consents
+    id: bube15t8739jub0p4eu0
+    name: manage_consents
+    tenant_id: system
+  system: true
+  tenant_id: system
+- audience: spiffe://localhost/system/system/bube15t8739jub0p4eug
+  authorization_server_id: system
+  id: bube15t8739jub0p4eug
+  name: OAuth2
+  scopes:
+  - authorization_server_id: system
+    display_name: Introspect tokens
+    id: bube15t8739jub0p4ev0
+    name: introspect_tokens
+    tenant_id: system
+  - authorization_server_id: system
+    display_name: Revoke tokens
+    id: bube15t8739jub0p4evg
+    name: revoke_tokens
+    tenant_id: system
+  - authorization_server_id: system
+    display_name: List clients with access
+    id: bube15t8739jub0p4f00
+    name: list_clients_with_access
+    tenant_id: system
+  - authorization_server_id: system
+    display_name: Revoke client access
+    id: bube15t8739jub0p4f0g
+    name: revoke_client_access
+    tenant_id: system
+  - authorization_server_id: system
+    description: Allows to register client using dynamic client registration endpoint
+      when it's configured to require initial access token
+    display_name: Use Dynamic Client Registration
+    id: bube15t8739jub0p4f10
+    name: dcr_register
+    tenant_id: system
+  system: true
+  tenant_id: system
+- audience: spiffe://localhost/default/system/bube15t8739jub0p4fdg
+  authorization_server_id: system
+  id: bube15t8739jub0p4fdg
+  name: Profile
+  scopes:
+  - authorization_server_id: system
+    description: This scope value requests access to the email and email_verified
+      claims.
+    display_name: Email
+    id: bube15t8739jub0p4fe0
+    name: email
+    tenant_id: default
+  - authorization_server_id: system
+    description: This scope value requests access to the phone_number and phone_number_verified
+      claims.
+    display_name: Phone
+    id: bube15t8739jub0p4feg
+    name: phone
+    tenant_id: default
+  - authorization_server_id: system
+    description: This scope value requests access to the address claim.
+    display_name: Address
+    id: bube15t8739jub0p4ff0
+    name: address
+    tenant_id: default
+  - authorization_server_id: system
+    description: 'This scope value requests access to the end-user''s default profile
+      claims, which are: name, family_name, given_name, middle_name, nickname, preferred_username,
+      profile, picture, website, gender, birthdate, zoneinfo, locale, and updated_at.'
+    display_name: Profile
+    id: bube15t8739jub0p4ffg
+    name: profile
+    tenant_id: default
+  - authorization_server_id: system
+    description: This scope value requests access to the sub claim which uniquely
+      identifies the user.
+    display_name: OpenID
+    id: bube15t8739jub0p4fg0
+    name: openid
+    tenant_id: default
+  - authorization_server_id: system
+    description: This scope value requests offline access using refresh token.
+    display_name: Offline access
+    id: bube15t8739jub0p4fgg
+    name: offline_access
+    tenant_id: default
+  system: true
+  tenant_id: default
+- audience: spiffe://localhost/default/system/bube15t8739jub0p4fh0
+  authorization_server_id: system
+  id: bube15t8739jub0p4fh0
+  name: User Privacy & Consent
+  scopes:
+  - authorization_server_id: system
+    display_name: View consents
+    id: bube15t8739jub0p4fhg
+    name: view_consents
+    tenant_id: default
+  - authorization_server_id: system
+    display_name: Manage consents
+    id: bube15t8739jub0p4fi0
+    name: manage_consents
+    tenant_id: default
+  system: true
+  tenant_id: default
+- audience: spiffe://localhost/default/system/bube15t8739jub0p4fig
+  authorization_server_id: system
+  id: bube15t8739jub0p4fig
+  name: OAuth2
+  scopes:
+  - authorization_server_id: system
+    display_name: Introspect tokens
+    id: bube15t8739jub0p4fj0
+    name: introspect_tokens
+    tenant_id: default
+  - authorization_server_id: system
+    display_name: Revoke tokens
+    id: bube15t8739jub0p4fjg
+    name: revoke_tokens
+    tenant_id: default
+  - authorization_server_id: system
+    display_name: List clients with access
+    id: bube15t8739jub0p4fk0
+    name: list_clients_with_access
+    tenant_id: default
+  - authorization_server_id: system
+    display_name: Revoke client access
+    id: bube15t8739jub0p4fkg
+    name: revoke_client_access
+    tenant_id: default
+  - authorization_server_id: system
+    description: Allows to register client using dynamic client registration endpoint
+      when it's configured to require initial access token
+    display_name: Use Dynamic Client Registration
+    id: bube15t8739jub0p4fl0
+    name: dcr_register
+    tenant_id: default
+  system: true
+  tenant_id: default
+- audience: spiffe://localhost/default/system/bube15t8739jub0p4flg
+  authorization_server_id: system
+  id: bube15t8739jub0p4flg
+  name: Login and Scope Grant
+  scopes:
+  - authorization_server_id: system
+    id: bube15t8739jub0p4fm0
+    name: manage_logins
+    tenant_id: default
+  - authorization_server_id: system
+    id: bube15t8739jub0p4fmg
+    name: manage_scope_grants
+    tenant_id: default
+  system: true
+  tenant_id: default
+- audience: spiffe://localhost/default/system/bube15t8739jub0p4fn0
+  authorization_server_id: system
+  id: bube15t8739jub0p4fn0
+  name: Gateway
+  scopes:
+  - authorization_server_id: system
+    id: bube15t8739jub0p4fng
+    name: read_gateway_configuration
+    tenant_id: default
+  - authorization_server_id: system
+    id: bube15t8739jub0p4fo0
+    name: write_gateway_configuration
+    tenant_id: default
+  - authorization_server_id: system
+    id: bube15t8739jub0p4fog
+    name: push_gateway_requests
+    tenant_id: default
+  system: true
+  tenant_id: default
+- audience: spiffe://localhost/default/admin/bube15t8739jub0p4g50
+  authorization_server_id: admin
+  id: bube15t8739jub0p4g50
+  name: Profile
+  scopes:
+  - authorization_server_id: admin
+    description: This scope value requests access to the email and email_verified
+      claims.
+    display_name: Email
+    id: bube15t8739jub0p4g5g
+    name: email
+    tenant_id: default
+  - authorization_server_id: admin
+    description: This scope value requests access to the phone_number and phone_number_verified
+      claims.
+    display_name: Phone
+    id: bube15t8739jub0p4g60
+    name: phone
+    tenant_id: default
+  - authorization_server_id: admin
+    description: This scope value requests access to the address claim.
+    display_name: Address
+    id: bube15t8739jub0p4g6g
+    name: address
+    tenant_id: default
+  - authorization_server_id: admin
+    description: 'This scope value requests access to the end-user''s default profile
+      claims, which are: name, family_name, given_name, middle_name, nickname, preferred_username,
+      profile, picture, website, gender, birthdate, zoneinfo, locale, and updated_at.'
+    display_name: Profile
+    id: bube15t8739jub0p4g70
+    name: profile
+    tenant_id: default
+  - authorization_server_id: admin
+    description: This scope value requests access to the sub claim which uniquely
+      identifies the user.
+    display_name: OpenID
+    id: bube15t8739jub0p4g7g
+    name: openid
+    tenant_id: default
+  - authorization_server_id: admin
+    description: This scope value requests offline access using refresh token.
+    display_name: Offline access
+    id: bube15t8739jub0p4g80
+    name: offline_access
+    tenant_id: default
+  system: true
+  tenant_id: default
+- audience: spiffe://localhost/default/admin/bube15t8739jub0p4g8g
+  authorization_server_id: admin
+  id: bube15t8739jub0p4g8g
+  name: User Privacy & Consent
+  scopes:
+  - authorization_server_id: admin
+    display_name: View consents
+    id: bube15t8739jub0p4g90
+    name: view_consents
+    tenant_id: default
+  - authorization_server_id: admin
+    display_name: Manage consents
+    id: bube15t8739jub0p4g9g
+    name: manage_consents
+    tenant_id: default
+  system: true
+  tenant_id: default
+- audience: spiffe://localhost/default/admin/bube15t8739jub0p4ga0
+  authorization_server_id: admin
+  id: bube15t8739jub0p4ga0
+  name: OAuth2
+  scopes:
+  - authorization_server_id: admin
+    display_name: Introspect tokens
+    id: bube15t8739jub0p4gag
+    name: introspect_tokens
+    tenant_id: default
+  - authorization_server_id: admin
+    display_name: Revoke tokens
+    id: bube15t8739jub0p4gb0
+    name: revoke_tokens
+    tenant_id: default
+  - authorization_server_id: admin
+    display_name: List clients with access
+    id: bube15t8739jub0p4gbg
+    name: list_clients_with_access
+    tenant_id: default
+  - authorization_server_id: admin
+    display_name: Revoke client access
+    id: bube15t8739jub0p4gc0
+    name: revoke_client_access
+    tenant_id: default
+  - authorization_server_id: admin
+    description: Allows to register client using dynamic client registration endpoint
+      when it's configured to require initial access token
+    display_name: Use Dynamic Client Registration
+    id: bube15t8739jub0p4gcg
+    name: dcr_register
+    tenant_id: default
+  system: true
+  tenant_id: default
+- audience: spiffe://localhost/default/developer/bube15t8739jub0p4gp0
+  authorization_server_id: developer
+  id: bube15t8739jub0p4gp0
+  name: Profile
+  scopes:
+  - authorization_server_id: developer
+    description: This scope value requests access to the email and email_verified
+      claims.
+    display_name: Email
+    id: bube15t8739jub0p4gpg
+    name: email
+    tenant_id: default
+  - authorization_server_id: developer
+    description: This scope value requests access to the phone_number and phone_number_verified
+      claims.
+    display_name: Phone
+    id: bube15t8739jub0p4gq0
+    name: phone
+    tenant_id: default
+  - authorization_server_id: developer
+    description: This scope value requests access to the address claim.
+    display_name: Address
+    id: bube15t8739jub0p4gqg
+    name: address
+    tenant_id: default
+  - authorization_server_id: developer
+    description: 'This scope value requests access to the end-user''s default profile
+      claims, which are: name, family_name, given_name, middle_name, nickname, preferred_username,
+      profile, picture, website, gender, birthdate, zoneinfo, locale, and updated_at.'
+    display_name: Profile
+    id: bube15t8739jub0p4gr0
+    name: profile
+    tenant_id: default
+  - authorization_server_id: developer
+    description: This scope value requests access to the sub claim which uniquely
+      identifies the user.
+    display_name: OpenID
+    id: bube15t8739jub0p4grg
+    name: openid
+    tenant_id: default
+  - authorization_server_id: developer
+    description: This scope value requests offline access using refresh token.
+    display_name: Offline access
+    id: bube15t8739jub0p4gs0
+    name: offline_access
+    tenant_id: default
+  system: true
+  tenant_id: default
+- audience: spiffe://localhost/default/developer/bube15t8739jub0p4gsg
+  authorization_server_id: developer
+  id: bube15t8739jub0p4gsg
+  name: User Privacy & Consent
+  scopes:
+  - authorization_server_id: developer
+    display_name: View consents
+    id: bube15t8739jub0p4gt0
+    name: view_consents
+    tenant_id: default
+  - authorization_server_id: developer
+    display_name: Manage consents
+    id: bube15t8739jub0p4gtg
+    name: manage_consents
+    tenant_id: default
+  system: true
+  tenant_id: default
+- audience: spiffe://localhost/default/developer/bube15t8739jub0p4gu0
+  authorization_server_id: developer
+  id: bube15t8739jub0p4gu0
+  name: OAuth2
+  scopes:
+  - authorization_server_id: developer
+    display_name: Introspect tokens
+    id: bube15t8739jub0p4gug
+    name: introspect_tokens
+    tenant_id: default
+  - authorization_server_id: developer
+    display_name: Revoke tokens
+    id: bube15t8739jub0p4gv0
+    name: revoke_tokens
+    tenant_id: default
+  - authorization_server_id: developer
+    display_name: List clients with access
+    id: bube15t8739jub0p4gvg
+    name: list_clients_with_access
+    tenant_id: default
+  - authorization_server_id: developer
+    display_name: Revoke client access
+    id: bube15t8739jub0p4h00
+    name: revoke_client_access
+    tenant_id: default
+  - authorization_server_id: developer
+    description: Allows to register client using dynamic client registration endpoint
+      when it's configured to require initial access token
+    display_name: Use Dynamic Client Registration
+    id: bube15t8739jub0p4h0g
+    name: dcr_register
+    tenant_id: default
+  system: true
+  tenant_id: default
+- audience: spiffe://localhost/default/openbanking/bugkg8q3g9kregtu04l0
+  authorization_server_id: openbanking
+  id: bugkg8q3g9kregtu04l0
+  name: Profile
+  scopes:
+  - authorization_server_id: openbanking
+    description: This scope value requests access to the email and email_verified
+      claims.
+    display_name: Email
+    id: bugkg8q3g9kregtu04lg
+    name: email
+    tenant_id: default
+  - authorization_server_id: openbanking
+    description: This scope value requests access to the phone_number and phone_number_verified
+      claims.
+    display_name: Phone
+    id: bugkg8q3g9kregtu04m0
+    name: phone
+    tenant_id: default
+  - authorization_server_id: openbanking
+    description: This scope value requests access to the address claim.
+    display_name: Address
+    id: bugkg8q3g9kregtu04mg
+    name: address
+    tenant_id: default
+  - authorization_server_id: openbanking
+    description: 'This scope value requests access to the end-user''s default profile
+      claims, which are: name, family_name, given_name, middle_name, nickname, preferred_username,
+      profile, picture, website, gender, birthdate, zoneinfo, locale, and updated_at.'
+    display_name: Profile
+    id: bugkg8q3g9kregtu04n0
+    name: profile
+    tenant_id: default
+  - authorization_server_id: openbanking
+    description: This scope value requests access to the sub claim which uniquely
+      identifies the user.
+    display_name: OpenID
+    id: bugkg8q3g9kregtu04ng
+    name: openid
+    tenant_id: default
+  - authorization_server_id: openbanking
+    description: This scope value requests offline access using refresh token.
+    display_name: Offline access
+    id: bugkg8q3g9kregtu04o0
+    name: offline_access
+    tenant_id: default
+  system: true
+  tenant_id: default
+- audience: spiffe://localhost/default/openbanking/bugkg8q3g9kregtu04og
+  authorization_server_id: openbanking
+  id: bugkg8q3g9kregtu04og
+  name: User Privacy & Consent
+  scopes:
+  - authorization_server_id: openbanking
+    description: Allows to view user consents
+    display_name: View consents
+    id: bugkg8q3g9kregtu04p0
+    name: view_consents
+    tenant_id: default
+  - authorization_server_id: openbanking
+    description: Allows to grant and revoke user consents
+    display_name: Manage consents
+    id: bugkg8q3g9kregtu04pg
+    name: manage_consents
+    tenant_id: default
+  system: true
+  tenant_id: default
+- audience: spiffe://localhost/default/openbanking/bugkg8q3g9kregtu04q0
+  authorization_server_id: openbanking
+  id: bugkg8q3g9kregtu04q0
+  name: OAuth2
+  scopes:
+  - authorization_server_id: openbanking
+    description: Allows to introspect tokens
+    display_name: Introspect tokens
+    id: bugkg8q3g9kregtu04qg
+    name: introspect_tokens
+    tenant_id: default
+  - authorization_server_id: openbanking
+    description: Allows to revoke tokens
+    display_name: Revoke tokens
+    id: bugkg8q3g9kregtu04r0
+    name: revoke_tokens
+    tenant_id: default
+  - authorization_server_id: openbanking
+    description: Allows to list clients that user granted access
+    display_name: List clients with access
+    id: bugkg8q3g9kregtu04rg
+    name: list_clients_with_access
+    tenant_id: default
+  - authorization_server_id: openbanking
+    description: Allows to revoke client access granted by user and remove all tokens
+    display_name: Revoke client access
+    id: bugkg8q3g9kregtu04s0
+    name: revoke_client_access
+    tenant_id: default
+  - authorization_server_id: openbanking
+    description: Allows to register client using dynamic client registration endpoint
+      when it's configured to require initial access token
+    display_name: Use Dynamic Client Registration
+    id: bugkg8q3g9kregtu04sg
+    name: dcr_register
+    tenant_id: default
+  system: true
+  tenant_id: default
+- audience: spiffe://localhost/default/openbanking/bugkg8q3g9kregtu04t0
+  authorization_server_id: openbanking
+  id: bugkg8q3g9kregtu04t0
+  name: Openbanking
+  scopes:
+  - authorization_server_id: openbanking
+    description: Ability to read Accounts information
+    display_name: Accounts
+    id: bugkg8q3g9kregtu04tg
+    name: accounts
+    tenant_id: default
+  - authorization_server_id: openbanking
+    description: Ability to perform payments
+    display_name: Payments
+    id: bugkg8q3g9kregtu0456
+    name: payments
+    tenant_id: default
+  - authorization_server_id: openbanking
+    display_name: introspect_openbanking_tokens
+    id: bukj5c6k7qdmm5ppbi40
+    name: introspect_openbanking_tokens
+    tenant_id: default
+  system: true
+  tenant_id: default
+- audience: spiffe://localhost/default/system/bui20gpjkpv9e38d5jjg
+  authorization_server_id: system
+  id: bui20gpjkpv9e38d5jjg
+  name: Openbanking
+  scopes:
+  - authorization_server_id: system
+    display_name: manage_openbanking_consents
+    id: bui20p1jkpv9e38d5jlg
+    name: manage_openbanking_consents
+    tenant_id: default
+  tenant_id: default
+- audience: spiffe://localhost/default/bank-customers/bv0na68mekk67nekvptg
+  authorization_server_id: bank-customers
+  id: bv0na68mekk67nekvptg
+  name: Profile
+  scopes:
+  - authorization_server_id: bank-customers
+    description: This scope value requests access to the email and email_verified
+      claims.
+    display_name: Email
+    id: bv0na68mekk67nekvpu0
+    name: email
+    tenant_id: default
+  - authorization_server_id: bank-customers
+    description: This scope value requests access to the phone_number and phone_number_verified
+      claims.
+    display_name: Phone
+    id: bv0na68mekk67nekvpug
+    name: phone
+    tenant_id: default
+  - authorization_server_id: bank-customers
+    description: This scope value requests access to the address claim.
+    display_name: Address
+    id: bv0na68mekk67nekvpv0
+    name: address
+    tenant_id: default
+  - authorization_server_id: bank-customers
+    description: 'This scope value requests access to the end-user''s default profile
+      claims, which are: name, family_name, given_name, middle_name, nickname, preferred_username,
+      profile, picture, website, gender, birthdate, zoneinfo, locale, and updated_at.'
+    display_name: Profile
+    id: bv0na68mekk67nekvpvg
+    name: profile
+    tenant_id: default
+  - authorization_server_id: bank-customers
+    description: This scope value requests access to the sub claim which uniquely
+      identifies the user.
+    display_name: OpenID
+    id: bv0na68mekk67nekvq00
+    name: openid
+    tenant_id: default
+  - authorization_server_id: bank-customers
+    description: This scope value requests offline access using refresh token.
+    display_name: Offline access
+    id: bv0na68mekk67nekvq0g
+    name: offline_access
+    tenant_id: default
+  system: true
+  tenant_id: default
+- audience: spiffe://localhost/default/bank-customers/bv0na68mekk67nekvq10
+  authorization_server_id: bank-customers
+  id: bv0na68mekk67nekvq10
+  name: User Privacy & Consent
+  scopes:
+  - authorization_server_id: bank-customers
+    description: Allows to view user consents
+    display_name: View consents
+    id: bv0na68mekk67nekvq1g
+    name: view_consents
+    tenant_id: default
+  - authorization_server_id: bank-customers
+    description: Allows to grant and revoke user consents
+    display_name: Manage consents
+    id: bv0na68mekk67nekvq20
+    name: manage_consents
+    tenant_id: default
+  system: true
+  tenant_id: default
+- audience: spiffe://localhost/default/bank-customers/bv0na68mekk67nekvq2g
+  authorization_server_id: bank-customers
+  id: bv0na68mekk67nekvq2g
+  name: OAuth2
+  scopes:
+  - authorization_server_id: bank-customers
+    description: Allows to introspect tokens
+    display_name: Introspect tokens
+    id: bv0na68mekk67nekvq30
+    name: introspect_tokens
+    tenant_id: default
+  - authorization_server_id: bank-customers
+    description: Allows to revoke tokens
+    display_name: Revoke tokens
+    id: bv0na68mekk67nekvq3g
+    name: revoke_tokens
+    tenant_id: default
+  - authorization_server_id: bank-customers
+    description: Allows to list clients that user granted access
+    display_name: List clients with access
+    id: bv0na68mekk67nekvq40
+    name: list_clients_with_access
+    tenant_id: default
+  - authorization_server_id: bank-customers
+    description: Allows to revoke client access granted by user and remove all tokens
+    display_name: Revoke client access
+    id: bv0na68mekk67nekvq4g
+    name: revoke_client_access
+    tenant_id: default
+  - authorization_server_id: bank-customers
+    description: Allows to register client using dynamic client registration endpoint
+      when it's configured to require initial access token
+    display_name: Use Dynamic Client Registration
+    id: bv0na68mekk67nekvq50
+    name: dcr_register
+    tenant_id: default
+  system: true
+  tenant_id: default
+- audience: spiffe://localhost/default/bank-admins/bv2f7sqed9c9is80f230
+  authorization_server_id: bank-admins
+  id: bv2f7sqed9c9is80f230
+  name: Profile
+  scopes:
+  - authorization_server_id: bank-admins
+    description: This scope value requests access to the email and email_verified
+      claims.
+    display_name: Email
+    id: bv2f7sqed9c9is80f23g
+    name: email
+    tenant_id: default
+  - authorization_server_id: bank-admins
+    description: This scope value requests access to the phone_number and phone_number_verified
+      claims.
+    display_name: Phone
+    id: bv2f7sqed9c9is80f240
+    name: phone
+    tenant_id: default
+  - authorization_server_id: bank-admins
+    description: This scope value requests access to the address claim.
+    display_name: Address
+    id: bv2f7sqed9c9is80f24g
+    name: address
+    tenant_id: default
+  - authorization_server_id: bank-admins
+    description: 'This scope value requests access to the end-user''s default profile
+      claims, which are: name, family_name, given_name, middle_name, nickname, preferred_username,
+      profile, picture, website, gender, birthdate, zoneinfo, locale, and updated_at.'
+    display_name: Profile
+    id: bv2f7sqed9c9is80f250
+    name: profile
+    tenant_id: default
+  - authorization_server_id: bank-admins
+    description: This scope value requests access to the sub claim which uniquely
+      identifies the user.
+    display_name: OpenID
+    id: bv2f7sqed9c9is80f25g
+    name: openid
+    tenant_id: default
+  - authorization_server_id: bank-admins
+    description: This scope value requests offline access using refresh token.
+    display_name: Offline access
+    id: bv2f7sqed9c9is80f260
+    name: offline_access
+    tenant_id: default
+  system: true
+  tenant_id: default
+- audience: spiffe://localhost/default/bank-admins/bv2f7sqed9c9is80f26g
+  authorization_server_id: bank-admins
+  id: bv2f7sqed9c9is80f26g
+  name: User Privacy & Consent
+  scopes:
+  - authorization_server_id: bank-admins
+    description: Allows to view user consents
+    display_name: View consents
+    id: bv2f7sqed9c9is80f270
+    name: view_consents
+    tenant_id: default
+  - authorization_server_id: bank-admins
+    description: Allows to grant and revoke user consents
+    display_name: Manage consents
+    id: bv2f7sqed9c9is80f27g
+    name: manage_consents
+    tenant_id: default
+  system: true
+  tenant_id: default
+- audience: spiffe://localhost/default/bank-admins/bv2f7sqed9c9is80f280
+  authorization_server_id: bank-admins
+  id: bv2f7sqed9c9is80f280
+  name: OAuth2
+  scopes:
+  - authorization_server_id: bank-admins
+    description: Allows to introspect tokens
+    display_name: Introspect tokens
+    id: bv2f7sqed9c9is80f28g
+    name: introspect_tokens
+    tenant_id: default
+  - authorization_server_id: bank-admins
+    description: Allows to revoke tokens
+    display_name: Revoke tokens
+    id: bv2f7sqed9c9is80f290
+    name: revoke_tokens
+    tenant_id: default
+  - authorization_server_id: bank-admins
+    description: Allows to list clients that user granted access
+    display_name: List clients with access
+    id: bv2f7sqed9c9is80f29g
+    name: list_clients_with_access
+    tenant_id: default
+  - authorization_server_id: bank-admins
+    description: Allows to revoke client access granted by user and remove all tokens
+    display_name: Revoke client access
+    id: bv2f7sqed9c9is80f2a0
+    name: revoke_client_access
+    tenant_id: default
+  - authorization_server_id: bank-admins
+    description: Allows to register client using dynamic client registration endpoint
+      when it's configured to require initial access token
+    display_name: Use Dynamic Client Registration
+    id: bv2f7sqed9c9is80f2ag
+    name: dcr_register
+    tenant_id: default
+  system: true
+  tenant_id: default
+- audience: spiffe://localhost/default/system/bv340dbjknue62vuguqg
+  authorization_server_id: system
+  id: bv340dbjknue62vuguqg
+  name: Management
+  scopes:
+  - authorization_server_id: system
+    display_name: view_clients
+    id: bv340hrjknue62vugvf0
+    name: view_clients
+    tenant_id: default
+  tenant_id: default
+- audience: spiffe://localhost/default/financroo/bv3p4io557ouq8rha0fg
+  authorization_server_id: financroo
+  id: bv3p4io557ouq8rha0fg
+  name: Profile
+  scopes:
+  - authorization_server_id: financroo
+    description: This scope value requests access to the email and email_verified
+      claims.
+    display_name: Email
+    id: bv3p4io557ouq8rha0g0
+    name: email
+    tenant_id: default
+  - authorization_server_id: financroo
+    description: This scope value requests access to the phone_number and phone_number_verified
+      claims.
+    display_name: Phone
+    id: bv3p4io557ouq8rha0gg
+    name: phone
+    tenant_id: default
+  - authorization_server_id: financroo
+    description: This scope value requests access to the address claim.
+    display_name: Address
+    id: bv3p4io557ouq8rha0h0
+    name: address
+    tenant_id: default
+  - authorization_server_id: financroo
+    description: 'This scope value requests access to the end-user''s default profile
+      claims, which are: name, family_name, given_name, middle_name, nickname, preferred_username,
+      profile, picture, website, gender, birthdate, zoneinfo, locale, and updated_at.'
+    display_name: Profile
+    id: bv3p4io557ouq8rha0hg
+    name: profile
+    tenant_id: default
+  - authorization_server_id: financroo
+    description: This scope value requests access to the sub claim which uniquely
+      identifies the user.
+    display_name: OpenID
+    id: bv3p4io557ouq8rha0i0
+    name: openid
+    tenant_id: default
+  - authorization_server_id: financroo
+    description: This scope value requests offline access using refresh token.
+    display_name: Offline access
+    id: bv3p4io557ouq8rha0ig
+    name: offline_access
+    tenant_id: default
+  system: true
+  tenant_id: default
+- audience: spiffe://localhost/default/financroo/bv3p4io557ouq8rha0j0
+  authorization_server_id: financroo
+  id: bv3p4io557ouq8rha0j0
+  name: User Privacy & Consent
+  scopes:
+  - authorization_server_id: financroo
+    description: Allows to view user consents
+    display_name: View consents
+    id: bv3p4io557ouq8rha0jg
+    name: view_consents
+    tenant_id: default
+  - authorization_server_id: financroo
+    description: Allows to grant and revoke user consents
+    display_name: Manage consents
+    id: bv3p4io557ouq8rha0k0
+    name: manage_consents
+    tenant_id: default
+  system: true
+  tenant_id: default
+- audience: spiffe://localhost/default/financroo/bv3p4io557ouq8rha0kg
+  authorization_server_id: financroo
+  id: bv3p4io557ouq8rha0kg
+  name: OAuth2
+  scopes:
+  - authorization_server_id: financroo
+    description: Allows to introspect tokens
+    display_name: Introspect tokens
+    id: bv3p4io557ouq8rha0l0
+    name: introspect_tokens
+    tenant_id: default
+  - authorization_server_id: financroo
+    description: Allows to revoke tokens
+    display_name: Revoke tokens
+    id: bv3p4io557ouq8rha0lg
+    name: revoke_tokens
+    tenant_id: default
+  - authorization_server_id: financroo
+    description: Allows to list clients that user granted access
+    display_name: List clients with access
+    id: bv3p4io557ouq8rha0m0
+    name: list_clients_with_access
+    tenant_id: default
+  - authorization_server_id: financroo
+    description: Allows to revoke client access granted by user and remove all tokens
+    display_name: Revoke client access
+    id: bv3p4io557ouq8rha0mg
+    name: revoke_client_access
+    tenant_id: default
+  - authorization_server_id: financroo
+    description: Allows to register client using dynamic client registration endpoint
+      when it's configured to require initial access token
+    display_name: Use Dynamic Client Registration
+    id: bv3p4io557ouq8rha0n0
+    name: dcr_register
+    tenant_id: default
+  system: true
+  tenant_id: default
+tenants:
+- authentication_context_settings:
+    attributes:
+    - description: List of scopes
+      name: scp
+      type: string_array
+    - description: List of groups that user belongs to
+      name: groups
+      type: string_array
+    - description: Email
+      name: email
+      type: string
+    - description: Email verified
+      name: email_verified
+      type: bool
+    - description: Phone
+      name: phone_number
+      type: string
+    - description: Phone verified
+      name: phone_number_verified
+      type: bool
+    - description: Full mailing address
+      name: address.formatted
+      type: string
+    - description: Full street address
+      name: address.street_address
+      type: string
+    - description: City or locality
+      name: address.locality
+      type: string
+    - description: Stage, province, prefecture or region
+      name: address.region
+      type: string
+    - description: Country
+      name: address.country
+      type: string
+    - description: Postal code
+      name: address.postal_code
+      type: string
+    - description: Name
+      name: name
+      type: string
+    - description: Given name
+      name: given_name
+      type: string
+    - description: Middle name
+      name: middle_name
+      type: string
+    - description: Family name
+      name: family_name
+      type: string
+    - description: Nickname
+      name: nickname
+      type: string
+    - description: The primary username that represents the user
+      name: preferred_username
+      type: string
+    - description: URL of the profile page
+      name: profile
+      type: string
+    - description: URL of the profile picture
+      name: picture
+      type: string
+    - description: URL of the web page
+      name: website
+      type: string
+    - description: Gender
+      name: gender
+      type: string
+    - description: Birthdate
+      name: birthdate
+      type: string
+    - description: Zoneinfo
+      name: zoneinfo
+      type: string
+    - description: Locale
+      name: locale
+      type: string
+    - description: Last update
+      name: updated_at
+      type: number
+    - description: openbanking intent id
+      name: openbanking_intent_id
+      type: string
+  id: default
+  jwks:
+    keys:
+    - alg: ES256
+      crv: P-256
+      d: X-fyb3foLQBdRoj-GPNxWuav9oiHxriPnqV-TkpCxI4
+      kid: "51076151891499070092989142217049672266"
+      kty: EC
+      use: sig
+      x: o0t05csQYpl6o26ww9GT4OVREyBFIIlrUlle5dZKIO0
+      x5c:
+      - MIIBwjCCAWmgAwIBAgIQJmzotqlNrxVO2SPGIkaKSjAKBggqhkjOPQQDAjAsMRQwEgYDVQQKEwtDbG91ZGVudGl0eTEUMBIGA1UEAxMLQ2xvdWRlbnRpdHkwHhcNMjAxMDI2MTQ0MzM1WhcNMjAxMTI2MTQ0MzM1WjAsMRQwEgYDVQQKEwtDbG91ZGVudGl0eTEUMBIGA1UEAxMLQ2xvdWRlbnRpdHkwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAASjS3TlyxBimXqjbrDD0ZPg5VETIEUgiWtSWV7l1kog7SGe4G8XBNyoJ1PrMFdRBihUDsOZ45A5SQ7FBc47/aPWo20wazAOBgNVHQ8BAf8EBAMCAqQwEwYDVR0lBAwwCgYIKwYBBQUHAwEwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUTtUv5Ie3ojeVolTw+lOuHayyev8wFAYDVR0RBA0wC4IJbG9jYWxob3N0MAoGCCqGSM49BAMCA0cAMEQCIDX50o4DJZy1uVBwjwnN7fsOIZYMJtcVLMZoN/bSnnjGAiBouUpASbjHsUx5v33VmZBiufNGnjnoO30DsRuPz6JNvQ==
+      x5t: YRnegI80CvnTo4jSw-E7nO6PqXc
+      x5t#S256: w16uagJslkf67eS7flMCL92BxINQF-frFv4ZyCGVJFw
+      "y": IZ7gbxcE3KgnU-swV1EGKFQOw5njkDlJDsUFzjv9o9Y
+  name: default
+  styling:
+    colors: {}
+  url: https://localhost:8443/default
+- authentication_context_settings:
+    attributes:
+    - description: List of scopes
+      name: scp
+      type: string_array
+    - description: List of groups that user belongs to
+      name: groups
+      type: string_array
+    - description: Email
+      name: email
+      type: string
+    - description: Email verified
+      name: email_verified
+      type: bool
+    - description: Phone
+      name: phone_number
+      type: string
+    - description: Phone verified
+      name: phone_number_verified
+      type: bool
+    - description: Full mailing address
+      name: address.formatted
+      type: string
+    - description: Full street address
+      name: address.street_address
+      type: string
+    - description: City or locality
+      name: address.locality
+      type: string
+    - description: Stage, province, prefecture or region
+      name: address.region
+      type: string
+    - description: Country
+      name: address.country
+      type: string
+    - description: Postal code
+      name: address.postal_code
+      type: string
+    - description: Name
+      name: name
+      type: string
+    - description: Given name
+      name: given_name
+      type: string
+    - description: Middle name
+      name: middle_name
+      type: string
+    - description: Family name
+      name: family_name
+      type: string
+    - description: Nickname
+      name: nickname
+      type: string
+    - description: The primary username that represents the user
+      name: preferred_username
+      type: string
+    - description: URL of the profile page
+      name: profile
+      type: string
+    - description: URL of the profile picture
+      name: picture
+      type: string
+    - description: URL of the web page
+      name: website
+      type: string
+    - description: Gender
+      name: gender
+      type: string
+    - description: Birthdate
+      name: birthdate
+      type: string
+    - description: Zoneinfo
+      name: zoneinfo
+      type: string
+    - description: Locale
+      name: locale
+      type: string
+    - description: Last update
+      name: updated_at
+      type: number
+  id: system
+  jwks:
+    keys:
+    - alg: ES256
+      crv: P-256
+      d: Bvr-zA_OJFlQXPC5LqkQXBH9qgfCRU-bwWVV-fykWQs
+      kid: "47371647463746024431940681773388256704"
+      kty: EC
+      use: sig
+      x: 0gmSHotUGGWnoLzlwmzPHWgj4Dz_Lz0z4h2JwNuQg8k
+      x5c:
+      - MIIBwzCCAWmgAwIBAgIQI6NyizNzhC/EoWUu99nVwDAKBggqhkjOPQQDAjAsMRQwEgYDVQQKEwtDbG91ZGVudGl0eTEUMBIGA1UEAxMLQ2xvdWRlbnRpdHkwHhcNMjAxMDI2MTQ0MzM1WhcNMjAxMTI2MTQ0MzM1WjAsMRQwEgYDVQQKEwtDbG91ZGVudGl0eTEUMBIGA1UEAxMLQ2xvdWRlbnRpdHkwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAATSCZIei1QYZaegvOXCbM8daCPgPP8vPTPiHYnA25CDyVH20+nPxBG6BH1Fc8sFsIN4jxip95ItldJi2fFpLdjUo20wazAOBgNVHQ8BAf8EBAMCAqQwEwYDVR0lBAwwCgYIKwYBBQUHAwEwDwYDVR0TAQH/BAUwAwEB/zAdBgNVHQ4EFgQUoKmMbDQGCgMxngefgDQOoPC87UIwFAYDVR0RBA0wC4IJbG9jYWxob3N0MAoGCCqGSM49BAMCA0gAMEUCIFoxrNdC7NI0DLfw1MXgt+NT06EyEpRhFD3DivQoVcWIAiEA4SfzmFGX7WkU+YFvskYmAchQqYXlm5w/wAmGTzi/XAQ=
+      x5t: 8Fn-M550BswBtZ2iB2vYE0Ty6z0
+      x5t#S256: ILbB6LI4mMXLBNhyuNkU6h5k2-7iVJ2-MW9rD2-jBZ4
+      "y": UfbT6c_EEboEfUVzywWwg3iPGKn3ki2V0mLZ8Wkt2NQ
+  name: default
+  styling:
+    colors: {}
+  url: https://localhost:8443/system
+

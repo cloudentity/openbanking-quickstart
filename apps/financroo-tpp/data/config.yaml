@@ -1,0 +1,19 @@
+login:
+  tenant_id: default
+  server_id: financroo
+  client_id: bv3p4uo557ouq8rha2bg
+  root_ca: "/certs/ca.pem"
+  timeout: 5s
+banks:
+- id: gobank
+  url: http://bank:8070
+  acp_client:
+    tenant_id: default
+    server_id: openbanking
+    client_id: bugkgm23g9kregtu051g
+    cert_file: "/certs/tpp_cert.pem"
+    key_file: "/certs/tpp_key.pem"
+    root_ca: "/certs/ca.pem"
+    timeout: 5s
+feature_flags:
+  investments: false

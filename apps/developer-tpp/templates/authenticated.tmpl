@@ -1,0 +1,71 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+
+<html>
+<head>
+  <link rel="stylesheet" href="/assets/material-components-web.min.css">
+  <script src="/assets/material-components-web.min.js"></script>
+  <link href="/assets/fonts.css" rel="stylesheet">
+  <link href="/assets/material-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <title>TPP sample app</title>
+</head>
+
+<body>
+<div class="aut-banner">
+  <div class="aut-banner-logo">
+    <img src="/assets/images/cloudentity-logo-short.png" alt="Cloudentity ACP">
+    <span>TPP sample app</span>
+  </div>
+  <div class="aut-banner-contact">
+    <button class="mdc-button mdc-button--raised" onclick="onRetry()">
+      <div class="mdc-button__ripple"></div>
+      <span class="mdc-button__label">Try again</span>
+    </button>
+  </div>
+</div>
+
+<div class="aut-container" style="padding: 5px; width: 1024px;">
+  <div class="aut-demo-info">
+    <div class="material-icons aut-demo-info-icon">error_outline</div>
+    <div class="aut-demo-info-text">
+      <p style="color: rgba(0, 0, 0, 0.87); font-weight: 500">Authenticated</p>
+      <p style="color: rgba(0, 0, 0, 0.6);">User has been authenticated. Authorization code has been exchanged for an access token using mtls.</p>
+    </div>
+  </div>
+</div>
+<div class="aut-container" style="padding: 5px; width: 1024px;">
+  <p>Access token is opaque:</p>
+  <pre>{{ .access_token }}</pre>
+
+  <p style="margin-top:32px">Addtionally, id_token has been issued:</p>
+  <pre>{{ .id_token_raw }}</pre>
+  <pre>{{ .id_token_header }}</pre>
+  <pre>{{ .id_token_payload }}</pre>
+
+  <p style="margin-top:32px">TPP can call userinfo endpoint:</p>
+  <pre>{{ .userinfo }}</pre>
+
+  <p style="margin-top:32px">Now TPP can make a call to bank's /accounts API</p>
+  <pre>{{ .accounts_raw }}</pre>
+
+  <p style="margin-top:32px">Please note that bank only returned accounts that user explicitly agreed to share on the consent page.</p>
+  <p>Additionally, depending on granted permissions, accounts response may be limited, i.e when only `ReadAccountsBasic` permission has been granted,
+    than account details are not returned.</p>
+
+  <p>For corase-granted authorization of bank APIs, ACP's custom account access introspection can be used (<a
+            href="https://localhost:8443/api/swagger/default/default/#/openbanking/openbankingAccountAccessConsentIntrospect" target="_blank">see
+      swagger).</a></p>
+
+  <p>You can revoke consent in <a href="https://localhost:8085">self service portal</a></p>
+  
+  <p>Admins can manage TPPs consents in <a href="https://localhost:8086">admin portal</a></p>
+</div>
+
+<script>
+  function onRetry () {
+    window.location.href = "/";
+  }
+</script>
+
+</body>
+</html>
