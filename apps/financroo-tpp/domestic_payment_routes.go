@@ -7,14 +7,15 @@ import (
 	"net/url"
 	"time"
 
-	acpclient "github.com/cloudentity/acp-client-go"
-	"github.com/cloudentity/acp-client-go/client/openbanking"
-	"github.com/cloudentity/acp-client-go/models"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/paymentinitiation/client/domestic_payments"
 	obModels "github.com/cloudentity/openbanking-quickstart/openbanking/paymentinitiation/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 	"github.com/google/uuid"
+
+	acpclient "github.com/cloudentity/acp-client-go"
+	"github.com/cloudentity/acp-client-go/client/openbanking"
+	"github.com/cloudentity/acp-client-go/models"
 )
 
 type CreateDomesticPaymentConsentRequest struct {

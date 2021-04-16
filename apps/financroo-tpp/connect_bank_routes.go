@@ -132,7 +132,7 @@ func (s *Server) ConnectBankCallback() func(*gin.Context) {
 
 		c.SetCookie("app", "", -1, "/", "", false, true)
 
-		c.Redirect(http.StatusFound, s.Config.UIURL + "?connected=yes")
+		c.Redirect(http.StatusFound, s.Config.UIURL+"?connected=yes")
 	}
 }
 

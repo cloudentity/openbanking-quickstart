@@ -18,7 +18,6 @@ func (b *BankTokens) GetAccessToken(bankID string) (string, error) {
 	}
 
 	return "", fmt.Errorf("no access token found for bank: %s", bankID)
-
 }
 
 type BankToken struct {

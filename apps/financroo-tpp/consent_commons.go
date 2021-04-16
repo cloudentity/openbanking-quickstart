@@ -47,4 +47,3 @@ func (s *Server) CreateConsentResponse(c *gin.Context, bankID BankID, consentID 
 
 	c.JSON(http.StatusOK, data)
 }
-
