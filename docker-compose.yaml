@@ -2,7 +2,7 @@ version: "3.0"
 
 services:
   developer-tpp:
-    image: cloudentity/openbanking-quickstart-tpp-developer:latest
+    image: cloudentity/openbanking-quickstart-developer-tpp:latest
     container_name: developer-tpp
     restart: always
     ports:
@@ -27,7 +27,7 @@ services:
       dockerfile: apps/developer-tpp/Dockerfile
 
   financroo-tpp:
-    image: cloudentity/openbanking-quickstart-tpp-financroo:latest
+    image: cloudentity/openbanking-quickstart-financroo-tpp:latest
     container_name: financroo-tpp
     restart: always
     ports:
