@@ -5,7 +5,7 @@ on:
     branches: master
 
 jobs:
-  main:
+  docker:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -15,9 +15,9 @@ jobs:
           - folder: "apps/developer-tpp"
             suffix: "developer-tpp"
           - folder: "consent/admin-portal"
-            suffix: "consent-admin"
+            suffix: "consent-admin-portal"
           - folder: "consent/self-service-portal"
-            suffix: "consent-self-service"
+            suffix: "consent-self-service-portal"
           - folder: "consent/consent-page"
             suffix: "consent-page"
           - folder: "apps/bank"
