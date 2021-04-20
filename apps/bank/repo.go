@@ -55,7 +55,7 @@ func NewUserRepo() (UserRepo, error) {
 	)
 
 	// create db
-	if userRepo.DB, err = bolt.Open("data/tppdb.db", os.FileMode(0644), &bolt.Options{Timeout: 3 * time.Second}); err != nil {
+	if userRepo.DB, err = bolt.Open("data/my.db", os.FileMode(0644), &bolt.Options{Timeout: 3 * time.Second}); err != nil {
 		return userRepo, errors.Wrapf(err, "failed to open db")
 	}
 

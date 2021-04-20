@@ -65,7 +65,7 @@ func (s *AccountAccessMFAConsentProvider) GetMFAData(loginRequest LoginRequest) 
 		return data, err
 	}
 
-	data.ClientName = response.Payload.Client.Name
+	data.ClientName = s.GetClientName(response.Payload.Client)
 	data.ConsentID = response.Payload.ConsentID
 	data.AuthenticationContext = response.Payload.AuthenticationContext
 

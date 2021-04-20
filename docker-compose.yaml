@@ -24,7 +24,7 @@ services:
       - BANK_URL=http://bank:8070
     build:
       context: .
-      dockerfile: apps/bank/Dockerfile
+      dockerfile: apps/developer-tpp/Dockerfile
 
   financroo-tpp:
     image: cloudentity/openbanking-quickstart-tpp-financroo:latest
@@ -34,7 +34,7 @@ services:
       - "8091:8091"
     volumes:
       - ./data:/certs
-      - ./financroo/data:/app/data
+      - ./mount/financroo-tpp:/app/data
     env_file:
     - .env
     environment:
@@ -53,7 +53,7 @@ services:
     ports:
       - "8080:8080"
     volumes:
-      - ./consent-page/data:/data
+      - ./mount/consent-page:/data
       - ./data/ca.pem:/ca.pem
       - ./data/bank_cert.pem:/bank_cert.pem
       - ./data/bank_key.pem:/bank_key.pem
@@ -67,8 +67,8 @@ services:
       - BANK_URL=http://bank:8070
       - DB_FILE=/data/my.db
       - LOG_LEVEL=debug
-      - ENABLE_MFA=true
-      - OTP_MODE=mock
+      # - ENABLE_MFA=true
+      # - OTP_MODE=mock
       # - MOBILE_CLAIM=mobile_verified
       # - TWILIO_ACCOUNT_SID=
       # - TWILIO_AUTH_TOKEN=
@@ -146,7 +146,7 @@ services:
       - ./data/ca.pem:/ca.pem
       - ./data/bank_cert.pem:/bank_cert.pem
       - ./data/bank_key.pem:/bank_key.pem
-      - ./bank/data:/app/data
+      - ./mount/bank:/app/data
     environment:
       - CLIENT_ID=bukj5p6k7qdmm5ppbi4g
       - ISSUER_URL=${ACP_INTERNAL_URL}/default/openbanking
