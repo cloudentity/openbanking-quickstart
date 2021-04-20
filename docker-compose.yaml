@@ -76,9 +76,9 @@ services:
       context: .
       dockerfile: consent/consent-page/Dockerfile
 
-  consent-self-service:
-    image: cloudentity/openbanking-quickstart-consent-self-service:latest
-    container_name: consent-self-service
+  consent-self-service-portal:
+    image: cloudentity/openbanking-quickstart-consent-self-service-portal:latest
+    container_name: consent-self-service-portal
     restart: always
     ports:
       - "8085:8085"
@@ -106,9 +106,9 @@ services:
       context: .
       dockerfile: consent/self-service-portal/Dockerfile
 
-  consent-admin:
-    image: cloudentity/openbanking-quickstart-consent-admin:latest
-    container_name: consent-admin
+  consent-admin-portal:
+    image: cloudentity/openbanking-quickstart-consent-admin-portal:latest
+    container_name: consent-admin-portal
     restart: always
     ports:
       - "8086:8086"
