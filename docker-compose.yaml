@@ -24,7 +24,7 @@ services:
       - BANK_URL=http://bank:8070
     build:
       context: .
-      dockerfile: apps/bank/Dockerfile
+      dockerfile: apps/developer-tpp/Dockerfile
 
   financroo-tpp:
     image: cloudentity/openbanking-quickstart-tpp-financroo:latest
