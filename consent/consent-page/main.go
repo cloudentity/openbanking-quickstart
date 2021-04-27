@@ -28,6 +28,10 @@ type Config struct {
 	KeyFile          string        `env:"KEY_FILE,required"`
 	BankURL          *url.URL      `env:"BANK_URL"`
 	EnableMFA        bool          `env:"ENABLE_MFA"`
+	EnableMFAOkta    bool          `env:"ENABLE_MFA_OKTA"`
+	OKTA_HOST        string        `env:"OKTA_HOST"`
+	OKTA_API_TOKEN   string        `env:"OKTA_API_TOKEN"`
+	OKTA_USER        string        `env:"OKTA_USER"`
 	OTPMode          string        `env:"OTP_MODE"` // optional, set to "mock" to use "111111" as otp
 	TwilioAccountSid string        `env:"TWILIO_ACCOUNT_SID"`
 	TwilioAuthToken  string        `env:"TWILIO_AUTH_TOKEN"`
