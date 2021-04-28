@@ -31,12 +31,12 @@
           {{ if .showOkta }}
            <form action="mfa?login_id={{ .login_request.ID }}&login_state={{ .login_request.State }}&consent_type={{ .login_request.ConsentType }}" method="post" id="form_okta">
             <input type="hidden" name="action" value="verify_okta"/>
-            <div class="mfa-container__card hover" style="margin-top: 16px;" onclick="submit('form_okta')">
+            <div class="mfa-container__card hover" style="margin-top: 16px;" onclick="submit('form_okta'); var elem = document.getElementById('okta_arrow'); elem.classList.add('loader'); elem.innerHTML=''">
               <div>
                 <div style="font-size: 14px">Verify with Okta</div>
                 <div class="caption" style="margin-top: 6px;">User: {{ .oktaUser }}</div>
               </div>
-              <div>
+              <div id="okta_arrow">
                 <i class="material-icons mdc-icon-button__icon"> keyboard_arrow_right</i>
               </div>
             </div>
