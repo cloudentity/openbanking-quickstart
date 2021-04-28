@@ -1,6 +1,5 @@
 
-  <form action="mfa?login_id={{ .login_request.ID }}&login_state={{ .login_request.State }}&consent_type={{ .login_request.ConsentType }}" method="post" id="form">
-    <input type="hidden" name="action" value="generate"/>
+ 
     <div class="mfa-container">
       <div class="mfa-container__item">
         <div class="mfa-container__item--left">
@@ -16,6 +15,8 @@
       </div>
       <div class="mfa-container__item">
         <div class="mfa-container__item--right">
+         <form action="mfa?login_id={{ .login_request.ID }}&login_state={{ .login_request.State }}&consent_type={{ .login_request.ConsentType }}" method="post" id="form">
+          <input type="hidden" name="action" value="generate"/>
           <div class="mfa-container__card hover" onclick="submit('form')">
             <div>
               <div style="font-size: 14px">Text message</div>
@@ -25,16 +26,22 @@
               <i class="material-icons mdc-icon-button__icon"> keyboard_arrow_right</i>
             </div>
           </div>
+        </form>
 
-          <div class="mfa-container__card" style="margin-top: 16px;">
-            <div>
-              <div style="font-size: 14px">Email</div>
-              <div class="caption" style="margin-top: 6px;">k*****n@mymail.com</div>
+          {{ if .showOkta }}
+           <form action="mfa?login_id={{ .login_request.ID }}&login_state={{ .login_request.State }}&consent_type={{ .login_request.ConsentType }}" method="post" id="form_okta">
+            <input type="hidden" name="action" value="verify_okta"/>
+            <div class="mfa-container__card hover" style="margin-top: 16px;" onclick="submit('form_okta')">
+              <div>
+                <div style="font-size: 14px">Verify with Okta</div>
+                <div class="caption" style="margin-top: 6px;">fixme: put user email here</div>
+              </div>
+              <div>
+                <i class="material-icons mdc-icon-button__icon"> keyboard_arrow_right</i>
+              </div>
             </div>
-            <div>
-              <i class="material-icons mdc-icon-button__icon"> keyboard_arrow_right</i>
-            </div>
-          </div>
+            </form>
+          {{ end }}
         </div>
       </div>
     </div>
