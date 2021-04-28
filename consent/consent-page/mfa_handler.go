@@ -215,6 +215,7 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 			ok       bool
 			valid    bool
 			mobile   string
+			subject  string
 			err      error
 		)
 
@@ -245,9 +246,14 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 			return
 		}
 
+		if subject, ok = data.AuthenticationContext["sub"].(string); !ok {
+			RenderInternalServerError(c, fmt.Errorf("subject not retrieved from authn context"))
+			return
+		}
+
 		action := c.PostForm("action")
 
-		logrus.Debugf("action: %s, mobile: %s", action, mobile)
+		logrus.Debugf("action: %s, mobile: %s, subject: %s", action, mobile, subject)
 
 		switch action {
 		case "generate", "resend":
@@ -317,7 +323,11 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 				status    string = "WAITING"
 			)
 
-			if oktaID, err = s.OktaHandler.GetOktaID(s.Config.OktaAPIToken, s.Config.OktaUser); err != nil {
+			if s.Config.OktaUseUser {
+				subject = s.Config.OktaUser
+			}
+
+			if oktaID, err = s.OktaHandler.GetOktaID(s.Config.OktaAPIToken, subject); err != nil {
 				RenderInternalServerError(c, errors.Wrapf(err, "failed to get okta id"))
 				return
 			}
@@ -368,7 +378,11 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 
 				templateData["showOkta"] = true
 
-				if oktaID, err = s.OktaHandler.GetOktaID(s.Config.OktaAPIToken, s.Config.OktaUser); err != nil {
+				if s.Config.OktaUseUser {
+					subject = s.Config.OktaUser
+				}
+
+				if oktaID, err = s.OktaHandler.GetOktaID(s.Config.OktaAPIToken, subject); err != nil {
 					logrus.Debugf("unable to retrieve okta id (err: %s). Not rendering okta button...")
 					templateData["showOkta"] = false
 				}

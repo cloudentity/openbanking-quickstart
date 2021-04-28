@@ -30,6 +30,7 @@ type Config struct {
 	EnableMFAOTP     bool          `env:"ENABLE_MFA_OTP"`
 	EnableMFAOkta    bool          `env:"ENABLE_MFA_OKTA"`
 	OktaHost         string        `env:"OKTA_HOST"`
+	OktaUseUser      bool          `env:"OKTA_USE_USER"`
 	OktaAPIToken     string        `env:"OKTA_API_TOKEN"`
 	OktaUser         string        `env:"OKTA_USER"`
 	OTPMode          string        `env:"OTP_MODE"` // optional, set to "mock" to use "111111" as otp

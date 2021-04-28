@@ -71,6 +71,7 @@ services:
       # - ENABLE_MFA_OTP=true
       - ENABLE_MFA_OKTA=true 
       - OKTA_HOST=https://dev-24138049.okta.com
+      #- OKTA_USE_USER=true
       - OKTA_USER=dmartin@cloudentity.com
       - OKTA_API_TOKEN=00N8yDp4qWzqarghJS8641_dpPX65fP2TXnsUVwSWZ
       # - OTP_MODE=mock
