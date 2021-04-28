@@ -14,6 +14,8 @@ type OktaHandler interface {
 	GetVerifyURL(token, id string) (string, error)
 	SendVerify(token, id, verifyURL string) (string, error)
 	GetVerificationStatus(token, pollURL string) (string, error)
+	SetStorage(LoginRequest, bool)
+	IsApproved(LoginRequest) (bool, error)
 }
 
 type OktaAPIResponseData []struct {
@@ -29,16 +31,31 @@ type DefaultOktaHandler struct {
 	HostURL  string
 	Client   *http.Client
 	APIToken string
+	Storage  map[LoginRequest]bool // simple map storage for now
 }
 
-func NewDefaultOktaHandler(host string, apiToken string) OktaHandler {
+func NewOktaHandler(host string, apiToken string) OktaHandler {
 	return &DefaultOktaHandler{
 		HostURL: host,
 		Client: &http.Client{
 			Timeout: time.Second * 10,
 		},
 		APIToken: apiToken,
+		Storage:  make(map[LoginRequest]bool),
 	}
+}
+
+func (o *DefaultOktaHandler) SetStorage(r LoginRequest, approved bool) {
+	o.Storage[r] = approved
+}
+
+func (o *DefaultOktaHandler) IsApproved(r LoginRequest) (bool, error) {
+	approved, ok := o.Storage[r]
+	if !ok {
+		return false, nil
+	}
+
+	return approved, nil
 }
 
 func (o *DefaultOktaHandler) GetAPIToken() string {
@@ -76,10 +93,6 @@ func (o *DefaultOktaHandler) GetOktaID(token, user string) (string, error) {
 
 	if err = json.NewDecoder(resp.Body).Decode(&data); err != nil {
 		return "", err
-	}
-
-	if len(data) == 0 {
-		return fmt.Errorf("okta /user endpoint returned no data")
 	}
 
 	return data[0].ID, nil
