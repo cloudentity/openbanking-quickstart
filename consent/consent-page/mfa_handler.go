@@ -377,6 +377,7 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 				)
 
 				templateData["showOkta"] = true
+				templateData["oktaUser"] = subject
 
 				if s.Config.OktaUseUser {
 					subject = s.Config.OktaUser
