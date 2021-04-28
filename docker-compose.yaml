@@ -68,6 +68,11 @@ services:
       - DB_FILE=/data/my.db
       - LOG_LEVEL=debug
       # - ENABLE_MFA=true
+      # - ENABLE_MFA_OTP=true
+      - ENABLE_MFA_OKTA=true 
+      - OKTA_HOST=https://dev-24138049.okta.com
+      - OKTA_USER=dmartin@cloudentity.com
+      - OKTA_API_TOKEN=00N8yDp4qWzqarghJS8641_dpPX65fP2TXnsUVwSWZ
       # - OTP_MODE=mock
       # - MOBILE_CLAIM=mobile_verified
       # - TWILIO_ACCOUNT_SID=
@@ -164,7 +169,7 @@ services:
     ports:
      - 8443:8443
     volumes:
-      - ./data/seed.yaml.generated:/seed.yaml
+      - ./data/seed.yaml:/seed.yaml
       - ./data/acp_cert.pem:/acp_cert.pem
       - ./data/acp_key.pem:/acp_key.pem
     environment:
