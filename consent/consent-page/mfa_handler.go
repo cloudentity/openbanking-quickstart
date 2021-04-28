@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/imdario/mergo"
@@ -305,13 +306,78 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 
 			redirect := fmt.Sprintf("?%s", c.Request.URL.Query().Encode())
 			logrus.Debugf("otp is valid, redirect: %s", redirect)
-
 			c.Redirect(http.StatusMovedPermanently, redirect)
 			return
+
+		case "verify_okta":
+			var (
+				verifyURL string
+				oktaID    string
+				pollURL   string
+				status    string = "WAITING"
+			)
+
+			if oktaID, err = s.OktaHandler.GetOktaID(s.Config.OktaAPIToken, s.Config.OktaUser); err != nil {
+				RenderInternalServerError(c, errors.Wrapf(err, "failed to get okta id"))
+				return
+			}
+
+			if verifyURL, err = s.OktaHandler.GetVerifyURL(s.Config.OktaAPIToken, oktaID); err != nil {
+				RenderInternalServerError(c, errors.Wrapf(err, "failed to get verify url"))
+				return
+			}
+
+			if pollURL, err = s.OktaHandler.SendVerify(s.Config.OktaAPIToken, oktaID, verifyURL); err != nil {
+				RenderInternalServerError(c, errors.Wrapf(err, "failed to send verify and get poll url"))
+				return
+			}
+
+			for status == "WAITING" {
+				if status, err = s.OktaHandler.GetVerificationStatus(s.Config.OktaAPIToken, pollURL); err != nil {
+					RenderInternalServerError(c, errors.Wrapf(err, "failed to get verification status"))
+					return
+				}
+				time.Sleep(time.Second * 2)
+			}
+
+			switch status {
+			case "SUCCESS", "success":
+				s.OktaHandler.SetStorage(r, true)
+				redirect := fmt.Sprintf("?%s", c.Request.URL.Query().Encode())
+				logrus.Debugf("okta is valid, redirect: %s", redirect)
+				c.Redirect(http.StatusMovedPermanently, redirect)
+				return
+			case "REJECTED", "rejected":
+				err = errors.New("user rejected consent on okta")
+				RenderError(c, 401, err.Error(), err)
+			default:
+				RenderInternalServerError(c, fmt.Errorf("received a status of %s", status))
+			}
+
 		default:
 			templateData := map[string]interface{}{
 				"mobile":     MaskMobile(mobile),
 				"mfaRequest": true,
+			}
+
+			if s.Config.EnableMFAOkta {
+				var (
+					oktaID  string
+					hasPush bool
+				)
+
+				templateData["showOkta"] = true
+
+				if oktaID, err = s.OktaHandler.GetOktaID(s.Config.OktaAPIToken, s.Config.OktaUser); err != nil {
+					logrus.Debugf("unable to retrieve okta id (err: %s). Not rendering okta button...")
+					templateData["showOkta"] = false
+				}
+
+				if hasPush = s.OktaHandler.HasFactorType(s.Config.OktaAPIToken, oktaID, "push"); !hasPush {
+					logrus.Debugf("no factor type push configured for okta id %s. Not rendering okta button...")
+					templateData["showOkta"] = false
+				}
+
 			}
 
 			if err = mergo.Merge(&templateData, provider.GetConsentMockData(r)); err != nil {
