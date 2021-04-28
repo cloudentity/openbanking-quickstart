@@ -27,11 +27,11 @@ type Config struct {
 	CertFile         string        `env:"CERT_FILE,required"`
 	KeyFile          string        `env:"KEY_FILE,required"`
 	BankURL          *url.URL      `env:"BANK_URL"`
-	EnableMFA        bool          `env:"ENABLE_MFA"`
+	EnableMFAOTP     bool          `env:"ENABLE_MFA_OTP"`
 	EnableMFAOkta    bool          `env:"ENABLE_MFA_OKTA"`
-	OKTA_HOST        string        `env:"OKTA_HOST"`
-	OKTA_API_TOKEN   string        `env:"OKTA_API_TOKEN"`
-	OKTA_USER        string        `env:"OKTA_USER"`
+	OktaHost         string        `env:"OKTA_HOST"`
+	OktaAPIToken     string        `env:"OKTA_API_TOKEN"`
+	OktaUser         string        `env:"OKTA_USER"`
 	OTPMode          string        `env:"OTP_MODE"` // optional, set to "mock" to use "111111" as otp
 	TwilioAccountSid string        `env:"TWILIO_ACCOUNT_SID"`
 	TwilioAuthToken  string        `env:"TWILIO_AUTH_TOKEN"`
@@ -63,12 +63,13 @@ func LoadConfig() (config Config, err error) {
 }
 
 type Server struct {
-	Config     Config
-	Client     acpclient.Client
-	BankClient BankClient
-	SMSClient  *SMSClient
-	OTPRepo    *OTPRepo
-	OTPHandler OTPHandler
+	Config      Config
+	Client      acpclient.Client
+	BankClient  BankClient
+	SMSClient   *SMSClient
+	OTPRepo     *OTPRepo
+	OTPHandler  OTPHandler
+	OktaHandler OktaHandler
 }
 
 func NewServer() (Server, error) {
@@ -106,6 +107,11 @@ func NewServer() (Server, error) {
 
 	server.OTPHandler = NewOTPHandler(server.Config.OTPMode, server.OTPRepo, server.SMSClient)
 
+	logrus.Debugf("server config: %+v", server.Config)
+	if server.Config.EnableMFAOkta {
+		server.OktaHandler = NewOktaHandler(server.Config.OktaHost, server.Config.OktaAPIToken)
+	}
+
 	return server, nil
 }
 
@@ -119,14 +125,27 @@ func RequireMFAMiddleware(s *Server) gin.HandlerFunc {
 			return
 		}
 		var (
-			approved bool
-			err      error
+			approved        bool
+			isApprovedFuncs []func(LoginRequest) (bool, error)
+			err             error
 		)
 
-		if approved, err = s.OTPHandler.IsApproved(NewLoginRequest(c)); err != nil {
-			RenderInvalidRequestError(c, nil)
-			c.Abort()
-			return
+		if s.Config.EnableMFAOTP {
+			isApprovedFuncs = append(isApprovedFuncs, s.OTPHandler.IsApproved)
+		}
+		if s.Config.EnableMFAOkta {
+			isApprovedFuncs = append(isApprovedFuncs, s.OktaHandler.IsApproved)
+		}
+
+		for _, f := range isApprovedFuncs {
+			if approved, err = f(NewLoginRequest(c)); err != nil {
+				RenderInvalidRequestError(c, nil)
+				c.Abort()
+				return
+			}
+			if approved {
+				break
+			}
 		}
 
 		if !approved {
@@ -146,7 +165,7 @@ func (s *Server) Start() error {
 	r.LoadHTMLGlob("templates/*")
 	r.Static("/assets", "./assets")
 
-	if s.Config.EnableMFA {
+	if s.Config.EnableMFAOTP || s.Config.EnableMFAOkta {
 		r.Use(RequireMFAMiddleware(s))
 		r.GET(mfaPath, s.MFAHandler())
 		r.POST(mfaPath, s.MFAHandler())
