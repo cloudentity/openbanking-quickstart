@@ -164,7 +164,7 @@ services:
     ports:
      - 8443:8443
     volumes:
-      - ./data/seed.yaml.generated:/seed.yaml
+      - ./data/seed.yaml:/seed.yaml
       - ./data/acp_cert.pem:/acp_cert.pem
       - ./data/acp_key.pem:/acp_key.pem
     environment:
