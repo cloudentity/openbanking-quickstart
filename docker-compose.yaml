@@ -22,9 +22,6 @@ services:
       - KEY_FILE=/tpp_key.pem
       - ROOT_CA=/ca.pem
       - BANK_URL=http://bank:8070
-    build:
-      context: .
-      dockerfile: apps/developer-tpp/Dockerfile
 
   financroo-tpp:
     image: cloudentity/openbanking-quickstart-financroo-tpp:latest
@@ -42,9 +39,6 @@ services:
       - CERT_FILE=/certs/tpp_cert.pem
       - KEY_FILE=/certs/tpp_key.pem
       - DB_FILE=/app/data/my.db
-    build:
-      context: .
-      dockerfile: apps/financroo-tpp/Dockerfile
 
   consent-page:
     image: cloudentity/openbanking-quickstart-consent-page:latest
@@ -72,9 +66,6 @@ services:
       # - MOBILE_CLAIM=mobile_verified
       # - TWILIO_ACCOUNT_SID=
       # - TWILIO_AUTH_TOKEN=
-    build:
-      context: .
-      dockerfile: consent/consent-page/Dockerfile
 
   consent-self-service-portal:
     image: cloudentity/openbanking-quickstart-consent-self-service-portal:latest
@@ -102,9 +93,6 @@ services:
       - INTROSPECT_CLIENT_ID=bv2dkff8mll9cf6pvd6g
       - INTROSPECT_CLIENT_SECRET=KThGH68f-gMC4cscGLFeOpIU4EYriYhKspOV9IwHbnw
       - INTROSPECT_ISSUER_URL=${ACP_INTERNAL_URL}/default/bank-customers
-    build:
-      context: .
-      dockerfile: consent/self-service-portal/Dockerfile
 
   consent-admin-portal:
     image: cloudentity/openbanking-quickstart-consent-admin-portal:latest
@@ -132,9 +120,6 @@ services:
       - INTROSPECT_CLIENT_ID=bv2fddlpfc67lmeti32g
       - INTROSPECT_CLIENT_SECRET=RkAIOVRlP6ZLhDvYixT1wBb8DG3bVkXAouoIrX7cwzA
       - INTROSPECT_ISSUER_URL=${ACP_INTERNAL_URL}/default/bank-admins
-    build:
-      context: .
-      dockerfile: consent/admin-portal/Dockerfile
       
   bank:
     image: cloudentity/openbanking-quickstart-bank:latest
@@ -153,9 +138,6 @@ services:
       - CERT_FILE=/bank_cert.pem
       - KEY_FILE=/bank_key.pem
       - ROOT_CA=/ca.pem
-    build:
-      context: .
-      dockerfile: apps/bank/Dockerfile
 
   acp:
     container_name: acp
