@@ -1,0 +1,27 @@
+version: "3.0"
+
+services:
+  developer-tpp:
+    build:
+      context: .
+      dockerfile: apps/developer-tpp/Dockerfile
+  financroo-tpp:
+    build:
+      context: .
+      dockerfile: apps/financroo-tpp/Dockerfile
+  consent-page:
+    build:
+      context: .
+      dockerfile: consent/consent-page/Dockerfile
+  consent-self-service-portal:
+    build:
+      context: .
+      dockerfile: consent/self-service-portal/Dockerfile
+  consent-admin-portal:
+    build:
+      context: .
+      dockerfile: consent/admin-portal/Dockerfile
+  bank:
+    build:
+      context: .
+      dockerfile: apps/bank/Dockerfile
