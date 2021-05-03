@@ -63,7 +63,7 @@ const useStyles = (withSubheader: boolean, mode: string) =>
 type CommonProps = {
   tab?: "accounts" | "investments";
   subHeaderTitle?: string | React.ReactNode;
-  subHeaderButton?: { title: string; onClick: () => void };
+  subHeaderButton?: { title: string; onClick: () => void; id?: string };
 };
 
 type Props =
@@ -166,6 +166,7 @@ export default function PageToolbar({
               variant="contained"
               color="primary"
               className={classes.button}
+              id={subHeaderButton.id}
             >
               {subHeaderButton.title}
             </Button>
