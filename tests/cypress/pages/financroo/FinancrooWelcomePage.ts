@@ -1,4 +1,4 @@
-import {FinancrooConnectAccountPage} from "./FinancrooConnectAccountPage";
+import {FinancrooConnectAccountPage} from "./accounts/FinancrooConnectAccountPage";
 
 export class FinancrooWelcomePage {
   private readonly financrooConnectAccountPage: FinancrooConnectAccountPage = new FinancrooConnectAccountPage();

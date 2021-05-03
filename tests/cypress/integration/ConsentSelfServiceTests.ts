@@ -7,7 +7,6 @@ import {Credentials} from "../pages/Credentials";
 import {ConsentSelfServicePage} from '../pages/consent-self-service/ConsentSelfServicePage';
 import {Urls} from "../pages/Urls";
 import {MfaPage} from "../pages/mfa/MfaPage";
-import {MfaTextMessagePage} from "../pages/mfa/MfaTextMessagePage";
 
 describe(`Consent self service app`, () => {
   const tppIntentPage: TppIntentPage = new TppIntentPage();
@@ -40,17 +39,17 @@ describe(`Consent self service app`, () => {
     // consentSelfServicePage.assertConsentIsNotDisplayed()
   })
 
- /* it(`Cancel first ACP login`, () => {
-    acpLoginPage.cancel();
-    errorPage.assertError("The user rejected the authentication")
-  })
+  /* it(`Cancel first ACP login`, () => {
+     acpLoginPage.cancel();
+     errorPage.assertError("The user rejected the authentication")
+   })
 
-  it(`Cancel second ACP login`, () => {
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    consentPage.confirm();
-    consentSelfServicePage.visit();
-    acpLoginPage.cancel();
-    errorPage.assertError("The user rejected the authentication")
-  })*/
+   it(`Cancel second ACP login`, () => {
+     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+     consentPage.confirm();
+     consentSelfServicePage.visit();
+     acpLoginPage.cancel();
+     errorPage.assertError("The user rejected the authentication")
+   })*/
 
 })
