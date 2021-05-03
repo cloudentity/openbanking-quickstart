@@ -3,7 +3,7 @@ import {FinancrooLoginPage} from '../pages/financroo/FinancrooLoginPage';
 import {ConsentPage} from '../pages/consent/ConsentPage';
 import {ErrorPage} from '../pages/ErrorPage';
 import {FinancrooWelcomePage} from '../pages/financroo/FinancrooWelcomePage';
-import {FinancrooDashboardPage} from '../pages/financroo/FinancrooDashboardPage';
+import {FinancrooAccountsPage} from '../pages/financroo/FinancrooAccountsPage';
 import {Credentials} from "../pages/Credentials";
 import {Urls} from "../pages/Urls";
 import {MfaPage} from "../pages/mfa/MfaPage";
@@ -14,7 +14,7 @@ describe(`Financroo app`, () => {
   const errorPage: ErrorPage = new ErrorPage();
   const financrooLoginPage: FinancrooLoginPage = new FinancrooLoginPage();
   const financrooWelcomePage: FinancrooWelcomePage = new FinancrooWelcomePage();
-  const financrooDashboardPage: FinancrooDashboardPage = new FinancrooDashboardPage();
+  const financrooAccountsPage: FinancrooAccountsPage = new FinancrooAccountsPage();
   const mfaPage: MfaPage = new MfaPage();
 
   const billsAccount: string = `Bills`;
@@ -42,7 +42,7 @@ describe(`Financroo app`, () => {
       consentPage.expandPermissions()
       consentPage.assertPermissions(7)
       consentPage.confirm()
-      financrooDashboardPage.assertAccounts(accounts)
+      financrooAccountsPage.assertAccounts(accounts)
     })
   })
 
@@ -62,9 +62,7 @@ describe(`Financroo app`, () => {
     acpLoginPage.login(Credentials.financrooUsername, Credentials.defaultPassword)
     financrooWelcomePage.connect()
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
-    mfaPage.textMessage()
-    mfaTextMessagePage.typePin()
-    mfaTextMessagePage.verify()
+    mfaPage.typePin()
     consentPage.cancel()
     errorPage.assertError(`rejected`)
   })

@@ -131,12 +131,14 @@ export default function PageToolbar({
                 <Tab
                   label="Accounts"
                   value="accounts"
+                  id={"accounts-tab"}
                   style={{ height: 64 }}
                   onClick={() => history.push("/")}
                 />
                 <Tab
                   label="Investments"
                   value="investments"
+                  id={"investments-tab"}
                   style={{ height: 64 }}
                   onClick={() => history.push("/investments")}
                 />

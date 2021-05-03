@@ -6,6 +6,7 @@ import {ErrorPage} from '../pages/ErrorPage';
 import {Credentials} from "../pages/Credentials";
 import {ConsentAdminPage} from "../pages/consent-admin/ConsentAdminPage";
 import {Urls} from "../pages/Urls";
+import {MfaPage} from "../pages/mfa/MfaPage";
 
 describe(`Consent admin app`, () => {
   const tppIntentPage: TppIntentPage = new TppIntentPage();
@@ -14,11 +15,12 @@ describe(`Consent admin app`, () => {
   const consentPage: ConsentPage = new ConsentPage();
   const errorPage: ErrorPage = new ErrorPage();
   const consentAdminPage: ConsentAdminPage = new ConsentAdminPage();
+  const mfaPage: MfaPage = new MfaPage();
 
   beforeEach(() => {
     consentAdminPage.visit()
     Urls.clearLocalStorage()
-    tppLoginPage.visit();
+    tppLoginPage.visit(true);
     tppLoginPage.next();
     tppIntentPage.saveIntentId()
     tppIntentPage.login();
@@ -26,8 +28,9 @@ describe(`Consent admin app`, () => {
 
   it(`Happy path with revoking consent`, () => {
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    mfaPage.typePin()
     consentPage.confirm();
-    consentAdminPage.visit();
+    consentAdminPage.visit(true);
     acpLoginPage.login(Credentials.consentAdminUsername, Credentials.defaultPassword);
     consentAdminPage.expandTab()
     consentAdminPage.revokeConsent()
@@ -37,6 +40,7 @@ describe(`Consent admin app`, () => {
 
   it(`Happy path with revoking all consents`, () => {
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    mfaPage.typePin()
     consentPage.confirm();
     consentAdminPage.visit();
     acpLoginPage.login(Credentials.consentAdminUsername, Credentials.defaultPassword);
@@ -53,6 +57,7 @@ describe(`Consent admin app`, () => {
 
   it(`Cancel second ACP login`, () => {
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    mfaPage.typePin()
     consentPage.confirm();
     consentAdminPage.visit();
     acpLoginPage.cancel();
