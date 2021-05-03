@@ -5,8 +5,8 @@ export class TppLoginPage {
   private readonly basicPermissionCheckboxLocator: string = `[value="ReadAccountsBasic"]`
   private readonly detailPermissionCheckboxLocator: string = `[value="ReadAccountsDetail"]`
 
-  public visit(): void {
-    Urls.forceVisit(Urls.tppTechnicalUrl);
+  public visit(force: boolean = false): void {
+    Urls.visit(Urls.tppTechnicalUrl, force);
   }
 
   public checkBasicPermission(check: boolean): void {

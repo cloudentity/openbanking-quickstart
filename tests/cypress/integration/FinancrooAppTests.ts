@@ -6,6 +6,7 @@ import {FinancrooWelcomePage} from '../pages/financroo/FinancrooWelcomePage';
 import {FinancrooDashboardPage} from '../pages/financroo/FinancrooDashboardPage';
 import {Credentials} from "../pages/Credentials";
 import {Urls} from "../pages/Urls";
+import {MfaPage} from "../pages/mfa/MfaPage";
 
 describe(`Financroo app`, () => {
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
@@ -14,6 +15,7 @@ describe(`Financroo app`, () => {
   const financrooLoginPage: FinancrooLoginPage = new FinancrooLoginPage();
   const financrooWelcomePage: FinancrooWelcomePage = new FinancrooWelcomePage();
   const financrooDashboardPage: FinancrooDashboardPage = new FinancrooDashboardPage();
+  const mfaPage: MfaPage = new MfaPage();
 
   const billsAccount: string = `Bills`;
   const householdAccount: string = `Household`;
@@ -35,9 +37,10 @@ describe(`Financroo app`, () => {
       acpLoginPage.login(Credentials.financrooUsername, Credentials.defaultPassword)
       financrooWelcomePage.connect()
       acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
+      mfaPage.typePin()
       consentPage.checkAccounts(accounts)
-      consentPage.assertPermissions([`ReadAccountsDetail`, `ReadAccountsBasic`, `ReadBalances`,
-        `ReadTransactionsBasic`, `ReadTransactionsDetail`, `ReadTransactionsCredits`, `ReadTransactionsDebits`])
+      consentPage.expandPermissions()
+      consentPage.assertPermissions(7)
       consentPage.confirm()
       financrooDashboardPage.assertAccounts(accounts)
     })
@@ -59,6 +62,9 @@ describe(`Financroo app`, () => {
     acpLoginPage.login(Credentials.financrooUsername, Credentials.defaultPassword)
     financrooWelcomePage.connect()
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
+    mfaPage.textMessage()
+    mfaTextMessagePage.typePin()
+    mfaTextMessagePage.verify()
     consentPage.cancel()
     errorPage.assertError(`rejected`)
   })

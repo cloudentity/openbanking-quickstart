@@ -5,8 +5,8 @@ export class ConsentAdminPage {
 
   private readonly expandIconSelector: string = `.MuiSvgIcon-root`;
 
-  public visit(): void {
-    Urls.forceVisit(Urls.consentAdminUrl);
+  public visit(force: boolean = false): void {
+    Urls.visit(Urls.consentAdminUrl, force);
   }
 
   public expandTab(): void {

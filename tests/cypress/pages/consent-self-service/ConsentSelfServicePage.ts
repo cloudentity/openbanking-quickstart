@@ -6,8 +6,8 @@ export class ConsentSelfServicePage {
   private readonly expandIconSelector: string = `.MuiSvgIcon-root`;
   private readonly confirmButtonLocator: string = `#confirm-button`;
 
-  public visit(): void {
-    Urls.forceVisit(Urls.consentSelfServiceUrl);
+  public visit(force: boolean = false): void {
+    Urls.visit(Urls.consentSelfServiceUrl, force);
   }
 
   public expandTab(): void {

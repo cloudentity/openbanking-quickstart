@@ -122,6 +122,7 @@ function ApplicationSimpleCard({ client, clickable = true }) {
 
   return (
     <div
+      id={client.id}
       className={classes.container}
       onClick={() => {
         if (clickable) {
