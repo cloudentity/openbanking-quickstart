@@ -60,7 +60,6 @@ const useStyles = makeStyles((theme: Theme) => ({
 function getRevokeHeader() {
   return (
     <div
-      id={'revoke-access-button'}
       style={{
         height: 72,
         backgroundColor: "#F7FAFF",
@@ -170,6 +169,7 @@ function ApplicationAccessPaymentDrawer({
             Cancel
           </Button>
           <Button
+            id={'revoke-access-button'}
             variant="outlined"
             className={classes.button}
             style={{
