@@ -12,6 +12,7 @@ import {FinancrooWelcomePage} from "../pages/financroo/FinancrooWelcomePage";
 import {FinancrooAccountsPage} from "../pages/financroo/accounts/FinancrooAccountsPage";
 import {FinancrooInvestmentsPage} from "../pages/financroo/investments/FinancrooInvestmentsPage";
 import {FinancrooContributePage} from "../pages/financroo/investments/FinancrooContributePage";
+import {ConsentSelfServiceApplicationPage} from "../pages/consent-self-service/ConsentSelfServiceApplicationPage";
 
 describe(`Consent self service app`, () => {
   const tppIntentPage: TppIntentPage = new TppIntentPage();
@@ -20,6 +21,7 @@ describe(`Consent self service app`, () => {
   const consentPage: ConsentPage = new ConsentPage();
   const errorPage: ErrorPage = new ErrorPage();
   const consentSelfServicePage: ConsentSelfServicePage = new ConsentSelfServicePage();
+  const consentSelfServiceApplicationPage: ConsentSelfServiceApplicationPage = new ConsentSelfServiceApplicationPage();
   const mfaPage: MfaPage = new MfaPage();
   const financrooLoginPage: FinancrooLoginPage = new FinancrooLoginPage();
   const financrooWelcomePage: FinancrooWelcomePage = new FinancrooWelcomePage();
@@ -53,23 +55,21 @@ describe(`Consent self service app`, () => {
 
   it(`Happy path with account consent`, () => {
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    // // consentSelfServicePage.expandTab()
-    // // consentSelfServicePage.revokeConsent()
-    // // consentSelfServicePage.expandTab()
-    //  consentSelfServicePage.assertConsentIsNotDisplayed()
+    consentSelfServicePage.clickOnApplicationCard()
+    consentSelfServiceApplicationPage.expandAccountsTab()
+    consentSelfServiceApplicationPage.expandAccountConsentRow()
   })
 
-  // it(`Happy path with payment consent`, () => {
-  //   acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-  //   // // consentSelfServicePage.expandTab()
-  //   // // consentSelfServicePage.revokeConsent()
-  //   // // consentSelfServicePage.expandTab()
-  //   //  consentSelfServicePage.assertConsentIsNotDisplayed()
-  // })
-  //
-  // it(`Cancel ACP login`, () => {
-  //   acpLoginPage.cancel();
-  //   errorPage.assertError("The user rejected the authentication")
-  // })
+  it(`Happy path with payment consent`, () => {
+    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    consentSelfServicePage.clickOnApplicationCard()
+    consentSelfServiceApplicationPage.expandPaymentsTab()
+    consentSelfServiceApplicationPage.expandPaymentConsentRow()
+  })
+
+  it(`Cancel ACP login`, () => {
+    acpLoginPage.cancel();
+    errorPage.assertError("The user rejected the authentication")
+  })
 
 })
