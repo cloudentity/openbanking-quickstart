@@ -39,6 +39,9 @@ describe(`Foo`, () => {
     financrooAccountsPage.goToInvestmentsTab()
     financrooInvestmentsPage.invest()
     financrooContributePage.contribute(1)
+    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
+    mfaPage.typePin()
+    consentPage.confirm()
   })
 
 })
