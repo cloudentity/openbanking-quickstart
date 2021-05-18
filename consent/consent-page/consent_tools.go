@@ -6,7 +6,8 @@ import (
 	"github.com/cloudentity/acp-client-go/models"
 )
 
-type ConsentTools struct{}
+type ConsentTools struct {
+}
 
 func (c *ConsentTools) GetPermissionsWithDescription(requestedPermissions []string) map[string][]Permission {
 	permissions := map[string][]Permission{}
