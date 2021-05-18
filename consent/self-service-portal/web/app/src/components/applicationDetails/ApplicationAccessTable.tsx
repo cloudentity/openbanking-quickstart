@@ -78,6 +78,7 @@ function getTableBody(type: "account" | "payment", rows, setDrawerData, data) {
         {rows.map((row) => (
           <TableRow
             key={row.id}
+            className={`consent-row`}
             onClick={() => {
               setDrawerData(data.find((v) => row.id === v.consent_id));
             }}

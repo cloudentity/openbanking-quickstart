@@ -10,4 +10,8 @@ export class FinancrooContributePage {
     cy.wait(1000)
     cy.get(this.nextButtonLocator).click()
   }
+
+  public assertItIsFinished(): void {
+    cy.get(this.nextButtonLocator).should(`contain.text`, `Back to portfolio`)
+  }
 }

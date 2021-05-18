@@ -52,7 +52,7 @@ describe(`Consent admin app`, () => {
 
   it(`Cancel first ACP login`, () => {
     acpLoginPage.cancel();
-    errorPage.assertError("The user rejected the authentication")
+    errorPage.assertError(`The user rejected the authentication`)
   })
 
   it(`Cancel second ACP login`, () => {
@@ -61,7 +61,7 @@ describe(`Consent admin app`, () => {
     consentPage.confirm();
     consentAdminPage.visit();
     acpLoginPage.cancel();
-    errorPage.assertError("The user rejected the authentication")
+    errorPage.assertError(`The user rejected the authentication`)
   })
 
 })

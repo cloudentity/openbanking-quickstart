@@ -7,6 +7,11 @@ import {Credentials} from "../pages/Credentials";
 import {ConsentSelfServicePage} from '../pages/consent-self-service/ConsentSelfServicePage';
 import {Urls} from "../pages/Urls";
 import {MfaPage} from "../pages/mfa/MfaPage";
+import {FinancrooLoginPage} from "../pages/financroo/FinancrooLoginPage";
+import {FinancrooWelcomePage} from "../pages/financroo/FinancrooWelcomePage";
+import {FinancrooAccountsPage} from "../pages/financroo/accounts/FinancrooAccountsPage";
+import {FinancrooInvestmentsPage} from "../pages/financroo/investments/FinancrooInvestmentsPage";
+import {FinancrooContributePage} from "../pages/financroo/investments/FinancrooContributePage";
 
 describe(`Consent self service app`, () => {
   const tppIntentPage: TppIntentPage = new TppIntentPage();
@@ -16,40 +21,55 @@ describe(`Consent self service app`, () => {
   const errorPage: ErrorPage = new ErrorPage();
   const consentSelfServicePage: ConsentSelfServicePage = new ConsentSelfServicePage();
   const mfaPage: MfaPage = new MfaPage();
+  const financrooLoginPage: FinancrooLoginPage = new FinancrooLoginPage();
+  const financrooWelcomePage: FinancrooWelcomePage = new FinancrooWelcomePage();
+  const financrooAccountsPage: FinancrooAccountsPage = new FinancrooAccountsPage();
+  const financrooInvestmentsPage: FinancrooInvestmentsPage = new FinancrooInvestmentsPage();
+  const financrooContributePage: FinancrooContributePage = new FinancrooContributePage();
 
-  beforeEach(() => {
-    consentSelfServicePage.visit()
+  before(() => {
+    financrooLoginPage.visit()
     Urls.clearLocalStorage()
-    tppLoginPage.visit(true);
-    tppLoginPage.next();
-    tppIntentPage.saveIntentId()
-    tppIntentPage.login();
-  });
-
-  it(`Happy path`, () => {
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    financrooLoginPage.visit()
+    financrooLoginPage.login()
+    acpLoginPage.login(Credentials.financrooUsername, Credentials.defaultPassword)
+    financrooWelcomePage.connect()
+    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
     mfaPage.typePin()
-    consentPage.confirm();
-    consentSelfServicePage.visit(true);
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    consentPage.confirm()
 
-    // consentSelfServicePage.expandTab()
-    // consentSelfServicePage.revokeConsent()
-    // consentSelfServicePage.expandTab()
-    // consentSelfServicePage.assertConsentIsNotDisplayed()
+    financrooLoginPage.visit()
+    financrooAccountsPage.goToInvestmentsTab()
+    financrooInvestmentsPage.invest()
+    financrooContributePage.contribute(1)
+    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
+    mfaPage.typePin()
+    consentPage.confirm()
   })
 
-  /* it(`Cancel first ACP login`, () => {
-     acpLoginPage.cancel();
-     errorPage.assertError("The user rejected the authentication")
-   })
+  beforeEach(() => {
+    consentSelfServicePage.visit(true)
+  })
 
-   it(`Cancel second ACP login`, () => {
-     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-     consentPage.confirm();
-     consentSelfServicePage.visit();
-     acpLoginPage.cancel();
-     errorPage.assertError("The user rejected the authentication")
-   })*/
+  it(`Happy path with account consent`, () => {
+    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    // // consentSelfServicePage.expandTab()
+    // // consentSelfServicePage.revokeConsent()
+    // // consentSelfServicePage.expandTab()
+    //  consentSelfServicePage.assertConsentIsNotDisplayed()
+  })
+
+  // it(`Happy path with payment consent`, () => {
+  //   acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+  //   // // consentSelfServicePage.expandTab()
+  //   // // consentSelfServicePage.revokeConsent()
+  //   // // consentSelfServicePage.expandTab()
+  //   //  consentSelfServicePage.assertConsentIsNotDisplayed()
+  // })
+  //
+  // it(`Cancel ACP login`, () => {
+  //   acpLoginPage.cancel();
+  //   errorPage.assertError("The user rejected the authentication")
+  // })
 
 })

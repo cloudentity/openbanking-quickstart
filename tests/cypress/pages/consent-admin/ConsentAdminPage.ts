@@ -1,5 +1,5 @@
 import {Urls} from '../Urls';
-import {Aliases} from "../Aliases";
+import {Aliases} from '../Aliases';
 
 export class ConsentAdminPage {
 

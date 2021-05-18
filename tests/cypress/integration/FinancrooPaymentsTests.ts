@@ -34,7 +34,7 @@ describe(`Foo`, () => {
     consentPage.confirm()
   });
 
-  it(`Foo1`, () => {
+  it(`Happy path`, () => {
     financrooLoginPage.visit()
     financrooAccountsPage.goToInvestmentsTab()
     financrooInvestmentsPage.invest()
@@ -42,6 +42,16 @@ describe(`Foo`, () => {
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
     mfaPage.typePin()
     consentPage.confirm()
+    financrooContributePage.assertItIsFinished()
+  })
+
+  it(`Cancel on ACP login`, () => {
+    financrooLoginPage.visit()
+    financrooAccountsPage.goToInvestmentsTab()
+    financrooInvestmentsPage.invest()
+    financrooContributePage.contribute(1)
+    acpLoginPage.cancel()
+    errorPage.assertError(`The user rejected the authentication`)
   })
 
 })

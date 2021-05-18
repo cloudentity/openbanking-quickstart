@@ -123,7 +123,7 @@ function ApplicationSimpleCard({ client, clickable = true }) {
   return (
     <div
       id={client.id}
-      className={classes.container}
+      className={`${classes.container} application-card`}
       onClick={() => {
         if (clickable) {
           history.push(`/app/${client.id}`);
