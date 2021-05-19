@@ -17,6 +17,8 @@ build:
 .PHONY: run-dev
 run-dev: replace-hosts
 	docker-compose -f docker-compose.yaml -f docker-compose.build.yaml up -d
+	./scripts/wait.sh
+	make seed
 
 .PHONY: run-acp
 run-acp-apps: replace-hosts
