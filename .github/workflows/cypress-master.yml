@@ -2,6 +2,8 @@ name: cypress
 
 on:
   push:
+    branches:
+      - master
 
 jobs:
   cypress:
@@ -18,7 +20,7 @@ jobs:
           password: ${{ secrets.PUBLIC_DOCKER_CLOUDENTITY_REPO_DEV_PASSWORD }}
 
       - name: Make run
-        run: make build run
+        run: make run
 
       - name: Run cypress tests
         uses: cypress-io/github-action@v2
