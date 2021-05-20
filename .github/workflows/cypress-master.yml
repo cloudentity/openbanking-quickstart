@@ -1,9 +1,9 @@
 name: cypress-master
 
 on:
-  push:
-    branches:
-      - master
+  workflow_run:
+    workflows: ["docker"]
+    types: [completed]
 
 jobs:
   cypress:
