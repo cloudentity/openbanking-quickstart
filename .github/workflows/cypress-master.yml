@@ -20,7 +20,7 @@ jobs:
           password: ${{ secrets.PUBLIC_DOCKER_CLOUDENTITY_REPO_DEV_PASSWORD }}
 
       - name: Make run
-        run: make run
+        run: ENABLE_MFA=true make run
 
       - name: Run cypress tests
         uses: cypress-io/github-action@v2
