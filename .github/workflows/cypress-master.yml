@@ -1,4 +1,4 @@
-name: cypress
+name: cypress-master
 
 on:
   push:
