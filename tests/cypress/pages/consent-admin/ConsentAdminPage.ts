@@ -1,12 +1,12 @@
 import {Urls} from '../Urls';
-import {Aliases} from "../Aliases";
+import {Aliases} from '../Aliases';
 
 export class ConsentAdminPage {
 
   private readonly expandIconSelector: string = `.MuiSvgIcon-root`;
 
-  public visit(): void {
-    Urls.forceVisit(Urls.consentAdminUrl);
+  public visit(force: boolean = false): void {
+    Urls.visit(Urls.consentAdminUrl, force);
   }
 
   public expandTab(): void {

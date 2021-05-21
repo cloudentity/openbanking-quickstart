@@ -169,6 +169,7 @@ function ApplicationAccessPaymentDrawer({
             Cancel
           </Button>
           <Button
+            id={'revoke-access-button'}
             variant="outlined"
             className={classes.button}
             style={{

@@ -1,7 +1,8 @@
 export class ConsentPage {
   private readonly confirmButtonLocator: string = `[value="confirm"]`;
   private readonly cancelButtonLocator: string = `[value="deny"]`;
-  private readonly permissionRowLocator: string = `.permission .account-header-title`;
+  private readonly permissionRowLocator: string = `[data-desc-id="account_permissions"] li`;
+  private readonly expandPermissionsButtonLocator: string = `[data-icon-id="account_permissions"]`
   private readonly accountIdsLocator: string = `[name="account_ids"]`;
 
   public checkAccounts(accounts: string[]): void {
@@ -9,8 +10,12 @@ export class ConsentPage {
     accounts.forEach(account => cy.get(`[id*="${account}"]`).check())
   }
 
-  public assertPermissions(permission: string[]): void {
-    cy.get(this.permissionRowLocator).invoke(`text`).should(`equal`, permission.join(``))
+  public expandPermissions(): void {
+    cy.get(this.expandPermissionsButtonLocator).click();
+  }
+
+  public assertPermissions(length: number): void {
+    cy.get(this.permissionRowLocator).should('have.length', length)
   }
 
   public confirm(): void {

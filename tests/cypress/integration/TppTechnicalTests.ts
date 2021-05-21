@@ -6,6 +6,7 @@ import {ConsentPage} from '../pages/consent/ConsentPage';
 import {ErrorPage} from '../pages/ErrorPage';
 import {Credentials} from "../pages/Credentials";
 import {Urls} from "../pages/Urls";
+import {MfaPage} from "../pages/mfa/MfaPage";
 
 describe(`Tpp technical app`, () => {
   const tppAuthenticatedPage: TppAuthenticatedPage = new TppAuthenticatedPage();
@@ -14,6 +15,7 @@ describe(`Tpp technical app`, () => {
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
   const consentPage: ConsentPage = new ConsentPage();
   const errorPage: ErrorPage = new ErrorPage();
+  const mfaPage: MfaPage = new MfaPage();
 
   const basicPermission: string = `ReadAccountsBasic`;
   const detailPermission: string = `ReadAccountsDetail`;
@@ -39,7 +41,9 @@ describe(`Tpp technical app`, () => {
       } else {
         tppIntentPage.login();
         acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-        consentPage.assertPermissions(permissions)
+        mfaPage.typePin()
+        consentPage.expandPermissions()
+        consentPage.assertPermissions(permissions.length)
         consentPage.confirm();
         if (!permissions.includes(basicPermission) && permissions.includes(detailPermission)) {
           errorPage.assertError(`failed to call bank get accounts`)
@@ -61,6 +65,7 @@ describe(`Tpp technical app`, () => {
     tppLoginPage.next();
     tppIntentPage.login();
     acpLoginPage.login(`user`, Credentials.defaultPassword);
+    mfaPage.typePin()
     consentPage.cancel()
     errorPage.assertError(`rejected`)
   })

@@ -3,9 +3,10 @@ import {FinancrooLoginPage} from '../pages/financroo/FinancrooLoginPage';
 import {ConsentPage} from '../pages/consent/ConsentPage';
 import {ErrorPage} from '../pages/ErrorPage';
 import {FinancrooWelcomePage} from '../pages/financroo/FinancrooWelcomePage';
-import {FinancrooDashboardPage} from '../pages/financroo/FinancrooDashboardPage';
+import {FinancrooAccountsPage} from '../pages/financroo/accounts/FinancrooAccountsPage';
 import {Credentials} from "../pages/Credentials";
 import {Urls} from "../pages/Urls";
+import {MfaPage} from "../pages/mfa/MfaPage";
 
 describe(`Financroo app`, () => {
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
@@ -13,7 +14,8 @@ describe(`Financroo app`, () => {
   const errorPage: ErrorPage = new ErrorPage();
   const financrooLoginPage: FinancrooLoginPage = new FinancrooLoginPage();
   const financrooWelcomePage: FinancrooWelcomePage = new FinancrooWelcomePage();
-  const financrooDashboardPage: FinancrooDashboardPage = new FinancrooDashboardPage();
+  const financrooAccountsPage: FinancrooAccountsPage = new FinancrooAccountsPage();
+  const mfaPage: MfaPage = new MfaPage();
 
   const billsAccount: string = `Bills`;
   const householdAccount: string = `Household`;
@@ -35,11 +37,12 @@ describe(`Financroo app`, () => {
       acpLoginPage.login(Credentials.financrooUsername, Credentials.defaultPassword)
       financrooWelcomePage.connect()
       acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
+      mfaPage.typePin()
       consentPage.checkAccounts(accounts)
-      consentPage.assertPermissions([`ReadAccountsDetail`, `ReadAccountsBasic`, `ReadBalances`,
-        `ReadTransactionsBasic`, `ReadTransactionsDetail`, `ReadTransactionsCredits`, `ReadTransactionsDebits`])
+      consentPage.expandPermissions()
+      consentPage.assertPermissions(7)
       consentPage.confirm()
-      financrooDashboardPage.assertAccounts(accounts)
+      financrooAccountsPage.assertAccounts(accounts)
     })
   })
 
@@ -59,6 +62,7 @@ describe(`Financroo app`, () => {
     acpLoginPage.login(Credentials.financrooUsername, Credentials.defaultPassword)
     financrooWelcomePage.connect()
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
+    mfaPage.typePin()
     consentPage.cancel()
     errorPage.assertError(`rejected`)
   })
