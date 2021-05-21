@@ -99,6 +99,7 @@ export default function AcccountsAddedDialog({ open, setOpen }) {
         </Button>
         <Button
           variant="outlined"
+          id={"start-investing-button"}
           onClick={() => {
             history.push("/investments");
           }}

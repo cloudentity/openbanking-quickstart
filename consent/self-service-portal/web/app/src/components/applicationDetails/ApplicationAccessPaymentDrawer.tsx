@@ -67,7 +67,7 @@ function ApplicationAccessPaymentDrawer({
       setDrawerData={setDrawerData}
     >
       <div className={classes.purpose}>
-        <div className={classes.purposeHeader}>Purpose for sharing data:</div>
+        <div className={`${classes.purposeHeader} purpose-header`}>Purpose for sharing data:</div>
         <div>To enable payments to Financroo investments</div>
       </div>
 

@@ -62,13 +62,13 @@ function ApplicationAccessTabs({
           <Tab
             value="account"
             label="Account access"
-            className={classes.tab}
+            className={`${classes.tab} accounts-tab`}
             style={tab === "account" ? { color: "#DC1B37" } : {}}
           />
           <Tab
             value="payment"
             label="Payment access"
-            className={classes.tab}
+            className={`${classes.tab} payments-tab`}
             style={tab === "payment" ? { color: "#DC1B37" } : {}}
           />
         </Tabs>

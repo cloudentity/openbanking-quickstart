@@ -5,6 +5,7 @@ export COMPOSE_DOCKER_CLI_BUILD=1
 
 OB_APPS=developer-tpp financroo-tpp consent-page consent-self-service-portal consent-admin-portal bank
 ACP_APPS=acp crdb hazelcast
+ENABLE_MFA?=false
 
 .PHONY: replace-hosts
 replace-hosts:

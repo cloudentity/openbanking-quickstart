@@ -6,6 +6,13 @@ import {ErrorPage} from '../pages/ErrorPage';
 import {Credentials} from "../pages/Credentials";
 import {ConsentSelfServicePage} from '../pages/consent-self-service/ConsentSelfServicePage';
 import {Urls} from "../pages/Urls";
+import {MfaPage} from "../pages/mfa/MfaPage";
+import {FinancrooLoginPage} from "../pages/financroo/FinancrooLoginPage";
+import {FinancrooWelcomePage} from "../pages/financroo/FinancrooWelcomePage";
+import {FinancrooAccountsPage} from "../pages/financroo/accounts/FinancrooAccountsPage";
+import {FinancrooInvestmentsPage} from "../pages/financroo/investments/FinancrooInvestmentsPage";
+import {FinancrooContributePage} from "../pages/financroo/investments/FinancrooContributePage";
+import {ConsentSelfServiceApplicationPage} from "../pages/consent-self-service/ConsentSelfServiceApplicationPage";
 
 describe(`Consent self service app`, () => {
   const tppIntentPage: TppIntentPage = new TppIntentPage();
@@ -14,36 +21,53 @@ describe(`Consent self service app`, () => {
   const consentPage: ConsentPage = new ConsentPage();
   const errorPage: ErrorPage = new ErrorPage();
   const consentSelfServicePage: ConsentSelfServicePage = new ConsentSelfServicePage();
+  const consentSelfServiceApplicationPage: ConsentSelfServiceApplicationPage = new ConsentSelfServiceApplicationPage();
+  const mfaPage: MfaPage = new MfaPage();
+  const financrooLoginPage: FinancrooLoginPage = new FinancrooLoginPage();
+  const financrooWelcomePage: FinancrooWelcomePage = new FinancrooWelcomePage();
+  const financrooAccountsPage: FinancrooAccountsPage = new FinancrooAccountsPage();
+  const financrooInvestmentsPage: FinancrooInvestmentsPage = new FinancrooInvestmentsPage();
+  const financrooContributePage: FinancrooContributePage = new FinancrooContributePage();
+
+  before(() => {
+    financrooLoginPage.visit()
+    Urls.clearLocalStorage()
+    financrooLoginPage.visit()
+    financrooLoginPage.login()
+    acpLoginPage.login(Credentials.financrooUsername, Credentials.defaultPassword)
+    financrooWelcomePage.connect()
+    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
+    mfaPage.typePin()
+    consentPage.confirm()
+
+    financrooLoginPage.visit()
+    financrooAccountsPage.goToInvestmentsTab()
+    financrooInvestmentsPage.invest()
+    financrooContributePage.contribute(1)
+    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
+    mfaPage.typePin()
+    consentPage.confirm()
+  })
 
   beforeEach(() => {
-    consentSelfServicePage.visit()
-    Urls.clearLocalStorage()
-    tppLoginPage.visit();
-    tppLoginPage.next();
-    tppIntentPage.saveIntentId()
-    tppIntentPage.login();
-  });
-
-  it(`Happy path`, () => {
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    consentPage.confirm();
-    consentSelfServicePage.visit();
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    consentSelfServicePage.expandTab()
-    consentSelfServicePage.revokeConsent()
-    consentSelfServicePage.expandTab()
-    consentSelfServicePage.assertConsentIsNotDisplayed()
+    consentSelfServicePage.visit(true)
   })
 
-  it(`Cancel first ACP login`, () => {
-    acpLoginPage.cancel();
-    errorPage.assertError("The user rejected the authentication")
+  it(`Happy path with account consent`, () => {
+    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    consentSelfServicePage.clickOnApplicationCard()
+    consentSelfServiceApplicationPage.expandAccountsTab()
+    consentSelfServiceApplicationPage.expandAccountConsentRow()
   })
 
-  it(`Cancel second ACP login`, () => {
+  it(`Happy path with payment consent`, () => {
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    consentPage.confirm();
-    consentSelfServicePage.visit();
+    consentSelfServicePage.clickOnApplicationCard()
+    consentSelfServiceApplicationPage.expandPaymentsTab()
+    consentSelfServiceApplicationPage.expandPaymentConsentRow()
+  })
+
+  it(`Cancel ACP login`, () => {
     acpLoginPage.cancel();
     errorPage.assertError("The user rejected the authentication")
   })

@@ -37,6 +37,7 @@ export default function Investments({
         tab="investments"
         subHeaderTitle="Investments"
         subHeaderButton={{
+          id: "invest-button",
           title: "Contribute now",
           onClick: () => {
             history.push("/investments/contribute");
