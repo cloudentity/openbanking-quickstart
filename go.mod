@@ -6,6 +6,7 @@ require (
 	github.com/caarlos0/env/v6 v6.4.0
 	github.com/cloudentity/acp-client-go v0.0.0-20210407134811-d5a489da08a3
 	github.com/dgrijalva/jwt-go v3.2.1-0.20200107013213-dc14462fd587+incompatible
+	github.com/ghodss/yaml v1.0.0
 	github.com/gin-gonic/gin v1.6.3
 	github.com/go-openapi/errors v0.19.9
 	github.com/go-openapi/runtime v0.19.24
@@ -23,8 +24,10 @@ require (
 	github.com/stretchr/testify v1.6.1
 	github.com/tidwall/pretty v1.0.2 // indirect
 	go.etcd.io/bbolt v1.3.5
+	golang.org/x/oauth2 v0.0.0-20201208152858-08078c50e5b5
 	golang.org/x/sys v0.0.0-20201119102817-f84b799fce68 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/go-playground/validator.v9 v9.31.0
+	gopkg.in/yaml.v3 v3.0.0-20210107192922-496545a6307b // indirect
 )
