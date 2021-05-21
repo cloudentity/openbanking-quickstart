@@ -63,7 +63,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	if body, err = yamlFile.ToJson(); err != nil {
+	if body, err = yamlFile.ToJSON(); err != nil {
 		log.Fatal(err)
 	}
 

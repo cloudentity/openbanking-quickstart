@@ -8,7 +8,7 @@ import (
 )
 
 func TestTemplates(t *testing.T) {
-	var testCases = []struct {
+	testCases := []struct {
 		name               string
 		dir                string
 		variablesFile      string
@@ -52,6 +52,7 @@ func TestTemplates(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
+		tc := tc
 		t.Run(tc.name, func(tt *testing.T) {
 			var variablesFile *string
 			if tc.variablesFile != "" {
@@ -64,14 +65,13 @@ func TestTemplates(t *testing.T) {
 			yamlFile, err := templates.Merge()
 			require.NoError(tt, err)
 
-			bs, err := yamlFile.ToJson()
+			bs, err := yamlFile.ToJSON()
 
 			require.NoError(tt, err)
 
 			if tc.assertResponse != nil {
 				tc.assertResponse(tt, bs)
 			}
-
 		})
 	}
 }

@@ -11,7 +11,7 @@ import (
 )
 
 func TestImport(t *testing.T) {
-	var testCases = []struct {
+	testCases := []struct {
 		name       string
 		issuerURL  func(port string) string
 		client     *http.Client
@@ -41,6 +41,7 @@ func TestImport(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
+		tc := tc
 		t.Run(tc.name, func(tt *testing.T) {
 			tc.mockServer.Start()
 			defer tc.mockServer.Close()

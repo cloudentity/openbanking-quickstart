@@ -91,7 +91,7 @@ func (t Templates) Merge() (YamlFile, error) {
 	return yamlFile, nil
 }
 
-func (y YamlFile) ToJson() ([]byte, error) {
+func (y YamlFile) ToJSON() ([]byte, error) {
 	var (
 		bs  []byte
 		err error
