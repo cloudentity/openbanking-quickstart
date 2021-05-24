@@ -49,7 +49,7 @@ func ImportConfiguration(iss *url.URL, client *http.Client, body []byte, mode st
 	}
 	defer resp.Body.Close()
 
-	if resp.StatusCode < 200 || resp.StatusCode > 300 {
+	if resp.StatusCode != http.StatusNoContent {
 		if bs, err = ioutil.ReadAll(resp.Body); err != nil {
 			return err
 		}

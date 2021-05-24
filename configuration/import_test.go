@@ -70,6 +70,6 @@ func serverWithMockedImportEndpoint(path string) *httptest.Server {
 			return
 		}
 
-		rw.WriteHeader(200)
+		rw.WriteHeader(204)
 	}))
 }
