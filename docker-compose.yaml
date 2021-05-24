@@ -146,14 +146,14 @@ services:
     ports:
      - 8443:8443
     volumes:
-      - ./data/seed.yaml.generated:/seed.yaml
       - ./data/acp_cert.pem:/acp_cert.pem
       - ./data/acp_key.pem:/acp_key.pem
     environment:
-      - FEATURES_SWAGGERUI=true
-      - FEATURES_SYSTEMOPENBANKINGCONSENTSMANAGEMENT=true
-      - FEATURES_OPENBANKINGDOMESTICPAYMENTCONSENTS=true
-      - FEATURES_SYSTEMCLIENTSMANAGEMENT=true
+      - FEATURES_SWAGGER_UI=true
+      - FEATURES_INTEGRATION_ENDPOINTS=true
+      - FEATURES_SYSTEM_OPENBANKING_CONSENTS_MANAGEMENT=true
+      - FEATURES_OPENBANKING_DOMESTIC_PAYMENT_CONSENTS=true
+      - FEATURES_SYSTEM_CLIENTS_MANAGEMENT=true
     command:
      - server
      - start
@@ -168,8 +168,7 @@ services:
      - --server.key.path
      - /acp_key.pem
      - --demo
-     - --input
-     - /seed.yaml
+     - --create-default-tenant
 
   crdb:
     container_name: crdb
@@ -188,6 +187,22 @@ services:
     restart: on-failure
     ports:
       - 5701:5701
+
+  configuration:
+    container_name: configuration
+    image: cloudentity/openbanking-quickstart-configuration:latest
+    restart: on-failure
+    depends_on:
+      - acp
+    volumes:
+      - ./data/imports:/imports
+    command:
+      - /app/main
+      - --templates-dir
+      - /imports
+      - --issuer-url
+      - https://acp:8443/system/system
+      - --verbose
 
 volumes:
   crdb:

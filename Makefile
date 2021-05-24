@@ -19,7 +19,6 @@ build:
 run-dev: replace-hosts
 	docker-compose -f docker-compose.yaml -f docker-compose.build.yaml up -d
 	./scripts/wait.sh
-	make seed
 
 .PHONY: run-acp
 run-acp-apps: replace-hosts
@@ -54,13 +53,6 @@ stop:
 .PHONY: clean
 clean:
 	docker-compose down -v
-
-.PHONY: dump
-dump:
-	docker exec acp ./acp export \
-		--sql.url 'postgres://root@crdb:26257/defaultdb?sslmode=disable' \
-		--secret.key KNEcLGdDqpwrXDubqPgDSUkMMsLPXaHh \
-		--format yaml > data/seed.yaml
 
 .PHONY: run-tests
 run-tests:
