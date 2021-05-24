@@ -11,6 +11,7 @@ import (
 
 	"github.com/ghodss/yaml"
 	"github.com/imdario/mergo"
+	"github.com/pkg/errors"
 )
 
 type YamlFile map[string]interface{}
@@ -31,18 +32,18 @@ func LoadTemplates(dir string, envFile *string) (Templates, error) {
 		err       error
 	)
 
-	if envFile != nil {
+	if envFile != nil && *envFile != "" {
 		if bs, err = ioutil.ReadFile(*envFile); err != nil {
-			return templates, err
+			return templates, errors.Wrapf(err, "failed to read env file")
 		}
 
 		if err = yaml.Unmarshal(bs, &variables); err != nil {
-			return templates, err
+			return templates, errors.Wrapf(err, "failed to unmarshal env file to yaml")
 		}
 	}
 
 	if files, err = ioutil.ReadDir(dir); err != nil {
-		return templates, err
+		return templates, errors.Wrapf(err, "failed to read templates directory: %s", dir)
 	}
 
 	for _, f := range files {
@@ -52,16 +53,16 @@ func LoadTemplates(dir string, envFile *string) (Templates, error) {
 
 		file := fmt.Sprintf("%s/%s", dir, f.Name())
 		if bs, err = ioutil.ReadFile(file); err != nil {
-			return templates, err
+			return templates, errors.Wrapf(err, "failed to read template: %s", file)
 		}
 
 		if t, err = template.New(file).Parse(string(bs)); err != nil {
-			return templates, err
+			return templates, errors.Wrapf(err, "failed to parse template: %s", file)
 		}
 
 		var buf bytes.Buffer
 		if err = t.Execute(&buf, variables); err != nil {
-			return templates, err
+			return templates, errors.Wrapf(err, "failed to render template: %s", file)
 		}
 
 		templates.m[file] = buf.Bytes()
@@ -76,15 +77,15 @@ func (t Templates) Merge() (YamlFile, error) {
 		err      error
 	)
 
-	for _, v := range t.m {
+	for t, v := range t.m {
 		var tmp YamlFile
 
 		if err = yaml.Unmarshal(v, &tmp); err != nil {
-			return yamlFile, err
+			return yamlFile, errors.Wrapf(err, "failed to unmarshal template: %s to yaml", t)
 		}
 
 		if err = mergo.Merge(&yamlFile, &tmp, mergo.WithAppendSlice); err != nil {
-			return yamlFile, err
+			return yamlFile, errors.Wrapf(err, "failed to merge template: %s", t)
 		}
 	}
 
@@ -98,7 +99,7 @@ func (y YamlFile) ToJSON() ([]byte, error) {
 	)
 
 	if bs, err = json.Marshal(&y); err != nil {
-		return bs, err
+		return bs, errors.Wrapf(err, "failed to marshal yaml to json")
 	}
 
 	return bs, nil

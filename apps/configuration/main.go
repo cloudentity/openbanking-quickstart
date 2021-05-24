@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"os"
 	"time"
 
 	"golang.org/x/oauth2"
@@ -18,14 +19,26 @@ var (
 	issuerURL     = flag.String("issuer-url", "https://localhost:8443/system/system", "issuer url")
 	clientID      = flag.String("client-id", "system", "client id")
 	clientSecret  = flag.String("client-secret", "n8HF35qzZkmsukHJzzz9LnN8m9Mf97uq", "client secret")
-	templatesDir  = flag.String("templates-dir", "./data/templates", "templates directory in yaml format")
+	templatesDir  = flag.String("templates-dir", "", "templates directory in yaml format")
 	variablesFile = flag.String("variables-file", "", "optional variables file in yaml format that can be used in templates")
 	httpTimeout   = flag.Duration("http-timeout", time.Second*10, "http timeout")
 	httpInsecure  = flag.Bool("http-insecure", true, "http insecure connection")
 	importMode    = flag.String("import-mode", "update", "how acp should behave in case of conflicts, possible options: fail | ignore | update")
 )
 
+func initialize() {
+	flag.Parse()
+
+	if *templatesDir == "" {
+		log.Printf("templates dir must be set, see usage below")
+		flag.PrintDefaults()
+		os.Exit(1)
+	}
+}
+
 func main() {
+	initialize()
+
 	var (
 		err       error
 		templates Templates

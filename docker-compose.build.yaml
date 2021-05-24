@@ -25,3 +25,7 @@ services:
     build:
       context: .
       dockerfile: apps/bank/Dockerfile
+  configuration:
+    build:
+      context: .
+      dockerfile: apps/configuration/Dockerfile
