@@ -13,7 +13,8 @@ import (
 func TestImport(t *testing.T) {
 	testCases := []struct {
 		name       string
-		issuerURL  func(port string) string
+		tenantURL  func(port string) string
+		tenant     string
 		client     *http.Client
 		body       []byte
 		mode       string
@@ -22,18 +23,20 @@ func TestImport(t *testing.T) {
 	}{
 		{
 			name: "import configuration for system tenant",
-			issuerURL: func(port string) string {
-				return fmt.Sprintf("http://localhost:%s/system/system", port)
+			tenantURL: func(port string) string {
+				return fmt.Sprintf("http://localhost:%s/system", port)
 			},
+			tenant:     "system",
 			client:     http.DefaultClient,
 			body:       []byte(`{"tenants": []}`),
 			mockServer: serverWithMockedImportEndpoint("/api/system/configuration"),
 		},
 		{
 			name: "import configuration for a specific tenant",
-			issuerURL: func(port string) string {
-				return fmt.Sprintf("http://localhost:%s/custom/system", port)
+			tenantURL: func(port string) string {
+				return fmt.Sprintf("http://localhost:%s/custom", port)
 			},
+			tenant:     "custom",
 			client:     http.DefaultClient,
 			body:       []byte(`{"servers": [{"id": "new", "initialize": true}]}`),
 			mockServer: serverWithMockedImportEndpoint("/api/system/custom/configuration"),
@@ -49,10 +52,10 @@ func TestImport(t *testing.T) {
 			serverURL, err := url.Parse(tc.mockServer.URL)
 			require.NoError(tt, err)
 
-			iss, err := url.Parse(tc.issuerURL(serverURL.Port()))
+			u, err := url.Parse(tc.tenantURL(serverURL.Port()))
 			require.NoError(tt, err)
 
-			err = ImportConfiguration(iss, tc.client, tc.body, tc.mode)
+			err = ImportConfiguration(u, &tc.tenant, tc.client, tc.body, tc.mode)
 
 			if tc.err != nil {
 				require.Error(tt, err)

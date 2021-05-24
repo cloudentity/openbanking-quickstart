@@ -19,7 +19,7 @@ type Templates struct {
 	m map[string][]byte
 }
 
-func LoadTemplates(dir string, envFile *string) (Templates, error) {
+func LoadTemplates(dir string, variablesFile *string) (Templates, error) {
 	var (
 		templates = Templates{
 			m: map[string][]byte{},
@@ -31,8 +31,8 @@ func LoadTemplates(dir string, envFile *string) (Templates, error) {
 		err       error
 	)
 
-	if envFile != nil {
-		if bs, err = ioutil.ReadFile(*envFile); err != nil {
+	if variablesFile != nil {
+		if bs, err = ioutil.ReadFile(*variablesFile); err != nil {
 			return templates, err
 		}
 

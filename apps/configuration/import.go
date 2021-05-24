@@ -6,10 +6,11 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"strings"
 )
 
-func ImportConfiguration(iss *url.URL, client *http.Client, body []byte, mode string) error {
+const systemTenant = "system"
+
+func ImportConfiguration(tenantURL *url.URL, tenant *string, client *http.Client, body []byte, mode string) error {
 	var (
 		req  *http.Request
 		resp *http.Response
@@ -17,29 +18,17 @@ func ImportConfiguration(iss *url.URL, client *http.Client, body []byte, mode st
 		err  error
 	)
 
-	parts := strings.Split(iss.Path, "/")
-	if len(parts) < 3 {
-		return fmt.Errorf("tenant/server must be present in the issuer url")
-	}
-
-	tenant := parts[1]
-	server := parts[2]
-
-	if tenant == "system" {
-		iss.Path = "/api/system/configuration"
+	if *tenant == systemTenant {
+		tenantURL.Path = "/api/system/configuration"
 	} else {
-		iss.Path = fmt.Sprintf("/api/system/%s/configuration", tenant)
-	}
-
-	if server != "system" {
-		return fmt.Errorf("system server must be used in the issuer url")
+		tenantURL.Path = fmt.Sprintf("/api/system/%s/configuration", *tenant)
 	}
 
 	if mode != "" {
-		iss.RawQuery = fmt.Sprintf("mode=%s", mode)
+		tenantURL.RawQuery = fmt.Sprintf("mode=%s", mode)
 	}
 
-	if req, err = http.NewRequest("PUT", iss.String(), bytes.NewBuffer(body)); err != nil {
+	if req, err = http.NewRequest("PUT", tenantURL.String(), bytes.NewBuffer(body)); err != nil {
 		return err
 	}
 	req.Header.Set("content-type", "application/json")
@@ -54,7 +43,7 @@ func ImportConfiguration(iss *url.URL, client *http.Client, body []byte, mode st
 			return err
 		}
 
-		return fmt.Errorf("import endpoint: %s returned invalid status code: %d, body: %s", iss.String(), resp.StatusCode, bs)
+		return fmt.Errorf("import endpoint: %s returned invalid status code: %d, body: %s", tenantURL.String(), resp.StatusCode, bs)
 	}
 
 	return nil
