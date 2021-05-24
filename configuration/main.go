@@ -22,7 +22,7 @@ var (
 	variablesFile = flag.String("variables-file", "", "optional variables file in yaml format that can be used in templates")
 	httpTimeout   = flag.Duration("http-timeout", time.Second*10, "http timeout")
 	httpInsecure  = flag.Bool("http-insecure", true, "http insecure connection")
-	importMode    = flag.String("import-mode", "update", "import mode: fail|ignore|update")
+	importMode    = flag.String("import-mode", "update", "how acp should behave in case of conflicts, possible options: fail | ignore | update")
 )
 
 func main() {
