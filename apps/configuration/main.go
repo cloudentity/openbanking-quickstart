@@ -17,7 +17,8 @@ import (
 )
 
 var (
-	issuerURL     = flag.String("issuer-url", "https://localhost:8443/system/system", "issuer url")
+	tenantURL     = flag.String("tenant-url", "https://localhost:8443/system", "tenant url")
+	tenant        = flag.String("tenant", "default", "tenant id")
 	clientID      = flag.String("client-id", "system", "client id")
 	clientSecret  = flag.String("client-secret", "n8HF35qzZkmsukHJzzz9LnN8m9Mf97uq", "client secret")
 	templatesDir  = flag.String("templates-dir", "", "templates directory in yaml format")
@@ -27,6 +28,8 @@ var (
 	importMode    = flag.String("import-mode", "update", "how acp should behave in case of conflicts, possible options: fail | ignore | update")
 	verbose       = flag.Bool("verbose", false, "show verbose logs")
 )
+
+const systemServer = "system"
 
 func initialize() {
 	flag.Parse()
@@ -53,10 +56,10 @@ func main() {
 		templates Templates
 		yamlFile  YamlFile
 		body      []byte
-		iss       *url.URL
+		tURL      *url.URL
 	)
 
-	if iss, err = url.Parse(*issuerURL); err != nil {
+	if tURL, err = url.Parse(*tenantURL); err != nil {
 		log.Fatal(err)
 	}
 
@@ -72,7 +75,7 @@ func main() {
 	cc := clientcredentials.Config{
 		ClientID:     *clientID,
 		ClientSecret: *clientSecret,
-		TokenURL:     fmt.Sprintf("%s/oauth2/token", iss.String()),
+		TokenURL:     fmt.Sprintf("%s/%s/oauth2/token", tURL.String(), systemServer),
 	}
 
 	client := cc.Client(context.WithValue(context.Background(), oauth2.HTTPClient, httpClient))
@@ -91,7 +94,7 @@ func main() {
 
 	logrus.Debugf("%s", body)
 
-	if err = ImportConfiguration(iss, client, body, *importMode); err != nil {
+	if err = ImportConfiguration(tURL, tenant, client, body, *importMode); err != nil {
 		log.Fatal(err)
 	}
 
