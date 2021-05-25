@@ -15,7 +15,7 @@ import (
 )
 
 var (
-	tenantURL     = flag.String("issuer-url", "https://localhost:8443/system", "issuer url")
+	tenantURL     = flag.String("tenant-url", "https://localhost:8443/system", "tenant url")
 	tenant        = flag.String("tenant", "default", "tenant id")
 	clientID      = flag.String("client-id", "system", "client id")
 	clientSecret  = flag.String("client-secret", "n8HF35qzZkmsukHJzzz9LnN8m9Mf97uq", "client secret")
