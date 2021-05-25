@@ -25,7 +25,7 @@ func (s *DomesticPaymentConsentHandler) GetConsent(c *gin.Context, loginRequest 
 	if response, err = s.Client.Openbanking.GetDomesticPaymentConsentSystem(
 		openbanking.NewGetDomesticPaymentConsentSystemParams().
 			WithTid(s.Client.TenantID).
-			WithLoginID(loginRequest.ID),
+			WithLogin(loginRequest.ID),
 		nil,
 	); err != nil {
 		RenderInternalServerError(c, errors.Wrapf(err, "failed to get domestic payment consent"))
@@ -56,7 +56,7 @@ func (s *DomesticPaymentConsentHandler) ConfirmConsent(c *gin.Context, loginRequ
 	if consent, err = s.Client.Openbanking.GetDomesticPaymentConsentSystem(
 		openbanking.NewGetDomesticPaymentConsentSystemParams().
 			WithTid(s.Client.TenantID).
-			WithLoginID(loginRequest.ID),
+			WithLogin(loginRequest.ID),
 		nil,
 	); err != nil {
 		return "", err
@@ -65,9 +65,9 @@ func (s *DomesticPaymentConsentHandler) ConfirmConsent(c *gin.Context, loginRequ
 	if accept, err = s.Client.Openbanking.AcceptDomesticPaymentConsentSystem(
 		openbanking.NewAcceptDomesticPaymentConsentSystemParams().
 			WithTid(s.Client.TenantID).
-			WithLoginID(loginRequest.ID).
-			WithAcceptDomesticPaymentConsent(&models.AcceptDomesticPaymentConsentRequest{
-				AccountIDs:    []string{*consent.Payload.Initiation.DebtorAccount.Identification},
+			WithLogin(loginRequest.ID).
+			WithAcceptConsent(&models.AcceptConsentRequest{
+				AccountIds:    []string{string(*consent.Payload.DomesticPaymentConsent.Initiation.DebtorAccount.Identification)},
 				GrantedScopes: s.GrantScopes(consent.Payload.RequestedScopes),
 				LoginState:    loginRequest.State,
 			}),
@@ -93,8 +93,8 @@ func (s *DomesticPaymentConsentHandler) DenyConsent(c *gin.Context, loginRequest
 	if reject, err = s.Client.Openbanking.RejectDomesticPaymentConsentSystem(
 		openbanking.NewRejectDomesticPaymentConsentSystemParams().
 			WithTid(s.Client.TenantID).
-			WithLoginID(loginRequest.ID).
-			WithRejectDomesticPaymentConsent(&models.RejectDomesticPaymentConsentRequest{
+			WithLogin(loginRequest.ID).
+			WithRejectConsent(&models.RejectConsentRequest{
 				ID:         loginRequest.ID,
 				LoginState: loginRequest.State,
 				Error:      "rejected",

@@ -62,7 +62,7 @@ func (s *Server) CreateDomesticPayment() func(*gin.Context) {
 			return
 		}
 
-		if introspectionResponse.Status != "Authorised" {
+		if *introspectionResponse.Status != "Authorised" {
 			msg := "domestic payment consent does not have status authorised"
 			c.JSON(http.StatusUnprocessableEntity, models.OBError1{
 				Message: &msg,
@@ -123,7 +123,7 @@ func (s *Server) CreateDomesticPayment() func(*gin.Context) {
 		response := paymentModels.OBWriteDomesticResponse5{
 			Data: &paymentModels.OBWriteDomesticResponse5Data{
 				DomesticPaymentID:    &id,
-				ConsentID:            &introspectionResponse.ConsentID,
+				ConsentID:            introspectionResponse.ConsentID,
 				Status:               &status,
 				Charges:              []*paymentModels.OBWriteDomesticResponse5DataChargesItems0{},
 				CreationDateTime:     newDateTimePtr(time.Now()),
@@ -136,7 +136,7 @@ func (s *Server) CreateDomesticPayment() func(*gin.Context) {
 		}
 
 		// create resource
-		if err = s.Storage.CreateDomesticPayment(introspectionResponse.Subject, response); err != nil {
+		if err = s.Storage.CreateDomesticPayment(introspectionResponse.Sub, response); err != nil {
 			msg := err.Error()
 			if errors.As(err, &errAlreadyExists) {
 				c.JSON(http.StatusConflict, models.OBError1{
@@ -180,7 +180,7 @@ func (s *Server) GetDomesticPayment() func(*gin.Context) {
 			return
 		}
 
-		if payment, err = s.Storage.GetDomesticPayment(introspectionResponse.Subject, domesticPaymentID); err != nil {
+		if payment, err = s.Storage.GetDomesticPayment(introspectionResponse.Sub, domesticPaymentID); err != nil {
 			if errors.As(err, &errNotFound) {
 				msg := "domestic payment id not found"
 				c.JSON(http.StatusNotFound, models.OBErrorResponse1{
@@ -234,7 +234,7 @@ func (s *Server) GetAccounts() func(*gin.Context) {
 			return
 		}
 
-		if userAccounts, err = s.Storage.GetAccounts(introspectionResponse.Subject); err != nil {
+		if userAccounts, err = s.Storage.GetAccounts(introspectionResponse.Sub); err != nil {
 			msg := err.Error()
 			c.JSON(http.StatusNotFound, models.OBErrorResponse1{
 				Message: &msg,
@@ -346,7 +346,7 @@ func (s *Server) GetBalances() func(ctx *gin.Context) {
 			return
 		}
 
-		if userBalances, err = s.Storage.GetBalances(introspectionResponse.Subject); err != nil {
+		if userBalances, err = s.Storage.GetBalances(introspectionResponse.Sub); err != nil {
 			msg := err.Error()
 			c.JSON(http.StatusNotFound, models.OBErrorResponse1{
 				Message: &msg,
@@ -446,7 +446,7 @@ func (s *Server) GetTransactions() func(ctx *gin.Context) {
 			return
 		}
 
-		if userTransactions, err = s.Storage.GetTransactions(introspectionResponse.Subject); err != nil {
+		if userTransactions, err = s.Storage.GetTransactions(introspectionResponse.Sub); err != nil {
 			msg := err.Error()
 			c.JSON(http.StatusNotFound, models.OBErrorResponse1{
 				Message: &msg,
@@ -569,7 +569,7 @@ func initiationsAreEqual(initiation1, initiation2 interface{}) bool {
 	return bytes.Equal(initiation1Bytes, initiation2Bytes)
 }
 
-func toDomesticResponse5DataInitiation(initiation *acpClient.DomesticPaymentConsentDataInitiation) *paymentModels.OBWriteDomesticResponse5DataInitiation {
+func toDomesticResponse5DataInitiation(initiation *acpClient.OBWriteDomesticConsentResponse5DataInitiation) *paymentModels.OBWriteDomesticResponse5DataInitiation {
 	var (
 		initiationBytes []byte
 		err             error

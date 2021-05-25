@@ -23,7 +23,7 @@ func (s *AccountAccessConsentHandler) GetConsent(c *gin.Context, loginRequest Lo
 	if response, err = s.Client.Openbanking.GetAccountAccessConsentSystem(
 		openbanking.NewGetAccountAccessConsentSystemParams().
 			WithTid(s.Client.TenantID).
-			WithLoginID(loginRequest.ID),
+			WithLogin(loginRequest.ID),
 		nil,
 	); err != nil {
 		RenderInternalServerError(c, errors.Wrapf(err, "failed to get account access consent"))
@@ -48,7 +48,7 @@ func (s *AccountAccessConsentHandler) ConfirmConsent(c *gin.Context, loginReques
 	if consent, err = s.Client.Openbanking.GetAccountAccessConsentSystem(
 		openbanking.NewGetAccountAccessConsentSystemParams().
 			WithTid(s.Client.TenantID).
-			WithLoginID(loginRequest.ID),
+			WithLogin(loginRequest.ID),
 		nil,
 	); err != nil {
 		return "", err
@@ -57,10 +57,10 @@ func (s *AccountAccessConsentHandler) ConfirmConsent(c *gin.Context, loginReques
 	if accept, err = s.Client.Openbanking.AcceptAccountAccessConsentSystem(
 		openbanking.NewAcceptAccountAccessConsentSystemParams().
 			WithTid(s.Client.TenantID).
-			WithLoginID(loginRequest.ID).
-			WithAcceptAccountAccessConsent(&models.AcceptAccountAccessConsentRequest{
+			WithLogin(loginRequest.ID).
+			WithAcceptConsent(&models.AcceptConsentRequest{
 				GrantedScopes: s.GrantScopes(consent.Payload.RequestedScopes),
-				AccountIDs:    c.PostFormArray("account_ids"),
+				AccountIds:    c.PostFormArray("account_ids"),
 				LoginState:    loginRequest.State,
 			}),
 		nil,
@@ -80,8 +80,8 @@ func (s *AccountAccessConsentHandler) DenyConsent(c *gin.Context, loginRequest L
 	if reject, err = s.Client.Openbanking.RejectAccountAccessConsentSystem(
 		openbanking.NewRejectAccountAccessConsentSystemParams().
 			WithTid(s.Client.TenantID).
-			WithLoginID(loginRequest.ID).
-			WithRejectAccountAccessConsent(&models.RejectAccountAccessConsentRequest{
+			WithLogin(loginRequest.ID).
+			WithRejectConsent(&models.RejectConsentRequest{
 				ID:         loginRequest.ID,
 				LoginState: loginRequest.State,
 				Error:      "rejected",

@@ -157,7 +157,7 @@ func (s *Server) FetchConsents(c *gin.Context) (*ConsentsAndAccounts, error) {
 		return nil, ErrTokenNotActive
 	}
 
-	if accounts, err = s.BankClient.GetInternalAccounts(at.Subject); err != nil {
+	if accounts, err = s.BankClient.GetInternalAccounts(at.Sub); err != nil {
 		return nil, fmt.Errorf("failed to get accounts from bank: %w", err)
 	}
 

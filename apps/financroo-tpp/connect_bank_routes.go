@@ -74,10 +74,11 @@ func (s *Server) ConnectBank() func(*gin.Context) {
 				WithTid(clients.AcpAccountsClient.TenantID).
 				WithAid(clients.AcpAccountsClient.ServerID).
 				WithRequest(&models.AccountAccessConsentRequest{
-					Data: &models.AccountAccessConsentRequestData{
+					Data: &models.OBReadConsent1Data{
 						Permissions:        connectRequest.Permissions,
 						ExpirationDateTime: strfmt.DateTime(time.Now().Add(time.Hour * 24 * 30)),
 					},
+					Risk: map[string]interface{}{},
 				}),
 			nil,
 		); err != nil {
@@ -85,7 +86,7 @@ func (s *Server) ConnectBank() func(*gin.Context) {
 			return
 		}
 
-		s.CreateConsentResponse(c, bankID, registerResponse.Payload.Data.ConsentID, user, clients.AcpAccountsClient)
+		s.CreateConsentResponse(c, bankID, *registerResponse.Payload.Data.ConsentID, user, clients.AcpAccountsClient)
 	}
 }
 

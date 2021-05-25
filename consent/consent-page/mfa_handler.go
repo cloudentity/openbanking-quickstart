@@ -59,15 +59,16 @@ func (s *AccountAccessMFAConsentProvider) GetMFAData(loginRequest LoginRequest) 
 	if response, err = s.Client.Openbanking.GetAccountAccessConsentSystem(
 		openbanking.NewGetAccountAccessConsentSystemParams().
 			WithTid(s.Client.TenantID).
-			WithLoginID(loginRequest.ID),
+			WithLogin(loginRequest.ID),
 		nil,
 	); err != nil {
 		return data, err
 	}
 
-	data.ClientName = s.GetClientName(response.Payload.Client)
+	// data.ClientName = s.GetClientName(response.Payload.ClientName)
+	data.ClientName = s.GetClientName(nil)
 	data.ConsentID = response.Payload.ConsentID
-	data.AuthenticationContext = response.Payload.AuthenticationContext
+	// data.AuthenticationContext = response.Payload.AuthenticationContext // todo this field is not returned by acp
 
 	return data, nil
 }
@@ -89,7 +90,7 @@ func (s *AccountAccessMFAConsentProvider) GetConsentMockData(loginRequest LoginR
 	return s.GetAccessConsentTemplateData(
 		loginRequest,
 		&models.GetAccountAccessConsentResponse{
-			Permissions: []string{"ReadAccountsBasic"},
+			// Permissions: []string{"ReadAccountsBasic"}, // todo
 		},
 		InternalAccounts{
 			Accounts: []InternalAccount{
@@ -121,21 +122,21 @@ func (s *DomesticPaymentMFAConsentProvider) GetMFAData(loginRequest LoginRequest
 	if response, err = s.Client.Openbanking.GetDomesticPaymentConsentSystem(
 		openbanking.NewGetDomesticPaymentConsentSystemParams().
 			WithTid(s.Client.TenantID).
-			WithLoginID(loginRequest.ID),
+			WithLogin(loginRequest.ID),
 		nil,
 	); err != nil {
 		return data, err
 	}
 
 	data.ConsentID = response.Payload.ConsentID
-	data.AuthenticationContext = response.Payload.AuthenticationContext
-	data.ClientName = response.Payload.Client.Name
+	// data.AuthenticationContext = response.Payload.AuthenticationContext
+	// data.ClientName = response.Payload.Client.Name
 	data.Amount = fmt.Sprintf(
 		"%s%s",
-		*response.Payload.Initiation.InstructedAmount.Amount,
-		*response.Payload.Initiation.InstructedAmount.Currency,
+		string(*response.Payload.DomesticPaymentConsent.Initiation.InstructedAmount.Amount),
+		string(*response.Payload.DomesticPaymentConsent.Initiation.InstructedAmount.Currency),
 	)
-	data.Account = *response.Payload.Initiation.DebtorAccount.Identification
+	data.Account = string(*response.Payload.DomesticPaymentConsent.Initiation.DebtorAccount.Identification)
 
 	return data, nil
 }
@@ -157,30 +158,30 @@ func (s *DomesticPaymentMFAConsentProvider) GetTemplateName() string {
 
 func (s *DomesticPaymentMFAConsentProvider) GetConsentMockData(loginRequest LoginRequest) map[string]interface{} {
 	var (
-		amount              = "100"
-		currency            = "GBP"
-		creditorAccountName = "ACME Inc"
-		debtorAccount       = "08080021325698"
+		// amount              = "100"
+		// currency            = "GBP"
+		// creditorAccountName = "ACME Inc"
+		debtorAccount = "08080021325698"
 	)
 
 	return s.GetDomesticPaymentTemplateData(
 		loginRequest,
 		&models.GetDomesticPaymentConsentResponse{
-			Initiation: &models.DomesticPaymentConsentDataInitiation{
-				CreditorAccount: &models.DomesticPaymentConsentCreditorAccount{
-					Name: &creditorAccountName,
-				},
-				DebtorAccount: &models.DomesticPaymentConsentDebtorAccount{
-					Identification: &debtorAccount,
-				},
-				InstructedAmount: &models.DomesticPaymentConsentInstructedAmount{
-					Amount:   &amount,
-					Currency: &currency,
-				},
-				RemittanceInformation: &models.DomesticPaymentConsentRemittanceInformation{
-					Reference: "FRESCO-101",
-				},
-			},
+			// Initiation: &models.OBWriteDomesticConsent4DataInitiation{
+			// 	CreditorAccount: &models.DomesticPaymentConsentCreditorAccount{
+			// 		Name: &creditorAccountName,
+			// 	},
+			// 	DebtorAccount: &models.DomesticPaymentConsentDebtorAccount{
+			// 		Identification: &debtorAccount,
+			// 	},
+			// 	InstructedAmount: &models.DomesticPaymentConsentInstructedAmount{
+			// 		Amount:   &amount,
+			// 		Currency: &currency,
+			// 	},
+			// 	RemittanceInformation: &models.DomesticPaymentConsentRemittanceInformation{
+			// 		Reference: "FRESCO-101",
+			// 	},
+			// },
 		},
 		InternalAccounts{
 			Accounts: []InternalAccount{

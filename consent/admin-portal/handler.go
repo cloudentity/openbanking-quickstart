@@ -19,9 +19,9 @@ func (s *Server) Index() func(*gin.Context) {
 }
 
 type Client struct {
-	ID       string                                              `json:"client_id"`
-	Name     string                                              `json:"client_name,omitempty"`
-	Consents []*models.OpenbankingAccountAccessConsentWithClient `json:"consents"`
+	ID       string                                 `json:"client_id"`
+	Name     string                                 `json:"client_name,omitempty"`
+	Consents []*models.OpenbankingConsentWithClient `json:"consents"`
 }
 
 type ListClientsResponse struct {
@@ -32,7 +32,7 @@ func (s *Server) ListClients() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
 			cs                  *clients.ListClientsSystemOK
-			consents            *openbanking.ListAccountAccessConsentsOK
+			consents            *openbanking.ListOBConsentsOK
 			clientsWithConsents []Client
 			err                 error
 		)
@@ -53,23 +53,24 @@ func (s *Server) ListClients() func(*gin.Context) {
 		}
 
 		for _, oc := range cs.Payload.Clients {
-			if consents, err = s.Client.Openbanking.ListAccountAccessConsents(
-				openbanking.NewListAccountAccessConsentsParams().
+
+			if consents, err = s.Client.Openbanking.ListOBConsents(
+				openbanking.NewListOBConsentsParams().
 					WithTid(s.Client.TenantID).
 					WithAid(s.Config.SystemClientsServerID).
-					WithListAccountAccessConsentsRequest(&models.ListAccountAccessConsentsRequest{
-						ClientID: oc.ID,
+					WithConsentsRequest(&models.ConsentsRequest{
+						ClientID: oc.ClientID,
 					}),
 				nil,
 			); err != nil {
-				c.String(http.StatusBadRequest, fmt.Sprintf("failed to list consents for client: %s, err: %+v", oc.ID, err))
+				c.String(http.StatusBadRequest, fmt.Sprintf("failed to list consents for client: %s, err: %+v", oc.ClientID, err))
 				return
 			}
 
 			if !oc.System {
 				clientsWithConsents = append(clientsWithConsents, Client{
-					ID:       oc.ID,
-					Name:     oc.Name,
+					ID:       oc.ClientID,
+					Name:     oc.ClientName,
 					Consents: consents.Payload.Consents,
 				})
 			}
@@ -108,7 +109,7 @@ func (s *Server) RevokeConsent() func(*gin.Context) {
 	}
 }
 
-var accountAccessConsentType = "account_access"
+// var accountAccessConsentType = "account_access"
 
 func (s *Server) RevokeConsentsForClient() func(*gin.Context) {
 	return func(c *gin.Context) {
@@ -126,11 +127,11 @@ func (s *Server) RevokeConsentsForClient() func(*gin.Context) {
 			openbanking.NewRevokeOpenbankingConsentsParams().
 				WithTid(s.Client.TenantID).
 				WithAid(s.Config.SystemClientsServerID).
-				WithClientID(&id).
-				WithConsentType(&accountAccessConsentType),
+				WithClientID(&id),
+			// WithConsentTypes([]string{accountAccessConsentType}),
 			nil,
 		); err != nil {
-			c.String(http.StatusBadRequest, fmt.Sprintf("failed to revoke account access consents for client: %s, err: %+v", id, err))
+			c.String(http.StatusBadRequest, fmt.Sprintf("failed to revoke consents for client: %s, err: %+v", id, err))
 			return
 		}
 
