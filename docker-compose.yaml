@@ -200,8 +200,10 @@ services:
       - /app/main
       - --templates-dir
       - /imports
-      - --issuer-url
-      - https://acp:8443/system/system
+      - --tenant-url
+      - https://acp:8443/system
+      - --tenant
+      - system
       - --verbose
 
 volumes:

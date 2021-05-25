@@ -92,8 +92,6 @@ func main() {
 		log.Fatal(err)
 	}
 
-	logrus.Debugf("%s", body)
-
 	if err = ImportConfiguration(tURL, tenant, client, body, *importMode); err != nil {
 		log.Fatal(err)
 	}
