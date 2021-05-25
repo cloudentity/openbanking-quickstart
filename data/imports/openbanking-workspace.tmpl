@@ -4,6 +4,7 @@ servers:
   name: Openbanking
   profile: openbanking_uk
   initialize: true
+  skip_server_consent_initialization: true
   root_cas: |
     -----BEGIN CERTIFICATE-----
     MIIDfjCCAmagAwIBAgIUHOLlcMhX8uJyFafYYNXYBMBJr2swDQYJKoZIhvcNAQEL
@@ -26,3 +27,10 @@ servers:
     VyZGyIRnGkXUtC239/Lz0v0PXVwAPUF8ITb0JYcG/ojIc5VfTOkQOeOHHBaS+dXt
     HBJjBbnwpN4tNFhczJkbga16hL+vV0I4z61mJG8OkDr25Q==
     -----END CERTIFICATE-----
+server_consents:
+- client_id: bv0ocudfotn6edhsiu7g
+  custom:
+    server_consent_url: https://localhost:8080
+  server_id: openbanking
+  tenant_id: default
+  type: custom
