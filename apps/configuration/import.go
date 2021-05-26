@@ -6,6 +6,8 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+
+	"github.com/sirupsen/logrus"
 )
 
 const systemTenant = "system"
@@ -27,6 +29,8 @@ func ImportConfiguration(tenantURL *url.URL, tenant *string, client *http.Client
 	if mode != "" {
 		tenantURL.RawQuery = fmt.Sprintf("mode=%s", mode)
 	}
+
+	logrus.Debugf("call endpoint: %s with body: %s", tenantURL.String(), string(body))
 
 	if req, err = http.NewRequest("PUT", tenantURL.String(), bytes.NewBuffer(body)); err != nil {
 		return err

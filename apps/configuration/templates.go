@@ -12,6 +12,7 @@ import (
 	"github.com/ghodss/yaml"
 	"github.com/imdario/mergo"
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 )
 
 type YamlFile map[string]interface{}
@@ -40,6 +41,8 @@ func LoadTemplates(dir string, variablesFile *string) (Templates, error) {
 		if err = yaml.Unmarshal(bs, &variables); err != nil {
 			return templates, errors.Wrapf(err, "failed to unmarshal env file to yaml")
 		}
+
+		logrus.Debugf("variables: %+v", variables)
 	}
 
 	if files, err = ioutil.ReadDir(dir); err != nil {
@@ -48,10 +51,13 @@ func LoadTemplates(dir string, variablesFile *string) (Templates, error) {
 
 	for _, f := range files {
 		if !strings.HasSuffix(f.Name(), ".tmpl") {
+			logrus.Debugf("file skipped: %+v", f.Name())
 			continue
 		}
 
 		file := fmt.Sprintf("%s/%s", dir, f.Name())
+		logrus.Debugf("read file: %+v", file)
+
 		if bs, err = ioutil.ReadFile(file); err != nil {
 			return templates, errors.Wrapf(err, "failed to read template: %s", file)
 		}
@@ -84,10 +90,14 @@ func (t Templates) Merge() (YamlFile, error) {
 			return yamlFile, errors.Wrapf(err, "failed to unmarshal template: %s to yaml", t)
 		}
 
+		logrus.Debugf("merge file: %s", t)
+
 		if err = mergo.Merge(&yamlFile, &tmp, mergo.WithAppendSlice); err != nil {
 			return yamlFile, errors.Wrapf(err, "failed to merge template: %s", t)
 		}
 	}
+
+	logrus.Debugf("final yaml file: \n %s", yamlFile)
 
 	return yamlFile, nil
 }

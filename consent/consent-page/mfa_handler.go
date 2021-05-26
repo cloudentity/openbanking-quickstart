@@ -59,13 +59,13 @@ func (s *AccountAccessMFAConsentProvider) GetMFAData(loginRequest LoginRequest) 
 	if response, err = s.Client.Openbanking.GetAccountAccessConsentSystem(
 		openbanking.NewGetAccountAccessConsentSystemParams().
 			WithTid(s.Client.TenantID).
-			WithLoginID(loginRequest.ID),
+			WithLogin(loginRequest.ID),
 		nil,
 	); err != nil {
 		return data, err
 	}
 
-	data.ClientName = s.GetClientName(response.Payload.Client)
+	data.ClientName = s.GetClientName(response.Payload.ClientInfo)
 	data.ConsentID = response.Payload.ConsentID
 	data.AuthenticationContext = response.Payload.AuthenticationContext
 
@@ -89,7 +89,9 @@ func (s *AccountAccessMFAConsentProvider) GetConsentMockData(loginRequest LoginR
 	return s.GetAccessConsentTemplateData(
 		loginRequest,
 		&models.GetAccountAccessConsentResponse{
-			Permissions: []string{"ReadAccountsBasic"},
+			AccountAccessConsent: &models.AccountAccessConsent{
+				Permissions: []string{"ReadAccountsBasic"},
+			},
 		},
 		InternalAccounts{
 			Accounts: []InternalAccount{
@@ -121,7 +123,7 @@ func (s *DomesticPaymentMFAConsentProvider) GetMFAData(loginRequest LoginRequest
 	if response, err = s.Client.Openbanking.GetDomesticPaymentConsentSystem(
 		openbanking.NewGetDomesticPaymentConsentSystemParams().
 			WithTid(s.Client.TenantID).
-			WithLoginID(loginRequest.ID),
+			WithLogin(loginRequest.ID),
 		nil,
 	); err != nil {
 		return data, err
@@ -129,13 +131,13 @@ func (s *DomesticPaymentMFAConsentProvider) GetMFAData(loginRequest LoginRequest
 
 	data.ConsentID = response.Payload.ConsentID
 	data.AuthenticationContext = response.Payload.AuthenticationContext
-	data.ClientName = response.Payload.Client.Name
+	data.ClientName = s.GetClientName(response.Payload.ClientInfo)
 	data.Amount = fmt.Sprintf(
 		"%s%s",
-		*response.Payload.Initiation.InstructedAmount.Amount,
-		*response.Payload.Initiation.InstructedAmount.Currency,
+		string(*response.Payload.DomesticPaymentConsent.Initiation.InstructedAmount.Amount),
+		string(*response.Payload.DomesticPaymentConsent.Initiation.InstructedAmount.Currency),
 	)
-	data.Account = *response.Payload.Initiation.DebtorAccount.Identification
+	data.Account = string(*response.Payload.DomesticPaymentConsent.Initiation.DebtorAccount.Identification)
 
 	return data, nil
 }
@@ -156,36 +158,38 @@ func (s *DomesticPaymentMFAConsentProvider) GetTemplateName() string {
 }
 
 func (s *DomesticPaymentMFAConsentProvider) GetConsentMockData(loginRequest LoginRequest) map[string]interface{} {
-	var (
-		amount              = "100"
-		currency            = "GBP"
-		creditorAccountName = "ACME Inc"
-		debtorAccount       = "08080021325698"
-	)
+	amount := models.OBActiveCurrencyAndAmountSimpleType("100")
+	currency := models.ActiveOrHistoricCurrencyCode("GBP")
+	creditorAccountName := "ACME Inc"
+	debtorAccount := models.Identification0("08080021325698")
 
 	return s.GetDomesticPaymentTemplateData(
 		loginRequest,
 		&models.GetDomesticPaymentConsentResponse{
-			Initiation: &models.DomesticPaymentConsentDataInitiation{
-				CreditorAccount: &models.DomesticPaymentConsentCreditorAccount{
-					Name: &creditorAccountName,
-				},
-				DebtorAccount: &models.DomesticPaymentConsentDebtorAccount{
-					Identification: &debtorAccount,
-				},
-				InstructedAmount: &models.DomesticPaymentConsentInstructedAmount{
-					Amount:   &amount,
-					Currency: &currency,
-				},
-				RemittanceInformation: &models.DomesticPaymentConsentRemittanceInformation{
-					Reference: "FRESCO-101",
+			DomesticPaymentConsent: &models.DomesticPaymentConsent{
+				OBWriteDomesticConsentResponse5Data: models.OBWriteDomesticConsentResponse5Data{
+					Initiation: &models.OBWriteDomesticConsentResponse5DataInitiation{
+						CreditorAccount: &models.OBWriteDomesticConsentResponse5DataInitiationCreditorAccount{
+							Name: &creditorAccountName,
+						},
+						DebtorAccount: &models.OBWriteDomesticConsentResponse5DataInitiationDebtorAccount{
+							Identification: &debtorAccount,
+						},
+						InstructedAmount: &models.OBWriteDomesticConsentResponse5DataInitiationInstructedAmount{
+							Amount:   &amount,
+							Currency: &currency,
+						},
+						RemittanceInformation: &models.OBWriteDomesticConsentResponse5DataInitiationRemittanceInformation{
+							Reference: "FRESCO-101",
+						},
+					},
 				},
 			},
 		},
 		InternalAccounts{
 			Accounts: []InternalAccount{
 				{
-					ID:   debtorAccount,
+					ID:   string(debtorAccount),
 					Name: "ACME Savings",
 				},
 			},
@@ -193,7 +197,7 @@ func (s *DomesticPaymentMFAConsentProvider) GetConsentMockData(loginRequest Logi
 		BalanceData{
 			Balance: []Balance{
 				{
-					AccountID: debtorAccount,
+					AccountID: string(debtorAccount),
 					Amount: BalanceAmount{
 						Amount:   "12000",
 						Currency: "GBP",
@@ -231,8 +235,16 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 			RenderInternalServerError(c, errors.Wrapf(err, "failed to get authn context"))
 			return
 		}
+		logrus.Debugf("authentication context: %+v", data.AuthenticationContext)
 
-		if mobile, ok = data.AuthenticationContext[s.Config.MobileClaim].(string); !ok {
+		mobileData, ok := data.AuthenticationContext[s.Config.MobileClaim]
+
+		if !ok {
+			RenderInvalidRequestError(c, errors.New("user does not have mobile configured"))
+			return
+		}
+
+		if mobile, ok = mobileData.(string); !ok {
 			RenderInternalServerError(c,
 				fmt.Errorf(
 					"failed to get mobile from authn context: %+v, mobile claim: %s, type: %T",

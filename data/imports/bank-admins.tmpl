@@ -1,0 +1,42 @@
+servers:
+- tenant_id: default
+  id: bank-admins
+  name: Bank customers
+  initialize: true
+idps:
+- tenant_id: default
+  authorization_server_id: bank-admins
+  name: Sandbox IDP
+  method: static
+  credentials:
+    static:
+      users:
+      - username: admin
+        password: p@ssw0rd!
+        authentication_context:
+          name: admin
+clients:
+- tenant_id: default
+  authorization_server_id: bank-admins
+  client_id: bv2f80aed9c9is80f2d0
+  client_name: Consent admin web app
+  client_secret: zE8acaD6__5VACBk8PUk-QU6_kBKSZGAXHgNfrzubOk
+  grant_types:
+  - authorization_code
+  redirect_uris:
+  - https://localhost:8086/callback
+  scopes:
+  - introspect_tokens
+  - revoke_tokens
+  token_endpoint_auth_method: none
+- tenant_id: default
+  authorization_server_id: bank-admins
+  client_id: bv2fddlpfc67lmeti32g
+  client_name: Consent admin backend
+  client_secret: RkAIOVRlP6ZLhDvYixT1wBb8DG3bVkXAouoIrX7cwzA
+  grant_types:
+  - client_credentials
+  scopes:
+  - introspect_tokens
+  - revoke_tokens
+  token_endpoint_auth_method: client_secret_post

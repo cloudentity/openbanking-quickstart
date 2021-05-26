@@ -11,6 +11,7 @@ import (
 	"os"
 	"time"
 
+	"github.com/sirupsen/logrus"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/clientcredentials"
 )
@@ -25,6 +26,7 @@ var (
 	httpTimeout   = flag.Duration("http-timeout", time.Second*10, "http timeout")
 	httpInsecure  = flag.Bool("http-insecure", true, "http insecure connection")
 	importMode    = flag.String("import-mode", "update", "how acp should behave in case of conflicts, possible options: fail | ignore | update")
+	verbose       = flag.Bool("verbose", false, "show verbose logs")
 )
 
 const systemServer = "system"
@@ -32,8 +34,15 @@ const systemServer = "system"
 func initialize() {
 	flag.Parse()
 
+	logrus.SetFormatter(&logrus.JSONFormatter{})
+	logrus.SetOutput(os.Stdout)
+
+	if *verbose {
+		logrus.SetLevel(logrus.DebugLevel)
+	}
+
 	if *templatesDir == "" {
-		log.Printf("templates dir must be set, see usage below")
+		logrus.Info("templates dir must be set, see usage below")
 		flag.PrintDefaults()
 		os.Exit(1)
 	}

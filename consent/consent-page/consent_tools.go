@@ -55,7 +55,7 @@ func (c *ConsentTools) GetAccountsWithBalance(accounts InternalAccounts, balance
 
 func (c *ConsentTools) GetClientName(client *models.ClientInfo) string {
 	if client != nil {
-		return client.Name
+		return client.ClientName
 	}
 
 	return "TPP"
@@ -68,16 +68,17 @@ func (c *ConsentTools) GetAccessConsentTemplateData(
 ) map[string]interface{} {
 	var expirationDate string
 
-	edt := time.Time(consent.ExpirationDateTime)
+	edt := time.Time(consent.AccountAccessConsent.ExpirationDateTime)
 	if !edt.IsZero() {
 		expirationDate = edt.Format("02/01/2006")
 	}
 
 	return map[string]interface{}{
-		"login_request":   loginRequest,
-		"accounts":        accounts.Accounts,
-		"permissions":     c.GetPermissionsWithDescription(consent.Permissions),
-		"client_name":     c.GetClientName(consent.Client),
+		"login_request": loginRequest,
+		"accounts":      accounts.Accounts,
+		"permissions":   c.GetPermissionsWithDescription(consent.AccountAccessConsent.Permissions),
+		// "client_name":     c.GetClientName(consent.Client), // client is no longer returned by acp
+		"client_name":     c.GetClientName(nil),
 		"expiration_date": expirationDate,
 	}
 }
@@ -90,8 +91,9 @@ func (c *ConsentTools) GetDomesticPaymentTemplateData(
 ) map[string]interface{} {
 	return map[string]interface{}{
 		"login_request": loginRequest,
-		"accounts":      c.GetAccountsWithBalance(accounts, balances, *consent.Initiation.DebtorAccount.Identification),
-		"client_name":   c.GetClientName(consent.Client),
-		"consent":       consent,
+		"accounts":      c.GetAccountsWithBalance(accounts, balances, string(*consent.DomesticPaymentConsent.Initiation.DebtorAccount.Identification)),
+		// "client_name":   c.GetClientName(consent.Client),
+		"client_name": c.GetClientName(nil),
+		"consent":     consent.DomesticPaymentConsent,
 	}
 }
