@@ -1,0 +1,4 @@
+consent_admin_portal_redirect_url: https://localhost:8086/callback
+consent_page_url: https://localhost:8080
+developer_tpp_url: https://localhost:8090
+financroo_app_url: https://localhost:8091
