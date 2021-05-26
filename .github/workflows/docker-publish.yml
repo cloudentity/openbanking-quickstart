@@ -22,6 +22,8 @@ jobs:
             suffix: "consent-page"
           - folder: "apps/bank"
             suffix: "bank"
+          - folder: "apps/configuration"
+            suffix: "configuration"
 
     name: Build and push docker ${{ matrix.images.suffix }}
     steps:

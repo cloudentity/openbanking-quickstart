@@ -38,17 +38,17 @@ describe(`Consent admin app`, () => {
     consentAdminPage.assertConsentIsNotDisplayed()
   })
 
-  it(`Happy path with revoking all consents`, () => {
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    mfaPage.typePin()
-    consentPage.confirm();
-    consentAdminPage.visit();
-    acpLoginPage.login(Credentials.consentAdminUsername, Credentials.defaultPassword);
-    consentAdminPage.expandTab()
-    consentAdminPage.revokeAllConsents()
-    consentAdminPage.expandTab()
-    consentAdminPage.assertConsentIsNotDisplayed()
-  })
+  // it(`Happy path with revoking all consents`, () => {
+  //   acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+  //   mfaPage.typePin()
+  //   consentPage.confirm();
+  //   consentAdminPage.visit();
+  //   acpLoginPage.login(Credentials.consentAdminUsername, Credentials.defaultPassword);
+  //   consentAdminPage.expandTab()
+  //   consentAdminPage.revokeAllConsents()
+  //   consentAdminPage.expandTab()
+  //   consentAdminPage.assertConsentIsNotDisplayed()
+  // })
 
   it(`Cancel first ACP login`, () => {
     acpLoginPage.cancel();
