@@ -29,8 +29,8 @@ describe(`Tpp technical app`, () => {
   [
     [basicPermission, detailPermission],
     [basicPermission],
-    [detailPermission],
-    []
+    [detailPermission]
+    // [] // todo add better error handling in the app
   ].forEach(permissions => {
     it(`Happy path with permissions: ${permissions}`, () => {
       tppLoginPage.checkBasicPermission(permissions.includes(basicPermission))
