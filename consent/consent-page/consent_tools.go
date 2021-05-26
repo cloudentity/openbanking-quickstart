@@ -94,6 +94,6 @@ func (c *ConsentTools) GetDomesticPaymentTemplateData(
 		"accounts":      c.GetAccountsWithBalance(accounts, balances, string(*consent.DomesticPaymentConsent.Initiation.DebtorAccount.Identification)),
 		// "client_name":   c.GetClientName(consent.Client),
 		"client_name": c.GetClientName(nil),
-		"consent":     consent,
+		"consent":     consent.DomesticPaymentConsent,
 	}
 }
