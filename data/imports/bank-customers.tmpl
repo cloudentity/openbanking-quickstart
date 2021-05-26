@@ -1,0 +1,48 @@
+servers:
+- tenant_id: default
+  id: bank-customers
+  name: Bank customers
+  initialize: true
+idps:
+- tenant_id: default
+  authorization_server_id: bank-customers
+  name: Sandbox IDP
+  method: static
+  credentials:
+    static:
+      users:
+      - username: user
+        password: p@ssw0rd!
+        authentication_context:
+          name: user
+      - username: user2
+        password: p@ssw0rd!
+        authentication_context:
+          name: user2
+      - username: user3
+        password: p@ssw0rd!
+        authentication_context:
+          name: user3
+clients:
+- tenant_id: default
+  authorization_server_id: bank-customers
+  client_id: bv0nab0mekk67nekvq7g
+  client_name: Consent self service
+  client_secret: 5j1RFwfeLQRci7jaouPr-O5qejBWql7waFkfR_x7H6A
+  grant_types:
+  - authorization_code
+  token_endpoint_auth_method: none
+  redirect_uris:
+  - https://localhost:8085/callback
+  trusted: true
+- tenant_id: default
+  authorization_server_id: bank-customers
+  client_id: bv2dkff8mll9cf6pvd6g
+  client_name: Consent self service backend
+  client_secret: KThGH68f-gMC4cscGLFeOpIU4EYriYhKspOV9IwHbnw
+  grant_types:
+  - client_credentials
+  scopes:
+  - introspect_tokens
+  - revoke_tokens
+  token_endpoint_auth_method: client_secret_post

@@ -1,0 +1,26 @@
+servers:
+- tenant_id: default
+  id: financroo
+  name: Financroo
+  initialize: true
+idps:
+- tenant_id: default
+  authorization_server_id: financroo
+  name: Sandbox IDP
+  method: static
+  credentials:
+    static:
+      users:
+      - username: test
+        password: p@ssw0rd!
+        authentication_context:
+          name: test
+clients:
+- tenant_id: default
+  authorization_server_id: financroo
+  client_id: bv3p4uo557ouq8rha2bg
+  client_name: Financroo App
+  client_secret: t4v9poj45-iFsIXzfSbQY8THZ3J5MP3iHzlLk6fKlr4
+  token_endpoint_auth_method: none
+  redirect_uris:
+  - https://localhost:8091/callback
