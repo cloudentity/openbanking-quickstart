@@ -65,10 +65,10 @@ func (s *AccountAccessMFAConsentProvider) GetMFAData(loginRequest LoginRequest) 
 		return data, err
 	}
 
-	// data.ClientName = s.GetClientName(response.Payload.ClientName)
-	data.ClientName = s.GetClientName(nil)
+	data.ClientName = s.GetClientName(nil) // todo
 	data.ConsentID = response.Payload.ConsentID
-	// data.AuthenticationContext = response.Payload.AuthenticationContext // todo this field is not returned by acp
+	// todo this field is not returned by acp
+	// data.AuthenticationContext = response.Payload.AuthenticationContext // nolint
 
 	return data, nil
 }
@@ -129,8 +129,8 @@ func (s *DomesticPaymentMFAConsentProvider) GetMFAData(loginRequest LoginRequest
 	}
 
 	data.ConsentID = response.Payload.ConsentID
-	// data.AuthenticationContext = response.Payload.AuthenticationContext
-	// data.ClientName = response.Payload.Client.Name
+	data.AuthenticationContext = map[string]interface{}{} // todo revive response.Payload.AuthenticationContext
+	data.ClientName = response.Payload.ClientID           // todo revive client name
 	data.Amount = fmt.Sprintf(
 		"%s%s",
 		string(*response.Payload.DomesticPaymentConsent.Initiation.InstructedAmount.Amount),
@@ -157,36 +157,38 @@ func (s *DomesticPaymentMFAConsentProvider) GetTemplateName() string {
 }
 
 func (s *DomesticPaymentMFAConsentProvider) GetConsentMockData(loginRequest LoginRequest) map[string]interface{} {
-	var (
-		// amount              = "100"
-		// currency            = "GBP"
-		// creditorAccountName = "ACME Inc"
-		debtorAccount = "08080021325698"
-	)
+	amount := models.OBActiveCurrencyAndAmountSimpleType("100")
+	currency := models.ActiveOrHistoricCurrencyCode("GBP")
+	creditorAccountName := "ACME Inc"
+	debtorAccount := models.Identification0("08080021325698")
 
 	return s.GetDomesticPaymentTemplateData(
 		loginRequest,
 		&models.GetDomesticPaymentConsentResponse{
-			// Initiation: &models.OBWriteDomesticConsent4DataInitiation{
-			// 	CreditorAccount: &models.DomesticPaymentConsentCreditorAccount{
-			// 		Name: &creditorAccountName,
-			// 	},
-			// 	DebtorAccount: &models.DomesticPaymentConsentDebtorAccount{
-			// 		Identification: &debtorAccount,
-			// 	},
-			// 	InstructedAmount: &models.DomesticPaymentConsentInstructedAmount{
-			// 		Amount:   &amount,
-			// 		Currency: &currency,
-			// 	},
-			// 	RemittanceInformation: &models.DomesticPaymentConsentRemittanceInformation{
-			// 		Reference: "FRESCO-101",
-			// 	},
-			// },
+			DomesticPaymentConsent: &models.DomesticPaymentConsent{
+				OBWriteDomesticConsentResponse5Data: models.OBWriteDomesticConsentResponse5Data{
+					Initiation: &models.OBWriteDomesticConsentResponse5DataInitiation{
+						CreditorAccount: &models.OBWriteDomesticConsentResponse5DataInitiationCreditorAccount{
+							Name: &creditorAccountName,
+						},
+						DebtorAccount: &models.OBWriteDomesticConsentResponse5DataInitiationDebtorAccount{
+							Identification: &debtorAccount,
+						},
+						InstructedAmount: &models.OBWriteDomesticConsentResponse5DataInitiationInstructedAmount{
+							Amount:   &amount,
+							Currency: &currency,
+						},
+						RemittanceInformation: &models.OBWriteDomesticConsentResponse5DataInitiationRemittanceInformation{
+							Reference: "FRESCO-101",
+						},
+					},
+				},
+			},
 		},
 		InternalAccounts{
 			Accounts: []InternalAccount{
 				{
-					ID:   debtorAccount,
+					ID:   string(debtorAccount),
 					Name: "ACME Savings",
 				},
 			},
@@ -194,7 +196,7 @@ func (s *DomesticPaymentMFAConsentProvider) GetConsentMockData(loginRequest Logi
 		BalanceData{
 			Balance: []Balance{
 				{
-					AccountID: debtorAccount,
+					AccountID: string(debtorAccount),
 					Amount: BalanceAmount{
 						Amount:   "12000",
 						Currency: "GBP",

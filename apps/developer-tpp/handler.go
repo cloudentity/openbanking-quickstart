@@ -45,7 +45,7 @@ func (s *Server) Login() func(*gin.Context) {
 					Data: &models.OBReadConsent1Data{
 						Permissions: c.PostFormArray("permissions"),
 					},
-					Risk: map[string]interface{}{}, // risk field is required
+					Risk: map[string]interface{}{},
 				}),
 			nil,
 		); err != nil {

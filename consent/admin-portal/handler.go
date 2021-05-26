@@ -53,7 +53,6 @@ func (s *Server) ListClients() func(*gin.Context) {
 		}
 
 		for _, oc := range cs.Payload.Clients {
-
 			if consents, err = s.Client.Openbanking.ListOBConsents(
 				openbanking.NewListOBConsentsParams().
 					WithTid(s.Client.TenantID).
@@ -109,8 +108,6 @@ func (s *Server) RevokeConsent() func(*gin.Context) {
 	}
 }
 
-// var accountAccessConsentType = "account_access"
-
 func (s *Server) RevokeConsentsForClient() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
@@ -128,7 +125,6 @@ func (s *Server) RevokeConsentsForClient() func(*gin.Context) {
 				WithTid(s.Client.TenantID).
 				WithAid(s.Config.SystemClientsServerID).
 				WithClientID(&id),
-			// WithConsentTypes([]string{accountAccessConsentType}),
 			nil,
 		); err != nil {
 			c.String(http.StatusBadRequest, fmt.Sprintf("failed to revoke consents for client: %s, err: %+v", id, err))
