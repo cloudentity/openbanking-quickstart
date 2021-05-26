@@ -65,10 +65,9 @@ func (s *AccountAccessMFAConsentProvider) GetMFAData(loginRequest LoginRequest) 
 		return data, err
 	}
 
-	data.ClientName = s.GetClientName(nil) // todo
+	data.ClientName = s.GetClientName(response.Payload.ClientInfo)
 	data.ConsentID = response.Payload.ConsentID
-	// todo this field is not returned by acp
-	// data.AuthenticationContext = response.Payload.AuthenticationContext // nolint
+	data.AuthenticationContext = response.Payload.AuthenticationContext
 
 	return data, nil
 }
@@ -90,7 +89,9 @@ func (s *AccountAccessMFAConsentProvider) GetConsentMockData(loginRequest LoginR
 	return s.GetAccessConsentTemplateData(
 		loginRequest,
 		&models.GetAccountAccessConsentResponse{
-			// Permissions: []string{"ReadAccountsBasic"}, // todo
+			AccountAccessConsent: &models.AccountAccessConsent{
+				Permissions: []string{"ReadAccountsBasic"},
+			},
 		},
 		InternalAccounts{
 			Accounts: []InternalAccount{
@@ -129,8 +130,8 @@ func (s *DomesticPaymentMFAConsentProvider) GetMFAData(loginRequest LoginRequest
 	}
 
 	data.ConsentID = response.Payload.ConsentID
-	data.AuthenticationContext = map[string]interface{}{} // todo revive response.Payload.AuthenticationContext
-	data.ClientName = response.Payload.ClientID           // todo revive client name
+	data.AuthenticationContext = response.Payload.AuthenticationContext
+	data.ClientName = s.GetClientName(response.Payload.ClientInfo)
 	data.Amount = fmt.Sprintf(
 		"%s%s",
 		string(*response.Payload.DomesticPaymentConsent.Initiation.InstructedAmount.Amount),
