@@ -235,8 +235,16 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 			RenderInternalServerError(c, errors.Wrapf(err, "failed to get authn context"))
 			return
 		}
+		logrus.Debugf("authentication context: %+v", data.AuthenticationContext)
 
-		if mobile, ok = data.AuthenticationContext[s.Config.MobileClaim].(string); !ok {
+		mobileData, ok := data.AuthenticationContext[s.Config.MobileClaim]
+
+		if !ok {
+			RenderInvalidRequestError(c, errors.New("user does not have mobile configured"))
+			return
+		}
+
+		if mobile, ok = mobileData.(string); !ok {
 			RenderInternalServerError(c,
 				fmt.Errorf(
 					"failed to get mobile from authn context: %+v, mobile claim: %s, type: %T",
