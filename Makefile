@@ -4,24 +4,20 @@ export COMPOSE_DOCKER_CLI_BUILD=1
 .EXPORT_ALL_VARIABLES: ;
 
 OB_APPS=developer-tpp financroo-tpp consent-page consent-self-service-portal consent-admin-portal bank
-ACP_APPS=acp crdb hazelcast
+ACP_APPS=acp crdb hazelcast configuration
 ENABLE_MFA?=false
-
-.PHONY: replace-hosts
-replace-hosts:
-	./scripts/replace_hosts.sh
 
 .PHONY: build
 build:
 	docker-compose -f docker-compose.yaml -f docker-compose.build.yaml build
 
 .PHONY: run-dev
-run-dev: replace-hosts
+run-dev:
 	docker-compose -f docker-compose.yaml -f docker-compose.build.yaml up -d
 	./scripts/wait.sh
 
 .PHONY: run-acp
-run-acp-apps: replace-hosts
+run-acp-apps:
 	docker-compose up -d --no-build ${ACP_APPS}
 	./scripts/wait.sh
 
