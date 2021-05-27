@@ -195,12 +195,11 @@ services:
     depends_on:
       - acp
     volumes:
-      - ./data/imports:/imports
       - ./data/variables.yaml:/variables.yaml
     command:
       - /app/main
       - --templates-dir
-      - /imports
+      - /app/imports
       - --tenant-url
       - https://acp:8443/system
       - --tenant
