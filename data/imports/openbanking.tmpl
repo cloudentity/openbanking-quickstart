@@ -52,7 +52,7 @@ idps:
 server_consents:
 - client_id: bv0ocudfotn6edhsiu7g
   custom:
-    server_consent_url: https://localhost:8080
+    server_consent_url: {{ .consent_page_url }}
   server_id: openbanking
   tenant_id: default
   type: custom
@@ -96,9 +96,9 @@ clients:
   tls_client_certificate_bound_access_tokens: true
   token_endpoint_auth_method: tls_client_auth
   redirect_uris:
-  - https://localhost:8090/callback
-  - https://localhost:8091/api/callback
-  - https://localhost:8091/api/domestic/callback
+  - {{ .developer_tpp_url }}/callback
+  - {{ .financroo_tpp_url }}/api/callback
+  - {{ .financroo_tpp_url }}/api/domestic/callback
   subject_type: pairwise
   request_object_signing_alg: RS256
   response_types:
