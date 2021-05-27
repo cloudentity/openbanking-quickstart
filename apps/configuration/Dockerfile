@@ -5,6 +5,7 @@ WORKDIR /app
 
 COPY go.mod .
 COPY go.sum .
+COPY data/imports imports
 
 RUN go mod download
 
@@ -18,5 +19,6 @@ RUN apk --no-cache add ca-certificates
 WORKDIR /app
 
 COPY --from=builder /app/main .
+COPY --from=builder /app/imports imports
 
 CMD ["./main"]
