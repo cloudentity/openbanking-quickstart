@@ -21,7 +21,7 @@ type Templates struct {
 	m map[string][]byte
 }
 
-func LoadTemplates(dirs string, variablesFile *string) (Templates, error) {
+func LoadTemplates(dirs []string, variablesFile *string) (Templates, error) {
 	var (
 		templates = Templates{
 			m: map[string][]byte{},
@@ -45,10 +45,7 @@ func LoadTemplates(dirs string, variablesFile *string) (Templates, error) {
 		logrus.Debugf("variables: %+v", variables)
 	}
 
-	directories := strings.Split(dirs, ",")
-	logrus.Debugf("scan directories: %+v", directories)
-
-	for _, d := range directories {
+	for _, d := range dirs {
 		if files, err = ioutil.ReadDir(d); err != nil {
 			return templates, errors.Wrapf(err, "failed to read templates dir: %s", d)
 		}

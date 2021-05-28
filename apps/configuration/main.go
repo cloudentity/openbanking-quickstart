@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/sirupsen/logrus"
@@ -80,7 +81,9 @@ func main() {
 
 	client := cc.Client(context.WithValue(context.Background(), oauth2.HTTPClient, httpClient))
 
-	if templates, err = LoadTemplates(*templatesDirs, variablesFile); err != nil {
+	dirs := strings.Split(*templatesDirs, ",")
+
+	if templates, err = LoadTemplates(dirs, variablesFile); err != nil {
 		log.Fatal(err)
 	}
 
