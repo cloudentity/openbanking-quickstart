@@ -29,6 +29,19 @@ func TestTemplates(t *testing.T) {
 			},
 		},
 		{
+			name: "merge multiple templates",
+			dir:  "./testdata/t1,./testdata/t2",
+			assertResponse: func(tt *testing.T, bs []byte) {
+				var m map[string]interface{}
+
+				err := json.Unmarshal(bs, &m)
+				require.NoError(tt, err)
+
+				require.Equal(tt, 2, len(m["servers"].([]interface{})))
+				require.Equal(tt, 2, len(m["clients"].([]interface{})))
+			},
+		},
+		{
 			name:          "merge templates using variables file",
 			dir:           "./testdata/t2",
 			variablesFile: "./testdata/variables.yaml",
