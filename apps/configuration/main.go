@@ -96,5 +96,5 @@ func main() {
 		log.Fatal(err)
 	}
 
-	fmt.Print("Configuration imported")
+	logrus.Info("Configuration imported")
 }
