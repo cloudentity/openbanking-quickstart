@@ -39,6 +39,7 @@ services:
       - CERT_FILE=/certs/tpp_cert.pem
       - KEY_FILE=/certs/tpp_key.pem
       - DB_FILE=/app/data/my.db
+      - TENANT=${TENANT}
 
   consent-page:
     image: cloudentity/openbanking-quickstart-consent-page:latest
