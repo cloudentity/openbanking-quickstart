@@ -4,7 +4,7 @@ Openbanking Quickstart
 ## Credentials
 
 - ACP admin portal: `https://localhost:8443/app/default/admin` `admin / admin`
-- Developer TPP: `https://localhost:8090` `user / user2 / user3 / p@ssw0rd!`
+- Developer TPP: `https://localhost:8090` `user | user2 | user3 / p@ssw0rd!`
 - Financroo TPP: `https://localhost:8091` `test / p@ssw0rd!`
 - Consent self service portal: `https://localhost:8085` `user | user2 | user3 / p@ssw0rd!`
 - Consent admin portal: `https://localhost:8086` `admin / p@ssw0rd!`
