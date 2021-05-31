@@ -79,11 +79,11 @@ func NewAcpClient(c Config, cfg BankConfig, redirect string) (acpclient.Client, 
 		err                                  error
 	)
 
-	if issuerURL, err = url.Parse(fmt.Sprintf("%s/%s/%s", c.ACPInternalURL, cfg.AcpClient.TenantID, cfg.AcpClient.ServerID)); err != nil {
+	if issuerURL, err = url.Parse(fmt.Sprintf("%s/%s/%s", c.ACPInternalURL, c.Tenant, cfg.AcpClient.ServerID)); err != nil {
 		return client, err
 	}
 
-	if authorizeURL, err = url.Parse(fmt.Sprintf("%s/%s/%s/oauth2/authorize", c.ACPURL, cfg.AcpClient.TenantID, cfg.AcpClient.ServerID)); err != nil {
+	if authorizeURL, err = url.Parse(fmt.Sprintf("%s/%s/%s/oauth2/authorize", c.ACPURL, c.Tenant, cfg.AcpClient.ServerID)); err != nil {
 		return client, err
 	}
 
@@ -120,7 +120,7 @@ func NewLoginClient(c Config) (acpclient.Client, error) {
 		err       error
 	)
 
-	if issuerURL, err = url.Parse(fmt.Sprintf("%s/%s/%s", c.ACPInternalURL, c.Login.TenantID, c.Login.ServerID)); err != nil {
+	if issuerURL, err = url.Parse(fmt.Sprintf("%s/%s/%s", c.ACPInternalURL, c.Tenant, c.Login.ServerID)); err != nil {
 		return client, err
 	}
 

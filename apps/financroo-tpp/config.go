@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/spf13/viper"
+	"gopkg.in/go-playground/validator.v9"
 )
 
 func init() {
@@ -15,12 +16,12 @@ func init() {
 	viper.SetDefault("UI_URL", "")
 	viper.SetDefault("CERT_FILE", "")
 	viper.SetDefault("KEY_FILE", "")
+	viper.SetDefault("TENANT", "")
 	viper.SetDefault("COOKIE_HASH_KEY", []byte("secret-key"))
 	viper.SetDefault("COOKIE_BLOCK_KEY", []byte("this-is-32-len-block-key"))
 }
 
 type ClientConfig struct {
-	TenantID string `mapstructure:"tenant_id"`
 	ServerID string `mapstructure:"server_id"`
 	ClientID string `mapstructure:"client_id"`
 }
@@ -61,6 +62,7 @@ type Config struct {
 	ACPURL         string `mapstructure:"acp_url" validate:"required,url"`
 	ACPInternalURL string `mapstructure:"acp_internal_url" validate:"required,url"`
 	AppHost        string `mapstructure:"app_host" validate:"required"`
+	Tenant         string `mapstructure:"tenant" validate:"required"`
 	UIURL          string `mapstructure:"ui_url" validate:"required,url"`
 	CertFile       string `mapstructure:"cert_file" validate:"required"`
 	KeyFile        string `mapstructure:"key_file" validate:"required"`
@@ -70,6 +72,8 @@ type Config struct {
 	Banks          []BankConfig
 	FeatureFlags   FeatureFlags `mapstructure:"feature_flags"`
 }
+
+var Validator = validator.New()
 
 func LoadConfig() (Config, error) {
 	var (
@@ -87,6 +91,10 @@ func LoadConfig() (Config, error) {
 	}
 
 	if err = viper.Unmarshal(&config); err != nil {
+		return config, err
+	}
+
+	if err = Validator.Struct(config); err != nil {
 		return config, err
 	}
 

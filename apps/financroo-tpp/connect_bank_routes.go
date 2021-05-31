@@ -34,7 +34,7 @@ func (s *Server) WebConfig() func(*gin.Context) {
 			"authorizationServerURL": s.Config.ACPURL,
 			"clientId":               s.Config.Login.ClientID,
 			"authorizationServerId":  s.Config.Login.ServerID,
-			"tenantId":               s.Config.Login.TenantID,
+			"tenantId":               s.Config.Tenant,
 		})
 	}
 }

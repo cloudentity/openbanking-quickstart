@@ -17,6 +17,7 @@ func TestConfig(t *testing.T) {
 		"UI_URL":           "https://localhost:8091",
 		"CERT_FILE":        "cert.pem",
 		"KEY_FILE":         "key.pem",
+		"TENANT":           "default",
 	} {
 		os.Setenv(k, v)
 	}
@@ -35,13 +36,11 @@ func TestConfig(t *testing.T) {
 
 	require.NotEmpty(t, config.Login.ClientID)
 	require.NotEmpty(t, config.Login.ServerID)
-	require.NotEmpty(t, config.Login.TenantID)
 	require.NotEmpty(t, config.Login.RootCA)
 	require.NotEmpty(t, config.Login.Timeout)
 
 	require.NotEmpty(t, config.Banks[0].ID)
 	require.NotEmpty(t, config.Banks[0].URL)
-	require.NotEmpty(t, config.Banks[0].AcpClient.TenantID)
 	require.NotEmpty(t, config.Banks[0].AcpClient.ServerID)
 	require.NotEmpty(t, config.Banks[0].AcpClient.ClientID)
 	require.NotEmpty(t, config.Banks[0].AcpClient.CertFile)
