@@ -54,7 +54,7 @@ services:
     environment:
       - CLIENT_ID=bv0ocudfotn6edhsiu7g
       - CLIENT_SECRET=pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0
-      - ISSUER_URL=${ACP_INTERNAL_URL}/${CONFIGURATION_TENANT}/system
+      - ISSUER_URL=${ACP_INTERNAL_URL}/${TENANT}/system
       - CERT_FILE=/bank_cert.pem
       - KEY_FILE=/bank_key.pem
       - ROOT_CA=/ca.pem
