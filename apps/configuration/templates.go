@@ -21,7 +21,7 @@ type Templates struct {
 	m map[string][]byte
 }
 
-func LoadTemplates(dir string, variablesFile *string) (Templates, error) {
+func LoadTemplates(dirs []string, variablesFile *string) (Templates, error) {
 	var (
 		templates = Templates{
 			m: map[string][]byte{},
@@ -45,33 +45,35 @@ func LoadTemplates(dir string, variablesFile *string) (Templates, error) {
 		logrus.Debugf("variables: %+v", variables)
 	}
 
-	if files, err = ioutil.ReadDir(dir); err != nil {
-		return templates, errors.Wrapf(err, "failed to read templates directory: %s", dir)
-	}
-
-	for _, f := range files {
-		if !strings.HasSuffix(f.Name(), ".tmpl") {
-			logrus.Debugf("file skipped: %+v", f.Name())
-			continue
+	for _, d := range dirs {
+		if files, err = ioutil.ReadDir(d); err != nil {
+			return templates, errors.Wrapf(err, "failed to read templates dir: %s", d)
 		}
 
-		file := fmt.Sprintf("%s/%s", dir, f.Name())
-		logrus.Debugf("read file: %+v", file)
+		for _, f := range files {
+			if !strings.HasSuffix(f.Name(), ".tmpl") {
+				logrus.Debugf("file skipped: %+v", f.Name())
+				continue
+			}
 
-		if bs, err = ioutil.ReadFile(file); err != nil {
-			return templates, errors.Wrapf(err, "failed to read template: %s", file)
+			file := fmt.Sprintf("%s/%s", d, f.Name())
+			logrus.Debugf("read file: %+v", file)
+
+			if bs, err = ioutil.ReadFile(file); err != nil {
+				return templates, errors.Wrapf(err, "failed to read template: %s", file)
+			}
+
+			if t, err = template.New(file).Parse(string(bs)); err != nil {
+				return templates, errors.Wrapf(err, "failed to parse template: %s", file)
+			}
+
+			var buf bytes.Buffer
+			if err = t.Execute(&buf, variables); err != nil {
+				return templates, errors.Wrapf(err, "failed to render template: %s", file)
+			}
+
+			templates.m[file] = buf.Bytes()
 		}
-
-		if t, err = template.New(file).Parse(string(bs)); err != nil {
-			return templates, errors.Wrapf(err, "failed to parse template: %s", file)
-		}
-
-		var buf bytes.Buffer
-		if err = t.Execute(&buf, variables); err != nil {
-			return templates, errors.Wrapf(err, "failed to render template: %s", file)
-		}
-
-		templates.m[file] = buf.Bytes()
 	}
 
 	return templates, nil

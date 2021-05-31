@@ -24,7 +24,7 @@ clients:
   grant_types:
   - authorization_code
   redirect_uris:
-  - {{ .consent_admin_portal_redirect_url }}
+  - {{ .consent_admin_portal_url }}/callback
   scopes:
   - introspect_tokens
   - revoke_tokens

@@ -198,7 +198,7 @@ services:
       - ./data/variables.yaml:/variables.yaml
     command:
       - /app/main
-      - --templates-dir
+      - --templates-dirs
       - /app/imports
       - --tenant-url
       - https://acp:8443/system

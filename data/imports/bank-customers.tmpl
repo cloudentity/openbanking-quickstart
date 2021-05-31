@@ -33,7 +33,7 @@ clients:
   - authorization_code
   token_endpoint_auth_method: none
   redirect_uris:
-  - {{ .consent_self_service_redirect_url }}
+  - {{ .consent_self_service_portal_url }}/callback
   trusted: true
 - tenant_id: default
   authorization_server_id: bank-customers

@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strings"
 	"time"
 
 	"github.com/sirupsen/logrus"
@@ -21,7 +22,7 @@ var (
 	tenant        = flag.String("tenant", "default", "tenant id")
 	clientID      = flag.String("client-id", "system", "client id")
 	clientSecret  = flag.String("client-secret", "n8HF35qzZkmsukHJzzz9LnN8m9Mf97uq", "client secret")
-	templatesDir  = flag.String("templates-dir", "", "templates directory in yaml format")
+	templatesDirs = flag.String("templates-dirs", "", "comma separated path to directories containing import templates with tmpl extension (yaml format)")
 	variablesFile = flag.String("variables-file", "", "optional variables file in yaml format that can be used in templates")
 	httpTimeout   = flag.Duration("http-timeout", time.Second*10, "http timeout")
 	httpInsecure  = flag.Bool("http-insecure", true, "http insecure connection")
@@ -41,8 +42,8 @@ func initialize() {
 		logrus.SetLevel(logrus.DebugLevel)
 	}
 
-	if *templatesDir == "" {
-		logrus.Info("templates dir must be set, see usage below")
+	if *templatesDirs == "" {
+		logrus.Info("templates dirs must be set, see usage below")
 		flag.PrintDefaults()
 		os.Exit(1)
 	}
@@ -80,7 +81,9 @@ func main() {
 
 	client := cc.Client(context.WithValue(context.Background(), oauth2.HTTPClient, httpClient))
 
-	if templates, err = LoadTemplates(*templatesDir, variablesFile); err != nil {
+	dirs := strings.Split(*templatesDirs, ",")
+
+	if templates, err = LoadTemplates(dirs, variablesFile); err != nil {
 		log.Fatal(err)
 	}
 

@@ -10,14 +10,14 @@ import (
 func TestTemplates(t *testing.T) {
 	testCases := []struct {
 		name               string
-		dir                string
+		dirs               []string
 		variablesFile      string
 		assertResponse     func(*testing.T, []byte)
 		expectedJSONOutput []byte
 	}{
 		{
 			name: "merge templates",
-			dir:  "./testdata/t1",
+			dirs: []string{"./testdata/t1"},
 			assertResponse: func(tt *testing.T, bs []byte) {
 				var m map[string]interface{}
 
@@ -29,8 +29,21 @@ func TestTemplates(t *testing.T) {
 			},
 		},
 		{
+			name: "merge multiple templates",
+			dirs: []string{"./testdata/t1", "./testdata/t2"},
+			assertResponse: func(tt *testing.T, bs []byte) {
+				var m map[string]interface{}
+
+				err := json.Unmarshal(bs, &m)
+				require.NoError(tt, err)
+
+				require.Equal(tt, 2, len(m["servers"].([]interface{})))
+				require.Equal(tt, 2, len(m["clients"].([]interface{})))
+			},
+		},
+		{
 			name:          "merge templates using variables file",
-			dir:           "./testdata/t2",
+			dirs:          []string{"./testdata/t2"},
 			variablesFile: "./testdata/variables.yaml",
 			assertResponse: func(tt *testing.T, bs []byte) {
 				require.JSONEq(tt, string([]byte(`{
@@ -59,7 +72,7 @@ func TestTemplates(t *testing.T) {
 				variablesFile = &tc.variablesFile
 			}
 
-			templates, err := LoadTemplates(tc.dir, variablesFile)
+			templates, err := LoadTemplates(tc.dirs, variablesFile)
 			require.NoError(tt, err)
 
 			yamlFile, err := templates.Merge()
