@@ -120,7 +120,7 @@ services:
       - INTROSPECT_CLIENT_ID=bv2fddlpfc67lmeti32g
       - INTROSPECT_CLIENT_SECRET=RkAIOVRlP6ZLhDvYixT1wBb8DG3bVkXAouoIrX7cwzA
       - INTROSPECT_ISSUER_URL=${ACP_INTERNAL_URL}/default/bank-admins
-      
+
   bank:
     image: cloudentity/openbanking-quickstart-bank:latest
     container_name: bank
@@ -198,15 +198,19 @@ services:
       - ./data/variables.yaml:/variables.yaml
     command:
       - /app/main
+      - --tenant-url
+      - ${CONFIGURATION_TENANT_URL}
+      - --tenant
+      - ${CONFIGURATION_TENANT}
+      - --client-id
+      - ${CONFIGURATION_CLIENT_ID}
+      - --client-secret
+      - ${CONFIGURATION_CLIENT_SECRET}
       - --templates-dirs
       - /app/imports
-      - --tenant-url
-      - https://acp:8443/system
-      - --tenant
-      - system
-      - --verbose
       - --variables-file
       - /variables.yaml
+      - --verbose
 
 volumes:
   crdb:
