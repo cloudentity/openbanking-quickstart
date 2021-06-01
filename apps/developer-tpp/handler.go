@@ -146,7 +146,7 @@ func (s *Server) Callback() func(*gin.Context) {
 			header, _ := json.MarshalIndent(IDToken.Header, "", "  ")
 			payload, _ := json.MarshalIndent(claims, "", "  ")
 
-			data["id_token_raw"] = IDToken
+			data["id_token_raw"] = token.IDToken
 			data["id_token_header"] = string(header)
 			data["id_token_payload"] = string(payload)
 		}
