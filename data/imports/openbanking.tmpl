@@ -81,7 +81,7 @@ clients:
   - revoke_tokens
   subject_type: pairwise
   system: true
-  tls_client_auth_subject_dn: CN=cid2.authorization.cloudentity.com,OU=Authorization,O=Cloudentity,L=Seattle,ST=Washinghton,C=US
+  tls_client_auth_subject_dn: {{ .bank_tls_client_auth_subject_dn }}
   tls_client_certificate_bound_access_tokens: true
   token_endpoint_auth_method: tls_client_auth
 # financroo / developer tpp
@@ -91,7 +91,7 @@ clients:
   client_name: Financroo
   client_uri: https://localhost:8090
   client_secret: -TlfoycUiE0qNi-XUBFDfTxMlhHTCjVxOF6pLrWZbQA
-  tls_client_auth_subject_dn: CN=cid1.authorization.cloudentity.com,OU=Authorization,O=Cloudentity,L=Seattle,ST=Washinghton,C=US
+  tls_client_auth_subject_dn: {{ .financroo_tls_client_auth_subject_dn }}
   tls_client_certificate_bound_access_tokens: true
   token_endpoint_auth_method: tls_client_auth
   redirect_uris:
