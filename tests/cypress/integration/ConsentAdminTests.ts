@@ -16,6 +16,7 @@ describe(`Consent admin app`, () => {
   const errorPage: ErrorPage = new ErrorPage();
   const consentAdminPage: ConsentAdminPage = new ConsentAdminPage();
   const mfaPage: MfaPage = new MfaPage();
+  const enableMfa = "true" //process.env.ENABLE_MFA
 
   beforeEach(() => {
     consentAdminPage.visit()
@@ -27,8 +28,10 @@ describe(`Consent admin app`, () => {
   });
 
   it(`Happy path with revoking consent`, () => {
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    mfaPage.typePin()
+    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
+    if (enableMfa) {
+      mfaPage.typePin()
+    }
     consentPage.confirm();
     consentAdminPage.visit(true);
     acpLoginPage.login(Credentials.consentAdminUsername, Credentials.defaultPassword);
@@ -57,7 +60,9 @@ describe(`Consent admin app`, () => {
 
   it(`Cancel second ACP login`, () => {
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    mfaPage.typePin()
+    if (enableMfa) {
+      mfaPage.typePin()
+    }
     consentPage.confirm();
     consentAdminPage.visit();
     acpLoginPage.cancel();
