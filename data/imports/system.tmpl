@@ -11,7 +11,7 @@ clients:
   - manage_openbanking_consents
   - manage_scope_grants
   - revoke_tokens
-  tls_client_auth_subject_dn: CN=cid2.authorization.cloudentity.com,OU=Authorization,O=Cloudentity,L=Seattle,ST=Washinghton,C=US
+  tls_client_auth_subject_dn: {{ .bank_tls_client_auth_subject_dn }}
   tls_client_certificate_bound_access_tokens: true
   token_endpoint_auth_method: client_secret_post
 - tenant_id: default
