@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"reflect"
 	"strconv"
 	"strings"
 	"time"
@@ -15,6 +16,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 	"github.com/google/uuid"
+	"github.com/jinzhu/copier"
 	"github.com/sirupsen/logrus"
 
 	"github.com/cloudentity/acp-client-go/client/openbanking"
@@ -102,20 +104,26 @@ func (s *Server) CreateDomesticPayment() func(*gin.Context) {
 			return
 		}
 
-		// request risk and consent risk must match nolint
-		// if paymentRequest.Risk.PaymentContextCode != introspectionResponse.PaymentContextCode ||
-		// 	paymentRequest.Risk.MerchantCategoryCode != introspectionResponse.MerchantCategoryCode ||
-		// 	paymentRequest.Risk.MerchantCustomerIdentification != introspectionResponse.MerchantCustomerIdentification ||
-		// 	!reflect.DeepEqual(paymentRequest.Risk.DeliveryAddress, introspectionResponse.DeliveryAddress) {
-		// 	msg := "request risk does not match consent risk"
-		// 	logrus.WithField("introspect response", introspectionResponse).
-		// 		WithField("payment risk", paymentRequest.Risk).
-		// 		Errorf(msg)
-		// 	c.JSON(http.StatusBadRequest, models.OBError1{
-		// 		Message: &msg,
-		// 	})
-		// 	return
-		// }
+		paymentRisk := paymentRequest.Risk
+		consentRisk := &paymentModels.OBRisk1{}
+
+		if err = copier.Copy(consentRisk, introspectionResponse); err != nil {
+			msg := "internal error"
+			logrus.WithError(err).Error("field copying failed")
+			c.JSON(http.StatusInternalServerError, models.OBError1{
+				Message: &msg,
+			})
+			return
+		}
+
+		if !reflect.DeepEqual(paymentRisk, consentRisk) {
+			msg := "risk validation failed"
+			logrus.Errorf(msg)
+			c.JSON(http.StatusBadRequest, models.OBError1{
+				Message: &msg,
+			})
+			return
+		}
 
 		id := uuid.New().String()
 		status := string(AcceptedSettlementInProcess)
