@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"reflect"
 	"strconv"
 	"strings"
 	"time"
@@ -102,20 +103,26 @@ func (s *Server) CreateDomesticPayment() func(*gin.Context) {
 			return
 		}
 
-		// request risk and consent risk must match nolint
-		// if paymentRequest.Risk.PaymentContextCode != introspectionResponse.PaymentContextCode ||
-		// 	paymentRequest.Risk.MerchantCategoryCode != introspectionResponse.MerchantCategoryCode ||
-		// 	paymentRequest.Risk.MerchantCustomerIdentification != introspectionResponse.MerchantCustomerIdentification ||
-		// 	!reflect.DeepEqual(paymentRequest.Risk.DeliveryAddress, introspectionResponse.DeliveryAddress) {
-		// 	msg := "request risk does not match consent risk"
-		// 	logrus.WithField("introspect response", introspectionResponse).
-		// 		WithField("payment risk", paymentRequest.Risk).
-		// 		Errorf(msg)
-		// 	c.JSON(http.StatusBadRequest, models.OBError1{
-		// 		Message: &msg,
-		// 	})
-		// 	return
-		// }
+		if paymentRequest.Risk.PaymentContextCode != introspectionResponse.PaymentContextCode {
+			RiskValidationFailed(c, "PaymentContextCode", introspectionResponse.PaymentContextCode, paymentRequest.Risk.PaymentContextCode)
+			return
+		}
+
+		if paymentRequest.Risk.MerchantCustomerIdentification != introspectionResponse.MerchantCustomerIdentification {
+			RiskValidationFailed(c, "MerchantCustomerIdentification", introspectionResponse.MerchantCustomerIdentification, paymentRequest.Risk.MerchantCustomerIdentification)
+			return
+		}
+
+		consentAddress := introspectionResponse.DeliveryAddress
+		paymentAddress := paymentRequest.Risk.DeliveryAddress
+		if 	consentAddress != nil && paymentAddress != nil && (
+			!reflect.DeepEqual((*consentAddress).AddressLine, (*paymentAddress).AddressLine) ||
+			(*consentAddress).Country != (*paymentAddress).Country ||
+			string((*consentAddress).BuildingNumber) != string((*paymentAddress).BuildingNumber) ||
+			string((*consentAddress).CountrySubDivision) != string((*paymentAddress).CountrySubDivision)) {
+			RiskValidationFailed(c, "DeliveryAddress", introspectionResponse.DeliveryAddress, paymentAddress)
+			return
+		}
 
 		id := uuid.New().String()
 		status := string(AcceptedSettlementInProcess)
@@ -155,6 +162,17 @@ func (s *Server) CreateDomesticPayment() func(*gin.Context) {
 
 		c.PureJSON(http.StatusCreated, response)
 	}
+}
+
+func RiskValidationFailed(c *gin.Context, fieldName string, consentValue interface{}, paymentValue interface{}) {
+	msg := "request risk does not match consent risk"
+	logrus.WithField("failedField", fieldName).
+		WithField("consentValue", consentValue).
+		WithField("paymentValue", paymentValue).
+		Errorf(msg)
+	c.JSON(http.StatusBadRequest, models.OBError1{
+		Message: &msg,
+	})
 }
 
 func (s *Server) GetDomesticPayment() func(*gin.Context) {
