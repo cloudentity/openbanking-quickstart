@@ -6,7 +6,7 @@ import Progress from "./Progress";
 import Tab from "@material-ui/core/Tab";
 import Hidden from "@material-ui/core/Hidden";
 import Tabs from "@material-ui/core/Tabs";
-import { Button, Container, Theme, Typography } from "@material-ui/core";
+import { Button, Container, Typography } from "@material-ui/core";
 import { logout } from "./AuthPage";
 import { makeStyles } from "@material-ui/core/styles";
 import { api } from "../api/api";
@@ -15,17 +15,23 @@ import { Route } from "react-router-dom";
 import noAccountEmptyState from "./no-accounts-empty-state.svg";
 import ClientsList from "./ClientsList";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   indicator: {
     backgroundColor: "#fff",
   },
 }));
 
+interface PropTypes {
+  authorizationServerURL?: string;
+  authorizationServerId?: string;
+  tenantId?: string;
+}
+
 export default function Dashboard({
   authorizationServerURL,
   authorizationServerId,
   tenantId,
-}) {
+}: PropTypes) {
   const [isProgress, setProgress] = useState(true);
   const [clients, setClients] = useState<any>([]);
   const [revokeDialog, setRevokeDialog] = useState<any>(null);

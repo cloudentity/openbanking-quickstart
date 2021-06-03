@@ -1,4 +1,4 @@
-import React, { Fragment, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Redirect, Route } from "react-router";
 import { api } from "../api/api";
 import { isTokenInStore, removeAllAuthDataFromStore } from "./auth.utils";
@@ -22,7 +22,7 @@ export default function PrivateRoute({
   }, [authorizationServerURL, tenantId, authorizationServerId]);
 
   return (
-    <Fragment>
+    <>
       {progress && <Progress />}
       {!progress && (
         <Route
@@ -41,6 +41,6 @@ export default function PrivateRoute({
           }
         />
       )}
-    </Fragment>
+    </>
   );
 }
