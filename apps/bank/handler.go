@@ -165,7 +165,6 @@ func (s *Server) CreateDomesticPayment() func(*gin.Context) {
 	}
 }
 
-
 func (s *Server) GetDomesticPayment() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
