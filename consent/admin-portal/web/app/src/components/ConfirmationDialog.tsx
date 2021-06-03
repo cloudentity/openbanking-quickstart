@@ -38,17 +38,31 @@ const ConfirmationDialog = ({
       maxWidth={"sm"}
       fullWidth
     >
-      <DialogTitle disableTypography id="confirmation-dialog-title" style={{ color: "#BD271E", background: "#F7FAFF", padding: "24px 32px"}}>
+      <DialogTitle
+        disableTypography
+        id="confirmation-dialog-title"
+        style={{
+          color: "#BD271E",
+          background: "#F7FAFF",
+          padding: "24px 32px",
+        }}
+      >
         <strong>{title}</strong>
       </DialogTitle>
-      <DialogContent style={{padding: "24px 32px"}}>
-        <Typography id="confirmation-dialog-content" component={"div"} variant="body1">
+      <DialogContent style={{ padding: "24px 32px" }}>
+        <Typography
+          id="confirmation-dialog-content"
+          component={"div"}
+          variant="body1"
+        >
           <strong>{content}</strong>
         </Typography>
         {warningItems && (
           <div style={{ marginTop: 8 }}>
-            {warningItems.map(i => (
-              <div style={{ marginTop: 4, display: "flex", alignItems: "center" }}>
+            {warningItems.map((i) => (
+              <div
+                style={{ marginTop: 4, display: "flex", alignItems: "center" }}
+              >
                 <DoneIcon style={{ marginRight: 6, color: "#BD271E" }} />{" "}
                 <Typography style={{ fontSize: 14 }}>{i}</Typography>
               </div>
