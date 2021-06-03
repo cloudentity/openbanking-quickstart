@@ -2,7 +2,7 @@
   "name": "consent-admin-app",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:8086",
+  "proxy": "https://localhost:8086",
   "dependencies": {
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.9.1",

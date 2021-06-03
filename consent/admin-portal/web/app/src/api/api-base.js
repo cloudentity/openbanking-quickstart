@@ -20,33 +20,33 @@ const buildUrl = (origin, base, path) => origin + normalize(base + '/' + path);
 const accessTokenHeader = () => ['Authorization', `Bearer ${getTokenFromStore()}`];
 
 const http = (request, origin, baseUrl) => ({
-    get: ({url, query = null, responseType = null, callback = toJson}) => request
+    get: ({ url, query = null, responseType = null, callback = toJson }) => request
         .get(buildUrl(origin, baseUrl, url))
         // .use(unauthorizedRedirect)
         .query(query)
         .responseType(responseType)
         .set(...accessTokenHeader())
         .then(callback),
-    post: ({url, body, query}) => request
+    post: ({ url, body, query }) => request
         .post(buildUrl(origin, baseUrl, url))
         // .use(unauthorizedRedirect)
         .query(query)
         .send(body)
         .set(...accessTokenHeader())
         .then(toJson),
-    put: ({url, body}) => request
+    put: ({ url, body }) => request
         .put(buildUrl(origin, baseUrl, url))
         .send(body)
         // .use(unauthorizedRedirect)
         .set(...accessTokenHeader())
         .then(toJson),
-    delete: ({url, query}) => request
+    delete: ({ url, query }) => request
         .delete(buildUrl(origin, baseUrl, url))
         // .use(unauthorizedRedirect)
         .query(query)
         .set(...accessTokenHeader())
         .then(toJson),
-    postFormData: ({url, formData, query}) => request
+    postFormData: ({ url, formData, query }) => request
         .post(buildUrl(origin, baseUrl, url))
         // .use(unauthorizedRedirect)
         .query(query)
