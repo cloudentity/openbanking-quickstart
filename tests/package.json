@@ -5,6 +5,8 @@
   "license": "MIT",
   "dependencies": {
     "cypress": "^7.2.0",
-    "typescript": "^4.2.4"
+    "typescript": "^4.2.4",
+    "@types/node": "^15.6.2",
+    "dotenv": "^10.0.0"
   }
 }
