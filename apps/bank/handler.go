@@ -16,6 +16,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 	"github.com/google/uuid"
+	"github.com/jinzhu/copier"
 	"github.com/sirupsen/logrus"
 
 	"github.com/cloudentity/acp-client-go/client/openbanking"
@@ -113,14 +114,27 @@ func (s *Server) CreateDomesticPayment() func(*gin.Context) {
 			return
 		}
 
-		consentAddress := introspectionResponse.DeliveryAddress
-		paymentAddress := paymentRequest.Risk.DeliveryAddress
-		if 	consentAddress != nil && paymentAddress != nil && (
-			!reflect.DeepEqual((*consentAddress).AddressLine, (*paymentAddress).AddressLine) ||
-			(*consentAddress).Country != (*paymentAddress).Country ||
-			string((*consentAddress).BuildingNumber) != string((*paymentAddress).BuildingNumber) ||
-			string((*consentAddress).CountrySubDivision) != string((*paymentAddress).CountrySubDivision)) {
-			RiskValidationFailed(c, "DeliveryAddress", introspectionResponse.DeliveryAddress, paymentAddress)
+		paymentAddress := &paymentModels.OBRisk1DeliveryAddress{}
+		consentAddress := &paymentModels.OBRisk1DeliveryAddress{}
+
+		if introspectionResponse.DeliveryAddress != nil {
+			if err = copier.Copy(consentAddress, introspectionResponse.DeliveryAddress); err != nil {
+				msg := "field copying failed"
+				ServerErr(c, err, msg)
+				return
+			}
+		}
+
+		if paymentRequest.Risk.DeliveryAddress != nil {
+			if err = copier.Copy(paymentAddress, paymentRequest.Risk.DeliveryAddress); err != nil {
+				msg := "field copying failed"
+				ServerErr(c, err, msg)
+				return
+			}
+		}
+
+		if !reflect.DeepEqual(paymentAddress, consentAddress) {
+			RiskValidationFailed(c, "DeliveryAddress", consentAddress, paymentAddress)
 			return
 		}
 
@@ -162,6 +176,13 @@ func (s *Server) CreateDomesticPayment() func(*gin.Context) {
 
 		c.PureJSON(http.StatusCreated, response)
 	}
+}
+
+func ServerErr(c *gin.Context, err error, msg string) {
+	logrus.WithError(err).Error("unexpected error")
+	c.JSON(http.StatusInternalServerError, models.OBError1{
+		Message: &msg,
+	})
 }
 
 func RiskValidationFailed(c *gin.Context, fieldName string, consentValue interface{}, paymentValue interface{}) {

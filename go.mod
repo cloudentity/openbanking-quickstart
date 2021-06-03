@@ -18,6 +18,7 @@ require (
 	github.com/google/uuid v1.1.2
 	github.com/gorilla/securecookie v1.1.1
 	github.com/imdario/mergo v0.3.12
+	github.com/jinzhu/copier v0.3.2
 	github.com/json-iterator/go v1.1.10 // indirect
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.7.0
