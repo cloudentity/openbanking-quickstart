@@ -104,37 +104,24 @@ func (s *Server) CreateDomesticPayment() func(*gin.Context) {
 			return
 		}
 
-		if paymentRequest.Risk.PaymentContextCode != introspectionResponse.PaymentContextCode {
-			RiskValidationFailed(c, "PaymentContextCode", introspectionResponse.PaymentContextCode, paymentRequest.Risk.PaymentContextCode)
+		paymentRisk := paymentRequest.Risk
+		consentRisk := &paymentModels.OBRisk1{}
+
+		if err = copier.Copy(consentRisk, introspectionResponse); err != nil {
+			msg := "internal error"
+			logrus.WithError(err).Error("field copying failed")
+			c.JSON(http.StatusInternalServerError, models.OBError1{
+				Message: &msg,
+			})
 			return
 		}
 
-		if paymentRequest.Risk.MerchantCustomerIdentification != introspectionResponse.MerchantCustomerIdentification {
-			RiskValidationFailed(c, "MerchantCustomerIdentification", introspectionResponse.MerchantCustomerIdentification, paymentRequest.Risk.MerchantCustomerIdentification)
-			return
-		}
-
-		paymentAddress := &paymentModels.OBRisk1DeliveryAddress{}
-		consentAddress := &paymentModels.OBRisk1DeliveryAddress{}
-
-		if introspectionResponse.DeliveryAddress != nil {
-			if err = copier.Copy(consentAddress, introspectionResponse.DeliveryAddress); err != nil {
-				msg := "field copying failed"
-				ServerErr(c, err, msg)
-				return
-			}
-		}
-
-		if paymentRequest.Risk.DeliveryAddress != nil {
-			if err = copier.Copy(paymentAddress, paymentRequest.Risk.DeliveryAddress); err != nil {
-				msg := "field copying failed"
-				ServerErr(c, err, msg)
-				return
-			}
-		}
-
-		if !reflect.DeepEqual(paymentAddress, consentAddress) {
-			RiskValidationFailed(c, "DeliveryAddress", consentAddress, paymentAddress)
+		if !reflect.DeepEqual(paymentRisk, consentRisk) {
+			msg := "risk validation failed"
+			logrus.Errorf(msg)
+			c.JSON(http.StatusBadRequest, models.OBError1{
+				Message: &msg,
+			})
 			return
 		}
 
@@ -178,23 +165,6 @@ func (s *Server) CreateDomesticPayment() func(*gin.Context) {
 	}
 }
 
-func ServerErr(c *gin.Context, err error, msg string) {
-	logrus.WithError(err).Error("unexpected error")
-	c.JSON(http.StatusInternalServerError, models.OBError1{
-		Message: &msg,
-	})
-}
-
-func RiskValidationFailed(c *gin.Context, fieldName string, consentValue interface{}, paymentValue interface{}) {
-	msg := "request risk does not match consent risk"
-	logrus.WithField("failedField", fieldName).
-		WithField("consentValue", consentValue).
-		WithField("paymentValue", paymentValue).
-		Errorf(msg)
-	c.JSON(http.StatusBadRequest, models.OBError1{
-		Message: &msg,
-	})
-}
 
 func (s *Server) GetDomesticPayment() func(*gin.Context) {
 	return func(c *gin.Context) {
