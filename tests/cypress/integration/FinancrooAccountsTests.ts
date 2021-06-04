@@ -7,6 +7,7 @@ import {FinancrooAccountsPage} from '../pages/financroo/accounts/FinancrooAccoun
 import {Credentials} from "../pages/Credentials";
 import {Urls} from "../pages/Urls";
 import {MfaPage} from "../pages/mfa/MfaPage";
+import {EnvironmentVariables} from "../pages/EnvironmentVariables"
 
 describe(`Financroo app`, () => {
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
@@ -16,6 +17,7 @@ describe(`Financroo app`, () => {
   const financrooWelcomePage: FinancrooWelcomePage = new FinancrooWelcomePage();
   const financrooAccountsPage: FinancrooAccountsPage = new FinancrooAccountsPage();
   const mfaPage: MfaPage = new MfaPage();
+  const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
 
   const billsAccount: string = `Bills`;
   const householdAccount: string = `Household`;
@@ -37,7 +39,9 @@ describe(`Financroo app`, () => {
       acpLoginPage.login(Credentials.financrooUsername, Credentials.defaultPassword)
       financrooWelcomePage.connect()
       acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
-      mfaPage.typePin()
+      if (environmentVariables.getMfaVariable()) {
+        mfaPage.typePin()
+      }
       consentPage.checkAccounts(accounts)
       consentPage.expandPermissions()
       consentPage.assertPermissions(7)
@@ -62,7 +66,9 @@ describe(`Financroo app`, () => {
     acpLoginPage.login(Credentials.financrooUsername, Credentials.defaultPassword)
     financrooWelcomePage.connect()
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
-    mfaPage.typePin()
+    if (environmentVariables.getMfaVariable()) {
+      mfaPage.typePin()
+    }
     consentPage.cancel()
     errorPage.assertError(`rejected`)
   })

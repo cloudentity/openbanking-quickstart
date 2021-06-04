@@ -7,6 +7,7 @@ import {Credentials} from "../pages/Credentials";
 import {ConsentAdminPage} from "../pages/consent-admin/ConsentAdminPage";
 import {Urls} from "../pages/Urls";
 import {MfaPage} from "../pages/mfa/MfaPage";
+import {EnvironmentVariables} from "../pages/EnvironmentVariables"
 
 describe(`Consent admin app`, () => {
   const tppIntentPage: TppIntentPage = new TppIntentPage();
@@ -16,7 +17,7 @@ describe(`Consent admin app`, () => {
   const errorPage: ErrorPage = new ErrorPage();
   const consentAdminPage: ConsentAdminPage = new ConsentAdminPage();
   const mfaPage: MfaPage = new MfaPage();
-  const enableMfa = "true" //process.env.ENABLE_MFA
+  const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
 
   beforeEach(() => {
     consentAdminPage.visit()
@@ -28,37 +29,8 @@ describe(`Consent admin app`, () => {
   });
 
   it(`Happy path with revoking consent`, () => {
-
-    // START Logging
-    Cypress.log({
-      displayName: 'Environment variable from node types >>> ' + process.env.LOG_LEVEL
-    })
-    console.log(process.env.LOG_LEVEL);
-
-    Cypress.log({
-      displayName: "Environment variable 'makefile_mfa' set via Makefile >>> " + Cypress.env('makefile_mfa')
-    })
-    console.log(Cypress.env('makefile_mfa'))
-
-    Cypress.log({
-      displayName: "Environment variable 'test' set in cypress.json file >>> " + Cypress.env('test')
-    })
-    console.log(Cypress.env('test'))
-
-
-    Cypress.log({
-      displayName: "Environment variable 'dotEnvMfa' set in index.js file via dotenv >>> " + Cypress.env('dotEnvMfa')
-    })
-    console.log(Cypress.env('dotEnvMfa'))
-
-    Cypress.log({
-      displayName: "Environment variable 'LOG_LEVEL' set in index.js file via dotenv >>> " + Cypress.env('logLevel')
-    })
-    console.log(Cypress.env('logLevel'))
-    // END Logging
-
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
-    if (Cypress.env('makefile_mfa')) {
+    if (environmentVariables.getMfaVariable()) {
       mfaPage.typePin()
     }
     consentPage.confirm();
@@ -81,7 +53,7 @@ describe(`Consent admin app`, () => {
   //   consentAdminPage.expandTab()
   //   consentAdminPage.assertConsentIsNotDisplayed()
   // })
-/*
+
   it(`Cancel first ACP login`, () => {
     acpLoginPage.cancel();
     errorPage.assertError(`The user rejected the authentication`)
@@ -89,7 +61,7 @@ describe(`Consent admin app`, () => {
 
   it(`Cancel second ACP login`, () => {
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    if (enableMfa) {
+    if (environmentVariables.getMfaVariable()) {
       mfaPage.typePin()
     }
     consentPage.confirm();
@@ -97,5 +69,5 @@ describe(`Consent admin app`, () => {
     acpLoginPage.cancel();
     errorPage.assertError(`The user rejected the authentication`)
   })
-*/
+ 
 })

@@ -9,6 +9,7 @@ import {Urls} from "../pages/Urls";
 import {MfaPage} from "../pages/mfa/MfaPage";
 import {FinancrooInvestmentsPage} from "../pages/financroo/investments/FinancrooInvestmentsPage";
 import {FinancrooContributePage} from "../pages/financroo/investments/FinancrooContributePage";
+import {EnvironmentVariables} from "../pages/EnvironmentVariables"
 
 describe(`Foo`, () => {
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
@@ -20,7 +21,7 @@ describe(`Foo`, () => {
   const financrooInvestmentsPage: FinancrooInvestmentsPage = new FinancrooInvestmentsPage();
   const financrooContributePage: FinancrooContributePage = new FinancrooContributePage();
   const mfaPage: MfaPage = new MfaPage();
-
+  const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
 
   beforeEach(() => {
     financrooLoginPage.visit()
@@ -30,7 +31,9 @@ describe(`Foo`, () => {
     acpLoginPage.login(Credentials.financrooUsername, Credentials.defaultPassword)
     financrooWelcomePage.connect()
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
-    mfaPage.typePin()
+    if (environmentVariables.getMfaVariable()) {
+      mfaPage.typePin()
+    }
     consentPage.confirm()
   });
 
@@ -40,7 +43,9 @@ describe(`Foo`, () => {
     financrooInvestmentsPage.invest()
     financrooContributePage.contribute(1)
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
-    mfaPage.typePin()
+    if (environmentVariables.getMfaVariable()) {
+      mfaPage.typePin()
+    }
     consentPage.confirm()
     financrooContributePage.assertItIsFinished()
   })
