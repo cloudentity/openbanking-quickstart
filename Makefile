@@ -52,4 +52,12 @@ clean:
 
 .PHONY: run-tests
 run-tests:
-	yarn --cwd tests run cypress open --env makefile_mfa=${ENABLE_MFA}
+	yarn --cwd tests run cypress open --env isMfaEnabled=${ENABLE_MFA}
+
+.PHONY: enable-mfa
+enable-mfa:
+	./scripts/set-mfa.sh true
+
+.PHONY: disable-mfa
+disable-mfa:
+	./scripts/set-mfa.sh false
