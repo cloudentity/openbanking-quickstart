@@ -15,11 +15,7 @@
 /**
  * @type {Cypress.PluginConfig}
  */
-// require('dotenv').config("../../../.env")
-require('dotenv').config()
-
 module.exports = (on, config) => {
-  config.env.logLevel = process.env.LOG_LEVEL
-  config.env.dotEnvMfa = process.env.ENABLE_MFA // No idea why is this working ?
-  return config
+  // `on` is used to hook into various events Cypress emits
+  // `config` is the resolved Cypress config
 }
