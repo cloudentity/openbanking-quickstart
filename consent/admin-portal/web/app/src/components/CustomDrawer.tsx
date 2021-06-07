@@ -226,13 +226,35 @@ function CustomDrawer({ data, setData, onRevoke }: PropTypes) {
                       style={{
                         display: "flex",
                         justifyContent: "space-between",
+                        alignItems: "center",
                       }}
                     >
                       <span>Consent ID</span>
                       <Chip type="active">{consent?.Status}</Chip>
                     </div>
-                    <div style={{ paddingBottom: 16 }}>
-                      {consent?.ConsentId}
+                    <div
+                      style={{
+                        paddingBottom: 16,
+                        display: "flex",
+                        justifyContent: "space-between",
+                        alignItems: "center",
+                      }}
+                    >
+                      <span>{consent?.ConsentId}</span>
+                      <Button
+                        style={{
+                          backgroundColor: "#bd271e",
+                          marginLeft: 4,
+                          color: "white",
+                          textTransform: "none",
+                          fontWeight: 400,
+                        }}
+                        onClick={() => {
+                          console.log("revoke access for", consent?.ConsentId);
+                        }}
+                      >
+                        Revoke access
+                      </Button>
                     </div>
                   </div>
                   <div>
@@ -334,7 +356,7 @@ function CustomDrawer({ data, setData, onRevoke }: PropTypes) {
             }
           }}
         >
-          Revoke access
+          Revoke all
         </Button>
       </div>
     </Drawer>
