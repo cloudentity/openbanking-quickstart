@@ -1,6 +1,29 @@
 # openbanking-quickstart
 Openbanking Quickstart
 
+## How to run environment locally
+### Set up MFA
+By default, MFA is turned off.
+1. Run `make enable-mfa` to turn MFA on.
+2. Run `make disable-mfa` to turn MFA off.
+
+### Set up ACP locally
+Run `make run-dev` to set up ACP.
+> #### Note
+> By default, MFA is turned off.
+> To run environment with MFA run `make enable-mfa` 
+> OR run `ENABLE_MFA=true make run-dev`
+
+## How to run Cypress test locally
+Run `make run-tests` to open Cypress GUI with tests scenarios.
+To run tests:
+- single test suite - click on intended test suite name `{TEST_NAME}.ts`
+- full set - click on `Run integration spec`
+
+> #### Note
+> Tests will be executed accordingly to `ENABLE_MFA` see **Set up ACP locally**. 
+> OR run `ENABLE_MFA=true make run-tests`
+
 ## Credentials
 
 - ACP admin portal: `https://localhost:8443/app/default/admin` `admin / admin`
