@@ -19,12 +19,16 @@ jobs:
           username: ${{ secrets.PUBLIC_DOCKER_CLOUDENTITY_REPO_DEV_USERNAME }}
           password: ${{ secrets.PUBLIC_DOCKER_CLOUDENTITY_REPO_DEV_PASSWORD }}
 
-      - name: Make run
-        run: ENABLE_MFA=true make build run
+      - name: Make enable mfa
+        run: make enable-mfa
 
-      - name: Run cypress tests
+      - name: Make run
+        run: make build run
+
+      - name: Run cypress tests with env
         uses: cypress-io/github-action@v2
         with:
+          env: isMfaEnabled=${{ ENABLE_MFA }}
           working-directory: tests
 
       - name: Upload cypress screenshots
