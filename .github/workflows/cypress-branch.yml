@@ -28,7 +28,7 @@ jobs:
       - name: Run cypress tests with env
         uses: cypress-io/github-action@v2
         with:
-          env: isMfaEnabled=${{ ENABLE_MFA }}
+          env: isMfaEnabled=true
           working-directory: tests
 
       - name: Upload cypress screenshots
