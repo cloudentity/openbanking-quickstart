@@ -1,23 +1,20 @@
 import React, { useEffect, useState } from "react";
+import { Route } from "react-router-dom";
+import { Container, makeStyles, Theme, Typography } from "@material-ui/core";
+
 import PageToolbar from "./PageToolbar";
-import MenuIcon from "@material-ui/icons/Menu";
-import IconButton from "@material-ui/core/IconButton";
 import Progress from "./Progress";
-import Tab from "@material-ui/core/Tab";
-import Hidden from "@material-ui/core/Hidden";
-import Tabs from "@material-ui/core/Tabs";
-import { Button, Container, Typography } from "@material-ui/core";
-import { logout } from "./AuthPage";
-import { makeStyles } from "@material-ui/core/styles";
 import { api } from "../api/api";
 import ConfirmationDialog from "./ConfirmationDialog";
-import { Route } from "react-router-dom";
 import noAccountEmptyState from "./no-accounts-empty-state.svg";
 import ClientsList from "./ClientsList";
+import Subheader from "./Subheader";
+import CustomTabs from "./CustomTabs";
+import SearchInput from "./SearchInput";
 
-const useStyles = makeStyles(() => ({
-  indicator: {
-    backgroundColor: "#fff",
+const useStyles = makeStyles((theme: Theme) => ({
+  subtitle: {
+    ...theme.custom.body1,
   },
 }));
 
@@ -68,71 +65,77 @@ export default function Dashboard({
 
   return (
     <div>
-      <PageToolbar>
-        <Hidden mdUp>
-          <IconButton edge="start" color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton>
-        </Hidden>
-        <Hidden smDown>
-          <Tabs
-            value={"clients"}
-            onChange={() => {}}
-            classes={{
-              indicator: classes.indicator,
-            }}
-            aria-label="menu tabs"
-            style={{ height: 64, marginLeft: 32 }}
-          >
-            <Tab
-              label="Clients"
-              value={"clients"}
-              style={{ height: 64, textTransform: "none", minWidth: "unset" }}
-            />
-          </Tabs>
-        </Hidden>
-        <div style={{ flex: 1 }} />
-        <Button
-          style={{ color: "#fff" }}
-          onClick={() =>
-            logout(authorizationServerURL, tenantId, authorizationServerId)
-          }
-        >
-          Logout
-        </Button>
-      </PageToolbar>
+      <PageToolbar
+        authorizationServerURL={authorizationServerURL}
+        authorizationServerId={authorizationServerId}
+        tenantId={tenantId}
+      />
       <div style={{ position: "relative" }}>
         {isProgress && <Progress />}
         {!isProgress && (
           <>
             {clients.length === 0 && (
               <div style={{ textAlign: "center", marginTop: 128 }}>
-                <Typography variant={"h3"} style={{ color: "#626576" }}>
+                <Typography variant="h3" style={{ color: "#626576" }}>
                   No authorized 3rd party Applications
                 </Typography>
                 <img
                   src={noAccountEmptyState}
                   style={{ marginTop: 64 }}
-                  alt={"empty state"}
+                  alt="empty state"
                 />
               </div>
             )}
             {clients.length > 0 && (
               <>
-                <div
-                  style={{
-                    background: "#F7F7F7",
-                    height: 148,
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <Container>
-                    <Typography variant={"h3"} color={"primary"}>
-                      Authorized 3rd party Applications
-                    </Typography>
-                  </Container>
-                </div>
+                <Subheader title="Customer Consent Portal">
+                  <div className={classes.subtitle}>
+                    Search for consents and manage data access on behalf of bank
+                    members
+                  </div>
+                  <div style={{ marginTop: 32 }}>
+                    <CustomTabs
+                      tabs={[
+                        {
+                          key: "user",
+                          label: "User",
+                          content: (
+                            <div>
+                              <SearchInput
+                                placeholder="Search by user ID"
+                                onSearch={(v) => console.log(v)}
+                              />
+                            </div>
+                          ),
+                        },
+                        {
+                          key: "account",
+                          label: "Account",
+                          content: (
+                            <div>
+                              <SearchInput
+                                placeholder="Search by account number"
+                                onSearch={(v) => console.log(v)}
+                              />
+                            </div>
+                          ),
+                        },
+                        {
+                          key: "consent",
+                          label: "Consent",
+                          content: (
+                            <div>
+                              <SearchInput
+                                placeholder="Search by consent ID"
+                                onSearch={(v) => console.log(v)}
+                              />
+                            </div>
+                          ),
+                        },
+                      ]}
+                    />
+                  </div>
+                </Subheader>
                 <Container>
                   <Route
                     exact
