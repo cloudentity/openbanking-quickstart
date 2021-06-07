@@ -23,7 +23,7 @@ jobs:
         run: make build
             
       - name: Make run disable mfa
-        run: make disable-mfa run
+        run: ENABLE_MFA=false make run
 
       - name: Run cypress tests without mfa
         uses: cypress-io/github-action@v2
@@ -49,7 +49,7 @@ jobs:
         run: make clean
 
       - name: Make run enable mfa
-        run: make enable-mfa run
+        run: ENABLE_MFA=true make run
 
       - name: Run cypress tests with mfa
         uses: cypress-io/github-action@v2
