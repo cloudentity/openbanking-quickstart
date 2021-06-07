@@ -19,8 +19,8 @@ jobs:
           username: ${{ secrets.PUBLIC_DOCKER_CLOUDENTITY_REPO_DEV_USERNAME }}
           password: ${{ secrets.PUBLIC_DOCKER_CLOUDENTITY_REPO_DEV_PASSWORD }}
 
-      - name: Make enable mfa
-        run: make enable-mfa
+      - name: Make disable mfa
+        run: make disable-mfa
 
       - name: Make run
         run: make build run
