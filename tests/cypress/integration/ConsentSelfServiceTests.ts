@@ -39,7 +39,7 @@ describe(`Consent self service app`, () => {
     acpLoginPage.login(Credentials.financrooUsername, Credentials.defaultPassword)
     financrooWelcomePage.connect()
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
-    if (environmentVariables.getMfaVariable()) {
+    if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin()
     }
     consentPage.confirm()
@@ -49,7 +49,7 @@ describe(`Consent self service app`, () => {
     financrooInvestmentsPage.invest()
     financrooContributePage.contribute(1)
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
-    if (environmentVariables.getMfaVariable()) {
+    if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin()
     }
     consentPage.confirm()
