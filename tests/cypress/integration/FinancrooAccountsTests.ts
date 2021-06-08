@@ -39,7 +39,7 @@ describe(`Financroo app`, () => {
       acpLoginPage.login(Credentials.financrooUsername, Credentials.defaultPassword)
       financrooWelcomePage.connect()
       acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
-      if (environmentVariables.getMfaVariable()) {
+      if (environmentVariables.isMfaEnabled()) {
         mfaPage.typePin()
       }
       consentPage.checkAccounts(accounts)
@@ -66,7 +66,7 @@ describe(`Financroo app`, () => {
     acpLoginPage.login(Credentials.financrooUsername, Credentials.defaultPassword)
     financrooWelcomePage.connect()
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
-    if (environmentVariables.getMfaVariable()) {
+    if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin()
     }
     consentPage.cancel()
