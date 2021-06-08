@@ -8,6 +8,10 @@ on:
 jobs:
   cypress:
     runs-on: ubuntu-latest
+    strategy:
+        fail-fast: false
+        matrix:
+          node: [1]
     steps:
       - name: Git checkout
         uses: actions/checkout@v2
