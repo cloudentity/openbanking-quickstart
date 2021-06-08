@@ -13,6 +13,7 @@ import {FinancrooAccountsPage} from "../pages/financroo/accounts/FinancrooAccoun
 import {FinancrooInvestmentsPage} from "../pages/financroo/investments/FinancrooInvestmentsPage";
 import {FinancrooContributePage} from "../pages/financroo/investments/FinancrooContributePage";
 import {ConsentSelfServiceApplicationPage} from "../pages/consent-self-service/ConsentSelfServiceApplicationPage";
+import {EnvironmentVariables} from "../pages/EnvironmentVariables"
 
 describe(`Consent self service app`, () => {
   const tppIntentPage: TppIntentPage = new TppIntentPage();
@@ -28,6 +29,7 @@ describe(`Consent self service app`, () => {
   const financrooAccountsPage: FinancrooAccountsPage = new FinancrooAccountsPage();
   const financrooInvestmentsPage: FinancrooInvestmentsPage = new FinancrooInvestmentsPage();
   const financrooContributePage: FinancrooContributePage = new FinancrooContributePage();
+  const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
 
   before(() => {
     financrooLoginPage.visit()
@@ -37,7 +39,9 @@ describe(`Consent self service app`, () => {
     acpLoginPage.login(Credentials.financrooUsername, Credentials.defaultPassword)
     financrooWelcomePage.connect()
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
-    mfaPage.typePin()
+    if (environmentVariables.isMfaEnabled()) {
+      mfaPage.typePin()
+    }
     consentPage.confirm()
 
     financrooLoginPage.visit()
@@ -45,7 +49,9 @@ describe(`Consent self service app`, () => {
     financrooInvestmentsPage.invest()
     financrooContributePage.contribute(1)
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
-    mfaPage.typePin()
+    if (environmentVariables.isMfaEnabled()) {
+      mfaPage.typePin()
+    }
     consentPage.confirm()
   })
 

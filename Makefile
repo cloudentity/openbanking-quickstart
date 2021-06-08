@@ -5,7 +5,6 @@ export COMPOSE_DOCKER_CLI_BUILD=1
 
 OB_APPS=developer-tpp financroo-tpp consent-page consent-self-service-portal consent-admin-portal bank
 ACP_APPS=acp crdb hazelcast configuration
-ENABLE_MFA?=false
 
 .PHONY: build
 build:
@@ -53,3 +52,11 @@ clean:
 .PHONY: run-tests
 run-tests:
 	yarn --cwd tests run cypress open
+
+.PHONY: enable-mfa
+enable-mfa:
+	./scripts/override_env.sh ENABLE_MFA true
+
+.PHONY: disable-mfa
+disable-mfa:
+	./scripts/override_env.sh ENABLE_MFA false

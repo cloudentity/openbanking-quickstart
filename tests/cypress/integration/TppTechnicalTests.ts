@@ -7,6 +7,7 @@ import {ErrorPage} from '../pages/ErrorPage';
 import {Credentials} from "../pages/Credentials";
 import {Urls} from "../pages/Urls";
 import {MfaPage} from "../pages/mfa/MfaPage";
+import {EnvironmentVariables} from "../pages/EnvironmentVariables"
 
 describe(`Tpp technical app`, () => {
   const tppAuthenticatedPage: TppAuthenticatedPage = new TppAuthenticatedPage();
@@ -16,6 +17,7 @@ describe(`Tpp technical app`, () => {
   const consentPage: ConsentPage = new ConsentPage();
   const errorPage: ErrorPage = new ErrorPage();
   const mfaPage: MfaPage = new MfaPage();
+  const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
 
   const basicPermission: string = `ReadAccountsBasic`;
   const detailPermission: string = `ReadAccountsDetail`;
@@ -41,7 +43,9 @@ describe(`Tpp technical app`, () => {
       } else {
         tppIntentPage.login();
         acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-        mfaPage.typePin()
+        if (environmentVariables.isMfaEnabled()) {
+          mfaPage.typePin()
+        }
         consentPage.expandPermissions()
         consentPage.assertPermissions(permissions.length)
         consentPage.confirm();
@@ -65,7 +69,9 @@ describe(`Tpp technical app`, () => {
     tppLoginPage.next();
     tppIntentPage.login();
     acpLoginPage.login(`user`, Credentials.defaultPassword);
-    mfaPage.typePin()
+    if (environmentVariables.isMfaEnabled()) {
+      mfaPage.typePin()
+    }
     consentPage.cancel()
     errorPage.assertError(`rejected`)
   })

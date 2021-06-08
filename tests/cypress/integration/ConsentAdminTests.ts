@@ -7,6 +7,7 @@ import {Credentials} from "../pages/Credentials";
 import {ConsentAdminPage} from "../pages/consent-admin/ConsentAdminPage";
 import {Urls} from "../pages/Urls";
 import {MfaPage} from "../pages/mfa/MfaPage";
+import {EnvironmentVariables} from "../pages/EnvironmentVariables"
 
 describe(`Consent admin app`, () => {
   const tppIntentPage: TppIntentPage = new TppIntentPage();
@@ -16,6 +17,7 @@ describe(`Consent admin app`, () => {
   const errorPage: ErrorPage = new ErrorPage();
   const consentAdminPage: ConsentAdminPage = new ConsentAdminPage();
   const mfaPage: MfaPage = new MfaPage();
+  const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
 
   beforeEach(() => {
     consentAdminPage.visit()
@@ -27,8 +29,10 @@ describe(`Consent admin app`, () => {
   });
 
   it(`Happy path with revoking consent`, () => {
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    mfaPage.typePin()
+    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
+    if (environmentVariables.isMfaEnabled()) {
+      mfaPage.typePin()
+    }
     consentPage.confirm();
     consentAdminPage.visit(true);
     acpLoginPage.login(Credentials.consentAdminUsername, Credentials.defaultPassword);
@@ -57,11 +61,13 @@ describe(`Consent admin app`, () => {
 
   it(`Cancel second ACP login`, () => {
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    mfaPage.typePin()
+    if (environmentVariables.isMfaEnabled()) {
+      mfaPage.typePin()
+    }
     consentPage.confirm();
     consentAdminPage.visit();
     acpLoginPage.cancel();
     errorPage.assertError(`The user rejected the authentication`)
   })
-
+ 
 })
