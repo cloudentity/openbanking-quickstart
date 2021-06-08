@@ -30,7 +30,7 @@ describe(`Consent admin app`, () => {
 
   it(`Happy path with revoking consent`, () => {
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
-    if (environmentVariables.unknown()) {
+    if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin()
     }
     consentPage.confirm();
