@@ -22,7 +22,7 @@ jobs:
       - name: Make build
         run: make build
             
-      - name: Make run disable mfa
+      - name: Make run with disabled mfa
         run: make disable-mfa run
 
       - name: Run cypress tests without mfa
@@ -47,7 +47,7 @@ jobs:
       - name: clean
         run: make clean
 
-      - name: Make run enable mfa
+      - name: Make with enabled mfa
         run: make enable-mfa run
 
       - name: Run cypress tests with mfa
