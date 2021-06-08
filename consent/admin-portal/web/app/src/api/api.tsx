@@ -3,18 +3,18 @@ import { base, baseWithCustomBaseUrl } from "./api-base";
 
 export const api = {
   userinfo: (
-    authorizationServerURL: string,
-    tenantId: string,
-    authorizationServerId: string
+      authorizationServerURL: string,
+      tenantId: string,
+      authorizationServerId: string
   ) =>
-    baseWithCustomBaseUrl("/", authorizationServerURL).get({
-      url: `/${tenantId}/${authorizationServerId}/userinfo`,
-    }),
+      baseWithCustomBaseUrl("/", authorizationServerURL).get({
+        url: `/${tenantId}/${authorizationServerId}/userinfo`,
+      }),
   getClients: () => base.get({ url: `/clients` }),
   // getClients: () => Promise.resolve(clientMockRes),
   deleteClient: ({ id }: { id: string }) =>
-    base.delete({ url: "/consents", query: { client_id: id } }),
+      base.delete({ url: `/clients/${id}`, query: {} }),
   getConsents: () => base.get({ url: `/consents` }),
   deleteConsent: ({ id }: { id: string }) =>
-    base.delete({ url: `/consents/${id}`, query: {} }),
+      base.delete({ url: `/consents/${id}`, query: {} }),
 };

@@ -12,6 +12,28 @@ import (
 	"github.com/cloudentity/acp-client-go/models"
 )
 
+const (
+	AccountAccessConsentType                 = "account_access"
+	DomesticPaymentConsentType               = "domestic_payment"
+	DomesticScheduledPaymentConsentType      = "domestic_scheduled_payment"
+	DomesticStandingOrderConsentType         = "domestic_standing_order"
+	InternationalPaymentConsentType          = "international_payment"
+	InternationalScheduledPaymentConsentType = "international_scheduled_payment"
+	InternationalStandingOrderConsentType    = "international_standing_order"
+	FilePaymentConsentType                   = "file_payment"
+)
+
+var ConsentTypes = []string{
+	AccountAccessConsentType,
+	DomesticPaymentConsentType,
+	DomesticScheduledPaymentConsentType,
+	DomesticStandingOrderConsentType,
+	InternationalPaymentConsentType,
+	InternationalStandingOrderConsentType,
+	InternationalScheduledPaymentConsentType,
+	FilePaymentConsentType,
+}
+
 func (s *Server) Index() func(*gin.Context) {
 	return func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", gin.H{})
@@ -124,6 +146,7 @@ func (s *Server) RevokeConsentsForClient() func(*gin.Context) {
 			openbanking.NewRevokeOpenbankingConsentsParams().
 				WithTid(s.Client.TenantID).
 				WithAid(s.Config.SystemClientsServerID).
+				WithConsentTypes(ConsentTypes).
 				WithClientID(&id),
 			nil,
 		); err != nil {
