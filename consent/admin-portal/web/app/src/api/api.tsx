@@ -13,7 +13,7 @@ export const api = {
   getClients: () => base.get({ url: `/clients` }),
   // getClients: () => Promise.resolve(clientMockRes),
   deleteClient: ({ id }: { id: string }) =>
-    base.delete({ url: `/clients/${id}`, query: {} }),
+    base.delete({ url: "/consents", query: { client_id: id } }),
   getConsents: () => base.get({ url: `/consents` }),
   deleteConsent: ({ id }: { id: string }) =>
     base.delete({ url: `/consents/${id}`, query: {} }),

@@ -1,4 +1,7 @@
-import { createMuiTheme, Theme } from "@material-ui/core";
+import {
+  unstable_createMuiStrictModeTheme as createMuiTheme,
+  Theme,
+} from "@material-ui/core";
 
 declare module "@material-ui/core/styles/createMuiTheme" {
   interface Theme {

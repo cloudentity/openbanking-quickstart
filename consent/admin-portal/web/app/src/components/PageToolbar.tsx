@@ -23,6 +23,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...theme.custom.button,
     color: "#DC1B37",
   },
+  appBar: {
+    backgroundColor: "white",
+    minHeight: 64,
+    padding: "0 80px",
+    [theme.breakpoints.down("sm")]: {
+      padding: 0,
+    },
+  },
 }));
 
 export default function PageToolbar({
@@ -36,7 +44,9 @@ export default function PageToolbar({
     <AppBar
       position="fixed"
       variant="outlined"
-      style={{ backgroundColor: "white", minHeight: 64, padding: "0 84px" }}
+      classes={{
+        root: classes.appBar,
+      }}
     >
       <Toolbar>
         <img src={logo} alt="logo" style={{ width: 160 }} />

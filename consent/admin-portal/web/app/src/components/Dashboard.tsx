@@ -5,7 +5,6 @@ import { Container, makeStyles, Theme, Typography } from "@material-ui/core";
 import PageToolbar from "./PageToolbar";
 import Progress from "./Progress";
 import { api } from "../api/api";
-import ConfirmationDialog from "./ConfirmationDialog";
 import noAccountEmptyState from "./no-accounts-empty-state.svg";
 import ClientsList from "./ClientsList";
 import Subheader from "./Subheader";
@@ -31,7 +30,6 @@ export default function Dashboard({
 }: PropTypes) {
   const [isProgress, setProgress] = useState(true);
   const [clients, setClients] = useState<any>([]);
-  const [revokeDialog, setRevokeDialog] = useState<any>(null);
   const classes = useStyles();
 
   useEffect(() => {
@@ -43,7 +41,7 @@ export default function Dashboard({
       .finally(() => setProgress(false));
   }, []);
 
-  const handleRevokeConsent = (id) => () => {
+  const handleRevokeConsent = (id: string) => {
     setProgress(true);
     api
       .deleteConsent({ id })
@@ -53,7 +51,7 @@ export default function Dashboard({
       .finally(() => setProgress(false));
   };
 
-  const handleRevokeClient = (id) => () => {
+  const handleRevokeClient = (id: string) => {
     setProgress(true);
     api
       .deleteClient({ id })
@@ -154,22 +152,6 @@ export default function Dashboard({
           </>
         )}
       </div>
-      {revokeDialog && (
-        <ConfirmationDialog
-          title="Revoke application access"
-          content="Are you sure you want to revoke access to your accounts for this application?"
-          confirmText="Yes, Revoke Access"
-          warningItems={[
-            "Your connected application will not be able to access your bank accounts.",
-            "You will have to authorize the application again if you would like to use it with your bank in the future.",
-          ]}
-          onCancel={() => setRevokeDialog(null)}
-          onConfirm={() => {
-            handleRevokeConsent(revokeDialog.consent_id);
-            setRevokeDialog(null);
-          }}
-        />
-      )}
     </div>
   );
 }

@@ -18,7 +18,7 @@ const colorMapper = {
   active: "#4CAF50",
   authorised: "#4CAF50",
   expired: "#BD271E",
-  consumed: "#626576",
+  revoked: "#626576",
 };
 
 type Props = {

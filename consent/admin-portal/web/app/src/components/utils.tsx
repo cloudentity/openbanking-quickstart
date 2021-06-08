@@ -1,4 +1,7 @@
+import React from "react";
+
 import { theme } from "../theme";
+import Chip from "./Chip";
 
 export const drawerStyles = {
   name: {
@@ -182,3 +185,45 @@ export const permissionsDict = {
       "The full legal name(s) of account holder(s). Address(es), telephone number(s) and email address(es)*",
   },
 };
+
+const availableConstentTypes = [
+  "account_access_consent",
+  "domestic_payment_consent",
+  "domestic_scheduled_payment_consent",
+  "domestic_standing_order_consent",
+  "file_payment_consent",
+  "international_payment_consent",
+  "international_scheduled_payment_consent",
+  "international_standing_order_consent",
+];
+
+export function getRawConsents(consents) {
+  return consents.reduce((acc, consent) => {
+    // show not null consent with type from availableConstentTypes
+    const consents = Object.entries(consent)
+      .map(([key, value]: [key: string, value: any]) =>
+        availableConstentTypes.includes(key) && value?.ConsentId
+          ? { type: key, consent: value, accounts: consent?.account_ids ?? [] }
+          : null
+      )
+      .filter((v) => v);
+    return [...acc, ...consents];
+  }, []);
+}
+
+export enum ConsentStatus {
+  Authorised = "Authorised",
+  Revoked = "Revoked",
+  Pending = "Pending",
+}
+
+export function getChipForStatus(status: ConsentStatus) {
+  return (
+    (status === ConsentStatus.Authorised && (
+      <Chip type="active">Authorised</Chip>
+    )) ||
+    (status === ConsentStatus.Revoked && <Chip type="revoked">Revoked</Chip>) ||
+    (status === ConsentStatus.Pending && <Chip type="revoked">Pending</Chip>) ||
+    null
+  );
+}

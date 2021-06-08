@@ -8,30 +8,37 @@ import Alert from "@material-ui/lab/Alert";
 import Checkbox from "@material-ui/core/Checkbox";
 import { uniq } from "ramda";
 
-import { drawerStyles, getDate, permissionsDict } from "./utils";
-import Chip from "./Chip";
+import {
+  drawerStyles,
+  getChipForStatus,
+  getDate,
+  getRawConsents,
+  permissionsDict,
+} from "./utils";
 
 const useStyles = makeStyles((theme: Theme) => ({
   ...drawerStyles,
-  container: {
-    width: 500,
-    marginBottom: 84,
-    overflow: "auto",
-  },
   header: {
     display: "flex",
     alignItems: "center",
     borderBottom: "1px solid #ECECEC",
     padding: "12px 24px",
   },
+  container: {
+    width: 500,
+    marginBottom: 84,
+    overflow: "auto",
+    height: "100%",
+  },
+  content: {
+    padding: 32,
+    height: "calc(100% - 64px)",
+  },
   name: {
     ...theme.custom.heading3,
   },
   id: {
     ...theme.custom.caption,
-  },
-  content: {
-    padding: 32,
   },
   bottomBar: {
     position: "absolute",
@@ -102,9 +109,20 @@ const useStyles = makeStyles((theme: Theme) => ({
       borderBottom: "none",
     },
   },
+  empty: {
+    height: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    color: "darkgray",
+  },
 }));
 
-function getRevokeHeader() {
+function getRevokeHeader(
+  revokeAccess: "client" | "consent" | null,
+  consentToRevoke: string | null,
+  clientName: string
+) {
   return (
     <div
       style={{
@@ -120,7 +138,12 @@ function getRevokeHeader() {
         color: "#BD271E",
       }}
     >
-      Revoke access
+      {revokeAccess === "client" &&
+        clientName &&
+        `Revoke access for ${clientName}`}
+      {revokeAccess === "consent" &&
+        consentToRevoke &&
+        `Revoke consent ${consentToRevoke}`}
     </div>
   );
 }
@@ -128,40 +151,28 @@ function getRevokeHeader() {
 interface PropTypes {
   data: any;
   setData: (data: string | null) => void;
-  onRevoke: (id: string) => void;
+  onRevokeClient: (id: string) => void;
+  onRevokeConsent: (id: string) => void;
 }
 
-const availableConstentTypes = [
-  "account_access_consent",
-  "domestic_payment_consent",
-  "domestic_scheduled_payment_consent",
-  "domestic_standing_order_consent",
-  "file_payment_consent",
-  "international_payment_consent",
-  "international_scheduled_payment_consent",
-  "international_standing_order_consent",
-];
-
-function CustomDrawer({ data, setData, onRevoke }: PropTypes) {
+function CustomDrawer({
+  data,
+  setData,
+  onRevokeClient,
+  onRevokeConsent,
+}: PropTypes) {
   const classes = useStyles();
-  const [revokeAccess, setRevokeAccess] = useState(false);
+  const [revokeAccess, setRevokeAccess] =
+    useState<"client" | "consent" | null>(null);
+  const [consentToRevoke, setConsentToRevoke] = useState<string | null>(null);
   const [revokeAccessAgree, setRevokeAccessAgree] = useState(false);
 
-  const rawConsents = data?.consents?.reduce((acc, consent) => {
-    const consents = Object.entries(consent)
-      .map(([key, value]: [key: string, value: any]) =>
-        availableConstentTypes.includes(key) && value?.ConsentId
-          ? { type: key, consent: value, accounts: consent?.account_ids ?? [] }
-          : null
-      )
-      .filter((v) => v);
-    return [...acc, ...consents, ...consents];
-  }, []);
+  const rawConsents = getRawConsents(data?.consents ?? []);
 
   return (
     <Drawer anchor="right" open={true} onClose={() => setData(null)}>
       {revokeAccess ? (
-        getRevokeHeader()
+        getRevokeHeader(revokeAccess, consentToRevoke, data?.client_name)
       ) : (
         <div className={classes.header}>
           <Avatar variant="square" className={classes.avatar}>
@@ -186,8 +197,9 @@ function CustomDrawer({ data, setData, onRevoke }: PropTypes) {
               accounts.
             </Alert>
             <div className={classes.revokeInfo}>
-              Are you sure you want to revoke access for all accounts connected
-              with this application?
+              {revokeAccess === "consent"
+                ? "Are you sure you want to revoke this consent?"
+                : "Are you sure you want to revoke access for all accounts connected with this application?"}
             </div>
             <div className={classes.revokeInfoCheckbox}>
               <Checkbox
@@ -200,6 +212,9 @@ function CustomDrawer({ data, setData, onRevoke }: PropTypes) {
           </div>
         ) : (
           <div className={classes.content}>
+            {rawConsents.length === 0 && (
+              <div className={classes.empty}>No consents</div>
+            )}
             {rawConsents.map(({ type, consent, accounts }) => {
               const permissionDates = {
                 Authorised: getDate(consent?.CreationDateTime),
@@ -219,7 +234,10 @@ function CustomDrawer({ data, setData, onRevoke }: PropTypes) {
               }));
 
               return (
-                <div className={classes.consentContainer}>
+                <div
+                  className={classes.consentContainer}
+                  key={consent?.ConsentId}
+                >
                   <div>
                     <div
                       className={classes.subHeader}
@@ -230,7 +248,7 @@ function CustomDrawer({ data, setData, onRevoke }: PropTypes) {
                       }}
                     >
                       <span>Consent ID</span>
-                      <Chip type="active">{consent?.Status}</Chip>
+                      {getChipForStatus(consent?.Status)}
                     </div>
                     <div
                       style={{
@@ -250,10 +268,11 @@ function CustomDrawer({ data, setData, onRevoke }: PropTypes) {
                           fontWeight: 400,
                         }}
                         onClick={() => {
-                          console.log("revoke access for", consent?.ConsentId);
+                          setRevokeAccess("consent");
+                          setConsentToRevoke(consent?.ConsentId);
                         }}
                       >
-                        Revoke access
+                        Revoke consent
                       </Button>
                     </div>
                   </div>
@@ -328,7 +347,7 @@ function CustomDrawer({ data, setData, onRevoke }: PropTypes) {
           className={classes.button}
           onClick={() => {
             if (revokeAccess) {
-              setRevokeAccess(false);
+              setRevokeAccess(null);
             } else {
               setData(null);
             }
@@ -337,7 +356,7 @@ function CustomDrawer({ data, setData, onRevoke }: PropTypes) {
           Cancel
         </Button>
         <Button
-          id={"revoke-access-button"}
+          id="revoke-access-button"
           variant="outlined"
           className={classes.button}
           style={{
@@ -345,18 +364,22 @@ function CustomDrawer({ data, setData, onRevoke }: PropTypes) {
             backgroundColor: "#BD271E",
             border: "none",
           }}
-          disabled={revokeAccess && !revokeAccessAgree}
+          disabled={revokeAccess !== null && !revokeAccessAgree}
           onClick={() => {
             if (revokeAccess) {
-              onRevoke(data?.client_id);
-              setRevokeAccess(false);
+              if (revokeAccess === "client") {
+                onRevokeClient(data?.client_id);
+              } else if (revokeAccess === "consent" && consentToRevoke) {
+                onRevokeConsent(consentToRevoke);
+              }
+              setRevokeAccess(null);
               setData(null);
             } else {
-              setRevokeAccess(true);
+              setRevokeAccess("client");
             }
           }}
         >
-          Revoke all
+          {revokeAccess === "consent" ? "Revoke consent" : "Revoke access"}
         </Button>
       </div>
     </Drawer>
