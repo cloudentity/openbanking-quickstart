@@ -197,6 +197,7 @@ services:
     depends_on:
       - acp
     volumes:
+      - ./data/tpp_cert.pem:/certs/tpp_cert.pem
       - ./data/variables.yaml:/variables.yaml
     environment:
       - |
