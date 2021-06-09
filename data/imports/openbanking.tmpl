@@ -4,6 +4,10 @@ servers:
   name: Openbanking
   profile: openbanking_uk
   initialize: true
+  {{ if .read_client_certificate_from_header }}
+  read_client_certificate_from_header: {{ .read_client_certificate_from_header }}
+  client_certificate_header: {{ .client_certificate_header }}
+  {{ end }}
   root_cas: |
 {{ env "CLIENT_ROOT_CA" | indent 4 }}
 idps:
