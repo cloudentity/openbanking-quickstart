@@ -47,7 +47,6 @@ func TestTemplates(t *testing.T) {
 			dirs:          []string{"./testdata/t2"},
 			variablesFile: "./testdata/variables.yaml",
 			assertResponse: func(tt *testing.T, bs []byte) {
-				tt.Logf("XXX json: %s", string(bs))
 				require.JSONEq(tt, string([]byte(`{
 		  "clients": [
 		    {
