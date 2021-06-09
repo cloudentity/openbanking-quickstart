@@ -2,18 +2,22 @@ package main
 
 import (
 	"bytes"
+	"crypto/x509"
 	"encoding/json"
+	"encoding/pem"
 	"fmt"
 	"io/ioutil"
 	"os"
 	"strings"
 	"text/template"
 
-	sprig "github.com/Masterminds/sprig/v3"
 	"github.com/ghodss/yaml"
 	"github.com/imdario/mergo"
+	"github.com/lestrrat-go/jwx/jwk"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+
+	sprig "github.com/Masterminds/sprig/v3"
 )
 
 type YamlFile map[string]interface{}
@@ -64,7 +68,7 @@ func LoadTemplates(dirs []string, variablesFile *string) (Templates, error) {
 				return templates, errors.Wrapf(err, "failed to read template: %s", file)
 			}
 
-			if t, err = template.New(file).Funcs(sprig.TxtFuncMap()).Parse(string(bs)); err != nil {
+			if t, err = template.New(file).Funcs(FuncMap()).Parse(string(bs)); err != nil {
 				return templates, errors.Wrapf(err, "failed to parse template: %s", file)
 			}
 
@@ -116,4 +120,58 @@ func (y YamlFile) ToJSON() ([]byte, error) {
 	}
 
 	return bs, nil
+}
+
+func FuncMap() template.FuncMap {
+	extra := template.FuncMap{
+		"toYaml":     toYAML,
+		"readFile":   readFile,
+		"jwksEncode": jwksEncode,
+	}
+
+	// merge with sprig
+	f := sprig.TxtFuncMap()
+	for k, v := range extra {
+		f[k] = v
+	}
+
+	return f
+}
+
+func toYAML(v interface{}) string {
+	data, err := yaml.Marshal(v)
+	if err != nil {
+		// ignore
+		return ""
+	}
+	return strings.TrimSuffix(string(data), "\n")
+}
+
+func readFile(v string) string {
+	data, err := ioutil.ReadFile(v)
+	if err != nil {
+		// ignore
+		return ""
+	}
+	return string(data)
+}
+
+func jwksEncode(v string) string {
+	pemblock, _ := pem.Decode([]byte(v))
+	if pemblock == nil {
+		return ""
+	}
+
+	parsed, err := x509.ParsePKCS8PrivateKey(pemblock.Bytes)
+	if err != nil {
+		return ""
+	}
+
+	key, err := jwk.New(parsed)
+	if err != nil {
+		return ""
+	}
+
+	output, _ := yaml.Marshal(key)
+	return string(output)
 }
