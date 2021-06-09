@@ -7,4 +7,4 @@ clients:
   redirect_uris:
   - {{ .app_url }}
   jwks:
-{{ .pem | pemToPublicJwks | indent 4 }}
+{{ .pem_file | readFile | pemToPublicJwks | indent 4 }}
