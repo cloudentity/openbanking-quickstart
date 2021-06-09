@@ -11,8 +11,7 @@ By default, MFA is turned off.
 Run `make run-dev` to set up ACP.
 > #### Note
 > By default, MFA is turned off.
-> To run environment with MFA run `make enable-mfa` 
-> OR run `ENABLE_MFA=true make run-dev`
+> To run environment with MFA run `make enable-mfa`.
 
 ## How to run Cypress test locally
 Run `make run-tests` to open Cypress GUI with tests scenarios.
@@ -21,8 +20,7 @@ To run tests:
 - full set - click on `Run integration spec`
 
 > #### Note
-> Tests will be executed accordingly to `ENABLE_MFA` see **Set up ACP locally**. 
-> OR run `ENABLE_MFA=true make run-tests`
+> Tests will be executed accordingly to the set load for `MFA`- see **Set up MFA**. 
 
 ## Credentials
 
