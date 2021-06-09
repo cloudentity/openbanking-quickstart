@@ -6,7 +6,6 @@ WORKDIR /app
 COPY go.mod .
 COPY go.sum .
 COPY data/imports imports
-COPY data/tpp_cert.pem .
 
 RUN go mod download
 
@@ -20,7 +19,6 @@ RUN apk --no-cache add ca-certificates
 WORKDIR /app
 
 COPY --from=builder /app/main .
-COPY --from=builder /app/tpp_cert.pem .
 COPY --from=builder /app/imports imports
 
 CMD ["./main"]
