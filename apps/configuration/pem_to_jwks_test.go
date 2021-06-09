@@ -1,19 +1,11 @@
 package main
 
 import (
-	"bytes"
-	"crypto/ecdsa"
-	"crypto/rsa"
-	"crypto/x509"
 	"encoding/json"
-	"encoding/pem"
-	"fmt"
 	"io/ioutil"
 	"testing"
 
-	"github.com/pkg/errors"
 	"github.com/stretchr/testify/require"
-	"gopkg.in/square/go-jose.v2"
 )
 
 func TestPemToJWKS(t *testing.T) {
@@ -27,45 +19,15 @@ func TestPemToJWKS(t *testing.T) {
 	key, err := ToPublicJWKs(cert)
 	require.NoError(t, err)
 
-	jsonBytes, err := json.MarshalIndent(&key, "", "    ")
+	jsonBs, err := json.Marshal(&key)
 	require.NoError(t, err)
 
-	t.Logf("%s", jsonBytes)
-	t.Fail()
-}
-
-func ToPublicJWKs(c *x509.Certificate) (jose.JSONWebKey, error) {
-	key := jose.JSONWebKey{
-		Key:   c.PublicKey,
-		Use:   "sig",
-		KeyID: c.SerialNumber.String(),
-	}
-
-	switch c.PublicKey.(type) {
-	case *rsa.PublicKey:
-		key.Algorithm = "RS256"
-	case *ecdsa.PublicKey:
-		key.Algorithm = "ES256"
-	default:
-		return key, errors.New("not supported public key type %v (must be rsa or ecdsa)")
-	}
-
-	return key, nil
-}
-
-func ParseCertificate(data []byte) (cert *x509.Certificate, err error) {
-	var block *pem.Block
-
-	if block, data = pem.Decode(data); block == nil {
-		data = bytes.TrimSpace(data)
-		if len(data) > 0 {
-			return nil, fmt.Errorf("certificate contains invalid data: %q", string(data))
-		}
-	}
-
-	if cert, err = x509.ParseCertificate(block.Bytes); err != nil {
-		return nil, errors.Wrapf(err, "failed to parse certificate")
-	}
-
-	return cert, nil
+	require.JSONEq(t, `{
+            "use": "sig",
+            "kty": "RSA",
+            "kid": "167467200346518873990055631921812347975180003245",
+            "alg": "RS256",
+            "n": "4b_IX1bV29pw6_Ce8DdkoNx4dxJnDD9AyxmTG2z99cvlHG6BJaMF6l09ncGXGbv3dufDKrhftkwfbTBdpUEAeext_ugCmXTV06Fayva6Iq7xCNE8pA6hJT1y3Edsqq3IU8KVivYjYwd_vrSUfCe8pQRsR6K8rqnJ66ryn0yewkTEyCgPIv6pOMbgq1d5iX_2G9rZNhj74miN5y4fy0tsbI3q2RUOzt2d-htkoysqu3Xta6qPA3vEJ2FnQo3dhgw4XSCEvjz-HSGnsTC-XBv6j6jI9SD5jI2UYqnyDcYmRHPJx2sQ_c8aLYHRdZxrxqIxUzulS6g0x74E2m0gBMKF5w",
+            "e": "AQAB"
+}`, string(jsonBs))
 }
