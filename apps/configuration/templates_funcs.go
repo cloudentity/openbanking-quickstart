@@ -3,6 +3,7 @@ package main
 import (
 	"crypto/x509"
 	"encoding/json"
+	"io/ioutil"
 	"text/template"
 
 	sprig "github.com/Masterminds/sprig/v3"
@@ -11,7 +12,8 @@ import (
 
 func CustomTemplateFuncs() template.FuncMap {
 	extra := template.FuncMap{
-		"pem_to_public_jwks": MustPemToPublicJwks,
+		"pemToPublicJwks": MustPemToPublicJwks,
+		"readFile":        MustReadFile,
 	}
 
 	// merge with sprig
@@ -53,4 +55,13 @@ func MustPemToPublicJwks(v string) string {
 	}
 
 	return res
+}
+
+func MustReadFile(v string) string {
+	f, err := ioutil.ReadFile(v)
+	if err != nil {
+		return ""
+	}
+
+	return string(f)
 }
