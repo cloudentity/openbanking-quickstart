@@ -6,3 +6,5 @@ clients:
   client_secret: secret
   redirect_uris:
   - {{ .app_url }}
+  jwks:
+{{ .pem_file | readFile | pemToPublicJwks | indent 4 }}

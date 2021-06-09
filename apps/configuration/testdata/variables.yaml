@@ -1,1 +1,2 @@
 app_url: https://localhost:8091/callback
+pem_file: ../../data/tpp_cert.pem

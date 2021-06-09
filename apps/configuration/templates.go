@@ -9,7 +9,6 @@ import (
 	"strings"
 	"text/template"
 
-	sprig "github.com/Masterminds/sprig/v3"
 	"github.com/ghodss/yaml"
 	"github.com/imdario/mergo"
 	"github.com/pkg/errors"
@@ -64,7 +63,7 @@ func LoadTemplates(dirs []string, variablesFile *string) (Templates, error) {
 				return templates, errors.Wrapf(err, "failed to read template: %s", file)
 			}
 
-			if t, err = template.New(file).Funcs(sprig.TxtFuncMap()).Parse(string(bs)); err != nil {
+			if t, err = template.New(file).Funcs(CustomTemplateFuncs()).Parse(string(bs)); err != nil {
 				return templates, errors.Wrapf(err, "failed to parse template: %s", file)
 			}
 
