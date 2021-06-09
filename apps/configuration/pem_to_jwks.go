@@ -12,7 +12,7 @@ import (
 	"gopkg.in/square/go-jose.v2"
 )
 
-func ToPublicJWKs(c *x509.Certificate) (jose.JSONWebKey, error) {
+func ToPublicJWKs(c *x509.Certificate) (jose.JSONWebKeySet, error) {
 	key := jose.JSONWebKey{
 		Key:   c.PublicKey,
 		Use:   "sig",
@@ -25,10 +25,10 @@ func ToPublicJWKs(c *x509.Certificate) (jose.JSONWebKey, error) {
 	case *ecdsa.PublicKey:
 		key.Algorithm = "ES256"
 	default:
-		return key, errors.New("not supported public key type %v (must be rsa or ecdsa)")
+		return jose.JSONWebKeySet{}, errors.New("not supported public key type %v (must be rsa or ecdsa)")
 	}
 
-	return key, nil
+	return jose.JSONWebKeySet{Keys: []jose.JSONWebKey{key}}, nil
 }
 
 func ParseCertificate(data []byte) (cert *x509.Certificate, err error) {
