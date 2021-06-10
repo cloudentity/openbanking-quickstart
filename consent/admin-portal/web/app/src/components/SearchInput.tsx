@@ -48,7 +48,14 @@ export default function SearchInput({ placeholder, onSearch }: PropTypes) {
           id="outlined-adornment-password"
           type="text"
           value={value}
-          onChange={(e) => setValue(e.target.value)}
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && value !== "") {
+              onSearch(value);
+            }
+          }}
+          onChange={(e) => {
+            setValue(e.target.value);
+          }}
           placeholder={placeholder}
           style={{
             paddingRight: 0,

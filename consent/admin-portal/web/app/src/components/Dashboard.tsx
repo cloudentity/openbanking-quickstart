@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Route } from "react-router-dom";
 import { Container, makeStyles, Theme, Typography } from "@material-ui/core";
+import { useHistory } from "react-router";
 
 import PageToolbar from "./PageToolbar";
 import Progress from "./Progress";
@@ -17,6 +18,23 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
+export const searchTabs = (history) => [
+  {
+    key: "account",
+    label: "Account",
+    content: (
+      <div>
+        <SearchInput
+          placeholder="Search by account number"
+          onSearch={(v) => {
+            // history.push(`/accounts/${v}`)
+          }}
+        />
+      </div>
+    ),
+  },
+];
+
 interface PropTypes {
   authorizationServerURL?: string;
   authorizationServerId?: string;
@@ -31,6 +49,7 @@ export default function Dashboard({
   const [isProgress, setProgress] = useState(true);
   const [clients, setClients] = useState<any>([]);
   const classes = useStyles();
+  const history = useHistory();
 
   useEffect(() => {
     setProgress(true);
@@ -41,15 +60,15 @@ export default function Dashboard({
       .finally(() => setProgress(false));
   }, []);
 
-  const handleRevokeConsent = (id: string) => {
-    setProgress(true);
-    api
-      .deleteConsent({ id })
-      .then(api.getClients)
-      .then((res) => setClients(res.clients || []))
-      .catch((err) => console.log(err))
-      .finally(() => setProgress(false));
-  };
+  // const handleRevokeConsent = (id: string) => {
+  //   setProgress(true);
+  //   api
+  //     .deleteConsent({ id })
+  //     .then(api.getClients)
+  //     .then((res) => setClients(res.clients || []))
+  //     .catch((err) => console.log(err))
+  //     .finally(() => setProgress(false));
+  // };
 
   const handleRevokeClient = (id: string) => {
     setProgress(true);
@@ -92,46 +111,7 @@ export default function Dashboard({
                     members
                   </div>
                   <div style={{ marginTop: 32 }}>
-                    <CustomTabs
-                      tabs={[
-                        {
-                          key: "user",
-                          label: "User",
-                          content: (
-                            <div>
-                              <SearchInput
-                                placeholder="Search by user ID"
-                                onSearch={(v) => console.log(v)}
-                              />
-                            </div>
-                          ),
-                        },
-                        {
-                          key: "account",
-                          label: "Account",
-                          content: (
-                            <div>
-                              <SearchInput
-                                placeholder="Search by account number"
-                                onSearch={(v) => console.log(v)}
-                              />
-                            </div>
-                          ),
-                        },
-                        {
-                          key: "consent",
-                          label: "Consent",
-                          content: (
-                            <div>
-                              <SearchInput
-                                placeholder="Search by consent ID"
-                                onSearch={(v) => console.log(v)}
-                              />
-                            </div>
-                          ),
-                        },
-                      ]}
-                    />
+                    <CustomTabs tabs={searchTabs(history)} />
                   </div>
                 </Subheader>
                 <Container>
@@ -142,7 +122,6 @@ export default function Dashboard({
                       <ClientsList
                         clients={clients}
                         onRevokeClient={handleRevokeClient}
-                        onRevokeConsent={handleRevokeConsent}
                       />
                     )}
                   />

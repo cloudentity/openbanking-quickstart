@@ -16,9 +16,7 @@ const useStyles = makeStyles(() => ({
 
 const colorMapper = {
   active: "#4CAF50",
-  authorised: "#4CAF50",
-  expired: "#BD271E",
-  revoked: "#626576",
+  inactive: "#BD271E",
 };
 
 type Props = {

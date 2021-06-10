@@ -116,63 +116,39 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: "center",
     color: "darkgray",
   },
+  revokeHeader: {
+    height: 72,
+    backgroundColor: "#F7FAFF",
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    paddingLeft: 32,
+    fontWeight: 600,
+    fontSize: 16,
+    lineHeight: "24px",
+    color: "#BD271E",
+  },
 }));
-
-function getRevokeHeader(
-  revokeAccess: "client" | "consent" | null,
-  consentToRevoke: string | null,
-  clientName: string
-) {
-  return (
-    <div
-      style={{
-        height: 72,
-        backgroundColor: "#F7FAFF",
-        width: "100%",
-        display: "flex",
-        alignItems: "center",
-        paddingLeft: 32,
-        fontWeight: 600,
-        fontSize: 16,
-        lineHeight: "24px",
-        color: "#BD271E",
-      }}
-    >
-      {revokeAccess === "client" &&
-        clientName &&
-        `Revoke access for ${clientName}`}
-      {revokeAccess === "consent" &&
-        consentToRevoke &&
-        `Revoke consent ${consentToRevoke}`}
-    </div>
-  );
-}
 
 interface PropTypes {
   data: any;
   setData: (data: string | null) => void;
   onRevokeClient: (id: string) => void;
-  onRevokeConsent: (id: string) => void;
 }
 
-function CustomDrawer({
-  data,
-  setData,
-  onRevokeClient,
-  onRevokeConsent,
-}: PropTypes) {
+function ApplicationDrawer({ data, setData, onRevokeClient }: PropTypes) {
   const classes = useStyles();
-  const [revokeAccess, setRevokeAccess] =
-    useState<"client" | "consent" | null>(null);
-  const [consentToRevoke, setConsentToRevoke] = useState<string | null>(null);
+  const [revokeAccess, setRevokeAccess] = useState(false);
   const [revokeAccessAgree, setRevokeAccessAgree] = useState(false);
 
-  const rawConsents = getRawConsents(data?.consents ?? []);
+  const rawConsents = getRawConsents(data?.consents ?? [])?.filter(
+    (v) => v?.type === "account_access_consent"
+  );
 
   return (
     <Drawer anchor="right" open={true} onClose={() => setData(null)}>
       {revokeAccess ? (
-        getRevokeHeader(revokeAccess, consentToRevoke, data?.client_name)
+        <div className={classes.revokeHeader}>Revoke access</div>
       ) : (
         <div className={classes.header}>
           <Avatar variant="square" className={classes.avatar}>
@@ -197,9 +173,8 @@ function CustomDrawer({
               accounts.
             </Alert>
             <div className={classes.revokeInfo}>
-              {revokeAccess === "consent"
-                ? "Are you sure you want to revoke this consent?"
-                : "Are you sure you want to revoke access for all accounts connected with this application?"}
+              Are you sure you want to revoke access for all accounts connected
+              with this application?
             </div>
             <div className={classes.revokeInfoCheckbox}>
               <Checkbox
@@ -213,17 +188,20 @@ function CustomDrawer({
         ) : (
           <div className={classes.content}>
             {rawConsents.length === 0 && (
-              <div className={classes.empty}>No consents</div>
+              <div className={classes.empty}>No details to show</div>
             )}
-            {rawConsents.map(({ type, consent, accounts }) => {
+            {rawConsents.map(({ consent }) => {
               const permissionDates = {
                 Authorised: getDate(consent?.CreationDateTime),
                 "Last updated": getDate(consent?.StatusUpdateDateTime),
-                "Active until": getDate(consent?.ExpirationDateTime),
+                "Active until": consent?.ExpirationDateTime
+                  ? getDate(consent?.ExpirationDateTime)
+                  : null,
               };
 
               const clusters = uniq(
-                consent.Permissions.map((v) => permissionsDict[v].Cluster)
+                consent?.Permissions?.map((v) => permissionsDict[v].Cluster) ??
+                  []
               ) as any;
 
               const permissionItems = clusters.map((cluster) => ({
@@ -259,82 +237,44 @@ function CustomDrawer({
                       }}
                     >
                       <span>{consent?.ConsentId}</span>
-                      <Button
-                        style={{
-                          backgroundColor: "#bd271e",
-                          marginLeft: 4,
-                          color: "white",
-                          textTransform: "none",
-                          fontWeight: 400,
-                        }}
-                        onClick={() => {
-                          setRevokeAccess("consent");
-                          setConsentToRevoke(consent?.ConsentId);
-                        }}
-                      >
-                        Revoke consent
-                      </Button>
-                    </div>
-                  </div>
-                  <div>
-                    <div className={classes.subHeader}>Consent Type</div>
-                    <div
-                      style={{ textTransform: "capitalize", paddingBottom: 16 }}
-                    >
-                      {type?.replaceAll("_", " ")}
                     </div>
                   </div>
                   <div>
                     <div className={classes.subHeader}>Permission dates</div>
                     <div className={classes.cardsWrapperGrid}>
                       {Object.entries(permissionDates).map(
-                        ([key, value]: any) => (
-                          <div className={classes.card} key={key}>
-                            <div className={classes.cardTitle}>{key}</div>
-                            <div className={classes.cardContent}>{value}</div>
-                          </div>
-                        )
+                        ([key, value]: any) =>
+                          value ? (
+                            <div className={classes.card} key={key}>
+                              <div className={classes.cardTitle}>{key}</div>
+                              <div className={classes.cardContent}>{value}</div>
+                            </div>
+                          ) : null
                       )}
                     </div>
                   </div>
 
-                  <div>
-                    <div className={classes.subHeader}>Accounts</div>
-                    <div className={classes.cardsWrapperGrid}>
-                      {accounts.map((id: string) => (
-                        <div
-                          className={classes.card}
-                          style={{
-                            display: "flex",
-                            alignItems: "baseline",
-                            padding: 10,
-                            justifyContent: "center",
-                          }}
-                          key={id}
-                        >
-                          <div className={classes.cardContent}>*{id}</div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  <div>
-                    <div className={classes.subHeader}>
-                      Details being shared
-                    </div>
+                  {permissionItems.length > 0 && (
                     <div>
-                      {permissionItems.map((v) => (
-                        <div key={v.title}>
-                          <div className={classes.detailsTitle}>{v.title}</div>
-                          <ul className={classes.ulList}>
-                            {v.items.map((item) => (
-                              <li key={item}>{item}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      ))}
+                      <div className={classes.subHeader}>
+                        Details being shared
+                      </div>
+                      <div>
+                        {permissionItems.map((v) => (
+                          <div key={v.title}>
+                            <div className={classes.detailsTitle}>
+                              {v.title}
+                            </div>
+                            <ul className={classes.ulList}>
+                              {v.items.map((item) => (
+                                <li key={item}>{item}</li>
+                              ))}
+                            </ul>
+                          </div>
+                        ))}
+                      </div>
                     </div>
-                  </div>
+                  )}
                 </div>
               );
             })}
@@ -347,7 +287,7 @@ function CustomDrawer({
           className={classes.button}
           onClick={() => {
             if (revokeAccess) {
-              setRevokeAccess(null);
+              setRevokeAccess(false);
             } else {
               setData(null);
             }
@@ -364,26 +304,22 @@ function CustomDrawer({
             backgroundColor: "#BD271E",
             border: "none",
           }}
-          disabled={revokeAccess !== null && !revokeAccessAgree}
+          disabled={revokeAccess && !revokeAccessAgree}
           onClick={() => {
             if (revokeAccess) {
-              if (revokeAccess === "client") {
-                onRevokeClient(data?.client_id);
-              } else if (revokeAccess === "consent" && consentToRevoke) {
-                onRevokeConsent(consentToRevoke);
-              }
-              setRevokeAccess(null);
+              onRevokeClient(data?.client_id);
+              setRevokeAccess(false);
               setData(null);
             } else {
-              setRevokeAccess("client");
+              setRevokeAccess(true);
             }
           }}
         >
-          {revokeAccess === "consent" ? "Revoke consent" : "Revoke access"}
+          Revoke access
         </Button>
       </div>
     </Drawer>
   );
 }
 
-export default CustomDrawer;
+export default ApplicationDrawer;

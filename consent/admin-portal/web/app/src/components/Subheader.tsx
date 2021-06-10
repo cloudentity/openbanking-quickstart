@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import React, { ReactNode, CSSProperties } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "@material-ui/core";
 
@@ -26,14 +26,16 @@ const useStyles = makeStyles((theme: Theme) => ({
 type Props = {
   title: string | ReactNode;
   children?: ReactNode;
+  containerStyle?: CSSProperties;
+  contentStyle?: CSSProperties;
 };
 
-function Subheader({ title, children }: Props) {
+function Subheader({ title, children, containerStyle, contentStyle }: Props) {
   const classes = useStyles();
 
   return (
-    <div className={classes.container}>
-      <div className={classes.content}>
+    <div className={classes.container} style={containerStyle}>
+      <div className={classes.content} style={contentStyle}>
         <div className={classes.title}>{title}</div>
         {children && <div className={classes.info}>{children}</div>}
       </div>

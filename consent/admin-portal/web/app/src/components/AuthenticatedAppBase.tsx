@@ -4,6 +4,7 @@ import { Route } from "react-router-dom";
 import { useSilentAuthentication } from "./useSilentAuthentication";
 import Dashboard from "./Dashboard";
 import Progress from "./Progress";
+// import AccountView from "./AccountView";
 
 interface PropTypes {
   authorizationServerURL?: string;
@@ -32,8 +33,18 @@ export default function AuthenticatedAppBase({
     <div style={{ marginTop: 64 }}>
       <Suspense fallback={<Progress />}>
         <Switch>
+          {/* <Route
+            path="/accounts/:id"
+            render={() => (
+              <AccountView
+                authorizationServerURL={authorizationServerURL}
+                authorizationServerId={authorizationServerId}
+                tenantId={tenantId}
+              />
+            )}
+          /> */}
           <Route
-            path={"/"}
+            path="/"
             render={() => (
               <Dashboard
                 authorizationServerURL={authorizationServerURL}

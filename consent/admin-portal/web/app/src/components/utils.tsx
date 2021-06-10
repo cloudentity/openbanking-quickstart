@@ -197,6 +197,8 @@ const availableConstentTypes = [
   "international_standing_order_consent",
 ];
 
+export const availableConstentTypesJoined = availableConstentTypes.join(",");
+
 export function getRawConsents(consents) {
   return consents.reduce((acc, consent) => {
     // show not null consent with type from availableConstentTypes
@@ -212,18 +214,16 @@ export function getRawConsents(consents) {
 }
 
 export enum ConsentStatus {
-  Authorised = "Authorised",
-  Revoked = "Revoked",
-  Pending = "Pending",
+  Active = "Active",
+  Inactive = "Inactive",
 }
 
 export function getChipForStatus(status: ConsentStatus) {
   return (
-    (status === ConsentStatus.Authorised && (
-      <Chip type="active">Authorised</Chip>
+    (status === ConsentStatus.Active && <Chip type="active">Active</Chip>) ||
+    (status === ConsentStatus.Inactive && (
+      <Chip type="inactive">Inactive</Chip>
     )) ||
-    (status === ConsentStatus.Revoked && <Chip type="revoked">Revoked</Chip>) ||
-    (status === ConsentStatus.Pending && <Chip type="revoked">Pending</Chip>) ||
     null
   );
 }

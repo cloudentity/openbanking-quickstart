@@ -8,7 +8,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   container: {
     background: "#FFFFFF",
     boxShadow:
-      "0px 1px 1px rgba(0, 0, 0, 0.08), 0px 0px 1px rgba(0, 0, 0, 0.31)",
+      "0px 1px 16px -4px rgba(0, 0, 0, 0.25), 0px 0px 1px rgba(0, 0, 0, 0.31)",
     borderRadius: 4,
     maxWidth: 850,
     margin: "0 auto 24px auto",
