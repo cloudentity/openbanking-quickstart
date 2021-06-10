@@ -152,8 +152,6 @@ export default function ClientsList({ clients, onRevokeClient }) {
               fontSize: 12,
               width: 200,
               marginTop: 32,
-              // backgroundColor: "#F7FAFF",
-              // width: "100%",
             }}
             endAdornment={
               <InputAdornment position="end">
