@@ -181,6 +181,9 @@ function ApplicationDrawer({ data, setData, onRevokeClient }: PropTypes) {
                 checked={revokeAccessAgree}
                 onChange={(e) => setRevokeAccessAgree(e.target.checked)}
                 color="primary"
+                inputProps={{
+                  id: "revoke-access-accept-checkbox",
+                }}
               />{" "}
               I agree
             </div>

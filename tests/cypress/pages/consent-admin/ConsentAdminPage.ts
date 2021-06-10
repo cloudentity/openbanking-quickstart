@@ -1,28 +1,29 @@
-import {Urls} from '../Urls';
-import {Aliases} from '../Aliases';
+import { Urls } from "../Urls";
+import { Aliases } from "../Aliases";
 
 export class ConsentAdminPage {
-
-  private readonly expandIconSelector: string = `.MuiSvgIcon-root`;
+  private readonly clientAvatarSelector: string = ".MuiAvatar-root";
+  private readonly clientDrawerSelector: string = ".MuiDrawer-paper";
+  private readonly clientRevokeAccessButtonSelector: string =
+    "#revoke-access-button";
+  private readonly clientRevokeAccessAcceptCheckboxSelector: string =
+    "#revoke-access-accept-checkbox";
 
   public visit(force: boolean = false): void {
     Urls.visit(Urls.consentAdminUrl, force);
   }
 
-  public expandTab(): void {
-    cy.get(this.expandIconSelector).click();
+  public openClientDrawer(): void {
+    cy.get(this.clientAvatarSelector).click();
   }
 
-  public assertConsentIsNotDisplayed(): void {
-    cy.get(`@${Aliases.intentId}`).then(intentId => cy.get(`#${intentId}`).should(`not.exist`))
+  public assertAppliationDrawerIsNotDisplayed(): void {
+    cy.get(this.clientDrawerSelector).should("not.exist");
   }
 
-  public revokeConsent(): void {
-    cy.get(`@${Aliases.intentId}`).then(intentId => cy.get(`#${intentId} .revoke-button`).click())
+  public revokeClientConsent(): void {
+    cy.get(this.clientRevokeAccessButtonSelector).click();
+    cy.get(this.clientRevokeAccessAcceptCheckboxSelector).click();
+    cy.get(this.clientRevokeAccessButtonSelector).click();
   }
-
-  public revokeAllConsents(): void {
-    cy.get(`.revoke-all-button`).click()
-  }
-
 }

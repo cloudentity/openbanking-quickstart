@@ -1,12 +1,12 @@
-import {TppIntentPage} from '../pages/tpp/TppIntentPage';
-import {TppLoginPage} from '../pages/tpp/TppLoginPage';
-import {AcpLoginPage} from '../pages/acp/AcpLoginPage';
-import {ConsentPage} from '../pages/consent/ConsentPage';
-import {ErrorPage} from '../pages/ErrorPage';
-import {Credentials} from "../pages/Credentials";
-import {ConsentAdminPage} from "../pages/consent-admin/ConsentAdminPage";
-import {Urls} from "../pages/Urls";
-import {MfaPage} from "../pages/mfa/MfaPage";
+import { TppIntentPage } from "../pages/tpp/TppIntentPage";
+import { TppLoginPage } from "../pages/tpp/TppLoginPage";
+import { AcpLoginPage } from "../pages/acp/AcpLoginPage";
+import { ConsentPage } from "../pages/consent/ConsentPage";
+import { ErrorPage } from "../pages/ErrorPage";
+import { Credentials } from "../pages/Credentials";
+import { ConsentAdminPage } from "../pages/consent-admin/ConsentAdminPage";
+import { Urls } from "../pages/Urls";
+import { MfaPage } from "../pages/mfa/MfaPage";
 
 describe(`Consent admin app`, () => {
   const tppIntentPage: TppIntentPage = new TppIntentPage();
@@ -18,25 +18,27 @@ describe(`Consent admin app`, () => {
   const mfaPage: MfaPage = new MfaPage();
 
   beforeEach(() => {
-    consentAdminPage.visit()
-    Urls.clearLocalStorage()
+    consentAdminPage.visit();
+    Urls.clearLocalStorage();
     tppLoginPage.visit(true);
     tppLoginPage.next();
-    tppIntentPage.saveIntentId()
+    tppIntentPage.saveIntentId();
     tppIntentPage.login();
   });
 
   it(`Happy path with revoking consent`, () => {
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    mfaPage.typePin()
+    mfaPage.typePin();
     consentPage.confirm();
     consentAdminPage.visit(true);
-    acpLoginPage.login(Credentials.consentAdminUsername, Credentials.defaultPassword);
-    consentAdminPage.expandTab()
-    consentAdminPage.revokeConsent()
-    consentAdminPage.expandTab()
-    consentAdminPage.assertConsentIsNotDisplayed()
-  })
+    acpLoginPage.login(
+      Credentials.consentAdminUsername,
+      Credentials.defaultPassword
+    );
+    consentAdminPage.openClientDrawer();
+    consentAdminPage.revokeClientConsent();
+    consentAdminPage.assertAppliationDrawerIsNotDisplayed();
+  });
 
   // it(`Happy path with revoking all consents`, () => {
   //   acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
@@ -52,16 +54,15 @@ describe(`Consent admin app`, () => {
 
   it(`Cancel first ACP login`, () => {
     acpLoginPage.cancel();
-    errorPage.assertError(`The user rejected the authentication`)
-  })
+    errorPage.assertError(`The user rejected the authentication`);
+  });
 
   it(`Cancel second ACP login`, () => {
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    mfaPage.typePin()
+    mfaPage.typePin();
     consentPage.confirm();
     consentAdminPage.visit();
     acpLoginPage.cancel();
-    errorPage.assertError(`The user rejected the authentication`)
-  })
-
-})
+    errorPage.assertError(`The user rejected the authentication`);
+  });
+});
