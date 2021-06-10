@@ -19,10 +19,35 @@ jobs:
           username: ${{ secrets.PUBLIC_DOCKER_CLOUDENTITY_REPO_DEV_USERNAME }}
           password: ${{ secrets.PUBLIC_DOCKER_CLOUDENTITY_REPO_DEV_PASSWORD }}
 
-      - name: Make run
-        run: ENABLE_MFA=true make run
+      - name: Make run with disabled mfa
+        run: make disable-mfa run
 
-      - name: Run cypress tests
+      - name: Run cypress tests without mfa
+        uses: cypress-io/github-action@v2
+        with:
+          working-directory: tests
+
+      - name: Upload cypress screenshots
+        uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: cypress-screenshots
+          path: tests/cypress/screenshots
+
+      - name: Upload cypress videos
+        uses: actions/upload-artifact@v1
+        if: failure()
+        with:
+          name: cypress-videos
+          path: tests/cypress/videos
+
+      - name: clean
+        run: make clean
+
+      - name: Make with enabled mfa
+        run: make enable-mfa run
+
+      - name: Run cypress tests with mfa
         uses: cypress-io/github-action@v2
         with:
           working-directory: tests
