@@ -9,7 +9,8 @@ servers:
   client_certificate_header: {{ .client_certificate_header }}
   {{ end }}
   root_cas: |
-{{ env "CLIENT_ROOT_CA" | indent 4 }}
+{{ readFile .ca_pem_file | indent 4 }}
+
 idps:
 - tenant_id: default
   authorization_server_id: openbanking
@@ -99,4 +100,4 @@ clients:
   - authorization_code
   - refresh_token
   jwks:
-{{ .financroo_pem_file | readFile | pemToPublicJwks | indent 4 }}
+{{ readFile .financroo_pem_file | pemToPublicJwks | indent 4 }}
