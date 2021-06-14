@@ -2,7 +2,7 @@ import React, { Suspense, useEffect, useState } from "react";
 import "./App.css";
 import { BrowserRouter as Router, Redirect, Route } from "react-router-dom";
 import { Switch } from "react-router";
-import { createMuiTheme, ThemeProvider } from "@material-ui/core";
+import { ThemeProvider } from "@material-ui/core";
 import { StylesProvider } from "@material-ui/core/styles";
 import superagent from "superagent";
 import Progress from "./components/Progress";
@@ -19,34 +19,7 @@ import {
   putIdTokenInStore,
   putTokenInStore,
 } from "./components/auth.utils";
-
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: "#007FFF",
-    },
-    secondary: {
-      main: "#434656",
-    },
-  },
-  overrides: {
-    MuiTableRow: {
-      root: {
-        "&$selected": {
-          backgroundColor: "rgba(54, 198, 175, 0.08)",
-          "&:hover": {
-            backgroundColor: "rgba(54, 198, 175, 0.2)",
-          },
-        },
-      },
-    },
-    MuiTableCell: {
-      root: {
-        borderBottom: "none",
-      },
-    },
-  },
-});
+import { theme } from "./theme";
 
 export type Config = {
   authorizationServerURL: string;

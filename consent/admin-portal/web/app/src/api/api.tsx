@@ -1,5 +1,5 @@
+import { availableConstentTypesJoined } from "../components/utils";
 import { base, baseWithCustomBaseUrl } from "./api-base";
-//import {clientMockRes} from "../components/clientsMockRes";
 
 export const api = {
   userinfo: (
@@ -11,9 +11,11 @@ export const api = {
       url: `/${tenantId}/${authorizationServerId}/userinfo`,
     }),
   getClients: () => base.get({ url: `/clients` }),
-  // getClients: () => Promise.resolve(clientMockRes),
   deleteClient: ({ id }: { id: string }) =>
-    base.delete({ url: `/clients/${id}`, query: {} }),
+    base.delete({
+      url: `/clients/${id}`,
+      query: { consent_types: availableConstentTypesJoined },
+    }),
   getConsents: () => base.get({ url: `/consents` }),
   deleteConsent: ({ id }: { id: string }) =>
     base.delete({ url: `/consents/${id}`, query: {} }),

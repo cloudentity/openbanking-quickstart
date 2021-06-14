@@ -1,25 +1,39 @@
 import React, { useEffect, useState } from "react";
-import PageToolbar from "./PageToolbar";
-import MenuIcon from "@material-ui/icons/Menu";
-import IconButton from "@material-ui/core/IconButton";
-import Progress from "./Progress";
-import Tab from "@material-ui/core/Tab";
-import Hidden from "@material-ui/core/Hidden";
-import Tabs from "@material-ui/core/Tabs";
-import { Button, Container, Typography } from "@material-ui/core";
-import { logout } from "./AuthPage";
-import { makeStyles } from "@material-ui/core/styles";
-import { api } from "../api/api";
-import ConfirmationDialog from "./ConfirmationDialog";
 import { Route } from "react-router-dom";
+import { Container, makeStyles, Theme, Typography } from "@material-ui/core";
+import { useHistory } from "react-router";
+
+import PageToolbar from "./PageToolbar";
+import Progress from "./Progress";
+import { api } from "../api/api";
 import noAccountEmptyState from "./no-accounts-empty-state.svg";
 import ClientsList from "./ClientsList";
+import Subheader from "./Subheader";
+import CustomTabs from "./CustomTabs";
+import SearchInput from "./SearchInput";
 
-const useStyles = makeStyles(() => ({
-  indicator: {
-    backgroundColor: "#fff",
+const useStyles = makeStyles((theme: Theme) => ({
+  subtitle: {
+    ...theme.custom.body1,
   },
 }));
+
+export const searchTabs = (history) => [
+  {
+    key: "account",
+    label: "Account",
+    content: (
+      <div>
+        <SearchInput
+          placeholder="Search by account number"
+          onSearch={(v) => {
+            // history.push(`/accounts/${v}`)
+          }}
+        />
+      </div>
+    ),
+  },
+];
 
 interface PropTypes {
   authorizationServerURL?: string;
@@ -34,8 +48,8 @@ export default function Dashboard({
 }: PropTypes) {
   const [isProgress, setProgress] = useState(true);
   const [clients, setClients] = useState<any>([]);
-  const [revokeDialog, setRevokeDialog] = useState<any>(null);
   const classes = useStyles();
+  const history = useHistory();
 
   useEffect(() => {
     setProgress(true);
@@ -46,17 +60,17 @@ export default function Dashboard({
       .finally(() => setProgress(false));
   }, []);
 
-  const handleRevokeConsent = (id) => () => {
-    setProgress(true);
-    api
-      .deleteConsent({ id })
-      .then(api.getClients)
-      .then((res) => setClients(res.clients || []))
-      .catch((err) => console.log(err))
-      .finally(() => setProgress(false));
-  };
+  // const handleRevokeConsent = (id: string) => {
+  //   setProgress(true);
+  //   api
+  //     .deleteConsent({ id })
+  //     .then(api.getClients)
+  //     .then((res) => setClients(res.clients || []))
+  //     .catch((err) => console.log(err))
+  //     .finally(() => setProgress(false));
+  // };
 
-  const handleRevokeClient = (id) => () => {
+  const handleRevokeClient = (id: string) => {
     setProgress(true);
     api
       .deleteClient({ id })
@@ -68,71 +82,38 @@ export default function Dashboard({
 
   return (
     <div>
-      <PageToolbar>
-        <Hidden mdUp>
-          <IconButton edge="start" color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton>
-        </Hidden>
-        <Hidden smDown>
-          <Tabs
-            value={"clients"}
-            onChange={() => {}}
-            classes={{
-              indicator: classes.indicator,
-            }}
-            aria-label="menu tabs"
-            style={{ height: 64, marginLeft: 32 }}
-          >
-            <Tab
-              label="Clients"
-              value={"clients"}
-              style={{ height: 64, textTransform: "none", minWidth: "unset" }}
-            />
-          </Tabs>
-        </Hidden>
-        <div style={{ flex: 1 }} />
-        <Button
-          style={{ color: "#fff" }}
-          onClick={() =>
-            logout(authorizationServerURL, tenantId, authorizationServerId)
-          }
-        >
-          Logout
-        </Button>
-      </PageToolbar>
+      <PageToolbar
+        authorizationServerURL={authorizationServerURL}
+        authorizationServerId={authorizationServerId}
+        tenantId={tenantId}
+      />
       <div style={{ position: "relative" }}>
         {isProgress && <Progress />}
         {!isProgress && (
           <>
             {clients.length === 0 && (
               <div style={{ textAlign: "center", marginTop: 128 }}>
-                <Typography variant={"h3"} style={{ color: "#626576" }}>
+                <Typography variant="h3" style={{ color: "#626576" }}>
                   No authorized 3rd party Applications
                 </Typography>
                 <img
                   src={noAccountEmptyState}
                   style={{ marginTop: 64 }}
-                  alt={"empty state"}
+                  alt="empty state"
                 />
               </div>
             )}
             {clients.length > 0 && (
               <>
-                <div
-                  style={{
-                    background: "#F7F7F7",
-                    height: 148,
-                    display: "flex",
-                    alignItems: "center",
-                  }}
-                >
-                  <Container>
-                    <Typography variant={"h3"} color={"primary"}>
-                      Authorized 3rd party Applications
-                    </Typography>
-                  </Container>
-                </div>
+                <Subheader title="Customer Consent Portal">
+                  <div className={classes.subtitle}>
+                    Search for consents and manage data access on behalf of bank
+                    members
+                  </div>
+                  <div style={{ marginTop: 32 }}>
+                    <CustomTabs tabs={searchTabs(history)} />
+                  </div>
+                </Subheader>
                 <Container>
                   <Route
                     exact
@@ -141,7 +122,6 @@ export default function Dashboard({
                       <ClientsList
                         clients={clients}
                         onRevokeClient={handleRevokeClient}
-                        onRevokeConsent={handleRevokeConsent}
                       />
                     )}
                   />
@@ -151,22 +131,6 @@ export default function Dashboard({
           </>
         )}
       </div>
-      {revokeDialog && (
-        <ConfirmationDialog
-          title="Revoke application access"
-          content="Are you sure you want to revoke access to your accounts for this application?"
-          confirmText="Yes, Revoke Access"
-          warningItems={[
-            "Your connected application will not be able to access your bank accounts.",
-            "You will have to authorize the application again if you would like to use it with your bank in the future.",
-          ]}
-          onCancel={() => setRevokeDialog(null)}
-          onConfirm={() => {
-            handleRevokeConsent(revokeDialog.consent_id);
-            setRevokeDialog(null);
-          }}
-        />
-      )}
     </div>
   );
 }
