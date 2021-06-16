@@ -97,6 +97,7 @@ export default function PageToolbar({
             }}
           >
             <Tab
+              id="consent-management-tab"
               key="consent"
               value="/"
               label="Consent management"
@@ -107,6 +108,7 @@ export default function PageToolbar({
               style={activeTab !== "/" ? { opacity: 0.5 } : {}}
             />
             <Tab
+              id="third-party-providers-tab"
               key="access"
               value="/providers"
               label="Third party providers"

@@ -39,9 +39,7 @@ describe(`Consent admin app`, () => {
       Credentials.consentAdminUsername,
       Credentials.defaultPassword
     );
-    consentAdminPage.openClientDrawer();
     consentAdminPage.revokeClientConsent();
-    consentAdminPage.assertAppliationDrawerIsNotDisplayed();
   });
 
   // it(`Happy path with revoking all consents`, () => {

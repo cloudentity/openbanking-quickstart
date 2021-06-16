@@ -44,7 +44,7 @@ export default function RevokeDialog({
   const classes = useStyles();
 
   return (
-    <Dialog onClose={handleClose} open={true}>
+    <Dialog onClose={handleClose} open={true} id="revoke-confirm-dialog">
       <DialogContent>
         <div className={classes.content}>
           Are your sure you want to revoke access for <b>{clientName}</b>?
@@ -57,6 +57,7 @@ export default function RevokeDialog({
         <Button
           onClick={onConfirm}
           className={clsx(classes.button, classes.revokeButton)}
+          id="revoke-confirm-button"
         >
           Revoke access
         </Button>
