@@ -2,6 +2,7 @@ import React from "react";
 
 import { theme } from "../theme";
 import Chip from "./Chip";
+import SearchInput from "./SearchInput";
 
 export const drawerStyles = {
   name: {
@@ -41,7 +42,6 @@ export const drawerStyles = {
       paddingBottom: 12,
     },
   },
-
   cardTitle: {
     fontWeight: "bold" as "bold",
     marginBottom: 4,
@@ -93,11 +93,12 @@ const monthNames = [
 export function getDate(date) {
   try {
     const d = new Date(date);
-    if (d.getFullYear() === 1) return "N/A";
+    const year = d.getFullYear();
+    if (year === 1 || isNaN(year)) return null;
     return `${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`;
   } catch (err) {
     console.error(err);
-    return "N/A";
+    return null;
   }
 }
 
@@ -216,14 +217,111 @@ export function getRawConsents(consents) {
 export enum ConsentStatus {
   Active = "Active",
   Inactive = "Inactive",
+  Authorised = "Authorised",
 }
 
-export function getChipForStatus(status: ConsentStatus) {
+export function getChipForStatus(status?: ConsentStatus) {
   return (
     (status === ConsentStatus.Active && <Chip type="active">Active</Chip>) ||
+    (status === ConsentStatus.Authorised && (
+      <Chip type="active">Authorised</Chip>
+    )) ||
     (status === ConsentStatus.Inactive && (
       <Chip type="inactive">Inactive</Chip>
     )) ||
     null
   );
 }
+
+type ConsentType = {
+  Charges: string | null;
+  ConsentId: string | null;
+  CreationDateTime: string | null;
+  CutOffDateTime: string | null;
+  ExpectedExecutionDateTime: string | null;
+  ExpectedSettlementDateTime: string | null;
+  Initiation: string | null;
+  Status: string | null;
+  StatusUpdateDateTime: string | null;
+  Permissions?: string[];
+  ExpirationDateTime?: string | null;
+};
+
+export type ClientType = {
+  client_id: string;
+  client_name: string;
+  consents: {
+    Client: {
+      client_uri: string;
+      id: string;
+      name: string;
+    };
+    account_access_consent: ConsentType;
+    account_ids: string[];
+    client_id: string;
+    consent_id: string;
+    created_at: string;
+    domestic_payment_consent: ConsentType;
+    domestic_scheduled_payment_consent: ConsentType;
+    domestic_standing_order_consent: ConsentType;
+    file_payment_consent: ConsentType;
+    international_payment_consent: ConsentType;
+    international_scheduled_payment_consent: ConsentType;
+    international_standing_order_consent: ConsentType;
+    server_id: string;
+    status: string;
+    tenant_id: string;
+    type: string;
+  }[];
+  mainStatus?: ConsentStatus;
+};
+
+export const handleSearch =
+  (searchText: string) =>
+  (history: any, accounts?: { [accountId: string]: string[] }) => {
+    if (accounts) {
+      const foundAccount = accounts[searchText];
+      history.push({
+        pathname: `/accounts/${searchText}`,
+        state: { clientIds: foundAccount || null, accounts },
+      });
+    }
+  };
+
+export const currencyDict = {
+  USD: "$",
+  GBP: "£",
+  EUR: "€",
+};
+
+export function enrichClientWithStatus(client) {
+  const found = client?.consents?.find(
+    (consent) =>
+      consent.account_access_consent &&
+      consent.account_access_consent.Status === "Authorised"
+  );
+  const status = found ? ConsentStatus.Active : ConsentStatus.Inactive;
+  return {
+    ...client,
+    mainStatus: status,
+  };
+}
+
+export const searchTabs = (
+  onSearch: (searchText: string) => void,
+  inputValue?: string
+) => [
+  {
+    key: "account",
+    label: "Account",
+    content: (
+      <div>
+        <SearchInput
+          placeholder="Search by account number"
+          onSearch={onSearch}
+          inputValue={inputValue}
+        />
+      </div>
+    ),
+  },
+];

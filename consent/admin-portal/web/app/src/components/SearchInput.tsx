@@ -29,17 +29,26 @@ const useStyles = makeStyles((theme: Theme) =>
       display: "flex",
       marginLeft: 2,
     },
+    input: {
+      height: 48,
+      boxSizing: "border-box",
+    },
   })
 );
 
 interface PropTypes {
   placeholder: string;
   onSearch: (text: string) => void;
+  inputValue?: string;
 }
 
-export default function SearchInput({ placeholder, onSearch }: PropTypes) {
+export default function SearchInput({
+  placeholder,
+  onSearch,
+  inputValue,
+}: PropTypes) {
   const classes = useStyles();
-  const [value, setValue] = useState("");
+  const [value, setValue] = useState(inputValue || "");
 
   return (
     <div className={classes.root}>
@@ -57,6 +66,9 @@ export default function SearchInput({ placeholder, onSearch }: PropTypes) {
             setValue(e.target.value);
           }}
           placeholder={placeholder}
+          classes={{
+            input: classes.input,
+          }}
           style={{
             paddingRight: 0,
             height: 48,
