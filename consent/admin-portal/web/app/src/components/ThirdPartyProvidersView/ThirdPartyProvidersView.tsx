@@ -1,24 +1,25 @@
 import React, { useEffect, useState } from "react";
-import { Route } from "react-router-dom";
 import { Container, makeStyles, Theme, Typography } from "@material-ui/core";
-import { useHistory } from "react-router";
 
-import PageToolbar from "./PageToolbar";
-import Progress from "./Progress";
-import { api } from "../api/api";
-import noAccountEmptyState from "./no-accounts-empty-state.svg";
-import ClientsList from "./ClientsList";
-import Subheader from "./Subheader";
-import CustomTabs from "./CustomTabs";
-import SearchInput from "./SearchInput";
+import PageToolbar from "../PageToolbar";
+import Progress from "../Progress";
+import { api } from "../../api/api";
+import noAccountEmptyState from "../no-accounts-empty-state.svg";
+import iconShield from "../../assets/icon-shield.svg";
+import ClientsList from "../ClientsList";
+import Subheader from "../Subheader";
+import SearchInput from "../SearchInput";
+import { ClientType } from "../utils";
 
 const useStyles = makeStyles((theme: Theme) => ({
   subtitle: {
     ...theme.custom.body1,
+    maxWidth: 588,
+    margin: "0 auto",
   },
 }));
 
-export const searchTabs = (history) => [
+export const searchTabs = (onSearch: (searchText: string) => void) => [
   {
     key: "account",
     label: "Account",
@@ -26,9 +27,7 @@ export const searchTabs = (history) => [
       <div>
         <SearchInput
           placeholder="Search by account number"
-          onSearch={(v) => {
-            // history.push(`/accounts/${v}`)
-          }}
+          onSearch={onSearch}
         />
       </div>
     ),
@@ -41,21 +40,22 @@ interface PropTypes {
   tenantId?: string;
 }
 
-export default function Dashboard({
+export default function ThirdPartyProvidersView({
   authorizationServerURL,
   authorizationServerId,
   tenantId,
 }: PropTypes) {
   const [isProgress, setProgress] = useState(true);
-  const [clients, setClients] = useState<any>([]);
+  const [clients, setClients] = useState<ClientType[] | []>([]);
   const classes = useStyles();
-  const history = useHistory();
 
   useEffect(() => {
     setProgress(true);
     api
       .getClients()
-      .then((res) => setClients(res.clients || []))
+      .then(({ clients }: { clients: ClientType[] }) => {
+        setClients(clients || []);
+      })
       .catch((err) => console.log(err))
       .finally(() => setProgress(false));
   }, []);
@@ -105,25 +105,19 @@ export default function Dashboard({
             )}
             {clients.length > 0 && (
               <>
-                <Subheader title="Customer Consent Portal">
+                <Subheader
+                  title="Third party providers (TPPs)"
+                  icon={iconShield}
+                >
                   <div className={classes.subtitle}>
-                    Search for consents and manage data access on behalf of bank
-                    members
-                  </div>
-                  <div style={{ marginTop: 32 }}>
-                    <CustomTabs tabs={searchTabs(history)} />
+                    Go Bank has granted API access to the following third-party
+                    applications. Revoke access to those you no longer trust.
                   </div>
                 </Subheader>
                 <Container>
-                  <Route
-                    exact
-                    path="/"
-                    render={() => (
-                      <ClientsList
-                        clients={clients}
-                        onRevokeClient={handleRevokeClient}
-                      />
-                    )}
+                  <ClientsList
+                    clients={clients}
+                    onRevokeClient={handleRevokeClient}
                   />
                 </Container>
               </>

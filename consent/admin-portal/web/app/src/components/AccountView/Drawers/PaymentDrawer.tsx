@@ -1,12 +1,10 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Theme } from "@material-ui/core";
+import Avatar from "@material-ui/core/Avatar";
 
-import Chip from "../Chip";
-import logo from "../../assets/welcome-image.png";
-import ApplicationAccessDrawer from "./ApplicationAccessDrawer";
-import { getDate } from "../ApplicationSimpleCard";
-import { currencyDict, drawerStyles } from "./utils";
+import CustomDrawer from "./CustomDrawer";
+import { currencyDict, drawerStyles, getDate } from "../../utils";
+import Chip from "../../Chip";
 
 const useStyles = makeStyles(() => ({
   ...drawerStyles,
@@ -19,14 +17,9 @@ const useStyles = makeStyles(() => ({
 type Props = {
   drawerData: any;
   setDrawerData: (data: string | null) => void;
-  status: string;
 };
 
-function ApplicationAccessPaymentDrawer({
-  drawerData,
-  setDrawerData,
-  status,
-}: Props) {
+function PaymentDrawer({ drawerData, setDrawerData }: Props) {
   const classes = useStyles();
 
   const details = drawerData?.domestic_payment_consent;
@@ -51,17 +44,24 @@ function ApplicationAccessPaymentDrawer({
   const permissionDates = {
     Authorised: getDate(details?.Authorisation?.CompletionDateTime),
     "Last updated": getDate(details?.StatusUpdateDateTime),
-    // "Active until": "N/A",
   };
 
+  const status = drawerData?.status;
+
   return (
-    <ApplicationAccessDrawer
+    <CustomDrawer
       header={
         <div className={classes.headerContent}>
-          <img className={classes.logo} src={logo} alt="app logo" />
+          <Avatar
+            variant="square"
+            className={classes.logo}
+            style={{ backgroundColor: "white", color: "#626576" }}
+          >
+            {drawerData?.Client?.name[0]?.toUpperCase()}
+          </Avatar>
           <h3 className={classes.name}>Financroo</h3>
           <div style={{ flex: 1 }} />
-          <Chip type="active">{status}</Chip>
+          <Chip type={status && status.toLowerCase()}>{status}</Chip>
         </div>
       }
       setDrawerData={setDrawerData}
@@ -117,8 +117,8 @@ function ApplicationAccessPaymentDrawer({
           </ul>
         </div>
       </div>
-    </ApplicationAccessDrawer>
+    </CustomDrawer>
   );
 }
 
-export default ApplicationAccessPaymentDrawer;
+export default PaymentDrawer;

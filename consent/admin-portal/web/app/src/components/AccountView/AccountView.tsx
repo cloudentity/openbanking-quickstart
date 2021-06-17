@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { makeStyles, Theme } from "@material-ui/core";
-import { useHistory, useParams } from "react-router";
+import { useHistory, useLocation, useParams } from "react-router";
 import ArrowBack from "@material-ui/icons/ArrowBack";
 import IconButton from "@material-ui/core/IconButton";
 
-import CustomTabs from "./CustomTabs";
-import { searchTabs } from "./Dashboard";
-import PageToolbar from "./PageToolbar";
-import Progress from "./Progress";
-import Subheader from "./Subheader";
+import CustomTabs from "../CustomTabs";
+import PageToolbar from "../PageToolbar";
+import Progress from "../Progress";
+import Subheader from "../Subheader";
+import { api } from "../../api/api";
+import { ClientType, handleSearch, searchTabs } from "../utils";
+import AccountClientsList from "./AccountClientsList";
 
 const useStyles = makeStyles((theme: Theme) => ({
   subtitle: {
@@ -30,15 +32,22 @@ const useStyles = makeStyles((theme: Theme) => ({
     maxWidth: 850,
     margin: "32px auto",
   },
-  accountInfo: {
-    backgroundColor: "white",
-    boxShadow: "0px 0px 0px 1px #ECECEC",
-    padding: 24,
-    borderRadius: 4,
-    marginBottom: 24,
+  info: {
+    "& span": {
+      fontWeight: 500,
+    },
   },
   subheader: {
     ...theme.custom.heading6,
+  },
+  empty: {
+    textAlign: "center",
+    color: "gray",
+  },
+  back: {
+    ...theme.custom.label,
+    color: "white",
+    marginLeft: 13,
   },
 }));
 
@@ -48,6 +57,11 @@ interface PropTypes {
   tenantId?: string;
 }
 
+interface LocationState {
+  clientIds: string[];
+  accounts: { [accountId: string]: string[] };
+}
+
 export default function AccountView({
   authorizationServerURL,
   authorizationServerId,
@@ -55,12 +69,26 @@ export default function AccountView({
 }: PropTypes) {
   const { id } = useParams<Record<string, string | undefined>>();
   const history = useHistory();
+  const { state } = useLocation<LocationState>();
   const [isProgress, setProgress] = useState(true);
   const classes = useStyles();
+  const [clients, setClients] = useState<ClientType[] | []>([]);
 
   useEffect(() => {
-    setProgress(false);
-  }, []);
+    setProgress(true);
+    api
+      .getClients()
+      .then(({ clients }: { clients: ClientType[] }) => {
+        const found = clients.filter((v) =>
+          state?.clientIds?.includes(v.client_id)
+        );
+        if (found.length) {
+          setClients(found);
+        }
+      })
+      .catch((err) => console.log(err))
+      .finally(() => setProgress(false));
+  }, [state?.clientIds]);
 
   return (
     <div>
@@ -90,6 +118,7 @@ export default function AccountView({
                     onMouseDown={() => history.push("/")}
                   >
                     <ArrowBack fontSize="small" style={{ color: "white" }} />
+                    <div className={classes.back}>Back</div>
                   </IconButton>
                 </div>
               </div>
@@ -101,15 +130,31 @@ export default function AccountView({
                   top: -32,
                 }}
               >
-                <CustomTabs tabs={searchTabs(history)} />
+                <CustomTabs
+                  tabs={searchTabs(
+                    (searchText) =>
+                      handleSearch(searchText)(history, state?.accounts),
+                    id
+                  )}
+                />
               </div>
             </Subheader>
             <div className={classes.container}>
-              <div className={classes.accountInfo}>
-                <div className={classes.subheader}>Account</div>
-                <div>{id}</div>
-              </div>
-              <div className={classes.header}>All Connected Applications</div>
+              {state?.clientIds ? (
+                <>
+                  <div className={classes.info}>
+                    <span>{clients.length} application(s)</span> found for
+                    account <span>#{id}</span>
+                  </div>
+                  <AccountClientsList
+                    clients={clients}
+                    accountId={id}
+                    accounts={state?.accounts}
+                  />
+                </>
+              ) : (
+                <div className={classes.empty}>No account found</div>
+              )}
             </div>
           </>
         )}

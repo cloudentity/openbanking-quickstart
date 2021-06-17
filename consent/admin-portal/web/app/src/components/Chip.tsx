@@ -16,25 +16,32 @@ const useStyles = makeStyles(() => ({
 
 const colorMapper = {
   active: "#4CAF50",
+  authorised: "#4CAF50",
   inactive: "#BD271E",
+  revoked: "#BD271E",
+  pending: "#BD271E",
+  other: "#BD271E",
 };
 
 type Props = {
   children: ReactNode;
-  type: keyof typeof colorMapper;
+  type?: keyof typeof colorMapper;
 };
 
 function Chip({ children, type }: Props) {
   const classes = useStyles();
 
-  return (
+  return type ? (
     <div
       className={classes.container}
-      style={{ color: colorMapper[type], borderColor: colorMapper[type] }}
+      style={{
+        color: colorMapper[type] || colorMapper.other,
+        borderColor: colorMapper[type] || colorMapper.other,
+      }}
     >
       {children}
     </div>
-  );
+  ) : null;
 }
 
 export default Chip;

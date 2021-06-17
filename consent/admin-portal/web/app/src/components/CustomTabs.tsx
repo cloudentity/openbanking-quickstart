@@ -1,8 +1,6 @@
-import React, { ReactNode, useState } from "react";
+import React, { ReactNode } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import { Theme } from "@material-ui/core";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -44,35 +42,10 @@ type Props = {
 
 function CustomTabs({ tabs }: Props) {
   const classes = useStyles();
-  const [tab, setTab] = useState(tabs[0].key);
-
-  const curentTab = tabs.find(({ key }) => tab === key);
+  const curentTab = tabs[0];
 
   return (
     <div className={classes.container}>
-      <div>
-        <Tabs
-          value={tab}
-          onChange={(_, newValue) => setTab(newValue)}
-          classes={{
-            root: classes.tabsRoot,
-            indicator: classes.tabsIndicator,
-          }}
-        >
-          {tabs.map(({ key, label }) => (
-            <Tab
-              key={key}
-              value={key}
-              label={label}
-              className={`${classes.tab} accounts-tab`}
-              style={tab === key ? { color: "#DC1B37" } : {}}
-              classes={{
-                root: classes.tabRoot,
-              }}
-            />
-          ))}
-        </Tabs>
-      </div>
       <div className={classes.content}>{curentTab?.content}</div>
     </div>
   );

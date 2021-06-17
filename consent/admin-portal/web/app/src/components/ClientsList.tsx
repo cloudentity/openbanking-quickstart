@@ -1,6 +1,5 @@
 import React, { useCallback, useEffect, useState } from "react";
 import { makeStyles, Theme } from "@material-ui/core";
-import Chip from "@material-ui/core/Chip";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import IconButton from "@material-ui/core/IconButton";
@@ -8,8 +7,8 @@ import CancelOutlined from "@material-ui/icons/CancelOutlined";
 import debounce from "lodash/debounce";
 
 import ClientCard from "./ClientCard";
-import CustomDrawer from "./ApplicationDrawer";
-import { ConsentStatus } from "./utils";
+import { Search } from "react-feather";
+import { ConsentStatus, getStatus } from "./utils";
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -39,6 +38,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   toolbar: {
     display: "flex",
     justifyContent: "space-between",
+    marginBottom: 16,
   },
   searchIconContainer: {
     backgroundColor: "#DC1B37",
@@ -49,33 +49,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-const activeChipStyle = {
-  backgroundColor: "#002D4C",
-  color: "white",
-};
-
-function enrichClientWithStatus(clients) {
-  return clients.map((client) => {
-    const found = client?.consents?.find(
-      (consent) =>
-        consent.account_access_consent &&
-        consent.account_access_consent.Status === "Authorised"
-    );
-    const status = found ? ConsentStatus.Active : ConsentStatus.Inactive;
-    return {
-      ...client,
-      mainStatus: status,
-    };
-  });
-}
-
 export default function ClientsList({ clients, onRevokeClient }) {
   const classes = useStyles();
-  const [drawerData, setDrawerData] = useState<any>(null);
-  const [filter, setFilter] = useState<"active" | "inactive" | "all">("all");
   const [searchText, setSearchText] = useState("");
   const [debouncedSearchText, setDebouncedSearchText] = useState("");
-  const [clientsWithStatus] = useState(enrichClientWithStatus(clients));
+  const [clientsWithStatus] = useState(
+    clients.map((v) => ({ ...v, mainStatus: getStatus(v) }))
+  );
   const [filteredClients, setFilteredClients] = useState(clientsWithStatus);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -87,56 +67,20 @@ export default function ClientsList({ clients, onRevokeClient }) {
   );
 
   useEffect(() => {
-    const clientsFiltered =
-      (filter === "active" &&
-        clientsWithStatus.filter(
-          (v) => v?.mainStatus === ConsentStatus.Active
-        )) ||
-      (filter === "inactive" &&
-        clientsWithStatus.filter(
-          (v) => v?.mainStatus === ConsentStatus.Inactive
-        )) ||
-      clientsWithStatus;
-
     const clientsSearched =
       (debouncedSearchText &&
-        clientsFiltered.filter((v) =>
+        clientsWithStatus.filter((v) =>
           v?.client_name
             ?.toLowerCase()
             ?.includes(debouncedSearchText.toLowerCase())
         )) ||
-      clientsFiltered;
-
+      clientsWithStatus;
     setFilteredClients(clientsSearched);
-  }, [filter, debouncedSearchText, clientsWithStatus]);
+  }, [debouncedSearchText, clientsWithStatus]);
 
   return (
     <div className={classes.container}>
-      <div className={classes.header}>All Connected Applications</div>
-      <div className={classes.subheader}>
-        Manage and revoke access to connected third-party applications
-      </div>
       <div className={classes.toolbar}>
-        <div>
-          <div className={classes.filterTitle}>Filter by permissions:</div>
-          <div className={classes.filterChips}>
-            <Chip
-              label="All types"
-              onClick={() => setFilter("all")}
-              style={filter === "all" ? activeChipStyle : {}}
-            />
-            <Chip
-              label="Active"
-              onClick={() => setFilter("active")}
-              style={filter === "active" ? activeChipStyle : {}}
-            />
-            <Chip
-              label="Inactive"
-              onClick={() => setFilter("inactive")}
-              style={filter === "inactive" ? activeChipStyle : {}}
-            />
-          </div>
-        </div>
         <div>
           <OutlinedInput
             type="text"
@@ -150,7 +94,7 @@ export default function ClientsList({ clients, onRevokeClient }) {
               paddingRight: 2,
               height: 32,
               fontSize: 12,
-              width: 200,
+              width: 208,
               marginTop: 32,
             }}
             endAdornment={
@@ -173,7 +117,10 @@ export default function ClientsList({ clients, onRevokeClient }) {
                     />
                   </IconButton>
                 ) : (
-                  <div style={{ width: 25.5 }} />
+                  <Search
+                    size="16"
+                    style={{ color: "#A0A3B5", marginRight: 6 }}
+                  />
                 )}
               </InputAdornment>
             }
@@ -182,24 +129,31 @@ export default function ClientsList({ clients, onRevokeClient }) {
         </div>
       </div>
       {filteredClients
-        .sort((a, b) =>
-          String(a?.client_name ?? "").localeCompare(b?.client_name ?? "")
-        )
+        .slice()
+        .sort((a, b) => {
+          if (
+            a.mainStatus === ConsentStatus.Active &&
+            b.mainStatus === ConsentStatus.Inactive
+          ) {
+            return -1;
+          }
+          if (
+            a.mainStatus === ConsentStatus.Inactive &&
+            b.mainStatus === ConsentStatus.Active
+          ) {
+            return 1;
+          }
+          return String(a?.client_name ?? "").localeCompare(
+            b?.client_name ?? ""
+          );
+        })
         .map((client) => (
           <ClientCard
             key={client?.client_id}
             client={client}
-            onClick={() => setDrawerData(client)}
+            onRevokeClient={onRevokeClient}
           />
         ))}
-
-      {drawerData && (
-        <CustomDrawer
-          data={drawerData}
-          setData={setDrawerData}
-          onRevokeClient={onRevokeClient}
-        />
-      )}
     </div>
   );
 }
