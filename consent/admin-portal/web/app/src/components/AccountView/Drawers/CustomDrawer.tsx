@@ -32,14 +32,27 @@ type Props = {
   children: ReactNode;
   header: ReactNode;
   bottomBar?: ReactNode;
-  setDrawerData: (data: string | null) => void;
+  setDrawerData?: (data: string | null) => void;
+  handleClose?: () => void;
 };
 
-function CustomDrawer({ children, header, bottomBar, setDrawerData }: Props) {
+function CustomDrawer({
+  children,
+  header,
+  bottomBar,
+  setDrawerData,
+  handleClose,
+}: Props) {
   const classes = useStyles();
 
   return (
-    <Drawer anchor="right" open={true} onClose={() => setDrawerData(null)}>
+    <Drawer
+      anchor="right"
+      open={true}
+      onClose={() =>
+        (setDrawerData && setDrawerData(null)) || (handleClose && handleClose())
+      }
+    >
       <div className={classes.header}>{header}</div>
       <div className={classes.container}>
         <div className={classes.content}>{children}</div>

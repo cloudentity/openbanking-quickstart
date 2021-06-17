@@ -2,9 +2,10 @@ import React, { useState } from "react";
 import { makeStyles, Theme } from "@material-ui/core/styles";
 import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
+import clsx from "clsx";
 
-import { ClientType, getDate } from "./utils";
-import RevokeDialog from "./ThirdPartyProvidersView/RevokeDialog";
+import { ClientType, ConsentStatus, getDate } from "./utils";
+import RevokeDrawer from "./ThirdPartyProvidersView/RevokeDrawer";
 
 const useStyles = makeStyles((theme: Theme) => ({
   card: {
@@ -16,6 +17,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: "flex",
     alignItems: "center",
     justifyContent: "space-between",
+    marginBottom: 16,
+  },
+  cardDisabled: {
+    backgroundColor: "#ECECEC",
   },
   date: {
     ...theme.custom.caption,
@@ -37,9 +42,17 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...theme.custom.heading3,
   },
   buttonRoot: {
-    textTransform: "capitalize",
     ...theme.custom.body2,
-    color: "#626576",
+    textTransform: "capitalize",
+    color: "#002D4C",
+    backgroundColor: "#FCFCFF",
+    border: "1px solid #002D4C",
+    padding: "8px 24px",
+  },
+  buttonRootDisabled: {
+    backgroundColor: "#DC1B37",
+    border: "1px solid #DC1B37",
+    color: "white !important",
   },
 }));
 
@@ -51,7 +64,7 @@ function getAuthorisedDate(client) {
     const date = accountAccessConsent?.account_access_consent?.CreationDateTime;
     return getDate(date);
   }
-  return null;
+  return "N/A";
 }
 
 interface PropTypes {
@@ -62,32 +75,55 @@ interface PropTypes {
 export default function ClientCard({ client, onRevokeClient }: PropTypes) {
   const classes = useStyles();
   const date = getAuthorisedDate(client);
-  const [openDialog, setOpenDialog] = useState(false);
+  const [openDrawer, setOpenDrawer] = useState(false);
+  const status = client?.mainStatus;
 
   return (
-    <div className={classes.card}>
+    <div
+      className={clsx(
+        classes.card,
+        status === ConsentStatus.Inactive && classes.cardDisabled
+      )}
+    >
       <div className={classes.cardName}>
         <Avatar variant="square" className={classes.avatar}>
           {client?.client_name[0]?.toUpperCase()}
         </Avatar>
         <div>
           <div className={classes.name}>{client?.client_name}</div>
-          {date && <div className={classes.date}>Connected {date}</div>}
+          {date !== "N/A" && (
+            <div className={classes.date}>Connected {date}</div>
+          )}
         </div>
       </div>
-      <Button
-        variant="outlined"
-        classes={{ root: classes.buttonRoot }}
-        onClick={() => setOpenDialog(true)}
-      >
-        Revoke
-      </Button>
+      {status !== ConsentStatus.Inactive ? (
+        <Button
+          variant="outlined"
+          classes={{ root: classes.buttonRoot }}
+          onClick={() => setOpenDrawer(true)}
+        >
+          Revoke
+        </Button>
+      ) : (
+        <Button
+          classes={{
+            root: clsx(classes.buttonRoot, classes.buttonRootDisabled),
+          }}
+          disabled
+        >
+          Revoked
+        </Button>
+      )}
 
-      {openDialog && (
-        <RevokeDialog
-          handleClose={() => setOpenDialog(false)}
-          onConfirm={() => onRevokeClient(client?.client_id)}
-          clientName={client?.client_name}
+      {openDrawer && (
+        <RevokeDrawer
+          handleClose={() => setOpenDrawer(false)}
+          onConfirm={() =>
+            client?.client_id &&
+            onRevokeClient &&
+            onRevokeClient(client?.client_id)
+          }
+          client={client}
         />
       )}
     </div>

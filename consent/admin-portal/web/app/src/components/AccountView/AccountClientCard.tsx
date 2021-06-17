@@ -4,6 +4,7 @@ import Avatar from "@material-ui/core/Avatar";
 import Button from "@material-ui/core/Button";
 import { uniq } from "ramda";
 import clsx from "clsx";
+import { useHistory } from "react-router";
 
 import {
   ClientType,
@@ -12,8 +13,7 @@ import {
   getDate,
   getRawConsents,
 } from "../utils";
-import { useHistory } from "react-router";
-import RevokeDialog from "../ThirdPartyProvidersView/RevokeDialog";
+import RevokeDrawer from "../ThirdPartyProvidersView/RevokeDrawer";
 
 const useStyles = makeStyles((theme: Theme) => ({
   card: {
@@ -76,10 +76,13 @@ const useStyles = makeStyles((theme: Theme) => ({
     ...theme.custom.caption,
   },
   manageButton: {
-    ...theme.custom.button,
-    backgroundColor: "#E6EAEE",
+    textTransform: "capitalize",
+    ...theme.custom.body2,
     color: "#002D4C",
     padding: "8px 24px",
+    backgroundColor: "#FCFCFF",
+    border: "1px solid #002D4C",
+
     "&:hover": {
       backgroundColor: "#E0E0E0",
     },
@@ -121,7 +124,7 @@ export default function AccountClientCard({
 }: PropTypes) {
   const classes = useStyles();
   const history = useHistory();
-  const [openDialog, setOpenDialog] = useState(false);
+  const [openDrawer, setOpenDrawer] = useState(false);
 
   const rawConsents = getRawConsents(client?.consents ?? []);
 
@@ -130,13 +133,9 @@ export default function AccountClientCard({
   );
 
   const permissionDates = {
-    authorised:
-      getDate(accountAccessConsent?.consent?.CreationDateTime) || "N/A",
-    lastUpdated:
-      getDate(accountAccessConsent?.consent?.StatusUpdateDateTime) || "N/A",
-    activeUntil: accountAccessConsent?.consent?.ExpirationDateTime
-      ? getDate(accountAccessConsent?.consent?.ExpirationDateTime) || "N/A"
-      : "N/A",
+    authorised: getDate(accountAccessConsent?.consent?.CreationDateTime),
+    lastUpdated: getDate(accountAccessConsent?.consent?.StatusUpdateDateTime),
+    activeUntil: getDate(accountAccessConsent?.consent?.ExpirationDateTime),
   };
 
   const types = rawConsents
@@ -144,7 +143,7 @@ export default function AccountClientCard({
     .filter((v) => v);
 
   const isApplicationListView = accountId && accounts;
-  const clientWithStatus = enrichClientWithStatus(client);
+  const clientWithStatus = client && enrichClientWithStatus(client);
 
   return (
     <div
@@ -184,7 +183,7 @@ export default function AccountClientCard({
         </div>
         <div>
           <div className={classes.label}>Permissions</div>
-          <div className={classes.caption}>{uniq(types).join(", ")}</div>
+          <div className={classes.caption}>{uniq(types).join(", ") || "-"}</div>
         </div>
         {isApplicationListView ? (
           <div>
@@ -196,22 +195,22 @@ export default function AccountClientCard({
         ) : (
           <Button
             className={classes.revokeButton}
-            onClick={() => setOpenDialog(true)}
+            onClick={() => setOpenDrawer(true)}
           >
             Revoke access
           </Button>
         )}
       </div>
 
-      {openDialog && (
-        <RevokeDialog
-          handleClose={() => setOpenDialog(false)}
+      {openDrawer && (
+        <RevokeDrawer
+          handleClose={() => setOpenDrawer(false)}
           onConfirm={() =>
             client?.client_id &&
             onRevokeClient &&
             onRevokeClient(client?.client_id)
           }
-          clientName={client?.client_name}
+          client={client}
         />
       )}
     </div>

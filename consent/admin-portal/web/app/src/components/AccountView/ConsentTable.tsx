@@ -82,10 +82,10 @@ function TableHeadComponent({ type }: { type: "account" | "payment" }) {
   if (type === "payment") {
     return (
       <TableHead>
-        <TableRow>
+        <TableRow classes={{ root: classes.tableRowRoot }}>
           <TableCell>Authorised</TableCell>
           <TableCell>Account</TableCell>
-          <TableCell>Creditor</TableCell>
+          <TableCell>Consent ID</TableCell>
           <TableCell>Status</TableCell>
           <TableCell align="right">Amount</TableCell>
         </TableRow>
@@ -135,7 +135,7 @@ function getTableBody(type: "account" | "payment", rows, setDrawerData, data) {
           >
             <TableCell>{row.authorised}</TableCell>
             <TableCell>{row.account}</TableCell>
-            <TableCell>{row.creditor}</TableCell>
+            <TableCell>{row.id}</TableCell>
             <TableCell>
               <Chip type={row.status && row.status.toLowerCase()}>
                 {row.status}
@@ -179,10 +179,10 @@ function ConsentTable({ data, type }: Props) {
     type === "account"
       ? data.map(({ account_access_consent, account_ids }) =>
           createDataAccount(
-            getDate(account_access_consent?.CreationDateTime) || "N/A",
+            getDate(account_access_consent?.CreationDateTime),
             account_ids.join(", "),
             account_access_consent?.Status,
-            getDate(account_access_consent?.ExpirationDateTime) || "N/A",
+            getDate(account_access_consent?.ExpirationDateTime),
             account_access_consent?.ConsentId
           )
         )

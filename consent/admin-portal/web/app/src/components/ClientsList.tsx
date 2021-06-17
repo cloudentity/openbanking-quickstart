@@ -8,6 +8,7 @@ import debounce from "lodash/debounce";
 
 import ClientCard from "./ClientCard";
 import { Search } from "react-feather";
+import { ConsentStatus, getStatus } from "./utils";
 
 const useStyles = makeStyles((theme: Theme) => ({
   container: {
@@ -52,7 +53,9 @@ export default function ClientsList({ clients, onRevokeClient }) {
   const classes = useStyles();
   const [searchText, setSearchText] = useState("");
   const [debouncedSearchText, setDebouncedSearchText] = useState("");
-  const [clientsWithStatus] = useState(clients);
+  const [clientsWithStatus] = useState(
+    clients.map((v) => ({ ...v, mainStatus: getStatus(v) }))
+  );
   const [filteredClients, setFilteredClients] = useState(clientsWithStatus);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -72,7 +75,6 @@ export default function ClientsList({ clients, onRevokeClient }) {
             ?.includes(debouncedSearchText.toLowerCase())
         )) ||
       clientsWithStatus;
-
     setFilteredClients(clientsSearched);
   }, [debouncedSearchText, clientsWithStatus]);
 
@@ -127,9 +129,24 @@ export default function ClientsList({ clients, onRevokeClient }) {
         </div>
       </div>
       {filteredClients
-        .sort((a, b) =>
-          String(a?.client_name ?? "").localeCompare(b?.client_name ?? "")
-        )
+        .slice()
+        .sort((a, b) => {
+          if (
+            a.mainStatus === ConsentStatus.Active &&
+            b.mainStatus === ConsentStatus.Inactive
+          ) {
+            return -1;
+          }
+          if (
+            a.mainStatus === ConsentStatus.Inactive &&
+            b.mainStatus === ConsentStatus.Active
+          ) {
+            return 1;
+          }
+          return String(a?.client_name ?? "").localeCompare(
+            b?.client_name ?? ""
+          );
+        })
         .map((client) => (
           <ClientCard
             key={client?.client_id}

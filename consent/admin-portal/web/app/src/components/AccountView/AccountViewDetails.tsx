@@ -92,7 +92,7 @@ export default function AccountViewDetails({
       if (found) {
         setClient(found);
         const consents = found.consents?.filter((v) =>
-          v.account_ids.includes(id)
+          v.account_ids?.includes(id)
         );
         setConsents(consents);
       }

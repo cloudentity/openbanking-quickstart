@@ -18,6 +18,18 @@ export const drawerStyles = {
     height: 48,
     objectFit: "contain" as "contain",
   },
+  drawerHeader: {
+    height: 72,
+    backgroundColor: "#F7FAFF",
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
+    paddingLeft: 32,
+    fontWeight: 600,
+    fontSize: 16,
+    lineHeight: "24px",
+    color: "#BD271E",
+  },
   headerContent: {
     padding: "12px 24px",
     display: "flex" as "flex",
@@ -94,11 +106,11 @@ export function getDate(date) {
   try {
     const d = new Date(date);
     const year = d.getFullYear();
-    if (year === 1 || isNaN(year)) return null;
+    if (year === 1 || isNaN(year)) return "N/A";
     return `${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`;
   } catch (err) {
     console.error(err);
-    return null;
+    return "N/A";
   }
 }
 
@@ -294,16 +306,19 @@ export const currencyDict = {
   EUR: "€",
 };
 
-export function enrichClientWithStatus(client) {
+export function getStatus(client: ClientType) {
   const found = client?.consents?.find(
     (consent) =>
       consent.account_access_consent &&
       consent.account_access_consent.Status === "Authorised"
   );
-  const status = found ? ConsentStatus.Active : ConsentStatus.Inactive;
+  return found ? ConsentStatus.Active : ConsentStatus.Inactive;
+}
+
+export function enrichClientWithStatus(client: ClientType) {
   return {
     ...client,
-    mainStatus: status,
+    mainStatus: getStatus(client),
   };
 }
 

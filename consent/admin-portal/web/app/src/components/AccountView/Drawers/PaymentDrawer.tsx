@@ -42,8 +42,8 @@ function PaymentDrawer({ drawerData, setDrawerData }: Props) {
   };
 
   const permissionDates = {
-    Authorised: getDate(details?.Authorisation?.CompletionDateTime) || "N/A",
-    "Last updated": getDate(details?.StatusUpdateDateTime) || "N/A",
+    Authorised: getDate(details?.Authorisation?.CompletionDateTime),
+    "Last updated": getDate(details?.StatusUpdateDateTime),
   };
 
   const status = drawerData?.status;

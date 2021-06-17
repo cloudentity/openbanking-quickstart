@@ -67,13 +67,13 @@ function AccountAccessDrawer({ drawerData, setDrawerData }: Props) {
   const classes = useStyles();
 
   const permissionDates = {
-    Authorised:
-      getDate(drawerData?.account_access_consent?.CreationDateTime) || "N/A",
-    "Last updated":
-      getDate(drawerData?.account_access_consent?.StatusUpdateDateTime) ||
-      "N/A",
-    "Active until":
-      getDate(drawerData?.account_access_consent?.ExpirationDateTime) || "N/A",
+    Authorised: getDate(drawerData?.account_access_consent?.CreationDateTime),
+    "Last updated": getDate(
+      drawerData?.account_access_consent?.StatusUpdateDateTime
+    ),
+    "Active until": getDate(
+      drawerData?.account_access_consent?.ExpirationDateTime
+    ),
   };
 
   const clusters = uniq(
