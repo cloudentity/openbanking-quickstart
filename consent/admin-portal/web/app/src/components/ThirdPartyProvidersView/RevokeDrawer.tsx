@@ -73,7 +73,7 @@ export default function RevokeDrawer({
             Cancel
           </Button>
           <Button
-            id={"revoke-access-button"}
+            id="revoke-access-button"
             variant="outlined"
             className={classes.button}
             style={{
@@ -108,6 +108,7 @@ export default function RevokeDrawer({
             checked={revokeAccessAgree}
             onChange={(e) => setRevokeAccessAgree(e.target.checked)}
             color="primary"
+            id="revoke-access-accept-checkbox"
           />{" "}
           I agree
         </div>
