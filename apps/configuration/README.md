@@ -7,7 +7,7 @@ It's useful when you want to add a new application, change idp, or openbanking c
 # Prerequisites
 
 The configuration app uses ACP [system import API]( https://docs.authorization.cloudentity.com/api/system/#operation/importConfiguration)
-This endpoint must be explicitly enabled on the ACP side (see ACP configuration reference guide: https://docs.authorization.cloudentity.com/reference/configuration/)
+This endpoint must be explicitly enabled on the ACP side, [see ACP configuration reference guide](https://docs.authorization.cloudentity.com/reference/configuration/)
 
 To be able to authenticate to the import endpoint you need an oauth client created in the system workspace.
 This client should be able to get token using client credentials flow and issue scope: `manage_configuration`.
@@ -31,7 +31,7 @@ docker run cloudentity/openbanking-quickstart-configuration:latest
 
 and then a help will be displayed with all the available options,
 
-or you can preview `configuration` docker container in the [docker-compose](../../docker-compose.yaml)
+or you can preview `configuration` docker container in the [docker-compose](../../docker-compose.yaml) to see how the configuration app is used to setup openbanking quickstart.
 
 # How to add a new template
 
