@@ -35,7 +35,7 @@ idps:
           name: user3
 server_consents:
 - tenant_id: default
-  client_id: {{ default "bv0ocudfotn6edhsiu7" .consent_page_client_id }}
+  client_id: {{ default "bv0ocudfotn6edhsiu7g" .consent_page_client_id }}
   custom:
     server_consent_url: {{ .consent_page_url }}
   server_id: openbanking
@@ -44,7 +44,7 @@ clients:
 # consent page
 - tenant_id: default
   authorization_server_id: system
-  client_id: {{ default "bv0ocudfotn6edhsiu7" .consent_page_client_id }}
+  client_id: {{ default "bv0ocudfotn6edhsiu7g" .consent_page_client_id }}
   client_secret: {{ default "pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0" .consent_page_client_secret }}
   client_name: custom server consent
   grant_types:
