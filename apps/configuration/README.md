@@ -23,4 +23,4 @@ You can optionally specify a path to variables file which could be used in the t
 
 # Sample usage
 
-See configuration docker container in the [docker-compose](../../docker-compose.yaml) that uses [Templates dir](../../data/imports) and [Variables file](../../data/variables.yaml)
+See `configuration` docker container in the [docker-compose](../../docker-compose.yaml) that uses [Templates dir](../../data/imports) and [Variables file](../../data/variables.yaml)
