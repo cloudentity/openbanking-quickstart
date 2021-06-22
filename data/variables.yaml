@@ -7,3 +7,5 @@ financroo_tls_client_auth_subject_dn: CN=cid1.authorization.cloudentity.com,OU=A
 bank_tls_client_auth_subject_dn: CN=cid2.authorization.cloudentity.com,OU=Authorization,O=Cloudentity,L=Seattle,ST=Washinghton,C=US
 financroo_pem_file: /certs/tpp_cert.pem
 ca_pem_file: /certs/ca.pem
+consent_page_client_id: bv0ocudfotn6edhsiu7
+consent_page_client_secret: MPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0
