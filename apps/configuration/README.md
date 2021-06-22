@@ -29,9 +29,9 @@ You can run a docker:
 docker run cloudentity/openbanking-quickstart-configuration:latest
 ```
 
-and then a help will be disabled with all the available options.
+and then a help will be displayed with all the available options,
 
-Or you can preview `configuration` docker container in the [docker-compose](../../docker-compose.yaml)
+or you can preview `configuration` docker container in the [docker-compose](../../docker-compose.yaml)
 
 # How to add a new template
 
