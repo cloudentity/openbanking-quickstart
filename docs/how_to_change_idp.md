@@ -1,6 +1,6 @@
 # How to change IDP
 
-To permanently change the IDP of the existing workspace (in this case `openbanking`) you need to define a new template and use it in (the configuration app)[../apps/configuration/README.md].
+To change the IDP of the existing workspace (in this case `openbanking`) you need to define a new template and use it in (the configuration app)[../apps/configuration/README.md].
 
 First, take a look at idp schema in the ACP import configuration request body: https://docs.authorization.cloudentity.com/api/system/#operation/importConfiguration
 
