@@ -7,6 +7,7 @@ export class ConsentSelfServiceApplicationPage {
   private readonly revokeButtonLocator: string = `#revoke-access-button`
   private readonly purposeHeaderLocator: string = `.purpose-header`
   private readonly consentRowLocator: string = `.consent-row`
+  private readonly consentRowAccountsLocator: string = `.consent-row > td:nth-child(2)`
 
   public visit(force: boolean = false): void {
     Urls.visit(Urls.consentSelfServiceUrl, force);
@@ -18,6 +19,10 @@ export class ConsentSelfServiceApplicationPage {
 
   public expandPaymentsTab(): void {
     cy.get(this.paymentsTabLocator).click();
+  }
+
+  public checkAccount(): void {
+    cy.get(this.consentRowAccountsLocator).should("contain.text", "22289")
   }
 
   public expandAccountConsentRow(): void {

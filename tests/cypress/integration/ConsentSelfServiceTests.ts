@@ -63,6 +63,7 @@ describe(`Consent self service app`, () => {
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
     consentSelfServicePage.clickOnApplicationCard()
     consentSelfServiceApplicationPage.expandAccountsTab()
+    consentSelfServiceApplicationPage.checkAccount()
     consentSelfServiceApplicationPage.expandAccountConsentRow()
   })
 
@@ -70,6 +71,7 @@ describe(`Consent self service app`, () => {
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
     consentSelfServicePage.clickOnApplicationCard()
     consentSelfServiceApplicationPage.expandPaymentsTab()
+    consentSelfServiceApplicationPage.checkAccount()
     consentSelfServiceApplicationPage.expandPaymentConsentRow()
   })
 
