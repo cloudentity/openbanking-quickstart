@@ -195,10 +195,10 @@ function ApplicationAccessTable({
 
   const rowsAccount =
     type === "account"
-      ? data.map(({ account_access_consent }) =>
+      ? data.map(({ account_ids, account_access_consent }) =>
           createDataAccount(
             getDate(account_access_consent?.CreationDateTime),
-            getAccountNames(account_access_consent?.AccountIDs ?? [], accounts),
+            getAccountNames(account_ids ?? [], accounts),
             account_access_consent?.Status,
             getDate(account_access_consent?.ExpirationDateTime),
             account_access_consent?.ConsentId
@@ -208,11 +208,11 @@ function ApplicationAccessTable({
 
   const rowsPayment =
     type === "payment"
-      ? data.map(({ domestic_payment_consent }) =>
+      ? data.map(({ account_ids, domestic_payment_consent }) =>
           createDataPayment(
             getDate(domestic_payment_consent?.CreationDateTime),
             getAccountNames(
-              domestic_payment_consent?.AccountIDs ?? [],
+              account_ids ?? [],
               accounts
             ),
             domestic_payment_consent?.Initiation?.CreditorAccount?.Name,
