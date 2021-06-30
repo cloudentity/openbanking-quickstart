@@ -21,7 +21,7 @@ export class ConsentSelfServiceApplicationPage {
     cy.get(this.paymentsTabLocator).click();
   }
 
-  public checkAccount(): vod {
+  public checkAccount(): void {
     cy.get(this.consentRowAccountsLocator).should("contain.text", "22289")
   }
 
