@@ -39,3 +39,11 @@ To run tests:
 - [Consent self service portal](consent/self-service-portal/LICENSE) - Cloudentity
 - [Consent admin portal](consent/admin-portal/LICENSE) - Cloudentity
 - [Consent page](consent/consent-page/LICENSE) - Cloudentity
+
+## Release process
+
+- `git checkout -b release/VERSION`
+- `make set-version`
+- `git add . && git commit -m 'Release VERSION' && git push`
+- verify if github action build and pushed released images to public docker hub
+- `git tag -a VERSION && git push --tags`
