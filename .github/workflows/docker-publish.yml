@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - master
-      - feature/release-utils
       - 'release/*'
 
 jobs:
@@ -51,7 +50,7 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
-          # push: true
+          push: true
           tags: cloudentity/openbanking-quickstart-${{ matrix.images.suffix }}:${{ env.VERSION }}
           context: .
           file: ./${{ matrix.images.folder }}/Dockerfile
