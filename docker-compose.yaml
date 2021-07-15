@@ -2,7 +2,7 @@ version: "3.0"
 
 services:
   developer-tpp:
-    image: cloudentity/openbanking-quickstart-developer-tpp:latest
+    image: cloudentity/openbanking-quickstart-developer-tpp:${VERSION}
     container_name: developer-tpp
     restart: always
     ports:
@@ -24,7 +24,7 @@ services:
       - BANK_URL=http://bank:8070
 
   financroo-tpp:
-    image: cloudentity/openbanking-quickstart-financroo-tpp:latest
+    image: cloudentity/openbanking-quickstart-financroo-tpp:${VERSION}
     container_name: financroo-tpp
     restart: always
     ports:
@@ -42,7 +42,7 @@ services:
       - TENANT=${TENANT}
 
   consent-page:
-    image: cloudentity/openbanking-quickstart-consent-page:latest
+    image: cloudentity/openbanking-quickstart-consent-page:${VERSION}
     container_name: consent-page
     restart: always
     ports:
@@ -70,7 +70,7 @@ services:
       # - TWILIO_AUTH_TOKEN=
 
   consent-self-service-portal:
-    image: cloudentity/openbanking-quickstart-consent-self-service-portal:latest
+    image: cloudentity/openbanking-quickstart-consent-self-service-portal:${VERSION}
     container_name: consent-self-service-portal
     restart: always
     ports:
@@ -97,7 +97,7 @@ services:
       - INTROSPECT_ISSUER_URL=${ACP_INTERNAL_URL}/${TENANT}/bank-customers
 
   consent-admin-portal:
-    image: cloudentity/openbanking-quickstart-consent-admin-portal:latest
+    image: cloudentity/openbanking-quickstart-consent-admin-portal:${VERSION}
     container_name: consent-admin-portal
     restart: always
     ports:
@@ -124,7 +124,7 @@ services:
       - INTROSPECT_ISSUER_URL=${ACP_INTERNAL_URL}/${TENANT}/bank-admins
 
   bank:
-    image: cloudentity/openbanking-quickstart-bank:latest
+    image: cloudentity/openbanking-quickstart-bank:${VERSION}
     container_name: bank
     restart: always
     ports:
