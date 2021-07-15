@@ -2,7 +2,9 @@ name: docker
 
 on:
   push:
-    branches: master
+    branches:
+      - master
+      - 'release/*'
 
 jobs:
   docker:
@@ -41,12 +43,14 @@ jobs:
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_TOKEN }}
-
+      - name: Set version
+        run: |
+          echo "VERSION=$(./scripts/version.sh)" >> $GITHUB_ENV
       - name: Build and push
         id: docker_build
         uses: docker/build-push-action@v2
         with:
           push: true
-          tags: cloudentity/openbanking-quickstart-${{ matrix.images.suffix }}:latest
+          tags: cloudentity/openbanking-quickstart-${{ matrix.images.suffix }}:${{ env.VERSION }}
           context: .
           file: ./${{ matrix.images.folder }}/Dockerfile

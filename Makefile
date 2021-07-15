@@ -60,3 +60,7 @@ enable-mfa:
 .PHONY: disable-mfa
 disable-mfa:
 	./scripts/override_env.sh ENABLE_MFA false
+
+.PHONY: set-version
+set-version:
+	./scripts/override_env.sh VERSION $(shell ./scripts/version.sh)
