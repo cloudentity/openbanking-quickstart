@@ -44,6 +44,7 @@ To run tests:
 
 - `git checkout -b release/VERSION`
 - `make set-version`
+- update CHANGELOG.md
 - `git add . && git commit -m 'Release VERSION' && git push`
 - verify if github action build and pushed released images to public docker hub
 - `git tag -a VERSION && git push --tags`
