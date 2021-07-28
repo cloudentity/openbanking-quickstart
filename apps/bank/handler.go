@@ -267,15 +267,6 @@ func (s *Server) GetAccounts() func(*gin.Context) {
 	}
 }
 
-type InternalAccounts struct {
-	Accounts []InternalAccount `json:"accounts"`
-}
-
-type InternalAccount struct {
-	ID   models.AccountID `json:"id"`
-	Name models.Nickname  `json:"name"`
-}
-
 func (s *Server) InternalGetAccounts() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
@@ -298,9 +289,7 @@ func (s *Server) InternalGetAccounts() func(*gin.Context) {
 }
 
 func NewAccountsResponse(accounts []models.OBAccount6, self strfmt.URI) models.OBReadAccount6 {
-	var (
-		accountsPointers = make([]*models.OBAccount6, len(accounts))
-	)
+	accountsPointers := make([]*models.OBAccount6, len(accounts))
 
 	for i, a := range accounts {
 		account := a
@@ -397,9 +386,7 @@ func (s *Server) InternalGetBalances() func(*gin.Context) {
 }
 
 func NewBalancesResponse(balances []models.OBReadBalance1DataBalanceItems0, self strfmt.URI) models.OBReadBalance1 {
-	var (
-		balancesPointers = make([]*models.OBReadBalance1DataBalanceItems0, len(balances))
-	)
+	balancesPointers := make([]*models.OBReadBalance1DataBalanceItems0, len(balances))
 
 	for i, b := range balances {
 		balance := b
