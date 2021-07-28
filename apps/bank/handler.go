@@ -250,33 +250,20 @@ func (s *Server) GetAccounts() func(*gin.Context) {
 			return
 		}
 
-		accounts := []*models.OBAccount6{}
+		accounts := []models.OBAccount6{}
 
-		for _, a := range userAccounts {
-			if has(introspectionResponse.AccountIDs, string(*a.AccountID)) {
-				account := a
+		for _, account := range userAccounts {
+			if has(introspectionResponse.AccountIDs, string(*account.AccountID)) {
 				if !has(grantedPermissions, "ReadAccountsDetail") {
 					account.Account = []*models.OBAccount6AccountItems0{}
 				}
 
-				accounts = append(accounts, &account)
+				accounts = append(accounts, account)
 			}
 		}
 
 		self := strfmt.URI(fmt.Sprintf("http://localhost:%s/accounts", strconv.Itoa(s.Config.Port)))
-		response := models.OBReadAccount6{
-			Data: &models.OBReadAccount6Data{
-				Account: accounts,
-			},
-			Meta: &models.Meta{
-				TotalPages: int32(len(accounts)),
-			},
-			Links: &models.Links{
-				Self: &self,
-			},
-		}
-
-		c.PureJSON(http.StatusOK, response)
+		c.PureJSON(http.StatusOK, NewAccountsResponse(accounts, self))
 	}
 }
 
@@ -289,7 +276,6 @@ type InternalAccount struct {
 	Name models.Nickname  `json:"name"`
 }
 
-// this API is bank specific. It should return all users's account.
 func (s *Server) InternalGetAccounts() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
@@ -306,16 +292,31 @@ func (s *Server) InternalGetAccounts() func(*gin.Context) {
 			return
 		}
 
-		ia := make([]InternalAccount, len(accounts))
+		self := strfmt.URI(fmt.Sprintf("http://localhost:%s/accounts", strconv.Itoa(s.Config.Port)))
+		c.PureJSON(http.StatusOK, NewAccountsResponse(accounts, self))
+	}
+}
 
-		for i, a := range accounts {
-			ia[i] = InternalAccount{
-				ID:   *a.AccountID,
-				Name: a.Nickname,
-			}
-		}
+func NewAccountsResponse(accounts []models.OBAccount6, self strfmt.URI) models.OBReadAccount6 {
+	var (
+		convertedAccounts = make([]*models.OBAccount6, len(accounts))
+	)
 
-		c.PureJSON(http.StatusOK, InternalAccounts{Accounts: ia})
+	for i, a := range accounts {
+		account := a
+		convertedAccounts[i] = &account
+	}
+
+	return models.OBReadAccount6{
+		Data: &models.OBReadAccount6Data{
+			Account: convertedAccounts,
+		},
+		Meta: &models.Meta{
+			TotalPages: int32(len(accounts)),
+		},
+		Links: &models.Links{
+			Self: &self,
+		},
 	}
 }
 
@@ -388,6 +389,7 @@ func (s *Server) GetBalances() func(ctx *gin.Context) {
 	}
 }
 
+// TODO: change  this to use same model as GetBalances
 func (s *Server) InternalGetBalances() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
