@@ -13,7 +13,7 @@ func TestOTP(t *testing.T) {
 	otpRepo, err := NewOTPRepo(db)
 	require.NoError(t, err)
 
-	h := DefaultOTPHandler{Repo: otpRepo}
+	h := DemoOTPHandler{Repo: otpRepo}
 	r := LoginRequest{
 		ID:          "123",
 		State:       "abc",
@@ -31,11 +31,11 @@ func TestOTP(t *testing.T) {
 	require.NoError(t, err)
 	require.Equal(t, false, approved)
 
-	valid, err := h.Verify(r, "invalid")
+	valid, err := h.Verify(r, mobile, "invalid")
 	require.NoError(t, err)
 	require.Equal(t, false, valid)
 
-	valid, err = h.Verify(r, otp.OTP)
+	valid, err = h.Verify(r, mobile, otp.OTP)
 	require.NoError(t, err)
 	require.Equal(t, true, valid)
 

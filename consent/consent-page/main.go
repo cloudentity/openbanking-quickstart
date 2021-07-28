@@ -23,18 +23,27 @@ type Config struct {
 	ClientSecret     string        `env:"CLIENT_SECRET,required"`
 	IssuerURL        *url.URL      `env:"ISSUER_URL,required"`
 	Timeout          time.Duration `env:"TIMEOUT" envDefault:"5s"`
-	RootCA           string        `env:"ROOT_CA"`
-	CertFile         string        `env:"CERT_FILE,required"`
-	KeyFile          string        `env:"KEY_FILE,required"`
-	BankURL          *url.URL      `env:"BANK_URL"`
-	EnableMFA        bool          `env:"ENABLE_MFA"`
-	OTPMode          string        `env:"OTP_MODE"` // optional, set to "mock" to use "111111" as otp
-	TwilioAccountSid string        `env:"TWILIO_ACCOUNT_SID"`
-	TwilioAuthToken  string        `env:"TWILIO_AUTH_TOKEN"`
-	TwilioFrom       string        `env:"TWILIO_FROM" envDefault:"Cloudentity"`
-	DBFile           string        `env:"DB_FILE" envDefault:"./data/my.db"`
-	MobileClaim      string        `env:"MOBILE_CLAIM" envDefault:"mobile_verified"`
-	LogLevel         string        `env:"LOG_LEVEL" envDefault:"info"`
+	RootCA           string   `env:"ROOT_CA"`
+	CertFile         string   `env:"CERT_FILE,required"`
+	KeyFile          string   `env:"KEY_FILE,required"`
+	BankURL          *url.URL `env:"BANK_URL"`
+	EnableMFA        bool     `env:"ENABLE_MFA"`
+	OTPMode          string   `env:"OTP_MODE" envDefault:"demo"`
+	TwilioAccountSid string   `env:"TWILIO_ACCOUNT_SID"`
+	TwilioAuthToken  string   `env:"TWILIO_AUTH_TOKEN"`
+	TwilioFrom       string   `env:"TWILIO_FROM" envDefault:"Cloudentity"`
+	DBFile           string   `env:"DB_FILE" envDefault:"./data/my.db"`
+	MFAClaim         string   `env:"MFA_CLAIM" envDefault:"mobile_verified"`
+	LogLevel         string   `env:"LOG_LEVEL" envDefault:"info"`
+	Otp              OtpConfig
+}
+
+type OtpConfig struct {
+	Type       string        `env:"OTP_TYPE" envDefault:"otp"`
+	RequestURL string        `env:"OTP_REQUEST_URL"`
+	VerifyURL  string        `env:"OTP_VERIFY_URL"`
+	Timeout    time.Duration `env:"OTP_TIMEOUT" envDefault:"10s"`
+	AuthHeader string 		 `env:"OTP_AUTH_HEADER"`
 }
 
 func (c *Config) ClientConfig() acpclient.Config {
@@ -54,6 +63,8 @@ func LoadConfig() (config Config, err error) {
 	if err = env.Parse(&config); err != nil {
 		return config, err
 	}
+
+	logrus.WithField("config", config).Debug("loaded config")
 
 	return config, err
 }
@@ -100,7 +111,7 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to init otp repo")
 	}
 
-	server.OTPHandler = NewOTPHandler(server.Config.OTPMode, server.OTPRepo, server.SMSClient)
+	server.OTPHandler = NewOTPHandler(server.Config, server.OTPRepo, server.SMSClient)
 
 	return server, nil
 }
