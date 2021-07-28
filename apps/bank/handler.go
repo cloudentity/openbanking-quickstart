@@ -211,7 +211,7 @@ func (s *Server) GetAccounts() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
 			introspectionResponse *acpClient.IntrospectOpenbankingAccountAccessConsentResponse
-			userAccounts          []models.OBAccount6
+			accounts              []models.OBAccount6
 			err                   error
 		)
 
@@ -242,7 +242,7 @@ func (s *Server) GetAccounts() func(*gin.Context) {
 			return
 		}
 
-		if userAccounts, err = s.Storage.GetAccounts(introspectionResponse.Sub); err != nil {
+		if accounts, err = s.Storage.GetAccounts(introspectionResponse.Sub); err != nil {
 			msg := err.Error()
 			c.JSON(http.StatusNotFound, models.OBErrorResponse1{
 				Message: &msg,
@@ -250,20 +250,20 @@ func (s *Server) GetAccounts() func(*gin.Context) {
 			return
 		}
 
-		accounts := []models.OBAccount6{}
+		filteredAccounts := []models.OBAccount6{}
 
-		for _, account := range userAccounts {
+		for _, account := range accounts {
 			if has(introspectionResponse.AccountIDs, string(*account.AccountID)) {
 				if !has(grantedPermissions, "ReadAccountsDetail") {
 					account.Account = []*models.OBAccount6AccountItems0{}
 				}
 
-				accounts = append(accounts, account)
+				filteredAccounts = append(filteredAccounts, account)
 			}
 		}
 
 		self := strfmt.URI(fmt.Sprintf("http://localhost:%s/accounts", strconv.Itoa(s.Config.Port)))
-		c.PureJSON(http.StatusOK, NewAccountsResponse(accounts, self))
+		c.PureJSON(http.StatusOK, NewAccountsResponse(filteredAccounts, self))
 	}
 }
 
@@ -299,17 +299,17 @@ func (s *Server) InternalGetAccounts() func(*gin.Context) {
 
 func NewAccountsResponse(accounts []models.OBAccount6, self strfmt.URI) models.OBReadAccount6 {
 	var (
-		convertedAccounts = make([]*models.OBAccount6, len(accounts))
+		accountsPointers = make([]*models.OBAccount6, len(accounts))
 	)
 
 	for i, a := range accounts {
 		account := a
-		convertedAccounts[i] = &account
+		accountsPointers[i] = &account
 	}
 
 	return models.OBReadAccount6{
 		Data: &models.OBReadAccount6Data{
-			Account: convertedAccounts,
+			Account: accountsPointers,
 		},
 		Meta: &models.Meta{
 			TotalPages: int32(len(accounts)),
@@ -324,7 +324,7 @@ func (s *Server) GetBalances() func(ctx *gin.Context) {
 	return func(c *gin.Context) {
 		var (
 			introspectionResponse *acpClient.IntrospectOpenbankingAccountAccessConsentResponse
-			userBalances          []models.OBReadBalance1DataBalanceItems0
+			balances              []models.OBReadBalance1DataBalanceItems0
 			err                   error
 		)
 
@@ -355,7 +355,7 @@ func (s *Server) GetBalances() func(ctx *gin.Context) {
 			return
 		}
 
-		if userBalances, err = s.Storage.GetBalances(introspectionResponse.Sub); err != nil {
+		if balances, err = s.Storage.GetBalances(introspectionResponse.Sub); err != nil {
 			msg := err.Error()
 			c.JSON(http.StatusNotFound, models.OBErrorResponse1{
 				Message: &msg,
@@ -363,33 +363,18 @@ func (s *Server) GetBalances() func(ctx *gin.Context) {
 			return
 		}
 
-		balances := []*models.OBReadBalance1DataBalanceItems0{}
-
-		for _, balance := range userBalances {
-			b := balance
-			if has(introspectionResponse.AccountIDs, string(*b.AccountID)) {
-				balances = append(balances, &b)
+		filteredBalances := []models.OBReadBalance1DataBalanceItems0{}
+		for _, balance := range balances {
+			if has(introspectionResponse.AccountIDs, string(*balance.AccountID)) {
+				filteredBalances = append(filteredBalances, balance)
 			}
 		}
 
 		self := strfmt.URI(fmt.Sprintf("http://localhost:%s/balances", strconv.Itoa(s.Config.Port)))
-		response := models.OBReadBalance1{
-			Data: &models.OBReadBalance1Data{
-				Balance: balances,
-			},
-			Meta: &models.Meta{
-				TotalPages: int32(len(balances)),
-			},
-			Links: &models.Links{
-				Self: &self,
-			},
-		}
-
-		c.PureJSON(http.StatusOK, response)
+		c.PureJSON(http.StatusOK, NewBalancesResponse(filteredBalances, self))
 	}
 }
 
-// TODO: change  this to use same model as GetBalances
 func (s *Server) InternalGetBalances() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
@@ -406,18 +391,31 @@ func (s *Server) InternalGetBalances() func(*gin.Context) {
 			return
 		}
 
-		var balancesPointers []*models.OBReadBalance1DataBalanceItems0
+		self := strfmt.URI(fmt.Sprintf("http://localhost:%s/balances", strconv.Itoa(s.Config.Port)))
+		c.PureJSON(http.StatusOK, NewBalancesResponse(balances, self))
+	}
+}
 
-		for _, b := range balances {
-			balance := b
-			balancesPointers = append(balancesPointers, &balance)
-		}
+func NewBalancesResponse(balances []models.OBReadBalance1DataBalanceItems0, self strfmt.URI) models.OBReadBalance1 {
+	var (
+		balancesPointers = make([]*models.OBReadBalance1DataBalanceItems0, len(balances))
+	)
 
-		c.PureJSON(http.StatusOK, models.OBReadBalance1{
-			Data: &models.OBReadBalance1Data{
-				Balance: balancesPointers,
-			},
-		})
+	for i, b := range balances {
+		balance := b
+		balancesPointers[i] = &balance
+	}
+
+	return models.OBReadBalance1{
+		Data: &models.OBReadBalance1Data{
+			Balance: balancesPointers,
+		},
+		Meta: &models.Meta{
+			TotalPages: int32(len(balances)),
+		},
+		Links: &models.Links{
+			Self: &self,
+		},
 	}
 }
 
