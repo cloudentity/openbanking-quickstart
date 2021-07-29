@@ -11,7 +11,6 @@ import (
 	"strings"
 	"time"
 
-	acpClient "github.com/cloudentity/acp-client-go/models"
 	"github.com/cloudentity/openbanking-quickstart/models"
 	paymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/paymentinitiation/models"
 	"github.com/gin-gonic/gin"
@@ -19,6 +18,8 @@ import (
 	"github.com/google/uuid"
 	"github.com/jinzhu/copier"
 	"github.com/sirupsen/logrus"
+
+	acpClient "github.com/cloudentity/acp-client-go/models"
 )
 
 type DomesticPaymentStatus string

@@ -6,10 +6,11 @@ import (
 	"strconv"
 	"strings"
 
-	acpClient "github.com/cloudentity/acp-client-go/models"
 	"github.com/cloudentity/openbanking-quickstart/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
+
+	acpClient "github.com/cloudentity/acp-client-go/models"
 )
 
 // swagger:parameters getTransactionsRequest
