@@ -7,6 +7,7 @@ import (
 )
 
 func TestOTP(t *testing.T) {
+	mobile := "+48987654321"
 	db, err := InitDB(Config{DBFile: "./data/test.db"})
 	require.NoError(t, err)
 
