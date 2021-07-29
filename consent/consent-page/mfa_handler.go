@@ -346,7 +346,7 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 				"mfaTrans": map[string]interface{}{
 					"title": s.Trans.T("mfa.init.title"),
 					"subTitle": s.Trans.T("mfa.init.subTitle"),
-					"caption1": s.Trans.T("mfa.init.caption1", AsHTML),
+					"caption1": s.Trans.T("mfa.init.caption1"),
 					"caption2": s.Trans.T("mfa.init.caption2"),
 					"sms": s.Trans.T("mfa.init.sms"),
 					"email": s.Trans.T("mfa.init.email"),

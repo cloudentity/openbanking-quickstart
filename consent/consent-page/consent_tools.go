@@ -87,7 +87,7 @@ func (c *ConsentTools) GetAccessConsentTemplateData(
 			"expiration": c.Trans.TD("uk.account.expiration", map[string]interface{}{
 				"client_name":     clientName,
 				"expiration_date": expirationDate,
-			}, AsHTML),
+			}),
 			"cancel": c.Trans.T("uk.account.cancel"),
 			"agree": c.Trans.T("uk.account.agree"),
 		},
@@ -119,7 +119,7 @@ func (c *ConsentTools) GetDomesticPaymentTemplateData(
 			"accountInfo": c.Trans.T("uk.payment.accountInfo"),
 			"clickToProceed": c.Trans.TD("uk.payment.clickToProceed", map[string]interface{}{
 				"client_name": clientName,
-			}, AsHTML),
+			}),
 			"cancel": c.Trans.T("uk.payment.cancel"),
 			"confirm": c.Trans.T("uk.payment.confirm"),
 		},
