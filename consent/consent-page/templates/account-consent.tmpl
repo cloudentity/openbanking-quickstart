@@ -8,17 +8,19 @@
 
 <body>
 <div class="header">
-  <img src="/assets/images/gobank_logo.svg"/>
+  <img src="/assets/images/bank_logo.svg"/>
 </div>
-<div id="mask_branding">
-  <img src="/assets/images/mask_branding.svg"/>
+<div id="background-image">
+  <img src="/assets/images/background_image.svg"/>
 </div>
+
 {{ if or .mfaRequest .mfaConfirmation }}
 <div class="content mfa-required">
   {{ else }}
   <div class="content">
     {{ end }}
-    <div style="text-align: center; margin-top: 48px;">
+
+    <div class="icon-logo">
       <img src="/assets/images/account_access_logo.svg"/>
     </div>
 
@@ -73,8 +75,7 @@
                   keyboard_arrow_down</i>
               </button>
             </div>
-            <div class="account-description account-description-hidden" style="background: #FBFCFD"
-                 data-desc-id="account_permissions">
+            <div class="account-description account-description-hidden" data-desc-id="account_permissions">
               <div class="permission-name">Purpose for sharing data:</div>
               <div class="caption" style="margin-top: 8px;">
                 To uncover insights that can improve your financial well being.
@@ -101,15 +102,15 @@
         {{ end }}
 
         <div class="form-actions">
-          <button class="mdc-button mdc-button--outlined" type="submit" name="action" value="deny"
+          <button class="mdc-button mdc-button--outlined cancel-button" type="submit" name="action" value="deny"
                   {{ if or .mfaRequest .mfaConfirmation }} disabled {{end}}
-                  style="height: 48px; padding: 12px 24px; color: #002D4C; border-color: #002D4C">
+          >
             <div class="mdc-button__ripple"></div>
             <span class="mdc-button__label">Cancel</span>
           </button>
-          <button class="mdc-button mdc-button--raised" type="submit" name="action" value="confirm"
+          <button class="mdc-button mdc-button--raised confirm-button" type="submit" name="action" value="confirm"
                   {{ if or .mfaRequest .mfaConfirmation }} disabled {{end}}
-                  style="height: 48px; padding: 12px 24px; margin-left: 8px; background: #DC1B37">
+          >
             <div class="mdc-button__ripple"></div>
             <span class="mdc-button__label">I Agree</span>
           </button>
@@ -125,8 +126,8 @@
   {{ if .mfaConfirmation }}
     {{ template "mfa-verify.tmpl" .}}
   {{ end }}
-
-</body>
+  
+  </body>
 
 <script>
   function toggle(value) {
