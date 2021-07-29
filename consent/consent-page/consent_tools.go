@@ -6,7 +6,7 @@ import (
 	"github.com/cloudentity/acp-client-go/models"
 )
 
-type ConsentTools struct{
+type ConsentTools struct {
 	Trans *Trans
 }
 
@@ -77,19 +77,19 @@ func (c *ConsentTools) GetAccessConsentTemplateData(
 	clientName := c.GetClientName(nil)
 	return map[string]interface{}{
 		"trans": map[string]interface{}{
-			"headTitle": c.Trans.T("uk.account.headTitle"),
-			"title": c.Trans.T("uk.account.title"),
+			"headTitle":      c.Trans.T("uk.account.headTitle"),
+			"title":          c.Trans.T("uk.account.title"),
 			"selectAccounts": c.Trans.T("uk.account.selectAccounts"),
-			"reviewData": c.Trans.T("uk.account.review_data"),
-			"permissions": c.Trans.T("uk.account.permissions"),
-			"purpose": c.Trans.T("uk.account.purpose"),
-			"purposeDetail": c.Trans.T("uk.account.purposeDetail"),
+			"reviewData":     c.Trans.T("uk.account.review_data"),
+			"permissions":    c.Trans.T("uk.account.permissions"),
+			"purpose":        c.Trans.T("uk.account.purpose"),
+			"purposeDetail":  c.Trans.T("uk.account.purposeDetail"),
 			"expiration": c.Trans.TD("uk.account.expiration", map[string]interface{}{
 				"client_name":     clientName,
 				"expiration_date": expirationDate,
 			}),
 			"cancel": c.Trans.T("uk.account.cancel"),
-			"agree": c.Trans.T("uk.account.agree"),
+			"agree":  c.Trans.T("uk.account.agree"),
 		},
 		"login_request":   loginRequest,
 		"accounts":        accounts.Accounts,
@@ -108,19 +108,19 @@ func (c *ConsentTools) GetDomesticPaymentTemplateData(
 	clientName := c.GetClientName(nil)
 	return map[string]interface{}{
 		"trans": map[string]interface{}{
-			"headTitle": c.Trans.T("uk.payment.headTitle"),
-			"title": c.Trans.T("uk.payment.title"),
-			"paymentInfo": c.Trans.T("uk.payment.paymentInfo"),
+			"headTitle":        c.Trans.T("uk.payment.headTitle"),
+			"title":            c.Trans.T("uk.payment.title"),
+			"paymentInfo":      c.Trans.T("uk.payment.paymentInfo"),
 			"payeeAccountName": c.Trans.T("uk.payment.payeeAccountName"),
-			"sortCode": c.Trans.T("uk.payment.sortCode"),
-			"accountNumber": c.Trans.T("uk.payment.accountNumber"),
+			"sortCode":         c.Trans.T("uk.payment.sortCode"),
+			"accountNumber":    c.Trans.T("uk.payment.accountNumber"),
 			"paymentReference": c.Trans.T("uk.payment.paymentReference"),
-			"amount": c.Trans.T("uk.payment.amount"),
-			"accountInfo": c.Trans.T("uk.payment.accountInfo"),
+			"amount":           c.Trans.T("uk.payment.amount"),
+			"accountInfo":      c.Trans.T("uk.payment.accountInfo"),
 			"clickToProceed": c.Trans.TD("uk.payment.clickToProceed", map[string]interface{}{
 				"client_name": clientName,
 			}),
-			"cancel": c.Trans.T("uk.payment.cancel"),
+			"cancel":  c.Trans.T("uk.payment.cancel"),
 			"confirm": c.Trans.T("uk.payment.confirm"),
 		},
 		"login_request": loginRequest,

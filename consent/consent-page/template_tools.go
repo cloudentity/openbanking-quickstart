@@ -7,7 +7,7 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func RenderInvalidRequestError(c *gin.Context, trans *Trans,  err error) {
+func RenderInvalidRequestError(c *gin.Context, trans *Trans, err error) {
 	message := trans.T("invalidRequest")
 
 	RenderError(c, http.StatusBadRequest, message, err)

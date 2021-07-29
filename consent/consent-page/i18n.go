@@ -19,7 +19,7 @@ func (t *Trans) T(ID string) interface{} {
 	message := t.MustLocalize(&i18n.LocalizeConfig{
 		MessageID: ID,
 		DefaultMessage: &i18n.Message{
-			ID: ID,
+			ID:    ID,
 			Other: ID,
 		},
 	})
@@ -32,10 +32,10 @@ func (t *Trans) T(ID string) interface{} {
 
 func (t *Trans) TD(ID string, data map[string]interface{}) interface{} {
 	message := t.MustLocalize(&i18n.LocalizeConfig{
-		MessageID: ID,
+		MessageID:    ID,
 		TemplateData: data,
 		DefaultMessage: &i18n.Message{
-			ID: ID,
+			ID:    ID,
 			Other: ID,
 		},
 	})

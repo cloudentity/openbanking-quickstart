@@ -277,17 +277,16 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 				"resend":          isResend,
 				"mfaTrans": map[string]interface{}{
 					"title": s.Trans.T("mfa.postRequest.title"),
-					"subTitle": s.Trans.TD("mfa.postRequest.subTitle",map[string]interface{}{
+					"subTitle": s.Trans.TD("mfa.postRequest.subTitle", map[string]interface{}{
 						"id": mobile,
 					}),
-					"caption1": s.Trans.TD("mfa.postRequest.caption1",map[string]interface{}{
+					"caption1": s.Trans.TD("mfa.postRequest.caption1", map[string]interface{}{
 						"resend": isResend,
 					}),
-					"resend": s.Trans.T("mfa.postRequest.resend"),
+					"resend":             s.Trans.T("mfa.postRequest.resend"),
 					"authenticationCode": s.Trans.T("mfa.postRequest.authenticationCode"),
-					"errorInfo": s.Trans.T("mfa.postRequest.errorInfo"),
+					"errorInfo":          s.Trans.T("mfa.postRequest.errorInfo"),
 				},
-
 			}
 
 			if err = mergo.Merge(&templateData, provider.GetConsentMockData(r)); err != nil {
@@ -313,15 +312,15 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 					"invalid_otp":     true,
 					"mfaTrans": map[string]interface{}{
 						"title": s.Trans.T("mfa.postRequest.title"),
-						"subTitle": s.Trans.TD("mfa.postRequest.subTitle",map[string]interface{}{
+						"subTitle": s.Trans.TD("mfa.postRequest.subTitle", map[string]interface{}{
 							"id": mobile,
 						}),
-						"caption1": s.Trans.TD("mfa.postRequest.caption1",map[string]interface{}{
+						"caption1": s.Trans.TD("mfa.postRequest.caption1", map[string]interface{}{
 							"resend": false,
 						}),
-						"resend": s.Trans.T("mfa.postRequest.resend"),
+						"resend":             s.Trans.T("mfa.postRequest.resend"),
 						"authenticationCode": s.Trans.T("mfa.postRequest.authenticationCode"),
-						"errorInfo": s.Trans.T("mfa.postRequest.errorInfo"),
+						"errorInfo":          s.Trans.T("mfa.postRequest.errorInfo"),
 					},
 				}
 
@@ -344,12 +343,12 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 				"mobile":     MaskMobile(mobile),
 				"mfaRequest": true,
 				"mfaTrans": map[string]interface{}{
-					"title": s.Trans.T("mfa.init.title"),
+					"title":    s.Trans.T("mfa.init.title"),
 					"subTitle": s.Trans.T("mfa.init.subTitle"),
 					"caption1": s.Trans.T("mfa.init.caption1"),
 					"caption2": s.Trans.T("mfa.init.caption2"),
-					"sms": s.Trans.T("mfa.init.sms"),
-					"email": s.Trans.T("mfa.init.email"),
+					"sms":      s.Trans.T("mfa.init.sms"),
+					"email":    s.Trans.T("mfa.init.email"),
 				},
 			}
 
