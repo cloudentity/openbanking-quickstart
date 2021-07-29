@@ -17,6 +17,7 @@ RUN apk --no-cache add ca-certificates
 WORKDIR /app
 
 COPY --from=builder /app/templates templates
+COPY --from=builder /app/translations translations
 COPY --from=builder /app/assets assets
 COPY --from=builder /app/main .
 

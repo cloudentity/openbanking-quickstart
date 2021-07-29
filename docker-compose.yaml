@@ -54,7 +54,7 @@ services:
       - ./data/bank_key.pem:/bank_key.pem
       # sample extensions:
       - ./consent/consent-page/examples/custom-styles.css:/app/assets/extend-styles.css
-      - ./consent/consent-page/examples/custom-mfa-verify.tmpl:/app/templates/mfa-verify.tmpl
+      # - ./consent/consent-page/examples/custom-mfa-verify.tmpl:/app/templates/mfa-verify.tmpl
     env_file:
     - .env
     environment:
@@ -78,6 +78,7 @@ services:
       # - MFA_CLAIM=sub # for mobile use mobile_verified
       # - TWILIO_ACCOUNT_SID=
       # - TWILIO_AUTH_TOKEN=
+      - DEFAULT_LANGUAGE=en-us
 
   consent-self-service-portal:
     image: cloudentity/openbanking-quickstart-consent-self-service-portal:${VERSION}

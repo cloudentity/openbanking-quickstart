@@ -7,15 +7,19 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func RenderInvalidRequestError(c *gin.Context, err error) {
-	RenderError(c, http.StatusBadRequest, "Invalid request", err)
+func RenderInvalidRequestError(c *gin.Context, trans *Trans,  err error) {
+	message := trans.OrDefault("invalid_request", "Invalid Request")
+
+	RenderError(c, http.StatusBadRequest, message, err)
 }
 
-func RenderInternalServerError(c *gin.Context, err error) {
-	RenderError(c, http.StatusInternalServerError, "Internal Server Error", err)
+func RenderInternalServerError(c *gin.Context, trans *Trans, err error) {
+	message := trans.OrDefault("internal_server_error", "Internal Server Error")
+
+	RenderError(c, http.StatusInternalServerError, message, err)
 }
 
-func RenderError(c *gin.Context, statusCode int, msg string, err error) {
+func RenderError(c *gin.Context, statusCode int, msg interface{}, err error) {
 	if err != nil {
 		logrus.WithError(err).Errorf(err.Error())
 	}

@@ -6,7 +6,9 @@ import (
 	"github.com/cloudentity/acp-client-go/models"
 )
 
-type ConsentTools struct{}
+type ConsentTools struct{
+	Trans *Trans
+}
 
 func (c *ConsentTools) GetPermissionsWithDescription(requestedPermissions []string) map[string][]Permission {
 	permissions := map[string][]Permission{}
@@ -72,12 +74,27 @@ func (c *ConsentTools) GetAccessConsentTemplateData(
 		expirationDate = edt.Format("02/01/2006")
 	}
 
+	clientName := c.GetClientName(nil)
 	return map[string]interface{}{
-		"login_request": loginRequest,
-		"accounts":      accounts.Accounts,
-		"permissions":   c.GetPermissionsWithDescription(consent.AccountAccessConsent.Permissions),
-		// "client_name":     c.GetClientName(consent.Client), // client is no longer returned by acp
-		"client_name":     c.GetClientName(nil),
+		"trans": map[string]interface{}{
+			"headTitle": c.Trans.OrDefault("uk.account.headTitle", "Account Access Consent"),
+			"title": c.Trans.OrDefault("uk.account.title", "Account selection"),
+			"selectAccounts": c.Trans.OrDefault("uk.account.selectAccounts", "Select accounts to share with"),
+			"reviewData": c.Trans.OrDefault("uk.account.review_data", "Review the data you will be sharing"),
+			"permissions": c.Trans.OrDefault("uk.account.permissions", "Account permissions"),
+			"purpose": c.Trans.OrDefault("uk.account.purpose", "Purpose for sharing data:"),
+			"purposeDetail": c.Trans.OrDefault("uk.account.purposeDetail", "To uncover insights that can improve your financial well being."),
+			"expiration": c.Trans.WithDataOrDefault("uk.account.expiration", map[string]interface{}{
+				"client_name": clientName,
+				"expiration_date": expirationDate,
+			}, "<strong>{{ .client_name }}</strong> will have access to your account information until <strong>{{ .expiration_date }}</strong>", AsHTML),
+			"cancel": c.Trans.OrDefault("uk.account.cancel", "Cancel"),
+			"agree": c.Trans.OrDefault("uk.account.agree", "I Agree"),
+		},
+		"login_request":   loginRequest,
+		"accounts":        accounts.Accounts,
+		"permissions":     c.GetPermissionsWithDescription(consent.AccountAccessConsent.Permissions),
+		"client_name":     clientName,
 		"expiration_date": expirationDate,
 	}
 }
@@ -88,11 +105,27 @@ func (c *ConsentTools) GetDomesticPaymentTemplateData(
 	accounts InternalAccounts,
 	balances BalanceData,
 ) map[string]interface{} {
+	clientName := c.GetClientName(nil)
 	return map[string]interface{}{
+		"trans": map[string]interface{}{
+			"headTitle": c.Trans.OrDefault("uk.payment.headTitle", "Domestic Payment Consent"),
+			"title": c.Trans.OrDefault("uk.payment.title", "Account Confirm payment"),
+			"paymentInfo": c.Trans.OrDefault("uk.payment.paymentInfo", "Payment Information"),
+			"payeeAccountName": c.Trans.OrDefault("uk.payment.payeeAccountName", "Payee Account Name"),
+			"sortCode": c.Trans.OrDefault("uk.payment.sortCode", "Sort code"),
+			"accountNumber": c.Trans.OrDefault("uk.payment.accountNumber", "Account number"),
+			"paymentReference": c.Trans.OrDefault("uk.payment.paymentReference", "Payment reference"),
+			"amount": c.Trans.OrDefault("uk.payment.amount", "AMOUNT"),
+			"accountInfo": c.Trans.OrDefault("uk.payment.accountInfo", "Account Information"),
+			"clickToProceed": c.Trans.WithDataOrDefault("uk.payment.clickToProceed",map[string]interface{}{
+				"client_name": clientName,
+			}, "Click confirm to proceed with payment. Once payment is completed we’ll sign you out of <strong>gobank.com</strong> and return you to <strong>{{ .client_name }}</strong>", AsHTML),
+			"cancel": c.Trans.OrDefault("uk.payment.cancel", "Cancel"),
+			"confirm": c.Trans.OrDefault("uk.payment.confirm", "Confirm"),
+		},
 		"login_request": loginRequest,
 		"accounts":      c.GetAccountsWithBalance(accounts, balances, string(*consent.DomesticPaymentConsent.Initiation.DebtorAccount.Identification)),
-		// "client_name":   c.GetClientName(consent.Client),
-		"client_name": c.GetClientName(nil),
-		"consent":     consent.DomesticPaymentConsent,
+		"client_name":   clientName,
+		"consent":       consent.DomesticPaymentConsent,
 	}
 }

@@ -3,12 +3,11 @@
    <div class="mfa-container">
       <div class="mfa-container__item">
         <div class="mfa-container__item--left">
-          <div class="heading-2">Additional verification required</div>
-          <div class="heading-4">Enter the security code sent to {{ .mobile }}</div>
-          <div class="caption" style="margin-top: 12px">We just {{ if .resend }}re-{{ end }}send you a verification code. Enter the code to proceed.
-          </div>
+          <div class="heading-2">{{.mfaTrans.title}}</div>
+          <div class="heading-4">{{.mfaTrans.subTitle}}</div>
+          <div class="caption" style="margin-top: 12px">{{.mfaTrans.caption1}}</div>
           <div class="caption">
-            <a href="#" class="resend" onclick="resend('form')">Re-send the code</a>
+            <a href="#" class="resend" onclick="resend('form')">{{.mfaTrans.resend}}</a>
           </div>
         </div>
       </div>
@@ -16,7 +15,7 @@
         <div class="mfa-container__item--right">
           <div {{if .invalid_otp }}class="mfa-container__card error" {{else}}class="mfa-container__card"{{end}}>
             <div>
-              <div style="font-size: 14px">Authentication code</div>
+              <div style="font-size: 14px">{{.mfa.authenticationCode}}</div>
               <div style="margin-top: 16px" id="pinlogin"></div>
               <input type="hidden" id="otp" name="otp"/>
             </div>
@@ -24,7 +23,7 @@
           {{ if .invalid_otp }}
             <div class="error-container">
               <img src="assets/images/alert-triangle.png"/>
-              <span>Invalid code. Try again or re-send the code.</span>
+              <span>{{.mfaTrans.errorInfo}}</span>
             </div>
           {{end}}
           <button class="mdc-button mdc-button--raised" id="verify-button" disabled="true"

@@ -35,9 +35,9 @@ func (s *Server) GetMFAConsentProvider(loginRequest LoginRequest) (MFAConsentPro
 
 	switch loginRequest.ConsentType {
 	case "domestic_payment":
-		handler = &DomesticPaymentMFAConsentProvider{s, ConsentTools{}}
+		handler = &DomesticPaymentMFAConsentProvider{s, ConsentTools{Trans: s.Trans}}
 	case "account_access":
-		handler = &AccountAccessMFAConsentProvider{s, ConsentTools{}}
+		handler = &AccountAccessMFAConsentProvider{s, ConsentTools{Trans: s.Trans}}
 	default:
 		return nil, false
 	}
@@ -221,17 +221,17 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 		)
 
 		if err = r.Validate(); err != nil {
-			RenderInvalidRequestError(c, err)
+			RenderInvalidRequestError(c, s.Trans, err)
 			return
 		}
 
 		if provider, ok = s.GetMFAConsentProvider(r); !ok {
-			RenderInvalidRequestError(c, fmt.Errorf("invalid consent type %s", r.ConsentType))
+			RenderInvalidRequestError(c, s.Trans, fmt.Errorf("invalid consent type %s", r.ConsentType))
 			return
 		}
 
 		if data, err = provider.GetMFAData(r); err != nil {
-			RenderInternalServerError(c, errors.Wrapf(err, "failed to get authn context"))
+			RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to get authn context"))
 			return
 		}
 		logrus.Debugf("authentication context: %+v", data.AuthenticationContext)
@@ -239,12 +239,12 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 		claimData, ok := data.AuthenticationContext[s.Config.MFAClaim]
 
 		if !ok {
-			RenderInvalidRequestError(c, fmt.Errorf("user does not have %s configured", s.Config.MFAClaim))
+			RenderInvalidRequestError(c, s.Trans, fmt.Errorf("user does not have %s configured", s.Config.MFAClaim))
 			return
 		}
 
 		if mobile, ok = claimData.(string); !ok {
-			RenderInternalServerError(c,
+			RenderInternalServerError(c, s.Trans,
 				fmt.Errorf(
 					"failed to get %s from authn context: %+v, type: %T",
 					s.Config.MFAClaim,
@@ -266,18 +266,32 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 		switch action {
 		case "request", "resend":
 			if err = s.OTPHandler.Send(r, provider, mobile, data); err != nil {
-				RenderInternalServerError(c, errors.Wrapf(err, "failed to send sms otp"))
+				RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to send sms otp"))
 				return
 			}
 
+			isResend := action == "resend"
 			templateData := map[string]interface{}{
 				"mobile":          MaskMobile(mobile),
 				"mfaConfirmation": true,
-				"resend":          action == "resend",
+				"resend":          isResend,
+				"mfaTrans": map[string]interface{}{
+					"title": s.Trans.OrDefault("mfa.postRequest.title", "Additional verification required"),
+					"subTitle": s.Trans.WithDataOrDefault("mfa.postRequest.subTitle",map[string]interface{}{
+						"id": mobile,
+					}, "Enter the security code sent to {{ .id }}"),
+					"caption1": s.Trans.WithDataOrDefault("mfa.postRequest.caption1",map[string]interface{}{
+						"resend": isResend,
+					}, "We just {{ if .resend }}re-{{ end }}send you a verification code. Enter the code to proceed."),
+					"resend": s.Trans.OrDefault("mfa.postRequest.resend", "Re-send the code"),
+					"authenticationCode": s.Trans.OrDefault("mfa.postRequest.authenticationCode", "Authentication code"),
+					"errorInfo": s.Trans.OrDefault("mfa.postRequest.errorInfo", "Invalid code. Try again or re-send the code."),
+				},
+
 			}
 
 			if err = mergo.Merge(&templateData, provider.GetConsentMockData(r)); err != nil {
-				RenderInternalServerError(c, errors.Wrapf(err, "failed to merge template data"))
+				RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to merge template data"))
 				return
 			}
 
@@ -288,7 +302,7 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 			logrus.Debugf("check otp: %s", otpStr)
 
 			if valid, err = s.OTPHandler.Verify(r, mobile, otpStr); err != nil {
-				RenderInternalServerError(c, errors.Wrapf(err, "failed to validate otp"))
+				RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to validate otp"))
 				return
 			}
 
@@ -297,10 +311,22 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 					"mobile":          MaskMobile(mobile),
 					"mfaConfirmation": true,
 					"invalid_otp":     true,
+					"mfaTrans": map[string]interface{}{
+						"title": s.Trans.OrDefault("mfa.postRequest.title", "Additional verification required"),
+						"subTitle": s.Trans.WithDataOrDefault("mfa.postRequest.subTitle",map[string]interface{}{
+							"id": mobile,
+						}, "Enter the security code sent to {{ .id }}"),
+						"caption1": s.Trans.WithDataOrDefault("mfa.postRequest.caption1",map[string]interface{}{
+							"resend": false,
+						}, "We just {{ if .resend }}re-{{ end }}send you a verification code. Enter the code to proceed."),
+						"resend": s.Trans.OrDefault("mfa.postRequest.resend", "Re-send the code"),
+						"authenticationCode": s.Trans.OrDefault("mfa.postRequest.authenticationCode", "Authentication code"),
+						"errorInfo": s.Trans.OrDefault("mfa.postRequest.errorInfo", "Invalid code. Try again or re-send the code."),
+					},
 				}
 
 				if err = mergo.Merge(&templateData, provider.GetConsentMockData(r)); err != nil {
-					RenderInternalServerError(c, errors.Wrapf(err, "failed to merge template data"))
+					RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to merge template data"))
 					return
 				}
 
@@ -317,10 +343,18 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 			templateData := map[string]interface{}{
 				"mobile":     MaskMobile(mobile),
 				"mfaRequest": true,
+				"mfaTrans": map[string]interface{}{
+					"title": s.Trans.OrDefault("mfa.init.title", "Additional verification required"),
+					"subTitle": s.Trans.OrDefault("mfa.init.subTitle", "To proceed, select where to send your security code"),
+					"caption1": s.Trans.OrDefault("mfa.init.caption1", "By choosing text message you authorize <strong>GoBank</strong> to text and call you.", AsHTML),
+					"caption2": s.Trans.OrDefault("mfa.init.caption2", "Message rates may apply"),
+					"sms": s.Trans.OrDefault("mfa.init.sms", "Text message"),
+					"email": s.Trans.OrDefault("mfa.init.email", "Email"),
+				},
 			}
 
 			if err = mergo.Merge(&templateData, provider.GetConsentMockData(r)); err != nil {
-				RenderInternalServerError(c, errors.Wrapf(err, "failed to validate otp"))
+				RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to validate otp"))
 				return
 			}
 
