@@ -21,13 +21,13 @@ func AsHTML(i interface{}) interface{} {
 	return template.HTML(i.(string))
 }
 
-func (t *Trans) OrDefault(ID string, def string, options ...Option) interface{} {
+func (t *Trans) T(ID string, options ...Option) interface{} {
 	var result interface{}
 	message := t.MustLocalize(&i18n.LocalizeConfig{
 		MessageID: ID,
 		DefaultMessage: &i18n.Message{
 			ID: ID,
-			Other: def,
+			Other: ID,
 		},
 	})
 
@@ -43,14 +43,14 @@ func (t *Trans) OrDefault(ID string, def string, options ...Option) interface{} 
 	return result
 }
 
-func (t *Trans) WithDataOrDefault(ID string, data map[string]interface{}, def string, options ...Option) interface{} {
+func (t *Trans) TD(ID string, data map[string]interface{}, options ...Option) interface{} {
 	var result interface{}
 	message := t.MustLocalize(&i18n.LocalizeConfig{
 		MessageID: ID,
 		TemplateData: data,
 		DefaultMessage: &i18n.Message{
 			ID: ID,
-			Other: def,
+			Other: ID,
 		},
 	})
 

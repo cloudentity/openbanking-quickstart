@@ -276,16 +276,16 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 				"mfaConfirmation": true,
 				"resend":          isResend,
 				"mfaTrans": map[string]interface{}{
-					"title": s.Trans.OrDefault("mfa.postRequest.title", "Additional verification required"),
-					"subTitle": s.Trans.WithDataOrDefault("mfa.postRequest.subTitle",map[string]interface{}{
+					"title": s.Trans.T("mfa.postRequest.title"),
+					"subTitle": s.Trans.TD("mfa.postRequest.subTitle",map[string]interface{}{
 						"id": mobile,
-					}, "Enter the security code sent to {{ .id }}"),
-					"caption1": s.Trans.WithDataOrDefault("mfa.postRequest.caption1",map[string]interface{}{
+					}),
+					"caption1": s.Trans.TD("mfa.postRequest.caption1",map[string]interface{}{
 						"resend": isResend,
-					}, "We just {{ if .resend }}re-{{ end }}send you a verification code. Enter the code to proceed."),
-					"resend": s.Trans.OrDefault("mfa.postRequest.resend", "Re-send the code"),
-					"authenticationCode": s.Trans.OrDefault("mfa.postRequest.authenticationCode", "Authentication code"),
-					"errorInfo": s.Trans.OrDefault("mfa.postRequest.errorInfo", "Invalid code. Try again or re-send the code."),
+					}),
+					"resend": s.Trans.T("mfa.postRequest.resend"),
+					"authenticationCode": s.Trans.T("mfa.postRequest.authenticationCode"),
+					"errorInfo": s.Trans.T("mfa.postRequest.errorInfo"),
 				},
 
 			}
@@ -312,16 +312,16 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 					"mfaConfirmation": true,
 					"invalid_otp":     true,
 					"mfaTrans": map[string]interface{}{
-						"title": s.Trans.OrDefault("mfa.postRequest.title", "Additional verification required"),
-						"subTitle": s.Trans.WithDataOrDefault("mfa.postRequest.subTitle",map[string]interface{}{
+						"title": s.Trans.T("mfa.postRequest.title"),
+						"subTitle": s.Trans.TD("mfa.postRequest.subTitle",map[string]interface{}{
 							"id": mobile,
-						}, "Enter the security code sent to {{ .id }}"),
-						"caption1": s.Trans.WithDataOrDefault("mfa.postRequest.caption1",map[string]interface{}{
+						}),
+						"caption1": s.Trans.TD("mfa.postRequest.caption1",map[string]interface{}{
 							"resend": false,
-						}, "We just {{ if .resend }}re-{{ end }}send you a verification code. Enter the code to proceed."),
-						"resend": s.Trans.OrDefault("mfa.postRequest.resend", "Re-send the code"),
-						"authenticationCode": s.Trans.OrDefault("mfa.postRequest.authenticationCode", "Authentication code"),
-						"errorInfo": s.Trans.OrDefault("mfa.postRequest.errorInfo", "Invalid code. Try again or re-send the code."),
+						}),
+						"resend": s.Trans.T("mfa.postRequest.resend"),
+						"authenticationCode": s.Trans.T("mfa.postRequest.authenticationCode"),
+						"errorInfo": s.Trans.T("mfa.postRequest.errorInfo"),
 					},
 				}
 
@@ -344,12 +344,12 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 				"mobile":     MaskMobile(mobile),
 				"mfaRequest": true,
 				"mfaTrans": map[string]interface{}{
-					"title": s.Trans.OrDefault("mfa.init.title", "Additional verification required"),
-					"subTitle": s.Trans.OrDefault("mfa.init.subTitle", "To proceed, select where to send your security code"),
-					"caption1": s.Trans.OrDefault("mfa.init.caption1", "By choosing text message you authorize <strong>GoBank</strong> to text and call you.", AsHTML),
-					"caption2": s.Trans.OrDefault("mfa.init.caption2", "Message rates may apply"),
-					"sms": s.Trans.OrDefault("mfa.init.sms", "Text message"),
-					"email": s.Trans.OrDefault("mfa.init.email", "Email"),
+					"title": s.Trans.T("mfa.init.title"),
+					"subTitle": s.Trans.T("mfa.init.subTitle"),
+					"caption1": s.Trans.T("mfa.init.caption1", AsHTML),
+					"caption2": s.Trans.T("mfa.init.caption2"),
+					"sms": s.Trans.T("mfa.init.sms"),
+					"email": s.Trans.T("mfa.init.email"),
 				},
 			}
 

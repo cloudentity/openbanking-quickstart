@@ -1,3 +1,6 @@
+invalidRequest: Invalid Request
+internalServerError: Internal Server Error
+
 uk.account.headTitle: Account Access Consent
 uk.account.title: Account selection
 uk.account.selectAccounts: Select accounts to share with

@@ -8,13 +8,13 @@ import (
 )
 
 func RenderInvalidRequestError(c *gin.Context, trans *Trans,  err error) {
-	message := trans.OrDefault("invalid_request", "Invalid Request")
+	message := trans.T("invalidRequest")
 
 	RenderError(c, http.StatusBadRequest, message, err)
 }
 
 func RenderInternalServerError(c *gin.Context, trans *Trans, err error) {
-	message := trans.OrDefault("internal_server_error", "Internal Server Error")
+	message := trans.T("internalServerError")
 
 	RenderError(c, http.StatusInternalServerError, message, err)
 }
