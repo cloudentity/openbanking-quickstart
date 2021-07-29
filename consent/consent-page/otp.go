@@ -119,7 +119,7 @@ func NewOTPHandler(config Config, otpRepo *OTPRepo, smsClient *SMSClient) OTPHan
 		m := NewMockOTPHandler()
 		return &m
 	case "custom":
-		return NewCustomOTPHandler(config.Otp, otpRepo)
+		return NewCustomOTPHandler(config, otpRepo)
 	}
 
 	return &DemoOTPHandler{Repo: otpRepo, SMSClient: smsClient}

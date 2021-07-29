@@ -35,6 +35,7 @@ type Config struct {
 	DBFile           string   `env:"DB_FILE" envDefault:"./data/my.db"`
 	MFAClaim         string   `env:"MFA_CLAIM" envDefault:"mobile_verified"`
 	LogLevel         string   `env:"LOG_LEVEL" envDefault:"info"`
+	DevMode          bool     `env:"DEV_MODE"`
 	Otp              OtpConfig
 }
 
@@ -153,14 +154,21 @@ func (s *Server) Start() error {
 	r.LoadHTMLGlob("templates/*")
 	r.Static("/assets", "./assets")
 
+	base := r.Group("")
+
 	if s.Config.EnableMFA {
-		r.Use(RequireMFAMiddleware(s))
-		r.GET(mfaPath, s.MFAHandler())
-		r.POST(mfaPath, s.MFAHandler())
+		base.Use(RequireMFAMiddleware(s))
+		base.GET(mfaPath, s.MFAHandler())
+		base.POST(mfaPath, s.MFAHandler())
 	}
 
-	r.GET("/", s.Get())
-	r.POST("/", s.Post())
+	if s.Config.DevMode {
+		demo := r.Group("/demo")
+		demo.POST("/totp/verify", s.DemoTotpVerify)
+	}
+
+	base.GET("/", s.Get())
+	base.POST("/", s.Post())
 
 	return r.RunTLS(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)), s.Config.CertFile, s.Config.KeyFile)
 }

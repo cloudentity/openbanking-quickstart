@@ -2,10 +2,16 @@ package main
 
 import (
 	"bytes"
+	"crypto/tls"
+	"crypto/x509"
 	"encoding/json"
 	"errors"
+	"io/ioutil"
 	"net/http"
 	"strings"
+	"time"
+
+	"github.com/sirupsen/logrus"
 )
 
 type CustomOTPHandler struct {
@@ -14,11 +20,32 @@ type CustomOTPHandler struct {
 	Repo   *OTPRepo
 }
 
-func NewCustomOTPHandler(config OtpConfig, repo *OTPRepo) OTPHandler {
+func NewCustomOTPHandler(config Config, repo *OTPRepo) OTPHandler {
+	var (
+		pool = x509.NewCertPool()
+		bts  []byte
+		err  error
+	)
+
+	if bts, err = ioutil.ReadFile(config.RootCA); err != nil {
+		logrus.Errorf("failed to read root ca from %s", config.RootCA)
+		panic(err)
+	}
+
+	if !pool.AppendCertsFromPEM(bts) {
+		logrus.Error("failed to append cert from pem")
+		panic("failed to append cert from pem!")
+	}
+
 	return &CustomOTPHandler{
-		config: config,
+		config: config.Otp,
 		client: &http.Client{
-			Timeout: config.Timeout,
+			Timeout:   config.Otp.Timeout,
+			Transport: &http.Transport{
+				TLSClientConfig: &tls.Config{
+					RootCAs: pool,
+				},
+			},
 		},
 		Repo: repo,
 	}
@@ -89,6 +116,7 @@ func (c *CustomOTPHandler) Verify(r LoginRequest, login string, otp string) (boo
 		return false, err
 	}
 
+	req.Header.Set("Accept", "application/json")
 	req.Header.Set("Content-Type", "application/json")
 	req.Header.Set("Authorization", c.config.AuthHeader)
 
@@ -102,6 +130,17 @@ func (c *CustomOTPHandler) Verify(r LoginRequest, login string, otp string) (boo
 
 	if err = json.NewDecoder(res.Body).Decode(&ver); err != nil {
 		return false, err
+	}
+
+	if ver.Ok {
+		if err = c.Repo.Set(OTP{
+			ID:         GetOTPID(r),
+			OTP:        "-", // we don't want to store that
+			Expiration: time.Now().Add(OTPExpiration).Unix(),
+			Approved:   true,
+		}); err != nil {
+			return false, err
+		}
 	}
 
 	return ver.Ok, nil
