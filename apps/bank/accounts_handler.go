@@ -131,7 +131,7 @@ type GetInternalAccountsRequest struct {
 	Sub string `json:"sub"`
 }
 
-// swagger:route GET /internal/accounts/{sub} bank GetInternalAccountsRequest
+// swagger:route GET /internal/accounts/{sub} bank getInternalAccountsRequest
 //
 // get all accounts for user
 //
