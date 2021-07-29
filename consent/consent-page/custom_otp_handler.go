@@ -127,6 +127,8 @@ func (c *CustomOTPHandler) Verify(r LoginRequest, login string, otp string) (boo
 		return false, err
 	}
 
+	defer res.Body.Close()
+
 	if res.StatusCode >= 400 {
 		return false, errors.New("otp verification request not accepted")
 	}
