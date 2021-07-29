@@ -70,7 +70,7 @@ services:
       - GIN_MODE=debug # change to release to disable gin debug
       # - ENABLE_MFA=true
       # - DEV_MODE=true
-      # - OTP_MODE=custom # change to custom to enable custom OTP handling
+      - OTP_MODE=mock # change to custom to enable custom OTP handling
       # - OTP_TYPE=totp
       # - OTP_REQUEST_URL= # this does not matter for totp
       # - OTP_VERIFY_URL=https://localhost:8080/demo/totp/verify
