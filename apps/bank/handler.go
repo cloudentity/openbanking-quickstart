@@ -23,6 +23,19 @@ import (
 	acpClient "github.com/cloudentity/acp-client-go/models"
 )
 
+type RequestHeaders struct {
+	// in:header
+	AuthDate string `json:"x-fapi-auth-date"`
+	// in:header
+	CustomerIPAddress string `json:"x-fapi-customer-ip-address"`
+	// in:header
+	Authorization string `json:"authorization"`
+	// in:header
+	InteractionID string `json:"x-fapi-interaction-id"`
+	// in:header
+	CustomerAgent string `json:"x-customer-user-agent"`
+}
+
 type DomesticPaymentStatus string
 
 const (
@@ -30,6 +43,27 @@ const (
 	AcceptedSettlementCompleted DomesticPaymentStatus = "AcceptedSettlementCompleted"
 )
 
+// swagger:parameters createDomesticPaymentRequest
+type CreateDomesticPaymentRequest struct {
+	RequestHeaders
+
+	// in:body
+	Request *paymentModels.OBWriteDomestic2
+}
+
+// swagger:route POST /domestic-payments bank createDomesticPaymentRequest
+//
+// create domestic payment
+//
+// Security:
+//   defaultcc: payments
+//
+// Responses:
+//   201: OBWriteDomesticResponse5
+//   400: OBErrorResponse1
+//   403: OBErrorResponse1
+//   422: OBErrorResponse1
+//   500: OBErrorResponse1
 func (s *Server) CreateDomesticPayment() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
@@ -165,6 +199,26 @@ func (s *Server) CreateDomesticPayment() func(*gin.Context) {
 	}
 }
 
+// swagger:parameters getDomesticPaymentRequest
+type GetDomesticPaymentRequest struct {
+	RequestHeaders
+
+	// in:path
+	DomesticPaymentID string `json:"DomesticPaymentId"`
+}
+
+// swagger:route GET /domestic-payments/{DomesticPaymentId} bank getDomesticPaymentRequest
+//
+// get domestic payment
+//
+// Security:
+//   defaultcc: payments
+//
+// Responses:
+//   201: OBWriteDomesticResponse5
+//   403: OBErrorResponse1
+//   404: OBErrorResponse1
+//   500: OBErrorResponse1
 func (s *Server) GetDomesticPayment() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
@@ -207,6 +261,24 @@ func (s *Server) GetDomesticPayment() func(*gin.Context) {
 	}
 }
 
+// swagger:parameters GetAccountsParams
+type GetAccountsParams struct {
+	RequestHeaders
+}
+
+// swagger:route GET /accounts bank GetAccountsParams
+//
+// get accounts
+//
+// Security:
+//   defaultcc: accounts
+//
+// Responses:
+//   200: OBReadAccount6
+//	 400: OBErrorResponse1
+//   403: OBErrorResponse1
+//   404: OBErrorResponse1
+//   500: OBErrorResponse1
 func (s *Server) GetAccounts() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
