@@ -361,7 +361,22 @@ type InternalAccount struct {
 	Name models.Nickname  `json:"name"`
 }
 
-// this API is bank specific. It should return all users's account.
+// swagger:parameters getInternalAccountsRequest
+type GetInternalAccountsRequest struct {
+	// in:path
+	Sub string `json:"sub"`
+}
+
+// swagger:route GET /internal/accounts/{sub} bank GetInternalAccountsRequest
+//
+// get all accounts for user
+//
+// Security:
+//   defaultcc: accounts
+//
+// Responses:
+//   200: OBReadAccount6
+//   404: OBErrorResponse1
 func (s *Server) InternalGetAccounts() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
