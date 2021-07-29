@@ -406,6 +406,22 @@ func (s *Server) InternalGetAccounts() func(*gin.Context) {
 	}
 }
 
+// swagger:parameters getBalancesRequest
+type GetBalancesRequest struct {
+	RequestHeaders
+}
+
+// swagger:route GET /balances bank getBalancesRequest
+//
+// get balances
+//
+// Security:
+//   defaultcc: accounts
+//
+// Responses:
+//   200: OBReadBalance1
+//   403: OBErrorResponse1
+//   404: OBErrorResponse1
 func (s *Server) GetBalances() func(ctx *gin.Context) {
 	return func(c *gin.Context) {
 		var (
@@ -506,6 +522,23 @@ func (s *Server) InternalGetBalances() func(*gin.Context) {
 	}
 }
 
+// swagger:parameters getTransactionsRequest
+type GetTransactionsRequest struct {
+	RequestHeaders
+}
+
+// swagger:route GET /transactions bank getTransactionsRequest
+//
+// get transactions
+//
+// Security:
+//   defaultcc: accounts
+//
+// Responses:
+//   200: OBReadTransaction6
+//   400: OBErrorResponse1
+//   403: OBErrorResponse1
+//   404: OBErrorResponse1
 func (s *Server) GetTransactions() func(ctx *gin.Context) {
 	return func(c *gin.Context) {
 		var (
