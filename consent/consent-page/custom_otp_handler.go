@@ -40,10 +40,11 @@ func NewCustomOTPHandler(config Config, repo *OTPRepo) OTPHandler {
 	return &CustomOTPHandler{
 		config: config.Otp,
 		client: &http.Client{
-			Timeout:   config.Otp.Timeout,
+			Timeout: config.Otp.Timeout,
 			Transport: &http.Transport{
 				TLSClientConfig: &tls.Config{
-					RootCAs: pool,
+					RootCAs:    pool,
+					MinVersion: tls.VersionTLS12,
 				},
 			},
 		},
@@ -82,6 +83,8 @@ func (c *CustomOTPHandler) Send(r LoginRequest, provider MFAConsentProvider, to 
 	if res, err = c.client.Do(req); err != nil {
 		return err
 	}
+
+	defer res.Body.Close()
 
 	if res.StatusCode >= 400 {
 		return errors.New("otp request not accepted")

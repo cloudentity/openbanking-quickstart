@@ -153,7 +153,7 @@ func (m *MockOTPHandler) Send(r LoginRequest, provider MFAConsentProvider, to st
 	)
 
 	if otp, err = m.Generate(r); err != nil {
-		return errors.Wrap(err,"failed to generate otp")
+		return errors.Wrap(err, "failed to generate otp")
 	}
 
 	if err = m.Store(otp); err != nil {
@@ -196,7 +196,7 @@ func (m *MockOTPHandler) IsApproved(r LoginRequest) (bool, error) {
 	return o.Approved, nil
 }
 
-func (o *MockOTPHandler) GetDefaultAction() string {
+func (m *MockOTPHandler) GetDefaultAction() string {
 	return ""
 }
 
@@ -234,7 +234,7 @@ func (o *DemoOTPHandler) Send(r LoginRequest, provider MFAConsentProvider, to st
 	)
 
 	if otp, err = o.Generate(r); err != nil {
-		return errors.Wrap(err,"failed to generate otp")
+		return errors.Wrap(err, "failed to generate otp")
 	}
 
 	if err = o.Store(otp); err != nil {
