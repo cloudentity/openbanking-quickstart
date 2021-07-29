@@ -2,3 +2,10 @@
     background: yellow !important;
     color: black !important;
 }
+
+.header {
+    height: 100px;
+    background-color: #ff839d;
+    border-bottom: 8px solid hotpink;
+    display: flex;
+}
