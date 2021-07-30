@@ -20,7 +20,7 @@ type CustomOTPHandler struct {
 	Repo   *OTPRepo
 }
 
-func NewCustomOTPHandler(config Config, repo *OTPRepo) OTPHandler {
+func NewCustomOTPHandler(config Config, repo *OTPRepo) (OTPHandler, error) {
 	var (
 		pool = x509.NewCertPool()
 		bts  []byte
@@ -29,12 +29,12 @@ func NewCustomOTPHandler(config Config, repo *OTPRepo) OTPHandler {
 
 	if bts, err = ioutil.ReadFile(config.RootCA); err != nil {
 		logrus.Errorf("failed to read root ca from %s", config.RootCA)
-		panic(err)
+		return nil, err
 	}
 
 	if !pool.AppendCertsFromPEM(bts) {
 		logrus.Error("failed to append cert from pem")
-		panic("failed to append cert from pem!")
+		return nil, err
 	}
 
 	return &CustomOTPHandler{
@@ -49,7 +49,7 @@ func NewCustomOTPHandler(config Config, repo *OTPRepo) OTPHandler {
 			},
 		},
 		Repo: repo,
-	}
+	}, nil
 }
 
 type CustomOtpRequest struct {
