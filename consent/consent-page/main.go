@@ -112,7 +112,9 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to init otp repo")
 	}
 
-	server.OTPHandler = NewOTPHandler(server.Config, server.OTPRepo, server.SMSClient)
+	if server.OTPHandler, err = NewOTPHandler(server.Config, server.OTPRepo, server.SMSClient); err != nil {
+		return server, errors.Wrapf(err, "failed to init otp handler")
+	}
 
 	return server, nil
 }
