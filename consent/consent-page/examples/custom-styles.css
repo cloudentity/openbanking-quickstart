@@ -1,24 +1,18 @@
-.mdc-button {
-  background: yellow !important;
-  color: black !important;
+:root {
+  --mdc-theme-secondary: #1c5d47;
+  --background-color: rgba(238, 232, 232, 0.36);
+  --alert-color: #1c5d47;
 }
 
 .header {
-  height: 100px;
-  background-color: #ff839d;
-  border-bottom: 8px solid hotpink;
-  display: flex;
+  background-color: #1c5d47;
 }
 
-:root {
-  --mdc-theme-secondary: orange;
-  --background-color: #618282;
+.content {
+  color: black;
 }
 
 .header > img {
-  content: url(/assets/images/account_access_logo.svg);
-}
-
-.icon-logo > img {
-  content: url(/assets/images/bank_logo.svg);
+  height: 60px;
+  content: url(https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4VsmrwWvmoN9EJoyhhi7u-O2zokXG1JptBiGBb0sZis9pt8YJbXSPoXKKMgh5zVRjbFc&usqp=CAU);
 }

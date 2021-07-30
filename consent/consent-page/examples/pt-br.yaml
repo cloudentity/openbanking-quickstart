@@ -1,0 +1,40 @@
+invalidRequest: Invalid Request
+internalServerError: Internal Server Error
+
+uk.account.headTitle: consentimento de acesso à conta
+uk.account.title: seleção de conta
+uk.account.selectAccounts: Select accounts to share with
+uk.account.review_data: Review the data you will be sharing
+uk.account.permissions: Account permissions
+uk.account.purpose: Purpose for sharing data
+uk.account.purposeDetail: To uncover insights that can improve your financial well being.
+uk.account.expiration: <strong>{{ .client_name }}</strong> will have access to your account information until <strong>{{ .expiration_date }}</strong>
+uk.account.cancel: Cancelar
+uk.account.agree: Eu concordo
+
+uk.payment.headTitle: Domestic Payment Consent
+uk.payment.title: Account Confirm payment
+uk.payment.paymentInfo: Payment Information
+uk.payment.payeeAccountName: Payee Account Name
+uk.payment.sortCode: Sort code
+uk.payment.accountNumber: Account number
+uk.payment.paymentReference: Payment reference
+uk.payment.amount: AMOUNT
+uk.payment.accountInfo: Account Information
+uk.payment.clickToProceed: Click confirm to proceed with payment. Once payment is completed we’ll sign you out of <strong>gobank.com</strong> and return you to <strong>{{ .client_name }}</strong>
+uk.payment.cancel: Cancel
+uk.payment.confirm: Confirm
+
+mfa.init.title: Additional verification required
+mfa.init.subTitle: To proceed, select where to send your security code
+mfa.init.caption1: By choosing text message you authorize <strong>GoBank</strong> to text and call you.
+mfa.init.caption2: Message rates may apply
+mfa.init.sms: Text message
+mfa.init.email: Email
+
+mfa.postRequest.title: Additional verification required
+mfa.postRequest.subTitle: Enter verification code from your OTP application
+mfa.postRequest.caption1: " "
+mfa.postRequest.resend: " "
+mfa.postRequest.authenticationCode: Authentication code
+mfa.postRequest.errorInfo: Invalid code. Try again.

@@ -1,0 +1,230 @@
+version: "3.0"
+
+services:
+  developer-tpp:
+    image: cloudentity/openbanking-quickstart-developer-tpp:${VERSION}
+    container_name: developer-tpp
+    restart: always
+    ports:
+      - "8090:8090"
+    volumes:
+      - ./data/ca.pem:/ca.pem
+      - ./data/tpp_cert.pem:/tpp_cert.pem
+      - ./data/tpp_key.pem:/tpp_key.pem
+    environment:
+      - CLIENT_ID=bugkgm23g9kregtu051g
+      - AUTHORIZE_URL=${ACP_URL}/${TENANT}/openbanking/oauth2/authorize
+      - TOKEN_URL=${ACP_INTERNAL_URL}/${TENANT}/openbanking/oauth2/token
+      - ISSUER_URL=${ACP_INTERNAL_URL}/${TENANT}/openbanking
+      - USERINFO_URL=${ACP_INTERNAL_URL}/${TENANT}/openbanking/userinfo
+      - REDIRECT_URL=https://${APP_HOST}:8090/callback
+      - CERT_FILE=/tpp_cert.pem
+      - KEY_FILE=/tpp_key.pem
+      - ROOT_CA=/ca.pem
+      - BANK_URL=http://bank:8070
+
+  financroo-tpp:
+    image: cloudentity/openbanking-quickstart-financroo-tpp:${VERSION}
+    container_name: financroo-tpp
+    restart: always
+    ports:
+      - "8091:8091"
+    volumes:
+      - ./data:/certs
+      - ./mount/financroo-tpp:/app/data
+    env_file:
+      - .env
+    environment:
+      - UI_URL=https://${APP_HOST}:8091
+      - CERT_FILE=/certs/tpp_cert.pem
+      - KEY_FILE=/certs/tpp_key.pem
+      - DB_FILE=/app/data/my.db
+      - TENANT=${TENANT}
+
+  consent-page:
+    image: cloudentity/openbanking-quickstart-consent-page:${VERSION}
+    container_name: consent-page
+    restart: always
+    ports:
+      - "8080:8080"
+    volumes:
+      - ./mount/consent-page:/data
+      - ./data/ca.pem:/ca.pem
+      - ./data/bank_cert.pem:/bank_cert.pem
+      - ./data/bank_key.pem:/bank_key.pem
+      # sample extensions:
+      - ./consent/consent-page/examples/custom-styles.css:/app/assets/extend-styles.css
+      - ./consent/consent-page/examples/pt-br.yaml:/app/translations/pt-br.yaml
+    env_file:
+      - .env
+    environment:
+      - CLIENT_ID=bv0ocudfotn6edhsiu7g
+      - CLIENT_SECRET=pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0
+      - ISSUER_URL=${ACP_INTERNAL_URL}/${TENANT}/system
+      - CERT_FILE=/bank_cert.pem
+      - KEY_FILE=/bank_key.pem
+      - ROOT_CA=/ca.pem
+      - BANK_URL=http://bank:8070
+      - DB_FILE=/data/my.db
+      - LOG_LEVEL=debug
+      - GIN_MODE=debug
+      - ENABLE_MFA=true
+      - DEV_MODE=true
+      - OTP_MODE=custom
+      - OTP_TYPE=totp
+      - OTP_VERIFY_URL=https://localhost:8080/demo/totp/verify
+      - OTP_AUTH_HEADER=Bearer this-is-some-test-token
+      - MFA_CLAIM=sub
+      - DEFAULT_LANGUAGE=pt-br
+
+  consent-self-service-portal:
+    image: cloudentity/openbanking-quickstart-consent-self-service-portal:${VERSION}
+    container_name: consent-self-service-portal
+    restart: always
+    ports:
+      - "8085:8085"
+    volumes:
+      - ./data/ca.pem:/ca.pem
+      - ./data/bank_cert.pem:/bank_cert.pem
+      - ./data/bank_key.pem:/bank_key.pem
+    environment:
+      - SYSTEM_CLIENT_ID=buc3b1hhuc714r78env0
+      - SYSTEM_CLIENT_SECRET=PBV7q0akoP603rZbU0EFdxbhZ-djxF7FIVwyKaLnBYU
+      - SYSTEM_ISSUER_URL=${ACP_INTERNAL_URL}/${TENANT}/system
+      - SYSTEM_CLIENTS_SERVER_ID=openbanking
+      - CERT_FILE=/bank_cert.pem
+      - KEY_FILE=/bank_key.pem
+      - ROOT_CA=/ca.pem
+      - BANK_URL=http://bank:8070
+      - LOGIN_AUTHORIZATION_SERVER_URL=${ACP_URL}
+      - LOGIN_AUTHORIZATION_SERVER_ID=bank-customers
+      - LOGIN_TENANT_ID=${TENANT}
+      - LOGIN_CLIENT_ID=bv0nab0mekk67nekvq7g
+      - INTROSPECT_CLIENT_ID=bv2dkff8mll9cf6pvd6g
+      - INTROSPECT_CLIENT_SECRET=KThGH68f-gMC4cscGLFeOpIU4EYriYhKspOV9IwHbnw
+      - INTROSPECT_ISSUER_URL=${ACP_INTERNAL_URL}/${TENANT}/bank-customers
+
+  consent-admin-portal:
+    image: cloudentity/openbanking-quickstart-consent-admin-portal:${VERSION}
+    container_name: consent-admin-portal
+    restart: always
+    ports:
+      - "8086:8086"
+    volumes:
+      - ./data/ca.pem:/ca.pem
+      - ./data/bank_cert.pem:/bank_cert.pem
+      - ./data/bank_key.pem:/bank_key.pem
+    environment:
+      - SYSTEM_CLIENT_ID=bv2fe0tpfc67lmeti340
+      - SYSTEM_CLIENT_SECRET=v6yYaApda9juR_DrlI5mpdsdm9u2-D0rQIG9ynakyDE
+      - SYSTEM_ISSUER_URL=${ACP_INTERNAL_URL}/${TENANT}/system
+      - SYSTEM_CLIENTS_SERVER_ID=openbanking
+      - CERT_FILE=/bank_cert.pem
+      - KEY_FILE=/bank_key.pem
+      - ROOT_CA=/ca.pem
+      - BANK_URL=http://bank:8070
+      - LOGIN_AUTHORIZATION_SERVER_URL=${ACP_URL}
+      - LOGIN_AUTHORIZATION_SERVER_ID=bank-admins
+      - LOGIN_TENANT_ID=${TENANT}
+      - LOGIN_CLIENT_ID=bv2f80aed9c9is80f2d0
+      - INTROSPECT_CLIENT_ID=bv2fddlpfc67lmeti32g
+      - INTROSPECT_CLIENT_SECRET=RkAIOVRlP6ZLhDvYixT1wBb8DG3bVkXAouoIrX7cwzA
+      - INTROSPECT_ISSUER_URL=${ACP_INTERNAL_URL}/${TENANT}/bank-admins
+
+  bank:
+    image: cloudentity/openbanking-quickstart-bank:${VERSION}
+    container_name: bank
+    restart: always
+    ports:
+      - "8070:8070"
+    volumes:
+      - ./data/ca.pem:/ca.pem
+      - ./data/bank_cert.pem:/bank_cert.pem
+      - ./data/bank_key.pem:/bank_key.pem
+      - ./mount/bank:/app/data
+    environment:
+      - CLIENT_ID=bukj5p6k7qdmm5ppbi4g
+      - ISSUER_URL=${ACP_INTERNAL_URL}/${TENANT}/openbanking
+      - CERT_FILE=/bank_cert.pem
+      - KEY_FILE=/bank_key.pem
+      - ROOT_CA=/ca.pem
+
+  acp:
+    container_name: acp
+    restart: always
+    image: ${ACP_DOCKER_IMAGE}:${ACP_VERSION}
+    ports:
+      - 8443:8443
+    volumes:
+      - ./data/acp_cert.pem:/acp_cert.pem
+      - ./data/acp_key.pem:/acp_key.pem
+    environment:
+      - FEATURES_SWAGGER_UI=true
+      - FEATURES_INTEGRATION_ENDPOINTS=true
+      - FEATURES_SYSTEM_OPENBANKING_CONSENTS_MANAGEMENT=true
+      - FEATURES_OPENBANKING_DOMESTIC_PAYMENT_CONSENTS=true
+      - FEATURES_SYSTEM_CLIENTS_MANAGEMENT=true
+      - SERVER_URL=${ACP_URL}
+    command:
+      - server
+      - start
+      - --sql.url
+      - postgres://root@crdb:26257/defaultdb?sslmode=disable
+      - --hazelcast.address
+      - hazelcast:5701
+      - --secret.key
+      - KNEcLGdDqpwrXDubqPgDSUkMMsLPXaHh
+      - --server.cert.path
+      - /acp_cert.pem
+      - --server.key.path
+      - /acp_key.pem
+      - --demo
+      - --create-default-tenant
+
+  crdb:
+    container_name: crdb
+    image: cockroachdb/cockroach:v20.2.6
+    restart: always
+    ports:
+      - 26257:26257
+      - 8081:8080
+    command: start-single-node --insecure
+    volumes:
+      - crdb:/cockroach/cockroach-data"
+
+  hazelcast:
+    container_name: hazelcast
+    image: hazelcast/hazelcast:3.12
+    restart: on-failure
+    ports:
+      - 5701:5701
+
+  configuration:
+    container_name: configuration
+    image: cloudentity/openbanking-quickstart-configuration:latest
+    restart: on-failure
+    depends_on:
+      - acp
+    volumes:
+      - ./data/tpp_cert.pem:/certs/tpp_cert.pem
+      - ./data/ca.pem:/certs/ca.pem
+      - ./data/variables.yaml:/variables.yaml
+      - ./data/imports:/app/imports
+    command:
+      - /app/main
+      - --tenant-url
+      - ${CONFIGURATION_TENANT_URL}
+      - --tenant
+      - ${CONFIGURATION_TENANT}
+      - --client-id
+      - ${CONFIGURATION_CLIENT_ID}
+      - --client-secret
+      - ${CONFIGURATION_CLIENT_SECRET}
+      - --templates-dirs
+      - /app/imports
+      - --variables-file
+      - /variables.yaml
+      - --verbose
+
+volumes:
+  crdb:
