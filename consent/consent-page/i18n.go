@@ -15,34 +15,34 @@ func NewTranslations(bundle *i18n.Bundle, lang string) *Trans {
 	return &Trans{i18n.NewLocalizer(bundle, lang)}
 }
 
-func (t *Trans) T(ID string) interface{} {
+func (t *Trans) T(id string) interface{} {
 	message := t.MustLocalize(&i18n.LocalizeConfig{
-		MessageID: ID,
+		MessageID: id,
 		DefaultMessage: &i18n.Message{
-			ID:    ID,
-			Other: ID,
+			ID:    id,
+			Other: id,
 		},
 	})
 
 	logrus.WithField("message", message).
-		Debugf("tried to find message %s", ID)
+		Debugf("tried to find message %s", id)
 
-	return template.HTML(message)
+	return template.HTML(message) // nolint
 }
 
-func (t *Trans) TD(ID string, data map[string]interface{}) interface{} {
+func (t *Trans) TD(id string, data map[string]interface{}) interface{} {
 	message := t.MustLocalize(&i18n.LocalizeConfig{
-		MessageID:    ID,
+		MessageID:    id,
 		TemplateData: data,
 		DefaultMessage: &i18n.Message{
-			ID:    ID,
-			Other: ID,
+			ID:    id,
+			Other: id,
 		},
 	})
 
 	logrus.WithField("message", message).
 		WithField("data", data).
-		Debugf("tried to find message %s", ID)
+		Debugf("tried to find message %s", id)
 
-	return template.HTML(message)
+	return template.HTML(message) // nolint
 }

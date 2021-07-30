@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"io/fs"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -93,6 +94,7 @@ func NewServer() (Server, error) {
 		db     *bolt.DB
 		l      logrus.Level
 		err    error
+		trans  []fs.FileInfo
 	)
 
 	if server.Config, err = LoadConfig(); err != nil {
@@ -111,13 +113,13 @@ func NewServer() (Server, error) {
 	bundle := i18n.NewBundle(server.Config.DefaultLanguage)
 	bundle.RegisterUnmarshalFunc("yaml", yaml.Unmarshal)
 
-	if translations, err := ioutil.ReadDir(server.Config.TransDir); err != nil {
+	if trans, err = ioutil.ReadDir(server.Config.TransDir); err != nil {
 		return server, errors.Wrapf(err, "failed to read dir %s", server.Config.TransDir)
-	} else {
-		for _, t := range translations {
-			if _, err := bundle.LoadMessageFile(server.Config.TransDir + "/" + t.Name()); err != nil {
-				return server, err
-			}
+	}
+
+	for _, t := range trans {
+		if _, err := bundle.LoadMessageFile(server.Config.TransDir + "/" + t.Name()); err != nil {
+			return server, err
 		}
 	}
 
