@@ -110,19 +110,22 @@ type OTPHandler interface {
 	Send(r LoginRequest, provider MFAConsentProvider, to string, data MFAData) error
 	Verify(r LoginRequest, login string, otp string) (bool, error)
 	IsApproved(r LoginRequest) (bool, error)
+	// GetDefaultAction can be used to start mfa flow from different a different point.
+	// Example:
+	// For TOTP we are skipping sending a request for OTP as it is generate by the user
 	GetDefaultAction() string
 }
 
-func NewOTPHandler(config Config, otpRepo *OTPRepo, smsClient *SMSClient) OTPHandler {
+func NewOTPHandler(config Config, otpRepo *OTPRepo, smsClient *SMSClient) (OTPHandler, error) {
 	switch config.OTPMode {
 	case "mock":
 		m := NewMockOTPHandler()
-		return &m
+		return &m, nil
 	case "custom":
 		return NewCustomOTPHandler(config, otpRepo)
 	}
 
-	return &DemoOTPHandler{Repo: otpRepo, SMSClient: smsClient}
+	return &DemoOTPHandler{Repo: otpRepo, SMSClient: smsClient}, nil
 }
 
 type MockOTPHandler struct {
