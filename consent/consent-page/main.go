@@ -2,6 +2,8 @@ package main
 
 import (
 	"fmt"
+	"io/fs"
+	"io/ioutil"
 	"net/http"
 	"net/url"
 	"strconv"
@@ -9,10 +11,13 @@ import (
 	"time"
 
 	"github.com/caarlos0/env/v6"
+	"github.com/ghodss/yaml"
 	"github.com/gin-gonic/gin"
+	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	bolt "go.etcd.io/bbolt"
+	"golang.org/x/text/language"
 
 	acpclient "github.com/cloudentity/acp-client-go"
 )
@@ -36,7 +41,10 @@ type Config struct {
 	MFAClaim         string        `env:"MFA_CLAIM" envDefault:"mobile_verified"`
 	LogLevel         string        `env:"LOG_LEVEL" envDefault:"info"`
 	DevMode          bool          `env:"DEV_MODE"`
-	Otp              OtpConfig
+	DefaultLanguage  language.Tag  `env:"DEFAULT_LANGUAGE"  envDefault:"en-us"`
+	TransDir         string        `env:"TRANS_DIR" envDefault:"./translations"`
+
+	Otp OtpConfig
 }
 
 type OtpConfig struct {
@@ -77,6 +85,7 @@ type Server struct {
 	SMSClient  *SMSClient
 	OTPRepo    *OTPRepo
 	OTPHandler OTPHandler
+	Trans      *Trans
 }
 
 func NewServer() (Server, error) {
@@ -85,6 +94,7 @@ func NewServer() (Server, error) {
 		db     *bolt.DB
 		l      logrus.Level
 		err    error
+		trans  []fs.FileInfo
 	)
 
 	if server.Config, err = LoadConfig(); err != nil {
@@ -99,6 +109,21 @@ func NewServer() (Server, error) {
 	if server.Client, err = acpclient.New(server.Config.ClientConfig()); err != nil {
 		return server, errors.Wrapf(err, "failed to init acp client")
 	}
+
+	bundle := i18n.NewBundle(server.Config.DefaultLanguage)
+	bundle.RegisterUnmarshalFunc("yaml", yaml.Unmarshal)
+
+	if trans, err = ioutil.ReadDir(server.Config.TransDir); err != nil {
+		return server, errors.Wrapf(err, "failed to read dir %s", server.Config.TransDir)
+	}
+
+	for _, t := range trans {
+		if _, err = bundle.LoadMessageFile(server.Config.TransDir + "/" + t.Name()); err != nil {
+			return server, err
+		}
+	}
+
+	server.Trans = NewTranslations(bundle, server.Config.DefaultLanguage.String())
 
 	server.SMSClient = NewSMSClient(server.Config)
 
@@ -134,7 +159,7 @@ func RequireMFAMiddleware(s *Server) gin.HandlerFunc {
 		)
 
 		if approved, err = s.OTPHandler.IsApproved(NewLoginRequest(c)); err != nil {
-			RenderInvalidRequestError(c, nil)
+			RenderInvalidRequestError(c, s.Trans, nil)
 			c.Abort()
 			return
 		}

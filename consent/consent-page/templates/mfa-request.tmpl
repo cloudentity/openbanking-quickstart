@@ -4,21 +4,17 @@
     <div class="mfa-container">
       <div class="mfa-container__item">
         <div class="mfa-container__item--left">
-          <div class="heading-2">Additional verification required</div>
-          <div class="heading-4">To proceed, select where to send your security code</div>
-          <div class="caption" style="margin-top: 12px">By choosing text message you authorize <strong>GoBank</strong>
-            to
-            text
-            and call you.
-          </div>
-          <div class="caption">Message rates may apply</div>
+          <div class="heading-2">{{.mfaTrans.title}}</div>
+          <div class="heading-4">{{.mfaTrans.subTitle}}</div>
+          <div class="caption" style="margin-top: 12px">{{.mfaTrans.caption1}}</div>
+          <div class="caption" style="margin-top: 12px">{{.mfaTrans.caption2}}</div>
         </div>
       </div>
       <div class="mfa-container__item">
         <div class="mfa-container__item--right">
           <div class="mfa-container__card hover" onclick="submit('form')">
             <div>
-              <div style="font-size: 14px">Text message</div>
+              <div style="font-size: 14px">{{.mfaTrans.sms}}</div>
               <div class="caption" style="margin-top: 6px;">{{ .mobile }}</div>
             </div>
             <div>
@@ -28,7 +24,7 @@
 
           <div class="mfa-container__card" style="margin-top: 16px;">
             <div>
-              <div style="font-size: 14px">Email</div>
+              <div style="font-size: 14px">{{.mfaTrans.email}}</div>
               <div class="caption" style="margin-top: 6px;">k*****n@mymail.com</div>
             </div>
             <div>

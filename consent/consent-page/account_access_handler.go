@@ -26,12 +26,12 @@ func (s *AccountAccessConsentHandler) GetConsent(c *gin.Context, loginRequest Lo
 			WithLogin(loginRequest.ID),
 		nil,
 	); err != nil {
-		RenderInternalServerError(c, errors.Wrapf(err, "failed to get account access consent"))
+		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to get account access consent"))
 		return
 	}
 
 	if accounts, err = s.BankClient.GetInternalAccounts(response.Payload.Subject); err != nil {
-		RenderInternalServerError(c, errors.Wrapf(err, "failed to get accounts from bank"))
+		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to get accounts from bank"))
 		return
 	}
 
