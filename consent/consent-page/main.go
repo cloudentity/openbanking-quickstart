@@ -118,7 +118,7 @@ func NewServer() (Server, error) {
 	}
 
 	for _, t := range trans {
-		if _, err := bundle.LoadMessageFile(server.Config.TransDir + "/" + t.Name()); err != nil {
+		if _, err = bundle.LoadMessageFile(server.Config.TransDir + "/" + t.Name()); err != nil {
 			return server, err
 		}
 	}
