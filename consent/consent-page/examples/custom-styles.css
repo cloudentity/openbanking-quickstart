@@ -1,0 +1,24 @@
+.mdc-button {
+  background: yellow !important;
+  color: black !important;
+}
+
+.header {
+  height: 100px;
+  background-color: #ff839d;
+  border-bottom: 8px solid hotpink;
+  display: flex;
+}
+
+:root {
+  --mdc-theme-secondary: orange;
+  --background-color: #618282;
+}
+
+.header > img {
+  content: url(/assets/images/account_access_logo.svg);
+}
+
+.icon-logo > img {
+  content: url(/assets/images/bank_logo.svg);
+}

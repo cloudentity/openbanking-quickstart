@@ -28,13 +28,23 @@ type Config struct {
 	KeyFile          string        `env:"KEY_FILE,required"`
 	BankURL          *url.URL      `env:"BANK_URL"`
 	EnableMFA        bool          `env:"ENABLE_MFA"`
-	OTPMode          string        `env:"OTP_MODE"` // optional, set to "mock" to use "111111" as otp
+	OTPMode          string        `env:"OTP_MODE" envDefault:"demo"`
 	TwilioAccountSid string        `env:"TWILIO_ACCOUNT_SID"`
 	TwilioAuthToken  string        `env:"TWILIO_AUTH_TOKEN"`
 	TwilioFrom       string        `env:"TWILIO_FROM" envDefault:"Cloudentity"`
 	DBFile           string        `env:"DB_FILE" envDefault:"./data/my.db"`
-	MobileClaim      string        `env:"MOBILE_CLAIM" envDefault:"mobile_verified"`
+	MFAClaim         string        `env:"MFA_CLAIM" envDefault:"mobile_verified"`
 	LogLevel         string        `env:"LOG_LEVEL" envDefault:"info"`
+	DevMode          bool          `env:"DEV_MODE"`
+	Otp              OtpConfig
+}
+
+type OtpConfig struct {
+	Type       string        `env:"OTP_TYPE" envDefault:"otp"`
+	RequestURL string        `env:"OTP_REQUEST_URL"`
+	VerifyURL  string        `env:"OTP_VERIFY_URL"`
+	Timeout    time.Duration `env:"OTP_TIMEOUT" envDefault:"10s"`
+	AuthHeader string        `env:"OTP_AUTH_HEADER"`
 }
 
 func (c *Config) ClientConfig() acpclient.Config {
@@ -54,6 +64,8 @@ func LoadConfig() (config Config, err error) {
 	if err = env.Parse(&config); err != nil {
 		return config, err
 	}
+
+	logrus.WithField("config", config).Debug("loaded config")
 
 	return config, err
 }
@@ -100,7 +112,9 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to init otp repo")
 	}
 
-	server.OTPHandler = NewOTPHandler(server.Config.OTPMode, server.OTPRepo, server.SMSClient)
+	if server.OTPHandler, err = NewOTPHandler(server.Config, server.OTPRepo, server.SMSClient); err != nil {
+		return server, errors.Wrapf(err, "failed to init otp handler")
+	}
 
 	return server, nil
 }
@@ -142,14 +156,21 @@ func (s *Server) Start() error {
 	r.LoadHTMLGlob("templates/*")
 	r.Static("/assets", "./assets")
 
+	base := r.Group("")
+
 	if s.Config.EnableMFA {
-		r.Use(RequireMFAMiddleware(s))
-		r.GET(mfaPath, s.MFAHandler())
-		r.POST(mfaPath, s.MFAHandler())
+		base.Use(RequireMFAMiddleware(s))
+		base.GET(mfaPath, s.MFAHandler())
+		base.POST(mfaPath, s.MFAHandler())
 	}
 
-	r.GET("/", s.Get())
-	r.POST("/", s.Post())
+	if s.Config.DevMode {
+		demo := r.Group("/demo")
+		demo.POST("/totp/verify", s.DemoTotpVerify)
+	}
+
+	base.GET("/", s.Get())
+	base.POST("/", s.Post())
 
 	return r.RunTLS(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)), s.Config.CertFile, s.Config.KeyFile)
 }

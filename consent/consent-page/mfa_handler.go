@@ -214,7 +214,6 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 			r        = NewLoginRequest(c)
 			provider MFAConsentProvider
 			data     MFAData
-			otp      OTP
 			ok       bool
 			valid    bool
 			mobile   string
@@ -237,20 +236,20 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 		}
 		logrus.Debugf("authentication context: %+v", data.AuthenticationContext)
 
-		mobileData, ok := data.AuthenticationContext[s.Config.MobileClaim]
+		claimData, ok := data.AuthenticationContext[s.Config.MFAClaim]
 
 		if !ok {
-			RenderInvalidRequestError(c, errors.New("user does not have mobile configured"))
+			RenderInvalidRequestError(c, fmt.Errorf("user does not have %s configured", s.Config.MFAClaim))
 			return
 		}
 
-		if mobile, ok = mobileData.(string); !ok {
+		if mobile, ok = claimData.(string); !ok {
 			RenderInternalServerError(c,
 				fmt.Errorf(
-					"failed to get mobile from authn context: %+v, mobile claim: %s, type: %T",
+					"failed to get %s from authn context: %+v, type: %T",
+					s.Config.MFAClaim,
 					data.AuthenticationContext,
-					s.Config.MobileClaim,
-					data.AuthenticationContext[s.Config.MobileClaim],
+					data.AuthenticationContext[s.Config.MFAClaim],
 				),
 			)
 			return
@@ -258,21 +257,15 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 
 		action := c.PostForm("action")
 
+		if action == "" {
+			action = s.OTPHandler.GetDefaultAction()
+		}
+
 		logrus.Debugf("action: %s, mobile: %s", action, mobile)
 
 		switch action {
-		case "generate", "resend":
-			if otp, err = s.OTPHandler.Generate(r); err != nil {
-				RenderInternalServerError(c, errors.Wrapf(err, "failed to generate otp"))
-				return
-			}
-
-			if err = s.OTPHandler.Store(otp); err != nil {
-				RenderInternalServerError(c, errors.Wrapf(err, "failed to store otp"))
-				return
-			}
-
-			if err = s.OTPHandler.Send(mobile, provider.GetSMSBody(data, otp)); err != nil {
+		case "request", "resend":
+			if err = s.OTPHandler.Send(r, provider, mobile, data); err != nil {
 				RenderInternalServerError(c, errors.Wrapf(err, "failed to send sms otp"))
 				return
 			}
@@ -294,7 +287,7 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 			otpStr := c.PostForm("otp")
 			logrus.Debugf("check otp: %s", otpStr)
 
-			if valid, err = s.OTPHandler.Verify(r, otpStr); err != nil {
+			if valid, err = s.OTPHandler.Verify(r, mobile, otpStr); err != nil {
 				RenderInternalServerError(c, errors.Wrapf(err, "failed to validate otp"))
 				return
 			}

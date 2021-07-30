@@ -52,6 +52,9 @@ services:
       - ./data/ca.pem:/ca.pem
       - ./data/bank_cert.pem:/bank_cert.pem
       - ./data/bank_key.pem:/bank_key.pem
+      # sample extensions:
+      - ./consent/consent-page/examples/custom-styles.css:/app/assets/extend-styles.css
+      - ./consent/consent-page/examples/custom-mfa-verify.tmpl:/app/templates/mfa-verify.tmpl
     env_file:
     - .env
     environment:
@@ -64,8 +67,15 @@ services:
       - BANK_URL=http://bank:8070
       - DB_FILE=/data/my.db
       - LOG_LEVEL=debug
-      - OTP_MODE=mock
-      # - MOBILE_CLAIM=mobile_verified
+      - GIN_MODE=debug # change to release to disable gin debug
+      # - ENABLE_MFA=true
+      # - DEV_MODE=true
+      - OTP_MODE=mock # change to custom to enable custom OTP handling
+      # - OTP_TYPE=totp
+      # - OTP_REQUEST_URL= # this does not matter for totp
+      # - OTP_VERIFY_URL=https://localhost:8080/demo/totp/verify
+      # - OTP_AUTH_HEADER=Bearer this-is-some-test-token
+      # - MFA_CLAIM=sub # for mobile use mobile_verified
       # - TWILIO_ACCOUNT_SID=
       # - TWILIO_AUTH_TOKEN=
 

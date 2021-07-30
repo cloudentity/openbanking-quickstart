@@ -1,11 +1,11 @@
 
   <form action="mfa?login_id={{ .login_request.ID }}&login_state={{ .login_request.State }}&consent_type={{ .login_request.ConsentType }}" method="post" id="form">
-    <input type="hidden" name="action" value="generate"/>
+    <input type="hidden" name="action" value="request"/>
     <div class="mfa-container">
       <div class="mfa-container__item">
         <div class="mfa-container__item--left">
           <div class="heading-2">Additional verification required</div>
-          <div class="heading-4" style="margin-top: 12px">To proceed, select where to send your security code</div>
+          <div class="heading-4">To proceed, select where to send your security code</div>
           <div class="caption" style="margin-top: 12px">By choosing text message you authorize <strong>GoBank</strong>
             to
             text
