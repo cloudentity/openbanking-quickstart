@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
@@ -177,8 +178,14 @@ func RequireMFAMiddleware(s *Server) gin.HandlerFunc {
 }
 
 func (s *Server) Start() error {
+	var err error
+
 	r := gin.Default()
-	r.LoadHTMLGlob("templates/*")
+
+	if err = loadTemplates(r, "./templates"); err != nil {
+		return errors.Wrapf(err, "failed to load templates")
+	}
+
 	r.Static("/assets", "./assets")
 
 	base := r.Group("")
@@ -213,4 +220,25 @@ func main() {
 	if err = server.Start(); err != nil {
 		logrus.WithError(err).Fatalf("failed to start server")
 	}
+}
+
+func loadTemplates(r *gin.Engine, dir string) error {
+	var (
+		baseTemplates   []string
+		customTemplates []string
+		err             error
+	)
+
+	if baseTemplates, err = filepath.Glob(fmt.Sprintf("%s/base/*.tmpl", dir)); err != nil {
+		return errors.Wrapf(err, "failed to get base templates")
+	}
+
+	if customTemplates, err = filepath.Glob(fmt.Sprintf("%s/custom/*.tmpl", dir)); err != nil {
+		return errors.Wrapf(err, "failed to get custom templates")
+	}
+
+	templates := append(baseTemplates, customTemplates...)
+	r.LoadHTMLFiles(templates...)
+
+	return nil
 }
