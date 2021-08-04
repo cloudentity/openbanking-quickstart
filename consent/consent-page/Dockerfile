@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.1.3-experimental
-FROM golang:1.15 as builder
+FROM golang:1.16 as builder
 
 WORKDIR /app
 
@@ -19,6 +19,7 @@ RUN apk --no-cache add ca-certificates
 WORKDIR /app
 
 COPY --from=builder /app/templates templates
+COPY --from=builder /app/translations translations
 COPY --from=builder /app/assets assets
 COPY --from=builder /app/main .
 

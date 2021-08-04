@@ -59,7 +59,7 @@ func (s *Server) Get() func(*gin.Context) {
 		)
 
 		if handler, loginRequest, err = s.WithConsentHandler(c); err != nil {
-			RenderInvalidRequestError(c, err)
+			RenderInvalidRequestError(c, s.Trans, err)
 			return
 		}
 
@@ -77,7 +77,7 @@ func (s *Server) Post() func(*gin.Context) {
 		)
 
 		if handler, loginRequest, err = s.WithConsentHandler(c); err != nil {
-			RenderInvalidRequestError(c, err)
+			RenderInvalidRequestError(c, s.Trans, err)
 			return
 		}
 
@@ -99,12 +99,12 @@ func (s *Server) PostConsent(c *gin.Context, loginRequest LoginRequest, consentH
 	case "deny":
 		redirect, err = consentHandler.DenyConsent(c, loginRequest)
 	default:
-		RenderInvalidRequestError(c, fmt.Errorf("invalid form action: %s", action))
+		RenderInvalidRequestError(c, s.Trans, fmt.Errorf("invalid form action: %s", action))
 		return
 	}
 
 	if err != nil {
-		RenderInternalServerError(c, errors.Wrapf(err, "failed to %s consent: %+v", c.PostForm("action"), loginRequest.ConsentType))
+		RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to %s consent: %+v", c.PostForm("action"), loginRequest.ConsentType))
 		return
 	}
 
@@ -118,9 +118,9 @@ func (s *Server) GetConsentHandler(loginRequest LoginRequest) (SpecificConsentHa
 
 	switch loginRequest.ConsentType {
 	case "domestic_payment":
-		handler = &DomesticPaymentConsentHandler{s, ConsentTools{}}
+		handler = &DomesticPaymentConsentHandler{s, ConsentTools{Trans: s.Trans}}
 	case "account_access":
-		handler = &AccountAccessConsentHandler{s, ConsentTools{}}
+		handler = &AccountAccessConsentHandler{s, ConsentTools{Trans: s.Trans}}
 	default:
 		return nil, false
 	}
