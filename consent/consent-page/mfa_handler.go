@@ -82,7 +82,7 @@ func (s *AccountAccessMFAConsentProvider) GetSMSBody(data MFAData, otp OTP) stri
 }
 
 func (s *AccountAccessMFAConsentProvider) GetTemplateName() string {
-	return "account-consent.tmpl"
+	return s.GetTemplateNameForSpec("account-consent.tmpl")
 }
 
 func (s *AccountAccessMFAConsentProvider) GetConsentMockData(loginRequest LoginRequest) map[string]interface{} {
@@ -154,7 +154,7 @@ func (s *DomesticPaymentMFAConsentProvider) GetSMSBody(data MFAData, otp OTP) st
 }
 
 func (s *DomesticPaymentMFAConsentProvider) GetTemplateName() string {
-	return "payment-consent.tmpl"
+	return s.GetTemplateNameForSpec("payment-consent.tmpl")
 }
 
 func (s *DomesticPaymentMFAConsentProvider) GetConsentMockData(loginRequest LoginRequest) map[string]interface{} {
