@@ -23,6 +23,13 @@ import (
 	acpclient "github.com/cloudentity/acp-client-go"
 )
 
+type Spec string
+
+const (
+	OBUK Spec = "obuk"
+	OBBR Spec = "obbr"
+)
+
 type Config struct {
 	Port             int           `env:"PORT" envDefault:"8080"`
 	ClientID         string        `env:"CLIENT_ID,required"`
@@ -44,6 +51,7 @@ type Config struct {
 	DevMode          bool          `env:"DEV_MODE"`
 	DefaultLanguage  language.Tag  `env:"DEFAULT_LANGUAGE"  envDefault:"en-us"`
 	TransDir         string        `env:"TRANS_DIR" envDefault:"./translations"`
+	Spec             Spec          `env:"SPEC,required"`
 
 	Otp OtpConfig
 }
@@ -80,13 +88,15 @@ func LoadConfig() (config Config, err error) {
 }
 
 type Server struct {
-	Config     Config
-	Client     acpclient.Client
-	BankClient BankClient
-	SMSClient  *SMSClient
-	OTPRepo    *OTPRepo
-	OTPHandler OTPHandler
-	Trans      *Trans
+	Config                      Config
+	Client                      acpclient.Client
+	BankClient                  BankClient
+	SMSClient                   *SMSClient
+	OTPRepo                     *OTPRepo
+	OTPHandler                  OTPHandler
+	Trans                       *Trans
+	PaymentConsentHandler       ConsentHandler
+	AccountAccessConsentHandler ConsentHandler
 }
 
 func NewServer() (Server, error) {
@@ -140,6 +150,16 @@ func NewServer() (Server, error) {
 
 	if server.OTPHandler, err = NewOTPHandler(server.Config, server.OTPRepo, server.SMSClient); err != nil {
 		return server, errors.Wrapf(err, "failed to init otp handler")
+	}
+
+	switch server.Config.Spec {
+	case OBUK:
+		server.AccountAccessConsentHandler = &OBUKAccountAccessConsentHandler{&server, ConsentTools{Trans: server.Trans}}
+		server.PaymentConsentHandler = &OBUKDomesticPaymentConsentHandler{&server, ConsentTools{Trans: server.Trans}}
+	case OBBR:
+		server.AccountAccessConsentHandler = &OBBRAccountAccessConsentHandler{}
+	default:
+		return server, errors.Wrapf(err, "unsupported spec %s", server.Config.Spec)
 	}
 
 	return server, nil

@@ -67,6 +67,7 @@ services:
       - BANK_URL=http://bank:8070
       - DB_FILE=/data/my.db
       - LOG_LEVEL=debug
+      - SPEC=obuk
       - GIN_MODE=debug # change to release to disable gin debug
       # - ENABLE_MFA=true
       # - DEV_MODE=true
