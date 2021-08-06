@@ -129,3 +129,40 @@ func (c *ConsentTools) GetDomesticPaymentTemplateData(
 		"consent":       consent.DomesticPaymentConsent,
 	}
 }
+
+func (c *ConsentTools) GetOBBRDataAccessConsentTemplateData(
+	loginRequest LoginRequest,
+	consent *models.GetOBBRCustomerDataAccessConsentResponse,
+	accounts InternalAccounts,
+) map[string]interface{} {
+	var expirationDate string
+
+	edt := time.Time(consent.CustomerDataAccessConsent.ExpirationDateTime)
+	if !edt.IsZero() {
+		expirationDate = edt.Format("02/01/2006")
+	}
+
+	clientName := c.GetClientName(nil)
+	return map[string]interface{}{
+		"trans": map[string]interface{}{
+			"headTitle":      c.Trans.T("uk.account.headTitle"),
+			"title":          c.Trans.T("uk.account.title"),
+			"selectAccounts": c.Trans.T("uk.account.selectAccounts"),
+			"reviewData":     c.Trans.T("uk.account.review_data"),
+			"permissions":    c.Trans.T("uk.account.permissions"),
+			"purpose":        c.Trans.T("uk.account.purpose"),
+			"purposeDetail":  c.Trans.T("uk.account.purposeDetail"),
+			"expiration": c.Trans.TD("uk.account.expiration", map[string]interface{}{
+				"client_name":     clientName,
+				"expiration_date": expirationDate,
+			}),
+			"cancel": c.Trans.T("uk.account.cancel"),
+			"agree":  c.Trans.T("uk.account.agree"),
+		},
+		"login_request": loginRequest,
+		"accounts":      accounts.Accounts,
+		//"permissions":     c.GetPermissionsWithDescription(consent.AccountAccessConsent.Permissions),
+		"client_name":     clientName,
+		"expiration_date": expirationDate,
+	}
+}
