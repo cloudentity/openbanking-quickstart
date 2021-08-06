@@ -49,7 +49,7 @@ services:
       - "8080:8080"
     volumes:
       - ./mount/consent-page:/data
-      - ./data/brasil/ca.pem:/ca.pem
+      - ./data/ca.pem:/ca.pem
       - ./data/bank_cert.pem:/bank_cert.pem
       - ./data/bank_key.pem:/bank_key.pem
       # sample extensions:
