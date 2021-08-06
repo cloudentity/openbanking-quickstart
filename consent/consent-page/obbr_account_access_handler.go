@@ -1,6 +1,8 @@
 package main
 
 import (
+	"github.com/cloudentity/acp-client-go/client/openbanking"
+	"github.com/cloudentity/acp-client-go/models"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 
