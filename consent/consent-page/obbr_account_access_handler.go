@@ -20,7 +20,8 @@ func (s *OBBRAccountAccessConsentHandler) GetConsent(c *gin.Context, loginReques
 	)
 
 	if response, err = s.Client.Openbanking.GetOBBRCustomerDataAccessConsentSystem(
-		openbanking.NewGetOBBRCustomerDataAccessConsentSystemParams().
+		openbanking.NewGetOBBRCustomerDataAccessConsentSystemParamsWithContext(c).
+			WithDefaults().
 			WithTid(s.Client.TenantID).
 			WithLogin(loginRequest.ID),
 		nil,
