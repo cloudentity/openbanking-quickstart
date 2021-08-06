@@ -107,20 +107,25 @@ var (
 )
 
 type OTPHandler interface {
-	Generate(r LoginRequest) (OTP, error)
-	Store(otp OTP) error
-	Send(to, body string) error
-	Verify(r LoginRequest, otp string) (bool, error)
+	Send(r LoginRequest, provider MFAConsentProvider, to string, data MFAData) error
+	Verify(r LoginRequest, login string, otp string) (bool, error)
 	IsApproved(r LoginRequest) (bool, error)
+	// GetDefaultAction can be used to start mfa flow from different a different point.
+	// Example:
+	// For TOTP we are skipping sending a request for OTP as it is generate by the user
+	GetDefaultAction() string
 }
 
-func NewOTPHandler(mode string, otpRepo *OTPRepo, smsClient *SMSClient) OTPHandler {
-	if mode == "mock" {
+func NewOTPHandler(config Config, otpRepo *OTPRepo, smsClient *SMSClient) (OTPHandler, error) {
+	switch config.OTPMode {
+	case "mock":
 		m := NewMockOTPHandler()
-		return &m
+		return &m, nil
+	case "custom":
+		return NewCustomOTPHandler(config, otpRepo)
 	}
 
-	return &DefaultOTPHandler{Repo: otpRepo, SMSClient: smsClient}
+	return &DemoOTPHandler{Repo: otpRepo, SMSClient: smsClient}, nil
 }
 
 type MockOTPHandler struct {
@@ -144,11 +149,24 @@ func (m *MockOTPHandler) Store(otp OTP) error {
 	return nil
 }
 
-func (m *MockOTPHandler) Send(to, body string) error {
+func (m *MockOTPHandler) Send(r LoginRequest, provider MFAConsentProvider, to string, data MFAData) error {
+	var (
+		otp OTP
+		err error
+	)
+
+	if otp, err = m.Generate(r); err != nil {
+		return errors.Wrap(err, "failed to generate otp")
+	}
+
+	if err = m.Store(otp); err != nil {
+		return errors.Wrap(err, "failed to store otp")
+	}
+
 	return nil
 }
 
-func (m *MockOTPHandler) Verify(r LoginRequest, otp string) (bool, error) {
+func (m *MockOTPHandler) Verify(r LoginRequest, login string, otp string) (bool, error) {
 	var (
 		id  = GetOTPID(r)
 		ok  bool
@@ -181,12 +199,16 @@ func (m *MockOTPHandler) IsApproved(r LoginRequest) (bool, error) {
 	return o.Approved, nil
 }
 
-type DefaultOTPHandler struct {
+func (m *MockOTPHandler) GetDefaultAction() string {
+	return ""
+}
+
+type DemoOTPHandler struct {
 	Repo      *OTPRepo
 	SMSClient *SMSClient
 }
 
-func (o *DefaultOTPHandler) Generate(r LoginRequest) (OTP, error) {
+func (o *DemoOTPHandler) Generate(r LoginRequest) (OTP, error) {
 	var (
 		otp    OTP
 		otpStr string
@@ -204,15 +226,28 @@ func (o *DefaultOTPHandler) Generate(r LoginRequest) (OTP, error) {
 	}, nil
 }
 
-func (o *DefaultOTPHandler) Store(otp OTP) error {
+func (o *DemoOTPHandler) Store(otp OTP) error {
 	return o.Repo.Set(otp)
 }
 
-func (o *DefaultOTPHandler) Send(to, body string) error {
-	return o.SMSClient.Send(to, body)
+func (o *DemoOTPHandler) Send(r LoginRequest, provider MFAConsentProvider, to string, data MFAData) error {
+	var (
+		otp OTP
+		err error
+	)
+
+	if otp, err = o.Generate(r); err != nil {
+		return errors.Wrap(err, "failed to generate otp")
+	}
+
+	if err = o.Store(otp); err != nil {
+		return errors.Wrap(err, "failed to store otp")
+	}
+
+	return o.SMSClient.Send(to, provider.GetSMSBody(data, otp))
 }
 
-func (o *DefaultOTPHandler) Verify(r LoginRequest, otp string) (bool, error) {
+func (o *DemoOTPHandler) Verify(r LoginRequest, login string, otp string) (bool, error) {
 	var (
 		storedOtp OTP
 		err       error
@@ -235,13 +270,21 @@ func (o *DefaultOTPHandler) Verify(r LoginRequest, otp string) (bool, error) {
 	return false, nil
 }
 
-func (o *DefaultOTPHandler) IsApproved(r LoginRequest) (bool, error) {
+func (o *DemoOTPHandler) IsApproved(r LoginRequest) (bool, error) {
+	return IsOtpApproved(o.Repo, r)
+}
+
+func (o *DemoOTPHandler) GetDefaultAction() string {
+	return ""
+}
+
+func IsOtpApproved(repo *OTPRepo, r LoginRequest) (bool, error) {
 	var (
 		storedOtp OTP
 		err       error
 	)
 
-	if storedOtp, err = o.Repo.Get(GetOTPID(r)); err != nil {
+	if storedOtp, err = repo.Get(GetOTPID(r)); err != nil {
 		return false, err
 	}
 

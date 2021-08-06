@@ -3,31 +3,33 @@
 <html>
 <head>
   {{ template "imports.tmpl" }}
-  <title>Account Access Consent</title>
+  <title>{{.trans.headTitle}}</title>
 </head>
 
 <body>
 <div class="header">
-  <img src="/assets/images/gobank_logo.svg"/>
+  <img src="/assets/images/bank_logo.svg"/>
 </div>
-<div id="mask_branding">
-  <img src="/assets/images/mask_branding.svg"/>
+<div id="background-image">
+  <img src="/assets/images/background_image.svg"/>
 </div>
+
 {{ if or .mfaRequest .mfaConfirmation }}
 <div class="content mfa-required">
   {{ else }}
   <div class="content">
     {{ end }}
-    <div style="text-align: center; margin-top: 48px;">
+
+    <div class="icon-logo">
       <img src="/assets/images/account_access_logo.svg"/>
     </div>
 
-    <p class="consent-title">Account selection</p>
+    <p class="consent-title">{{ .trans.title }}</p>
 
     <form action="?login_id={{ .login_request.ID }}&login_state={{ .login_request.State }}&consent_type={{ .login_request.ConsentType }}"
           method="post">
       <div class="form-block">
-        <div class="form-block-title">Select accounts to share with {{ .client_name }}</div>
+        <div class="form-block-title">{{.trans.selectAccounts}} {{ .client_name }}</div>
         <div class="accounts-block">
           {{ range .accounts }}
             <div class="account-row">
@@ -57,12 +59,12 @@
           {{ end }}
         </div>
 
-        <div class="form-block-title">Review the data you will be sharing</div>
+        <div class="form-block-title">{{.trans.reviewData}}</div>
         <div class="permissions-block">
 
           <div class="account-row">
             <div class="account-header">
-              <div class="account-header-title" style="margin-left: 16px; margin-right: 16px;">Account permissions</div>
+              <div class="account-header-title" style="margin-left: 16px; margin-right: 16px;">{{.trans.permissions}}</div>
               <button id="show-description"
                       class="mdc-icon-button"
                       aria-label="Show description"
@@ -73,11 +75,10 @@
                   keyboard_arrow_down</i>
               </button>
             </div>
-            <div class="account-description account-description-hidden" style="background: #FBFCFD"
-                 data-desc-id="account_permissions">
-              <div class="permission-name">Purpose for sharing data:</div>
+            <div class="account-description account-description-hidden" data-desc-id="account_permissions">
+              <div class="permission-name">{{.trans.purpose}}</div>
               <div class="caption" style="margin-top: 8px;">
-                To uncover insights that can improve your financial well being.
+                {{.trans.purposeDetail}}
               </div>
               {{ range $key, $value := .permissions }}
                 <div class="permission-name" style="margin-top: 16px;">{{ $key }}</div>
@@ -96,22 +97,21 @@
         </div>
 
         {{ if .expiration_date }}
-        <p class="caption" style="text-align: center; margin: 32px 0;"><strong>{{ .client_name }}</strong> will have access to
-          your account information until <strong>{{ .expiration_date }}</strong></p>
+        <p class="caption" style="text-align: center; margin: 32px 0;">{{.trans.expiration}}</p>
         {{ end }}
 
         <div class="form-actions">
-          <button class="mdc-button mdc-button--outlined" type="submit" name="action" value="deny"
+          <button class="mdc-button mdc-button--outlined cancel-button" type="submit" name="action" value="deny"
                   {{ if or .mfaRequest .mfaConfirmation }} disabled {{end}}
-                  style="height: 48px; padding: 12px 24px; color: #002D4C; border-color: #002D4C">
+          >
             <div class="mdc-button__ripple"></div>
-            <span class="mdc-button__label">Cancel</span>
+            <span class="mdc-button__label">{{.trans.cancel}}</span>
           </button>
-          <button class="mdc-button mdc-button--raised" type="submit" name="action" value="confirm"
+          <button class="mdc-button mdc-button--raised confirm-button" type="submit" name="action" value="confirm"
                   {{ if or .mfaRequest .mfaConfirmation }} disabled {{end}}
-                  style="height: 48px; padding: 12px 24px; margin-left: 8px; background: #DC1B37">
+          >
             <div class="mdc-button__ripple"></div>
-            <span class="mdc-button__label">I Agree</span>
+            <span class="mdc-button__label">{{.trans.agree}}</span>
           </button>
         </div>
       </div>
@@ -125,7 +125,7 @@
   {{ if .mfaConfirmation }}
     {{ template "mfa-verify.tmpl" .}}
   {{ end }}
-
+    </div>
 </body>
 
 <script>

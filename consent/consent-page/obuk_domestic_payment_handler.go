@@ -9,12 +9,12 @@ import (
 	"github.com/cloudentity/acp-client-go/models"
 )
 
-type DomesticPaymentConsentHandler struct {
+type OBUKDomesticPaymentConsentHandler struct {
 	*Server
 	ConsentTools
 }
 
-func (s *DomesticPaymentConsentHandler) GetConsent(c *gin.Context, loginRequest LoginRequest) {
+func (s *OBUKDomesticPaymentConsentHandler) GetConsent(c *gin.Context, loginRequest LoginRequest) {
 	var (
 		accounts InternalAccounts
 		response *openbanking.GetDomesticPaymentConsentSystemOK
@@ -28,24 +28,24 @@ func (s *DomesticPaymentConsentHandler) GetConsent(c *gin.Context, loginRequest 
 			WithLogin(loginRequest.ID),
 		nil,
 	); err != nil {
-		RenderInternalServerError(c, errors.Wrapf(err, "failed to get domestic payment consent"))
+		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to get domestic payment consent"))
 		return
 	}
 
 	if accounts, err = s.BankClient.GetInternalAccounts(response.Payload.Subject); err != nil {
-		RenderInternalServerError(c, errors.Wrapf(err, "failed to get accounts from bank"))
+		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to get accounts from bank"))
 		return
 	}
 
 	if balances, err = s.BankClient.GetInternalBalances(response.Payload.Subject); err != nil {
-		RenderInternalServerError(c, errors.Wrapf(err, "failed to load account balances"))
+		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to load account balances"))
 		return
 	}
 
-	Render(c, "payment-consent.tmpl", s.GetDomesticPaymentTemplateData(loginRequest, response.Payload, accounts, balances.Data))
+	Render(c, s.GetTemplateNameForSpec("payment-consent.tmpl"), s.GetDomesticPaymentTemplateData(loginRequest, response.Payload, accounts, balances.Data))
 }
 
-func (s *DomesticPaymentConsentHandler) ConfirmConsent(c *gin.Context, loginRequest LoginRequest) (string, error) {
+func (s *OBUKDomesticPaymentConsentHandler) ConfirmConsent(c *gin.Context, loginRequest LoginRequest) (string, error) {
 	var (
 		consent  *openbanking.GetDomesticPaymentConsentSystemOK
 		accept   *openbanking.AcceptDomesticPaymentConsentSystemOK
@@ -83,7 +83,7 @@ func (s *DomesticPaymentConsentHandler) ConfirmConsent(c *gin.Context, loginRequ
 	return redirect, nil
 }
 
-func (s *DomesticPaymentConsentHandler) DenyConsent(c *gin.Context, loginRequest LoginRequest) (string, error) {
+func (s *OBUKDomesticPaymentConsentHandler) DenyConsent(c *gin.Context, loginRequest LoginRequest) (string, error) {
 	var (
 		reject   *openbanking.RejectDomesticPaymentConsentSystemOK
 		redirect string
@@ -112,4 +112,4 @@ func (s *DomesticPaymentConsentHandler) DenyConsent(c *gin.Context, loginRequest
 	return redirect, nil
 }
 
-var _ SpecificConsentHandler = &DomesticPaymentConsentHandler{}
+var _ ConsentHandler = &OBUKDomesticPaymentConsentHandler{}

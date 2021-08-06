@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/cloudentity/openbanking-quickstart/models"
 )
 
 type BankClient struct {
@@ -54,34 +56,46 @@ func (c *BankClient) GetInternalAccounts(subject string) (InternalAccounts, erro
 		request  *http.Request
 		response *http.Response
 		bytes    []byte
-		resp     = InternalAccounts{}
+		resp     = models.OBReadAccount6{}
 		err      error
 	)
 
 	if request, err = http.NewRequest("GET", fmt.Sprintf("%s/internal/accounts/%s", c.baseURL, subject), nil); err != nil {
-		return resp, nil
+		return InternalAccounts{}, nil
 	}
 
 	if response, err = c.Client.Do(request); err != nil {
-		return resp, nil
+		return InternalAccounts{}, nil
 	}
 	defer response.Body.Close()
 
 	if bytes, err = ioutil.ReadAll(response.Body); err != nil {
-		return resp, nil
+		return InternalAccounts{}, nil
 	}
 
 	if response.StatusCode != 200 {
-		return resp, fmt.Errorf("unexpected status code: %d, body: %s", response.StatusCode, string(bytes))
+		return InternalAccounts{}, fmt.Errorf("unexpected status code: %d, body: %s", response.StatusCode, string(bytes))
 	}
 
 	if err = json.Unmarshal(bytes, &resp); err != nil {
-		return resp, nil
+		return InternalAccounts{}, nil
 	}
 
-	return resp, nil
+	return ToInternalAccounts(resp), nil
 }
 
+func ToInternalAccounts(data models.OBReadAccount6) InternalAccounts {
+	accounts := make([]InternalAccount, len(data.Data.Account))
+	for i, account := range data.Data.Account {
+		accounts[i] = InternalAccount{
+			ID:   string(*account.AccountID),
+			Name: string(account.Nickname),
+		}
+	}
+	return InternalAccounts{Accounts: accounts}
+}
+
+// TODO: map response to InternalBalances
 func (c *BankClient) GetInternalBalances(subject string) (BalanceResponse, error) {
 	var (
 		request  *http.Request

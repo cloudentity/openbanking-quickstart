@@ -7,6 +7,7 @@ import (
 )
 
 type ConsentTools struct {
+	Trans *Trans
 }
 
 func (c *ConsentTools) GetPermissionsWithDescription(requestedPermissions []string) map[string][]Permission {
@@ -73,12 +74,27 @@ func (c *ConsentTools) GetAccessConsentTemplateData(
 		expirationDate = edt.Format("02/01/2006")
 	}
 
+	clientName := c.GetClientName(nil)
 	return map[string]interface{}{
-		"login_request": loginRequest,
-		"accounts":      accounts.Accounts,
-		"permissions":   c.GetPermissionsWithDescription(consent.AccountAccessConsent.Permissions),
-		// "client_name":     c.GetClientName(consent.Client), // client is no longer returned by acp
-		"client_name":     c.GetClientName(nil),
+		"trans": map[string]interface{}{
+			"headTitle":      c.Trans.T("uk.account.headTitle"),
+			"title":          c.Trans.T("uk.account.title"),
+			"selectAccounts": c.Trans.T("uk.account.selectAccounts"),
+			"reviewData":     c.Trans.T("uk.account.review_data"),
+			"permissions":    c.Trans.T("uk.account.permissions"),
+			"purpose":        c.Trans.T("uk.account.purpose"),
+			"purposeDetail":  c.Trans.T("uk.account.purposeDetail"),
+			"expiration": c.Trans.TD("uk.account.expiration", map[string]interface{}{
+				"client_name":     clientName,
+				"expiration_date": expirationDate,
+			}),
+			"cancel": c.Trans.T("uk.account.cancel"),
+			"agree":  c.Trans.T("uk.account.agree"),
+		},
+		"login_request":   loginRequest,
+		"accounts":        accounts.Accounts,
+		"permissions":     c.GetPermissionsWithDescription(consent.AccountAccessConsent.Permissions),
+		"client_name":     clientName,
 		"expiration_date": expirationDate,
 	}
 }
@@ -89,11 +105,27 @@ func (c *ConsentTools) GetDomesticPaymentTemplateData(
 	accounts InternalAccounts,
 	balances BalanceData,
 ) map[string]interface{} {
+	clientName := c.GetClientName(nil)
 	return map[string]interface{}{
+		"trans": map[string]interface{}{
+			"headTitle":        c.Trans.T("uk.payment.headTitle"),
+			"title":            c.Trans.T("uk.payment.title"),
+			"paymentInfo":      c.Trans.T("uk.payment.paymentInfo"),
+			"payeeAccountName": c.Trans.T("uk.payment.payeeAccountName"),
+			"sortCode":         c.Trans.T("uk.payment.sortCode"),
+			"accountNumber":    c.Trans.T("uk.payment.accountNumber"),
+			"paymentReference": c.Trans.T("uk.payment.paymentReference"),
+			"amount":           c.Trans.T("uk.payment.amount"),
+			"accountInfo":      c.Trans.T("uk.payment.accountInfo"),
+			"clickToProceed": c.Trans.TD("uk.payment.clickToProceed", map[string]interface{}{
+				"client_name": clientName,
+			}),
+			"cancel":  c.Trans.T("uk.payment.cancel"),
+			"confirm": c.Trans.T("uk.payment.confirm"),
+		},
 		"login_request": loginRequest,
 		"accounts":      c.GetAccountsWithBalance(accounts, balances, string(*consent.DomesticPaymentConsent.Initiation.DebtorAccount.Identification)),
-		// "client_name":   c.GetClientName(consent.Client),
-		"client_name": c.GetClientName(nil),
-		"consent":     consent.DomesticPaymentConsent,
+		"client_name":   clientName,
+		"consent":       consent.DomesticPaymentConsent,
 	}
 }

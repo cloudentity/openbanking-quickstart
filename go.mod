@@ -20,6 +20,7 @@ require (
 	github.com/imdario/mergo v0.3.12
 	github.com/jinzhu/copier v0.3.2
 	github.com/json-iterator/go v1.1.10 // indirect
+	github.com/nicksnyder/go-i18n/v2 v2.1.2
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.7.0
 	github.com/spf13/viper v1.7.1
@@ -28,6 +29,7 @@ require (
 	go.etcd.io/bbolt v1.3.5
 	golang.org/x/oauth2 v0.0.0-20201208152858-08078c50e5b5
 	golang.org/x/sys v0.0.0-20201119102817-f84b799fce68 // indirect
+	golang.org/x/text v0.3.6
 	google.golang.org/appengine v1.6.7 // indirect
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/go-playground/validator.v9 v9.31.0

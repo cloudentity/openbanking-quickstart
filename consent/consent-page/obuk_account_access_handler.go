@@ -8,12 +8,12 @@ import (
 	"github.com/cloudentity/acp-client-go/models"
 )
 
-type AccountAccessConsentHandler struct {
+type OBUKAccountAccessConsentHandler struct {
 	*Server
 	ConsentTools
 }
 
-func (s *AccountAccessConsentHandler) GetConsent(c *gin.Context, loginRequest LoginRequest) {
+func (s *OBUKAccountAccessConsentHandler) GetConsent(c *gin.Context, loginRequest LoginRequest) {
 	var (
 		accounts InternalAccounts
 		response *openbanking.GetAccountAccessConsentSystemOK
@@ -26,19 +26,19 @@ func (s *AccountAccessConsentHandler) GetConsent(c *gin.Context, loginRequest Lo
 			WithLogin(loginRequest.ID),
 		nil,
 	); err != nil {
-		RenderInternalServerError(c, errors.Wrapf(err, "failed to get account access consent"))
+		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to get account access consent"))
 		return
 	}
 
 	if accounts, err = s.BankClient.GetInternalAccounts(response.Payload.Subject); err != nil {
-		RenderInternalServerError(c, errors.Wrapf(err, "failed to get accounts from bank"))
+		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to get accounts from bank"))
 		return
 	}
 
-	Render(c, "account-consent.tmpl", s.GetAccessConsentTemplateData(loginRequest, response.Payload, accounts))
+	Render(c, s.GetTemplateNameForSpec("account-consent.tmpl"), s.GetAccessConsentTemplateData(loginRequest, response.Payload, accounts))
 }
 
-func (s *AccountAccessConsentHandler) ConfirmConsent(c *gin.Context, loginRequest LoginRequest) (string, error) {
+func (s *OBUKAccountAccessConsentHandler) ConfirmConsent(c *gin.Context, loginRequest LoginRequest) (string, error) {
 	var (
 		consent *openbanking.GetAccountAccessConsentSystemOK
 		accept  *openbanking.AcceptAccountAccessConsentSystemOK
@@ -71,7 +71,7 @@ func (s *AccountAccessConsentHandler) ConfirmConsent(c *gin.Context, loginReques
 	return accept.Payload.RedirectTo, nil
 }
 
-func (s *AccountAccessConsentHandler) DenyConsent(c *gin.Context, loginRequest LoginRequest) (string, error) {
+func (s *OBUKAccountAccessConsentHandler) DenyConsent(c *gin.Context, loginRequest LoginRequest) (string, error) {
 	var (
 		reject *openbanking.RejectAccountAccessConsentSystemOK
 		err    error
@@ -95,4 +95,4 @@ func (s *AccountAccessConsentHandler) DenyConsent(c *gin.Context, loginRequest L
 	return reject.Payload.RedirectTo, nil
 }
 
-var _ SpecificConsentHandler = &AccountAccessConsentHandler{}
+var _ ConsentHandler = &OBUKAccountAccessConsentHandler{}

@@ -3,15 +3,15 @@
 <html>
 <head>
   {{ template "imports.tmpl" }}
-  <title>Domestic Payment Consent</title>
+  <title>{{.trans.headTitle}}</title>
 </head>
 
 <body>
 <div class="header">
-  <img src="/assets/images/gobank_logo.svg"/>
+  <img src="/assets/images/bank_logo.svg"/>
 </div>
-<div id="mask_branding">
-  <img src="/assets/images/mask_branding.svg"/>
+<div id="background-image">
+  <img src="/assets/images/background_image.svg"/>
 </div>
 {{ if or .mfaRequest .mfaConfirmation }}
 <div class="content mfa-required">
@@ -22,35 +22,35 @@
       <img src="/assets/images/account_access_logo.svg"/>
     </div>
 
-    <p class="consent-title">Confirm payment</p>
+    <p class="consent-title">{{.trans.title}}</p>
 
     <form action="?login_id={{ .login_request.ID }}&login_state={{ .login_request.State }}&consent_type={{ .login_request.ConsentType }}"
           method="post">
       <div class="form-block">
-        <div class="form-block-title">Payment Information</div>
+        <div class="form-block-title">{{.trans.paymentInfo}}</div>
         <div class="accounts-block" style="padding: 16px 32px">
           <div style="display: flex; align-items: center; justify-content: space-between">
-            <div class="caption">Payee Account Name</div>
+            <div class="caption">{{.trans.payeeAccountName}}</div>
             <div class="caption">{{ .consent.Initiation.CreditorAccount.Name }}</div>
           </div>
           <div style="display: flex; align-items: center; justify-content: space-between">
-            <div class="caption" style="margin-top: 12px">Sort code</div>
+            <div class="caption" style="margin-top: 12px">{{.trans.sortCode}}</div>
             {{/*            <!-- (missing in model, fix in ACP required) <div class="caption">{{ .consent.Initiation.CreditorAccount.SortCode }}</div> -->*/}}
             <div class="caption">N/A</div>
           </div>
           <div style="display: flex; align-items: center; justify-content: space-between">
-            <div class="caption" style="margin-top: 12px">Account number</div>
+            <div class="caption" style="margin-top: 12px">{{.trans.accountNumber}}</div>
             <div class="caption">{{ .consent.Initiation.DebtorAccount.Identification }}</div>
           </div>
           <div style="display: flex; align-items: center; justify-content: space-between">
-            <div class="caption" style="margin-top: 12px">Payment reference</div>
+            <div class="caption" style="margin-top: 12px">{{.trans.paymentReference}}</div>
             <div class="caption">{{ .consent.Initiation.RemittanceInformation.Reference }}</div>
           </div>
         </div>
 
         <div class="accounts-block" style="padding: 16px 32px">
           <div style="display: flex; align-items: center; justify-content: space-between">
-            <div class="caption" style="margin-top: 12px">AMOUNT</div>
+            <div class="caption" style="margin-top: 12px">{{.trans.amount}}</div>
             <div style="background: #1F2D48; border-radius: 12px; color: #fff; padding: 4px 8px; font-size: 12px">
               {{ .consent.Initiation.InstructedAmount.Amount }} {{ .consent.Initiation.InstructedAmount.Currency }}
             </div>
@@ -58,7 +58,7 @@
         </div>
 
 
-        <div class="form-block-title" style="margin-top: 32px">Account Information</div>
+        <div class="form-block-title" style="margin-top: 32px">{{.trans.accountInfo}}</div>
         <div class="accounts-block">
           {{ range .accounts }}
             <div class="account-row">
@@ -73,20 +73,19 @@
         </div>
 
         <p class="caption" style="text-align: center; margin: 32px 0;">
-          Click confirm to proceed with payment. Once payment is completed we’ll sign you out of <strong>gobank.com</strong> and return
-          you to <strong>{{ .client_name }}</strong>
+          {{.trans.clickToProceed}}
         </p>
 
         <div class="form-actions">
           <button class="mdc-button mdc-button--outlined" type="submit" name="action" value="deny"
                   style="height: 48px; padding: 12px 24px; color: #002D4C; border-color: #002D4C">
             <div class="mdc-button__ripple"></div>
-            <span class="mdc-button__label">Cancel</span>
+            <span class="mdc-button__label">{{.trans.cancel}}</span>
           </button>
           <button class="mdc-button mdc-button--raised" type="submit" name="action" value="confirm"
                   style="height: 48px; padding: 12px 24px; margin-left: 8px; background: #DC1B37">
             <div class="mdc-button__ripple"></div>
-            <span class="mdc-button__label">Confirm</span>
+            <span class="mdc-button__label">{{.trans.confirm}}</span>
           </button>
         </div>
       </div>
