@@ -3,6 +3,8 @@ version: "3.0"
 services:
   developer-tpp:
     image: cloudentity/openbanking-quickstart-developer-tpp:${VERSION}
+    networks:
+      - acp_system
     container_name: developer-tpp
     restart: always
     ports:
@@ -25,6 +27,8 @@ services:
 
   financroo-tpp:
     image: cloudentity/openbanking-quickstart-financroo-tpp:${VERSION}
+    networks:
+      - acp_system
     container_name: financroo-tpp
     restart: always
     ports:
@@ -43,6 +47,8 @@ services:
 
   consent-page:
     image: cloudentity/openbanking-quickstart-consent-page:${VERSION}
+    networks:
+      - acp_system
     container_name: consent-page
     restart: always
     ports:
@@ -58,16 +64,16 @@ services:
     env_file:
       - .env
     environment:
-      - CLIENT_ID=bv0ocudfotn6edhsiu7g
-      - CLIENT_SECRET=pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0
-      - ISSUER_URL=${ACP_INTERNAL_URL}/${TENANT}/system
+      - CLIENT_ID=c46gd3dtuag908q5bl8g
+      - CLIENT_SECRET=kFGVnGV4zg2lXIzWEPnRTmRpXIzhuv84L-CGan7SGak
+      - ISSUER_URL=${ACP_INTERNAL_URL}/1lqi5u2kttdidtzwoiud386cd6d71c4d483289f11d2d247b8c88/system
       - CERT_FILE=/bank_cert.pem
       - KEY_FILE=/bank_key.pem
       - ROOT_CA=/ca.pem
       - BANK_URL=http://bank:8070
       - DB_FILE=/data/my.db
       - LOG_LEVEL=debug
-      - SPEC=obuk
+      - SPEC=obbr
       - GIN_MODE=debug # change to release to disable gin debug
       # - ENABLE_MFA=true
       # - DEV_MODE=true
@@ -83,6 +89,8 @@ services:
 
   consent-self-service-portal:
     image: cloudentity/openbanking-quickstart-consent-self-service-portal:${VERSION}
+    networks:
+      - acp_system
     container_name: consent-self-service-portal
     restart: always
     ports:
@@ -110,6 +118,8 @@ services:
 
   consent-admin-portal:
     image: cloudentity/openbanking-quickstart-consent-admin-portal:${VERSION}
+    networks:
+      - acp_system
     container_name: consent-admin-portal
     restart: always
     ports:
@@ -137,6 +147,8 @@ services:
 
   bank:
     image: cloudentity/openbanking-quickstart-bank:${VERSION}
+    networks:
+      - acp_system
     container_name: bank
     restart: always
     ports:
@@ -157,6 +169,10 @@ services:
     container_name: acp
     restart: always
     image: ${ACP_DOCKER_IMAGE}:${ACP_VERSION}
+    networks:
+      acp_system:
+        aliases:
+          - authorization.cloudentity.com
     ports:
       - 8443:8443
     volumes:
@@ -170,7 +186,7 @@ services:
       - FEATURES_SYSTEM_CLIENTS_MANAGEMENT=true
       - FEATURES_OPENBANKING_BRASIL_CONSENTS=true
       - FEATURES_OPENBANKING_BRASIL_PAYMENTS=true
-      - SERVER_URL=${ACP_URL}
+      - SERVER_URL=https://authorization.cloudentity.com:8443
     command:
       - server
       - start
@@ -186,9 +202,12 @@ services:
       - /acp_key.pem
       - --demo
       - --create-default-tenant
+      - --dev
 
   crdb:
     container_name: crdb
+    networks:
+      - acp_system
     image: cockroachdb/cockroach:v20.2.6
     restart: always
     ports:
@@ -200,6 +219,8 @@ services:
 
   hazelcast:
     container_name: hazelcast
+    networks:
+      - acp_system
     image: hazelcast/hazelcast:3.12
     restart: on-failure
     ports:
@@ -207,6 +228,8 @@ services:
 
   configuration:
     container_name: configuration
+    networks:
+      - acp_system
     image: cloudentity/openbanking-quickstart-configuration:latest
     restart: on-failure
     depends_on:
@@ -234,3 +257,7 @@ services:
 
 volumes:
   crdb:
+
+networks:
+  acp_system:
+    external: true
