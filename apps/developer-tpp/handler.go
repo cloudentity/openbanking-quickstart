@@ -57,7 +57,7 @@ func (s *Server) Login() func(*gin.Context) {
 		data["account_access_consent_raw"] = string(registerResponseRaw)
 
 		if loginURL, storage.CSRF, err = s.Client.AuthorizeURL(
-			acpclient.WithOpenbankingIntentID(*registerResponse.Payload.Data.ConsentID, []string{"urn:openbanking:psd2:sca"}),
+			acpclient.WithOpenbankingIntentID(registerResponse.Payload.Data.ConsentID, []string{"urn:openbanking:psd2:sca"}),
 			acpclient.WithPKCE(),
 		); err != nil {
 			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to build authorize url: %+v", err))

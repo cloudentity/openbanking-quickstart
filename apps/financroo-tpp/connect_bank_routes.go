@@ -86,7 +86,7 @@ func (s *Server) ConnectBank() func(*gin.Context) {
 			return
 		}
 
-		s.CreateConsentResponse(c, bankID, *registerResponse.Payload.Data.ConsentID, user, clients.AcpAccountsClient)
+		s.CreateConsentResponse(c, bankID, registerResponse.Payload.Data.ConsentID, user, clients.AcpAccountsClient)
 	}
 }
 

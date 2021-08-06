@@ -170,7 +170,7 @@ func (s *DomesticPaymentMFAConsentProvider) GetConsentMockData(loginRequest Logi
 				OBWriteDomesticConsentResponse5Data: models.OBWriteDomesticConsentResponse5Data{
 					Initiation: &models.OBWriteDomesticConsentResponse5DataInitiation{
 						CreditorAccount: &models.OBWriteDomesticConsentResponse5DataInitiationCreditorAccount{
-							Name: &creditorAccountName,
+							Name: creditorAccountName,
 						},
 						DebtorAccount: &models.OBWriteDomesticConsentResponse5DataInitiationDebtorAccount{
 							Identification: &debtorAccount,

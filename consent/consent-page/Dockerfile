@@ -5,7 +5,6 @@ WORKDIR /app
 
 COPY go.mod .
 COPY go.sum .
-COPY models models
 COPY openbanking openbanking
 RUN go mod download
 

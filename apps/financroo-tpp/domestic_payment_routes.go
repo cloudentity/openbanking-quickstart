@@ -58,7 +58,7 @@ func (s *Server) CreateDomesticPaymentConsent() func(*gin.Context) {
 		schemaName := models.OBExternalAccountIdentification4Code("UK.OBIE.SortCodeAccountNumber")
 		account := models.OBWriteDomesticConsent4DataInitiationCreditorAccount{
 			Identification: &identification,
-			Name:           &paymentConsentRequest.PayeeAccountName,
+			Name:           paymentConsentRequest.PayeeAccountName,
 			SchemeName:     &schemaName,
 		}
 
@@ -79,18 +79,18 @@ func (s *Server) CreateDomesticPaymentConsent() func(*gin.Context) {
 				WithRequest(&models.DomesticPaymentConsentRequest{
 					Data: &models.OBWriteDomesticConsent4Data{
 						Authorisation: &models.OBWriteDomesticConsent4DataAuthorisation{
-							AuthorisationType:  &authorisationType,
+							AuthorisationType:  authorisationType,
 							CompletionDateTime: strfmt.DateTime(time.Now().Add(time.Hour)),
 						},
 						Initiation: &models.OBWriteDomesticConsent4DataInitiation{
 							CreditorAccount:        &account,
 							DebtorAccount:          &debtorAccount,
-							EndToEndIdentification: &id,
+							EndToEndIdentification: id,
 							InstructedAmount: &models.OBWriteDomesticConsent4DataInitiationInstructedAmount{
 								Amount:   &amount,
 								Currency: &currency,
 							},
-							InstructionIdentification: &id,
+							InstructionIdentification: id,
 							RemittanceInformation: &models.OBWriteDomesticConsent4DataInitiationRemittanceInformation{
 								Reference:    paymentConsentRequest.PaymentReference,
 								Unstructured: "Unstructured todo", // TODO invoice info?
@@ -106,7 +106,7 @@ func (s *Server) CreateDomesticPaymentConsent() func(*gin.Context) {
 			return
 		}
 
-		s.CreateConsentResponse(c, paymentConsentRequest.BankID, *registerResponse.Payload.Data.ConsentID, user, clients.AcpPaymentsClient)
+		s.CreateConsentResponse(c, paymentConsentRequest.BankID, registerResponse.Payload.Data.ConsentID, user, clients.AcpPaymentsClient)
 	}
 }
 
