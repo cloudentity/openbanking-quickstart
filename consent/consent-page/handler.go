@@ -126,9 +126,9 @@ func (s *Server) PostConsent(c *gin.Context, loginRequest LoginRequest, consentH
 
 func (s *Server) GetConsentHandler(loginRequest LoginRequest) (ConsentHandler, bool) {
 	switch loginRequest.ConsentType {
-	case "domestic_payment":
+	case "domestic_payment", "payments":
 		return s.PaymentConsentHandler, true
-	case "account_access":
+	case "account_access", "consents":
 		return s.AccountAccessConsentHandler, true
 	default:
 		return nil, false
