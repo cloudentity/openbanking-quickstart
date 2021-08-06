@@ -496,7 +496,7 @@ func (s *Server) IntrospectAccountsToken(c *gin.Context) (*acpClient.IntrospectO
 	token = strings.ReplaceAll(token, "Bearer ", "")
 
 	if introspectionResponse, err = s.Client.Openbanking.OpenbankingAccountAccessConsentIntrospect(
-		openbanking.NewOpenbankingAccountAccessConsentIntrospectParams().
+		openbanking.NewOpenbankingAccountAccessConsentIntrospectParamsWithContext(c).
 			WithTid(s.Client.TenantID).
 			WithAid(s.Client.ServerID).
 			WithToken(&token),
@@ -522,7 +522,7 @@ func (s *Server) IntrospectPaymentsToken(c *gin.Context) (*acpClient.IntrospectO
 	token = strings.ReplaceAll(token, "Bearer ", "")
 
 	if introspectionResponse, err = s.Client.Openbanking.OpenbankingDomesticPaymentConsentIntrospect(
-		openbanking.NewOpenbankingDomesticPaymentConsentIntrospectParams().
+		openbanking.NewOpenbankingDomesticPaymentConsentIntrospectParamsWithContext(c).
 			WithTid(s.Client.TenantID).
 			WithAid(s.Client.ServerID).
 			WithToken(&token),

@@ -23,7 +23,7 @@ func (s *OBUKDomesticPaymentConsentHandler) GetConsent(c *gin.Context, loginRequ
 	)
 
 	if response, err = s.Client.Openbanking.GetDomesticPaymentConsentSystem(
-		openbanking.NewGetDomesticPaymentConsentSystemParams().
+		openbanking.NewGetDomesticPaymentConsentSystemParamsWithContext(c).
 			WithTid(s.Client.TenantID).
 			WithLogin(loginRequest.ID),
 		nil,
@@ -54,7 +54,7 @@ func (s *OBUKDomesticPaymentConsentHandler) ConfirmConsent(c *gin.Context, login
 	)
 
 	if consent, err = s.Client.Openbanking.GetDomesticPaymentConsentSystem(
-		openbanking.NewGetDomesticPaymentConsentSystemParams().
+		openbanking.NewGetDomesticPaymentConsentSystemParamsWithContext(c).
 			WithTid(s.Client.TenantID).
 			WithLogin(loginRequest.ID),
 		nil,
@@ -63,7 +63,7 @@ func (s *OBUKDomesticPaymentConsentHandler) ConfirmConsent(c *gin.Context, login
 	}
 
 	if accept, err = s.Client.Openbanking.AcceptDomesticPaymentConsentSystem(
-		openbanking.NewAcceptDomesticPaymentConsentSystemParams().
+		openbanking.NewAcceptDomesticPaymentConsentSystemParamsWithContext(c).
 			WithTid(s.Client.TenantID).
 			WithLogin(loginRequest.ID).
 			WithAcceptConsent(&models.AcceptConsentRequest{
@@ -91,7 +91,7 @@ func (s *OBUKDomesticPaymentConsentHandler) DenyConsent(c *gin.Context, loginReq
 	)
 
 	if reject, err = s.Client.Openbanking.RejectDomesticPaymentConsentSystem(
-		openbanking.NewRejectDomesticPaymentConsentSystemParams().
+		openbanking.NewRejectDomesticPaymentConsentSystemParamsWithContext(c).
 			WithTid(s.Client.TenantID).
 			WithLogin(loginRequest.ID).
 			WithRejectConsent(&models.RejectConsentRequest{

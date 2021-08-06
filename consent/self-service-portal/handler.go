@@ -109,7 +109,7 @@ func (s *Server) RevokeConsent() func(*gin.Context) {
 		}
 
 		if _, err = s.Client.Openbanking.RevokeOpenbankingConsent(
-			openbanking.NewRevokeOpenbankingConsentParams().
+			openbanking.NewRevokeOpenbankingConsentParamsWithContext(c).
 				WithTid(s.Client.TenantID).
 				WithAid(s.Config.SystemClientsServerID).
 				WithConsentID(id),
@@ -167,7 +167,7 @@ func (s *Server) FetchConsents(c *gin.Context) (*ConsentsAndAccounts, error) {
 	}
 
 	if response, err = s.Client.Openbanking.ListOBConsents(
-		openbanking.NewListOBConsentsParams().
+		openbanking.NewListOBConsentsParamsWithContext(c).
 			WithTid(s.Client.TenantID).
 			WithAid(s.Config.SystemClientsServerID).
 			WithConsentsRequest(&models.ConsentsRequest{

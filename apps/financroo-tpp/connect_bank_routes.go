@@ -70,7 +70,7 @@ func (s *Server) ConnectBank() func(*gin.Context) {
 		}
 
 		if registerResponse, err = clients.AcpAccountsClient.Openbanking.CreateAccountAccessConsentRequest(
-			openbanking.NewCreateAccountAccessConsentRequestParams().
+			openbanking.NewCreateAccountAccessConsentRequestParamsWithContext(c).
 				WithTid(clients.AcpAccountsClient.TenantID).
 				WithAid(clients.AcpAccountsClient.ServerID).
 				WithRequest(&models.AccountAccessConsentRequest{

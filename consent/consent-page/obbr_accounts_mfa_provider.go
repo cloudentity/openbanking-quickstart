@@ -20,7 +20,7 @@ func (s *OBBRAccountAccessMFAConsentProvider) GetMFAData(loginRequest LoginReque
 	)
 
 	if response, err = s.Client.Openbanking.GetOBBRCustomerDataAccessConsentSystem(
-		openbanking.NewGetOBBRCustomerDataAccessConsentSystemParams().
+		openbanking.NewGetOBBRCustomerDataAccessConsentSystemParamsWithContext(c).
 			WithTid(s.Client.TenantID).
 			WithLogin(loginRequest.ID),
 		nil,

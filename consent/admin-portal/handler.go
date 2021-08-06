@@ -65,7 +65,7 @@ func (s *Server) ListClients() func(*gin.Context) {
 		}
 
 		if cs, err = s.Client.Clients.ListClientsSystem(
-			clients.NewListClientsSystemParams().
+			clients.NewListClientsSystemParamsWithContext(c).
 				WithTid(s.Client.TenantID).
 				WithAid(s.Config.SystemClientsServerID),
 			nil,
@@ -76,7 +76,7 @@ func (s *Server) ListClients() func(*gin.Context) {
 
 		for _, oc := range cs.Payload.Clients {
 			if consents, err = s.Client.Openbanking.ListOBConsents(
-				openbanking.NewListOBConsentsParams().
+				openbanking.NewListOBConsentsParamsWithContext(c).
 					WithTid(s.Client.TenantID).
 					WithAid(s.Config.SystemClientsServerID).
 					WithConsentsRequest(&models.ConsentsRequest{
@@ -116,7 +116,7 @@ func (s *Server) RevokeConsent() func(*gin.Context) {
 		}
 
 		if _, err = s.Client.Openbanking.RevokeOpenbankingConsent(
-			openbanking.NewRevokeOpenbankingConsentParams().
+			openbanking.NewRevokeOpenbankingConsentParamsWithContext(c).
 				WithTid(s.Client.TenantID).
 				WithAid(s.Config.SystemClientsServerID).
 				WithConsentID(id),
@@ -143,7 +143,7 @@ func (s *Server) RevokeConsentsForClient() func(*gin.Context) {
 		}
 
 		if _, err = s.Client.Openbanking.RevokeOpenbankingConsents(
-			openbanking.NewRevokeOpenbankingConsentsParams().
+			openbanking.NewRevokeOpenbankingConsentsParamsWithContext(c).
 				WithTid(s.Client.TenantID).
 				WithAid(s.Config.SystemClientsServerID).
 				WithConsentTypes(ConsentTypes).

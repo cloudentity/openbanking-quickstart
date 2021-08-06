@@ -57,7 +57,7 @@ func (s *AccountAccessMFAConsentProvider) GetMFAData(loginRequest LoginRequest) 
 	)
 
 	if response, err = s.Client.Openbanking.GetAccountAccessConsentSystem(
-		openbanking.NewGetAccountAccessConsentSystemParams().
+		openbanking.NewGetAccountAccessConsentSystemParamsWithContext(c).
 			WithTid(s.Client.TenantID).
 			WithLogin(loginRequest.ID),
 		nil,
@@ -121,7 +121,7 @@ func (s *DomesticPaymentMFAConsentProvider) GetMFAData(loginRequest LoginRequest
 	)
 
 	if response, err = s.Client.Openbanking.GetDomesticPaymentConsentSystem(
-		openbanking.NewGetDomesticPaymentConsentSystemParams().
+		openbanking.NewGetDomesticPaymentConsentSystemParamsWithContext(c).
 			WithTid(s.Client.TenantID).
 			WithLogin(loginRequest.ID),
 		nil,

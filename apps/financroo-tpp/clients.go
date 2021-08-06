@@ -28,7 +28,7 @@ func (c *Clients) RenewAccountsToken(bank ConnectedBank) (*models.TokenResponse,
 	)
 
 	if resp, err = c.AcpAccountsClient.Acp.Oauth2.Token(
-		oauth2.NewTokenParams().
+		oauth2.NewTokenParamsWithContext(c).
 			WithAid(c.AcpAccountsClient.ServerID).
 			WithTid(c.AcpAccountsClient.TenantID).
 			WithClientID(&c.AcpAccountsClient.Config.ClientID).
