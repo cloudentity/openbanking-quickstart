@@ -157,7 +157,7 @@ func NewServer() (Server, error) {
 		server.AccountAccessConsentHandler = &OBUKAccountAccessConsentHandler{&server, ConsentTools{Trans: server.Trans}}
 		server.PaymentConsentHandler = &OBUKDomesticPaymentConsentHandler{&server, ConsentTools{Trans: server.Trans}}
 	case OBBR:
-		server.AccountAccessConsentHandler = &OBBRAccountAccessConsentHandler{}
+		server.AccountAccessConsentHandler = &OBBRAccountAccessConsentHandler{&server, ConsentTools{Trans: server.Trans}}
 	default:
 		return server, errors.Wrapf(err, "unsupported spec %s", server.Config.Spec)
 	}
