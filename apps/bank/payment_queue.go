@@ -3,7 +3,7 @@ package main
 import (
 	"time"
 
-	paymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/paymentinitiation/models"
+	paymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
 	logrus "github.com/sirupsen/logrus"
 )
 

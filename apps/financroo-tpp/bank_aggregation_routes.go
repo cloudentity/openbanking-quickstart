@@ -8,7 +8,7 @@ import (
 	"github.com/cloudentity/openbanking-quickstart/client/accounts"
 	"github.com/cloudentity/openbanking-quickstart/client/balances"
 	"github.com/cloudentity/openbanking-quickstart/client/transactions"
-	"github.com/cloudentity/openbanking-quickstart/models"
+	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 )
