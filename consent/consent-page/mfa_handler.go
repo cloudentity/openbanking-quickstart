@@ -24,7 +24,7 @@ type MFAData struct {
 }
 
 type MFAConsentProvider interface {
-	GetMFAData(LoginRequest) (MFAData, error)
+	GetMFAData(*gin.Context, LoginRequest) (MFAData, error)
 	GetSMSBody(MFAData, OTP) string
 	GetTemplateName() string
 	GetConsentMockData(LoginRequest) map[string]interface{}
@@ -49,7 +49,7 @@ type AccountAccessMFAConsentProvider struct {
 	ConsentTools
 }
 
-func (s *AccountAccessMFAConsentProvider) GetMFAData(loginRequest LoginRequest) (MFAData, error) {
+func (s *AccountAccessMFAConsentProvider) GetMFAData(c *gin.Context, loginRequest LoginRequest) (MFAData, error) {
 	var (
 		response *openbanking.GetAccountAccessConsentSystemOK
 		data     = MFAData{}
@@ -113,7 +113,7 @@ type DomesticPaymentMFAConsentProvider struct {
 	ConsentTools
 }
 
-func (s *DomesticPaymentMFAConsentProvider) GetMFAData(loginRequest LoginRequest) (MFAData, error) {
+func (s *DomesticPaymentMFAConsentProvider) GetMFAData(c *gin.Context, loginRequest LoginRequest) (MFAData, error) {
 	var (
 		response *openbanking.GetDomesticPaymentConsentSystemOK
 		data     = MFAData{}
@@ -230,7 +230,7 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 			return
 		}
 
-		if data, err = provider.GetMFAData(r); err != nil {
+		if data, err = provider.GetMFAData(c, r); err != nil {
 			RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to get authn context"))
 			return
 		}

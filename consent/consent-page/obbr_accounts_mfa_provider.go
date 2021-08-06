@@ -5,6 +5,7 @@ import (
 
 	"github.com/cloudentity/acp-client-go/client/openbanking"
 	"github.com/cloudentity/acp-client-go/models"
+	"github.com/gin-gonic/gin"
 )
 
 type OBBRAccountAccessMFAConsentProvider struct {
@@ -12,7 +13,7 @@ type OBBRAccountAccessMFAConsentProvider struct {
 	ConsentTools
 }
 
-func (s *OBBRAccountAccessMFAConsentProvider) GetMFAData(loginRequest LoginRequest) (MFAData, error) {
+func (s *OBBRAccountAccessMFAConsentProvider) GetMFAData(c *gin.Context, loginRequest LoginRequest) (MFAData, error) {
 	var (
 		response *openbanking.GetOBBRCustomerDataAccessConsentSystemOK
 		data     = MFAData{}
