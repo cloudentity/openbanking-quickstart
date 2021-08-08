@@ -1,17 +1,24 @@
 :root {
-  --mdc-theme-primary: #00AAB5;
+  --mdc-theme-primary: #00aab5;
+  --mdc-theme-secondary: #00aab5;
+  --alert-color: #dc1b37;
+  --dark-color: #002d4c;
+  --dark-font-color: #212533;
+  --gray-color: #ececec;
+  --background-color: #1f2d48;
+  --border-color: #f4f4f4;
 }
 
 html {
-  font-family: 'Inter', sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 body {
-  background-color: #1F2D48;
+  background-color: var(--background-color);
   margin: 0;
 }
 
-#mask_branding {
+#background-image {
   position: absolute;
   opacity: 0.04;
 }
@@ -43,12 +50,17 @@ body {
   user-select: none;
 }
 
+.icon-logo {
+  text-align: center;
+  margin-top: 48px;
+}
+
 .mdc-button {
   text-transform: none;
 }
 
 .hr {
-  background: #ECECEC;
+  background: var(--gray-color);
   width: 100%;
   height: 1px;
 }
@@ -56,15 +68,15 @@ body {
 .accounts-block {
   margin-top: 16px;
   padding: 0 16px;
-  background: #FCFCFF;
-  border: 1px solid #F4F4F4;
+  background: #fcfcff;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
 }
 
 .permissions-block {
   margin-top: 16px;
-  background: #FCFCFF;
-  border: 1px solid #F4F4F4;
+  background: #fcfcff;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
 }
 
@@ -73,13 +85,13 @@ body {
 }
 
 .account-row:not(:first-child) {
-  border-top: 1px solid #ECECEC;
+  border-top: 1px solid var(--gray-color);
 }
 
 .caption {
   font-size: 12px;
   font-weight: 400;
-  color: #212533;
+  color: var(--dark-font-color);
 }
 
 .error-title {
@@ -106,7 +118,7 @@ body {
 
 .form-block {
   background-color: #fff;
-  color: #212533;
+  color: var(--dark-font-color);
   border-radius: 4px;
   padding: 16px 32px 32px 32px;
 }
@@ -145,8 +157,8 @@ body {
 .account-description {
   color: rgba(0, 0, 0, 0.6);
   font-size: 12px;
-  background: #fff;
-  border: 1px solid #f4f4f4;
+  background: #fbfcfd;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
   padding: 16px;
   margin-top: 16px;
@@ -174,6 +186,21 @@ body {
   text-align: center;
 }
 
+.confirm-button {
+  height: 48px;
+  padding: 12px 24px;
+  margin-left: 8px;
+  background: var(--alert-color) !important;
+  color: white !important;
+}
+
+.cancel-button {
+  height: 48px;
+  padding: 12px 24px;
+  color: var(--dark-color) !important;
+  border-color: var(--dark-color) !important;
+}
+
 .mfa-container {
   position: fixed;
   bottom: 0;
@@ -190,7 +217,7 @@ body {
 
 .mfa-container__item--left {
   width: 408px;
-  margin-left: auto
+  margin-left: auto;
 }
 
 .mfa-container__item--right {
@@ -204,7 +231,6 @@ body {
   font-weight: 400;
   line-height: 40px;
   text-align: left;
-
 }
 
 .heading-4 {
@@ -214,7 +240,7 @@ body {
   font-weight: 600;
   line-height: 24px;
   text-align: left;
-
+  margin-top: 12px;
 }
 
 .caption {
@@ -230,7 +256,7 @@ body {
 .mfa-container__card {
   margin-bottom: 12px;
   padding: 12px 16px;
-  border: 1px solid #f4f4f4;
+  border: 1px solid var(--border-color);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -238,12 +264,13 @@ body {
 }
 
 .mfa-container__card.error {
-  border: 1px solid #DC1B37;
+  border: 1px solid var(--alert-color);
   box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.08), 0px 0px 1px rgba(0, 0, 0, 0.31);
 }
 
 .mfa-container__card.hover:hover {
-  box-shadow: 0px 1px 16px -4px rgba(0, 0, 0, 0.25), 0px 0px 1px rgba(0, 0, 0, 0.31);
+  box-shadow: 0px 1px 16px -4px rgba(0, 0, 0, 0.25),
+    0px 0px 1px rgba(0, 0, 0, 0.31);
   cursor: pointer;
 }
 
@@ -260,7 +287,8 @@ body {
   border-radius: 2px;
 }
 
-a.resend, a.resend:visited {
+a.resend,
+a.resend:visited {
   color: red;
   text-decoration: none;
 }

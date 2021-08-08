@@ -31,10 +31,21 @@ func (l *LoginRequest) Validate() error {
 	return nil
 }
 
-func (s *Server) WithConsentHandler(c *gin.Context) (SpecificConsentHandler, LoginRequest, error) {
+func (s *Server) GetTemplateNameForSpec(basename string) string {
+	switch s.Config.Spec {
+	case OBUK:
+		return string(OBUK) + "-" + basename
+	case OBBR:
+		return string(OBUK) + "-" + basename
+	}
+
+	return basename
+}
+
+func (s *Server) WithConsentHandler(c *gin.Context) (ConsentHandler, LoginRequest, error) {
 	var (
 		loginRequest = NewLoginRequest(c)
-		handler      SpecificConsentHandler
+		handler      ConsentHandler
 		err          error
 		ok           bool
 	)
@@ -53,13 +64,13 @@ func (s *Server) WithConsentHandler(c *gin.Context) (SpecificConsentHandler, Log
 func (s *Server) Get() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			handler      SpecificConsentHandler
+			handler      ConsentHandler
 			loginRequest LoginRequest
 			err          error
 		)
 
 		if handler, loginRequest, err = s.WithConsentHandler(c); err != nil {
-			RenderInvalidRequestError(c, err)
+			RenderInvalidRequestError(c, s.Trans, err)
 			return
 		}
 
@@ -70,14 +81,14 @@ func (s *Server) Get() func(*gin.Context) {
 func (s *Server) Post() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			handler SpecificConsentHandler
+			handler ConsentHandler
 
 			loginRequest LoginRequest
 			err          error
 		)
 
 		if handler, loginRequest, err = s.WithConsentHandler(c); err != nil {
-			RenderInvalidRequestError(c, err)
+			RenderInvalidRequestError(c, s.Trans, err)
 			return
 		}
 
@@ -85,7 +96,7 @@ func (s *Server) Post() func(*gin.Context) {
 	}
 }
 
-func (s *Server) PostConsent(c *gin.Context, loginRequest LoginRequest, consentHandler SpecificConsentHandler) {
+func (s *Server) PostConsent(c *gin.Context, loginRequest LoginRequest, consentHandler ConsentHandler) {
 	var (
 		redirect string
 		err      error
@@ -99,12 +110,12 @@ func (s *Server) PostConsent(c *gin.Context, loginRequest LoginRequest, consentH
 	case "deny":
 		redirect, err = consentHandler.DenyConsent(c, loginRequest)
 	default:
-		RenderInvalidRequestError(c, fmt.Errorf("invalid form action: %s", action))
+		RenderInvalidRequestError(c, s.Trans, fmt.Errorf("invalid form action: %s", action))
 		return
 	}
 
 	if err != nil {
-		RenderInternalServerError(c, errors.Wrapf(err, "failed to %s consent: %+v", c.PostForm("action"), loginRequest.ConsentType))
+		RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to %s consent: %+v", c.PostForm("action"), loginRequest.ConsentType))
 		return
 	}
 
@@ -113,21 +124,18 @@ func (s *Server) PostConsent(c *gin.Context, loginRequest LoginRequest, consentH
 	c.Redirect(http.StatusFound, redirect)
 }
 
-func (s *Server) GetConsentHandler(loginRequest LoginRequest) (SpecificConsentHandler, bool) {
-	var handler SpecificConsentHandler
-
+func (s *Server) GetConsentHandler(loginRequest LoginRequest) (ConsentHandler, bool) {
 	switch loginRequest.ConsentType {
 	case "domestic_payment":
-		handler = &DomesticPaymentConsentHandler{s, ConsentTools{}}
+		return s.PaymentConsentHandler, true
 	case "account_access":
-		handler = &AccountAccessConsentHandler{s, ConsentTools{}}
+		return s.AccountAccessConsentHandler, true
 	default:
 		return nil, false
 	}
-	return handler, true
 }
 
-type SpecificConsentHandler interface {
+type ConsentHandler interface {
 	GetConsent(c *gin.Context, loginRequest LoginRequest)
 	ConfirmConsent(c *gin.Context, loginRequest LoginRequest) (redirect string, err error)
 	DenyConsent(c *gin.Context, loginRequest LoginRequest) (redirect string, err error)

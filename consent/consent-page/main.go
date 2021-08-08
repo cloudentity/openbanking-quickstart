@@ -2,19 +2,32 @@ package main
 
 import (
 	"fmt"
+	"io/fs"
+	"io/ioutil"
 	"net/http"
 	"net/url"
+	"path/filepath"
 	"strconv"
 	"strings"
 	"time"
 
 	"github.com/caarlos0/env/v6"
+	"github.com/ghodss/yaml"
 	"github.com/gin-gonic/gin"
+	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	bolt "go.etcd.io/bbolt"
+	"golang.org/x/text/language"
 
 	acpclient "github.com/cloudentity/acp-client-go"
+)
+
+type Spec string
+
+const (
+	OBUK Spec = "obuk"
+	OBBR Spec = "obbr"
 )
 
 type Config struct {
@@ -28,13 +41,27 @@ type Config struct {
 	KeyFile          string        `env:"KEY_FILE,required"`
 	BankURL          *url.URL      `env:"BANK_URL"`
 	EnableMFA        bool          `env:"ENABLE_MFA"`
-	OTPMode          string        `env:"OTP_MODE"` // optional, set to "mock" to use "111111" as otp
+	OTPMode          string        `env:"OTP_MODE" envDefault:"demo"`
 	TwilioAccountSid string        `env:"TWILIO_ACCOUNT_SID"`
 	TwilioAuthToken  string        `env:"TWILIO_AUTH_TOKEN"`
 	TwilioFrom       string        `env:"TWILIO_FROM" envDefault:"Cloudentity"`
 	DBFile           string        `env:"DB_FILE" envDefault:"./data/my.db"`
-	MobileClaim      string        `env:"MOBILE_CLAIM" envDefault:"mobile_verified"`
+	MFAClaim         string        `env:"MFA_CLAIM" envDefault:"mobile_verified"`
 	LogLevel         string        `env:"LOG_LEVEL" envDefault:"info"`
+	DevMode          bool          `env:"DEV_MODE"`
+	DefaultLanguage  language.Tag  `env:"DEFAULT_LANGUAGE"  envDefault:"en-us"`
+	TransDir         string        `env:"TRANS_DIR" envDefault:"./translations"`
+	Spec             Spec          `env:"SPEC,required"`
+
+	Otp OtpConfig
+}
+
+type OtpConfig struct {
+	Type       string        `env:"OTP_TYPE" envDefault:"otp"`
+	RequestURL string        `env:"OTP_REQUEST_URL"`
+	VerifyURL  string        `env:"OTP_VERIFY_URL"`
+	Timeout    time.Duration `env:"OTP_TIMEOUT" envDefault:"10s"`
+	AuthHeader string        `env:"OTP_AUTH_HEADER"`
 }
 
 func (c *Config) ClientConfig() acpclient.Config {
@@ -55,16 +82,21 @@ func LoadConfig() (config Config, err error) {
 		return config, err
 	}
 
+	logrus.WithField("config", config).Debug("loaded config")
+
 	return config, err
 }
 
 type Server struct {
-	Config     Config
-	Client     acpclient.Client
-	BankClient BankClient
-	SMSClient  *SMSClient
-	OTPRepo    *OTPRepo
-	OTPHandler OTPHandler
+	Config                      Config
+	Client                      acpclient.Client
+	BankClient                  BankClient
+	SMSClient                   *SMSClient
+	OTPRepo                     *OTPRepo
+	OTPHandler                  OTPHandler
+	Trans                       *Trans
+	PaymentConsentHandler       ConsentHandler
+	AccountAccessConsentHandler ConsentHandler
 }
 
 func NewServer() (Server, error) {
@@ -73,6 +105,7 @@ func NewServer() (Server, error) {
 		db     *bolt.DB
 		l      logrus.Level
 		err    error
+		trans  []fs.FileInfo
 	)
 
 	if server.Config, err = LoadConfig(); err != nil {
@@ -88,6 +121,21 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to init acp client")
 	}
 
+	bundle := i18n.NewBundle(server.Config.DefaultLanguage)
+	bundle.RegisterUnmarshalFunc("yaml", yaml.Unmarshal)
+
+	if trans, err = ioutil.ReadDir(server.Config.TransDir); err != nil {
+		return server, errors.Wrapf(err, "failed to read dir %s", server.Config.TransDir)
+	}
+
+	for _, t := range trans {
+		if _, err = bundle.LoadMessageFile(server.Config.TransDir + "/" + t.Name()); err != nil {
+			return server, err
+		}
+	}
+
+	server.Trans = NewTranslations(bundle, server.Config.DefaultLanguage.String())
+
 	server.SMSClient = NewSMSClient(server.Config)
 
 	server.BankClient = NewBankClient(server.Config)
@@ -100,7 +148,19 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to init otp repo")
 	}
 
-	server.OTPHandler = NewOTPHandler(server.Config.OTPMode, server.OTPRepo, server.SMSClient)
+	if server.OTPHandler, err = NewOTPHandler(server.Config, server.OTPRepo, server.SMSClient); err != nil {
+		return server, errors.Wrapf(err, "failed to init otp handler")
+	}
+
+	switch server.Config.Spec {
+	case OBUK:
+		server.AccountAccessConsentHandler = &OBUKAccountAccessConsentHandler{&server, ConsentTools{Trans: server.Trans}}
+		server.PaymentConsentHandler = &OBUKDomesticPaymentConsentHandler{&server, ConsentTools{Trans: server.Trans}}
+	case OBBR:
+		server.AccountAccessConsentHandler = &OBBRAccountAccessConsentHandler{}
+	default:
+		return server, errors.Wrapf(err, "unsupported spec %s", server.Config.Spec)
+	}
 
 	return server, nil
 }
@@ -120,7 +180,7 @@ func RequireMFAMiddleware(s *Server) gin.HandlerFunc {
 		)
 
 		if approved, err = s.OTPHandler.IsApproved(NewLoginRequest(c)); err != nil {
-			RenderInvalidRequestError(c, nil)
+			RenderInvalidRequestError(c, s.Trans, nil)
 			c.Abort()
 			return
 		}
@@ -138,18 +198,31 @@ func RequireMFAMiddleware(s *Server) gin.HandlerFunc {
 }
 
 func (s *Server) Start() error {
-	r := gin.Default()
-	r.LoadHTMLGlob("templates/*")
-	r.Static("/assets", "./assets")
+	var err error
 
-	if s.Config.EnableMFA {
-		r.Use(RequireMFAMiddleware(s))
-		r.GET(mfaPath, s.MFAHandler())
-		r.POST(mfaPath, s.MFAHandler())
+	r := gin.Default()
+
+	if err = loadTemplates(r, "./templates"); err != nil {
+		return errors.Wrapf(err, "failed to load templates")
 	}
 
-	r.GET("/", s.Get())
-	r.POST("/", s.Post())
+	r.Static("/assets", "./assets")
+
+	base := r.Group("")
+
+	if s.Config.EnableMFA {
+		base.Use(RequireMFAMiddleware(s))
+		base.GET(mfaPath, s.MFAHandler())
+		base.POST(mfaPath, s.MFAHandler())
+	}
+
+	if s.Config.DevMode {
+		demo := r.Group("/demo")
+		demo.POST("/totp/verify", s.DemoTotpVerify)
+	}
+
+	base.GET("/", s.Get())
+	base.POST("/", s.Post())
 
 	return r.RunTLS(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)), s.Config.CertFile, s.Config.KeyFile)
 }
@@ -167,4 +240,25 @@ func main() {
 	if err = server.Start(); err != nil {
 		logrus.WithError(err).Fatalf("failed to start server")
 	}
+}
+
+func loadTemplates(r *gin.Engine, dir string) error {
+	var (
+		baseTemplates   []string
+		customTemplates []string
+		err             error
+	)
+
+	if baseTemplates, err = filepath.Glob(fmt.Sprintf("%s/base/*.tmpl", dir)); err != nil {
+		return errors.Wrapf(err, "failed to get base templates")
+	}
+
+	if customTemplates, err = filepath.Glob(fmt.Sprintf("%s/custom/*.tmpl", dir)); err != nil {
+		return errors.Wrapf(err, "failed to get custom templates")
+	}
+
+	templates := append(baseTemplates, customTemplates...)
+	r.LoadHTMLFiles(templates...)
+
+	return nil
 }

@@ -7,8 +7,8 @@ import (
 	"os"
 	"time"
 
-	"github.com/cloudentity/openbanking-quickstart/models"
-	paymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/paymentinitiation/models"
+	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
+	paymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
 	"github.com/go-openapi/strfmt"
 	"github.com/pkg/errors"
 	bolt "go.etcd.io/bbolt"

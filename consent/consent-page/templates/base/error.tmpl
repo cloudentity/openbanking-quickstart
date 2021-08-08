@@ -1,0 +1,20 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+
+<html>
+<head>
+  {{ template "imports.tmpl" }}
+  <title>Error</title>
+</head>
+
+<body>
+<div class="header">
+  <img src="/assets/images/bank_logo.svg"/>
+</div>
+<div id="background-image">
+  <img src="/assets/images/background_image.svg"/>
+</div>
+<div class="content">
+  <p class="error-title">{{ .msg }}</p>
+</div>
+</body>
+</html>

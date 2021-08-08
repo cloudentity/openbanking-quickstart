@@ -7,7 +7,7 @@ import (
 	"time"
 
 	obc "github.com/cloudentity/openbanking-quickstart/client"
-	payments_client "github.com/cloudentity/openbanking-quickstart/openbanking/paymentinitiation/client"
+	payments_client "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/client"
 	"github.com/pkg/errors"
 
 	acpclient "github.com/cloudentity/acp-client-go"
