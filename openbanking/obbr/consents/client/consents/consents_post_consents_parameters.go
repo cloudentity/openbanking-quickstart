@@ -15,7 +15,7 @@ import (
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/cloudentity/acp/pkg/openbankingbr/consents/models"
+	"github.com/cloudentity/openbanking-quickstart/openbanking/obbr/consents/models"
 )
 
 // NewConsentsPostConsentsParams creates a new ConsentsPostConsentsParams object,

@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/cloudentity/openbanking-quickstart/models"
+	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
 )
 
 type BankClient struct {

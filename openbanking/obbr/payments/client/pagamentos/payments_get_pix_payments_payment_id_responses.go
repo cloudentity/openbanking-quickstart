@@ -12,7 +12,7 @@ import (
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/cloudentity/acp/pkg/openbankingbr/payments/models"
+	"github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/models"
 )
 
 // PaymentsGetPixPaymentsPaymentIDReader is a Reader for the PaymentsGetPixPaymentsPaymentID structure.
