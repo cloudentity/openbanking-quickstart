@@ -6,11 +6,10 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/gin-gonic/gin"
-	"github.com/pkg/errors"
-
 	obc "github.com/cloudentity/openbanking-quickstart/client"
 	payments_client "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/client"
+	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
 
 	acpclient "github.com/cloudentity/acp-client-go"
 	"github.com/cloudentity/acp-client-go/client/oauth2"

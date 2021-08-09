@@ -3,9 +3,10 @@ package main
 import (
 	"fmt"
 
+	"github.com/gin-gonic/gin"
+
 	"github.com/cloudentity/acp-client-go/client/openbanking"
 	"github.com/cloudentity/acp-client-go/models"
-	"github.com/gin-gonic/gin"
 )
 
 type OBBRAccountAccessMFAConsentProvider struct {
