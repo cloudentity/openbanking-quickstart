@@ -145,19 +145,19 @@ func (c *ConsentTools) GetOBBRDataAccessConsentTemplateData(
 	clientName := c.GetClientName(nil)
 	return map[string]interface{}{
 		"trans": map[string]interface{}{
-			"headTitle":      c.Trans.T("uk.account.headTitle"),
-			"title":          c.Trans.T("uk.account.title"),
-			"selectAccounts": c.Trans.T("uk.account.selectAccounts"),
-			"reviewData":     c.Trans.T("uk.account.review_data"),
-			"permissions":    c.Trans.T("uk.account.permissions"),
-			"purpose":        c.Trans.T("uk.account.purpose"),
-			"purposeDetail":  c.Trans.T("uk.account.purposeDetail"),
-			"expiration": c.Trans.TD("uk.account.expiration", map[string]interface{}{
+			"headTitle":      c.Trans.T("br.account.headTitle"),
+			"title":          c.Trans.T("br.account.title"),
+			"selectAccounts": c.Trans.T("br.account.selectAccounts"),
+			"reviewData":     c.Trans.T("br.account.review_data"),
+			"permissions":    c.Trans.T("br.account.permissions"),
+			"purpose":        c.Trans.T("br.account.purpose"),
+			"purposeDetail":  c.Trans.T("br.account.purposeDetail"),
+			"expiration": c.Trans.TD("br.account.expiration", map[string]interface{}{
 				"client_name":     clientName,
 				"expiration_date": expirationDate,
 			}),
-			"cancel": c.Trans.T("uk.account.cancel"),
-			"agree":  c.Trans.T("uk.account.agree"),
+			"cancel": c.Trans.T("br.account.cancel"),
+			"agree":  c.Trans.T("br.account.agree"),
 		},
 		"login_request": loginRequest,
 		"accounts":      accounts.Accounts,
@@ -176,20 +176,20 @@ func (c *ConsentTools) GetOBBRPaymentConsentTemplateData(
 	clientName := c.GetClientName(nil)
 	return map[string]interface{}{
 		"trans": map[string]interface{}{
-			"headTitle":        c.Trans.T("uk.payment.headTitle"),
-			"title":            c.Trans.T("uk.payment.title"),
-			"paymentInfo":      c.Trans.T("uk.payment.paymentInfo"),
-			"payeeAccountName": c.Trans.T("uk.payment.payeeAccountName"),
-			"sortCode":         c.Trans.T("uk.payment.sortCode"),
-			"accountNumber":    c.Trans.T("uk.payment.accountNumber"),
-			"paymentReference": c.Trans.T("uk.payment.paymentReference"),
-			"amount":           c.Trans.T("uk.payment.amount"),
-			"accountInfo":      c.Trans.T("uk.payment.accountInfo"),
-			"clickToProceed": c.Trans.TD("uk.payment.clickToProceed", map[string]interface{}{
+			"headTitle":        c.Trans.T("br.payment.headTitle"),
+			"title":            c.Trans.T("br.payment.title"),
+			"paymentInfo":      c.Trans.T("br.payment.paymentInfo"),
+			"payeeAccountName": c.Trans.T("br.payment.payeeAccountName"),
+			"sortCode":         c.Trans.T("br.payment.sortCode"),
+			"accountNumber":    c.Trans.T("br.payment.accountNumber"),
+			"paymentReference": c.Trans.T("br.payment.paymentReference"),
+			"amount":           c.Trans.T("br.payment.amount"),
+			"accountInfo":      c.Trans.T("br.payment.accountInfo"),
+			"clickToProceed": c.Trans.TD("br.payment.clickToProceed", map[string]interface{}{
 				"client_name": clientName,
 			}),
-			"cancel":  c.Trans.T("uk.payment.cancel"),
-			"confirm": c.Trans.T("uk.payment.confirm"),
+			"cancel":  c.Trans.T("br.payment.cancel"),
+			"confirm": c.Trans.T("br.payment.confirm"),
 		},
 		"login_request": loginRequest,
 		"accounts":      c.GetAccountsWithBalance(accounts, balances, consent.CustomerDataAccessConsent.DebtorAccount.Number),

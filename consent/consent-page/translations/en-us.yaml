@@ -25,6 +25,30 @@ uk.payment.clickToProceed: Click confirm to proceed with payment. Once payment i
 uk.payment.cancel: Cancel
 uk.payment.confirm: Confirm
 
+br.account.headTitle: Account Access Consent
+br.account.title: Account selection
+br.account.selectAccounts: Select accounts to share with
+br.account.review_data: Review the data you will be sharing
+br.account.permissions: Account permissions
+br.account.purpose: Purpose for sharing data
+br.account.purposeDetail: To uncover insights that can improve your financial well being.
+br.account.expiration: <strong>{{ .client_name }}</strong> will have access to your account information until <strong>{{ .expiration_date }}</strong>
+br.account.cancel: Cancel
+br.account.agree: I Agree
+
+br.payment.headTitle: Payment Consent
+br.payment.title: Account Confirm payment
+br.payment.paymentInfo: Payment Information
+br.payment.payeeAccountName: Payee Account Name
+br.payment.sortCode: Sort code
+br.payment.accountNumber: Account number
+br.payment.paymentReference: Payment reference
+br.payment.amount: AMOUNT
+br.payment.accountInfo: Account Information
+br.payment.clickToProceed: Click confirm to proceed with payment. Once payment is completed we’ll sign you out of <strong>gobank.com</strong> and return you to <strong>{{ .client_name }}</strong>
+br.payment.cancel: Cancel
+br.payment.confirm: Confirm
+
 mfa.init.title: Additional verification required
 mfa.init.subTitle: To proceed, select where to send your security code
 mfa.init.caption1: By choosing text message you authorize <strong>GoBank</strong> to text and call you.
