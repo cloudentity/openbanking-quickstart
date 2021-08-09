@@ -31,25 +31,22 @@ type MFAConsentProvider interface {
 }
 
 func (s *Server) GetMFAConsentProvider(loginRequest LoginRequest) (MFAConsentProvider, bool) {
-	var handler MFAConsentProvider
-
 	switch loginRequest.ConsentType {
-	case "domestic_payment":
-		handler = &DomesticPaymentMFAConsentProvider{s, ConsentTools{Trans: s.Trans}}
-	case "account_access":
-		handler = &AccountAccessMFAConsentProvider{s, ConsentTools{Trans: s.Trans}}
+	case "domestic_payment", "payments":
+		return s.PaymentMFAConsentProvider, true
+	case "account_access", "consents":
+		return s.AccountAccessMFAConsentProvider, true
 	default:
 		return nil, false
 	}
-	return handler, true
 }
 
-type AccountAccessMFAConsentProvider struct {
+type OBUKAccountAccessMFAConsentProvider struct {
 	*Server
 	ConsentTools
 }
 
-func (s *AccountAccessMFAConsentProvider) GetMFAData(c *gin.Context, loginRequest LoginRequest) (MFAData, error) {
+func (s *OBUKAccountAccessMFAConsentProvider) GetMFAData(c *gin.Context, loginRequest LoginRequest) (MFAData, error) {
 	var (
 		response *openbanking.GetAccountAccessConsentSystemOK
 		data     = MFAData{}
@@ -72,7 +69,7 @@ func (s *AccountAccessMFAConsentProvider) GetMFAData(c *gin.Context, loginReques
 	return data, nil
 }
 
-func (s *AccountAccessMFAConsentProvider) GetSMSBody(data MFAData, otp OTP) string {
+func (s *OBUKAccountAccessMFAConsentProvider) GetSMSBody(data MFAData, otp OTP) string {
 	return fmt.Sprintf(
 		"%s is requesting access to your accounts, please pre-authorize the consent %s using following code: %s to proceed.",
 		data.ClientName,
@@ -81,11 +78,11 @@ func (s *AccountAccessMFAConsentProvider) GetSMSBody(data MFAData, otp OTP) stri
 	)
 }
 
-func (s *AccountAccessMFAConsentProvider) GetTemplateName() string {
+func (s *OBUKAccountAccessMFAConsentProvider) GetTemplateName() string {
 	return s.GetTemplateNameForSpec("account-consent.tmpl")
 }
 
-func (s *AccountAccessMFAConsentProvider) GetConsentMockData(loginRequest LoginRequest) map[string]interface{} {
+func (s *OBUKAccountAccessMFAConsentProvider) GetConsentMockData(loginRequest LoginRequest) map[string]interface{} {
 	return s.GetAccessConsentTemplateData(
 		loginRequest,
 		&models.GetAccountAccessConsentResponse{
