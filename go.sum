@@ -81,6 +81,8 @@ github.com/cloudentity/acp-client-go v0.0.0-20210806030743-4650df4d7117 h1:p6DZH
 github.com/cloudentity/acp-client-go v0.0.0-20210806030743-4650df4d7117/go.mod h1:NBZIC1K5DEil5H0Rm+lJ8tNZ9ukLHh/9mdOMLpPo2vM=
 github.com/cloudentity/acp-client-go v0.0.0-20210806143614-aafefe122820 h1:H8RrSeeHKiEt5Ebc0ehU/5MegnxKo3tN7PJEcrYoMkA=
 github.com/cloudentity/acp-client-go v0.0.0-20210806143614-aafefe122820/go.mod h1:NBZIC1K5DEil5H0Rm+lJ8tNZ9ukLHh/9mdOMLpPo2vM=
+github.com/cloudentity/acp-client-go v0.0.0-20210809194217-a6b8a778653e h1:P+IMaeicNskQmT3rkOrO3g4ZHIwiMpoBjVQXvL/DEiA=
+github.com/cloudentity/acp-client-go v0.0.0-20210809194217-a6b8a778653e/go.mod h1:NBZIC1K5DEil5H0Rm+lJ8tNZ9ukLHh/9mdOMLpPo2vM=
 github.com/cncf/udpa/go v0.0.0-20191209042840-269d4d468f6f/go.mod h1:M8M6+tZqaGXZJjfX53e64911xZQV5JYwmTeXPW+k8Sc=
 github.com/coreos/bbolt v1.3.2/go.mod h1:iRUV2dpdMOn7Bo10OQBFzIJO9kkE559Wcmn+qkEiiKk=
 github.com/coreos/etcd v3.3.13+incompatible/go.mod h1:uF7uidLiAD3TWHmW31ZFd/JWoc32PjwdhPthX9715RE=
