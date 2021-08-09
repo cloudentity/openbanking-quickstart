@@ -270,6 +270,7 @@ issues:
     - path: apps/bank/
       linters:
         - deadcode
+        - unused
 
     - path: fosite.+_test\.go
       linters:
