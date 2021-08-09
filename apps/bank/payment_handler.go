@@ -11,8 +11,8 @@ import (
 	"strings"
 	"time"
 
-	"github.com/cloudentity/openbanking-quickstart/models"
-	paymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/paymentinitiation/models"
+	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
+	paymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 	"github.com/google/uuid"
@@ -84,7 +84,7 @@ func (s *Server) CreateDomesticPayment() func(*gin.Context) {
 			return
 		}
 
-		if *introspectionResponse.Status != "Authorised" {
+		if introspectionResponse.Status != "Authorised" {
 			msg := "domestic payment consent does not have status authorised"
 			c.JSON(http.StatusUnprocessableEntity, models.OBError1{
 				Message: &msg,
@@ -151,7 +151,7 @@ func (s *Server) CreateDomesticPayment() func(*gin.Context) {
 		response := paymentModels.OBWriteDomesticResponse5{
 			Data: &paymentModels.OBWriteDomesticResponse5Data{
 				DomesticPaymentID:    &id,
-				ConsentID:            introspectionResponse.ConsentID,
+				ConsentID:            &introspectionResponse.ConsentID,
 				Status:               &status,
 				Charges:              []*paymentModels.OBWriteDomesticResponse5DataChargesItems0{},
 				CreationDateTime:     newDateTimePtr(time.Now()),

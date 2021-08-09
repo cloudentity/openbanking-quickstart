@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/cloudentity/openbanking-quickstart/models"
+	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 
@@ -72,29 +72,16 @@ func (s *Server) GetBalances() func(ctx *gin.Context) {
 			return
 		}
 
-		balances := []*models.OBReadBalance1DataBalanceItems0{}
+		filteredBalances := []models.OBReadBalance1DataBalanceItems0{}
 
 		for _, balance := range userBalances {
-			b := balance
-			if has(introspectionResponse.AccountIDs, string(*b.AccountID)) {
-				balances = append(balances, &b)
+			if has(introspectionResponse.AccountIDs, string(*balance.AccountID)) {
+				filteredBalances = append(filteredBalances, balance)
 			}
 		}
 
 		self := strfmt.URI(fmt.Sprintf("http://localhost:%s/balances", strconv.Itoa(s.Config.Port)))
-		response := models.OBReadBalance1{
-			Data: &models.OBReadBalance1Data{
-				Balance: balances,
-			},
-			Meta: &models.Meta{
-				TotalPages: int32(len(balances)),
-			},
-			Links: &models.Links{
-				Self: &self,
-			},
-		}
-
-		c.PureJSON(http.StatusOK, response)
+		c.PureJSON(http.StatusOK, NewBalancesResponse(filteredBalances, self))
 	}
 }
 
@@ -130,17 +117,28 @@ func (s *Server) InternalGetBalances() func(*gin.Context) {
 			return
 		}
 
-		var balancesPointers []*models.OBReadBalance1DataBalanceItems0
+		self := strfmt.URI(fmt.Sprintf("http://localhost:%s/balances", strconv.Itoa(s.Config.Port)))
+		c.PureJSON(http.StatusOK, NewBalancesResponse(balances, self))
+	}
+}
 
-		for _, b := range balances {
-			balance := b
-			balancesPointers = append(balancesPointers, &balance)
-		}
+func NewBalancesResponse(balances []models.OBReadBalance1DataBalanceItems0, self strfmt.URI) models.OBReadBalance1 {
+	balancesPointers := make([]*models.OBReadBalance1DataBalanceItems0, len(balances))
 
-		c.PureJSON(http.StatusOK, models.OBReadBalance1{
-			Data: &models.OBReadBalance1Data{
-				Balance: balancesPointers,
-			},
-		})
+	for i, b := range balances {
+		balance := b
+		balancesPointers[i] = &balance
+	}
+
+	return models.OBReadBalance1{
+		Data: &models.OBReadBalance1Data{
+			Balance: balancesPointers,
+		},
+		Meta: &models.Meta{
+			TotalPages: int32(len(balances)),
+		},
+		Links: &models.Links{
+			Self: &self,
+		},
 	}
 }
