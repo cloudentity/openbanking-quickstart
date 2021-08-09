@@ -241,6 +241,7 @@ linters:
     - wsl
     - rowserrcheck
   fast: false
+  
 
 issues:
   # List of regexps of issue texts to exclude, empty list by default.
@@ -263,6 +264,12 @@ issues:
         - noctx
         - errorlint
         - goconst
+        - paralleltest
+        - thelper
+      
+    - path: apps/bank/
+      linters:
+        - deadcode
 
     - path: fosite.+_test\.go
       linters:
