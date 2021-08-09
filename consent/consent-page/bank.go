@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/cloudentity/openbanking-quickstart/models"
+	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
 )
 
 type BankClient struct {
@@ -61,16 +61,16 @@ func (c *BankClient) GetInternalAccounts(subject string) (InternalAccounts, erro
 	)
 
 	if request, err = http.NewRequest("GET", fmt.Sprintf("%s/internal/accounts/%s", c.baseURL, subject), nil); err != nil {
-		return InternalAccounts{}, nil
+		return InternalAccounts{}, err
 	}
 
 	if response, err = c.Client.Do(request); err != nil {
-		return InternalAccounts{}, nil
+		return InternalAccounts{}, err
 	}
 	defer response.Body.Close()
 
 	if bytes, err = ioutil.ReadAll(response.Body); err != nil {
-		return InternalAccounts{}, nil
+		return InternalAccounts{}, err
 	}
 
 	if response.StatusCode != 200 {
@@ -78,7 +78,7 @@ func (c *BankClient) GetInternalAccounts(subject string) (InternalAccounts, erro
 	}
 
 	if err = json.Unmarshal(bytes, &resp); err != nil {
-		return InternalAccounts{}, nil
+		return InternalAccounts{}, err
 	}
 
 	return ToInternalAccounts(resp), nil
@@ -106,16 +106,16 @@ func (c *BankClient) GetInternalBalances(subject string) (BalanceResponse, error
 	)
 
 	if request, err = http.NewRequest("GET", fmt.Sprintf("%s/internal/balances/%s", c.baseURL, subject), nil); err != nil {
-		return resp, nil
+		return resp, err
 	}
 
 	if response, err = c.Client.Do(request); err != nil {
-		return resp, nil
+		return resp, err
 	}
 	defer response.Body.Close()
 
 	if bytes, err = ioutil.ReadAll(response.Body); err != nil {
-		return resp, nil
+		return resp, err
 	}
 
 	if response.StatusCode != 200 {
@@ -123,7 +123,7 @@ func (c *BankClient) GetInternalBalances(subject string) (BalanceResponse, error
 	}
 
 	if err = json.Unmarshal(bytes, &resp); err != nil {
-		return resp, nil
+		return resp, err
 	}
 
 	return resp, nil
