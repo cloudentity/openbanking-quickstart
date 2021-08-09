@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -8,7 +9,6 @@ import (
 
 	obc "github.com/cloudentity/openbanking-quickstart/client"
 	payments_client "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/client"
-	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 
 	acpclient "github.com/cloudentity/acp-client-go"
@@ -22,7 +22,7 @@ type Clients struct {
 	BankClient        OpenbankingClient
 }
 
-func (c *Clients) RenewAccountsToken(ctx *gin.Context, bank ConnectedBank) (*models.TokenResponse, error) {
+func (c *Clients) RenewAccountsToken(ctx context.Context, bank ConnectedBank) (*models.TokenResponse, error) {
 	var (
 		resp *oauth2.TokenOK
 		err  error
