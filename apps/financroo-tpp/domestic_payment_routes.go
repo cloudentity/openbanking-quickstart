@@ -73,7 +73,7 @@ func (s *Server) CreateDomesticPaymentConsent() func(*gin.Context) {
 		amount := models.OBActiveCurrencyAndAmountSimpleType(paymentConsentRequest.Amount)
 
 		if registerResponse, err = clients.AcpPaymentsClient.Openbanking.CreateDomesticPaymentConsent(
-			openbanking.NewCreateDomesticPaymentConsentParams().
+			openbanking.NewCreateDomesticPaymentConsentParamsWithContext(c).
 				WithTid(clients.AcpPaymentsClient.TenantID).
 				WithAid(clients.AcpPaymentsClient.ServerID).
 				WithRequest(&models.DomesticPaymentConsentRequest{
@@ -144,7 +144,7 @@ func (s *Server) DomesticPaymentCallback() func(*gin.Context) {
 		acpClient := bank.AcpPaymentsClient
 		bankClient := bank.BankClient
 
-		params := openbanking.NewGetDomesticPaymentConsentRequestParams().
+		params := openbanking.NewGetDomesticPaymentConsentRequestParamsWithContext(c).
 			WithTid(acpClient.TenantID).
 			WithAid(acpClient.ServerID).
 			WithConsentID(appStorage.IntentID)
@@ -169,7 +169,7 @@ func (s *Server) DomesticPaymentCallback() func(*gin.Context) {
 			return
 		}
 
-		if paymentCreated, err = bankClient.DomesticPayments.CreateDomesticPayments(domestic_payments.NewCreateDomesticPaymentsParams().
+		if paymentCreated, err = bankClient.DomesticPayments.CreateDomesticPayments(domestic_payments.NewCreateDomesticPaymentsParamsWithContext(c).
 			WithAuthorization(token.AccessToken).
 			WithOBWriteDomestic2Param(&obModels.OBWriteDomestic2{
 				Data: &obModels.OBWriteDomestic2Data{

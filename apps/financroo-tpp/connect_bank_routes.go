@@ -137,7 +137,7 @@ func (s *Server) ConnectBankCallback() func(*gin.Context) {
 	}
 }
 
-func (s *Server) ConnectedBanks() func(*gin.Context) {
+func (s *Server) ConnectedBanks() func(c *gin.Context) {
 	return func(c *gin.Context) {
 		var (
 			user           User

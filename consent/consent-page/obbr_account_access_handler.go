@@ -20,7 +20,8 @@ func (s *OBBRAccountAccessConsentHandler) GetConsent(c *gin.Context, loginReques
 	)
 
 	if response, err = s.Client.Openbanking.GetOBBRCustomerDataAccessConsentSystem(
-		openbanking.NewGetOBBRCustomerDataAccessConsentSystemParams().
+		openbanking.NewGetOBBRCustomerDataAccessConsentSystemParamsWithContext(c).
+			WithDefaults().
 			WithTid(s.Client.TenantID).
 			WithLogin(loginRequest.ID),
 		nil,
@@ -46,7 +47,7 @@ func (s *OBBRAccountAccessConsentHandler) ConfirmConsent(c *gin.Context, loginRe
 	)
 
 	if consent, err = s.Client.Openbanking.GetOBBRCustomerDataAccessConsentSystem(
-		openbanking.NewGetOBBRCustomerDataAccessConsentSystemParams().
+		openbanking.NewGetOBBRCustomerDataAccessConsentSystemParamsWithContext(c).
 			WithTid(s.Client.TenantID).
 			WithLogin(loginRequest.ID),
 		nil,
@@ -55,7 +56,7 @@ func (s *OBBRAccountAccessConsentHandler) ConfirmConsent(c *gin.Context, loginRe
 	}
 
 	if accept, err = s.Client.Openbanking.AcceptOBBRCustomerDataAccessConsentSystem(
-		openbanking.NewAcceptOBBRCustomerDataAccessConsentSystemParams().
+		openbanking.NewAcceptOBBRCustomerDataAccessConsentSystemParamsWithContext(c).
 			WithTid(s.Client.TenantID).
 			WithLogin(loginRequest.ID).
 			WithAcceptConsent(&models.AcceptConsentRequest{
@@ -78,7 +79,7 @@ func (s *OBBRAccountAccessConsentHandler) DenyConsent(c *gin.Context, loginReque
 	)
 
 	if reject, err = s.Client.Openbanking.RejectOBBRCustomerDataAccessConsentSystem(
-		openbanking.NewRejectOBBRCustomerDataAccessConsentSystemParams().
+		openbanking.NewRejectOBBRCustomerDataAccessConsentSystemParamsWithContext(c).
 			WithTid(s.Client.TenantID).
 			WithLogin(loginRequest.ID).
 			WithRejectConsent(&models.RejectConsentRequest{

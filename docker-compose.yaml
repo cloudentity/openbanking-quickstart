@@ -33,7 +33,7 @@ services:
       - ./data:/certs
       - ./mount/financroo-tpp:/app/data
     env_file:
-    - .env
+      - .env
     environment:
       - UI_URL=https://${APP_HOST}:8091
       - CERT_FILE=/certs/tpp_cert.pem
@@ -56,7 +56,7 @@ services:
       - ./consent/consent-page/examples/custom-styles.css:/app/assets/extend-styles.css
       # - ./consent/consent-page/examples/custom-mfa-verify.tmpl:/app/templates/mfa-verify.tmpl
     env_file:
-    - .env
+      - .env
     environment:
       - CLIENT_ID=bv0ocudfotn6edhsiu7g
       - CLIENT_SECRET=pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0
@@ -158,7 +158,7 @@ services:
     restart: always
     image: ${ACP_DOCKER_IMAGE}:${ACP_VERSION}
     ports:
-     - 8443:8443
+      - 8443:8443
     volumes:
       - ./data/acp_cert.pem:/acp_cert.pem
       - ./data/acp_key.pem:/acp_key.pem
@@ -168,33 +168,35 @@ services:
       - FEATURES_SYSTEM_OPENBANKING_CONSENTS_MANAGEMENT=true
       - FEATURES_OPENBANKING_DOMESTIC_PAYMENT_CONSENTS=true
       - FEATURES_SYSTEM_CLIENTS_MANAGEMENT=true
+      - FEATURES_OPENBANKING_BRASIL_CONSENTS=true
+      - FEATURES_OPENBANKING_BRASIL_PAYMENTS=true
       - SERVER_URL=${ACP_URL}
     command:
-     - server
-     - start
-     - --sql.url
-     - postgres://root@crdb:26257/defaultdb?sslmode=disable
-     - --hazelcast.address
-     - hazelcast:5701
-     - --secret.key
-     - KNEcLGdDqpwrXDubqPgDSUkMMsLPXaHh
-     - --server.cert.path
-     - /acp_cert.pem
-     - --server.key.path
-     - /acp_key.pem
-     - --demo
-     - --create-default-tenant
+      - server
+      - start
+      - --sql.url
+      - postgres://root@crdb:26257/defaultdb?sslmode=disable
+      - --hazelcast.address
+      - hazelcast:5701
+      - --secret.key
+      - KNEcLGdDqpwrXDubqPgDSUkMMsLPXaHh
+      - --server.cert.path
+      - /acp_cert.pem
+      - --server.key.path
+      - /acp_key.pem
+      - --demo
+      - --create-default-tenant
 
   crdb:
     container_name: crdb
     image: cockroachdb/cockroach:v20.2.6
     restart: always
     ports:
-     - 26257:26257
-     - 8081:8080
+      - 26257:26257
+      - 8081:8080
     command: start-single-node --insecure
     volumes:
-     - crdb:/cockroach/cockroach-data"
+      - crdb:/cockroach/cockroach-data"
 
   hazelcast:
     container_name: hazelcast

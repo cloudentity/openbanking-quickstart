@@ -98,7 +98,7 @@ func (s *Server) GetAccounts() func(ctx *gin.Context) {
 				return
 			}
 
-			if resp, err = client.Accounts.GetAccounts(accounts.NewGetAccountsParams().WithAuthorization(accessToken), nil); err != nil {
+			if resp, err = client.Accounts.GetAccounts(accounts.NewGetAccountsParamsWithContext(c).WithAuthorization(accessToken), nil); err != nil {
 				c.String(http.StatusUnauthorized, fmt.Sprintf("failed to call bank get accounts: %+v", err))
 				return
 			}
@@ -149,7 +149,7 @@ func (s *Server) GetBalances() func(ctx *gin.Context) {
 				c.String(http.StatusInternalServerError, fmt.Sprintf("failed to update user: %+v", err))
 			}
 
-			if resp, err = client.Balances.GetBalances(balances.NewGetBalancesParams().WithAuthorization(accessToken), nil); err != nil {
+			if resp, err = client.Balances.GetBalances(balances.NewGetBalancesParamsWithContext(c).WithAuthorization(accessToken), nil); err != nil {
 				c.String(http.StatusUnauthorized, fmt.Sprintf("failed to call bank get balances: %+v", err))
 				return
 			}
@@ -197,7 +197,7 @@ func (s *Server) GetTransactions() func(ctx *gin.Context) {
 				return
 			}
 
-			if resp, err = client.Transactions.GetTransactions(transactions.NewGetTransactionsParams().WithAuthorization(accessToken), nil); err != nil {
+			if resp, err = client.Transactions.GetTransactions(transactions.NewGetTransactionsParamsWithContext(c).WithAuthorization(accessToken), nil); err != nil {
 				c.String(http.StatusUnauthorized, fmt.Sprintf("failed to call bank get transactions: %+v", err))
 				return
 			}

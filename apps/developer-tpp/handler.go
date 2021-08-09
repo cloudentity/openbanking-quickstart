@@ -38,7 +38,7 @@ func (s *Server) Login() func(*gin.Context) {
 		)
 
 		if registerResponse, err = s.Client.Openbanking.CreateAccountAccessConsentRequest(
-			openbanking.NewCreateAccountAccessConsentRequestParams().
+			openbanking.NewCreateAccountAccessConsentRequestParamsWithContext(c).
 				WithTid(s.Client.TenantID).
 				WithAid(s.Client.ServerID).
 				WithRequest(&models.AccountAccessConsentRequest{
@@ -153,7 +153,7 @@ func (s *Server) Callback() func(*gin.Context) {
 
 		var accountsResp *accounts.GetAccountsOK
 
-		if accountsResp, err = s.BankClient.Accounts.GetAccounts(accounts.NewGetAccountsParams().WithAuthorization(token.AccessToken), nil); err != nil {
+		if accountsResp, err = s.BankClient.Accounts.GetAccounts(accounts.NewGetAccountsParamsWithContext(c).WithAuthorization(token.AccessToken), nil); err != nil {
 			c.String(http.StatusUnauthorized, fmt.Sprintf("failed to call bank get accounts: %+v", err))
 			return
 		}
