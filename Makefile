@@ -64,3 +64,15 @@ disable-mfa:
 .PHONY: set-version
 set-version:
 	./scripts/override_env.sh VERSION $(shell ./scripts/version.sh)
+
+.PHONY: generate-openbanking-integration-specs 
+generate-openbanking-integration-specs: generate-obuk-integration-spec 
+
+.PHONY: generate-obuk-integration-spec
+generate-obuk-integration-spec:
+	docker build -t quickstart-swagger -f build/swagger.dockerfile .
+	docker run  -v ${CURDIR}:/code quickstart-swagger \
+    swagger generate spec \
+        -m \
+        -o api/internal/bank.yaml \
+         -w ./apps/bank 
