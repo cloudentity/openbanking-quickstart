@@ -1,11 +1,12 @@
 package main
 
 import (
-	"github.com/cloudentity/acp-client-go/client/openbanking"
-	"github.com/cloudentity/acp-client-go/models"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+
+	"github.com/cloudentity/acp-client-go/client/openbanking"
+	"github.com/cloudentity/acp-client-go/models"
 )
 
 type OBBRPaymentConsentHandler struct {
@@ -66,7 +67,7 @@ func (s *OBBRPaymentConsentHandler) ConfirmConsent(c *gin.Context, loginRequest 
 			WithTid(s.Client.TenantID).
 			WithLogin(loginRequest.ID).
 			WithAcceptConsent(&models.AcceptConsentRequest{
-				AccountIds:    []string{string(consent.Payload.CustomerDataAccessConsent.DebtorAccount.Number)},
+				AccountIds:    []string{consent.Payload.CustomerDataAccessConsent.DebtorAccount.Number},
 				GrantedScopes: s.GrantScopes(consent.Payload.RequestedScopes),
 				LoginState:    loginRequest.State,
 			}),

@@ -161,7 +161,7 @@ func (c *ConsentTools) GetOBBRDataAccessConsentTemplateData(
 		},
 		"login_request": loginRequest,
 		"accounts":      accounts.Accounts,
-		//"permissions":     c.GetPermissionsWithDescription(consent.AccountAccessConsent.Permissions),
+		// "permissions":     c.GetPermissionsWithDescription(consent.AccountAccessConsent.Permissions),
 		"client_name":     clientName,
 		"expiration_date": expirationDate,
 	}
@@ -192,7 +192,7 @@ func (c *ConsentTools) GetOBBRPaymentConsentTemplateData(
 			"confirm": c.Trans.T("uk.payment.confirm"),
 		},
 		"login_request": loginRequest,
-		"accounts":      c.GetAccountsWithBalance(accounts, balances, string(consent.CustomerDataAccessConsent.DebtorAccount.Number)),
+		"accounts":      c.GetAccountsWithBalance(accounts, balances, consent.CustomerDataAccessConsent.DebtorAccount.Number),
 		"client_name":   clientName,
 		"consent":       OBBRPaymentConsentTemplateData(consent.CustomerDataAccessConsent),
 	}

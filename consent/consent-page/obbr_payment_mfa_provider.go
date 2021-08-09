@@ -3,9 +3,10 @@ package main
 import (
 	"fmt"
 
+	"github.com/gin-gonic/gin"
+
 	"github.com/cloudentity/acp-client-go/client/openbanking"
 	"github.com/cloudentity/acp-client-go/models"
-	"github.com/gin-gonic/gin"
 )
 
 type OBBRPaymentMFAConsentProvider struct {
@@ -34,10 +35,10 @@ func (s *OBBRPaymentMFAConsentProvider) GetMFAData(c *gin.Context, loginRequest 
 	data.ClientName = s.GetClientName(response.Payload.ClientInfo)
 	data.Amount = fmt.Sprintf(
 		"%s%s",
-		string(response.Payload.CustomerDataAccessConsent.Payment.Amount),
-		string(response.Payload.CustomerDataAccessConsent.Payment.Currency),
+		response.Payload.CustomerDataAccessConsent.Payment.Amount,
+		response.Payload.CustomerDataAccessConsent.Payment.Currency,
 	)
-	data.Account = string(response.Payload.CustomerDataAccessConsent.DebtorAccount.Number)
+	data.Account = response.Payload.CustomerDataAccessConsent.DebtorAccount.Number
 
 	return data, nil
 }
