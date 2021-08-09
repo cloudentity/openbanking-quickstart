@@ -53,13 +53,18 @@ func LoadConfig() (config Config, err error) {
 }
 
 type Server struct {
-	Config       Config
-	Client       acpclient.Client
-	Storage      UserRepo
-	PaymentQueue PaymentQueue
+	Config  Config
+	Client  acpclient.Client
+	Storage Storage
+	//PaymentQueue PaymentQueue
 
 	GetAccountsLogic         EndpointLogic
 	GetInternalAccountsLogic EndpointLogic
+
+	GetBalancesLogic         EndpointLogic
+	GetBalancesInternalLogic EndpointLogic
+
+	GetTransactionsLogic EndpointLogic
 }
 
 func NewServer() (Server, error) {
@@ -80,14 +85,17 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to init repo")
 	}
 
-	if server.PaymentQueue, err = NewPaymentQueue(server.Storage); err != nil {
+	/*if server.PaymentQueue, err = NewPaymentQueue(server.Storage); err != nil {
 		return server, errors.Wrapf(err, "failed to init payment queue")
-	}
+	}*/
 
 	switch server.Config.Spec {
 	case OBUK:
 		server.GetAccountsLogic = &OBUKAccountsHandler{Server: &server}
 		server.GetInternalAccountsLogic = &OBUKInternalAccountsHandler{Server: &server}
+		server.GetBalancesLogic = &OBUKBalancesHandler{Server: &server}
+		server.GetBalancesInternalLogic = &OBUKBalancesInternalHandler{Server: &server}
+		server.GetTransactionsLogic = &OBUKTransactionsHandler{Server: &server}
 	case OBBR:
 	default:
 		return server, errors.Wrapf(err, "unsupported spec %s", server.Config.Spec)
@@ -100,13 +108,14 @@ func (s *Server) Start() error {
 	r := gin.Default()
 	r.GET("/accounts", s.Get(s.GetAccountsLogic))
 	r.GET("/internal/accounts/:sub", s.Get(s.GetInternalAccountsLogic))
-	r.GET("/internal/balances/:sub", s.InternalGetBalances())
-	r.GET("/transactions", s.GetTransactions())
-	r.GET("/balances", s.GetBalances())
-	r.POST("/domestic-payments", s.CreateDomesticPayment())
-	r.GET("/domestic-payments/:DomesticPaymentId", s.GetDomesticPayment())
 
-	go s.PaymentQueue.Start()
+	r.GET("/internal/balances/:sub", s.Get(s.GetBalancesInternalLogic))
+	r.GET("/balances", s.Get(s.GetBalancesInternalLogic))
+
+	r.GET("/transactions", s.Get(s.GetTransactionsLogic))
+
+	//r.POST("/domestic-payments", s.CreateDomesticPayment())
+	//r.GET("/domestic-payments/:DomesticPaymentId", s.GetDomesticPayment())
 
 	return r.Run(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)))
 }

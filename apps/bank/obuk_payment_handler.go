@@ -1,6 +1,6 @@
 package main
 
-import (
+/*import (
 	"bytes"
 	"encoding/json"
 	"errors"
@@ -50,6 +50,66 @@ type CreateDomesticPaymentRequest struct {
 //   403: OBErrorResponse1
 //   422: OBErrorResponse1
 //   500: OBErrorResponse1
+type OBUKPaymentHandler struct {
+	*Server
+	*acpClient.IntrospectOpenbankingDomesticPaymentConsentResponse
+	request *paymentModels.OBWriteDomestic2
+}
+
+func (h *OBUKPaymentHandler) Validate() error {
+	/*
+		scopes := strings.Split(introspectionResponse.Scope, " ")
+				if !has(scopes, "payments") {
+					msg := "token has no payments scope granted"
+					c.JSON(http.StatusForbidden, models.OBErrorResponse1{
+						Message: &msg,
+					})
+					return
+				}
+
+				if introspectionResponse.Status != "Authorised" {
+					msg := "domestic payment consent does not have status authorised"
+					c.JSON(http.StatusUnprocessableEntity, models.OBError1{
+						Message: &msg,
+					})
+					return
+				}
+
+				if paymentRequest.Data.Initiation == nil {
+					msg := "initiation data not present in request"
+					c.JSON(http.StatusBadRequest, models.OBError1{
+						Message: &msg,
+					})
+					return
+				}
+
+				if introspectionResponse.Initiation == nil {
+					msg := "initiation data not present in introspection response"
+					c.JSON(http.StatusInternalServerError, models.OBError1{
+						Message: &msg,
+					})
+					return
+				}
+
+				if !initiationsAreEqual(*paymentRequest.Data.Initiation, *introspectionResponse.Initiation) {
+					msg := "request initiation does not match consent initiation"
+					c.JSON(http.StatusBadRequest, models.OBError1{
+						Message: &msg,
+					})
+					return
+				}
+
+				if paymentRequest.Risk == nil {
+					msg := "no risk data in payment request"
+					c.JSON(http.StatusBadRequest, models.OBError1{
+						Message: &msg,
+					})
+					return
+				}
+
+	return nil
+}
+
 func (s *Server) CreateDomesticPayment() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
@@ -293,3 +353,4 @@ func toDomesticResponse5DataInitiation(initiation *acpClient.OBWriteDomesticCons
 
 	return &ret
 }
+*/

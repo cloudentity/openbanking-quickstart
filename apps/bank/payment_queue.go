@@ -1,6 +1,6 @@
 package main
 
-import (
+/*import (
 	"time"
 
 	paymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
@@ -28,4 +28,4 @@ func (pq *PaymentQueue) Start() {
 			}
 		})
 	}
-}
+}*/
