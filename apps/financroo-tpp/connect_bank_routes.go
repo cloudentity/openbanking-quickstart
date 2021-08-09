@@ -70,7 +70,7 @@ func (s *Server) ConnectBank() func(*gin.Context) {
 		}
 
 		if registerResponse, err = clients.AcpAccountsClient.Openbanking.CreateAccountAccessConsentRequest(
-			openbanking.NewCreateAccountAccessConsentRequestParams().
+			openbanking.NewCreateAccountAccessConsentRequestParamsWithContext(c).
 				WithTid(clients.AcpAccountsClient.TenantID).
 				WithAid(clients.AcpAccountsClient.ServerID).
 				WithRequest(&models.AccountAccessConsentRequest{
@@ -161,7 +161,7 @@ func (s *Server) ConnectedBanks() func(*gin.Context) {
 				return
 			}
 
-			if tokenResponse, err = clients.RenewAccountsToken(b); err != nil {
+			if tokenResponse, err = clients.RenewAccountsToken(c, b); err != nil {
 				logrus.Warnf("failed to renew token for bank: %s", b.BankID)
 				expiredBanks = append(expiredBanks, b.BankID)
 				continue
