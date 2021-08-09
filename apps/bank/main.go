@@ -14,6 +14,13 @@ import (
 	acpclient "github.com/cloudentity/acp-client-go"
 )
 
+type Spec string
+
+const (
+	OBUK Spec = "obuk"
+	OBBR Spec = "obbr"
+)
+
 type Config struct {
 	Port      int           `env:"PORT" envDefault:"8070"`
 	ClientID  string        `env:"CLIENT_ID,required"`
@@ -22,6 +29,7 @@ type Config struct {
 	RootCA    string        `env:"ROOT_CA,required"`
 	CertFile  string        `env:"CERT_FILE,required"`
 	KeyFile   string        `env:"KEY_FILE,required"`
+	Spec      Spec          `env:"SPEC,required"`
 }
 
 func (c *Config) ClientConfig() acpclient.Config {
@@ -49,6 +57,9 @@ type Server struct {
 	Client       acpclient.Client
 	Storage      UserRepo
 	PaymentQueue PaymentQueue
+
+	GetAccountsLogic         EndpointLogic
+	GetInternalAccountsLogic EndpointLogic
 }
 
 func NewServer() (Server, error) {
@@ -73,13 +84,22 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to init payment queue")
 	}
 
+	switch server.Config.Spec {
+	case OBUK:
+		server.GetAccountsLogic = &OBUKAccountsHandler{Server: &server}
+		server.GetInternalAccountsLogic = &OBUKInternalAccountsHandler{Server: &server}
+	case OBBR:
+	default:
+		return server, errors.Wrapf(err, "unsupported spec %s", server.Config.Spec)
+	}
+
 	return server, nil
 }
 
 func (s *Server) Start() error {
 	r := gin.Default()
-	r.GET("/accounts", s.GetAccounts())
-	r.GET("/internal/accounts/:sub", s.InternalGetAccounts())
+	r.GET("/accounts", s.Get(s.GetAccountsLogic))
+	r.GET("/internal/accounts/:sub", s.Get(s.GetInternalAccountsLogic))
 	r.GET("/internal/balances/:sub", s.InternalGetBalances())
 	r.GET("/transactions", s.GetTransactions())
 	r.GET("/balances", s.GetBalances())
