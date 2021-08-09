@@ -152,6 +152,7 @@ services:
       - CERT_FILE=/bank_cert.pem
       - KEY_FILE=/bank_key.pem
       - ROOT_CA=/ca.pem
+      - SPEC=obuk
 
   acp:
     container_name: acp
