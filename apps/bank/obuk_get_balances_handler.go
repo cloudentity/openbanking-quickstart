@@ -1,9 +1,13 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
+	"strings"
 
+	acpClient "github.com/cloudentity/acp-client-go/models"
+	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 )
@@ -21,10 +25,16 @@ import (
 //   404: OBErrorResponse1
 type OBUKGetBalancesHandler struct {
 	*Server
+	introspectionResponse *acpClient.IntrospectOpenbankingAccountAccessConsentResponse
 }
 
 func (h *OBUKGetBalancesHandler) SetIntrospectionResponse(c *gin.Context) error {
-	return nil
+	if resp, err := h.IntrospectAccountsToken(c); err != nil {
+		return err
+	} else {
+		h.introspectionResponse = resp
+		return nil
+	}
 }
 
 func (h *OBUKGetBalancesHandler) MapError(c *gin.Context, err error) interface{} {
@@ -37,17 +47,30 @@ func (h *OBUKGetBalancesHandler) BuildResponse(c *gin.Context, data BankUserData
 }
 
 func (h *OBUKGetBalancesHandler) Validate(c *gin.Context) error {
+	scopes := strings.Split(h.introspectionResponse.Scope, " ")
+	if !has(scopes, "accounts") {
+		return errors.New("token has no accounts scope granted")
+	}
+
+	grantedPermissions := h.introspectionResponse.Permissions
+	if !has(grantedPermissions, "ReadBalances") {
+		return errors.New("ReadBalances permission has not been granted")
+	}
 	return nil
 }
 
 func (h *OBUKGetBalancesHandler) GetUserIdentifier(c *gin.Context) string {
-	return c.Param("sub")
-}
-
-func (h *OBUKGetBalancesHandler) CreateResource(c *gin.Context) (interface{}, error) {
-	return "", nil
+	return h.introspectionResponse.Sub
 }
 
 func (h *OBUKGetBalancesHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
-	return data
+	filteredBalances := []models.OBReadBalance1DataBalanceItems0{}
+
+	for _, balance := range data.Balances {
+		if has(h.introspectionResponse.AccountIDs, string(*balance.AccountID)) {
+			filteredBalances = append(filteredBalances, balance)
+		}
+	}
+
+	return BankUserData{Balances: filteredBalances}
 }
