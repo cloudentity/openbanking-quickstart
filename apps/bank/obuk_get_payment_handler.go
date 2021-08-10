@@ -1,7 +1,9 @@
 package main
 
 import (
-	paymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
+	"errors"
+	"strings"
+
 	"github.com/gin-gonic/gin"
 
 	acpClient "github.com/cloudentity/acp-client-go/models"
@@ -20,46 +22,52 @@ import (
 //   404: OBErrorResponse1
 //   500: OBErrorResponse1
 
-// swagger:route POST /domestic-payments bank createDomesticPaymentRequest
-//
-// create domestic payment
-//
-// Security:
-//   defaultcc: payments
-//
-// Responses:
-//   201: OBWriteDomesticResponse5
-//   400: OBErrorResponse1
-//   403: OBErrorResponse1
-//   422: OBErrorResponse1
-//   500: OBErrorResponse1
-
 type OBUKGetPaymentHandler struct {
 	*Server
 	introspectionResponse *acpClient.IntrospectOpenbankingDomesticPaymentConsentResponse
-	request               *paymentModels.OBWriteDomestic2
 }
 
 func (h *OBUKGetPaymentHandler) SetIntrospectionResponse(c *gin.Context) error {
-	return nil
+	if resp, err := h.IntrospectPaymentsToken(c); err != nil {
+		return err
+	} else {
+		h.introspectionResponse = resp
+		return nil
+	}
 }
 
 func (h *OBUKGetPaymentHandler) Validate(c *gin.Context) error {
+	scopes := strings.Split(h.introspectionResponse.Scope, " ")
+	if !has(scopes, "payments") {
+		return errors.New("token has no payments scope granted")
+	}
 	return nil
 }
 
 func (h *OBUKGetPaymentHandler) MapError(c *gin.Context, err error) interface{} {
-	return nil
+	return OBUKMapError(err)
 }
 
 func (h *OBUKGetPaymentHandler) GetUserIdentifier(c *gin.Context) string {
-	return ""
+	return h.introspectionResponse.Sub
 }
 
 func (h *OBUKGetPaymentHandler) BuildResponse(c *gin.Context, data BankUserData) interface{} {
-	return nil
+	if len(data.Payments) == 1 {
+		return data.Payments[0]
+	}
+	return h.MapError(c, errors.New("no payments matching id were found"))
 }
 
 func (h *OBUKGetPaymentHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
-	return data
+	filtered := BankUserData{}
+
+	for _, payment := range data.Payments {
+		if *payment.Data.ConsentID == c.Param("DomesticPaymentId") {
+			filtered.Payments = append(filtered.Payments, payment)
+			return filtered
+		}
+	}
+
+	return BankUserData{}
 }
