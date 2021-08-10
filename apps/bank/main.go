@@ -117,7 +117,7 @@ func (s *Server) Start() error {
 	r.GET("/transactions", s.Get(s.GetTransactionsLogic))
 
 	//r.POST("/domestic-payments", s.CreateDomesticPayment())
-	//r.GET("/domestic-payments/:DomesticPaymentId", s.GetDomesticPayment())
+	r.GET("/domestic-payments/:DomesticPaymentId", s.Get(s.GetPaymentLogic))
 
 	return r.Run(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)))
 }
