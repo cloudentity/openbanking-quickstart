@@ -60,6 +60,27 @@ func NewBalancesResponse(balances []models.OBReadBalance1DataBalanceItems0, self
 	}
 }
 
+func NewTransactionsResponse(transactions []models.OBTransaction6, self strfmt.URI) models.OBReadTransaction6 {
+	transactionPointers := []*models.OBTransaction6{}
+
+	for _, transaction := range transactions {
+		t := transaction
+		transactionPointers = append(transactionPointers, &t)
+	}
+
+	return models.OBReadTransaction6{
+		Data: &models.OBReadDataTransaction6{
+			Transaction: transactionPointers,
+		},
+		Meta: &models.Meta{
+			TotalPages: int32(len(transactions)),
+		},
+		Links: &models.Links{
+			Self: &self,
+		},
+	}
+}
+
 func has(list []string, a string) bool {
 	for _, b := range list {
 		if b == a {
