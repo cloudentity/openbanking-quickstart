@@ -65,16 +65,26 @@ func (s *Server) Start() error {
 	r.GET("/", s.Index())
 	r.GET("/config.json", s.WebConfig())
 
+	// TODO:
 	r.POST("/api/connect/:bankId", s.ConnectBank())
+
 	r.GET("/api/callback", s.ConnectBankCallback())
 	r.DELETE("/api/disconnect/:bankId", s.DisconnectBank())
 
+	// TODO:
 	r.POST("/api/domestic-payment-consent", s.CreateDomesticPaymentConsent())
+	// TODO:
 	r.GET("/api/domestic/callback", s.DomesticPaymentCallback())
 
+	// TODO:
 	r.GET("/api/accounts", s.GetAccounts())
+
+	// TODO:
 	r.GET("/api/transactions", s.GetTransactions())
+
+	//TODO:
 	r.GET("/api/balances", s.GetBalances())
+
 	r.GET("/api/banks", s.ConnectedBanks())
 
 	r.NoRoute(func(c *gin.Context) {
