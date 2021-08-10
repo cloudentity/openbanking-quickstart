@@ -44,6 +44,5 @@ func (h *OBUKGetBalancesInternalHandler) GetUserIdentifier(c *gin.Context) strin
 }
 
 func (h *OBUKGetBalancesInternalHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
-
 	return data
 }
