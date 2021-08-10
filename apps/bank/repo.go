@@ -9,15 +9,16 @@ import (
 
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
 	paymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
+
 	"github.com/pkg/errors"
 	bolt "go.etcd.io/bbolt"
 )
 
 type BankUserData struct {
-	Accounts     Accounts                                 `json:"accounts"`
-	Balances     Balances                                 `json:"balances"`
-	Transactions []models.OBTransaction6                  `json:"transactions"`
-	Payments     []paymentModels.OBWriteDomesticResponse5 `json:"payments"`
+	Accounts     Accounts     `json:"accounts"`
+	Balances     Balances     `json:"balances"`
+	Transactions Transactions `json:"transactions"`
+	Payments     Payments     `json:"payments"`
 }
 
 type Accounts struct {
@@ -38,6 +39,10 @@ type Payments struct {
 type Storage interface {
 	Get(string) (BankUserData, error)
 	Put(string, BankUserData) error
+}
+
+type Has interface {
+	Has(interface{}) bool
 }
 
 var bucketName = []byte(`users`)
@@ -85,26 +90,6 @@ func (u *UserRepo) Put(sub string, data BankUserData) error {
 	})
 }
 
-type UserToDataFile map[string]BankUserData
-
-func readUserToDataFile() (UserToDataFile, error) {
-	var (
-		bs   []byte
-		u2df UserToDataFile
-		err  error
-	)
-
-	if bs, err = ioutil.ReadFile("./data/data.json"); err != nil {
-		return u2df, errors.Wrapf(err, "failed to read file")
-	}
-
-	if err = json.Unmarshal(bs, &u2df); err != nil {
-		return u2df, errors.Wrapf(err, "failed to unmarshal data")
-	}
-
-	return u2df, nil
-}
-
 func NewUserRepo() (*UserRepo, error) {
 	var (
 		userRepo UserRepo
@@ -147,4 +132,24 @@ func NewUserRepo() (*UserRepo, error) {
 	}
 
 	return &userRepo, nil
+}
+
+type UserToDataFile map[string]BankUserData
+
+func readUserToDataFile() (UserToDataFile, error) {
+	var (
+		bs   []byte
+		u2df UserToDataFile
+		err  error
+	)
+
+	if bs, err = ioutil.ReadFile("./data/data.json"); err != nil {
+		return u2df, errors.Wrapf(err, "failed to read file")
+	}
+
+	if err = json.Unmarshal(bs, &u2df); err != nil {
+		return u2df, errors.Wrapf(err, "failed to unmarshal data")
+	}
+
+	return u2df, nil
 }

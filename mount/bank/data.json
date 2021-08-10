@@ -74,193 +74,195 @@
 				}
 			]
 		},
-		"transactions": [{
-				"AccountId": "22289",
-				"TransactionId": "123",
-				"TransactionReference": "Ref 123",
-				"Amount": {
-					"Amount": "10.00",
-					"Currency": "GBP"
-				},
-				"CreditDebitIndicator": "Credit",
-				"Status": "Booked",
-				"BookingDateTime": "2020-04-05T10:43:07+00:00",
-				"ValueDateTime": "2020-04-05T10:45:22+00:00",
-				"TransactionInformation": "Cash from Aubrey",
-				"BankTransactionCode": {
-					"Code": "ReceivedCreditTransfer",
-					"SubCode": "DomesticCreditTransfer"
-				},
-				"ProprietaryBankTransactionCode": {
-					"Code": "Transfer",
-					"Issuer": "AlphaBank"
-				},
-				"Balance": {
+		"transactions": {
+			"obuk": [{
+					"AccountId": "22289",
+					"TransactionId": "123",
+					"TransactionReference": "Ref 123",
 					"Amount": {
-						"Amount": "230.00",
+						"Amount": "10.00",
 						"Currency": "GBP"
 					},
 					"CreditDebitIndicator": "Credit",
-					"Type": "InterimBooked"
-				}
-			},
-			{
-				"AccountId": "31820",
-				"TransactionId": "567",
-				"TransactionReference": "Ref 124",
-				"Amount": {
-					"Amount": "100.00",
-					"Currency": "GBP"
+					"Status": "Booked",
+					"BookingDateTime": "2020-04-05T10:43:07+00:00",
+					"ValueDateTime": "2020-04-05T10:45:22+00:00",
+					"TransactionInformation": "Cash from Aubrey",
+					"BankTransactionCode": {
+						"Code": "ReceivedCreditTransfer",
+						"SubCode": "DomesticCreditTransfer"
+					},
+					"ProprietaryBankTransactionCode": {
+						"Code": "Transfer",
+						"Issuer": "AlphaBank"
+					},
+					"Balance": {
+						"Amount": {
+							"Amount": "230.00",
+							"Currency": "GBP"
+						},
+						"CreditDebitIndicator": "Credit",
+						"Type": "InterimBooked"
+					}
 				},
-				"CreditDebitIndicator": "Debit",
-				"Status": "Booked",
-				"BookingDateTime": "2020-05-02T14:22:09+00:00",
-				"ValueDateTime": "2020-05-02T14:22:09+00:00",
-				"TransactionInformation": "Paid the gas bill",
-				"AddressLine": "Coventry",
-				"BankTransactionCode": {
-					"Code": "IssuedCreditTransfer",
-					"SubCode": "AutomaticTransfer"
-				},
-				"ProprietaryBankTransactionCode": {
-					"Code": "DirectDebit",
-					"Issuer": "AlphaBank"
-				},
-				"Balance": {
+				{
+					"AccountId": "31820",
+					"TransactionId": "567",
+					"TransactionReference": "Ref 124",
 					"Amount": {
-						"Amount": "57.36",
+						"Amount": "100.00",
 						"Currency": "GBP"
 					},
 					"CreditDebitIndicator": "Debit",
-					"Type": "InterimBooked"
-				}
-			},
-			{
-				"AccountId": "31820",
-				"TransactionId": "5678",
-				"TransactionReference": "Ref 124",
-				"Amount": {
-					"Amount": "200.00",
-					"Currency": "GBP"
+					"Status": "Booked",
+					"BookingDateTime": "2020-05-02T14:22:09+00:00",
+					"ValueDateTime": "2020-05-02T14:22:09+00:00",
+					"TransactionInformation": "Paid the gas bill",
+					"AddressLine": "Coventry",
+					"BankTransactionCode": {
+						"Code": "IssuedCreditTransfer",
+						"SubCode": "AutomaticTransfer"
+					},
+					"ProprietaryBankTransactionCode": {
+						"Code": "DirectDebit",
+						"Issuer": "AlphaBank"
+					},
+					"Balance": {
+						"Amount": {
+							"Amount": "57.36",
+							"Currency": "GBP"
+						},
+						"CreditDebitIndicator": "Debit",
+						"Type": "InterimBooked"
+					}
 				},
-				"CreditDebitIndicator": "Debit",
-				"Status": "Booked",
-				"BookingDateTime": "2020-05-02T14:22:09+00:00",
-				"ValueDateTime": "2020-05-02T14:22:09+00:00",
-				"TransactionInformation": "Paid the gas bill",
-				"AddressLine": "Coventry",
-				"BankTransactionCode": {
-					"Code": "Entertainment",
-					"SubCode": "AutomaticTransfer"
-				},
-				"ProprietaryBankTransactionCode": {
-					"Code": "DirectDebit",
-					"Issuer": "AlphaBank"
-				},
-				"Balance": {
+				{
+					"AccountId": "31820",
+					"TransactionId": "5678",
+					"TransactionReference": "Ref 124",
 					"Amount": {
-						"Amount": "57.36",
+						"Amount": "200.00",
 						"Currency": "GBP"
 					},
 					"CreditDebitIndicator": "Debit",
-					"Type": "InterimBooked"
-				}
-			},
-			{
-				"AccountId": "31820",
-				"TransactionId": "5679",
-				"TransactionReference": "Ref 124",
-				"Amount": {
-					"Amount": "300.00",
-					"Currency": "GBP"
+					"Status": "Booked",
+					"BookingDateTime": "2020-05-02T14:22:09+00:00",
+					"ValueDateTime": "2020-05-02T14:22:09+00:00",
+					"TransactionInformation": "Paid the gas bill",
+					"AddressLine": "Coventry",
+					"BankTransactionCode": {
+						"Code": "Entertainment",
+						"SubCode": "AutomaticTransfer"
+					},
+					"ProprietaryBankTransactionCode": {
+						"Code": "DirectDebit",
+						"Issuer": "AlphaBank"
+					},
+					"Balance": {
+						"Amount": {
+							"Amount": "57.36",
+							"Currency": "GBP"
+						},
+						"CreditDebitIndicator": "Debit",
+						"Type": "InterimBooked"
+					}
 				},
-				"CreditDebitIndicator": "Debit",
-				"Status": "Booked",
-				"BookingDateTime": "2020-05-02T14:22:09+00:00",
-				"ValueDateTime": "2020-05-02T14:22:09+00:00",
-				"TransactionInformation": "Paid the gas bill",
-				"AddressLine": "Coventry",
-				"BankTransactionCode": {
-					"Code": "Clothes",
-					"SubCode": "AutomaticTransfer"
-				},
-				"ProprietaryBankTransactionCode": {
-					"Code": "DirectDebit",
-					"Issuer": "AlphaBank"
-				},
-				"Balance": {
+				{
+					"AccountId": "31820",
+					"TransactionId": "5679",
+					"TransactionReference": "Ref 124",
 					"Amount": {
-						"Amount": "57.36",
+						"Amount": "300.00",
 						"Currency": "GBP"
 					},
 					"CreditDebitIndicator": "Debit",
-					"Type": "InterimBooked"
-				}
-			},
-			{
-				"AccountId": "31820",
-				"TransactionId": "5680",
-				"TransactionReference": "Ref 124",
-				"Amount": {
-					"Amount": "33.00",
-					"Currency": "GBP"
+					"Status": "Booked",
+					"BookingDateTime": "2020-05-02T14:22:09+00:00",
+					"ValueDateTime": "2020-05-02T14:22:09+00:00",
+					"TransactionInformation": "Paid the gas bill",
+					"AddressLine": "Coventry",
+					"BankTransactionCode": {
+						"Code": "Clothes",
+						"SubCode": "AutomaticTransfer"
+					},
+					"ProprietaryBankTransactionCode": {
+						"Code": "DirectDebit",
+						"Issuer": "AlphaBank"
+					},
+					"Balance": {
+						"Amount": {
+							"Amount": "57.36",
+							"Currency": "GBP"
+						},
+						"CreditDebitIndicator": "Debit",
+						"Type": "InterimBooked"
+					}
 				},
-				"CreditDebitIndicator": "Debit",
-				"Status": "Booked",
-				"BookingDateTime": "2020-05-02T14:22:09+00:00",
-				"ValueDateTime": "2020-05-02T14:22:09+00:00",
-				"TransactionInformation": "Paid the gas bill",
-				"AddressLine": "Coventry",
-				"BankTransactionCode": {
-					"Code": "Clothes",
-					"SubCode": "AutomaticTransfer"
-				},
-				"ProprietaryBankTransactionCode": {
-					"Code": "DirectDebit",
-					"Issuer": "AlphaBank"
-				},
-				"Balance": {
+				{
+					"AccountId": "31820",
+					"TransactionId": "5680",
+					"TransactionReference": "Ref 124",
 					"Amount": {
-						"Amount": "57.36",
+						"Amount": "33.00",
 						"Currency": "GBP"
 					},
 					"CreditDebitIndicator": "Debit",
-					"Type": "InterimBooked"
-				}
-			},
-			{
-				"AccountId": "31821",
-				"BankId": "apexfinancial",
-				"TransactionId": "5680",
-				"TransactionReference": "Ref 124",
-				"Amount": {
-					"Amount": "33.00",
-					"Currency": "GBP"
+					"Status": "Booked",
+					"BookingDateTime": "2020-05-02T14:22:09+00:00",
+					"ValueDateTime": "2020-05-02T14:22:09+00:00",
+					"TransactionInformation": "Paid the gas bill",
+					"AddressLine": "Coventry",
+					"BankTransactionCode": {
+						"Code": "Clothes",
+						"SubCode": "AutomaticTransfer"
+					},
+					"ProprietaryBankTransactionCode": {
+						"Code": "DirectDebit",
+						"Issuer": "AlphaBank"
+					},
+					"Balance": {
+						"Amount": {
+							"Amount": "57.36",
+							"Currency": "GBP"
+						},
+						"CreditDebitIndicator": "Debit",
+						"Type": "InterimBooked"
+					}
 				},
-				"CreditDebitIndicator": "Debit",
-				"Status": "Booked",
-				"BookingDateTime": "2020-05-02T14:22:09+00:00",
-				"ValueDateTime": "2020-05-02T14:22:09+00:00",
-				"TransactionInformation": "Paid the gas bill",
-				"AddressLine": "Coventry",
-				"BankTransactionCode": {
-					"Code": "Clothes",
-					"SubCode": "AutomaticTransfer"
-				},
-				"ProprietaryBankTransactionCode": {
-					"Code": "DirectDebit",
-					"Issuer": "AlphaBank"
-				},
-				"Balance": {
+				{
+					"AccountId": "31821",
+					"BankId": "apexfinancial",
+					"TransactionId": "5680",
+					"TransactionReference": "Ref 124",
 					"Amount": {
-						"Amount": "57.36",
+						"Amount": "33.00",
 						"Currency": "GBP"
 					},
 					"CreditDebitIndicator": "Debit",
-					"Type": "InterimBooked"
+					"Status": "Booked",
+					"BookingDateTime": "2020-05-02T14:22:09+00:00",
+					"ValueDateTime": "2020-05-02T14:22:09+00:00",
+					"TransactionInformation": "Paid the gas bill",
+					"AddressLine": "Coventry",
+					"BankTransactionCode": {
+						"Code": "Clothes",
+						"SubCode": "AutomaticTransfer"
+					},
+					"ProprietaryBankTransactionCode": {
+						"Code": "DirectDebit",
+						"Issuer": "AlphaBank"
+					},
+					"Balance": {
+						"Amount": {
+							"Amount": "57.36",
+							"Currency": "GBP"
+						},
+						"CreditDebitIndicator": "Debit",
+						"Type": "InterimBooked"
+					}
 				}
-			}
-		]
+			]
+		}
 	},
 	"user2": {
 		"accounts": {
@@ -337,193 +339,195 @@
 				}
 			]
 		},
-		"transactions": [{
-				"AccountId": "22289",
-				"TransactionId": "123",
-				"TransactionReference": "Ref 123",
-				"Amount": {
-					"Amount": "10.00",
-					"Currency": "GBP"
-				},
-				"CreditDebitIndicator": "Credit",
-				"Status": "Booked",
-				"BookingDateTime": "2020-04-05T10:43:07+00:00",
-				"ValueDateTime": "2020-04-05T10:45:22+00:00",
-				"TransactionInformation": "Cash from Aubrey",
-				"BankTransactionCode": {
-					"Code": "ReceivedCreditTransfer",
-					"SubCode": "DomesticCreditTransfer"
-				},
-				"ProprietaryBankTransactionCode": {
-					"Code": "Transfer",
-					"Issuer": "AlphaBank"
-				},
-				"Balance": {
+		"transactions": {
+			"obuk": [{
+					"AccountId": "22289",
+					"TransactionId": "123",
+					"TransactionReference": "Ref 123",
 					"Amount": {
-						"Amount": "230.00",
+						"Amount": "10.00",
 						"Currency": "GBP"
 					},
 					"CreditDebitIndicator": "Credit",
-					"Type": "InterimBooked"
-				}
-			},
-			{
-				"AccountId": "31820",
-				"TransactionId": "567",
-				"TransactionReference": "Ref 124",
-				"Amount": {
-					"Amount": "100.00",
-					"Currency": "GBP"
+					"Status": "Booked",
+					"BookingDateTime": "2020-04-05T10:43:07+00:00",
+					"ValueDateTime": "2020-04-05T10:45:22+00:00",
+					"TransactionInformation": "Cash from Aubrey",
+					"BankTransactionCode": {
+						"Code": "ReceivedCreditTransfer",
+						"SubCode": "DomesticCreditTransfer"
+					},
+					"ProprietaryBankTransactionCode": {
+						"Code": "Transfer",
+						"Issuer": "AlphaBank"
+					},
+					"Balance": {
+						"Amount": {
+							"Amount": "230.00",
+							"Currency": "GBP"
+						},
+						"CreditDebitIndicator": "Credit",
+						"Type": "InterimBooked"
+					}
 				},
-				"CreditDebitIndicator": "Debit",
-				"Status": "Booked",
-				"BookingDateTime": "2020-05-02T14:22:09+00:00",
-				"ValueDateTime": "2020-05-02T14:22:09+00:00",
-				"TransactionInformation": "Paid the gas bill",
-				"AddressLine": "Coventry",
-				"BankTransactionCode": {
-					"Code": "IssuedCreditTransfer",
-					"SubCode": "AutomaticTransfer"
-				},
-				"ProprietaryBankTransactionCode": {
-					"Code": "DirectDebit",
-					"Issuer": "AlphaBank"
-				},
-				"Balance": {
+				{
+					"AccountId": "31820",
+					"TransactionId": "567",
+					"TransactionReference": "Ref 124",
 					"Amount": {
-						"Amount": "57.36",
+						"Amount": "100.00",
 						"Currency": "GBP"
 					},
 					"CreditDebitIndicator": "Debit",
-					"Type": "InterimBooked"
-				}
-			},
-			{
-				"AccountId": "31820",
-				"TransactionId": "5678",
-				"TransactionReference": "Ref 124",
-				"Amount": {
-					"Amount": "200.00",
-					"Currency": "GBP"
+					"Status": "Booked",
+					"BookingDateTime": "2020-05-02T14:22:09+00:00",
+					"ValueDateTime": "2020-05-02T14:22:09+00:00",
+					"TransactionInformation": "Paid the gas bill",
+					"AddressLine": "Coventry",
+					"BankTransactionCode": {
+						"Code": "IssuedCreditTransfer",
+						"SubCode": "AutomaticTransfer"
+					},
+					"ProprietaryBankTransactionCode": {
+						"Code": "DirectDebit",
+						"Issuer": "AlphaBank"
+					},
+					"Balance": {
+						"Amount": {
+							"Amount": "57.36",
+							"Currency": "GBP"
+						},
+						"CreditDebitIndicator": "Debit",
+						"Type": "InterimBooked"
+					}
 				},
-				"CreditDebitIndicator": "Debit",
-				"Status": "Booked",
-				"BookingDateTime": "2020-05-02T14:22:09+00:00",
-				"ValueDateTime": "2020-05-02T14:22:09+00:00",
-				"TransactionInformation": "Paid the gas bill",
-				"AddressLine": "Coventry",
-				"BankTransactionCode": {
-					"Code": "Entertainment",
-					"SubCode": "AutomaticTransfer"
-				},
-				"ProprietaryBankTransactionCode": {
-					"Code": "DirectDebit",
-					"Issuer": "AlphaBank"
-				},
-				"Balance": {
+				{
+					"AccountId": "31820",
+					"TransactionId": "5678",
+					"TransactionReference": "Ref 124",
 					"Amount": {
-						"Amount": "57.36",
+						"Amount": "200.00",
 						"Currency": "GBP"
 					},
 					"CreditDebitIndicator": "Debit",
-					"Type": "InterimBooked"
-				}
-			},
-			{
-				"AccountId": "31820",
-				"TransactionId": "5679",
-				"TransactionReference": "Ref 124",
-				"Amount": {
-					"Amount": "300.00",
-					"Currency": "GBP"
+					"Status": "Booked",
+					"BookingDateTime": "2020-05-02T14:22:09+00:00",
+					"ValueDateTime": "2020-05-02T14:22:09+00:00",
+					"TransactionInformation": "Paid the gas bill",
+					"AddressLine": "Coventry",
+					"BankTransactionCode": {
+						"Code": "Entertainment",
+						"SubCode": "AutomaticTransfer"
+					},
+					"ProprietaryBankTransactionCode": {
+						"Code": "DirectDebit",
+						"Issuer": "AlphaBank"
+					},
+					"Balance": {
+						"Amount": {
+							"Amount": "57.36",
+							"Currency": "GBP"
+						},
+						"CreditDebitIndicator": "Debit",
+						"Type": "InterimBooked"
+					}
 				},
-				"CreditDebitIndicator": "Debit",
-				"Status": "Booked",
-				"BookingDateTime": "2020-05-02T14:22:09+00:00",
-				"ValueDateTime": "2020-05-02T14:22:09+00:00",
-				"TransactionInformation": "Paid the gas bill",
-				"AddressLine": "Coventry",
-				"BankTransactionCode": {
-					"Code": "Clothes",
-					"SubCode": "AutomaticTransfer"
-				},
-				"ProprietaryBankTransactionCode": {
-					"Code": "DirectDebit",
-					"Issuer": "AlphaBank"
-				},
-				"Balance": {
+				{
+					"AccountId": "31820",
+					"TransactionId": "5679",
+					"TransactionReference": "Ref 124",
 					"Amount": {
-						"Amount": "57.36",
+						"Amount": "300.00",
 						"Currency": "GBP"
 					},
 					"CreditDebitIndicator": "Debit",
-					"Type": "InterimBooked"
-				}
-			},
-			{
-				"AccountId": "31820",
-				"TransactionId": "5680",
-				"TransactionReference": "Ref 124",
-				"Amount": {
-					"Amount": "33.00",
-					"Currency": "GBP"
+					"Status": "Booked",
+					"BookingDateTime": "2020-05-02T14:22:09+00:00",
+					"ValueDateTime": "2020-05-02T14:22:09+00:00",
+					"TransactionInformation": "Paid the gas bill",
+					"AddressLine": "Coventry",
+					"BankTransactionCode": {
+						"Code": "Clothes",
+						"SubCode": "AutomaticTransfer"
+					},
+					"ProprietaryBankTransactionCode": {
+						"Code": "DirectDebit",
+						"Issuer": "AlphaBank"
+					},
+					"Balance": {
+						"Amount": {
+							"Amount": "57.36",
+							"Currency": "GBP"
+						},
+						"CreditDebitIndicator": "Debit",
+						"Type": "InterimBooked"
+					}
 				},
-				"CreditDebitIndicator": "Debit",
-				"Status": "Booked",
-				"BookingDateTime": "2020-05-02T14:22:09+00:00",
-				"ValueDateTime": "2020-05-02T14:22:09+00:00",
-				"TransactionInformation": "Paid the gas bill",
-				"AddressLine": "Coventry",
-				"BankTransactionCode": {
-					"Code": "Clothes",
-					"SubCode": "AutomaticTransfer"
-				},
-				"ProprietaryBankTransactionCode": {
-					"Code": "DirectDebit",
-					"Issuer": "AlphaBank"
-				},
-				"Balance": {
+				{
+					"AccountId": "31820",
+					"TransactionId": "5680",
+					"TransactionReference": "Ref 124",
 					"Amount": {
-						"Amount": "57.36",
+						"Amount": "33.00",
 						"Currency": "GBP"
 					},
 					"CreditDebitIndicator": "Debit",
-					"Type": "InterimBooked"
-				}
-			},
-			{
-				"AccountId": "31821",
-				"BankId": "apexfinancial",
-				"TransactionId": "5680",
-				"TransactionReference": "Ref 124",
-				"Amount": {
-					"Amount": "33.00",
-					"Currency": "GBP"
+					"Status": "Booked",
+					"BookingDateTime": "2020-05-02T14:22:09+00:00",
+					"ValueDateTime": "2020-05-02T14:22:09+00:00",
+					"TransactionInformation": "Paid the gas bill",
+					"AddressLine": "Coventry",
+					"BankTransactionCode": {
+						"Code": "Clothes",
+						"SubCode": "AutomaticTransfer"
+					},
+					"ProprietaryBankTransactionCode": {
+						"Code": "DirectDebit",
+						"Issuer": "AlphaBank"
+					},
+					"Balance": {
+						"Amount": {
+							"Amount": "57.36",
+							"Currency": "GBP"
+						},
+						"CreditDebitIndicator": "Debit",
+						"Type": "InterimBooked"
+					}
 				},
-				"CreditDebitIndicator": "Debit",
-				"Status": "Booked",
-				"BookingDateTime": "2020-05-02T14:22:09+00:00",
-				"ValueDateTime": "2020-05-02T14:22:09+00:00",
-				"TransactionInformation": "Paid the gas bill",
-				"AddressLine": "Coventry",
-				"BankTransactionCode": {
-					"Code": "Clothes",
-					"SubCode": "AutomaticTransfer"
-				},
-				"ProprietaryBankTransactionCode": {
-					"Code": "DirectDebit",
-					"Issuer": "AlphaBank"
-				},
-				"Balance": {
+				{
+					"AccountId": "31821",
+					"BankId": "apexfinancial",
+					"TransactionId": "5680",
+					"TransactionReference": "Ref 124",
 					"Amount": {
-						"Amount": "57.36",
+						"Amount": "33.00",
 						"Currency": "GBP"
 					},
 					"CreditDebitIndicator": "Debit",
-					"Type": "InterimBooked"
+					"Status": "Booked",
+					"BookingDateTime": "2020-05-02T14:22:09+00:00",
+					"ValueDateTime": "2020-05-02T14:22:09+00:00",
+					"TransactionInformation": "Paid the gas bill",
+					"AddressLine": "Coventry",
+					"BankTransactionCode": {
+						"Code": "Clothes",
+						"SubCode": "AutomaticTransfer"
+					},
+					"ProprietaryBankTransactionCode": {
+						"Code": "DirectDebit",
+						"Issuer": "AlphaBank"
+					},
+					"Balance": {
+						"Amount": {
+							"Amount": "57.36",
+							"Currency": "GBP"
+						},
+						"CreditDebitIndicator": "Debit",
+						"Type": "InterimBooked"
+					}
 				}
-			}
-		]
+			]
+		}
 	},
 	"user3": {
 		"accounts": {
@@ -600,193 +604,195 @@
 				}
 			]
 		},
-		"transactions": [{
-				"AccountId": "22289",
-				"TransactionId": "123",
-				"TransactionReference": "Ref 123",
-				"Amount": {
-					"Amount": "10.00",
-					"Currency": "GBP"
-				},
-				"CreditDebitIndicator": "Credit",
-				"Status": "Booked",
-				"BookingDateTime": "2020-04-05T10:43:07+00:00",
-				"ValueDateTime": "2020-04-05T10:45:22+00:00",
-				"TransactionInformation": "Cash from Aubrey",
-				"BankTransactionCode": {
-					"Code": "ReceivedCreditTransfer",
-					"SubCode": "DomesticCreditTransfer"
-				},
-				"ProprietaryBankTransactionCode": {
-					"Code": "Transfer",
-					"Issuer": "AlphaBank"
-				},
-				"Balance": {
+		"transactions": {
+			"obuk": [{
+					"AccountId": "22289",
+					"TransactionId": "123",
+					"TransactionReference": "Ref 123",
 					"Amount": {
-						"Amount": "230.00",
+						"Amount": "10.00",
 						"Currency": "GBP"
 					},
 					"CreditDebitIndicator": "Credit",
-					"Type": "InterimBooked"
-				}
-			},
-			{
-				"AccountId": "31820",
-				"TransactionId": "567",
-				"TransactionReference": "Ref 124",
-				"Amount": {
-					"Amount": "100.00",
-					"Currency": "GBP"
+					"Status": "Booked",
+					"BookingDateTime": "2020-04-05T10:43:07+00:00",
+					"ValueDateTime": "2020-04-05T10:45:22+00:00",
+					"TransactionInformation": "Cash from Aubrey",
+					"BankTransactionCode": {
+						"Code": "ReceivedCreditTransfer",
+						"SubCode": "DomesticCreditTransfer"
+					},
+					"ProprietaryBankTransactionCode": {
+						"Code": "Transfer",
+						"Issuer": "AlphaBank"
+					},
+					"Balance": {
+						"Amount": {
+							"Amount": "230.00",
+							"Currency": "GBP"
+						},
+						"CreditDebitIndicator": "Credit",
+						"Type": "InterimBooked"
+					}
 				},
-				"CreditDebitIndicator": "Debit",
-				"Status": "Booked",
-				"BookingDateTime": "2020-05-02T14:22:09+00:00",
-				"ValueDateTime": "2020-05-02T14:22:09+00:00",
-				"TransactionInformation": "Paid the gas bill",
-				"AddressLine": "Coventry",
-				"BankTransactionCode": {
-					"Code": "IssuedCreditTransfer",
-					"SubCode": "AutomaticTransfer"
-				},
-				"ProprietaryBankTransactionCode": {
-					"Code": "DirectDebit",
-					"Issuer": "AlphaBank"
-				},
-				"Balance": {
+				{
+					"AccountId": "31820",
+					"TransactionId": "567",
+					"TransactionReference": "Ref 124",
 					"Amount": {
-						"Amount": "57.36",
+						"Amount": "100.00",
 						"Currency": "GBP"
 					},
 					"CreditDebitIndicator": "Debit",
-					"Type": "InterimBooked"
-				}
-			},
-			{
-				"AccountId": "31820",
-				"TransactionId": "5678",
-				"TransactionReference": "Ref 124",
-				"Amount": {
-					"Amount": "200.00",
-					"Currency": "GBP"
+					"Status": "Booked",
+					"BookingDateTime": "2020-05-02T14:22:09+00:00",
+					"ValueDateTime": "2020-05-02T14:22:09+00:00",
+					"TransactionInformation": "Paid the gas bill",
+					"AddressLine": "Coventry",
+					"BankTransactionCode": {
+						"Code": "IssuedCreditTransfer",
+						"SubCode": "AutomaticTransfer"
+					},
+					"ProprietaryBankTransactionCode": {
+						"Code": "DirectDebit",
+						"Issuer": "AlphaBank"
+					},
+					"Balance": {
+						"Amount": {
+							"Amount": "57.36",
+							"Currency": "GBP"
+						},
+						"CreditDebitIndicator": "Debit",
+						"Type": "InterimBooked"
+					}
 				},
-				"CreditDebitIndicator": "Debit",
-				"Status": "Booked",
-				"BookingDateTime": "2020-05-02T14:22:09+00:00",
-				"ValueDateTime": "2020-05-02T14:22:09+00:00",
-				"TransactionInformation": "Paid the gas bill",
-				"AddressLine": "Coventry",
-				"BankTransactionCode": {
-					"Code": "Entertainment",
-					"SubCode": "AutomaticTransfer"
-				},
-				"ProprietaryBankTransactionCode": {
-					"Code": "DirectDebit",
-					"Issuer": "AlphaBank"
-				},
-				"Balance": {
+				{
+					"AccountId": "31820",
+					"TransactionId": "5678",
+					"TransactionReference": "Ref 124",
 					"Amount": {
-						"Amount": "57.36",
+						"Amount": "200.00",
 						"Currency": "GBP"
 					},
 					"CreditDebitIndicator": "Debit",
-					"Type": "InterimBooked"
-				}
-			},
-			{
-				"AccountId": "31820",
-				"TransactionId": "5679",
-				"TransactionReference": "Ref 124",
-				"Amount": {
-					"Amount": "300.00",
-					"Currency": "GBP"
+					"Status": "Booked",
+					"BookingDateTime": "2020-05-02T14:22:09+00:00",
+					"ValueDateTime": "2020-05-02T14:22:09+00:00",
+					"TransactionInformation": "Paid the gas bill",
+					"AddressLine": "Coventry",
+					"BankTransactionCode": {
+						"Code": "Entertainment",
+						"SubCode": "AutomaticTransfer"
+					},
+					"ProprietaryBankTransactionCode": {
+						"Code": "DirectDebit",
+						"Issuer": "AlphaBank"
+					},
+					"Balance": {
+						"Amount": {
+							"Amount": "57.36",
+							"Currency": "GBP"
+						},
+						"CreditDebitIndicator": "Debit",
+						"Type": "InterimBooked"
+					}
 				},
-				"CreditDebitIndicator": "Debit",
-				"Status": "Booked",
-				"BookingDateTime": "2020-05-02T14:22:09+00:00",
-				"ValueDateTime": "2020-05-02T14:22:09+00:00",
-				"TransactionInformation": "Paid the gas bill",
-				"AddressLine": "Coventry",
-				"BankTransactionCode": {
-					"Code": "Clothes",
-					"SubCode": "AutomaticTransfer"
-				},
-				"ProprietaryBankTransactionCode": {
-					"Code": "DirectDebit",
-					"Issuer": "AlphaBank"
-				},
-				"Balance": {
+				{
+					"AccountId": "31820",
+					"TransactionId": "5679",
+					"TransactionReference": "Ref 124",
 					"Amount": {
-						"Amount": "57.36",
+						"Amount": "300.00",
 						"Currency": "GBP"
 					},
 					"CreditDebitIndicator": "Debit",
-					"Type": "InterimBooked"
-				}
-			},
-			{
-				"AccountId": "31820",
-				"TransactionId": "5680",
-				"TransactionReference": "Ref 124",
-				"Amount": {
-					"Amount": "33.00",
-					"Currency": "GBP"
+					"Status": "Booked",
+					"BookingDateTime": "2020-05-02T14:22:09+00:00",
+					"ValueDateTime": "2020-05-02T14:22:09+00:00",
+					"TransactionInformation": "Paid the gas bill",
+					"AddressLine": "Coventry",
+					"BankTransactionCode": {
+						"Code": "Clothes",
+						"SubCode": "AutomaticTransfer"
+					},
+					"ProprietaryBankTransactionCode": {
+						"Code": "DirectDebit",
+						"Issuer": "AlphaBank"
+					},
+					"Balance": {
+						"Amount": {
+							"Amount": "57.36",
+							"Currency": "GBP"
+						},
+						"CreditDebitIndicator": "Debit",
+						"Type": "InterimBooked"
+					}
 				},
-				"CreditDebitIndicator": "Debit",
-				"Status": "Booked",
-				"BookingDateTime": "2020-05-02T14:22:09+00:00",
-				"ValueDateTime": "2020-05-02T14:22:09+00:00",
-				"TransactionInformation": "Paid the gas bill",
-				"AddressLine": "Coventry",
-				"BankTransactionCode": {
-					"Code": "Clothes",
-					"SubCode": "AutomaticTransfer"
-				},
-				"ProprietaryBankTransactionCode": {
-					"Code": "DirectDebit",
-					"Issuer": "AlphaBank"
-				},
-				"Balance": {
+				{
+					"AccountId": "31820",
+					"TransactionId": "5680",
+					"TransactionReference": "Ref 124",
 					"Amount": {
-						"Amount": "57.36",
+						"Amount": "33.00",
 						"Currency": "GBP"
 					},
 					"CreditDebitIndicator": "Debit",
-					"Type": "InterimBooked"
-				}
-			},
-			{
-				"AccountId": "31821",
-				"BankId": "apexfinancial",
-				"TransactionId": "5680",
-				"TransactionReference": "Ref 124",
-				"Amount": {
-					"Amount": "33.00",
-					"Currency": "GBP"
+					"Status": "Booked",
+					"BookingDateTime": "2020-05-02T14:22:09+00:00",
+					"ValueDateTime": "2020-05-02T14:22:09+00:00",
+					"TransactionInformation": "Paid the gas bill",
+					"AddressLine": "Coventry",
+					"BankTransactionCode": {
+						"Code": "Clothes",
+						"SubCode": "AutomaticTransfer"
+					},
+					"ProprietaryBankTransactionCode": {
+						"Code": "DirectDebit",
+						"Issuer": "AlphaBank"
+					},
+					"Balance": {
+						"Amount": {
+							"Amount": "57.36",
+							"Currency": "GBP"
+						},
+						"CreditDebitIndicator": "Debit",
+						"Type": "InterimBooked"
+					}
 				},
-				"CreditDebitIndicator": "Debit",
-				"Status": "Booked",
-				"BookingDateTime": "2020-05-02T14:22:09+00:00",
-				"ValueDateTime": "2020-05-02T14:22:09+00:00",
-				"TransactionInformation": "Paid the gas bill",
-				"AddressLine": "Coventry",
-				"BankTransactionCode": {
-					"Code": "Clothes",
-					"SubCode": "AutomaticTransfer"
-				},
-				"ProprietaryBankTransactionCode": {
-					"Code": "DirectDebit",
-					"Issuer": "AlphaBank"
-				},
-				"Balance": {
+				{
+					"AccountId": "31821",
+					"BankId": "apexfinancial",
+					"TransactionId": "5680",
+					"TransactionReference": "Ref 124",
 					"Amount": {
-						"Amount": "57.36",
+						"Amount": "33.00",
 						"Currency": "GBP"
 					},
 					"CreditDebitIndicator": "Debit",
-					"Type": "InterimBooked"
+					"Status": "Booked",
+					"BookingDateTime": "2020-05-02T14:22:09+00:00",
+					"ValueDateTime": "2020-05-02T14:22:09+00:00",
+					"TransactionInformation": "Paid the gas bill",
+					"AddressLine": "Coventry",
+					"BankTransactionCode": {
+						"Code": "Clothes",
+						"SubCode": "AutomaticTransfer"
+					},
+					"ProprietaryBankTransactionCode": {
+						"Code": "DirectDebit",
+						"Issuer": "AlphaBank"
+					},
+					"Balance": {
+						"Amount": {
+							"Amount": "57.36",
+							"Currency": "GBP"
+						},
+						"CreditDebitIndicator": "Debit",
+						"Type": "InterimBooked"
+					}
 				}
-			}
-		]
+			]
+		}
 	},
 	"xxx": {
 		"accounts": {
@@ -863,192 +869,194 @@
 				}
 			]
 		},
-		"transactions": [{
-				"AccountId": "22289",
-				"TransactionId": "123",
-				"TransactionReference": "Ref 123",
-				"Amount": {
-					"Amount": "10.00",
-					"Currency": "GBP"
-				},
-				"CreditDebitIndicator": "Credit",
-				"Status": "Booked",
-				"BookingDateTime": "2020-04-05T10:43:07+00:00",
-				"ValueDateTime": "2020-04-05T10:45:22+00:00",
-				"TransactionInformation": "Cash from Aubrey",
-				"BankTransactionCode": {
-					"Code": "ReceivedCreditTransfer",
-					"SubCode": "DomesticCreditTransfer"
-				},
-				"ProprietaryBankTransactionCode": {
-					"Code": "Transfer",
-					"Issuer": "AlphaBank"
-				},
-				"Balance": {
+		"transactions": {
+			"obuk": [{
+					"AccountId": "22289",
+					"TransactionId": "123",
+					"TransactionReference": "Ref 123",
 					"Amount": {
-						"Amount": "230.00",
+						"Amount": "10.00",
 						"Currency": "GBP"
 					},
 					"CreditDebitIndicator": "Credit",
-					"Type": "InterimBooked"
-				}
-			},
-			{
-				"AccountId": "31820",
-				"TransactionId": "567",
-				"TransactionReference": "Ref 124",
-				"Amount": {
-					"Amount": "100.00",
-					"Currency": "GBP"
+					"Status": "Booked",
+					"BookingDateTime": "2020-04-05T10:43:07+00:00",
+					"ValueDateTime": "2020-04-05T10:45:22+00:00",
+					"TransactionInformation": "Cash from Aubrey",
+					"BankTransactionCode": {
+						"Code": "ReceivedCreditTransfer",
+						"SubCode": "DomesticCreditTransfer"
+					},
+					"ProprietaryBankTransactionCode": {
+						"Code": "Transfer",
+						"Issuer": "AlphaBank"
+					},
+					"Balance": {
+						"Amount": {
+							"Amount": "230.00",
+							"Currency": "GBP"
+						},
+						"CreditDebitIndicator": "Credit",
+						"Type": "InterimBooked"
+					}
 				},
-				"CreditDebitIndicator": "Debit",
-				"Status": "Booked",
-				"BookingDateTime": "2020-05-02T14:22:09+00:00",
-				"ValueDateTime": "2020-05-02T14:22:09+00:00",
-				"TransactionInformation": "Paid the gas bill",
-				"AddressLine": "Coventry",
-				"BankTransactionCode": {
-					"Code": "IssuedCreditTransfer",
-					"SubCode": "AutomaticTransfer"
-				},
-				"ProprietaryBankTransactionCode": {
-					"Code": "DirectDebit",
-					"Issuer": "AlphaBank"
-				},
-				"Balance": {
+				{
+					"AccountId": "31820",
+					"TransactionId": "567",
+					"TransactionReference": "Ref 124",
 					"Amount": {
-						"Amount": "57.36",
+						"Amount": "100.00",
 						"Currency": "GBP"
 					},
 					"CreditDebitIndicator": "Debit",
-					"Type": "InterimBooked"
-				}
-			},
-			{
-				"AccountId": "31820",
-				"TransactionId": "5678",
-				"TransactionReference": "Ref 124",
-				"Amount": {
-					"Amount": "200.00",
-					"Currency": "GBP"
+					"Status": "Booked",
+					"BookingDateTime": "2020-05-02T14:22:09+00:00",
+					"ValueDateTime": "2020-05-02T14:22:09+00:00",
+					"TransactionInformation": "Paid the gas bill",
+					"AddressLine": "Coventry",
+					"BankTransactionCode": {
+						"Code": "IssuedCreditTransfer",
+						"SubCode": "AutomaticTransfer"
+					},
+					"ProprietaryBankTransactionCode": {
+						"Code": "DirectDebit",
+						"Issuer": "AlphaBank"
+					},
+					"Balance": {
+						"Amount": {
+							"Amount": "57.36",
+							"Currency": "GBP"
+						},
+						"CreditDebitIndicator": "Debit",
+						"Type": "InterimBooked"
+					}
 				},
-				"CreditDebitIndicator": "Debit",
-				"Status": "Booked",
-				"BookingDateTime": "2020-05-02T14:22:09+00:00",
-				"ValueDateTime": "2020-05-02T14:22:09+00:00",
-				"TransactionInformation": "Paid the gas bill",
-				"AddressLine": "Coventry",
-				"BankTransactionCode": {
-					"Code": "Entertainment",
-					"SubCode": "AutomaticTransfer"
-				},
-				"ProprietaryBankTransactionCode": {
-					"Code": "DirectDebit",
-					"Issuer": "AlphaBank"
-				},
-				"Balance": {
+				{
+					"AccountId": "31820",
+					"TransactionId": "5678",
+					"TransactionReference": "Ref 124",
 					"Amount": {
-						"Amount": "57.36",
+						"Amount": "200.00",
 						"Currency": "GBP"
 					},
 					"CreditDebitIndicator": "Debit",
-					"Type": "InterimBooked"
-				}
-			},
-			{
-				"AccountId": "31820",
-				"TransactionId": "5679",
-				"TransactionReference": "Ref 124",
-				"Amount": {
-					"Amount": "300.00",
-					"Currency": "GBP"
+					"Status": "Booked",
+					"BookingDateTime": "2020-05-02T14:22:09+00:00",
+					"ValueDateTime": "2020-05-02T14:22:09+00:00",
+					"TransactionInformation": "Paid the gas bill",
+					"AddressLine": "Coventry",
+					"BankTransactionCode": {
+						"Code": "Entertainment",
+						"SubCode": "AutomaticTransfer"
+					},
+					"ProprietaryBankTransactionCode": {
+						"Code": "DirectDebit",
+						"Issuer": "AlphaBank"
+					},
+					"Balance": {
+						"Amount": {
+							"Amount": "57.36",
+							"Currency": "GBP"
+						},
+						"CreditDebitIndicator": "Debit",
+						"Type": "InterimBooked"
+					}
 				},
-				"CreditDebitIndicator": "Debit",
-				"Status": "Booked",
-				"BookingDateTime": "2020-05-02T14:22:09+00:00",
-				"ValueDateTime": "2020-05-02T14:22:09+00:00",
-				"TransactionInformation": "Paid the gas bill",
-				"AddressLine": "Coventry",
-				"BankTransactionCode": {
-					"Code": "Clothes",
-					"SubCode": "AutomaticTransfer"
-				},
-				"ProprietaryBankTransactionCode": {
-					"Code": "DirectDebit",
-					"Issuer": "AlphaBank"
-				},
-				"Balance": {
+				{
+					"AccountId": "31820",
+					"TransactionId": "5679",
+					"TransactionReference": "Ref 124",
 					"Amount": {
-						"Amount": "57.36",
+						"Amount": "300.00",
 						"Currency": "GBP"
 					},
 					"CreditDebitIndicator": "Debit",
-					"Type": "InterimBooked"
-				}
-			},
-			{
-				"AccountId": "31820",
-				"TransactionId": "5680",
-				"TransactionReference": "Ref 124",
-				"Amount": {
-					"Amount": "33.00",
-					"Currency": "GBP"
+					"Status": "Booked",
+					"BookingDateTime": "2020-05-02T14:22:09+00:00",
+					"ValueDateTime": "2020-05-02T14:22:09+00:00",
+					"TransactionInformation": "Paid the gas bill",
+					"AddressLine": "Coventry",
+					"BankTransactionCode": {
+						"Code": "Clothes",
+						"SubCode": "AutomaticTransfer"
+					},
+					"ProprietaryBankTransactionCode": {
+						"Code": "DirectDebit",
+						"Issuer": "AlphaBank"
+					},
+					"Balance": {
+						"Amount": {
+							"Amount": "57.36",
+							"Currency": "GBP"
+						},
+						"CreditDebitIndicator": "Debit",
+						"Type": "InterimBooked"
+					}
 				},
-				"CreditDebitIndicator": "Debit",
-				"Status": "Booked",
-				"BookingDateTime": "2020-05-02T14:22:09+00:00",
-				"ValueDateTime": "2020-05-02T14:22:09+00:00",
-				"TransactionInformation": "Paid the gas bill",
-				"AddressLine": "Coventry",
-				"BankTransactionCode": {
-					"Code": "Clothes",
-					"SubCode": "AutomaticTransfer"
-				},
-				"ProprietaryBankTransactionCode": {
-					"Code": "DirectDebit",
-					"Issuer": "AlphaBank"
-				},
-				"Balance": {
+				{
+					"AccountId": "31820",
+					"TransactionId": "5680",
+					"TransactionReference": "Ref 124",
 					"Amount": {
-						"Amount": "57.36",
+						"Amount": "33.00",
 						"Currency": "GBP"
 					},
 					"CreditDebitIndicator": "Debit",
-					"Type": "InterimBooked"
-				}
-			},
-			{
-				"AccountId": "31821",
-				"BankId": "apexfinancial",
-				"TransactionId": "5680",
-				"TransactionReference": "Ref 124",
-				"Amount": {
-					"Amount": "33.00",
-					"Currency": "GBP"
+					"Status": "Booked",
+					"BookingDateTime": "2020-05-02T14:22:09+00:00",
+					"ValueDateTime": "2020-05-02T14:22:09+00:00",
+					"TransactionInformation": "Paid the gas bill",
+					"AddressLine": "Coventry",
+					"BankTransactionCode": {
+						"Code": "Clothes",
+						"SubCode": "AutomaticTransfer"
+					},
+					"ProprietaryBankTransactionCode": {
+						"Code": "DirectDebit",
+						"Issuer": "AlphaBank"
+					},
+					"Balance": {
+						"Amount": {
+							"Amount": "57.36",
+							"Currency": "GBP"
+						},
+						"CreditDebitIndicator": "Debit",
+						"Type": "InterimBooked"
+					}
 				},
-				"CreditDebitIndicator": "Debit",
-				"Status": "Booked",
-				"BookingDateTime": "2020-05-02T14:22:09+00:00",
-				"ValueDateTime": "2020-05-02T14:22:09+00:00",
-				"TransactionInformation": "Paid the gas bill",
-				"AddressLine": "Coventry",
-				"BankTransactionCode": {
-					"Code": "Clothes",
-					"SubCode": "AutomaticTransfer"
-				},
-				"ProprietaryBankTransactionCode": {
-					"Code": "DirectDebit",
-					"Issuer": "AlphaBank"
-				},
-				"Balance": {
+				{
+					"AccountId": "31821",
+					"BankId": "apexfinancial",
+					"TransactionId": "5680",
+					"TransactionReference": "Ref 124",
 					"Amount": {
-						"Amount": "57.36",
+						"Amount": "33.00",
 						"Currency": "GBP"
 					},
 					"CreditDebitIndicator": "Debit",
-					"Type": "InterimBooked"
+					"Status": "Booked",
+					"BookingDateTime": "2020-05-02T14:22:09+00:00",
+					"ValueDateTime": "2020-05-02T14:22:09+00:00",
+					"TransactionInformation": "Paid the gas bill",
+					"AddressLine": "Coventry",
+					"BankTransactionCode": {
+						"Code": "Clothes",
+						"SubCode": "AutomaticTransfer"
+					},
+					"ProprietaryBankTransactionCode": {
+						"Code": "DirectDebit",
+						"Issuer": "AlphaBank"
+					},
+					"Balance": {
+						"Amount": {
+							"Amount": "57.36",
+							"Currency": "GBP"
+						},
+						"CreditDebitIndicator": "Debit",
+						"Type": "InterimBooked"
+					}
 				}
-			}
-		]
+			]
+		}
 	}
 }
