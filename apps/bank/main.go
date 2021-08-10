@@ -111,12 +111,12 @@ func (s *Server) Start() error {
 	r.GET("/accounts", s.Get(s.GetAccountsLogic))
 	r.GET("/internal/accounts/:sub", s.Get(s.GetInternalAccountsLogic))
 
+	r.GET("/balances", s.Get(s.GetBalancesLogic))
 	r.GET("/internal/balances/:sub", s.Get(s.GetBalancesInternalLogic))
-	r.GET("/balances", s.Get(s.GetBalancesInternalLogic))
 
 	r.GET("/transactions", s.Get(s.GetTransactionsLogic))
 
-	//r.POST("/domestic-payments", s.CreateDomesticPayment())
+	r.POST("/domestic-payments", s.Post(s.CreatePaymentLogic))
 	r.GET("/domestic-payments/:DomesticPaymentId", s.Get(s.GetPaymentLogic))
 
 	return r.Run(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)))
