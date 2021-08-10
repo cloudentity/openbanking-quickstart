@@ -70,6 +70,7 @@ type Server struct {
 	GetPaymentLogic    GetEndpointLogic
 }
 
+// TODO: fix error mapping so that http code is returned
 func NewServer() (Server, error) {
 	var (
 		server = Server{}
