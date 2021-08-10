@@ -58,13 +58,16 @@ type Server struct {
 	Storage Storage
 	//PaymentQueue PaymentQueue
 
-	GetAccountsLogic         EndpointLogic
-	GetInternalAccountsLogic EndpointLogic
+	GetAccountsLogic         GetEndpointLogic
+	GetInternalAccountsLogic GetEndpointLogic
 
-	GetBalancesLogic         EndpointLogic
-	GetBalancesInternalLogic EndpointLogic
+	GetBalancesLogic         GetEndpointLogic
+	GetBalancesInternalLogic GetEndpointLogic
 
-	GetTransactionsLogic EndpointLogic
+	GetTransactionsLogic GetEndpointLogic
+
+	CreatePaymentLogic CreateEndpointLogic
+	GetPaymentLogic    GetEndpointLogic
 }
 
 func NewServer() (Server, error) {
@@ -85,17 +88,15 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to init repo")
 	}
 
-	/*if server.PaymentQueue, err = NewPaymentQueue(server.Storage); err != nil {
-		return server, errors.Wrapf(err, "failed to init payment queue")
-	}*/
-
 	switch server.Config.Spec {
 	case OBUK:
-		server.GetAccountsLogic = &OBUKAccountsHandler{Server: &server}
-		server.GetInternalAccountsLogic = &OBUKInternalAccountsHandler{Server: &server}
-		server.GetBalancesLogic = &OBUKBalancesHandler{Server: &server}
-		server.GetBalancesInternalLogic = &OBUKBalancesInternalHandler{Server: &server}
-		server.GetTransactionsLogic = &OBUKTransactionsHandler{Server: &server}
+		server.GetAccountsLogic = &OBUKGetAccountsHandler{Server: &server}
+		server.GetInternalAccountsLogic = &OBUKGetAccountsInternalHandler{Server: &server}
+		server.GetBalancesLogic = &OBUKGetBalancesHandler{Server: &server}
+		server.GetBalancesInternalLogic = &OBUKGetBalancesInternalHandler{Server: &server}
+		server.GetTransactionsLogic = &OBUKGetTransactionsHandler{Server: &server}
+		server.CreatePaymentLogic = &OBUKCreatePaymentHandler{Server: &server}
+		server.GetPaymentLogic = &OBUKGetPaymentHandler{Server: &server}
 	case OBBR:
 	default:
 		return server, errors.Wrapf(err, "unsupported spec %s", server.Config.Spec)
