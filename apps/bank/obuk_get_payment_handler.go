@@ -50,19 +50,19 @@ func (h *OBUKGetPaymentHandler) GetUserIdentifier(c *gin.Context) string {
 }
 
 func (h *OBUKGetPaymentHandler) BuildResponse(c *gin.Context, data BankUserData) interface{} {
-	if len(data.Payments) == 1 {
-		return data.Payments[0]
+	if len(data.Payments.OBUK) == 1 {
+		return data.Payments.OBUK[0]
 	}
-	return h.MapError(c, errors.New("no payments matching id were found"))
+	return h.MapError(c, ErrNotFound{"payment with consent id " + *data.Payments.OBUK[0].Data.ConsentID})
 }
 
 func (h *OBUKGetPaymentHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
-	filtered := BankUserData{}
+	var filteredPayments Payments
 
-	for _, payment := range data.Payments {
+	for _, payment := range data.Payments.OBUK {
 		if *payment.Data.ConsentID == c.Param("DomesticPaymentId") {
-			filtered.Payments = append(filtered.Payments, payment)
-			return filtered
+			filteredPayments.OBUK = append(filteredPayments.OBUK, payment)
+			return BankUserData{Payments: filteredPayments}
 		}
 	}
 
