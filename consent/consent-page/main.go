@@ -88,15 +88,17 @@ func LoadConfig() (config Config, err error) {
 }
 
 type Server struct {
-	Config                      Config
-	Client                      acpclient.Client
-	BankClient                  BankClient
-	SMSClient                   *SMSClient
-	OTPRepo                     *OTPRepo
-	OTPHandler                  OTPHandler
-	Trans                       *Trans
-	PaymentConsentHandler       ConsentHandler
-	AccountAccessConsentHandler ConsentHandler
+	Config                          Config
+	Client                          acpclient.Client
+	BankClient                      BankClient
+	SMSClient                       *SMSClient
+	OTPRepo                         *OTPRepo
+	OTPHandler                      OTPHandler
+	Trans                           *Trans
+	PaymentConsentHandler           ConsentHandler
+	PaymentMFAConsentProvider       MFAConsentProvider
+	AccountAccessConsentHandler     ConsentHandler
+	AccountAccessMFAConsentProvider MFAConsentProvider
 }
 
 func NewServer() (Server, error) {
@@ -155,9 +157,14 @@ func NewServer() (Server, error) {
 	switch server.Config.Spec {
 	case OBUK:
 		server.AccountAccessConsentHandler = &OBUKAccountAccessConsentHandler{&server, ConsentTools{Trans: server.Trans}}
+		server.AccountAccessMFAConsentProvider = &OBUKAccountAccessMFAConsentProvider{&server, ConsentTools{Trans: server.Trans}}
 		server.PaymentConsentHandler = &OBUKDomesticPaymentConsentHandler{&server, ConsentTools{Trans: server.Trans}}
+		server.PaymentMFAConsentProvider = &DomesticPaymentMFAConsentProvider{&server, ConsentTools{Trans: server.Trans}}
 	case OBBR:
-		server.AccountAccessConsentHandler = &OBBRAccountAccessConsentHandler{}
+		server.AccountAccessConsentHandler = &OBBRAccountAccessConsentHandler{&server, ConsentTools{Trans: server.Trans}}
+		server.AccountAccessMFAConsentProvider = &OBBRAccountAccessMFAConsentProvider{&server, ConsentTools{Trans: server.Trans}}
+		server.PaymentConsentHandler = &OBBRPaymentConsentHandler{&server, ConsentTools{Trans: server.Trans}}
+		server.PaymentMFAConsentProvider = &OBBRPaymentMFAConsentProvider{&server, ConsentTools{Trans: server.Trans}}
 	default:
 		return server, errors.Wrapf(err, "unsupported spec %s", server.Config.Spec)
 	}

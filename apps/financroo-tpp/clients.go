@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"net/http"
 	"net/url"
@@ -21,14 +22,14 @@ type Clients struct {
 	BankClient        OpenbankingClient
 }
 
-func (c *Clients) RenewAccountsToken(bank ConnectedBank) (*models.TokenResponse, error) {
+func (c *Clients) RenewAccountsToken(ctx context.Context, bank ConnectedBank) (*models.TokenResponse, error) {
 	var (
 		resp *oauth2.TokenOK
 		err  error
 	)
 
 	if resp, err = c.AcpAccountsClient.Acp.Oauth2.Token(
-		oauth2.NewTokenParams().
+		oauth2.NewTokenParamsWithContext(ctx).
 			WithAid(c.AcpAccountsClient.ServerID).
 			WithTid(c.AcpAccountsClient.TenantID).
 			WithClientID(&c.AcpAccountsClient.Config.ClientID).

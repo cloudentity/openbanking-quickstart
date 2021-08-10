@@ -24,32 +24,29 @@ type MFAData struct {
 }
 
 type MFAConsentProvider interface {
-	GetMFAData(LoginRequest) (MFAData, error)
+	GetMFAData(*gin.Context, LoginRequest) (MFAData, error)
 	GetSMSBody(MFAData, OTP) string
 	GetTemplateName() string
 	GetConsentMockData(LoginRequest) map[string]interface{}
 }
 
 func (s *Server) GetMFAConsentProvider(loginRequest LoginRequest) (MFAConsentProvider, bool) {
-	var handler MFAConsentProvider
-
 	switch loginRequest.ConsentType {
-	case "domestic_payment":
-		handler = &DomesticPaymentMFAConsentProvider{s, ConsentTools{Trans: s.Trans}}
-	case "account_access":
-		handler = &AccountAccessMFAConsentProvider{s, ConsentTools{Trans: s.Trans}}
+	case "domestic_payment", "payments":
+		return s.PaymentMFAConsentProvider, true
+	case "account_access", "consents":
+		return s.AccountAccessMFAConsentProvider, true
 	default:
 		return nil, false
 	}
-	return handler, true
 }
 
-type AccountAccessMFAConsentProvider struct {
+type OBUKAccountAccessMFAConsentProvider struct {
 	*Server
 	ConsentTools
 }
 
-func (s *AccountAccessMFAConsentProvider) GetMFAData(loginRequest LoginRequest) (MFAData, error) {
+func (s *OBUKAccountAccessMFAConsentProvider) GetMFAData(c *gin.Context, loginRequest LoginRequest) (MFAData, error) {
 	var (
 		response *openbanking.GetAccountAccessConsentSystemOK
 		data     = MFAData{}
@@ -57,7 +54,7 @@ func (s *AccountAccessMFAConsentProvider) GetMFAData(loginRequest LoginRequest) 
 	)
 
 	if response, err = s.Client.Openbanking.GetAccountAccessConsentSystem(
-		openbanking.NewGetAccountAccessConsentSystemParams().
+		openbanking.NewGetAccountAccessConsentSystemParamsWithContext(c).
 			WithTid(s.Client.TenantID).
 			WithLogin(loginRequest.ID),
 		nil,
@@ -72,7 +69,7 @@ func (s *AccountAccessMFAConsentProvider) GetMFAData(loginRequest LoginRequest) 
 	return data, nil
 }
 
-func (s *AccountAccessMFAConsentProvider) GetSMSBody(data MFAData, otp OTP) string {
+func (s *OBUKAccountAccessMFAConsentProvider) GetSMSBody(data MFAData, otp OTP) string {
 	return fmt.Sprintf(
 		"%s is requesting access to your accounts, please pre-authorize the consent %s using following code: %s to proceed.",
 		data.ClientName,
@@ -81,11 +78,11 @@ func (s *AccountAccessMFAConsentProvider) GetSMSBody(data MFAData, otp OTP) stri
 	)
 }
 
-func (s *AccountAccessMFAConsentProvider) GetTemplateName() string {
+func (s *OBUKAccountAccessMFAConsentProvider) GetTemplateName() string {
 	return s.GetTemplateNameForSpec("account-consent.tmpl")
 }
 
-func (s *AccountAccessMFAConsentProvider) GetConsentMockData(loginRequest LoginRequest) map[string]interface{} {
+func (s *OBUKAccountAccessMFAConsentProvider) GetConsentMockData(loginRequest LoginRequest) map[string]interface{} {
 	return s.GetAccessConsentTemplateData(
 		loginRequest,
 		&models.GetAccountAccessConsentResponse{
@@ -113,7 +110,7 @@ type DomesticPaymentMFAConsentProvider struct {
 	ConsentTools
 }
 
-func (s *DomesticPaymentMFAConsentProvider) GetMFAData(loginRequest LoginRequest) (MFAData, error) {
+func (s *DomesticPaymentMFAConsentProvider) GetMFAData(c *gin.Context, loginRequest LoginRequest) (MFAData, error) {
 	var (
 		response *openbanking.GetDomesticPaymentConsentSystemOK
 		data     = MFAData{}
@@ -121,7 +118,7 @@ func (s *DomesticPaymentMFAConsentProvider) GetMFAData(loginRequest LoginRequest
 	)
 
 	if response, err = s.Client.Openbanking.GetDomesticPaymentConsentSystem(
-		openbanking.NewGetDomesticPaymentConsentSystemParams().
+		openbanking.NewGetDomesticPaymentConsentSystemParamsWithContext(c).
 			WithTid(s.Client.TenantID).
 			WithLogin(loginRequest.ID),
 		nil,
@@ -170,7 +167,7 @@ func (s *DomesticPaymentMFAConsentProvider) GetConsentMockData(loginRequest Logi
 				OBWriteDomesticConsentResponse5Data: models.OBWriteDomesticConsentResponse5Data{
 					Initiation: &models.OBWriteDomesticConsentResponse5DataInitiation{
 						CreditorAccount: &models.OBWriteDomesticConsentResponse5DataInitiationCreditorAccount{
-							Name: &creditorAccountName,
+							Name: creditorAccountName,
 						},
 						DebtorAccount: &models.OBWriteDomesticConsentResponse5DataInitiationDebtorAccount{
 							Identification: &debtorAccount,
@@ -230,7 +227,7 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 			return
 		}
 
-		if data, err = provider.GetMFAData(r); err != nil {
+		if data, err = provider.GetMFAData(c, r); err != nil {
 			RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to get authn context"))
 			return
 		}

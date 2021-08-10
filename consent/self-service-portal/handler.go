@@ -109,7 +109,7 @@ func (s *Server) RevokeConsent() func(*gin.Context) {
 		}
 
 		if _, err = s.Client.Openbanking.RevokeOpenbankingConsent(
-			openbanking.NewRevokeOpenbankingConsentParams().
+			openbanking.NewRevokeOpenbankingConsentParamsWithContext(c).
 				WithTid(s.Client.TenantID).
 				WithAid(s.Config.SystemClientsServerID).
 				WithConsentID(id),
@@ -149,7 +149,7 @@ func (s *Server) FetchConsents(c *gin.Context) (*ConsentsAndAccounts, error) {
 		types = nil
 	}
 
-	if at, err = s.IntrospectClient.IntrospectToken(token); err != nil {
+	if at, err = s.IntrospectClient.IntrospectToken(c, token); err != nil {
 		return nil, fmt.Errorf("failed to introspect client: %w", err)
 	}
 
@@ -167,7 +167,7 @@ func (s *Server) FetchConsents(c *gin.Context) (*ConsentsAndAccounts, error) {
 	}
 
 	if response, err = s.Client.Openbanking.ListOBConsents(
-		openbanking.NewListOBConsentsParams().
+		openbanking.NewListOBConsentsParamsWithContext(c).
 			WithTid(s.Client.TenantID).
 			WithAid(s.Config.SystemClientsServerID).
 			WithConsentsRequest(&models.ConsentsRequest{

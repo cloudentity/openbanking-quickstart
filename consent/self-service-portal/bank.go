@@ -42,16 +42,16 @@ func (c *BankClient) GetInternalAccounts(subject string) (InternalAccounts, erro
 	)
 
 	if request, err = http.NewRequest("GET", fmt.Sprintf("%s/internal/accounts/%s", c.baseURL, subject), nil); err != nil {
-		return InternalAccounts{}, err
+		return InternalAccounts{}, nil
 	}
 
 	if response, err = c.Client.Do(request); err != nil {
-		return InternalAccounts{}, err
+		return InternalAccounts{}, nil
 	}
 	defer response.Body.Close()
 
 	if bytes, err = ioutil.ReadAll(response.Body); err != nil {
-		return InternalAccounts{}, err
+		return InternalAccounts{}, nil
 	}
 
 	if response.StatusCode != 200 {
@@ -59,7 +59,7 @@ func (c *BankClient) GetInternalAccounts(subject string) (InternalAccounts, erro
 	}
 
 	if err = json.Unmarshal(bytes, &resp); err != nil {
-		return InternalAccounts{}, err
+		return InternalAccounts{}, nil
 	}
 
 	return ToInternalAccounts(resp), nil

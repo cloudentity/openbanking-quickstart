@@ -126,6 +126,102 @@ func (c *ConsentTools) GetDomesticPaymentTemplateData(
 		"login_request": loginRequest,
 		"accounts":      c.GetAccountsWithBalance(accounts, balances, string(*consent.DomesticPaymentConsent.Initiation.DebtorAccount.Identification)),
 		"client_name":   clientName,
-		"consent":       consent.DomesticPaymentConsent,
+		"consent":       OBUKPaymentConsentTemplateData(consent.DomesticPaymentConsent),
+	}
+}
+
+func (c *ConsentTools) GetOBBRDataAccessConsentTemplateData(
+	loginRequest LoginRequest,
+	consent *models.GetOBBRCustomerDataAccessConsentResponse,
+	accounts InternalAccounts,
+) map[string]interface{} {
+	var expirationDate string
+
+	edt := time.Time(consent.CustomerDataAccessConsent.ExpirationDateTime)
+	if !edt.IsZero() {
+		expirationDate = edt.Format("02/01/2006")
+	}
+
+	clientName := c.GetClientName(nil)
+	return map[string]interface{}{
+		"trans": map[string]interface{}{
+			"headTitle":      c.Trans.T("br.account.headTitle"),
+			"title":          c.Trans.T("br.account.title"),
+			"selectAccounts": c.Trans.T("br.account.selectAccounts"),
+			"reviewData":     c.Trans.T("br.account.review_data"),
+			"permissions":    c.Trans.T("br.account.permissions"),
+			"purpose":        c.Trans.T("br.account.purpose"),
+			"purposeDetail":  c.Trans.T("br.account.purposeDetail"),
+			"expiration": c.Trans.TD("br.account.expiration", map[string]interface{}{
+				"client_name":     clientName,
+				"expiration_date": expirationDate,
+			}),
+			"cancel": c.Trans.T("br.account.cancel"),
+			"agree":  c.Trans.T("br.account.agree"),
+		},
+		"login_request": loginRequest,
+		"accounts":      accounts.Accounts,
+		// "permissions":     c.GetPermissionsWithDescription(consent.AccountAccessConsent.Permissions),
+		"client_name":     clientName,
+		"expiration_date": expirationDate,
+	}
+}
+
+func (c *ConsentTools) GetOBBRPaymentConsentTemplateData(
+	loginRequest LoginRequest,
+	consent *models.GetOBBRCustomerPaymentConsentResponse,
+	accounts InternalAccounts,
+	balances BalanceData,
+) map[string]interface{} {
+	clientName := c.GetClientName(nil)
+	return map[string]interface{}{
+		"trans": map[string]interface{}{
+			"headTitle":        c.Trans.T("br.payment.headTitle"),
+			"title":            c.Trans.T("br.payment.title"),
+			"paymentInfo":      c.Trans.T("br.payment.paymentInfo"),
+			"payeeAccountName": c.Trans.T("br.payment.payeeAccountName"),
+			"sortCode":         c.Trans.T("br.payment.sortCode"),
+			"accountNumber":    c.Trans.T("br.payment.accountNumber"),
+			"paymentReference": c.Trans.T("br.payment.paymentReference"),
+			"amount":           c.Trans.T("br.payment.amount"),
+			"accountInfo":      c.Trans.T("br.payment.accountInfo"),
+			"clickToProceed": c.Trans.TD("br.payment.clickToProceed", map[string]interface{}{
+				"client_name": clientName,
+			}),
+			"cancel":  c.Trans.T("br.payment.cancel"),
+			"confirm": c.Trans.T("br.payment.confirm"),
+		},
+		"login_request": loginRequest,
+		"accounts":      c.GetAccountsWithBalance(accounts, balances, consent.CustomerDataAccessConsent.DebtorAccount.Number),
+		"client_name":   clientName,
+		"consent":       OBBRPaymentConsentTemplateData(consent.CustomerDataAccessConsent),
+	}
+}
+
+type PaymentConsentTemplateData struct {
+	AccountName    string
+	SortCode       string
+	Identification string
+	Reference      string
+	Currency       string
+	Amount         string
+}
+
+func OBUKPaymentConsentTemplateData(consent *models.DomesticPaymentConsent) PaymentConsentTemplateData {
+	return PaymentConsentTemplateData{
+		AccountName:    consent.Initiation.CreditorAccount.Name,
+		Identification: string(*consent.Initiation.DebtorAccount.Identification),
+		Reference:      consent.Initiation.RemittanceInformation.Reference,
+		Currency:       string(*consent.Initiation.InstructedAmount.Currency),
+		Amount:         string(*consent.Initiation.InstructedAmount.Amount),
+	}
+}
+
+func OBBRPaymentConsentTemplateData(consent *models.OBBRCustomerPaymentConsent) PaymentConsentTemplateData {
+	return PaymentConsentTemplateData{
+		AccountName:    consent.Creditor.Name,
+		Identification: consent.DebtorAccount.Number,
+		Currency:       consent.Payment.Currency,
+		Amount:         consent.Payment.Amount,
 	}
 }
