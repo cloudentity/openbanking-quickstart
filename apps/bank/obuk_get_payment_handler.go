@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -36,13 +35,14 @@ func (h *OBUKGetPaymentHandler) SetIntrospectionResponse(c *gin.Context) error {
 func (h *OBUKGetPaymentHandler) Validate(c *gin.Context) error {
 	scopes := strings.Split(h.introspectionResponse.Scope, " ")
 	if !has(scopes, "payments") {
-		return errors.New("token has no payments scope granted")
+		return NewErrForbidden("token has no payments scope granted")
 	}
 	return nil
 }
 
-func (h *OBUKGetPaymentHandler) MapError(c *gin.Context, err error) (int, interface{}) {
-	return OBUKMapError(err)
+func (h *OBUKGetPaymentHandler) MapError(c *gin.Context, err error) (code int, resp interface{}) {
+	code, resp = OBUKMapError(err)
+	return
 }
 
 func (h *OBUKGetPaymentHandler) GetUserIdentifier(c *gin.Context) string {

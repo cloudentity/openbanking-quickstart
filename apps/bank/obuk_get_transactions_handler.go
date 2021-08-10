@@ -6,11 +6,11 @@ import (
 	"strconv"
 	"strings"
 
+	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 
 	acpClient "github.com/cloudentity/acp-client-go/models"
-	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
 )
 
 // swagger:route GET /transactions bank getTransactionsRequest
@@ -36,8 +36,9 @@ func (h *OBUKGetTransactionsHandler) SetIntrospectionResponse(c *gin.Context) er
 	return err
 }
 
-func (h *OBUKGetTransactionsHandler) MapError(c *gin.Context, err error) (int, interface{}) {
-	return OBUKMapError(err)
+func (h *OBUKGetTransactionsHandler) MapError(c *gin.Context, err error) (code int, resp interface{}) {
+	code, resp = OBUKMapError(err)
+	return
 }
 
 func (h *OBUKGetTransactionsHandler) BuildResponse(c *gin.Context, data BankUserData) interface{} {
@@ -53,7 +54,7 @@ func (h *OBUKGetTransactionsHandler) Validate(c *gin.Context) error {
 
 	grantedPermissions := h.introspectionResponse.Permissions
 	if !has(grantedPermissions, "ReadTransactionsBasic") {
-		return errors.New("ReadTransactionsBasic permission has not been granted")
+		return errors.New("ReadTransactionsBasic permission has not been granted") // nolint
 	}
 
 	return nil

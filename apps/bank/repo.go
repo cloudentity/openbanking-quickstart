@@ -9,7 +9,6 @@ import (
 
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
 	paymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
-
 	"github.com/pkg/errors"
 	bolt "go.etcd.io/bbolt"
 )
@@ -36,6 +35,7 @@ type Transactions struct {
 type Payments struct {
 	OBUK []paymentModels.OBWriteDomesticResponse5 `json:"obuk"`
 }
+
 type Storage interface {
 	Get(string) (BankUserData, error)
 	Put(string, BankUserData) error
@@ -60,7 +60,7 @@ func (u *UserRepo) Get(sub string) (BankUserData, error) {
 	if err = u.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket(bucketName)
 		v := b.Get([]byte(sub))
-		if err := json.Unmarshal(v, &data); err != nil {
+		if err = json.Unmarshal(v, &data); err != nil {
 			return errors.Wrapf(err, fmt.Sprintf("failed to unmarshal data for user %s", sub))
 		}
 		return nil

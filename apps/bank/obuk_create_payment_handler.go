@@ -8,12 +8,13 @@ import (
 	"strconv"
 	"strings"
 
-	acpClient "github.com/cloudentity/acp-client-go/models"
 	paymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 	"github.com/google/uuid"
 	"github.com/jinzhu/copier"
+
+	acpClient "github.com/cloudentity/acp-client-go/models"
 )
 
 // swagger:route POST /domestic-payments bank createDomesticPaymentRequest
@@ -54,13 +55,13 @@ func (h *OBUKCreatePaymentHandler) CreateResource(c *gin.Context, sub string) (i
 
 	for _, p := range data.Payments.OBUK {
 		if p.Data.ConsentID == payment.Data.ConsentID {
-			return payment, ErrAlreadyExists{*payment.Data.ConsentID}
+			return payment, NewErrAlreadyExists(fmt.Sprintf("payment with id %s", *p.Data.ConsentID))
 		}
 	}
 	data.Payments.OBUK = append(data.Payments.OBUK, payment)
 
 	if err = h.Storage.Put(sub, data); err != nil {
-		return "", err
+		return "", NewErrInternalServer("failed to store resource")
 	}
 
 	return payment, nil
@@ -75,11 +76,11 @@ func (h *OBUKCreatePaymentHandler) SetIntrospectionResponse(c *gin.Context) erro
 func (h *OBUKCreatePaymentHandler) Validate(c *gin.Context) error {
 	scopes := strings.Split(h.introspectionResponse.Scope, " ")
 	if !has(scopes, "payments") {
-		return errors.New("token has no payments scope granted")
+		return NewErrForbidden("token has no payments scope granted")
 	}
 
 	if h.introspectionResponse.Status != "Authorised" {
-		return errors.New("domestic payment consent does not have status authorised")
+		return NewErrUnprocessableEntity("domestic payment consent does not have status authorised")
 	}
 
 	if h.request.Data.Initiation == nil {
@@ -91,8 +92,7 @@ func (h *OBUKCreatePaymentHandler) Validate(c *gin.Context) error {
 	}
 
 	if h.introspectionResponse.Initiation == nil {
-		return errors.New("initiation data not present in introspection response")
-
+		return NewErrInternalServer("initiation data not present in introspection response")
 	}
 
 	if !initiationsAreEqual(h.request.Data.Initiation, h.introspectionResponse.Initiation) {
@@ -101,7 +101,7 @@ func (h *OBUKCreatePaymentHandler) Validate(c *gin.Context) error {
 
 	consentRisk := &paymentModels.OBRisk1{}
 	if err := copier.Copy(consentRisk, h.introspectionResponse); err != nil {
-		return errors.New("internal error")
+		return NewErrInternalServer("internal error")
 	}
 
 	paymentRisk := h.request.Risk
@@ -112,7 +112,7 @@ func (h *OBUKCreatePaymentHandler) Validate(c *gin.Context) error {
 	return nil
 }
 
-func (h *OBUKCreatePaymentHandler) MapError(c *gin.Context, err error) (int, interface{}) {
+func (h *OBUKCreatePaymentHandler) MapError(c *gin.Context, err error) (code int, ret interface{}) {
 	return OBUKMapError(err)
 }
 

@@ -1,15 +1,15 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"strconv"
 	"strings"
 
-	acpClient "github.com/cloudentity/acp-client-go/models"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
+
+	acpClient "github.com/cloudentity/acp-client-go/models"
 )
 
 // swagger:route GET /balances bank getBalancesRequest
@@ -34,8 +34,9 @@ func (h *OBUKGetBalancesHandler) SetIntrospectionResponse(c *gin.Context) error 
 	return err
 }
 
-func (h *OBUKGetBalancesHandler) MapError(c *gin.Context, err error) (int, interface{}) {
-	return OBUKMapError(err)
+func (h *OBUKGetBalancesHandler) MapError(c *gin.Context, err error) (code int, resp interface{}) {
+	code, resp = OBUKMapError(err)
+	return
 }
 
 func (h *OBUKGetBalancesHandler) BuildResponse(c *gin.Context, data BankUserData) interface{} {
@@ -46,12 +47,12 @@ func (h *OBUKGetBalancesHandler) BuildResponse(c *gin.Context, data BankUserData
 func (h *OBUKGetBalancesHandler) Validate(c *gin.Context) error {
 	scopes := strings.Split(h.introspectionResponse.Scope, " ")
 	if !has(scopes, "accounts") {
-		return errors.New("token has no accounts scope granted")
+		return NewErrForbidden("token has no accounts scope granted")
 	}
 
 	grantedPermissions := h.introspectionResponse.Permissions
 	if !has(grantedPermissions, "ReadBalances") {
-		return errors.New("ReadBalances permission has not been granted")
+		return NewErrForbidden("ReadBalances permission has not been granted")
 	}
 	return nil
 }

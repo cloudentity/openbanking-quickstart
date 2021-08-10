@@ -1,21 +1,21 @@
 package main
 
 import (
-	acpClient "github.com/cloudentity/acp-client-go/models"
 	"github.com/gin-gonic/gin"
 )
 
 type OBBRGetAccountsHandler struct {
 	*Server
-	introspectionResponse *acpClient.IntrospectOBBRDataAccessConsentResponse
+	// introspectionResponse *acpClient.IntrospectOBBRDataAccessConsentResponse
 }
 
 func (h *OBBRGetAccountsHandler) SetIntrospectionResponse(c *gin.Context) error {
 	return nil
 }
 
-func (h *OBBRGetAccountsHandler) MapError(c *gin.Context, err error) (int, interface{}) {
-	return 500, nil
+func (h *OBBRGetAccountsHandler) MapError(c *gin.Context, err error) (code int, resp interface{}) {
+	code, resp = 500, nil
+	return
 }
 
 func (h *OBBRGetAccountsHandler) BuildResponse(c *gin.Context, data BankUserData) interface{} {

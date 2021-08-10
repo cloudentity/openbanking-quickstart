@@ -56,7 +56,7 @@ type Server struct {
 	Config  Config
 	Client  acpclient.Client
 	Storage Storage
-	//PaymentQueue PaymentQueue
+	// PaymentQueue PaymentQueue
 
 	GetAccountsLogic         GetEndpointLogic
 	GetInternalAccountsLogic GetEndpointLogic

@@ -39,8 +39,8 @@ func (s *Server) Get(h GetEndpointLogic) func(*gin.Context) {
 		}
 
 		if data, err = s.Storage.Get(h.GetUserIdentifier(c)); err != nil {
-			code, errResp := h.MapError(c, err)
-			c.PureJSON(code, errResp)
+			_, errResp := h.MapError(c, err)
+			c.PureJSON(http.StatusNotFound, errResp)
 			return
 		}
 
