@@ -81,6 +81,24 @@ func NewTransactionsResponse(transactions []models.OBTransaction6, self strfmt.U
 	}
 }
 
+func NewOBUKPaymentConsent(introspectionResponse *acpClient.IntrospectOpenbankingDomesticPaymentConsentResponse, self strfmt.URI, id string) paymentModels.OBWriteDomesticResponse5 {
+	status := string(AcceptedSettlementInProcess)
+	return paymentModels.OBWriteDomesticResponse5{
+		Data: &paymentModels.OBWriteDomesticResponse5Data{
+			DomesticPaymentID:    &id,
+			ConsentID:            &introspectionResponse.ConsentID,
+			Status:               &status,
+			Charges:              []*paymentModels.OBWriteDomesticResponse5DataChargesItems0{},
+			CreationDateTime:     newDateTimePtr(time.Now()),
+			StatusUpdateDateTime: newDateTimePtr(time.Now()),
+			Initiation:           toDomesticResponse5DataInitiation(introspectionResponse.Initiation),
+		},
+		Links: &paymentModels.Links{
+			Self: &self,
+		},
+	}
+}
+
 func has(list []string, a string) bool {
 	for _, b := range list {
 		if b == a {
