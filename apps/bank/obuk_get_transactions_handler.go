@@ -11,11 +11,6 @@ import (
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
 )
 
-// swagger:parameters getTransactionsRequest
-type GetTransactionsRequest struct {
-	RequestHeaders
-}
-
 // swagger:route GET /transactions bank getTransactionsRequest
 //
 // get transactions
@@ -28,12 +23,12 @@ type GetTransactionsRequest struct {
 //   400: OBErrorResponse1
 //   403: OBErrorResponse1
 //   404: OBErrorResponse1
-type OBUKTransactionsHandler struct {
+type OBUKGetTransactionsHandler struct {
 	*Server
 	introspectionResponse *acpClient.IntrospectOpenbankingAccountAccessConsentResponse
 }
 
-func (h *OBUKTransactionsHandler) SetIntrospectionResponse(c *gin.Context) error {
+func (h *OBUKGetTransactionsHandler) SetIntrospectionResponse(c *gin.Context) error {
 	var (
 		resp *acpClient.IntrospectOpenbankingAccountAccessConsentResponse
 		err  error
@@ -47,15 +42,15 @@ func (h *OBUKTransactionsHandler) SetIntrospectionResponse(c *gin.Context) error
 	return nil
 }
 
-func (h *OBUKTransactionsHandler) MapError(err error) interface{} {
+func (h *OBUKGetTransactionsHandler) MapError(c *gin.Context, err error) interface{} {
 	return OBUKMapError(err)
 }
 
-func (h *OBUKTransactionsHandler) SetRequest(c *gin.Context) error {
+func (h *OBUKGetTransactionsHandler) SetRequest(c *gin.Context) error {
 	return nil
 }
 
-func (h *OBUKTransactionsHandler) BuildResponse(data BankUserData) interface{} {
+func (h *OBUKGetTransactionsHandler) BuildResponse(c *gin.Context, data BankUserData) interface{} {
 	transactions := []*models.OBTransaction6{}
 
 	for _, transaction := range data.Transactions {
@@ -77,7 +72,7 @@ func (h *OBUKTransactionsHandler) BuildResponse(data BankUserData) interface{} {
 	return response
 }
 
-func (h *OBUKTransactionsHandler) Validate() error {
+func (h *OBUKGetTransactionsHandler) Validate(c *gin.Context) error {
 
 	/*
 		grantedPermissions := introspectionResponse.Permissions
@@ -102,11 +97,11 @@ func (h *OBUKTransactionsHandler) Validate() error {
 	return nil
 }
 
-func (h *OBUKTransactionsHandler) GetUserIdentifier(c *gin.Context) string {
+func (h *OBUKGetTransactionsHandler) GetUserIdentifier(c *gin.Context) string {
 	return h.introspectionResponse.Sub
 }
 
-func (h *OBUKTransactionsHandler) Filter(data BankUserData) BankUserData {
+func (h *OBUKGetTransactionsHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
 	/*
 		transactions := []*models.OBTransaction6{}
 
@@ -128,5 +123,8 @@ func (h *OBUKTransactionsHandler) Filter(data BankUserData) BankUserData {
 			}
 	*/
 	return data
+}
 
+func (h *OBUKGetTransactionsHandler) CreateResource(c *gin.Context) (interface{}, error) {
+	return "", nil
 }
