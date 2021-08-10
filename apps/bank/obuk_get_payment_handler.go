@@ -28,12 +28,9 @@ type OBUKGetPaymentHandler struct {
 }
 
 func (h *OBUKGetPaymentHandler) SetIntrospectionResponse(c *gin.Context) error {
-	if resp, err := h.IntrospectPaymentsToken(c); err != nil {
-		return err
-	} else {
-		h.introspectionResponse = resp
-		return nil
-	}
+	var err error
+	h.introspectionResponse, err = h.IntrospectPaymentsToken(c)
+	return err
 }
 
 func (h *OBUKGetPaymentHandler) Validate(c *gin.Context) error {
