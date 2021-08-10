@@ -32,7 +32,7 @@ func (h *OBUKGetBalancesInternalHandler) MapError(c *gin.Context, err error) int
 
 func (h *OBUKGetBalancesInternalHandler) BuildResponse(c *gin.Context, data BankUserData) interface{} {
 	self := strfmt.URI(fmt.Sprintf("http://localhost:%s/balances", strconv.Itoa(h.Config.Port)))
-	return NewBalancesResponse(data.Balances, self)
+	return NewBalancesResponse(data.Balances.OBUK, self)
 }
 
 func (h *OBUKGetBalancesInternalHandler) Validate(c *gin.Context) error {

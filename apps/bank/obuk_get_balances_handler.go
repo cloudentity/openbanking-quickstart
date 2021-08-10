@@ -40,7 +40,7 @@ func (h *OBUKGetBalancesHandler) MapError(c *gin.Context, err error) interface{}
 
 func (h *OBUKGetBalancesHandler) BuildResponse(c *gin.Context, data BankUserData) interface{} {
 	self := strfmt.URI(fmt.Sprintf("http://localhost:%s/balances", strconv.Itoa(h.Config.Port)))
-	return NewBalancesResponse(data.Balances, self)
+	return NewBalancesResponse(data.Balances.OBUK, self)
 }
 
 func (h *OBUKGetBalancesHandler) Validate(c *gin.Context) error {
@@ -63,11 +63,15 @@ func (h *OBUKGetBalancesHandler) GetUserIdentifier(c *gin.Context) string {
 func (h *OBUKGetBalancesHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
 	filteredBalances := []models.OBReadBalance1DataBalanceItems0{}
 
-	for _, balance := range data.Balances {
+	for _, balance := range data.Balances.OBUK {
 		if has(h.introspectionResponse.AccountIDs, string(*balance.AccountID)) {
 			filteredBalances = append(filteredBalances, balance)
 		}
 	}
 
-	return BankUserData{Balances: filteredBalances}
+	return BankUserData{
+		Balances: Balances{
+			OBUK: filteredBalances,
+		},
+	}
 }

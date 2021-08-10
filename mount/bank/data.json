@@ -33,45 +33,47 @@
 				}
 			]
 		},
-		"balances": [{
-				"AccountId": "22289",
-				"Amount": {
-					"Amount": "1230.00",
-					"Currency": "GBP"
-				},
-				"CreditDebitIndicator": "Credit",
-				"Type": "InterimAvailable",
-				"DateTime": "2017-04-05T10:43:07+00:00",
-				"CreditLine": [{
-					"Included": true,
+		"balances": {
+			"obuk": [{
+					"AccountId": "22289",
 					"Amount": {
-						"Amount": "1000.00",
+						"Amount": "1230.00",
 						"Currency": "GBP"
 					},
-					"Type": "Temporary"
-				}]
-			},
-			{
-				"AccountId": "31820",
-				"Amount": {
-					"Amount": "57.36",
-					"Currency": "GBP"
+					"CreditDebitIndicator": "Credit",
+					"Type": "InterimAvailable",
+					"DateTime": "2017-04-05T10:43:07+00:00",
+					"CreditLine": [{
+						"Included": true,
+						"Amount": {
+							"Amount": "1000.00",
+							"Currency": "GBP"
+						},
+						"Type": "Temporary"
+					}]
 				},
-				"CreditDebitIndicator": "Debit",
-				"Type": "InterimBooked",
-				"DateTime": "2017-05-02T14:22:09+00:00"
-			},
-			{
-				"AccountId": "31821",
-				"Amount": {
-					"Amount": "99.36",
-					"Currency": "GBP"
+				{
+					"AccountId": "31820",
+					"Amount": {
+						"Amount": "57.36",
+						"Currency": "GBP"
+					},
+					"CreditDebitIndicator": "Debit",
+					"Type": "InterimBooked",
+					"DateTime": "2017-05-02T14:22:09+00:00"
 				},
-				"CreditDebitIndicator": "Debit",
-				"Type": "InterimBooked",
-				"DateTime": "2017-05-02T14:22:09+00:00"
-			}
-		],
+				{
+					"AccountId": "31821",
+					"Amount": {
+						"Amount": "99.36",
+						"Currency": "GBP"
+					},
+					"CreditDebitIndicator": "Debit",
+					"Type": "InterimBooked",
+					"DateTime": "2017-05-02T14:22:09+00:00"
+				}
+			]
+		},
 		"transactions": [{
 				"AccountId": "22289",
 				"TransactionId": "123",
@@ -294,45 +296,47 @@
 				}
 			]
 		},
-		"balances": [{
-				"AccountId": "22289",
-				"Amount": {
-					"Amount": "1230.00",
-					"Currency": "GBP"
-				},
-				"CreditDebitIndicator": "Credit",
-				"Type": "InterimAvailable",
-				"DateTime": "2017-04-05T10:43:07+00:00",
-				"CreditLine": [{
-					"Included": true,
+		"balances": {
+			"obuk": [{
+					"AccountId": "22289",
 					"Amount": {
-						"Amount": "1000.00",
+						"Amount": "1230.00",
 						"Currency": "GBP"
 					},
-					"Type": "Temporary"
-				}]
-			},
-			{
-				"AccountId": "31820",
-				"Amount": {
-					"Amount": "57.36",
-					"Currency": "GBP"
+					"CreditDebitIndicator": "Credit",
+					"Type": "InterimAvailable",
+					"DateTime": "2017-04-05T10:43:07+00:00",
+					"CreditLine": [{
+						"Included": true,
+						"Amount": {
+							"Amount": "1000.00",
+							"Currency": "GBP"
+						},
+						"Type": "Temporary"
+					}]
 				},
-				"CreditDebitIndicator": "Debit",
-				"Type": "InterimBooked",
-				"DateTime": "2017-05-02T14:22:09+00:00"
-			},
-			{
-				"AccountId": "31821",
-				"Amount": {
-					"Amount": "99.36",
-					"Currency": "GBP"
+				{
+					"AccountId": "31820",
+					"Amount": {
+						"Amount": "57.36",
+						"Currency": "GBP"
+					},
+					"CreditDebitIndicator": "Debit",
+					"Type": "InterimBooked",
+					"DateTime": "2017-05-02T14:22:09+00:00"
 				},
-				"CreditDebitIndicator": "Debit",
-				"Type": "InterimBooked",
-				"DateTime": "2017-05-02T14:22:09+00:00"
-			}
-		],
+				{
+					"AccountId": "31821",
+					"Amount": {
+						"Amount": "99.36",
+						"Currency": "GBP"
+					},
+					"CreditDebitIndicator": "Debit",
+					"Type": "InterimBooked",
+					"DateTime": "2017-05-02T14:22:09+00:00"
+				}
+			]
+		},
 		"transactions": [{
 				"AccountId": "22289",
 				"TransactionId": "123",
@@ -555,45 +559,47 @@
 				}
 			]
 		},
-		"balances": [{
-				"AccountId": "22289",
-				"Amount": {
-					"Amount": "1230.00",
-					"Currency": "GBP"
-				},
-				"CreditDebitIndicator": "Credit",
-				"Type": "InterimAvailable",
-				"DateTime": "2017-04-05T10:43:07+00:00",
-				"CreditLine": [{
-					"Included": true,
+		"balances": {
+			"obuk": [{
+					"AccountId": "22289",
 					"Amount": {
-						"Amount": "1000.00",
+						"Amount": "1230.00",
 						"Currency": "GBP"
 					},
-					"Type": "Temporary"
-				}]
-			},
-			{
-				"AccountId": "31820",
-				"Amount": {
-					"Amount": "57.36",
-					"Currency": "GBP"
+					"CreditDebitIndicator": "Credit",
+					"Type": "InterimAvailable",
+					"DateTime": "2017-04-05T10:43:07+00:00",
+					"CreditLine": [{
+						"Included": true,
+						"Amount": {
+							"Amount": "1000.00",
+							"Currency": "GBP"
+						},
+						"Type": "Temporary"
+					}]
 				},
-				"CreditDebitIndicator": "Debit",
-				"Type": "InterimBooked",
-				"DateTime": "2017-05-02T14:22:09+00:00"
-			},
-			{
-				"AccountId": "31821",
-				"Amount": {
-					"Amount": "99.36",
-					"Currency": "GBP"
+				{
+					"AccountId": "31820",
+					"Amount": {
+						"Amount": "57.36",
+						"Currency": "GBP"
+					},
+					"CreditDebitIndicator": "Debit",
+					"Type": "InterimBooked",
+					"DateTime": "2017-05-02T14:22:09+00:00"
 				},
-				"CreditDebitIndicator": "Debit",
-				"Type": "InterimBooked",
-				"DateTime": "2017-05-02T14:22:09+00:00"
-			}
-		],
+				{
+					"AccountId": "31821",
+					"Amount": {
+						"Amount": "99.36",
+						"Currency": "GBP"
+					},
+					"CreditDebitIndicator": "Debit",
+					"Type": "InterimBooked",
+					"DateTime": "2017-05-02T14:22:09+00:00"
+				}
+			]
+		},
 		"transactions": [{
 				"AccountId": "22289",
 				"TransactionId": "123",
@@ -816,45 +822,47 @@
 				}
 			]
 		},
-		"balances": [{
-				"AccountId": "22289",
-				"Amount": {
-					"Amount": "1230.00",
-					"Currency": "GBP"
-				},
-				"CreditDebitIndicator": "Credit",
-				"Type": "InterimAvailable",
-				"DateTime": "2017-04-05T10:43:07+00:00",
-				"CreditLine": [{
-					"Included": true,
+		"balances": {
+			"obuk": [{
+					"AccountId": "22289",
 					"Amount": {
-						"Amount": "1000.00",
+						"Amount": "1230.00",
 						"Currency": "GBP"
 					},
-					"Type": "Temporary"
-				}]
-			},
-			{
-				"AccountId": "31820",
-				"Amount": {
-					"Amount": "57.36",
-					"Currency": "GBP"
+					"CreditDebitIndicator": "Credit",
+					"Type": "InterimAvailable",
+					"DateTime": "2017-04-05T10:43:07+00:00",
+					"CreditLine": [{
+						"Included": true,
+						"Amount": {
+							"Amount": "1000.00",
+							"Currency": "GBP"
+						},
+						"Type": "Temporary"
+					}]
 				},
-				"CreditDebitIndicator": "Debit",
-				"Type": "InterimBooked",
-				"DateTime": "2017-05-02T14:22:09+00:00"
-			},
-			{
-				"AccountId": "31821",
-				"Amount": {
-					"Amount": "99.36",
-					"Currency": "GBP"
+				{
+					"AccountId": "31820",
+					"Amount": {
+						"Amount": "57.36",
+						"Currency": "GBP"
+					},
+					"CreditDebitIndicator": "Debit",
+					"Type": "InterimBooked",
+					"DateTime": "2017-05-02T14:22:09+00:00"
 				},
-				"CreditDebitIndicator": "Debit",
-				"Type": "InterimBooked",
-				"DateTime": "2017-05-02T14:22:09+00:00"
-			}
-		],
+				{
+					"AccountId": "31821",
+					"Amount": {
+						"Amount": "99.36",
+						"Currency": "GBP"
+					},
+					"CreditDebitIndicator": "Debit",
+					"Type": "InterimBooked",
+					"DateTime": "2017-05-02T14:22:09+00:00"
+				}
+			]
+		},
 		"transactions": [{
 				"AccountId": "22289",
 				"TransactionId": "123",

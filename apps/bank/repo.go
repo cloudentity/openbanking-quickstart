@@ -15,7 +15,7 @@ import (
 
 type BankUserData struct {
 	Accounts     Accounts                                 `json:"accounts"`
-	Balances     []models.OBReadBalance1DataBalanceItems0 `json:"balances"`
+	Balances     Balances                                 `json:"balances"`
 	Transactions []models.OBTransaction6                  `json:"transactions"`
 	Payments     []paymentModels.OBWriteDomesticResponse5 `json:"payments"`
 }
@@ -24,6 +24,17 @@ type Accounts struct {
 	OBUK []models.OBAccount6 `json:"obuk"`
 }
 
+type Balances struct {
+	OBUK []models.OBReadBalance1DataBalanceItems0 `json:"obuk"`
+}
+
+type Transactions struct {
+	OBUK []models.OBTransaction6 `json:"obuk"`
+}
+
+type Payments struct {
+	OBUK []paymentModels.OBWriteDomesticResponse5 `json:"obuk"`
+}
 type Storage interface {
 	Get(string) (BankUserData, error)
 	Put(string, BankUserData) error
