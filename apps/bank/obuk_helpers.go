@@ -81,7 +81,7 @@ func NewTransactionsResponse(transactions []models.OBTransaction6, self strfmt.U
 	}
 }
 
-func NewOBUKPaymentConsent(introspectionResponse *acpClient.IntrospectOpenbankingDomesticPaymentConsentResponse, self strfmt.URI, id string) paymentModels.OBWriteDomesticResponse5 {
+func NewOBUKPayment(introspectionResponse *acpClient.IntrospectOpenbankingDomesticPaymentConsentResponse, self strfmt.URI, id string) paymentModels.OBWriteDomesticResponse5 {
 	status := string(AcceptedSettlementInProcess)
 	return paymentModels.OBWriteDomesticResponse5{
 		Data: &paymentModels.OBWriteDomesticResponse5Data{
