@@ -48,12 +48,16 @@ func (h *OBUKCreatePaymentHandler) CreateResource(c *gin.Context, sub string) (i
 		return "", err
 	}
 
-	// could just check if it already exists here...
-	data.Payments = append(data.Payments, payment)
+	for _, p := range data.Payments.OBUK {
+		if p.Data.ConsentID == payment.Data.ConsentID {
+			return payment, ErrAlreadyExists{*payment.Data.ConsentID}
+		}
+	}
+	data.Payments.OBUK = append(data.Payments.OBUK, payment)
 
-	/*if err = h.Storage.Put(sub, data); err != nil {
+	if err = h.Storage.Put(sub, data); err != nil {
 		return "", err
-	}*/
+	}
 
 	return payment, nil
 }
