@@ -2,14 +2,18 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
+	"reflect"
 	"strconv"
+	"strings"
 
 	acpClient "github.com/cloudentity/acp-client-go/models"
 	paymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 	"github.com/google/uuid"
+	"github.com/jinzhu/copier"
 )
 
 // swagger:route POST /domestic-payments bank createDomesticPaymentRequest
@@ -69,75 +73,42 @@ func (h *OBUKCreatePaymentHandler) SetIntrospectionResponse(c *gin.Context) erro
 }
 
 func (h *OBUKCreatePaymentHandler) Validate(c *gin.Context) error {
-	/*scopes := strings.Split(introspectionResponse.Scope, " ")
+	scopes := strings.Split(h.introspectionResponse.Scope, " ")
 	if !has(scopes, "payments") {
-		msg := "token has no payments scope granted"
-		c.JSON(http.StatusForbidden, models.OBErrorResponse1{
-			Message: &msg,
-		})
-		return
+		return errors.New("token has no payments scope granted")
 	}
 
-	if *introspectionResponse.Status != "Authorised" {
-		msg := "domestic payment consent does not have status authorised"
-		c.JSON(http.StatusUnprocessableEntity, models.OBError1{
-			Message: &msg,
-		})
-		return
+	if h.introspectionResponse.Status != "Authorised" {
+		return errors.New("domestic payment consent does not have status authorised")
 	}
 
-	if paymentRequest.Data.Initiation == nil {
-		msg := "initiation data not present in request"
-		c.JSON(http.StatusBadRequest, models.OBError1{
-			Message: &msg,
-		})
-		return
+	if h.request.Data.Initiation == nil {
+		return errors.New("initiation data not present in request")
 	}
 
-	if introspectionResponse.Initiation == nil {
-		msg := "initiation data not present in introspection response"
-		c.JSON(http.StatusInternalServerError, models.OBError1{
-			Message: &msg,
-		})
-		return
+	if h.request.Risk == nil {
+		return errors.New("no risk data in payment request")
 	}
 
-	if !initiationsAreEqual(*paymentRequest.Data.Initiation, *introspectionResponse.Initiation) {
-		msg := "request initiation does not match consent initiation"
-		c.JSON(http.StatusBadRequest, models.OBError1{
-			Message: &msg,
-		})
-		return
+	if h.introspectionResponse.Initiation == nil {
+		return errors.New("initiation data not present in introspection response")
+
 	}
 
-	if paymentRequest.Risk == nil {
-		msg := "no risk data in payment request"
-		c.JSON(http.StatusBadRequest, models.OBError1{
-			Message: &msg,
-		})
-		return
+	if !initiationsAreEqual(h.request.Data.Initiation, h.introspectionResponse.Initiation) {
+		return errors.New("request initiation does not match consent initiation")
 	}
 
-	paymentRisk := paymentRequest.Risk
 	consentRisk := &paymentModels.OBRisk1{}
-
-	if err = copier.Copy(consentRisk, introspectionResponse); err != nil {
-		msg := "internal error"
-		logrus.WithError(err).Error("field copying failed")
-		c.JSON(http.StatusInternalServerError, models.OBError1{
-			Message: &msg,
-		})
-		return
+	if err := copier.Copy(consentRisk, h.introspectionResponse); err != nil {
+		return errors.New("internal error")
 	}
 
+	paymentRisk := h.request.Risk
 	if !reflect.DeepEqual(paymentRisk, consentRisk) {
-		msg := "risk validation failed"
-		logrus.Errorf(msg)
-		c.JSON(http.StatusBadRequest, models.OBError1{
-			Message: &msg,
-		})
-		return
-	}*/
+		return errors.New("risk validation failed")
+	}
+
 	return nil
 }
 
