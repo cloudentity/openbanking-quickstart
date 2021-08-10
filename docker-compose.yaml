@@ -67,7 +67,7 @@ services:
       - BANK_URL=http://bank:8070
       - DB_FILE=/data/my.db
       - LOG_LEVEL=debug
-      - SPEC=obuk
+      - SPEC=${SPEC}
       - GIN_MODE=debug # change to release to disable gin debug
       # - ENABLE_MFA=true
       # - DEV_MODE=true
@@ -152,7 +152,7 @@ services:
       - CERT_FILE=/bank_cert.pem
       - KEY_FILE=/bank_key.pem
       - ROOT_CA=/ca.pem
-      - SPEC=obuk
+      - SPEC=${SPEC}
 
   acp:
     container_name: acp
