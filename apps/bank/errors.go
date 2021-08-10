@@ -2,6 +2,12 @@ package main
 
 import "fmt"
 
+var (
+	errNotFound      ErrNotFound
+	errAlreadyExists ErrAlreadyExists
+	errBadRequest    ErrBadRequest
+)
+
 type ErrNotFound struct {
 	resourceName string
 }
@@ -17,3 +23,5 @@ type ErrAlreadyExists struct {
 func (e ErrAlreadyExists) Error() string {
 	return fmt.Sprintf("resource %s already exists", e.resourceName)
 }
+
+type ErrBadRequest error

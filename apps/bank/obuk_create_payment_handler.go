@@ -112,7 +112,7 @@ func (h *OBUKCreatePaymentHandler) Validate(c *gin.Context) error {
 	return nil
 }
 
-func (h *OBUKCreatePaymentHandler) MapError(c *gin.Context, err error) interface{} {
+func (h *OBUKCreatePaymentHandler) MapError(c *gin.Context, err error) (int, interface{}) {
 	return OBUKMapError(err)
 }
 

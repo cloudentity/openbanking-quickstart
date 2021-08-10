@@ -34,7 +34,7 @@ func (h *OBUKGetBalancesHandler) SetIntrospectionResponse(c *gin.Context) error 
 	return err
 }
 
-func (h *OBUKGetBalancesHandler) MapError(c *gin.Context, err error) interface{} {
+func (h *OBUKGetBalancesHandler) MapError(c *gin.Context, err error) (int, interface{}) {
 	return OBUKMapError(err)
 }
 

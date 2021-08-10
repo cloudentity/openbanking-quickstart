@@ -41,7 +41,7 @@ func (h *OBUKGetPaymentHandler) Validate(c *gin.Context) error {
 	return nil
 }
 
-func (h *OBUKGetPaymentHandler) MapError(c *gin.Context, err error) interface{} {
+func (h *OBUKGetPaymentHandler) MapError(c *gin.Context, err error) (int, interface{}) {
 	return OBUKMapError(err)
 }
 
@@ -53,7 +53,9 @@ func (h *OBUKGetPaymentHandler) BuildResponse(c *gin.Context, data BankUserData)
 	if len(data.Payments.OBUK) == 1 {
 		return data.Payments.OBUK[0]
 	}
-	return h.MapError(c, ErrNotFound{"payment with consent id " + *data.Payments.OBUK[0].Data.ConsentID})
+
+	_, err := h.MapError(c, ErrNotFound{"payment with consent id " + *data.Payments.OBUK[0].Data.ConsentID})
+	return err
 }
 
 func (h *OBUKGetPaymentHandler) Filter(c *gin.Context, data BankUserData) BankUserData {

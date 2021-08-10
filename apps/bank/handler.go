@@ -9,7 +9,7 @@ import (
 type EndpointLogicCommon interface {
 	SetIntrospectionResponse(*gin.Context) error
 	Validate(*gin.Context) error
-	MapError(*gin.Context, error) interface{}
+	MapError(*gin.Context, error) (int, interface{})
 	GetUserIdentifier(*gin.Context) string
 }
 
@@ -27,17 +27,20 @@ func (s *Server) Get(h GetEndpointLogic) func(*gin.Context) {
 		)
 
 		if err = h.SetIntrospectionResponse(c); err != nil {
-			c.PureJSON(http.StatusBadRequest, h.MapError(c, err))
+			code, errResp := h.MapError(c, err)
+			c.PureJSON(code, errResp)
 			return
 		}
 
 		if err = h.Validate(c); err != nil {
-			c.PureJSON(http.StatusBadRequest, h.MapError(c, err))
+			code, errResp := h.MapError(c, err)
+			c.PureJSON(code, errResp)
 			return
 		}
 
 		if data, err = s.Storage.Get(h.GetUserIdentifier(c)); err != nil {
-			c.PureJSON(http.StatusBadRequest, h.MapError(c, err))
+			code, errResp := h.MapError(c, err)
+			c.PureJSON(code, errResp)
 			return
 		}
 
@@ -60,22 +63,26 @@ func (s *Server) Post(h CreateEndpointLogic) func(*gin.Context) {
 		)
 
 		if err = h.SetRequest(c); err != nil {
-			c.PureJSON(http.StatusBadRequest, h.MapError(c, err))
+			code, errResp := h.MapError(c, err)
+			c.PureJSON(code, errResp)
 			return
 		}
 
 		if err = h.SetIntrospectionResponse(c); err != nil {
-			c.PureJSON(http.StatusBadRequest, h.MapError(c, err))
+			code, errResp := h.MapError(c, err)
+			c.PureJSON(code, errResp)
 			return
 		}
 
 		if err = h.Validate(c); err != nil {
-			c.PureJSON(http.StatusBadRequest, h.MapError(c, err))
+			code, errResp := h.MapError(c, err)
+			c.PureJSON(code, errResp)
 			return
 		}
 
 		if created, err = h.CreateResource(c, h.GetUserIdentifier(c)); err != nil {
-			c.PureJSON(http.StatusBadRequest, h.MapError(c, err))
+			code, errResp := h.MapError(c, err)
+			c.PureJSON(code, errResp)
 			return
 		}
 

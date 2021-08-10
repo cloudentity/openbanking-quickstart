@@ -14,8 +14,8 @@ func (h *OBBRGetAccountsHandler) SetIntrospectionResponse(c *gin.Context) error 
 	return nil
 }
 
-func (h *OBBRGetAccountsHandler) MapError(c *gin.Context, err error) interface{} {
-	return nil
+func (h *OBBRGetAccountsHandler) MapError(c *gin.Context, err error) (int, interface{}) {
+	return 500, nil
 }
 
 func (h *OBBRGetAccountsHandler) BuildResponse(c *gin.Context, data BankUserData) interface{} {

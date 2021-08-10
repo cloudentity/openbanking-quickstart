@@ -3,6 +3,8 @@ package main
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
+	"net/http"
 	"time"
 
 	acpClient "github.com/cloudentity/acp-client-go/models"
@@ -11,11 +13,23 @@ import (
 	"github.com/go-openapi/strfmt"
 )
 
-func OBUKMapError(err error) models.OBError1 {
+func OBUKMapError(err error) (int, models.OBError1) {
 	msg := err.Error()
-	return models.OBError1{
+	resp := models.OBError1{
 		Message: &msg,
 	}
+
+	if errors.As(err, &errNotFound) {
+		return http.StatusNotFound, resp
+	}
+	if errors.As(err, &errBadRequest) {
+		return http.StatusBadRequest, resp
+	}
+	if errors.As(err, &errAlreadyExists) {
+		return http.StatusConflict, resp
+	}
+
+	return http.StatusInternalServerError, resp
 }
 
 func NewAccountsResponse(accounts []models.OBAccount6, self strfmt.URI) models.OBReadAccount6 {
