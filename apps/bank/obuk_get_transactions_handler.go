@@ -1,8 +1,10 @@
 package main
 
 import (
+	"errors"
 	"fmt"
 	"strconv"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
@@ -29,71 +31,34 @@ type OBUKGetTransactionsHandler struct {
 }
 
 func (h *OBUKGetTransactionsHandler) SetIntrospectionResponse(c *gin.Context) error {
-	var (
-		resp *acpClient.IntrospectOpenbankingAccountAccessConsentResponse
-		err  error
-	)
-
-	if resp, err = h.IntrospectAccountsToken(c); err != nil {
+	if resp, err := h.IntrospectAccountsToken(c); err != nil {
 		return err
+	} else {
+		h.introspectionResponse = resp
+		return nil
 	}
-
-	h.introspectionResponse = resp
-	return nil
 }
 
 func (h *OBUKGetTransactionsHandler) MapError(c *gin.Context, err error) interface{} {
 	return OBUKMapError(err)
 }
 
-func (h *OBUKGetTransactionsHandler) SetRequest(c *gin.Context) error {
-	return nil
-}
-
 func (h *OBUKGetTransactionsHandler) BuildResponse(c *gin.Context, data BankUserData) interface{} {
-	transactions := []*models.OBTransaction6{}
-
-	for _, transaction := range data.Transactions {
-		t := transaction
-		transactions = append(transactions, &t)
-	}
 	self := strfmt.URI(fmt.Sprintf("http://localhost:%s/transactions", strconv.Itoa(h.Config.Port)))
-	response := models.OBReadTransaction6{
-		Data: &models.OBReadDataTransaction6{
-			Transaction: transactions,
-		},
-		Meta: &models.Meta{
-			TotalPages: int32(len(transactions)),
-		},
-		Links: &models.Links{
-			Self: &self,
-		},
-	}
-	return response
+	return NewTransactionsResponse(data.Transactions, self)
 }
 
 func (h *OBUKGetTransactionsHandler) Validate(c *gin.Context) error {
+	scopes := strings.Split(h.introspectionResponse.Scope, " ")
+	if !has(scopes, "accounts") {
+		return errors.New("token has no accounts scope granted")
+	}
 
-	/*
-		grantedPermissions := introspectionResponse.Permissions
+	grantedPermissions := h.introspectionResponse.Permissions
+	if !has(grantedPermissions, "ReadTransactionsBasic") {
+		return errors.New("ReadTransactionsBasic permission has not been granted")
+	}
 
-		scopes := strings.Split(introspectionResponse.Scope, " ")
-		if !has(scopes, "accounts") {
-			msg := "token has no accounts scope granted"
-			c.JSON(http.StatusForbidden, models.OBErrorResponse1{
-				Message: &msg,
-			})
-			return
-		}
-
-		if !has(grantedPermissions, "ReadTransactionsBasic") {
-			msg := "ReadTransactionsBasic permission has not been granted"
-			c.JSON(http.StatusForbidden, models.OBErrorResponse1{
-				Message: &msg,
-			})
-			return
-		}
-	*/
 	return nil
 }
 
@@ -102,29 +67,24 @@ func (h *OBUKGetTransactionsHandler) GetUserIdentifier(c *gin.Context) string {
 }
 
 func (h *OBUKGetTransactionsHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
-	/*
-		transactions := []*models.OBTransaction6{}
+	grantedPermissions := h.introspectionResponse.Permissions
+	filteredTransactions := []models.OBTransaction6{}
 
-			for _, transaction := range userTransactions {
-				t := transaction
-				if has(introspectionResponse.AccountIDs, string(*t.AccountID)) {
-					if !has(grantedPermissions, "ReadTransactionsDetail") {
-						t.TransactionInformation = ""
-						t.Balance = &models.OBTransactionCashBalance{}
-						t.MerchantDetails = &models.OBMerchantDetails1{}
-						t.CreditorAgent = &models.OBBranchAndFinancialInstitutionIdentification61{}
-						t.CreditorAccount = &models.OBCashAccount60{}
-						t.DebtorAgent = &models.OBBranchAndFinancialInstitutionIdentification62{}
-						t.DebtorAccount = &models.OBCashAccount61{}
-					}
-
-					transactions = append(transactions, &t)
-				}
+	for _, transaction := range data.Transactions {
+		if has(h.introspectionResponse.AccountIDs, string(*transaction.AccountID)) {
+			if !has(grantedPermissions, "ReadTransactionsDetail") {
+				transaction.TransactionInformation = ""
+				transaction.Balance = &models.OBTransactionCashBalance{}
+				transaction.MerchantDetails = &models.OBMerchantDetails1{}
+				transaction.CreditorAgent = &models.OBBranchAndFinancialInstitutionIdentification61{}
+				transaction.CreditorAccount = &models.OBCashAccount60{}
+				transaction.DebtorAgent = &models.OBBranchAndFinancialInstitutionIdentification62{}
+				transaction.DebtorAccount = &models.OBCashAccount61{}
 			}
-	*/
-	return data
-}
 
-func (h *OBUKGetTransactionsHandler) CreateResource(c *gin.Context) (interface{}, error) {
-	return "", nil
+			filteredTransactions = append(filteredTransactions, transaction)
+		}
+	}
+
+	return BankUserData{Transactions: filteredTransactions}
 }
