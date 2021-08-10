@@ -99,6 +99,7 @@ func NewServer() (Server, error) {
 		server.CreatePaymentLogic = &OBUKCreatePaymentHandler{Server: &server}
 		server.GetPaymentLogic = &OBUKGetPaymentHandler{Server: &server}
 	case OBBR:
+		server.GetAccountsLogic = &OBBRGetAccountsHandler{Server: &server}
 	default:
 		return server, errors.Wrapf(err, "unsupported spec %s", server.Config.Spec)
 	}
