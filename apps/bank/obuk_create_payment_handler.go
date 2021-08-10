@@ -14,6 +14,19 @@ import (
 	"github.com/google/uuid"
 )
 
+// swagger:route POST /domestic-payments bank createDomesticPaymentRequest
+//
+// create domestic payment
+//
+// Security:
+//   defaultcc: payments
+//
+// Responses:
+//   201: OBWriteDomesticResponse5
+//   400: OBErrorResponse1
+//   403: OBErrorResponse1
+//   422: OBErrorResponse1
+//   500: OBErrorResponse1
 type OBUKCreatePaymentHandler struct {
 	*Server
 	introspectionResponse *acpClient.IntrospectOpenbankingDomesticPaymentConsentResponse
