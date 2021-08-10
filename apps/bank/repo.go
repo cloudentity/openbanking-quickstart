@@ -14,10 +14,14 @@ import (
 )
 
 type BankUserData struct {
-	Accounts     []models.OBAccount6                      `json:"accounts"`
+	Accounts     Accounts                                 `json:"accounts"`
 	Balances     []models.OBReadBalance1DataBalanceItems0 `json:"balances"`
 	Transactions []models.OBTransaction6                  `json:"transactions"`
 	Payments     []paymentModels.OBWriteDomesticResponse5 `json:"payments"`
+}
+
+type Accounts struct {
+	OBUK []models.OBAccount6 `json:"obuk"`
 }
 
 type Storage interface {
