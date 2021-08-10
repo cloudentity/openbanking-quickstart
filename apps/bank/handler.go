@@ -1,7 +1,6 @@
 package main
 
 import (
-	"errors"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -49,18 +48,15 @@ func (s *Server) Get(h GetEndpointLogic) func(*gin.Context) {
 
 type CreateEndpointLogic interface {
 	SetRequest(*gin.Context) error
-	BuildResource(*gin.Context) interface{}
-	StoreResource(*gin.Context, string, interface{}) (interface{}, error)
-	ResourceAlreadyExists(*gin.Context, string, interface{}) bool
+	CreateResource(*gin.Context, string) (interface{}, error)
 	EndpointLogicCommon
 }
 
 func (s *Server) Post(h CreateEndpointLogic) func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			resource interface{}
-			stored   interface{}
-			err      error
+			created interface{}
+			err     error
 		)
 
 		if err = h.SetRequest(c); err != nil {
@@ -78,17 +74,11 @@ func (s *Server) Post(h CreateEndpointLogic) func(*gin.Context) {
 			return
 		}
 
-		resource = h.BuildResource(c)
-
-		if h.ResourceAlreadyExists(c, h.GetUserIdentifier(c), resource) {
-			c.PureJSON(http.StatusConflict, h.MapError(c, errors.New("resource already exists")))
-		}
-
-		if stored, err = h.StoreResource(c, h.GetUserIdentifier(c), resource); err != nil {
+		if created, err = h.CreateResource(c, h.GetUserIdentifier(c)); err != nil {
 			c.PureJSON(http.StatusBadRequest, h.MapError(c, err))
 			return
 		}
 
-		c.PureJSON(http.StatusCreated, stored)
+		c.PureJSON(http.StatusCreated, created)
 	}
 }
