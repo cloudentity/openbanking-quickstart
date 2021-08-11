@@ -58,19 +58,18 @@ type Server struct {
 	Storage Storage
 	// PaymentQueue PaymentQueue
 
-	GetAccountsLogic         GetEndpointLogic
-	GetInternalAccountsLogic GetEndpointLogic
+	MakeGetAccountsHandler         GetEndpointLogicFactory
+	MakeGetAccountsInternalHandler GetEndpointLogicFactory
 
-	GetBalancesLogic         GetEndpointLogic
-	GetBalancesInternalLogic GetEndpointLogic
+	MakeGetBalancesHandler         GetEndpointLogicFactory
+	MakeGetBalancesInternalHandler GetEndpointLogicFactory
 
-	GetTransactionsLogic GetEndpointLogic
+	MakeGetTransactionsHandler GetEndpointLogicFactory
 
-	CreatePaymentLogic CreateEndpointLogic
-	GetPaymentLogic    GetEndpointLogic
+	MakeCreatePaymentHandler CreateEndpointLogicFactory
+	MakeGetPaymentHandler    GetEndpointLogicFactory
 }
 
-// TODO: fix error mapping so that http code is returned
 func NewServer() (Server, error) {
 	var (
 		server = Server{}
@@ -91,15 +90,15 @@ func NewServer() (Server, error) {
 
 	switch server.Config.Spec {
 	case OBUK:
-		server.GetAccountsLogic = &OBUKGetAccountsHandler{Server: &server}
-		server.GetInternalAccountsLogic = &OBUKGetAccountsInternalHandler{Server: &server}
-		server.GetBalancesLogic = &OBUKGetBalancesHandler{Server: &server}
-		server.GetBalancesInternalLogic = &OBUKGetBalancesInternalHandler{Server: &server}
-		server.GetTransactionsLogic = &OBUKGetTransactionsHandler{Server: &server}
-		server.CreatePaymentLogic = &OBUKCreatePaymentHandler{Server: &server}
-		server.GetPaymentLogic = &OBUKGetPaymentHandler{Server: &server}
+		server.MakeGetAccountsHandler = NewOBUKGetAccountsHandler
+		server.MakeGetAccountsInternalHandler = NewOBUKGetAccountsInternalHandler
+		server.MakeGetBalancesHandler = NewOBUKGetBalancesHandler
+		server.MakeGetBalancesInternalHandler = NewOBUKGetBalancesInternalHandler
+		server.MakeGetTransactionsHandler = NewOBUKGetTransactionsHandler
+		server.MakeCreatePaymentHandler = NewOBUKCreatePaymentHandler
+		server.MakeGetPaymentHandler = NewOBUKGetPaymentHandler
 	case OBBR:
-		server.GetAccountsLogic = &OBBRGetAccountsHandler{Server: &server}
+		server.MakeGetAccountsHandler = NewOBBRGetAccountsHandler
 	default:
 		return server, errors.Wrapf(err, "unsupported spec %s", server.Config.Spec)
 	}
@@ -109,16 +108,16 @@ func NewServer() (Server, error) {
 
 func (s *Server) Start() error {
 	r := gin.Default()
-	r.GET("/accounts", s.Get(s.GetAccountsLogic))
-	r.GET("/internal/accounts/:sub", s.Get(s.GetInternalAccountsLogic))
+	r.GET("/accounts", s.Get(s.MakeGetAccountsHandler))
+	r.GET("/internal/accounts/:sub", s.Get(s.MakeGetAccountsInternalHandler))
 
-	r.GET("/balances", s.Get(s.GetBalancesLogic))
-	r.GET("/internal/balances/:sub", s.Get(s.GetBalancesInternalLogic))
+	r.GET("/balances", s.Get(s.MakeGetBalancesHandler))
+	r.GET("/internal/balances/:sub", s.Get(s.MakeGetBalancesInternalHandler))
 
-	r.GET("/transactions", s.Get(s.GetTransactionsLogic))
+	r.GET("/transactions", s.Get(s.MakeGetTransactionsHandler))
 
-	r.POST("/domestic-payments", s.Post(s.CreatePaymentLogic))
-	r.GET("/domestic-payments/:DomesticPaymentId", s.Get(s.GetPaymentLogic))
+	r.POST("/domestic-payments", s.Post(s.MakeCreatePaymentHandler))
+	r.GET("/domestic-payments/:DomesticPaymentId", s.Get(s.MakeGetPaymentHandler))
 
 	return r.Run(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)))
 }

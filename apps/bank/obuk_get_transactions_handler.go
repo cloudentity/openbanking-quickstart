@@ -30,6 +30,10 @@ type OBUKGetTransactionsHandler struct {
 	introspectionResponse *acpClient.IntrospectOpenbankingAccountAccessConsentResponse
 }
 
+func NewOBUKGetTransactionsHandler(server *Server) GetEndpointLogic {
+	return &OBUKGetTransactionsHandler{Server: server}
+}
+
 func (h *OBUKGetTransactionsHandler) SetIntrospectionResponse(c *gin.Context) error {
 	var err error
 	h.introspectionResponse, err = h.IntrospectAccountsToken(c)

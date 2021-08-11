@@ -26,6 +26,10 @@ type OBUKGetPaymentHandler struct {
 	introspectionResponse *acpClient.IntrospectOpenbankingDomesticPaymentConsentResponse
 }
 
+func NewOBUKGetPaymentHandler(server *Server) GetEndpointLogic {
+	return &OBUKGetPaymentHandler{Server: server}
+}
+
 func (h *OBUKGetPaymentHandler) SetIntrospectionResponse(c *gin.Context) error {
 	var err error
 	h.introspectionResponse, err = h.IntrospectPaymentsToken(c)

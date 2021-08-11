@@ -9,6 +9,10 @@ type OBBRGetAccountsHandler struct {
 	// introspectionResponse *acpClient.IntrospectOBBRDataAccessConsentResponse
 }
 
+func NewOBBRGetAccountsHandler(server *Server) GetEndpointLogic {
+	return &OBBRGetAccountsHandler{Server: server}
+}
+
 func (h *OBBRGetAccountsHandler) SetIntrospectionResponse(c *gin.Context) error {
 	return nil
 }

@@ -22,6 +22,10 @@ type OBUKGetAccountsInternalHandler struct {
 	*Server
 }
 
+func NewOBUKGetAccountsInternalHandler(server *Server) GetEndpointLogic {
+	return &OBUKGetAccountsInternalHandler{Server: server}
+}
+
 func (h *OBUKGetAccountsInternalHandler) SetIntrospectionResponse(c *gin.Context) error {
 	return nil
 }

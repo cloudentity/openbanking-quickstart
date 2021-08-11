@@ -36,6 +36,10 @@ type OBUKCreatePaymentHandler struct {
 	request               *paymentModels.OBWriteDomestic2
 }
 
+func NewOBUKCreatePaymentHandler(server *Server) CreateEndpointLogic {
+	return &OBUKCreatePaymentHandler{Server: server}
+}
+
 func (h *OBUKCreatePaymentHandler) SetRequest(c *gin.Context) error {
 	return json.NewDecoder(c.Request.Body).Decode(&h.request)
 }

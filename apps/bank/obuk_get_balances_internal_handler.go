@@ -22,6 +22,10 @@ type OBUKGetBalancesInternalHandler struct {
 	*Server
 }
 
+func NewOBUKGetBalancesInternalHandler(server *Server) GetEndpointLogic {
+	return &OBUKGetBalancesInternalHandler{Server: server}
+}
+
 func (h *OBUKGetBalancesInternalHandler) SetIntrospectionResponse(c *gin.Context) error {
 	return nil
 }

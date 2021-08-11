@@ -13,15 +13,18 @@ type EndpointLogicCommon interface {
 	GetUserIdentifier(*gin.Context) string
 }
 
+type GetEndpointLogicFactory func(server *Server) GetEndpointLogic
+
 type GetEndpointLogic interface {
 	BuildResponse(*gin.Context, BankUserData) interface{}
 	Filter(*gin.Context, BankUserData) BankUserData
 	EndpointLogicCommon
 }
 
-func (s *Server) Get(h GetEndpointLogic) func(*gin.Context) {
+func (s *Server) Get(factory GetEndpointLogicFactory) func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
+			h    = factory(s)
 			data BankUserData
 			err  error
 		)
@@ -49,15 +52,18 @@ func (s *Server) Get(h GetEndpointLogic) func(*gin.Context) {
 	}
 }
 
+type CreateEndpointLogicFactory func(*Server) CreateEndpointLogic
+
 type CreateEndpointLogic interface {
 	SetRequest(*gin.Context) error
 	CreateResource(*gin.Context, string) (interface{}, error)
 	EndpointLogicCommon
 }
 
-func (s *Server) Post(h CreateEndpointLogic) func(*gin.Context) {
+func (s *Server) Post(factory CreateEndpointLogicFactory) func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
+			h       = factory(s)
 			created interface{}
 			err     error
 		)
