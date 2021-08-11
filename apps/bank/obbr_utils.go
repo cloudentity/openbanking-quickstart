@@ -1,6 +1,8 @@
 package main
 
 import (
+	"time"
+
 	acpClient "github.com/cloudentity/acp-client-go/models"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obbr/consents/models"
 	paymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/models"
@@ -11,26 +13,14 @@ import (
 
 func OBBRMapError(c *gin.Context, err *Error) (int, interface{}) {
 	return err.Code, models.OpenbankingBrasilResponseError{
-		Errors: []*models.OpenbankingBrasilError{},
+		Errors: []*models.OpenbankingBrasilError{
+			{
+				Detail: err.Message,
+			},
+		},
 	}
 }
 
-/*
-{
-  "errors": [
-    {
-      "code": "string",
-      "title": "string",
-      "detail": "string"
-    }
-  ],
-  "meta": {
-    "totalRecords": 1,
-    "totalPages": 1,
-    "requestDateTime": "2021-05-21T08:30:00Z"
-  }
-}
-*/
 func NewOBBRAccountsResponse(accounts []AccountData) ResponseAccountList {
 	return ResponseAccountList{
 		Data: accounts,
@@ -46,10 +36,26 @@ func OBBRPermsToStringSlice(perms []acpClient.OpenbankingBrasilPermission) []str
 }
 
 func NewOBBRPayment(introspectionResponse *acpClient.IntrospectOBBRPaymentConsentResponse, self strfmt.URI, id string) paymentModels.OpenbankingBrasilResponsePixPayment {
-	// TODO: create
+	now := strfmt.DateTime(time.Now())
+	status := paymentModels.OpenbankingBrasilStatus1PDNG
+	localInstrument := paymentModels.OpenbankingBrasilEnumLocalInstrumentMANU
 	return paymentModels.OpenbankingBrasilResponsePixPayment{
+		Data: &paymentModels.OpenbankingBrasilResponsePixPaymentData{
+			PaymentID:            id,
+			ConsentID:            introspectionResponse.ConsentID,
+			CreationDateTime:     now,
+			StatusUpdateDateTime: now,
+			Status:               &status,
+			LocalInstrument:      &localInstrument,
+			Payment: &paymentModels.OpenbankingBrasilPaymentPix{
+				Amount:   introspectionResponse.OBBRCustomerPaymentConsent.Payment.Amount,
+				Currency: introspectionResponse.OBBRCustomerPaymentConsent.Payment.Currency,
+			},
+			CreditorAccount: &paymentModels.OpenbankingBrasilCreditorAccount{},
+		},
 		Links: &paymentModels.OpenbankingBrasilLinks{
 			Self: string(self),
 		},
+		Meta: &paymentModels.OpenbankingBrasilMeta{},
 	}
 }
