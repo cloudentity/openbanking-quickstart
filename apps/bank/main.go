@@ -108,16 +108,23 @@ func NewServer() (Server, error) {
 
 func (s *Server) Start() error {
 	r := gin.Default()
-	r.GET("/accounts", s.Get(s.MakeGetAccountsHandler))
-	r.GET("/internal/accounts/:sub", s.Get(s.MakeGetAccountsInternalHandler))
 
-	r.GET("/balances", s.Get(s.MakeGetBalancesHandler))
-	r.GET("/internal/balances/:sub", s.Get(s.MakeGetBalancesInternalHandler))
+	switch s.Config.Spec {
+	case OBUK:
+		r.GET("/accounts", s.Get(s.MakeGetAccountsHandler))
+		r.GET("/internal/accounts/:sub", s.Get(s.MakeGetAccountsInternalHandler))
+		r.GET("/balances", s.Get(s.MakeGetBalancesHandler))
+		r.GET("/internal/balances/:sub", s.Get(s.MakeGetBalancesInternalHandler))
+		r.GET("/transactions", s.Get(s.MakeGetTransactionsHandler))
+		r.POST("/domestic-payments", s.Post(s.MakeCreatePaymentHandler))
+		r.GET("/domestic-payments/:DomesticPaymentId", s.Get(s.MakeGetPaymentHandler))
 
-	r.GET("/transactions", s.Get(s.MakeGetTransactionsHandler))
+	case OBBR:
+		r.GET("/accounts/v1/accounts", s.Get(s.MakeGetAccountsHandler))
 
-	r.POST("/domestic-payments", s.Post(s.MakeCreatePaymentHandler))
-	r.GET("/domestic-payments/:DomesticPaymentId", s.Get(s.MakeGetPaymentHandler))
+	default:
+		return fmt.Errorf("unsupported spec %s", s.Config.Spec)
+	}
 
 	return r.Run(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)))
 }
