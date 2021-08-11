@@ -40,11 +40,10 @@ func (h *OBBRGetAccountsHandler) Validate(c *gin.Context) *Error {
 		return ErrForbidden.WithMessage("token has no consents scope granted")
 	}
 
-	// TODO: look at how permissions for accounts in obbr work
-	/*grantedPermissions := h.introspectionResponse.Permissions
-	if !has(grantedPermissions, "ReadAccountsBasic") {
-		return ErrForbidden.WithMessage("ReadAccountsBasic permission has not been granted")
-	}*/
+	grantedPermissions := h.introspectionResponse.Permissions
+	if !has(OBBRPermsToStringSlice(grantedPermissions), "ACCOUNTS_READ") {
+		return ErrForbidden.WithMessage("ACCOUNTS_READ permission has not been granted")
+	}
 
 	return nil
 }
@@ -53,7 +52,17 @@ func (h *OBBRGetAccountsHandler) GetUserIdentifier(c *gin.Context) string {
 	return h.introspectionResponse.Sub
 }
 
-// TODO: will need to add filtering here depending on how permissions work in obbr
 func (h *OBBRGetAccountsHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
-	return data
+	var filteredAccounts []AccountData
+
+	for _, account := range data.Accounts.OBBR {
+		if has(h.introspectionResponse.AccountIDs, string(account.AccountID)) {
+			filteredAccounts = append(filteredAccounts, account)
+		}
+	}
+	return BankUserData{
+		Accounts: Accounts{
+			OBBR: filteredAccounts,
+		},
+	}
 }
