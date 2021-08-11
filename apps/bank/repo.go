@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	obbrPaymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/models"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
 	paymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
 	"github.com/pkg/errors"
@@ -34,7 +35,8 @@ type Transactions struct {
 }
 
 type Payments struct {
-	OBUK []paymentModels.OBWriteDomesticResponse5 `json:"obuk"`
+	OBUK []paymentModels.OBWriteDomesticResponse5                `json:"obuk"`
+	OBBR []obbrPaymentModels.OpenbankingBrasilResponsePixPayment `json:"obbr"`
 }
 
 // TODO: replace this will code generated from openapi
