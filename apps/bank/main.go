@@ -22,14 +22,15 @@ const (
 )
 
 type Config struct {
-	Port      int           `env:"PORT" envDefault:"8070"`
-	ClientID  string        `env:"CLIENT_ID,required"`
-	IssuerURL *url.URL      `env:"ISSUER_URL,required"`
-	Timeout   time.Duration `env:"TIMEOUT" envDefault:"5s"`
-	RootCA    string        `env:"ROOT_CA,required"`
-	CertFile  string        `env:"CERT_FILE,required"`
-	KeyFile   string        `env:"KEY_FILE,required"`
-	Spec      Spec          `env:"SPEC,required"`
+	Port         int           `env:"PORT" envDefault:"8070"`
+	ClientID     string        `env:"CLIENT_ID,required"`
+	IssuerURL    *url.URL      `env:"ISSUER_URL,required"`
+	Timeout      time.Duration `env:"TIMEOUT" envDefault:"5s"`
+	RootCA       string        `env:"ROOT_CA,required"`
+	CertFile     string        `env:"CERT_FILE,required"`
+	KeyFile      string        `env:"KEY_FILE,required"`
+	Spec         Spec          `env:"SPEC,required"`
+	SeedFilePath string
 }
 
 func (c *Config) ClientConfig() acpclient.Config {
@@ -47,6 +48,13 @@ func (c *Config) ClientConfig() acpclient.Config {
 func LoadConfig() (config Config, err error) {
 	if err = env.Parse(&config); err != nil {
 		return config, err
+	}
+
+	switch config.Spec {
+	case OBUK:
+		config.SeedFilePath = fmt.Sprintf("data/%s-data.json", OBUK)
+	case OBBR:
+		config.SeedFilePath = fmt.Sprintf("data/%s-data.json", OBBR)
 	}
 
 	return config, err
@@ -84,7 +92,7 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to init acp client")
 	}
 
-	if server.Storage, err = NewUserRepo(); err != nil {
+	if server.Storage, err = NewUserRepo(server.Config.SeedFilePath); err != nil {
 		return server, errors.Wrapf(err, "failed to init repo")
 	}
 

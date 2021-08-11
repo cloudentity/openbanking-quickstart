@@ -49,7 +49,7 @@ func (h *OBUKGetAccountsHandler) MapError(c *gin.Context, err *Error) (code int,
 
 func (h *OBUKGetAccountsHandler) BuildResponse(c *gin.Context, data BankUserData) interface{} {
 	self := strfmt.URI(fmt.Sprintf("http://localhost:%s/accounts", strconv.Itoa(h.Config.Port)))
-	return NewAccountsResponse(data.Accounts.OBUK, self)
+	return NewAccountsResponse(data.OBUKAccounts, self)
 }
 
 func (h *OBUKGetAccountsHandler) Validate(c *gin.Context) *Error {
@@ -74,7 +74,7 @@ func (h *OBUKGetAccountsHandler) Filter(c *gin.Context, data BankUserData) BankU
 	grantedPermissions := h.introspectionResponse.Permissions
 	filteredAccounts := []models.OBAccount6{}
 
-	for _, account := range data.Accounts.OBUK {
+	for _, account := range data.OBUKAccounts {
 		if has(h.introspectionResponse.AccountIDs, string(*account.AccountID)) {
 			if !has(grantedPermissions, "ReadAccountsDetail") {
 				account.Account = []*models.OBAccount6AccountItems0{}
@@ -84,8 +84,6 @@ func (h *OBUKGetAccountsHandler) Filter(c *gin.Context, data BankUserData) BankU
 		}
 	}
 	return BankUserData{
-		Accounts: Accounts{
-			OBUK: filteredAccounts,
-		},
+		OBUKAccounts: filteredAccounts,
 	}
 }

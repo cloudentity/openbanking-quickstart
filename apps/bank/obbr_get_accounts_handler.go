@@ -31,7 +31,7 @@ func (h *OBBRGetAccountsHandler) MapError(c *gin.Context, err *Error) (code int,
 }
 
 func (h *OBBRGetAccountsHandler) BuildResponse(c *gin.Context, data BankUserData) interface{} {
-	return NewOBBRAccountsResponse(data.Accounts.OBBR)
+	return NewOBBRAccountsResponse(data.OBBRAccounts)
 }
 
 func (h *OBBRGetAccountsHandler) Validate(c *gin.Context) *Error {
@@ -58,7 +58,7 @@ func (h *OBBRGetAccountsHandler) Filter(c *gin.Context, data BankUserData) BankU
 		requestedAccountType = c.Query("accountType")
 	)
 
-	for _, account := range data.Accounts.OBBR {
+	for _, account := range data.OBBRAccounts {
 		if !has(h.introspectionResponse.AccountIDs, account.AccountID) {
 			continue
 		}
@@ -69,8 +69,6 @@ func (h *OBBRGetAccountsHandler) Filter(c *gin.Context, data BankUserData) BankU
 	}
 
 	return BankUserData{
-		Accounts: Accounts{
-			OBBR: filteredAccounts,
-		},
+		OBBRAccounts: filteredAccounts,
 	}
 }

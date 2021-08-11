@@ -15,33 +15,13 @@ import (
 )
 
 type BankUserData struct {
-	Accounts     Accounts     `json:"accounts"`
-	Balances     Balances     `json:"balances"`
-	Transactions Transactions `json:"transactions"`
-	Payments     Payments     `json:"payments"`
-}
+	OBUKAccounts     []models.OBAccount6                      `json:"obuk_accounts"`
+	OBUKBalances     []models.OBReadBalance1DataBalanceItems0 `json:"obuk_balances"`
+	OBUKTransactions []models.OBTransaction6                  `json:"obuk_transactions"`
+	OBUKPayments     []paymentModels.OBWriteDomesticResponse5 `json:"obuk_payments"`
 
-type Accounts struct {
-	OBUK []models.OBAccount6 `json:"obuk"`
-	OBBR []AccountData       `json:"obbr"`
-}
-
-type Balances struct {
-	OBUK []models.OBReadBalance1DataBalanceItems0 `json:"obuk"`
-}
-
-type Transactions struct {
-	OBUK []models.OBTransaction6 `json:"obuk"`
-}
-
-type Payments struct {
-	OBUK []paymentModels.OBWriteDomesticResponse5                `json:"obuk"`
-	OBBR []obbrPaymentModels.OpenbankingBrasilResponsePixPayment `json:"obbr"`
-}
-
-// TODO: replace this will code generated from openapi
-type ResponseAccountList struct {
-	Data []AccountData `json:"data"`
+	OBBRAccounts []AccountData                                           `json:"obbr_accounts"`
+	OBBRPayments []obbrPaymentModels.OpenbankingBrasilResponsePixPayment `json:"obbr_payments"`
 }
 
 type AccountData struct {
@@ -109,7 +89,7 @@ func (u *UserRepo) Put(sub string, data BankUserData) error {
 	})
 }
 
-func NewUserRepo() (*UserRepo, error) {
+func NewUserRepo(datafilepath string) (*UserRepo, error) {
 	var (
 		userRepo UserRepo
 		u2df     UserToDataFile
@@ -122,7 +102,7 @@ func NewUserRepo() (*UserRepo, error) {
 	}
 
 	// read init data from file
-	if u2df, err = readUserToDataFile(); err != nil {
+	if u2df, err = readUserToDataFile(datafilepath); err != nil {
 		return nil, errors.Wrapf(err, "failed to read data file")
 	}
 
@@ -155,14 +135,14 @@ func NewUserRepo() (*UserRepo, error) {
 
 type UserToDataFile map[string]BankUserData
 
-func readUserToDataFile() (UserToDataFile, error) {
+func readUserToDataFile(filepath string) (UserToDataFile, error) {
 	var (
 		bs   []byte
 		u2df UserToDataFile
 		err  error
 	)
 
-	if bs, err = ioutil.ReadFile("./data/data.json"); err != nil {
+	if bs, err = ioutil.ReadFile(filepath); err != nil {
 		return u2df, errors.Wrapf(err, "failed to read file")
 	}
 

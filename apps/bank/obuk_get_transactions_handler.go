@@ -48,7 +48,7 @@ func (h *OBUKGetTransactionsHandler) MapError(c *gin.Context, err *Error) (code 
 
 func (h *OBUKGetTransactionsHandler) BuildResponse(c *gin.Context, data BankUserData) interface{} {
 	self := strfmt.URI(fmt.Sprintf("http://localhost:%s/transactions", strconv.Itoa(h.Config.Port)))
-	return NewTransactionsResponse(data.Transactions.OBUK, self)
+	return NewTransactionsResponse(data.OBUKTransactions, self)
 }
 
 func (h *OBUKGetTransactionsHandler) Validate(c *gin.Context) *Error {
@@ -71,11 +71,11 @@ func (h *OBUKGetTransactionsHandler) GetUserIdentifier(c *gin.Context) string {
 
 func (h *OBUKGetTransactionsHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
 	var (
-		filteredTransactions Transactions
+		filteredTransactions []models.OBTransaction6
 		grantedPermissions   = h.introspectionResponse.Permissions
 	)
 
-	for _, transaction := range data.Transactions.OBUK {
+	for _, transaction := range data.OBUKTransactions {
 		if has(h.introspectionResponse.AccountIDs, string(*transaction.AccountID)) {
 			if !has(grantedPermissions, "ReadTransactionsDetail") {
 				transaction.TransactionInformation = ""
@@ -87,9 +87,9 @@ func (h *OBUKGetTransactionsHandler) Filter(c *gin.Context, data BankUserData) B
 				transaction.DebtorAccount = &models.OBCashAccount61{}
 			}
 
-			filteredTransactions.OBUK = append(filteredTransactions.OBUK, transaction)
+			filteredTransactions = append(filteredTransactions, transaction)
 		}
 	}
 
-	return BankUserData{Transactions: filteredTransactions}
+	return BankUserData{OBUKTransactions: filteredTransactions}
 }

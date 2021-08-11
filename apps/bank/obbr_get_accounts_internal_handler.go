@@ -22,7 +22,7 @@ func (h *OBBRGetAccountsInternalHandler) MapError(c *gin.Context, err *Error) (c
 }
 
 func (h *OBBRGetAccountsInternalHandler) BuildResponse(c *gin.Context, data BankUserData) interface{} {
-	return NewOBBRAccountsResponse(data.Accounts.OBBR)
+	return NewOBBRAccountsResponse(data.OBBRAccounts)
 }
 
 func (h *OBBRGetAccountsInternalHandler) Validate(c *gin.Context) *Error {

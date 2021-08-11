@@ -63,12 +63,12 @@ func (h *OBBRCreatePaymentHandler) CreateResource(c *gin.Context, sub string) (i
 		return "", ErrInternalServer.WithMessage("failed to retrieve resource")
 	}
 
-	for _, p := range data.Payments.OBBR {
+	for _, p := range data.OBBRPayments {
 		if p.Data.ConsentID == payment.Data.ConsentID {
 			return payment, ErrAlreadyExists
 		}
 	}
-	data.Payments.OBBR = append(data.Payments.OBBR, payment)
+	data.OBBRPayments = append(data.OBBRPayments, payment)
 
 	if err = h.Storage.Put(sub, data); err != nil {
 		return "", ErrInternalServer.WithMessage("failed to store resource")
