@@ -100,6 +100,7 @@ func NewServer() (Server, error) {
 	case OBBR:
 		server.MakeGetAccountsHandler = NewOBBRGetAccountsHandler
 		server.MakeGetAccountsInternalHandler = NewOBBRGetAccountsInternalHandler
+		server.MakeCreatePaymentHandler = NewOBBRCreatePaymentHandler
 	default:
 		return server, errors.Wrapf(err, "unsupported spec %s", server.Config.Spec)
 	}
@@ -123,6 +124,7 @@ func (s *Server) Start() error {
 
 	case OBBR:
 		r.GET("/accounts/v1/accounts", s.Get(s.MakeGetAccountsHandler))
+		r.GET("/payments/v1/pix/payments", s.Post(s.MakeCreatePaymentHandler))
 
 	default:
 		return fmt.Errorf("unsupported spec %s", s.Config.Spec)
