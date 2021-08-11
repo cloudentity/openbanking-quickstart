@@ -3,10 +3,10 @@ package main
 import (
 	"strings"
 
+	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
 	"github.com/gin-gonic/gin"
 
 	acpClient "github.com/cloudentity/acp-client-go/models"
-	paymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
 )
 
 // swagger:route GET /domestic-payments/{DomesticPaymentId} bank getDomesticPaymentRequest
@@ -66,7 +66,7 @@ func (h *OBUKGetPaymentHandler) BuildResponse(c *gin.Context, data BankUserData)
 }
 
 func (h *OBUKGetPaymentHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
-	var filteredPayments []paymentModels.OBWriteDomesticResponse5
+	var filteredPayments []models.OBWriteDomesticResponse5
 
 	for _, payment := range data.OBUKPayments {
 		if *payment.Data.ConsentID == c.Param("DomesticPaymentId") {
