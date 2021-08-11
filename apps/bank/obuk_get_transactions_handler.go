@@ -35,7 +35,7 @@ func NewOBUKGetTransactionsHandler(server *Server) GetEndpointLogic {
 
 func (h *OBUKGetTransactionsHandler) SetIntrospectionResponse(c *gin.Context) *Error {
 	var err error
-	if h.introspectionResponse, err = h.IntrospectAccountsToken(c); err != nil {
+	if h.introspectionResponse, err = h.OBUKIntrospectAccountsToken(c); err != nil {
 		return ErrBadRequest.WithMessage("failed to introspect token")
 	}
 	return nil

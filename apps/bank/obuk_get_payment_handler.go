@@ -32,7 +32,7 @@ func NewOBUKGetPaymentHandler(server *Server) GetEndpointLogic {
 
 func (h *OBUKGetPaymentHandler) SetIntrospectionResponse(c *gin.Context) *Error {
 	var err error
-	if h.introspectionResponse, err = h.IntrospectPaymentsToken(c); err != nil {
+	if h.introspectionResponse, err = h.OBUKIntrospectPaymentsToken(c); err != nil {
 		return ErrBadRequest.WithMessage("failed to introspect token")
 	}
 	return nil

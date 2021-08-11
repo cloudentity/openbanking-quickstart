@@ -75,7 +75,7 @@ func (h *OBUKCreatePaymentHandler) CreateResource(c *gin.Context, sub string) (i
 
 func (h *OBUKCreatePaymentHandler) SetIntrospectionResponse(c *gin.Context) *Error {
 	var err error
-	if h.introspectionResponse, err = h.IntrospectPaymentsToken(c); err != nil {
+	if h.introspectionResponse, err = h.OBUKIntrospectPaymentsToken(c); err != nil {
 		return ErrBadRequest.WithMessage("failed to introspect token")
 	}
 	return nil
