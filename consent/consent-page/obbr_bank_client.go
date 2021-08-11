@@ -28,14 +28,14 @@ type ResponseAccountList struct {
 }
 
 type AccountData struct {
-	BrandName string `json:"brandName"`
+	BrandName   string `json:"brandName"`
 	CompanyCnpj string `json:"companyCnpj"`
-    Type string `json:"type"`
-	CompeCode string `json:"compeCode"`
-	BranchCode string `json:"branchCode"`
-	Number string `json:"number"`
-	CheckDigit string `json:"checkDigit"`
-	AccountID string `json:"accountId"`
+	Type        string `json:"type"`
+	CompeCode   string `json:"compeCode"`
+	BranchCode  string `json:"branchCode"`
+	Number      string `json:"number"`
+	CheckDigit  string `json:"checkDigit"`
+	AccountID   string `json:"accountId"`
 }
 
 func (c *OBBRBankClient) GetInternalAccounts(subject string) (InternalAccounts, error) {
