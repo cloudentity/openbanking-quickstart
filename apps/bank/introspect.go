@@ -85,3 +85,29 @@ func (s *Server) OBBRIntrospectAccountsToken(c *gin.Context) (*acpClient.Introsp
 
 	return introspectionResponse.Payload, nil
 }
+
+func (s *Server) OBBRIntrospectPaymentsToken(c *gin.Context) (*acpClient.IntrospectOBBRPaymentConsentResponse, error) {
+	var (
+		introspectionResponse *openbanking.ObbrPaymentConsentIntrospectOK
+		err                   error
+	)
+
+	token := c.GetHeader("Authorization")
+	token = strings.ReplaceAll(token, "Bearer ", "")
+
+	if introspectionResponse, err = s.Client.Openbanking.ObbrPaymentConsentIntrospect(
+		openbanking.NewObbrPaymentConsentIntrospectParamsWithContext(c).
+			WithTid(s.Client.TenantID).
+			WithAid(s.Client.ServerID).
+			WithToken(&token),
+		nil,
+	); err != nil {
+		return nil, err
+	}
+
+	if !introspectionResponse.Payload.Active {
+		return nil, errors.New("access token is not active")
+	}
+
+	return introspectionResponse.Payload, nil
+}
