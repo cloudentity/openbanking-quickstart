@@ -56,7 +56,7 @@ func (h *OBUKCreatePaymentHandler) CreateResource(c *gin.Context, sub string) (i
 	)
 
 	if data, err = h.Storage.Get(sub); err != nil {
-		return "", ErrInternalServer.WithMessage("failed to retrive resource")
+		return "", ErrInternalServer.WithMessage("failed to retrieve resource")
 	}
 
 	for _, p := range data.Payments.OBUK {
