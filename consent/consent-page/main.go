@@ -140,7 +140,14 @@ func NewServer() (Server, error) {
 
 	server.SMSClient = NewSMSClient(server.Config)
 
-	server.BankClient = NewBankClient(server.Config)
+	switch server.Config.Spec {
+	case OBUK:
+		server.BankClient = NewOBUKBankClient(server.Config)
+	case OBBR:
+		server.BankClient = NewOBBRBankClient(server.Config)
+	default:
+		return Server{}, errors.New("invalid SPEC configuration")
+	}
 
 	if db, err = InitDB(server.Config); err != nil {
 		return server, errors.Wrapf(err, "failed to init db")
