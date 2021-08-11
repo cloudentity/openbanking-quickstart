@@ -1,6 +1,7 @@
 package main
 
 import (
+	acpClient "github.com/cloudentity/acp-client-go/models"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obbr/consents/models"
 	"github.com/gin-gonic/gin"
 )
@@ -31,4 +32,12 @@ func NewOBBRAccountsResponse(accounts []AccountData) ResponseAccountList {
 	return ResponseAccountList{
 		Data: accounts,
 	}
+}
+
+func OBBRPermsToStringSlice(perms []acpClient.OpenbankingBrasilPermission) []string {
+	var slice []string
+	for _, perm := range perms {
+		slice = append(slice, string(perm))
+	}
+	return slice
 }
