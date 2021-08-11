@@ -3,6 +3,9 @@ package main
 import (
 	acpClient "github.com/cloudentity/acp-client-go/models"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obbr/consents/models"
+	paymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/models"
+	"github.com/go-openapi/strfmt"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -40,4 +43,13 @@ func OBBRPermsToStringSlice(perms []acpClient.OpenbankingBrasilPermission) []str
 		slice = append(slice, string(perm))
 	}
 	return slice
+}
+
+func NewOBBRPayment(introspectionResponse *acpClient.IntrospectOBBRPaymentConsentResponse, self strfmt.URI, id string) paymentModels.OpenbankingBrasilResponsePixPayment {
+	// TODO: create
+	return paymentModels.OpenbankingBrasilResponsePixPayment{
+		Links: &paymentModels.OpenbankingBrasilLinks{
+			Self: string(self),
+		},
+	}
 }
