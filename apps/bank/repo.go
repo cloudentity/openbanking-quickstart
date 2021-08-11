@@ -22,6 +22,7 @@ type BankUserData struct {
 
 type Accounts struct {
 	OBUK []models.OBAccount6 `json:"obuk"`
+	OBBR []AccountData       `json:"obbr"`
 }
 
 type Balances struct {
@@ -34,6 +35,22 @@ type Transactions struct {
 
 type Payments struct {
 	OBUK []paymentModels.OBWriteDomesticResponse5 `json:"obuk"`
+}
+
+// TODO: replace this will code generated from openapi
+type ResponseAccountList struct {
+	Data []AccountData `json:"data"`
+}
+
+type AccountData struct {
+	BrandName   string `json:"brandName"`
+	CompanyCnpj string `json:"companyCnpj"`
+	Type        string `json:"type"`
+	CompeCode   string `json:"compeCode"`
+	BranchCode  string `json:"branchCode"`
+	Number      string `json:"number"`
+	CheckDigit  string `json:"checkDigit"`
+	AccountID   string `json:"accountId"`
 }
 
 type Storage interface {
