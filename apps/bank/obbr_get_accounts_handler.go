@@ -13,11 +13,11 @@ func NewOBBRGetAccountsHandler(server *Server) GetEndpointLogic {
 	return &OBBRGetAccountsHandler{Server: server}
 }
 
-func (h *OBBRGetAccountsHandler) SetIntrospectionResponse(c *gin.Context) error {
+func (h *OBBRGetAccountsHandler) SetIntrospectionResponse(c *gin.Context) *Error {
 	return nil
 }
 
-func (h *OBBRGetAccountsHandler) MapError(c *gin.Context, err error) (code int, resp interface{}) {
+func (h *OBBRGetAccountsHandler) MapError(c *gin.Context, err *Error) (code int, resp interface{}) {
 	code, resp = 500, nil
 	return
 }
@@ -26,7 +26,7 @@ func (h *OBBRGetAccountsHandler) BuildResponse(c *gin.Context, data BankUserData
 	return nil
 }
 
-func (h *OBBRGetAccountsHandler) Validate(c *gin.Context) error {
+func (h *OBBRGetAccountsHandler) Validate(c *gin.Context) *Error {
 	return nil
 }
 

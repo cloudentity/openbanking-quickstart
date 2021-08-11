@@ -26,11 +26,11 @@ func NewOBUKGetAccountsInternalHandler(server *Server) GetEndpointLogic {
 	return &OBUKGetAccountsInternalHandler{Server: server}
 }
 
-func (h *OBUKGetAccountsInternalHandler) SetIntrospectionResponse(c *gin.Context) error {
+func (h *OBUKGetAccountsInternalHandler) SetIntrospectionResponse(c *gin.Context) *Error {
 	return nil
 }
 
-func (h *OBUKGetAccountsInternalHandler) MapError(c *gin.Context, err error) (code int, resp interface{}) {
+func (h *OBUKGetAccountsInternalHandler) MapError(c *gin.Context, err *Error) (code int, resp interface{}) {
 	code, resp = OBUKMapError(err)
 	return
 }
@@ -40,7 +40,7 @@ func (h *OBUKGetAccountsInternalHandler) BuildResponse(c *gin.Context, data Bank
 	return NewAccountsResponse(data.Accounts.OBUK, self)
 }
 
-func (h *OBUKGetAccountsInternalHandler) Validate(c *gin.Context) error {
+func (h *OBUKGetAccountsInternalHandler) Validate(c *gin.Context) *Error {
 	return nil
 }
 

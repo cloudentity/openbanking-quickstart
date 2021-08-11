@@ -1,74 +1,62 @@
 package main
 
 import (
-	"errors"
-	"fmt"
+	"net/http"
+
+	"github.com/pkg/errors"
 )
+
+type Error struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+	Error   error  `json:"-"`
+}
+
+func (e *Error) WithError(err error) *Error {
+	return &Error{
+		Code:    e.Code,
+		Message: e.Message,
+		Error:   errors.WithStack(err),
+	}
+}
+
+func (e *Error) WithMessage(message string) *Error {
+	return &Error{
+		Code:    e.Code,
+		Message: message,
+		Error:   e.Error,
+	}
+}
+
+func (e *Error) WithCode(code int) *Error {
+	return &Error{
+		Code:    code,
+		Message: e.Message,
+		Error:   e.Error,
+	}
+}
 
 var (
-	errNotFound            ErrNotFound
-	errAlreadyExists       ErrAlreadyExists
-	errForbidden           ErrForbidden
-	errInternalServer      ErrInternalServer
-	errUnprocessableEntity ErrUnprocessableEntity
+	ErrNotFound = &Error{
+		Code:    http.StatusNotFound,
+		Message: "entity not found",
+	}
+	ErrForbidden = &Error{
+		Code:    http.StatusForbidden,
+		Message: "operation forbidden",
+	}
+	ErrAlreadyExists = &Error{
+		Code:    http.StatusConflict,
+		Message: "entity already exists",
+	}
+	ErrBadRequest = &Error{
+		Code: http.StatusBadRequest,
+	}
+	ErrUnprocessableEntity = &Error{
+		Code: http.StatusUnprocessableEntity,
+	}
+	ErrInternalServer = &Error{
+		Code:    http.StatusInternalServerError,
+		Message: "unknown error",
+	}
 )
-
-type ErrNotFound struct {
-	resourceName string
-}
-
-func NewErrNotFound(name string) ErrNotFound {
-	return ErrNotFound{name}
-}
-
-func (e ErrNotFound) Error() string {
-	return fmt.Sprintf("unable to find resource %s", e.resourceName)
-}
-
-type ErrAlreadyExists struct {
-	resourceName string
-}
-
-func NewErrAlreadyExists(name string) ErrAlreadyExists {
-	return ErrAlreadyExists{name}
-}
-
-func (e ErrAlreadyExists) Error() string {
-	return fmt.Sprintf("resource %s already exists", e.resourceName)
-}
-
-type ErrForbidden struct {
-	err error
-}
-
-func NewErrForbidden(message string) ErrForbidden {
-	return ErrForbidden{errors.New(message)}
-}
-
-func (e ErrForbidden) Error() string {
-	return e.err.Error()
-}
-
-type ErrInternalServer struct {
-	err error
-}
-
-func NewErrInternalServer(message string) ErrInternalServer {
-	return ErrInternalServer{errors.New(message)}
-}
-
-func (e ErrInternalServer) Error() string {
-	return e.err.Error()
-}
-
-type ErrUnprocessableEntity struct {
-	err error
-}
-
-func NewErrUnprocessableEntity(message string) ErrUnprocessableEntity {
-	return ErrUnprocessableEntity{errors.New(message)}
-}
-
-func (e ErrUnprocessableEntity) Error() string {
-	return e.err.Error()
-}

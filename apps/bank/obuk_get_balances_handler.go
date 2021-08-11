@@ -32,13 +32,15 @@ func NewOBUKGetBalancesHandler(server *Server) GetEndpointLogic {
 	return &OBUKGetBalancesHandler{Server: server}
 }
 
-func (h *OBUKGetBalancesHandler) SetIntrospectionResponse(c *gin.Context) error {
+func (h *OBUKGetBalancesHandler) SetIntrospectionResponse(c *gin.Context) *Error {
 	var err error
-	h.introspectionResponse, err = h.IntrospectAccountsToken(c)
-	return err
+	if h.introspectionResponse, err = h.IntrospectAccountsToken(c); err != nil {
+		return ErrBadRequest.WithMessage("failed to introspect token")
+	}
+	return nil
 }
 
-func (h *OBUKGetBalancesHandler) MapError(c *gin.Context, err error) (code int, resp interface{}) {
+func (h *OBUKGetBalancesHandler) MapError(c *gin.Context, err *Error) (code int, resp interface{}) {
 	code, resp = OBUKMapError(err)
 	return
 }
@@ -48,15 +50,15 @@ func (h *OBUKGetBalancesHandler) BuildResponse(c *gin.Context, data BankUserData
 	return NewBalancesResponse(data.Balances.OBUK, self)
 }
 
-func (h *OBUKGetBalancesHandler) Validate(c *gin.Context) error {
+func (h *OBUKGetBalancesHandler) Validate(c *gin.Context) *Error {
 	scopes := strings.Split(h.introspectionResponse.Scope, " ")
 	if !has(scopes, "accounts") {
-		return NewErrForbidden("token has no accounts scope granted")
+		return ErrForbidden.WithMessage("token has no accounts scope granted")
 	}
 
 	grantedPermissions := h.introspectionResponse.Permissions
 	if !has(grantedPermissions, "ReadBalances") {
-		return NewErrForbidden("ReadBalances permission has not been granted")
+		return ErrForbidden.WithMessage("ReadBalances permission has not been granted")
 	}
 	return nil
 }

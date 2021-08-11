@@ -3,8 +3,6 @@ package main
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
-	"net/http"
 	"time"
 
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
@@ -14,29 +12,11 @@ import (
 	acpClient "github.com/cloudentity/acp-client-go/models"
 )
 
-func OBUKMapError(err error) (int, models.OBError1) {
-	msg := err.Error()
+func OBUKMapError(err *Error) (int, models.OBError1) {
 	resp := models.OBError1{
-		Message: &msg,
+		Message: &err.Message,
 	}
-
-	if errors.As(err, &errNotFound) {
-		return http.StatusNotFound, resp
-	}
-	if errors.As(err, &errInternalServer) {
-		return http.StatusInternalServerError, resp
-	}
-	if errors.As(err, &errAlreadyExists) {
-		return http.StatusConflict, resp
-	}
-	if errors.As(err, &errForbidden) {
-		return http.StatusForbidden, resp
-	}
-	if errors.As(err, &errUnprocessableEntity) {
-		return http.StatusUnprocessableEntity, resp
-	}
-
-	return http.StatusBadRequest, resp
+	return err.Code, resp
 }
 
 func NewAccountsResponse(accounts []models.OBAccount6, self strfmt.URI) models.OBReadAccount6 {

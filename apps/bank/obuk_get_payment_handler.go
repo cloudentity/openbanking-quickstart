@@ -30,21 +30,23 @@ func NewOBUKGetPaymentHandler(server *Server) GetEndpointLogic {
 	return &OBUKGetPaymentHandler{Server: server}
 }
 
-func (h *OBUKGetPaymentHandler) SetIntrospectionResponse(c *gin.Context) error {
+func (h *OBUKGetPaymentHandler) SetIntrospectionResponse(c *gin.Context) *Error {
 	var err error
-	h.introspectionResponse, err = h.IntrospectPaymentsToken(c)
-	return err
-}
-
-func (h *OBUKGetPaymentHandler) Validate(c *gin.Context) error {
-	scopes := strings.Split(h.introspectionResponse.Scope, " ")
-	if !has(scopes, "payments") {
-		return NewErrForbidden("token has no payments scope granted")
+	if h.introspectionResponse, err = h.IntrospectPaymentsToken(c); err != nil {
+		return ErrBadRequest.WithMessage("failed to introspect token")
 	}
 	return nil
 }
 
-func (h *OBUKGetPaymentHandler) MapError(c *gin.Context, err error) (code int, resp interface{}) {
+func (h *OBUKGetPaymentHandler) Validate(c *gin.Context) *Error {
+	scopes := strings.Split(h.introspectionResponse.Scope, " ")
+	if !has(scopes, "payments") {
+		return ErrForbidden.WithMessage("token has no payments scope granted")
+	}
+	return nil
+}
+
+func (h *OBUKGetPaymentHandler) MapError(c *gin.Context, err *Error) (code int, resp interface{}) {
 	code, resp = OBUKMapError(err)
 	return
 }
@@ -58,7 +60,7 @@ func (h *OBUKGetPaymentHandler) BuildResponse(c *gin.Context, data BankUserData)
 		return data.Payments.OBUK[0]
 	}
 
-	_, err := h.MapError(c, ErrNotFound{"payment with consent id " + *data.Payments.OBUK[0].Data.ConsentID})
+	_, err := h.MapError(c, ErrNotFound.WithMessage("payment with consent id "+*data.Payments.OBUK[0].Data.ConsentID))
 	return err
 }
 

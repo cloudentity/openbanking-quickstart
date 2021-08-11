@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"errors"
 	"fmt"
 	"reflect"
 	"strconv"
@@ -40,11 +39,14 @@ func NewOBUKCreatePaymentHandler(server *Server) CreateEndpointLogic {
 	return &OBUKCreatePaymentHandler{Server: server}
 }
 
-func (h *OBUKCreatePaymentHandler) SetRequest(c *gin.Context) error {
-	return json.NewDecoder(c.Request.Body).Decode(&h.request)
+func (h *OBUKCreatePaymentHandler) SetRequest(c *gin.Context) *Error {
+	if err := json.NewDecoder(c.Request.Body).Decode(&h.request); err != nil {
+		return ErrInternalServer.WithMessage("failed to decode request")
+	}
+	return nil
 }
 
-func (h *OBUKCreatePaymentHandler) CreateResource(c *gin.Context, sub string) (interface{}, error) {
+func (h *OBUKCreatePaymentHandler) CreateResource(c *gin.Context, sub string) (interface{}, *Error) {
 	var (
 		data    BankUserData
 		id      = uuid.New().String()
@@ -54,70 +56,73 @@ func (h *OBUKCreatePaymentHandler) CreateResource(c *gin.Context, sub string) (i
 	)
 
 	if data, err = h.Storage.Get(sub); err != nil {
-		return "", err
+		return "", ErrInternalServer.WithMessage("failed to retrive resource")
 	}
 
 	for _, p := range data.Payments.OBUK {
 		if p.Data.ConsentID == payment.Data.ConsentID {
-			return payment, NewErrAlreadyExists(fmt.Sprintf("payment with id %s", *p.Data.ConsentID))
+			return payment, ErrAlreadyExists
 		}
 	}
 	data.Payments.OBUK = append(data.Payments.OBUK, payment)
 
 	if err = h.Storage.Put(sub, data); err != nil {
-		return "", NewErrInternalServer("failed to store resource")
+		return "", ErrInternalServer.WithMessage("failed to store resource")
 	}
 
 	return payment, nil
 }
 
-func (h *OBUKCreatePaymentHandler) SetIntrospectionResponse(c *gin.Context) error {
+func (h *OBUKCreatePaymentHandler) SetIntrospectionResponse(c *gin.Context) *Error {
 	var err error
-	h.introspectionResponse, err = h.IntrospectPaymentsToken(c)
-	return err
+	if h.introspectionResponse, err = h.IntrospectPaymentsToken(c); err != nil {
+		return ErrBadRequest.WithMessage("failed to introspect token")
+	}
+	return nil
 }
 
-func (h *OBUKCreatePaymentHandler) Validate(c *gin.Context) error {
+func (h *OBUKCreatePaymentHandler) Validate(c *gin.Context) *Error {
 	scopes := strings.Split(h.introspectionResponse.Scope, " ")
 	if !has(scopes, "payments") {
-		return NewErrForbidden("token has no payments scope granted")
+		return ErrForbidden.WithMessage("token has no payments scope granted")
 	}
 
 	if h.introspectionResponse.Status != "Authorised" {
-		return NewErrUnprocessableEntity("domestic payment consent does not have status authorised")
+		return ErrUnprocessableEntity.WithMessage("domestic payment consent does not have status authorised")
 	}
 
 	if h.request.Data.Initiation == nil {
-		return errors.New("initiation data not present in request")
+		return ErrBadRequest.WithMessage("initiation data not present in request")
 	}
 
 	if h.request.Risk == nil {
-		return errors.New("no risk data in payment request")
+		return ErrBadRequest.WithMessage("no risk data in payment request")
 	}
 
 	if h.introspectionResponse.Initiation == nil {
-		return NewErrInternalServer("initiation data not present in introspection response")
+		return ErrInternalServer.WithMessage("initiation data not present in introspection response")
 	}
 
 	if !initiationsAreEqual(h.request.Data.Initiation, h.introspectionResponse.Initiation) {
-		return errors.New("request initiation does not match consent initiation")
+		return ErrBadRequest.WithMessage("request initiation does not match consent initiation")
 	}
 
 	consentRisk := &paymentModels.OBRisk1{}
 	if err := copier.Copy(consentRisk, h.introspectionResponse); err != nil {
-		return NewErrInternalServer("internal error")
+		return ErrInternalServer
 	}
 
 	paymentRisk := h.request.Risk
 	if !reflect.DeepEqual(paymentRisk, consentRisk) {
-		return errors.New("risk validation failed")
+		return ErrBadRequest.WithMessage("risk validation failed")
 	}
 
 	return nil
 }
 
-func (h *OBUKCreatePaymentHandler) MapError(c *gin.Context, err error) (code int, ret interface{}) {
-	return OBUKMapError(err)
+func (h *OBUKCreatePaymentHandler) MapError(c *gin.Context, err *Error) (code int, resp interface{}) {
+	code, resp = OBUKMapError(err)
+	return
 }
 
 func (h *OBUKCreatePaymentHandler) GetUserIdentifier(c *gin.Context) string {
