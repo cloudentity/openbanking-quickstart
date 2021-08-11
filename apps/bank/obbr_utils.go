@@ -3,22 +3,23 @@ package main
 import (
 	"time"
 
-	acpClient "github.com/cloudentity/acp-client-go/models"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obbr/consents/models"
 	paymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/models"
+	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/gin-gonic/gin"
+	acpClient "github.com/cloudentity/acp-client-go/models"
 )
 
-func OBBRMapError(c *gin.Context, err *Error) (int, interface{}) {
-	return err.Code, models.OpenbankingBrasilResponseError{
+func OBBRMapError(c *gin.Context, err *Error) (code int, resp interface{}) {
+	code, resp = err.Code, models.OpenbankingBrasilResponseError{
 		Errors: []*models.OpenbankingBrasilError{
 			{
 				Detail: err.Message,
 			},
 		},
 	}
+	return
 }
 
 func NewOBBRAccountsResponse(accounts []AccountData) ResponseAccountList {

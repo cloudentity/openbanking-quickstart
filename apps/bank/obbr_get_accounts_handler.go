@@ -59,7 +59,7 @@ func (h *OBBRGetAccountsHandler) Filter(c *gin.Context, data BankUserData) BankU
 	)
 
 	for _, account := range data.Accounts.OBBR {
-		if !has(h.introspectionResponse.AccountIDs, string(account.AccountID)) {
+		if !has(h.introspectionResponse.AccountIDs, account.AccountID) {
 			continue
 		}
 		if requestedAccountType != "" && account.Type != requestedAccountType {
