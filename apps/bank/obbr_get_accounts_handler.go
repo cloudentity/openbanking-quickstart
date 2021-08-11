@@ -53,13 +53,21 @@ func (h *OBBRGetAccountsHandler) GetUserIdentifier(c *gin.Context) string {
 }
 
 func (h *OBBRGetAccountsHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
-	var filteredAccounts []AccountData
+	var (
+		filteredAccounts     []AccountData
+		requestedAccountType = c.Query("accountType")
+	)
 
 	for _, account := range data.Accounts.OBBR {
-		if has(h.introspectionResponse.AccountIDs, string(account.AccountID)) {
-			filteredAccounts = append(filteredAccounts, account)
+		if !has(h.introspectionResponse.AccountIDs, string(account.AccountID)) {
+			continue
 		}
+		if requestedAccountType != "" && account.Type != requestedAccountType {
+			continue
+		}
+		filteredAccounts = append(filteredAccounts, account)
 	}
+
 	return BankUserData{
 		Accounts: Accounts{
 			OBBR: filteredAccounts,
