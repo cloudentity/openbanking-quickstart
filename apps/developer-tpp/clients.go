@@ -5,7 +5,6 @@ import (
 
 	obbr "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/client"
 	obuk "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client"
-
 	httptransport "github.com/go-openapi/runtime/client"
 )
 

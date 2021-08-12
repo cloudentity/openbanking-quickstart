@@ -6,7 +6,6 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client/accounts"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 
@@ -23,6 +22,10 @@ func (s *Server) Get() func(*gin.Context) {
 	return func(c *gin.Context) {
 		c.HTML(http.StatusOK, "login.tmpl", gin.H{})
 	}
+}
+
+type AccountsGetter interface {
+	GetAccounts(*gin.Context, string) (interface{}, error)
 }
 
 func (s *Server) Login() func(*gin.Context) {
@@ -151,14 +154,14 @@ func (s *Server) Callback() func(*gin.Context) {
 			data["id_token_payload"] = string(payload)
 		}
 
-		var accountsResp *accounts.GetAccountsOK
+		var accountsResp interface{}
 
-		if accountsResp, err = s.BankClient.OBUK.Accounts.GetAccounts(accounts.NewGetAccountsParamsWithContext(c).WithAuthorization(token.AccessToken), nil); err != nil {
+		if accountsResp, err = s.GetAccounts(c, token.AccessToken); err != nil {
 			c.String(http.StatusUnauthorized, fmt.Sprintf("failed to call bank get accounts: %+v", err))
 			return
 		}
 
-		accountsRaw, _ := json.MarshalIndent(accountsResp.Payload, "", "  ")
+		accountsRaw, _ := json.MarshalIndent(accountsResp, "", "  ")
 		data["accounts_raw"] = string(accountsRaw)
 
 		c.HTML(http.StatusOK, "authenticated.tmpl", data)

@@ -70,6 +70,7 @@ type Server struct {
 	Client       acpclient.Client
 	BankClient   OpenbankingClient
 	SecureCookie *securecookie.SecureCookie
+	AccountsGetter
 }
 
 func NewServer() (Server, error) {
@@ -89,6 +90,12 @@ func NewServer() (Server, error) {
 	server.BankClient = NewOpenbankingClient(server.Config)
 
 	server.SecureCookie = securecookie.New(securecookie.GenerateRandomKey(64), securecookie.GenerateRandomKey(32))
+
+	switch server.Config.Spec {
+	case OBUK:
+		server.AccountsGetter = &OBUKAccountsGetter{Server: &server}
+	case OBBR:
+	}
 
 	return server, nil
 }
