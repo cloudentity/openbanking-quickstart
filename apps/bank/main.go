@@ -119,7 +119,7 @@ func NewServer() (Server, error) {
 func (s *Server) Start() error {
 	r := gin.Default()
 
-	r.GET("/internal/accounts/:sub", s.Get(s.MakeGetAccountsInternalHandler))
+	r.GET("/internal/accounts", s.Get(s.MakeGetAccountsInternalHandler))
 
 	switch s.Config.Spec {
 	case OBUK:

@@ -38,7 +38,7 @@ type AccountData struct {
 	AccountID   string `json:"accountId"`
 }
 
-func (c *OBBRBankClient) GetInternalAccounts(subject string) (InternalAccounts, error) {
+func (c *OBBRBankClient) GetInternalAccounts(id string) (InternalAccounts, error) {
 	var (
 		request  *http.Request
 		response *http.Response
@@ -47,7 +47,7 @@ func (c *OBBRBankClient) GetInternalAccounts(subject string) (InternalAccounts, 
 		err      error
 	)
 
-	if request, err = http.NewRequest("GET", fmt.Sprintf("%s/internal/accounts/%s", c.baseURL, subject), nil); err != nil {
+	if request, err = http.NewRequest("GET", fmt.Sprintf("%s/internal/accounts?id=%s", c.baseURL, id), nil); err != nil {
 		return InternalAccounts{}, err
 	}
 
@@ -83,7 +83,7 @@ func ToInternalOBBRAccounts(data ResponseAccountList) InternalAccounts {
 }
 
 // TODO: map response to InternalBalances
-func (c *OBBRBankClient) GetInternalBalances(subject string) (BalanceResponse, error) {
+func (c *OBBRBankClient) GetInternalBalances(id string) (BalanceResponse, error) {
 	var (
 		request  *http.Request
 		response *http.Response
@@ -92,7 +92,7 @@ func (c *OBBRBankClient) GetInternalBalances(subject string) (BalanceResponse, e
 		err      error
 	)
 
-	if request, err = http.NewRequest("GET", fmt.Sprintf("%s/internal/balances/%s", c.baseURL, subject), nil); err != nil {
+	if request, err = http.NewRequest("GET", fmt.Sprintf("%s/internal/balances?id=%s", c.baseURL, id), nil); err != nil {
 		return resp, err
 	}
 

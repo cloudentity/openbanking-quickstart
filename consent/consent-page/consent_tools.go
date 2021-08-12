@@ -1,13 +1,23 @@
 package main
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/cloudentity/acp-client-go/models"
 )
 
 type ConsentTools struct {
-	Trans *Trans
+	Trans  *Trans
+	Config Config
+}
+
+func (c *ConsentTools) GetInternalBankDataIdentifier(sub string, authCtx models.AuthenticationContext) string {
+	if c.Config.BankIDClaim == "sub" {
+		return sub
+	}
+
+	return fmt.Sprintf("%v", authCtx[c.Config.BankIDClaim])
 }
 
 func (c *ConsentTools) GetPermissionsWithDescription(requestedPermissions []string) map[string][]Permission {
@@ -96,6 +106,7 @@ func (c *ConsentTools) GetAccessConsentTemplateData(
 		"permissions":     c.GetPermissionsWithDescription(consent.AccountAccessConsent.Permissions),
 		"client_name":     clientName,
 		"expiration_date": expirationDate,
+		"ctx":             consent.AuthenticationContext,
 	}
 }
 
@@ -127,6 +138,7 @@ func (c *ConsentTools) GetDomesticPaymentTemplateData(
 		"accounts":      c.GetAccountsWithBalance(accounts, balances, string(*consent.DomesticPaymentConsent.Initiation.DebtorAccount.Identification)),
 		"client_name":   clientName,
 		"consent":       OBUKPaymentConsentTemplateData(consent.DomesticPaymentConsent),
+		"ctx":           consent.AuthenticationContext,
 	}
 }
 
@@ -164,6 +176,7 @@ func (c *ConsentTools) GetOBBRDataAccessConsentTemplateData(
 		// "permissions":     c.GetPermissionsWithDescription(consent.AccountAccessConsent.Permissions),
 		"client_name":     clientName,
 		"expiration_date": expirationDate,
+		"ctx":             consent.AuthenticationContext,
 	}
 }
 
@@ -195,6 +208,7 @@ func (c *ConsentTools) GetOBBRPaymentConsentTemplateData(
 		"accounts":      c.GetAccountsWithBalance(accounts, balances, consent.CustomerDataAccessConsent.DebtorAccount.Number),
 		"client_name":   clientName,
 		"consent":       OBBRPaymentConsentTemplateData(consent.CustomerDataAccessConsent),
+		"ctx":           consent.AuthenticationContext,
 	}
 }
 

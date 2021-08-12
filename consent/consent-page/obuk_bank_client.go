@@ -25,7 +25,7 @@ func NewOBUKBankClient(config Config) *OBUKBankClient {
 	return &c
 }
 
-func (c *OBUKBankClient) GetInternalAccounts(subject string) (InternalAccounts, error) {
+func (c *OBUKBankClient) GetInternalAccounts(id string) (InternalAccounts, error) {
 	var (
 		request  *http.Request
 		response *http.Response
@@ -34,7 +34,7 @@ func (c *OBUKBankClient) GetInternalAccounts(subject string) (InternalAccounts, 
 		err      error
 	)
 
-	if request, err = http.NewRequest("GET", fmt.Sprintf("%s/internal/accounts/%s", c.baseURL, subject), nil); err != nil {
+	if request, err = http.NewRequest("GET", fmt.Sprintf("%s/internal/accounts?id=%s", c.baseURL, id), nil); err != nil {
 		return InternalAccounts{}, err
 	}
 
@@ -70,7 +70,7 @@ func ToInternalOBUKAccounts(data models.OBReadAccount6) InternalAccounts {
 }
 
 // TODO: map response to InternalBalances
-func (c *OBUKBankClient) GetInternalBalances(subject string) (BalanceResponse, error) {
+func (c *OBUKBankClient) GetInternalBalances(id string) (BalanceResponse, error) {
 	var (
 		request  *http.Request
 		response *http.Response
@@ -79,7 +79,7 @@ func (c *OBUKBankClient) GetInternalBalances(subject string) (BalanceResponse, e
 		err      error
 	)
 
-	if request, err = http.NewRequest("GET", fmt.Sprintf("%s/internal/balances/%s", c.baseURL, subject), nil); err != nil {
+	if request, err = http.NewRequest("GET", fmt.Sprintf("%s/internal/balances?id=%s", c.baseURL, id), nil); err != nil {
 		return resp, err
 	}
 
