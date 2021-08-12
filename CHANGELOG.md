@@ -14,6 +14,9 @@
 - support for OBBR consents
 
 ## [1.11.2-rc2]
+- return access_denied when user rejects the consent 
+
+## [1.11.2-rc3]
 - support for OBBR bank API
 - extended templates model with `ctx AuthenticationContext`
 - configurable `BANK_ID_CLAIM` (default value `sub`) that is used to choose claim that is used to load data from bank
