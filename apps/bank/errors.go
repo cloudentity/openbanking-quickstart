@@ -1,19 +1,62 @@
 package main
 
-import "fmt"
+import (
+	"net/http"
 
-type ErrNotFound struct {
-	resourceName string
+	"github.com/pkg/errors"
+)
+
+type Error struct {
+	Code    int    `json:"code"`
+	Message string `json:"message"`
+	Error   error  `json:"-"`
 }
 
-func (e ErrNotFound) Error() string {
-	return fmt.Sprintf("unable to find resource %s", e.resourceName)
+func (e *Error) WithError(err error) *Error {
+	return &Error{
+		Code:    e.Code,
+		Message: e.Message,
+		Error:   errors.WithStack(err),
+	}
 }
 
-type ErrAlreadyExists struct {
-	resourceName string
+func (e *Error) WithMessage(message string) *Error {
+	return &Error{
+		Code:    e.Code,
+		Message: message,
+		Error:   e.Error,
+	}
 }
 
-func (e ErrAlreadyExists) Error() string {
-	return fmt.Sprintf("resource %s already exists", e.resourceName)
+func (e *Error) WithCode(code int) *Error {
+	return &Error{
+		Code:    code,
+		Message: e.Message,
+		Error:   e.Error,
+	}
 }
+
+var (
+	ErrNotFound = &Error{
+		Code:    http.StatusNotFound,
+		Message: "entity not found",
+	}
+	ErrForbidden = &Error{
+		Code:    http.StatusForbidden,
+		Message: "operation forbidden",
+	}
+	ErrAlreadyExists = &Error{
+		Code:    http.StatusConflict,
+		Message: "entity already exists",
+	}
+	ErrBadRequest = &Error{
+		Code: http.StatusBadRequest,
+	}
+	ErrUnprocessableEntity = &Error{
+		Code: http.StatusUnprocessableEntity,
+	}
+	ErrInternalServer = &Error{
+		Code:    http.StatusInternalServerError,
+		Message: "unknown error",
+	}
+)
