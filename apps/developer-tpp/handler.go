@@ -22,6 +22,12 @@ func (s *Server) Get() func(*gin.Context) {
 	}
 }
 
+type SpecLogicHandler interface {
+	AccountsGetter
+	LoginURLBuilder
+	ConsentCreator
+}
+
 type AccountsGetter interface {
 	GetAccounts(*gin.Context, string) (interface{}, error)
 }
@@ -57,10 +63,7 @@ func (s *Server) Login() func(*gin.Context) {
 		registerResponseRaw, _ := json.MarshalIndent(registerResponse, "", "  ")
 		data["account_access_consent_raw"] = string(registerResponseRaw)
 
-		if loginURL, storage.CSRF, err = s.Client.AuthorizeURL(
-			acpclient.WithOpenbankingIntentID(consentID, []string{"urn:openbanking:psd2:sca"}),
-			acpclient.WithPKCE(),
-		); err != nil {
+		if loginURL, storage.CSRF, err = s.BuildLoginURL(consentID); err != nil {
 			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to build authorize url: %+v", err))
 			return
 		}

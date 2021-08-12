@@ -1,17 +1,19 @@
 package main
 
 import (
-	"github.com/cloudentity/acp-client-go/client/openbanking"
-	"github.com/cloudentity/acp-client-go/models"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client/accounts"
 	"github.com/gin-gonic/gin"
+
+	acpclient "github.com/cloudentity/acp-client-go"
+	"github.com/cloudentity/acp-client-go/client/openbanking"
+	"github.com/cloudentity/acp-client-go/models"
 )
 
-type OBUKAccountsGetter struct {
+type OBUKLogic struct {
 	*Server
 }
 
-func (h *OBUKAccountsGetter) GetAccounts(c *gin.Context, token string) (interface{}, error) {
+func (h *OBUKLogic) GetAccounts(c *gin.Context, token string) (interface{}, error) {
 	var (
 		accountsResp *accounts.GetAccountsOK
 		err          error
@@ -24,11 +26,7 @@ func (h *OBUKAccountsGetter) GetAccounts(c *gin.Context, token string) (interfac
 	return accountsResp.Payload, nil
 }
 
-type OBUKAccountConsentCreator struct {
-	*Server
-}
-
-func (h *OBUKAccountConsentCreator) CreateConsent(c *gin.Context) (interface{}, error) {
+func (h *OBUKLogic) CreateConsent(c *gin.Context) (interface{}, error) {
 	var (
 		registerResponse *openbanking.CreateAccountAccessConsentRequestCreated
 		err              error
@@ -52,7 +50,7 @@ func (h *OBUKAccountConsentCreator) CreateConsent(c *gin.Context) (interface{}, 
 	return registerResponse, nil
 }
 
-func (h *OBUKAccountConsentCreator) GetConsentID(data interface{}) string {
+func (h *OBUKLogic) GetConsentID(data interface{}) string {
 	var (
 		registerResponse *openbanking.CreateAccountAccessConsentRequestCreated
 		ok               bool
@@ -62,4 +60,11 @@ func (h *OBUKAccountConsentCreator) GetConsentID(data interface{}) string {
 		return ""
 	}
 	return registerResponse.Payload.Data.ConsentID
+}
+
+func (h *OBUKLogic) BuildLoginURL(consentID string) (string, acpclient.CSRF, error) {
+	return h.Client.AuthorizeURL(
+		acpclient.WithOpenbankingIntentID(consentID, []string{"urn:openbanking:psd2:sca"}),
+		acpclient.WithPKCE(),
+	)
 }

@@ -70,8 +70,7 @@ type Server struct {
 	Client       acpclient.Client
 	BankClient   OpenbankingClient
 	SecureCookie *securecookie.SecureCookie
-	AccountsGetter
-	ConsentCreator
+	SpecLogicHandler
 }
 
 func NewServer() (Server, error) {
@@ -94,8 +93,7 @@ func NewServer() (Server, error) {
 
 	switch server.Config.Spec {
 	case OBUK:
-		server.AccountsGetter = &OBUKAccountsGetter{Server: &server}
-		server.ConsentCreator = &OBUKAccountConsentCreator{Server: &server}
+		server.SpecLogicHandler = &OBUKLogic{Server: &server}
 	case OBBR:
 	}
 
