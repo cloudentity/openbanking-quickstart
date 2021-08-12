@@ -19,7 +19,6 @@ RUN apk --no-cache add ca-certificates
 
 WORKDIR /app
 
-COPY --from=builder /app/data data
 COPY --from=builder /app/main .
 
 CMD ["./main"]

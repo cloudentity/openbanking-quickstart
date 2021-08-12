@@ -7,12 +7,42 @@ import (
 	"os"
 	"time"
 
+	obbrPaymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/models"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
 	paymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
-	"github.com/go-openapi/strfmt"
 	"github.com/pkg/errors"
 	bolt "go.etcd.io/bbolt"
 )
+
+type BankUserData struct {
+	OBUKAccounts     []models.OBAccount6                      `json:"obuk_accounts"`
+	OBUKBalances     []models.OBReadBalance1DataBalanceItems0 `json:"obuk_balances"`
+	OBUKTransactions []models.OBTransaction6                  `json:"obuk_transactions"`
+	OBUKPayments     []paymentModels.OBWriteDomesticResponse5 `json:"obuk_payments"`
+
+	OBBRAccounts []AccountData                                           `json:"obbr_accounts"`
+	OBBRPayments []obbrPaymentModels.OpenbankingBrasilResponsePixPayment `json:"obbr_payments"`
+}
+
+type AccountData struct {
+	BrandName   string `json:"brandName"`
+	CompanyCnpj string `json:"companyCnpj"`
+	Type        string `json:"type"`
+	CompeCode   string `json:"compeCode"`
+	BranchCode  string `json:"branchCode"`
+	Number      string `json:"number"`
+	CheckDigit  string `json:"checkDigit"`
+	AccountID   string `json:"accountId"`
+}
+
+type Storage interface {
+	Get(string) (BankUserData, error)
+	Put(string, BankUserData) error
+}
+
+type Has interface {
+	Has(interface{}) bool
+}
 
 var bucketName = []byte(`users`)
 
@@ -20,34 +50,46 @@ type UserRepo struct {
 	*bolt.DB
 }
 
-type Data struct {
-	Accounts     []models.OBAccount6                      `json:"accounts"`
-	Balances     []models.OBReadBalance1DataBalanceItems0 `json:"balances"`
-	Transactions []models.OBTransaction6                  `json:"transactions"`
-	Payments     []paymentModels.OBWriteDomesticResponse5 `json:"payments"`
-}
-
-type UserToDataFile map[string]Data
-
-func readUserToDataFile() (UserToDataFile, error) {
+func (u *UserRepo) Get(sub string) (BankUserData, error) {
 	var (
-		bs   []byte
-		u2df UserToDataFile
+		data BankUserData
 		err  error
 	)
 
-	if bs, err = ioutil.ReadFile("./data/data.json"); err != nil {
-		return u2df, errors.Wrapf(err, "failed to read file")
+	if err = u.View(func(tx *bolt.Tx) error {
+		b := tx.Bucket(bucketName)
+		v := b.Get([]byte(sub))
+		if err = json.Unmarshal(v, &data); err != nil {
+			return errors.Wrapf(err, fmt.Sprintf("failed to unmarshal data for user %s", sub))
+		}
+		return nil
+	}); err != nil {
+		return data, err
 	}
 
-	if err = json.Unmarshal(bs, &u2df); err != nil {
-		return u2df, errors.Wrapf(err, "failed to unmarshal data")
-	}
-
-	return u2df, nil
+	return data, nil
 }
 
-func NewUserRepo() (UserRepo, error) {
+func (u *UserRepo) Put(sub string, data BankUserData) error {
+	var (
+		dataBytes []byte
+		err       error
+	)
+
+	if dataBytes, err = json.Marshal(data); err != nil {
+		return err
+	}
+
+	return u.Update(func(tx *bolt.Tx) error {
+		b := tx.Bucket(bucketName)
+		if err = b.Put([]byte(sub), dataBytes); err != nil {
+			return errors.Wrapf(err, "failed to put value into database")
+		}
+		return nil
+	})
+}
+
+func NewUserRepo(datafilepath string) (*UserRepo, error) {
 	var (
 		userRepo UserRepo
 		u2df     UserToDataFile
@@ -56,12 +98,12 @@ func NewUserRepo() (UserRepo, error) {
 
 	// create db
 	if userRepo.DB, err = bolt.Open("data/my.db", os.FileMode(0644), &bolt.Options{Timeout: 3 * time.Second}); err != nil {
-		return userRepo, errors.Wrapf(err, "failed to open db")
+		return nil, errors.Wrapf(err, "failed to open db")
 	}
 
 	// read init data from file
-	if u2df, err = readUserToDataFile(); err != nil {
-		return userRepo, errors.Wrapf(err, "failed to read data file")
+	if u2df, err = readUserToDataFile(datafilepath); err != nil {
+		return nil, errors.Wrapf(err, "failed to read data file")
 	}
 
 	// setup bucket and default data
@@ -85,161 +127,28 @@ func NewUserRepo() (UserRepo, error) {
 
 		return nil
 	}); err != nil {
-		return userRepo, err
+		return nil, err
 	}
 
-	return userRepo, nil
+	return &userRepo, nil
 }
 
-func (ur *UserRepo) GetAccounts(sub string) ([]models.OBAccount6, error) {
+type UserToDataFile map[string]BankUserData
+
+func readUserToDataFile(filepath string) (UserToDataFile, error) {
 	var (
-		data Data
+		bs   []byte
+		u2df UserToDataFile
 		err  error
 	)
 
-	if err = ur.loadUser(sub, &data); err != nil {
-		return data.Accounts, err
+	if bs, err = ioutil.ReadFile(filepath); err != nil {
+		return u2df, errors.Wrapf(err, "failed to read file")
 	}
 
-	return data.Accounts, nil
-}
-
-func (ur *UserRepo) GetBalances(sub string) ([]models.OBReadBalance1DataBalanceItems0, error) {
-	var (
-		data Data
-		err  error
-	)
-
-	if err = ur.loadUser(sub, &data); err != nil {
-		return data.Balances, err
+	if err = json.Unmarshal(bs, &u2df); err != nil {
+		return u2df, errors.Wrapf(err, "failed to unmarshal data")
 	}
 
-	return data.Balances, nil
-}
-
-func (ur *UserRepo) GetTransactions(sub string) ([]models.OBTransaction6, error) {
-	var (
-		data Data
-		err  error
-	)
-
-	if err = ur.loadUser(sub, &data); err != nil {
-		return data.Transactions, err
-	}
-
-	return data.Transactions, nil
-}
-
-func (ur *UserRepo) CreateDomesticPayment(sub string, payment paymentModels.OBWriteDomesticResponse5) error {
-	var (
-		data Data
-		err  error
-	)
-
-	if err = ur.loadUser(sub, &data); err != nil {
-		return errors.Wrapf(err, fmt.Sprintf("failed to load user %s from database", sub))
-	}
-
-	for _, p := range data.Payments {
-		if p.Data.DomesticPaymentID == payment.Data.DomesticPaymentID {
-			return ErrAlreadyExists{fmt.Sprintf("/domestic-payments/%s", *p.Data.DomesticPaymentID)}
-		}
-	}
-
-	data.Payments = append(data.Payments, payment)
-
-	return ur.writeData(bucketName, []byte(sub), data)
-}
-
-func (ur *UserRepo) GetDomesticPayment(sub, domesticPaymentID string) (paymentModels.OBWriteDomesticResponse5, error) {
-	var (
-		data    Data
-		payment paymentModels.OBWriteDomesticResponse5
-		err     error
-	)
-
-	if err = ur.loadUser(sub, &data); err != nil {
-		return payment, errors.Wrapf(err, "failed to load data from db")
-	}
-
-	for _, p := range data.Payments {
-		if *p.Data.DomesticPaymentID == domesticPaymentID {
-			return p, nil
-		}
-	}
-
-	return payment, ErrNotFound{fmt.Sprintf("domestic-payment with id %s", domesticPaymentID)}
-}
-
-func (ur *UserRepo) SetDomesticPaymentStatus(domesticPaymentID string, status DomesticPaymentStatus) error {
-	var (
-		data = make(map[string]Data)
-		err  error
-	)
-
-	if err = ur.loadAll(data); err != nil {
-		return errors.Wrapf(err, "failed to load data from db")
-	}
-
-	for k, v := range data {
-		for i, payment := range v.Payments {
-			if *payment.Data.DomesticPaymentID == domesticPaymentID {
-				*data[k].Payments[i].Data.Status = string(status)
-				*data[k].Payments[i].Data.StatusUpdateDateTime = strfmt.DateTime(time.Now())
-				return ur.writeData(bucketName, []byte(k), data[k])
-			}
-		}
-	}
-
-	return fmt.Errorf("unable to find domestic payment id %s", domesticPaymentID)
-}
-
-func (ur *UserRepo) loadUser(sub string, data *Data) error {
-	return ur.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket(bucketName)
-		v := b.Get([]byte(sub))
-		if err := json.Unmarshal(v, data); err != nil {
-			return errors.Wrapf(err, fmt.Sprintf("failed to unmarshal data for user %s", sub))
-		}
-		return nil
-	})
-}
-
-func (ur *UserRepo) writeData(bucket, key []byte, data Data) error {
-	var (
-		dataBytes []byte
-		err       error
-	)
-
-	if dataBytes, err = json.Marshal(data); err != nil {
-		return err
-	}
-
-	return ur.Update(func(tx *bolt.Tx) error {
-		b := tx.Bucket(bucket)
-		if err = b.Put(key, dataBytes); err != nil {
-			return errors.Wrapf(err, "failed to put value into database")
-		}
-		return nil
-	})
-}
-
-func (ur *UserRepo) loadAll(m map[string]Data) error {
-	return ur.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket(bucketName)
-		c := b.Cursor()
-
-		for k, v := c.First(); k != nil; k, v = c.Next() {
-			var (
-				data Data
-				err  error
-			)
-			if err = json.Unmarshal(v, &data); err != nil {
-				return errors.Wrapf(err, fmt.Sprintf("failed to unmarshal data for user %s", string(k)))
-			}
-			m[string(k)] = data
-		}
-
-		return nil
-	})
+	return u2df, nil
 }
