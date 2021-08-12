@@ -84,7 +84,7 @@ func (s *OBUKAccountAccessConsentHandler) DenyConsent(c *gin.Context, loginReque
 			WithRejectConsent(&models.RejectConsentRequest{
 				ID:         loginRequest.ID,
 				LoginState: loginRequest.State,
-				Error:      "rejected",
+				Error:      "access_denied",
 				StatusCode: 403,
 			}),
 		nil,
