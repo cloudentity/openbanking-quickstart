@@ -45,7 +45,7 @@ func (h *OBUKGetBalancesInternalHandler) Validate(c *gin.Context) *Error {
 }
 
 func (h *OBUKGetBalancesInternalHandler) GetUserIdentifier(c *gin.Context) string {
-	return c.Param("id")
+	return c.Query("id")
 }
 
 func (h *OBUKGetBalancesInternalHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
