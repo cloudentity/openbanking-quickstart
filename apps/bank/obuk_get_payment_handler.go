@@ -3,6 +3,7 @@ package main
 import (
 	"strings"
 
+	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
 	"github.com/gin-gonic/gin"
 
 	acpClient "github.com/cloudentity/acp-client-go/models"
@@ -32,7 +33,7 @@ func NewOBUKGetPaymentHandler(server *Server) GetEndpointLogic {
 
 func (h *OBUKGetPaymentHandler) SetIntrospectionResponse(c *gin.Context) *Error {
 	var err error
-	if h.introspectionResponse, err = h.IntrospectPaymentsToken(c); err != nil {
+	if h.introspectionResponse, err = h.OBUKIntrospectPaymentsToken(c); err != nil {
 		return ErrBadRequest.WithMessage("failed to introspect token")
 	}
 	return nil
@@ -56,21 +57,21 @@ func (h *OBUKGetPaymentHandler) GetUserIdentifier(c *gin.Context) string {
 }
 
 func (h *OBUKGetPaymentHandler) BuildResponse(c *gin.Context, data BankUserData) interface{} {
-	if len(data.Payments.OBUK) == 1 {
-		return data.Payments.OBUK[0]
+	if len(data.OBUKPayments) == 1 {
+		return data.OBUKPayments[0]
 	}
 
-	_, err := h.MapError(c, ErrNotFound.WithMessage("payment with consent id "+*data.Payments.OBUK[0].Data.ConsentID))
+	_, err := h.MapError(c, ErrNotFound.WithMessage("payment with consent id "+*data.OBUKPayments[0].Data.ConsentID))
 	return err
 }
 
 func (h *OBUKGetPaymentHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
-	var filteredPayments Payments
+	var filteredPayments []models.OBWriteDomesticResponse5
 
-	for _, payment := range data.Payments.OBUK {
+	for _, payment := range data.OBUKPayments {
 		if *payment.Data.ConsentID == c.Param("DomesticPaymentId") {
-			filteredPayments.OBUK = append(filteredPayments.OBUK, payment)
-			return BankUserData{Payments: filteredPayments}
+			filteredPayments = append(filteredPayments, payment)
+			return BankUserData{OBUKPayments: filteredPayments}
 		}
 	}
 

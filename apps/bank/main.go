@@ -22,14 +22,15 @@ const (
 )
 
 type Config struct {
-	Port      int           `env:"PORT" envDefault:"8070"`
-	ClientID  string        `env:"CLIENT_ID,required"`
-	IssuerURL *url.URL      `env:"ISSUER_URL,required"`
-	Timeout   time.Duration `env:"TIMEOUT" envDefault:"5s"`
-	RootCA    string        `env:"ROOT_CA,required"`
-	CertFile  string        `env:"CERT_FILE,required"`
-	KeyFile   string        `env:"KEY_FILE,required"`
-	Spec      Spec          `env:"SPEC,required"`
+	Port         int           `env:"PORT" envDefault:"8070"`
+	ClientID     string        `env:"CLIENT_ID,required"`
+	IssuerURL    *url.URL      `env:"ISSUER_URL,required"`
+	Timeout      time.Duration `env:"TIMEOUT" envDefault:"5s"`
+	RootCA       string        `env:"ROOT_CA,required"`
+	CertFile     string        `env:"CERT_FILE,required"`
+	KeyFile      string        `env:"KEY_FILE,required"`
+	Spec         Spec          `env:"SPEC,required"`
+	SeedFilePath string
 }
 
 func (c *Config) ClientConfig() acpclient.Config {
@@ -47,6 +48,13 @@ func (c *Config) ClientConfig() acpclient.Config {
 func LoadConfig() (config Config, err error) {
 	if err = env.Parse(&config); err != nil {
 		return config, err
+	}
+
+	switch config.Spec {
+	case OBUK:
+		config.SeedFilePath = fmt.Sprintf("data/%s-data.json", OBUK)
+	case OBBR:
+		config.SeedFilePath = fmt.Sprintf("data/%s-data.json", OBBR)
 	}
 
 	return config, err
@@ -84,7 +92,7 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to init acp client")
 	}
 
-	if server.Storage, err = NewUserRepo(); err != nil {
+	if server.Storage, err = NewUserRepo(server.Config.SeedFilePath); err != nil {
 		return server, errors.Wrapf(err, "failed to init repo")
 	}
 
@@ -99,6 +107,8 @@ func NewServer() (Server, error) {
 		server.MakeGetPaymentHandler = NewOBUKGetPaymentHandler
 	case OBBR:
 		server.MakeGetAccountsHandler = NewOBBRGetAccountsHandler
+		server.MakeGetAccountsInternalHandler = NewOBBRGetAccountsInternalHandler
+		server.MakeCreatePaymentHandler = NewOBBRCreatePaymentHandler
 	default:
 		return server, errors.Wrapf(err, "unsupported spec %s", server.Config.Spec)
 	}
@@ -108,16 +118,25 @@ func NewServer() (Server, error) {
 
 func (s *Server) Start() error {
 	r := gin.Default()
-	r.GET("/accounts", s.Get(s.MakeGetAccountsHandler))
+
 	r.GET("/internal/accounts/:sub", s.Get(s.MakeGetAccountsInternalHandler))
 
-	r.GET("/balances", s.Get(s.MakeGetBalancesHandler))
-	r.GET("/internal/balances/:sub", s.Get(s.MakeGetBalancesInternalHandler))
+	switch s.Config.Spec {
+	case OBUK:
+		r.GET("/accounts", s.Get(s.MakeGetAccountsHandler))
+		r.GET("/balances", s.Get(s.MakeGetBalancesHandler))
+		r.GET("/internal/balances/:sub", s.Get(s.MakeGetBalancesInternalHandler))
+		r.GET("/transactions", s.Get(s.MakeGetTransactionsHandler))
+		r.POST("/domestic-payments", s.Post(s.MakeCreatePaymentHandler))
+		r.GET("/domestic-payments/:DomesticPaymentId", s.Get(s.MakeGetPaymentHandler))
 
-	r.GET("/transactions", s.Get(s.MakeGetTransactionsHandler))
+	case OBBR:
+		r.GET("/accounts/v1/accounts", s.Get(s.MakeGetAccountsHandler))
+		r.GET("/payments/v1/pix/payments", s.Post(s.MakeCreatePaymentHandler))
 
-	r.POST("/domestic-payments", s.Post(s.MakeCreatePaymentHandler))
-	r.GET("/domestic-payments/:DomesticPaymentId", s.Get(s.MakeGetPaymentHandler))
+	default:
+		return fmt.Errorf("unsupported spec %s", s.Config.Spec)
+	}
 
 	return r.Run(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)))
 }

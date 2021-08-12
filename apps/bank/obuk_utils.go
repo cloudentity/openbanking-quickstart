@@ -13,10 +13,9 @@ import (
 )
 
 func OBUKMapError(err *Error) (int, models.OBError1) {
-	resp := models.OBError1{
+	return err.Code, models.OBError1{
 		Message: &err.Message,
 	}
-	return err.Code, resp
 }
 
 func NewAccountsResponse(accounts []models.OBAccount6, self strfmt.URI) models.OBReadAccount6 {

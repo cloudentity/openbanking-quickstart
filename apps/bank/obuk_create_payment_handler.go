@@ -59,12 +59,12 @@ func (h *OBUKCreatePaymentHandler) CreateResource(c *gin.Context, sub string) (i
 		return "", ErrInternalServer.WithMessage("failed to retrieve resource")
 	}
 
-	for _, p := range data.Payments.OBUK {
+	for _, p := range data.OBUKPayments {
 		if p.Data.ConsentID == payment.Data.ConsentID {
 			return payment, ErrAlreadyExists
 		}
 	}
-	data.Payments.OBUK = append(data.Payments.OBUK, payment)
+	data.OBUKPayments = append(data.OBUKPayments, payment)
 
 	if err = h.Storage.Put(sub, data); err != nil {
 		return "", ErrInternalServer.WithMessage("failed to store resource")
@@ -75,7 +75,7 @@ func (h *OBUKCreatePaymentHandler) CreateResource(c *gin.Context, sub string) (i
 
 func (h *OBUKCreatePaymentHandler) SetIntrospectionResponse(c *gin.Context) *Error {
 	var err error
-	if h.introspectionResponse, err = h.IntrospectPaymentsToken(c); err != nil {
+	if h.introspectionResponse, err = h.OBUKIntrospectPaymentsToken(c); err != nil {
 		return ErrBadRequest.WithMessage("failed to introspect token")
 	}
 	return nil

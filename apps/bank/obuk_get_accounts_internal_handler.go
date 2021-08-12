@@ -37,7 +37,7 @@ func (h *OBUKGetAccountsInternalHandler) MapError(c *gin.Context, err *Error) (c
 
 func (h *OBUKGetAccountsInternalHandler) BuildResponse(c *gin.Context, data BankUserData) interface{} {
 	self := strfmt.URI(fmt.Sprintf("http://localhost:%s/accounts", strconv.Itoa(h.Config.Port)))
-	return NewAccountsResponse(data.Accounts.OBUK, self)
+	return NewAccountsResponse(data.OBUKAccounts, self)
 }
 
 func (h *OBUKGetAccountsInternalHandler) Validate(c *gin.Context) *Error {
