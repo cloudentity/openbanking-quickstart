@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/cloudentity/openbanking-quickstart/client/accounts"
+	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client/accounts"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 
@@ -153,7 +153,7 @@ func (s *Server) Callback() func(*gin.Context) {
 
 		var accountsResp *accounts.GetAccountsOK
 
-		if accountsResp, err = s.BankClient.Accounts.GetAccounts(accounts.NewGetAccountsParamsWithContext(c).WithAuthorization(token.AccessToken), nil); err != nil {
+		if accountsResp, err = s.BankClient.OBUK.Accounts.GetAccounts(accounts.NewGetAccountsParamsWithContext(c).WithAuthorization(token.AccessToken), nil); err != nil {
 			c.String(http.StatusUnauthorized, fmt.Sprintf("failed to call bank get accounts: %+v", err))
 			return
 		}
