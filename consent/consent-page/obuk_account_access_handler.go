@@ -31,7 +31,7 @@ func (s *OBUKAccountAccessConsentHandler) GetConsent(c *gin.Context, loginReques
 		return
 	}
 
-	id = s.ConsentTools.GetInternalBankDataIdentifier(response.Payload.Subject,response.Payload.AuthenticationContext)
+	id = s.ConsentTools.GetInternalBankDataIdentifier(response.Payload.Subject, response.Payload.AuthenticationContext)
 
 	if accounts, err = s.BankClient.GetInternalAccounts(id); err != nil {
 		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to get accounts from bank"))
