@@ -71,6 +71,7 @@ type Server struct {
 	BankClient   OpenbankingClient
 	SecureCookie *securecookie.SecureCookie
 	AccountsGetter
+	ConsentCreator
 }
 
 func NewServer() (Server, error) {
@@ -94,6 +95,7 @@ func NewServer() (Server, error) {
 	switch server.Config.Spec {
 	case OBUK:
 		server.AccountsGetter = &OBUKAccountsGetter{Server: &server}
+		server.ConsentCreator = &OBUKAccountConsentCreator{Server: &server}
 	case OBBR:
 	}
 

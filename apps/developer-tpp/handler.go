@@ -10,8 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 
 	acpclient "github.com/cloudentity/acp-client-go"
-	"github.com/cloudentity/acp-client-go/client/openbanking"
-	"github.com/cloudentity/acp-client-go/models"
 )
 
 type AppStorage struct {
@@ -28,10 +26,19 @@ type AccountsGetter interface {
 	GetAccounts(*gin.Context, string) (interface{}, error)
 }
 
+type LoginURLBuilder interface {
+	BuildLoginURL(string) (string, acpclient.CSRF, error)
+}
+
+type ConsentCreator interface {
+	CreateConsent(*gin.Context) (interface{}, error)
+	GetConsentID(interface{}) string
+}
+
 func (s *Server) Login() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			registerResponse   *openbanking.CreateAccountAccessConsentRequestCreated
+			registerResponse   interface{}
 			encodedCookieValue string
 			storage            AppStorage
 			loginURL           string
@@ -40,27 +47,18 @@ func (s *Server) Login() func(*gin.Context) {
 			err                error
 		)
 
-		if registerResponse, err = s.Client.Openbanking.CreateAccountAccessConsentRequest(
-			openbanking.NewCreateAccountAccessConsentRequestParamsWithContext(c).
-				WithTid(s.Client.TenantID).
-				WithAid(s.Client.ServerID).
-				WithRequest(&models.AccountAccessConsentRequest{
-					Data: &models.OBReadConsent1Data{
-						Permissions: c.PostFormArray("permissions"),
-					},
-					Risk: map[string]interface{}{},
-				}),
-			nil,
-		); err != nil {
+		if registerResponse, err = s.CreateConsent(c); err != nil {
 			c.String(http.StatusBadRequest, fmt.Sprintf("failed to register account access consent: %+v", err))
 			return
 		}
+
+		consentID := s.GetConsentID(registerResponse)
 
 		registerResponseRaw, _ := json.MarshalIndent(registerResponse, "", "  ")
 		data["account_access_consent_raw"] = string(registerResponseRaw)
 
 		if loginURL, storage.CSRF, err = s.Client.AuthorizeURL(
-			acpclient.WithOpenbankingIntentID(registerResponse.Payload.Data.ConsentID, []string{"urn:openbanking:psd2:sca"}),
+			acpclient.WithOpenbankingIntentID(consentID, []string{"urn:openbanking:psd2:sca"}),
 			acpclient.WithPKCE(),
 		); err != nil {
 			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to build authorize url: %+v", err))
@@ -94,7 +92,7 @@ func (s *Server) Login() func(*gin.Context) {
 			data["request_payload"] = string(payload)
 		}
 
-		data["intent_id"] = registerResponse.Payload.Data.ConsentID
+		data["intent_id"] = consentID
 		data["login_url"] = loginURL
 
 		c.HTML(http.StatusOK, "intent_registered.tmpl", data)
