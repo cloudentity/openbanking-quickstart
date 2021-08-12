@@ -125,7 +125,7 @@ func (s *Server) Start() error {
 	case OBUK:
 		r.GET("/accounts", s.Get(s.MakeGetAccountsHandler))
 		r.GET("/balances", s.Get(s.MakeGetBalancesHandler))
-		r.GET("/internal/balances/:sub", s.Get(s.MakeGetBalancesInternalHandler))
+		r.GET("/internal/balances", s.Get(s.MakeGetBalancesInternalHandler))
 		r.GET("/transactions", s.Get(s.MakeGetTransactionsHandler))
 		r.POST("/domestic-payments", s.Post(s.MakeCreatePaymentHandler))
 		r.GET("/domestic-payments/:DomesticPaymentId", s.Get(s.MakeGetPaymentHandler))
