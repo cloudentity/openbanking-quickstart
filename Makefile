@@ -76,3 +76,13 @@ generate-obuk-integration-spec:
         -m \
         -o api/internal/bank.yaml \
          -w ./apps/bank 
+
+.PHONY: generate-obbr-clients
+generate-obbr-clients: 
+	docker build -t quickstart-swagger -f build/swagger.dockerfile .
+	rm -rf ./openbanking/obbr/accounts/*
+	docker run  -v ${CURDIR}:/code quickstart-swagger \
+	swagger generate client \
+		-f api/obbr/accounts.yaml \
+		-A accounts  \
+		-t ./openbanking/obbr/accounts
