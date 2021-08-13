@@ -18,6 +18,7 @@ func (s *OBUKAccountAccessConsentHandler) GetConsent(c *gin.Context, loginReques
 		accounts InternalAccounts
 		response *openbanking.GetAccountAccessConsentSystemOK
 		err      error
+		id       string
 	)
 
 	if response, err = s.Client.Openbanking.GetAccountAccessConsentSystem(
@@ -30,7 +31,9 @@ func (s *OBUKAccountAccessConsentHandler) GetConsent(c *gin.Context, loginReques
 		return
 	}
 
-	if accounts, err = s.BankClient.GetInternalAccounts(response.Payload.Subject); err != nil {
+	id = s.ConsentTools.GetInternalBankDataIdentifier(response.Payload.Subject, response.Payload.AuthenticationContext)
+
+	if accounts, err = s.BankClient.GetInternalAccounts(id); err != nil {
 		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to get accounts from bank"))
 		return
 	}

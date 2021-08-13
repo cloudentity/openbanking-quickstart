@@ -30,7 +30,7 @@ func (h *OBBRGetAccountsInternalHandler) Validate(c *gin.Context) *Error {
 }
 
 func (h *OBBRGetAccountsInternalHandler) GetUserIdentifier(c *gin.Context) string {
-	return c.Param("sub")
+	return c.Query("id")
 }
 
 func (h *OBBRGetAccountsInternalHandler) Filter(c *gin.Context, data BankUserData) BankUserData {

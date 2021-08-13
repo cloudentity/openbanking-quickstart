@@ -119,13 +119,13 @@ func NewServer() (Server, error) {
 func (s *Server) Start() error {
 	r := gin.Default()
 
-	r.GET("/internal/accounts/:sub", s.Get(s.MakeGetAccountsInternalHandler))
+	r.GET("/internal/accounts", s.Get(s.MakeGetAccountsInternalHandler))
 
 	switch s.Config.Spec {
 	case OBUK:
 		r.GET("/accounts", s.Get(s.MakeGetAccountsHandler))
 		r.GET("/balances", s.Get(s.MakeGetBalancesHandler))
-		r.GET("/internal/balances/:sub", s.Get(s.MakeGetBalancesInternalHandler))
+		r.GET("/internal/balances", s.Get(s.MakeGetBalancesInternalHandler))
 		r.GET("/transactions", s.Get(s.MakeGetTransactionsHandler))
 		r.POST("/domestic-payments", s.Post(s.MakeCreatePaymentHandler))
 		r.GET("/domestic-payments/:DomesticPaymentId", s.Get(s.MakeGetPaymentHandler))
