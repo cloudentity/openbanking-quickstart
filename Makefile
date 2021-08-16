@@ -61,6 +61,9 @@ enable-mfa:
 disable-mfa:
 	./scripts/override_env.sh ENABLE_MFA false
 
+enable-spec-%:
+	./scripts/override_env.sh SPEC $*
+
 .PHONY: set-version
 set-version:
 	./scripts/override_env.sh VERSION $(shell ./scripts/version.sh)
