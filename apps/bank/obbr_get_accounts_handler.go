@@ -3,10 +3,10 @@ package main
 import (
 	"strings"
 
+	obbrAccountModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/models"
 	"github.com/gin-gonic/gin"
 
 	acpClient "github.com/cloudentity/acp-client-go/models"
-	obbrAccountModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/models"
 )
 
 type OBBRGetAccountsHandler struct {

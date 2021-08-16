@@ -9,7 +9,6 @@ import (
 
 	obbrAccountModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/models"
 	obbrPaymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/models"
-
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
 	paymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
 	"github.com/pkg/errors"

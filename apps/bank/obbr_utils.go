@@ -6,7 +6,6 @@ import (
 	obbrAccountModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/models"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obbr/consents/models"
 	paymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/models"
-
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 

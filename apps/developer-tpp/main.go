@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/url"
@@ -161,7 +162,7 @@ func (s *Server) GetTemplate(name string) string {
 	}
 }
 
-func (s *Server) GetEncryptionKey(c *gin.Context) (jose.JSONWebKey, error) {
+func (s *Server) GetEncryptionKey(ctx context.Context) (jose.JSONWebKey, error) {
 	var (
 		jwksResponse *oauth2.JwksOK
 		encKey       jose.JSONWebKey
@@ -170,7 +171,7 @@ func (s *Server) GetEncryptionKey(c *gin.Context) (jose.JSONWebKey, error) {
 	)
 
 	if jwksResponse, err = s.Client.Oauth2.Jwks(
-		oauth2.NewJwksParamsWithContext(c).
+		oauth2.NewJwksParamsWithContext(ctx).
 			WithTid(s.Client.TenantID).
 			WithAid(s.Client.ServerID),
 	); err != nil {
