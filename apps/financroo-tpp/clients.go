@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"time"
 
-	obc "github.com/cloudentity/openbanking-quickstart/client"
+	obc "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client"
 	payments_client "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/client"
 	"github.com/pkg/errors"
 
@@ -140,7 +140,7 @@ func NewLoginClient(c Config) (acpclient.Client, error) {
 }
 
 type OpenbankingClient struct {
-	*obc.Openbanking
+	*obc.OpenbankingAccountsClient
 
 	*payments_client.OpenbankingPaymentsClient
 }
@@ -164,7 +164,7 @@ func NewOpenbankingClient(config BankConfig) (OpenbankingClient, error) {
 		hc,
 	)
 
-	c.Openbanking = obc.New(tr, nil)
+	c.OpenbankingAccountsClient = obc.New(tr, nil)
 	c.OpenbankingPaymentsClient = payments_client.New(tr, nil)
 
 	return c, nil
