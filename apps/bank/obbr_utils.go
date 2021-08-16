@@ -3,8 +3,10 @@ package main
 import (
 	"time"
 
+	obbrAccountModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/models"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obbr/consents/models"
 	paymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/models"
+
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 
@@ -22,9 +24,15 @@ func OBBRMapError(c *gin.Context, err *Error) (code int, resp interface{}) {
 	return
 }
 
-func NewOBBRAccountsResponse(accounts []AccountData) ResponseAccountList {
-	return ResponseAccountList{
-		Data: accounts,
+func NewOBBRAccountsResponse(accounts []obbrAccountModels.AccountData) obbrAccountModels.ResponseAccountList {
+	accountPointers := []*obbrAccountModels.AccountData{}
+	for _, account := range accounts {
+		a := account
+		accountPointers = append(accountPointers, &a)
+	}
+
+	return obbrAccountModels.ResponseAccountList{
+		Data: accountPointers,
 	}
 }
 
