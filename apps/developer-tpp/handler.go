@@ -18,7 +18,7 @@ type AppStorage struct {
 
 func (s *Server) Get() func(*gin.Context) {
 	return func(c *gin.Context) {
-		c.HTML(http.StatusOK, "login.tmpl", gin.H{})
+		c.HTML(http.StatusOK, s.GetTemplate("login.tmpl"), gin.H{})
 	}
 }
 
@@ -26,6 +26,7 @@ type SpecLogicHandler interface {
 	AccountsGetter
 	LoginURLBuilder
 	ConsentCreator
+	DoRequestObjectEncryption() bool
 }
 
 type AccountsGetter interface {
@@ -33,7 +34,7 @@ type AccountsGetter interface {
 }
 
 type LoginURLBuilder interface {
-	BuildLoginURL(string) (string, acpclient.CSRF, error)
+	BuildLoginURL(*gin.Context, string, bool) (string, acpclient.CSRF, error)
 }
 
 type ConsentCreator interface {
@@ -63,7 +64,7 @@ func (s *Server) Login() func(*gin.Context) {
 		registerResponseRaw, _ := json.MarshalIndent(registerResponse, "", "  ")
 		data["account_access_consent_raw"] = string(registerResponseRaw)
 
-		if loginURL, storage.CSRF, err = s.BuildLoginURL(consentID); err != nil {
+		if loginURL, storage.CSRF, err = s.BuildLoginURL(c, consentID, false); err != nil {
 			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to build authorize url: %+v", err))
 			return
 		}
@@ -72,14 +73,6 @@ func (s *Server) Login() func(*gin.Context) {
 			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to parse login url: %+v", err))
 			return
 		}
-
-		// persist csrf in a secure encrypted cookie
-		if encodedCookieValue, err = s.SecureCookie.Encode("app", storage); err != nil {
-			c.String(http.StatusInternalServerError, fmt.Sprintf("error while encoding cookie: %+v", err))
-			return
-		}
-
-		c.SetCookie("app", encodedCookieValue, 0, "/", "", false, true)
 
 		rp := u.Query()["request"]
 
@@ -95,10 +88,25 @@ func (s *Server) Login() func(*gin.Context) {
 			data["request_payload"] = string(payload)
 		}
 
+		if s.DoRequestObjectEncryption() {
+			if loginURL, storage.CSRF, err = s.BuildLoginURL(c, consentID, true); err != nil {
+				c.String(http.StatusInternalServerError, fmt.Sprintf("failed to build authorize url: %+v", err))
+				return
+			}
+		}
+
+		// persist csrf in a secure encrypted cookie
+		if encodedCookieValue, err = s.SecureCookie.Encode("app", storage); err != nil {
+			c.String(http.StatusInternalServerError, fmt.Sprintf("error while encoding cookie: %+v", err))
+			return
+		}
+
+		c.SetCookie("app", encodedCookieValue, 0, "/", "", false, true)
+
 		data["intent_id"] = consentID
 		data["login_url"] = loginURL
 
-		c.HTML(http.StatusOK, "intent_registered.tmpl", data)
+		c.HTML(http.StatusOK, s.GetTemplate("intent_registered.tmpl"), data)
 	}
 }
 
@@ -165,6 +173,6 @@ func (s *Server) Callback() func(*gin.Context) {
 		accountsRaw, _ := json.MarshalIndent(accountsResp, "", "  ")
 		data["accounts_raw"] = string(accountsRaw)
 
-		c.HTML(http.StatusOK, "authenticated.tmpl", data)
+		c.HTML(http.StatusOK, s.GetTemplate("authenticated.tmpl"), data)
 	}
 }
