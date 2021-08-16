@@ -89,12 +89,8 @@ func (h *OBBRLogic) BuildLoginURL(c *gin.Context, consentID string, doRequestObj
 	var (
 		key    jose.JSONWebKey
 		client acpclient.Client
-		config = h.Config.ClientConfigWithScopes([]string{
-			"openid",
-			"consents",
-			"consent:" + consentID,
-		})
-		err error
+		config = h.Config.ExtendConsentScope(consentID).ClientConfig()
+		err    error
 	)
 
 	if key, err = h.GetEncryptionKey(c); err != nil {
