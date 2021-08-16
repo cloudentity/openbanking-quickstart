@@ -26,6 +26,10 @@ func (h *OBUKLogic) GetAccounts(c *gin.Context, token string) (interface{}, erro
 	return accountsResp.Payload, nil
 }
 
+func (h *OBUKLogic) DoRequestObjectEncryption() bool {
+	return false
+}
+
 func (h *OBUKLogic) CreateConsent(c *gin.Context) (interface{}, error) {
 	var (
 		registerResponse *openbanking.CreateAccountAccessConsentRequestCreated
@@ -62,7 +66,7 @@ func (h *OBUKLogic) GetConsentID(data interface{}) string {
 	return registerResponse.Payload.Data.ConsentID
 }
 
-func (h *OBUKLogic) BuildLoginURL(consentID string) (string, acpclient.CSRF, error) {
+func (h *OBUKLogic) BuildLoginURL(c *gin.Context, consentID string, doRequestObjectEncryption bool) (string, acpclient.CSRF, error) {
 	return h.Client.AuthorizeURL(
 		acpclient.WithOpenbankingIntentID(consentID, []string{"urn:openbanking:psd2:sca"}),
 		acpclient.WithPKCE(),
