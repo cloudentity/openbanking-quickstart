@@ -20,6 +20,7 @@ func (s *OBBRPaymentConsentHandler) GetConsent(c *gin.Context, loginRequest Logi
 		balances BalanceResponse
 		response *openbanking.GetOBBRCustomerPaymentConsentSystemOK
 		err      error
+		id       string
 	)
 
 	if response, err = s.Client.Openbanking.GetOBBRCustomerPaymentConsentSystem(
@@ -32,7 +33,9 @@ func (s *OBBRPaymentConsentHandler) GetConsent(c *gin.Context, loginRequest Logi
 		return
 	}
 
-	if accounts, err = s.BankClient.GetInternalAccounts(response.Payload.Subject); err != nil {
+	id = s.ConsentTools.GetInternalBankDataIdentifier(response.Payload.Subject, response.Payload.AuthenticationContext)
+
+	if accounts, err = s.BankClient.GetInternalAccounts(id); err != nil {
 		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to get accounts from bank"))
 		return
 	}
@@ -94,10 +97,11 @@ func (s *OBBRPaymentConsentHandler) DenyConsent(c *gin.Context, loginRequest Log
 			WithTid(s.Client.TenantID).
 			WithLogin(loginRequest.ID).
 			WithRejectConsent(&models.RejectConsentRequest{
-				ID:         loginRequest.ID,
-				LoginState: loginRequest.State,
-				Error:      "rejected",
-				StatusCode: 403,
+				ID:               loginRequest.ID,
+				LoginState:       loginRequest.State,
+				Error:            "access_denied",
+				ErrorDescription: "rejected",
+				StatusCode:       403,
 			}),
 		nil,
 	); err != nil {

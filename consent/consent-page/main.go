@@ -40,6 +40,7 @@ type Config struct {
 	CertFile         string        `env:"CERT_FILE,required"`
 	KeyFile          string        `env:"KEY_FILE,required"`
 	BankURL          *url.URL      `env:"BANK_URL"`
+	BankIDClaim      string        `env:"BANK_ID_CLAIM" envDefault:"sub"`
 	EnableMFA        bool          `env:"ENABLE_MFA"`
 	OTPMode          string        `env:"OTP_MODE" envDefault:"demo"`
 	TwilioAccountSid string        `env:"TWILIO_ACCOUNT_SID"`
@@ -140,7 +141,14 @@ func NewServer() (Server, error) {
 
 	server.SMSClient = NewSMSClient(server.Config)
 
-	server.BankClient = NewBankClient(server.Config)
+	switch server.Config.Spec {
+	case OBUK:
+		server.BankClient = NewOBUKBankClient(server.Config)
+	case OBBR:
+		server.BankClient = NewOBBRBankClient(server.Config)
+	default:
+		return Server{}, errors.New("invalid SPEC configuration")
+	}
 
 	if db, err = InitDB(server.Config); err != nil {
 		return server, errors.Wrapf(err, "failed to init db")
@@ -154,17 +162,18 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to init otp handler")
 	}
 
+	tools := ConsentTools{Trans: server.Trans, Config: server.Config}
 	switch server.Config.Spec {
 	case OBUK:
-		server.AccountAccessConsentHandler = &OBUKAccountAccessConsentHandler{&server, ConsentTools{Trans: server.Trans}}
-		server.AccountAccessMFAConsentProvider = &OBUKAccountAccessMFAConsentProvider{&server, ConsentTools{Trans: server.Trans}}
-		server.PaymentConsentHandler = &OBUKDomesticPaymentConsentHandler{&server, ConsentTools{Trans: server.Trans}}
-		server.PaymentMFAConsentProvider = &DomesticPaymentMFAConsentProvider{&server, ConsentTools{Trans: server.Trans}}
+		server.AccountAccessConsentHandler = &OBUKAccountAccessConsentHandler{&server, tools}
+		server.AccountAccessMFAConsentProvider = &OBUKAccountAccessMFAConsentProvider{&server, tools}
+		server.PaymentConsentHandler = &OBUKDomesticPaymentConsentHandler{&server, tools}
+		server.PaymentMFAConsentProvider = &DomesticPaymentMFAConsentProvider{&server, tools}
 	case OBBR:
-		server.AccountAccessConsentHandler = &OBBRAccountAccessConsentHandler{&server, ConsentTools{Trans: server.Trans}}
-		server.AccountAccessMFAConsentProvider = &OBBRAccountAccessMFAConsentProvider{&server, ConsentTools{Trans: server.Trans}}
-		server.PaymentConsentHandler = &OBBRPaymentConsentHandler{&server, ConsentTools{Trans: server.Trans}}
-		server.PaymentMFAConsentProvider = &OBBRPaymentMFAConsentProvider{&server, ConsentTools{Trans: server.Trans}}
+		server.AccountAccessConsentHandler = &OBBRAccountAccessConsentHandler{&server, tools}
+		server.AccountAccessMFAConsentProvider = &OBBRAccountAccessMFAConsentProvider{&server, tools}
+		server.PaymentConsentHandler = &OBBRPaymentConsentHandler{&server, tools}
+		server.PaymentMFAConsentProvider = &OBBRPaymentMFAConsentProvider{&server, tools}
 	default:
 		return server, errors.Wrapf(err, "unsupported spec %s", server.Config.Spec)
 	}

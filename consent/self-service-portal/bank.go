@@ -41,7 +41,7 @@ func (c *BankClient) GetInternalAccounts(subject string) (InternalAccounts, erro
 		err      error
 	)
 
-	if request, err = http.NewRequest("GET", fmt.Sprintf("%s/internal/accounts/%s", c.baseURL, subject), nil); err != nil {
+	if request, err = http.NewRequest("GET", fmt.Sprintf("%s/internal/accounts?id=%s", c.baseURL, subject), nil); err != nil {
 		return InternalAccounts{}, nil
 	}
 
