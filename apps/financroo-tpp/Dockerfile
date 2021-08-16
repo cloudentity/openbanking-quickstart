@@ -22,7 +22,6 @@ COPY go.mod .
 COPY go.sum .
 RUN go mod download
 
-COPY client client
 COPY openbanking openbanking
 COPY apps/financroo-tpp .
 RUN --mount=type=cache,target=/root/.cache/go-build,mode=777 \
