@@ -76,6 +76,10 @@ github.com/chzyer/test v0.0.0-20180213035817-a1ea475d72b1/go.mod h1:Q3SI9o4m/ZMn
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/cloudentity/acp-client-go v0.0.0-20210809194217-a6b8a778653e h1:P+IMaeicNskQmT3rkOrO3g4ZHIwiMpoBjVQXvL/DEiA=
 github.com/cloudentity/acp-client-go v0.0.0-20210809194217-a6b8a778653e/go.mod h1:NBZIC1K5DEil5H0Rm+lJ8tNZ9ukLHh/9mdOMLpPo2vM=
+github.com/cloudentity/acp-client-go v0.0.0-20210813184045-a87277b2256e h1:DcS/7BnRcIQMxJxG8zSAQ7LEhCJGgowH9J9UX/R2qxk=
+github.com/cloudentity/acp-client-go v0.0.0-20210813184045-a87277b2256e/go.mod h1:d1gwlsf+3OWS51a395JFpFykQXmJcgjgpqFBiX+dNYA=
+github.com/cloudentity/acp-client-go v0.0.0-20210816134157-deacd53bce2f h1:SjgAN0RMqOiRZm7D3GlIzhx/oY9PcUWGJ2TalSGVRqg=
+github.com/cloudentity/acp-client-go v0.0.0-20210816134157-deacd53bce2f/go.mod h1:d1gwlsf+3OWS51a395JFpFykQXmJcgjgpqFBiX+dNYA=
 github.com/cncf/udpa/go v0.0.0-20191209042840-269d4d468f6f/go.mod h1:M8M6+tZqaGXZJjfX53e64911xZQV5JYwmTeXPW+k8Sc=
 github.com/coreos/bbolt v1.3.2/go.mod h1:iRUV2dpdMOn7Bo10OQBFzIJO9kkE559Wcmn+qkEiiKk=
 github.com/coreos/etcd v3.3.13+incompatible/go.mod h1:uF7uidLiAD3TWHmW31ZFd/JWoc32PjwdhPthX9715RE=
