@@ -218,6 +218,8 @@ services:
       - ./data/ca.pem:/certs/ca.pem
       - ./data/variables.yaml:/variables.yaml
       - ./data/imports:/app/imports
+    environment: 
+      - SPEC=${SPEC}
     command:
       - /app/main
       - --tenant-url
