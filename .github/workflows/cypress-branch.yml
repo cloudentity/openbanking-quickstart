@@ -37,7 +37,7 @@ jobs:
         uses: cypress-io/github-action@v2
         with: 
           working-directory: tests
-          spec: tests/cypress/integration/TppTechnicalTests.ts
+          spec: cypress/integration/TppTechnicalTests.ts
 
       - name: Upload cypress screenshots
         uses: actions/upload-artifact@v1
