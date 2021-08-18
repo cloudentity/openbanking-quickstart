@@ -27,13 +27,9 @@ jobs:
         with:
           working-directory: tests
 
-      - name: Make run with OBBR environment
-        run: make enable-spec-obbr run
-      
-      - name: Run cypress tests with OBBR environment
-        uses: cypress-io/github-action@v2
-        with: 
-          spec: tests/cypress/integration/TppTechnicalTests.ts
+      - name: clean
+        run: make clean
+
 
       - name: Upload cypress screenshots
         uses: actions/upload-artifact@v1
@@ -59,6 +55,18 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           working-directory: tests
+      
+      - name: clean
+        run: make clean    
+
+      - name: Make run with OBBR environment
+        run: make enable-spec-obbr run
+      
+      - name: Run cypress tests with OBBR environment
+        uses: cypress-io/github-action@v2
+        with: 
+          working-directory: tests
+          spec: cypress/integration/TppTechnicalTests.ts
 
       - name: Upload cypress screenshots
         uses: actions/upload-artifact@v1
