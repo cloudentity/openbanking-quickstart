@@ -9,9 +9,8 @@ financroo_pem_file: /certs/tpp_cert.pem
 ca_pem_file: /certs/ca.pem
 consent_page_client_id: bv0ocudfotn6edhsiu7g
 consent_page_client_secret: pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0
-consent_page_client_id2: bukj5p6k7qdmm5ppxxxx
+obbr_consent_page_client: bukj5p6k7qdmm5ppxxxx
 postman_client_id: postman-dev
 bank_io_client_id: bankio-dev2
-bank_io_client_id2: bankio-dev221
+obbr_bank_client_id: bankio-dev221
 bank_io_redirect_uri: https://openbanking-dev2-apps.demo.axway.com:9443/openbanking/callback
-idp_login_url: https://openbanking-dev2-apim.demo.axway.com:8443/login
