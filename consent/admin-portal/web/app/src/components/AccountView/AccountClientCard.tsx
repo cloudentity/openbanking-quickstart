@@ -147,6 +147,7 @@ export default function AccountClientCard({
 
   return (
     <div
+      id={`client-${clientWithStatus?.client_name.toLocaleLowerCase()}`}
       className={clsx(classes.card, isApplicationListView && classes.clickable)}
       onClick={() => {
         if (isApplicationListView) {
@@ -189,11 +190,17 @@ export default function AccountClientCard({
           <div>
             <div></div>
             <div>
-              <Button className={classes.manageButton}>Manage</Button>
+              <Button
+                id="manage-account"
+                className={classes.manageButton}
+              >
+                Manage
+              </Button>
             </div>
           </div>
         ) : (
           <Button
+            id="revoke-access"
             className={classes.revokeButton}
             onClick={() => setOpenDrawer(true)}
           >

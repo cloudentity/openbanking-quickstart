@@ -167,7 +167,7 @@ export default function AccountViewDetails({
                 client={client}
                 onRevokeClient={handleRevokeClient}
               />
-              <ConsentTabs consents={consents} />
+              <ConsentTabs id="consents-tabs" consents={consents} />
             </div>
           </>
         )}

@@ -234,12 +234,12 @@ export enum ConsentStatus {
 
 export function getChipForStatus(status?: ConsentStatus) {
   return (
-    (status === ConsentStatus.Active && <Chip type="active">Active</Chip>) ||
+    (status === ConsentStatus.Active && <Chip type="active" id="status-active">Active</Chip>) ||
     (status === ConsentStatus.Authorised && (
-      <Chip type="active">Authorised</Chip>
+      <Chip type="active" id="status-authorised">Authorised</Chip>
     )) ||
     (status === ConsentStatus.Inactive && (
-      <Chip type="inactive">Inactive</Chip>
+      <Chip type="inactive" id="status-inactive">Inactive</Chip>
     )) ||
     null
   );
