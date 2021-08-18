@@ -30,8 +30,19 @@ jobs:
         with:
           working-directory: tests
 
+      - name: Make with enabled mfa
+        run: make enable-mfa run
+
+      - name: Run cypress tests with mfa
+        uses: cypress-io/github-action@v2
+        with:
+          working-directory: tests
+
+      - name: clean
+        run: make clean
+
       - name: Make run with OBBR environment
-        run: make clean enable-spec-obbr run
+        run: make enable-spec-obbr run
       
       - name: Run cypress tests with OBBR environment
         uses: cypress-io/github-action@v2
@@ -55,14 +66,6 @@ jobs:
 
       - name: clean
         run: make clean
-
-      - name: Make with enabled mfa
-        run: make enable-mfa run
-
-      - name: Run cypress tests with mfa
-        uses: cypress-io/github-action@v2
-        with:
-          working-directory: tests
 
       - name: Upload cypress screenshots
         uses: actions/upload-artifact@v1
