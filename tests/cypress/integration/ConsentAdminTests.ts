@@ -28,7 +28,7 @@ describe(`Consent admin app`, () => {
     tppIntentPage.login();
   });
 
-  it(`Happy path with revoking consent`, () => {
+  it(`Happy path with revoking consent from Third party providers page`, () => {
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
@@ -42,17 +42,25 @@ describe(`Consent admin app`, () => {
     consentAdminPage.revokeClientConsent();
   });
 
-  // it(`Happy path with revoking all consents`, () => {
-  //   acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-  //   mfaPage.typePin()
-  //   consentPage.confirm();
-  //   consentAdminPage.visit();
-  //   acpLoginPage.login(Credentials.consentAdminUsername, Credentials.defaultPassword);
-  //   consentAdminPage.expandTab()
-  //   consentAdminPage.revokeAllConsents()
-  //   consentAdminPage.expandTab()
-  //   consentAdminPage.assertConsentIsNotDisplayed()
-  // })
+  it(`Happy path with revoking consent from Consent management page`, () => {
+    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    if (environmentVariables.isMfaEnabled()) {
+      mfaPage.typePin();
+    }
+    consentPage.confirm();
+    consentAdminPage.visit();
+    acpLoginPage.login(
+      Credentials.consentAdminUsername,
+      Credentials.defaultPassword
+    );
+    consentAdminPage.searchAccount("22289");
+    consentAdminPage.assertAccountResult("22289");
+    consentAdminPage.assertClientAccountWithStatus("Financroo", "Active");
+    consentAdminPage.manageAccount("Financroo");
+    consentAdminPage.assertConsentsDetails();
+    consentAdminPage.revokeClientConsentByAccountName("Financroo");
+    consentAdminPage.assertClientAccountWithStatus("Financroo", "Inactive");
+  })
 
   it(`Cancel first ACP login`, () => {
     acpLoginPage.cancel();
