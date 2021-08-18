@@ -58,7 +58,7 @@ services:
     env_file:
       - .env
     environment:
-      - CLIENT_ID=bv0ocudfotn6edhsiu7g
+      - CLIENT_ID=bukj5p6k7qdMIIDfjCCAmagAwImm5ppxxxx
       - CLIENT_SECRET=pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0
       - ISSUER_URL=${ACP_INTERNAL_URL}/${TENANT}/system
       - CERT_FILE=/bank_cert.pem
@@ -158,6 +158,10 @@ services:
     container_name: acp
     restart: always
     image: ${ACP_DOCKER_IMAGE}:${ACP_VERSION}
+    networks:
+      default:
+        aliases:
+        - authorization.cloudentity.com
     ports:
       - 8443:8443
     volumes:
@@ -171,6 +175,7 @@ services:
       - FEATURES_SYSTEM_CLIENTS_MANAGEMENT=true
       - FEATURES_OPENBANKING_BRASIL_CONSENTS=true
       - FEATURES_OPENBANKING_BRASIL_PAYMENTS=true
+      - FEATURES_DEV_MODE=true
       - SERVER_URL=${ACP_URL}
     command:
       - server
@@ -215,6 +220,7 @@ services:
     volumes:
       - ./data/tpp_cert.pem:/certs/tpp_cert.pem
       - ./data/ca.pem:/certs/ca.pem
+      - ./data/brasil:/certs/brasil
       - ./data/variables.yaml:/variables.yaml
       - ./data/imports:/app/imports
     command:

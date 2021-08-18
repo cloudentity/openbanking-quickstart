@@ -3,6 +3,8 @@ servers:
   id: openbanking_brasil
   name: Openbanking Brazil
   profile: openbanking_br
+  access_token_strategy: "jwt"
+  enforce_pkce: false
   enable_trust_anchor: true
   trust_anchor_configuration:
     jwks_uri: "http://example.com"
@@ -23,6 +25,7 @@ servers:
   {{ end }}
   root_cas: |
 {{ readFile .ca_pem_file | indent 4 }}
+{{ readFile .conf_ca_pem_file | indent 4 }}
 
 idps:
 - tenant_id: default
@@ -57,7 +60,7 @@ clients:
 # consent page
 - tenant_id: default
   authorization_server_id: system
-  client_id: {{ default "bukj5p6k7qdmm5ppxxxx" .obbr_consent_page_client }}
+  client_id: {{ default "bukj5p6k7qdMIIDfjCCAmagAwImm5ppxxxx" .obbr_consent_page_client }}
   client_secret: {{ default "pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0" .consent_page_client_secret }}
   client_name: custom server consent
   grant_types:
@@ -114,6 +117,68 @@ clients:
   - refresh_token
   jwks:
 {{ readFile .financroo_pem_file | pemToPublicJwks | indent 4 }}
+- tenant_id: default
+  authorization_server_id: openbanking_brasil
+  client_id: {{ .conf_tpp_1_id }}
+  client_name: Conformance-tpp-1
+  client_uri: {{ .conf_tpp_1_url }}
+  tls_client_auth_subject_dn: {{ .conf_tpp_1_sub_dn }}
+  tls_client_certificate_bound_access_tokens: true
+  token_endpoint_auth_method: tls_client_auth
+  redirect_uris:
+    - {{ .conf_tpp_1_url }}/test/a/OBBConfTests/callback
+  subject_type: pairwise
+  request_object_signing_alg: PS256
+  response_types:
+    - token
+    - code
+    - code id_token
+  scopes:
+    - consent:*
+    - consents
+    - accounts
+    - payments
+    - introspect_tokens
+    - offline_access
+    - openid
+    - revoke_tokens
+  grant_types:
+    - client_credentials
+    - authorization_code
+    - refresh_token
+  jwks:
+    {{ readFile .conf_tpp_1_public_jwks | indent 4 }}
+- tenant_id: default
+  authorization_server_id: openbanking_brasil
+  client_id: {{ .conf_tpp_2_id }}
+  client_name: Conformance-tpp-2
+  client_uri: {{ .conf_tpp_2_url }}
+  tls_client_auth_subject_dn: {{ .conf_tpp_2_sub_dn }}
+  tls_client_certificate_bound_access_tokens: true
+  token_endpoint_auth_method: tls_client_auth
+  redirect_uris:
+    - {{ .conf_tpp_2_url }}/test/a/OBBConfTests/callback
+  subject_type: pairwise
+  request_object_signing_alg: PS256
+  response_types:
+    - token
+    - code
+    - code id_token
+  scopes:
+    - consent:*
+    - consents
+    - accounts
+    - payments
+    - introspect_tokens
+    - offline_access
+    - openid
+    - revoke_tokens
+  grant_types:
+    - client_credentials
+    - authorization_code
+    - refresh_token
+  jwks:
+    {{ readFile .conf_tpp_2_public_jwks | indent 4 }}
 policies:
 - id: block_openbanking_brasil_dcr
   language: cloudentity
