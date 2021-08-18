@@ -1,61 +1,63 @@
- <form action="mfa?login_id={{ .login_request.ID }}&login_state={{ .login_request.State }}&consent_type={{ .login_request.ConsentType }}" method="post" id="form">
-   <input type="hidden" name="action" value="verify" id="action" />
-   <div class="mfa-container">
-      <div class="mfa-container__item">
-        <div class="mfa-container__item--left">
-          <div class="heading-2">{{.mfaTrans.title}}</div>
-          <div class="heading-4">{{.mfaTrans.subTitle}}</div>
-          <div class="caption" style="margin-top: 12px">{{.mfaTrans.caption1}}</div>
-        </div>
-          <div class="caption">
-            <a href="#" class="resend" onclick="resend('form')">{{.mfaTrans.resend}}</a>
-          </div>
-        </div>
-      </div>
-      <div class="mfa-container__item">
-        <div class="mfa-container__item--right">
-          <div {{if .invalid_otp }}class="mfa-container__card error" {{else}}class="mfa-container__card"{{end}}>
-            <div>
-              <div style="font-size: 14px">{{.mfa.authenticationCode}}</div>
-              <div style="margin-top: 16px" id="pinlogin"></div>
-              <input type="hidden" id="otp" name="otp"/>
+<form action="mfa?login_id={{ .login_request.ID }}&login_state={{ .login_request.State }}&consent_type={{ .login_request.ConsentType }}"
+      method="post" id="form">
+    <input type="hidden" name="action" value="verify" id="action"/>
+    <div class="mfa-container">
+        <div class="mfa-container__item">
+            <div class="mfa-container__item--left">
+                <div class="heading-2">{{.mfaTrans.title}}</div>
+                <div class="heading-4">{{.mfaTrans.subTitle}}</div>
+                <div class="caption" style="margin-top: 12px">{{.mfaTrans.caption1}}</div>
+                <div class="caption">
+                    <a href="#" class="resend" onclick="resend('form')">{{.mfaTrans.resend}}</a>
+                </div>
             </div>
-          </div>
-          {{ if .invalid_otp }}
-            <div class="error-container">
-              <img src="assets/images/alert-triangle.png"/>
-              <span>{{.mfaTrans.errorInfo}}</span>
-            </div>
-          {{end}}
-          <button class="mdc-button mdc-button--raised" id="verify-button" disabled="true"
-                  style="background: #DC1B37; width: 100%; margin-top: 12px;"><span class="mdc-button__ripple"></span>Verify
-          </button>
         </div>
-      </div>
-  </form>
+        <div class="mfa-container__item">
+            <div class="mfa-container__item--right">
+                <div {{if .invalid_otp }}class="mfa-container__card error" {{else}}class="mfa-container__card"{{end}}>
+                    <div>
+                        <div style="font-size: 14px">{{.mfa.authenticationCode}}</div>
+                        <div style="margin-top: 16px" id="pinlogin"></div>
+                        <input type="hidden" id="otp" name="otp"/>
+                    </div>
+                </div>
+                {{ if .invalid_otp }}
+                    <div class="error-container">
+                        <img src="assets/images/alert-triangle.png"/>
+                        <span>{{.mfaTrans.errorInfo}}</span>
+                    </div>
+                {{end}}
+                <button class="mdc-button mdc-button--raised" id="verify-button" disabled="true"
+                        style="background: #DC1B37; width: 100%; margin-top: 12px;"><span
+                            class="mdc-button__ripple"></span>Verify
+                </button>
+            </div>
+        </div>
+    </div>
+</form>
 
-    <script>
-      var btn = document.querySelector('#verify-button');
+<script>
+    var btn = document.querySelector('#verify-button');
 
-      var pinlogin = new Pinlogin(document.querySelector('#pinlogin'), {
+    var pinlogin = new Pinlogin(document.querySelector('#pinlogin'), {
         fields: 6,
         reset: false,
         hideinput: false,
         pattern: "^[0-9a-zA-Z]*$",
         complete: function (pin) {
-          btn.disabled = false;
-          btn.focus();
-          btn.setAttribute("data-pin", pin);
-          document.getElementById("otp").value = pin;
+            btn.disabled = false;
+            btn.focus();
+            btn.setAttribute("data-pin", pin);
+            document.getElementById("otp").value = pin;
         },
         invalid: function (field, nr) {
-          btn.disabled = true;
+            btn.disabled = true;
         }
-      });
+    });
 
-      function resend(id) {
+    function resend(id) {
         document.getElementById('action').value = 'resend';
         document.getElementById(id).submit();
-      }
+    }
 
-    </script>
+</script>
