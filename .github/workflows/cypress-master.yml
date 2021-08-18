@@ -33,7 +33,7 @@ jobs:
       - name: Run cypress tests with OBBR environment
         uses: cypress-io/github-action@v2
         with: 
-          spec: tests/cypress/integration/OBBRTppTechnicalTests.ts
+          spec: tests/cypress/integration/TppTechnicalTests.ts
 
       - name: Upload cypress screenshots
         uses: actions/upload-artifact@v1
