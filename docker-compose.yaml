@@ -53,8 +53,8 @@ services:
       - ./data/bank_cert.pem:/bank_cert.pem
       - ./data/bank_key.pem:/bank_key.pem
       # sample extensions:
-      - ./consent/consent-page/examples/custom-styles.css:/app/assets/extend-styles.css
-      # - ./consent/consent-page/examples/custom-mfa-verify.tmpl:/app/templates/mfa-verify.tmpl
+      # - ./consent/consent-page/examples/custom-styles.css:/app/assets/extend-styles.css
+      # - ./consent/consent-page/examples/custom-mfa-verify.tmpl:/app/templates/custom/mfa-verify.tmpl
     env_file:
       - .env
     environment:
