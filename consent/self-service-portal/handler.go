@@ -149,7 +149,7 @@ func (s *Server) FetchConsents(c *gin.Context) (*ConsentsAndAccounts, error) {
 		types = nil
 	}
 
-	if at, err = s.IntrospectClient.IntrospectToken(c, token); err != nil {
+	if at, err = s.IntrospectClient.IntrospectToken(token); err != nil {
 		return nil, fmt.Errorf("failed to introspect client: %w", err)
 	}
 

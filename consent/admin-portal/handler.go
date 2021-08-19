@@ -164,7 +164,7 @@ func (s *Server) IntrospectToken(c *gin.Context) error {
 	token := c.GetHeader("Authorization")
 	token = strings.ReplaceAll(token, "Bearer ", "")
 
-	if _, err = s.IntrospectClient.IntrospectToken(c, token); err != nil {
+	if _, err = s.IntrospectClient.IntrospectToken(token); err != nil {
 		return fmt.Errorf("failed to introspect client: %w", err)
 	}
 

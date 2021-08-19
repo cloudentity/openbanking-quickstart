@@ -17,7 +17,7 @@ type OBBRPaymentConsentHandler struct {
 func (s *OBBRPaymentConsentHandler) GetConsent(c *gin.Context, loginRequest LoginRequest) {
 	var (
 		accounts InternalAccounts
-		balances BalanceResponse
+		balances = BalanceResponse{}
 		response *openbanking.GetOBBRCustomerPaymentConsentSystemOK
 		err      error
 		id       string
@@ -40,10 +40,10 @@ func (s *OBBRPaymentConsentHandler) GetConsent(c *gin.Context, loginRequest Logi
 		return
 	}
 
-	if balances, err = s.BankClient.GetInternalBalances(response.Payload.Subject); err != nil {
+	/*if balances, err = s.BankClient.GetInternalBalances(response.Payload.Subject); err != nil {
 		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to load account balances"))
 		return
-	}
+	}*/
 
 	Render(c, s.GetTemplateNameForSpec("payment-consent.tmpl"), s.GetOBBRPaymentConsentTemplateData(loginRequest, response.Payload, accounts, balances.Data))
 }
@@ -70,7 +70,7 @@ func (s *OBBRPaymentConsentHandler) ConfirmConsent(c *gin.Context, loginRequest 
 			WithTid(s.Client.TenantID).
 			WithLogin(loginRequest.ID).
 			WithAcceptConsent(&models.AcceptConsentRequest{
-				AccountIds:    []string{consent.Payload.CustomerDataAccessConsent.DebtorAccount.Number},
+				AccountIds:    []string{consent.Payload.CustomerPaymentConsent.DebtorAccount.Number},
 				GrantedScopes: s.GrantScopes(consent.Payload.RequestedScopes),
 				LoginState:    loginRequest.State,
 			}),
