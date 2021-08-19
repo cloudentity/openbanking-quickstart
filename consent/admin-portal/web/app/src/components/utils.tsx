@@ -232,14 +232,16 @@ export enum ConsentStatus {
   Authorised = "Authorised",
 }
 
-export function getChipForStatus(status?: ConsentStatus) {
+export function getChipForStatus(client?: ClientType) {
   return (
-    (status === ConsentStatus.Active && <Chip type="active">Active</Chip>) ||
-    (status === ConsentStatus.Authorised && (
-      <Chip type="active">Authorised</Chip>
+    (client?.mainStatus === ConsentStatus.Active && 
+      <Chip type="active" id={`status-active-${client?.client_id}`}>Active</Chip>
+    ) ||
+    (client?.mainStatus === ConsentStatus.Authorised && (
+      <Chip type="active" id={`status-authorised-${client?.client_id}`}>Authorised</Chip>
     )) ||
-    (status === ConsentStatus.Inactive && (
-      <Chip type="inactive">Inactive</Chip>
+    (client?.mainStatus === ConsentStatus.Inactive && (
+      <Chip type="inactive" id={`status-inactive-${client?.client_id}`}>Inactive</Chip>
     )) ||
     null
   );

@@ -92,7 +92,10 @@ export default function SearchInput({
                 <div style={{ width: 25.5 }} />
               )}
               <div className={classes.searchIconContainer}>
-                <IconButton onClick={() => value !== "" && onSearch(value)}>
+                <IconButton
+                  id="search-account"
+                  onClick={() => value !== "" && onSearch(value)}
+                >
                   <Search style={{ color: "white" }} />
                 </IconButton>
               </div>

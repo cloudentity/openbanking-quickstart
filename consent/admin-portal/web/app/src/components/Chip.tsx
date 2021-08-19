@@ -26,14 +26,16 @@ const colorMapper = {
 type Props = {
   children: ReactNode;
   type?: keyof typeof colorMapper;
+  id?: string;
 };
 
-function Chip({ children, type }: Props) {
+function Chip({ children, type, id }: Props) {
   const classes = useStyles();
 
   return type ? (
     <div
       className={classes.container}
+      id={id}
       style={{
         color: colorMapper[type] || colorMapper.other,
         borderColor: colorMapper[type] || colorMapper.other,

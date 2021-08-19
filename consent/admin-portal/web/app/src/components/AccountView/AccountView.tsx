@@ -142,7 +142,7 @@ export default function AccountView({
             <div className={classes.container}>
               {state?.clientIds ? (
                 <>
-                  <div className={classes.info}>
+                  <div className={classes.info} id="search-results">
                     <span>{clients.length} application(s)</span> found for
                     account <span>#{id}</span>
                   </div>
