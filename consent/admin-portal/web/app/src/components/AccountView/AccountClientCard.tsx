@@ -166,7 +166,7 @@ export default function AccountClientCard({
             </Avatar>
             <div className={classes.name}>{clientWithStatus?.client_name}</div>
           </div>
-          {getChipForStatus(clientWithStatus?.mainStatus)}
+          {getChipForStatus(clientWithStatus)}
         </div>
       </div>
       <div className={classes.details}>
