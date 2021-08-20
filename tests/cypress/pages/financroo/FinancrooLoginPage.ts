@@ -4,7 +4,7 @@ export class FinancrooLoginPage {
   private readonly loginButtonLocator: string = `.login-button`;
 
   public visit(force: boolean = false): void {
-    Urls.visit(Cypress.env("FINANCROO_URL"), force);
+    Urls.visit(Cypress.env('FINANCROO_URL'), force);
   }
 
   public login(): void {
