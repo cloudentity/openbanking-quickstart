@@ -27,7 +27,7 @@ export class ConsentAdminPage {
 
 
   public visit(force: boolean = false): void {
-    Urls.visit(Urls.consentAdminUrl, force);
+    Urls.visit(Cypress.env("CONSENT_ADMIN_URL"), force);
   }
 
   public revokeClientConsent(): void {
