@@ -10,7 +10,7 @@ services:
 
   fapi-test:
     container_name: fapi-test
-    image: docker.cloudentity.io/fapi/httpd:4.1.21
+    image: docker.cloudentity.io/fapi/httpd:4.1.25
     ports:
       - "8444:8444"
     depends_on:
@@ -22,7 +22,7 @@ services:
 
   fapi-server:
     container_name: fapi-server
-    image: docker.cloudentity.io/fapi/server:4.1.21
+    image: docker.cloudentity.io/fapi/server:4.1.25
     depends_on:
       - fapi-mongodb
     logging:
