@@ -10,7 +10,7 @@ export class ConsentSelfServiceApplicationPage {
   private readonly consentRowAccountsLocator: string = `.consent-row > td:nth-child(2)`
 
   public visit(force: boolean = false): void {
-    Urls.visit(Cypress.env('CONSENT_SELF_SERVICE_URL'), force);
+    Urls.visit(Cypress.env('consent_self_service_url'), force);
   }
 
   public expandAccountsTab(): void {

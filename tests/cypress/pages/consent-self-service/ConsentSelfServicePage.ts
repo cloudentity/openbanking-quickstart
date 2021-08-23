@@ -5,7 +5,7 @@ export class ConsentSelfServicePage {
   private readonly applicationCardLocator: string = `.application-card`;
 
   public visit(force: boolean = false): void {
-    Urls.visit(Cypress.env('CONSENT_SELF_SERVICE_URL'), force);
+    Urls.visit(Cypress.env('consent_self_service_url'), force);
   }
 
   public clickOnApplicationCard(): void {
