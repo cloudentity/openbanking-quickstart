@@ -12,11 +12,11 @@ services:
       - ./data/tpp_cert.pem:/tpp_cert.pem
       - ./data/tpp_key.pem:/tpp_key.pem
     environment:
-      - CLIENT_ID=bugkgm23g9kregtu051g
-      - AUTHORIZE_URL=${ACP_URL}/${TENANT}/openbanking/oauth2/authorize
-      - TOKEN_URL=${ACP_INTERNAL_URL}/${TENANT}/openbanking/oauth2/token
-      - ISSUER_URL=${ACP_INTERNAL_URL}/${TENANT}/openbanking
-      - USERINFO_URL=${ACP_INTERNAL_URL}/${TENANT}/openbanking/userinfo
+      - CLIENT_ID=${DEVELOPER_CLIENT_ID}
+      - AUTHORIZE_URL=${ACP_URL}/${TENANT}/${OPENBANKING_SERVER_ID}/oauth2/authorize
+      - TOKEN_URL=${ACP_INTERNAL_URL}/${TENANT}/${OPENBANKING_SERVER_ID}/oauth2/token
+      - ISSUER_URL=${ACP_INTERNAL_URL}/${TENANT}/${OPENBANKING_SERVER_ID}
+      - USERINFO_URL=${ACP_INTERNAL_URL}/${TENANT}/${OPENBANKING_SERVER_ID}/userinfo
       - REDIRECT_URL=https://${APP_HOST}:8090/callback
       - CERT_FILE=/tpp_cert.pem
       - KEY_FILE=/tpp_key.pem
@@ -59,7 +59,7 @@ services:
     env_file:
       - .env
     environment:
-      - CLIENT_ID=bv0ocudfotn6edhsiu7g
+      - CLIENT_ID=${CONSENT_PAGE_CLIENT_ID}
       - CLIENT_SECRET=pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0
       - ISSUER_URL=${ACP_INTERNAL_URL}/${TENANT}/system
       - CERT_FILE=/bank_cert.pem
@@ -96,7 +96,7 @@ services:
       - SYSTEM_CLIENT_ID=buc3b1hhuc714r78env0
       - SYSTEM_CLIENT_SECRET=PBV7q0akoP603rZbU0EFdxbhZ-djxF7FIVwyKaLnBYU
       - SYSTEM_ISSUER_URL=${ACP_INTERNAL_URL}/${TENANT}/system
-      - SYSTEM_CLIENTS_SERVER_ID=openbanking
+      - SYSTEM_CLIENTS_SERVER_ID=${OPENBANKING_SERVER_ID}
       - CERT_FILE=/bank_cert.pem
       - KEY_FILE=/bank_key.pem
       - ROOT_CA=/ca.pem
@@ -123,7 +123,7 @@ services:
       - SYSTEM_CLIENT_ID=bv2fe0tpfc67lmeti340
       - SYSTEM_CLIENT_SECRET=v6yYaApda9juR_DrlI5mpdsdm9u2-D0rQIG9ynakyDE
       - SYSTEM_ISSUER_URL=${ACP_INTERNAL_URL}/${TENANT}/system
-      - SYSTEM_CLIENTS_SERVER_ID=openbanking
+      - SYSTEM_CLIENTS_SERVER_ID=${OPENBANKING_SERVER_ID}
       - CERT_FILE=/bank_cert.pem
       - KEY_FILE=/bank_key.pem
       - ROOT_CA=/ca.pem
@@ -148,8 +148,8 @@ services:
       - ./data/bank_key.pem:/bank_key.pem
       - ./mount/bank:/app/data
     environment:
-      - CLIENT_ID=bukj5p6k7qdmm5ppbi4g
-      - ISSUER_URL=${ACP_INTERNAL_URL}/${TENANT}/openbanking
+      - CLIENT_ID=${BANK_CLIENT_ID}
+      - ISSUER_URL=${ACP_INTERNAL_URL}/${TENANT}/${OPENBANKING_SERVER_ID}
       - CERT_FILE=/bank_cert.pem
       - KEY_FILE=/bank_key.pem
       - ROOT_CA=/ca.pem

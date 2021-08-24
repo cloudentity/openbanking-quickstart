@@ -61,8 +61,19 @@ enable-mfa:
 disable-mfa:
 	./scripts/override_env.sh ENABLE_MFA false
 
-enable-spec-%:
-	./scripts/override_env.sh SPEC $*
+enable-spec-obuk:
+	./scripts/override_env.sh SPEC obuk
+	./scripts/override_env.sh OPENBANKING_SERVER_ID openbanking
+	./scripts/override_env.sh DEVELOPER_CLIENT_ID bugkgm23g9kregtu051g
+	./scripts/override_env.sh CONSENT_PAGE_CLIENT_ID bv0ocudfotn6edhsiu7g
+	./scripts/override_env.sh BANK_CLIENT_ID bukj5p6k7qdmm5ppbi4g
+
+enable-spec-obbr:
+	./scripts/override_env.sh SPEC obbr 
+	./scripts/override_env.sh OPENBANKING_SERVER_ID openbanking_brasil
+	./scripts/override_env.sh DEVELOPER_CLIENT_ID bukj5p6k7qdmm5other1
+	./scripts/override_env.sh BANK_CLIENT_ID bukj5p6k7qdmm5pother2
+	./scripts/override_env.sh CONSENT_PAGE_CLIENT_ID bukj5p6k7qdmm5ppxxxx
 
 .PHONY: set-version
 set-version:
