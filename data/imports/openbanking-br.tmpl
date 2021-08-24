@@ -3,11 +3,12 @@ servers:
   id: openbanking_brasil
   name: Openbanking Brazil
   profile: openbanking_br
+  issuer_id: 1234-1234-1234-1234
   access_token_strategy: "jwt"
   enforce_pkce: false
   enable_trust_anchor: true
   trust_anchor_configuration:
-    jwks_uri: "http://example.com"
+    jwks_uri: "https://authorization.cloudentity.com:8443/default/openbanking_brasil/open-banking-brasil/directory/jwks_uri"
   dynamic_client_registration:
     enabled: true
     initial_access_token:
@@ -119,6 +120,7 @@ clients:
 {{ readFile .financroo_pem_file | pemToPublicJwks | indent 4 }}
 - tenant_id: default
   authorization_server_id: openbanking_brasil
+  organisation_id: 74e929d9-33b6-4d85-8ba7-c146c867a817
   client_id: {{ .conf_tpp_1_id }}
   client_name: Conformance-tpp-1
   client_uri: {{ .conf_tpp_1_url }}
@@ -150,6 +152,7 @@ clients:
     {{ readFile .conf_tpp_1_public_jwks | indent 4 }}
 - tenant_id: default
   authorization_server_id: openbanking_brasil
+  organisation_id: 74e929d9-33b6-4d85-8ba7-c146c867a817
   client_id: {{ .conf_tpp_2_id }}
   client_name: Conformance-tpp-2
   client_uri: {{ .conf_tpp_2_url }}
