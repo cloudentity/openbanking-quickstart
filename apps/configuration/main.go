@@ -12,7 +12,6 @@ import (
 	"strings"
 	"time"
 
-	"github.com/caarlos0/env"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/clientcredentials"
@@ -32,25 +31,6 @@ var (
 )
 
 const systemServer = "system"
-
-type Spec string
-
-const (
-	OBUK Spec = "obuk"
-	OBBR Spec = "obbr"
-)
-
-type Config struct {
-	Spec Spec `env:"SPEC,required"`
-}
-
-func LoadConfig() (config Config, err error) {
-	if err = env.Parse(&config); err != nil {
-		return config, err
-	}
-
-	return config, err
-}
 
 func initialize() {
 	flag.Parse()
@@ -78,12 +58,7 @@ func main() {
 		yamlFile  YamlFile
 		body      []byte
 		tURL      *url.URL
-		config    Config
 	)
-
-	if config, err = LoadConfig(); err != nil {
-		log.Fatal(err)
-	}
 
 	if tURL, err = url.Parse(*tenantURL); err != nil {
 		log.Fatal(err)
@@ -107,13 +82,6 @@ func main() {
 	client := cc.Client(context.WithValue(context.Background(), oauth2.HTTPClient, httpClient))
 
 	dirs := strings.Split(*templatesDirs, ",")
-
-	switch config.Spec {
-	case OBBR:
-		dirs = append(dirs, dirs[0]+"/obbr")
-	case OBUK:
-		dirs = append(dirs, dirs[0]+"/obuk")
-	}
 
 	if templates, err = LoadTemplates(dirs, variablesFile); err != nil {
 		log.Fatal(err)
