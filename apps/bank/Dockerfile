@@ -5,7 +5,6 @@ WORKDIR /app
 
 COPY go.mod .
 COPY go.sum .
-COPY client client
 COPY openbanking openbanking
 
 RUN go mod download

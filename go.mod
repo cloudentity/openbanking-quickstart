@@ -4,8 +4,9 @@ go 1.15
 
 require (
 	github.com/Masterminds/sprig/v3 v3.2.2
+	github.com/caarlos0/env v3.5.0+incompatible // indirect
 	github.com/caarlos0/env/v6 v6.4.0
-	github.com/cloudentity/acp-client-go v0.0.0-20210809194217-a6b8a778653e
+	github.com/cloudentity/acp-client-go v0.0.0-20210816134157-deacd53bce2f
 	github.com/dgrijalva/jwt-go v3.2.1-0.20200107013213-dc14462fd587+incompatible
 	github.com/ghodss/yaml v1.0.0
 	github.com/gin-gonic/gin v1.7.3

@@ -7,6 +7,7 @@ import (
 	"os"
 	"time"
 
+	obbrAccountModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/models"
 	obbrPaymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/models"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
 	paymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
@@ -20,7 +21,7 @@ type BankUserData struct {
 	OBUKTransactions []models.OBTransaction6                  `json:"obuk_transactions"`
 	OBUKPayments     []paymentModels.OBWriteDomesticResponse5 `json:"obuk_payments"`
 
-	OBBRAccounts []AccountData                                           `json:"obbr_accounts"`
+	OBBRAccounts []obbrAccountModels.AccountData                         `json:"obbr_accounts"`
 	OBBRPayments []obbrPaymentModels.OpenbankingBrasilResponsePixPayment `json:"obbr_payments"`
 }
 
