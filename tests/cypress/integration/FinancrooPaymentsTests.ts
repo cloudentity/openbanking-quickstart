@@ -50,11 +50,24 @@ describe(`Foo`, () => {
     financrooContributePage.assertItIsFinished()
   })
 
+  it(`Reject path`, () => {
+    financrooLoginPage.visit()
+    financrooAccountsPage.goToInvestmentsTab()
+    financrooInvestmentsPage.invest()
+    financrooContributePage.contribute(2)
+    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
+    if (environmentVariables.isMfaEnabled()) {
+      mfaPage.typePin()
+    }
+    consentPage.cancel()
+    errorPage.assertError(`acp returned an error: rejected:`)
+  })
+
   it(`Cancel on ACP login`, () => {
     financrooLoginPage.visit()
     financrooAccountsPage.goToInvestmentsTab()
     financrooInvestmentsPage.invest()
-    financrooContributePage.contribute(1)
+    financrooContributePage.contribute(3)
     acpLoginPage.cancel()
     errorPage.assertError(`The user rejected the authentication`)
   })
