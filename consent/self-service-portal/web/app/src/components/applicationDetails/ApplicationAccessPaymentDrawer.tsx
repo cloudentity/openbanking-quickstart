@@ -75,7 +75,7 @@ function ApplicationAccessPaymentDrawer({
 
       <div>
         <div className={classes.subHeader}>TRANSACTION Details</div>
-        <div className={classes.cardsWrapper}>
+        <div className={classes.cardsWrapper} id="transactions-details">
           {Object.entries(transactionDetails).map(([key, value]: any) => (
             <div className={classes.card} key={key}>
               <div className={classes.cardTitle}>{key}</div>

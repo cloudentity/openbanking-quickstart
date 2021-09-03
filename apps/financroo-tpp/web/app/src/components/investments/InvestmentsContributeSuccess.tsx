@@ -175,6 +175,7 @@ export default function InvestmentsContributeSuccess({
         </ContributionCard>
         <Button
           onClick={() => history.push("/investments")}
+          id="back-to-portfolio"
           variant="contained"
           color="primary"
           style={{ ...theme.custom.button, marginTop: 44 }}
