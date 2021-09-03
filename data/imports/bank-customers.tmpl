@@ -1,10 +1,10 @@
 servers:
-- tenant_id: default
+- tenant_id: {{ .tenant_id }}
   id: bank-customers
   name: Bank customers
   initialize: true
 idps:
-- tenant_id: default
+- tenant_id: {{ .tenant_id }}
   id: sandbox
   authorization_server_id: bank-customers
   name: Sandbox IDP
@@ -25,7 +25,7 @@ idps:
         authentication_context:
           name: user3
 clients:
-- tenant_id: default
+- tenant_id: {{ .tenant_id }}
   authorization_server_id: bank-customers
   client_id: bv0nab0mekk67nekvq7g
   client_name: Consent self service
@@ -36,7 +36,7 @@ clients:
   redirect_uris:
   - {{ .consent_self_service_portal_url }}/callback
   trusted: true
-- tenant_id: default
+- tenant_id: {{ .tenant_id }}
   authorization_server_id: bank-customers
   client_id: bv2dkff8mll9cf6pvd6g
   client_name: Consent self service backend
