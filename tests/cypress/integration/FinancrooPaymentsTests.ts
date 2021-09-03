@@ -11,7 +11,7 @@ import {FinancrooInvestmentsPage} from "../pages/financroo/investments/Financroo
 import {FinancrooContributePage} from "../pages/financroo/investments/FinancrooContributePage";
 import {EnvironmentVariables} from "../pages/EnvironmentVariables"
 
-describe(`Foo`, () => {
+describe(`Financroo payments app test`, () => {
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
   const consentPage: ConsentPage = new ConsentPage();
   const errorPage: ErrorPage = new ErrorPage();
@@ -22,6 +22,8 @@ describe(`Foo`, () => {
   const financrooContributePage: FinancrooContributePage = new FinancrooContributePage();
   const mfaPage: MfaPage = new MfaPage();
   const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
+
+  const amount: number = Math.floor(Math.random() * 50) + 1;
 
   beforeEach(() => {
     financrooLoginPage.visit()
@@ -37,24 +39,25 @@ describe(`Foo`, () => {
     consentPage.confirm()
   });
 
-  it(`Happy path`, () => {
+  it(`Happy path with confirm consent to add new amount`, () => {
     financrooLoginPage.visit()
     financrooAccountsPage.goToInvestmentsTab()
     financrooInvestmentsPage.invest()
-    financrooContributePage.contribute(1)
+    financrooContributePage.contribute(amount)
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin()
     }
     consentPage.confirm()
+    financrooContributePage.assertAmount(amount)
     financrooContributePage.assertItIsFinished()
   })
 
-  it(`Reject path`, () => {
+  it(`Reject path with decline consent to add new amount`, () => {
     financrooLoginPage.visit()
     financrooAccountsPage.goToInvestmentsTab()
     financrooInvestmentsPage.invest()
-    financrooContributePage.contribute(2)
+    financrooContributePage.contribute(amount + 1)
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin()
@@ -67,7 +70,7 @@ describe(`Foo`, () => {
     financrooLoginPage.visit()
     financrooAccountsPage.goToInvestmentsTab()
     financrooInvestmentsPage.invest()
-    financrooContributePage.contribute(3)
+    financrooContributePage.contribute(amount + 2)
     acpLoginPage.cancel()
     errorPage.assertError(`The user rejected the authentication`)
   })

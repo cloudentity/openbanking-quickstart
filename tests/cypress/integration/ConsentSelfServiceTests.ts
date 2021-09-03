@@ -1,5 +1,3 @@
-import {TppIntentPage} from '../pages/tpp/TppIntentPage';
-import {TppLoginPage} from '../pages/tpp/TppLoginPage';
 import {AcpLoginPage} from '../pages/acp/AcpLoginPage';
 import {ConsentPage} from '../pages/consent/ConsentPage';
 import {ErrorPage} from '../pages/ErrorPage';
@@ -16,8 +14,6 @@ import {ConsentSelfServiceApplicationPage} from "../pages/consent-self-service/C
 import {EnvironmentVariables} from "../pages/EnvironmentVariables"
 
 describe(`Consent self service app`, () => {
-  const tppIntentPage: TppIntentPage = new TppIntentPage();
-  const tppLoginPage: TppLoginPage = new TppLoginPage();
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
   const consentPage: ConsentPage = new ConsentPage();
   const errorPage: ErrorPage = new ErrorPage();
@@ -30,6 +26,8 @@ describe(`Consent self service app`, () => {
   const financrooInvestmentsPage: FinancrooInvestmentsPage = new FinancrooInvestmentsPage();
   const financrooContributePage: FinancrooContributePage = new FinancrooContributePage();
   const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
+
+  const amount: number = Math.floor(Math.random() * 50) + 1;
 
   before(() => {
     financrooLoginPage.visit()
@@ -47,7 +45,7 @@ describe(`Consent self service app`, () => {
     financrooLoginPage.visit()
     financrooAccountsPage.goToInvestmentsTab()
     financrooInvestmentsPage.invest()
-    financrooContributePage.contribute(1)
+    financrooContributePage.contribute(amount)
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin()
@@ -73,6 +71,7 @@ describe(`Consent self service app`, () => {
     consentSelfServiceApplicationPage.expandPaymentsTab()
     consentSelfServiceApplicationPage.checkAccount()
     consentSelfServiceApplicationPage.expandPaymentConsentRow()
+    consentSelfServiceApplicationPage.assertAmount(amount)
   })
 
   it(`Cancel ACP login`, () => {
