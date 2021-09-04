@@ -28,6 +28,11 @@ stop-acp-apps:
 run-apps:
 	docker-compose up -d --no-build ${OB_APPS}
 
+.PHONY: run-apps-with-saas
+run-apps-with-saas:
+	docker-compose up -d --no-build configuration
+	docker-compose up -d --no-build ${OB_APPS}
+
 .PHONY: run
 run:
 	make run-acp-apps run-apps
