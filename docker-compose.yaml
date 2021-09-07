@@ -177,6 +177,7 @@ services:
       - FEATURES_OPENBANKING_BRASIL_PAYMENTS=true
       - FEATURES_DEV_MODE=true
       - SERVER_URL=${ACP_URL}
+      - LOGGING_LEVEL=debug
     command:
       - server
       - start

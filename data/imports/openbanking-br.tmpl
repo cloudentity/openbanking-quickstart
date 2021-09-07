@@ -7,6 +7,11 @@ servers:
   access_token_strategy: "jwt"
   enforce_pkce: false
   enable_trust_anchor: true
+  grant_types:
+    - authorization_code
+    - implicit
+    - refresh_token
+    - client_credentials
   trust_anchor_configuration:
     jwks_uri: "https://authorization.cloudentity.com:8443/default/openbanking_brasil/open-banking-brasil/directory/jwks_uri"
   dynamic_client_registration:
@@ -14,11 +19,11 @@ servers:
     initial_access_token:
       required: false
     payload:
-      format: json
+      format: "json"
       jws_payload:
         jwks:
           keys: null
-        jwks_uri:
+        jwks_uri: ""
   initialize: true
   {{ if .read_client_certificate_from_header }}
   read_client_certificate_from_header: {{ .read_client_certificate_from_header }}
@@ -121,8 +126,8 @@ clients:
 - tenant_id: default
   authorization_server_id: openbanking_brasil
   organisation_id: 74e929d9-33b6-4d85-8ba7-c146c867a817
-  client_id: {{ .conf_tpp_1_id }}
-  client_name: Conformance-tpp-1
+  client_id: cid-1
+  client_name: client-with-jwks
   client_uri: {{ .conf_tpp_1_url }}
   tls_client_auth_subject_dn: {{ .conf_tpp_1_sub_dn }}
   tls_client_certificate_bound_access_tokens: true
@@ -130,6 +135,8 @@ clients:
   redirect_uris:
     - {{ .conf_tpp_1_url }}/test/a/OBBConfTests/callback
     - https://fapi-test:8444/test/a/OBBConfTests/callback
+    - https://fapi-test:8444/test/a/MtlsDcrFapiTests/callback
+    - https://fapi-test:8444/test/a/PrivateKeyJwtDcrFapiTests/callback
   subject_type: pairwise
   request_object_signing_alg: PS256
   response_types:
@@ -144,6 +151,42 @@ clients:
     - offline_access
     - openid
     - revoke_tokens
+    - directory:software
+  grant_types:
+    - client_credentials
+    - authorization_code
+    - refresh_token
+  jwks:
+        {{ readFile .conf_tpp_1_public_jwks | indent 4 }}
+- tenant_id: default
+  authorization_server_id: openbanking_brasil
+  organisation_id: 74e929d9-33b6-4d85-8ba7-c146c867a817
+  client_id: {{ .conf_tpp_1_id }}
+  client_name: Conformance-tpp-1
+  client_uri: {{ .conf_tpp_1_url }}
+  tls_client_auth_subject_dn: {{ .conf_tpp_1_sub_dn }}
+  tls_client_certificate_bound_access_tokens: true
+  token_endpoint_auth_method: tls_client_auth
+  redirect_uris:
+    - {{ .conf_tpp_1_url }}/test/a/OBBConfTests/callback
+    - https://fapi-test:8444/test/a/OBBConfTests/callback
+    - https://fapi-test:8444/test/a/MtlsDcrFapiTests/callback
+    - https://fapi-test:8444/test/a/PrivateKeyJwtDcrFapiTests/callback
+  subject_type: pairwise
+  request_object_signing_alg: PS256
+  response_types:
+    - token
+    - code id_token
+  scopes:
+    - consent:*
+    - consents
+    - accounts
+    - payments
+    - introspect_tokens
+    - offline_access
+    - openid
+    - revoke_tokens
+    - directory:software
   grant_types:
     - client_credentials
     - authorization_code
@@ -163,6 +206,10 @@ clients:
     - {{ .conf_tpp_2_url }}/test/a/OBBConfTests/callback
     - https://fapi-test:8444/test/a/OBBConfTests/callback
     - https://fapi-test:8444/test/a/OBBConfTests/callback?dummy1=lorem&dummy2=ipsum
+    - https://fapi-test:8444/test/a/MtlsDcrFapiTests/callback
+    - https://fapi-test:8444/test/a/MtlsDcrFapiTests/callback?dummy1=lorem&dummy2=ipsum
+    - https://fapi-test:8444/test/a/PrivateKeyJwtDcrFapiTests/callback
+    - https://fapi-test:8444/test/a/PrivateKeyJwtDcrFapiTests/callback?dummy1=lorem&dummy2=ipsum
   subject_type: pairwise
   request_object_signing_alg: PS256
   response_types:
@@ -178,6 +225,7 @@ clients:
     - offline_access
     - openid
     - revoke_tokens
+    - directory:software
   grant_types:
     - client_credentials
     - authorization_code
@@ -193,3 +241,13 @@ policies:
   type: dcr
   validators:
     - name: "true"
+services:
+- id: directory
+  tenant_id: default
+  name: directory
+  authorization_server_id: openbanking_brasil
+  scopes:
+  - tenant_id: default
+    authorization_server_id: openbanking_brasil
+    name: directory:software
+    id: directory-software
