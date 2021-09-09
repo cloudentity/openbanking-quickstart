@@ -8,6 +8,7 @@ export class ConsentSelfServiceApplicationPage {
   private readonly purposeHeaderLocator: string = `.purpose-header`
   private readonly consentRowLocator: string = `.consent-row`
   private readonly consentRowAccountsLocator: string = `.consent-row > td:nth-child(2)`
+  private readonly transactionDetailsLocator: string = `#transactions-details`
 
   public visit(force: boolean = false): void {
     Urls.visit(Cypress.env('consent_self_service_url'), force);
@@ -35,4 +36,7 @@ export class ConsentSelfServiceApplicationPage {
     cy.get(this.purposeHeaderLocator).should(`contain.text`, `Purpose for sharing data`)
   }
 
+  public assertAmount(amount: number): void {
+    cy.get(this.transactionDetailsLocator).should(`contain.text`, "£ " + amount.toString())
+  }
 }

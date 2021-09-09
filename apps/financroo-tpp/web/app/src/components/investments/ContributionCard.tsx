@@ -66,7 +66,7 @@ export default function ContributionCard({
 
   return (
     <Card className={classes.card}>
-      {title && <div className={classes.title}>{title}</div>}
+      {title && <div className={classes.title} id="title">{title}</div>}
       <CardContent className={classes.content}>{children}</CardContent>
       {backButton && nextButton && (
         <CardActions className={classes.buttons}>
@@ -74,6 +74,7 @@ export default function ContributionCard({
             onClick={backButton.onClick}
             variant="outlined"
             color="secondary"
+            id="back-button"
             className={classes.backButton}
           >
             {backButton.title}
@@ -83,6 +84,7 @@ export default function ContributionCard({
             variant="contained"
             disableElevation
             color="primary"
+            id="next-button"
             style={{ color: "white" }}
             className={classes.nextButton}
             disabled={nextButton.disabled || false}
