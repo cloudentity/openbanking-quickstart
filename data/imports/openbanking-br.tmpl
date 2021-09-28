@@ -4,6 +4,7 @@ servers:
   name: Openbanking Brazil
   profile: openbanking_br
   issuer_id: 1234-1234-1234-1234
+  consent_id_namespace: xxxxx
   access_token_strategy: "jwt"
   enforce_pkce: false
   enable_trust_anchor: true
@@ -147,6 +148,7 @@ clients:
     - consents
     - accounts
     - payments
+    - customers
     - introspect_tokens
     - offline_access
     - openid
@@ -182,6 +184,7 @@ clients:
     - consents
     - accounts
     - payments
+    - customers
     - introspect_tokens
     - offline_access
     - openid
@@ -221,6 +224,7 @@ clients:
     - consents
     - accounts
     - payments
+    - customers
     - introspect_tokens
     - offline_access
     - openid
