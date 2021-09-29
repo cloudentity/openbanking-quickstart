@@ -100,3 +100,7 @@ generate-obbr-clients:
 		-f api/obbr/accounts.yaml \
 		-A accounts  \
 		-t ./openbanking/obbr/accounts
+
+.PHONY: obbr
+obbr:
+	docker-compose -f docker-compose.yaml -f docker-compose.brasil.yaml -f conformance/docker-compose.obb.yaml -f conformance/docker-compose.fapi.yaml ${cmd}
