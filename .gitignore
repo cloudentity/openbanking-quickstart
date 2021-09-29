@@ -21,3 +21,4 @@ data/seed.yaml.generated
 /tests/cypress/videos/*
 tests/package-lock.json
 my.db
+/conformance/mongo/
