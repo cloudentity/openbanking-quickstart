@@ -41,14 +41,15 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 type Props = {
   consents: ClientType["consents"];
+  id?: string;
 };
 
-function ConsentTabs({ consents }: Props) {
+function ConsentTabs({ consents, id }: Props) {
   const classes = useStyles();
   const [tab, setTab] = useState<"account" | "payment">("account");
 
   return (
-    <div className={classes.container}>
+    <div id={id} className={classes.container}>
       <div className={classes.header}>
         <Tabs
           value={tab}

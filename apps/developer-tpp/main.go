@@ -1,9 +1,12 @@
 package main
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
 	"net/url"
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/caarlos0/env/v6"
@@ -11,8 +14,17 @@ import (
 	"github.com/gorilla/securecookie"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+	"gopkg.in/square/go-jose.v2"
 
 	acpclient "github.com/cloudentity/acp-client-go"
+	"github.com/cloudentity/acp-client-go/client/oauth2"
+)
+
+type Spec string
+
+const (
+	OBUK Spec = "obuk"
+	OBBR Spec = "obbr"
 )
 
 type Config struct {
@@ -28,6 +40,18 @@ type Config struct {
 	CertFile     string        `env:"CERT_FILE,required"`
 	KeyFile      string        `env:"KEY_FILE,required"`
 	BankURL      *url.URL      `env:"BANK_URL,required"`
+	Spec         Spec          `env:"SPEC,required"`
+	ClientScopes []string
+}
+
+func (c Config) ExtendConsentScope(consentID string) *Config {
+	for idx, scope := range c.ClientScopes {
+		if strings.HasPrefix(scope, "consent:") {
+			c.ClientScopes[idx] = "consent:" + consentID
+			break
+		}
+	}
+	return &c
 }
 
 func (c *Config) ClientConfig() acpclient.Config {
@@ -41,7 +65,7 @@ func (c *Config) ClientConfig() acpclient.Config {
 		RedirectURL:                 c.RedirectURL,
 		RequestObjectSigningKeyFile: c.KeyFile,
 		RequestObjectExpiration:     &requestObjectExpiration,
-		Scopes:                      []string{"accounts", "openid"},
+		Scopes:                      c.ClientScopes,
 		Timeout:                     c.Timeout,
 		CertFile:                    c.CertFile,
 		KeyFile:                     c.KeyFile,
@@ -62,6 +86,7 @@ type Server struct {
 	Client       acpclient.Client
 	BankClient   OpenbankingClient
 	SecureCookie *securecookie.SecureCookie
+	SpecLogicHandler
 }
 
 func NewServer() (Server, error) {
@@ -74,6 +99,13 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to load config")
 	}
 
+	switch server.Config.Spec {
+	case OBUK:
+		server.Config.ClientScopes = []string{"openid", "accounts"}
+	case OBBR:
+		server.Config.ClientScopes = []string{"openid", "consents", "consent:*"}
+	}
+
 	if server.Client, err = acpclient.New(server.Config.ClientConfig()); err != nil {
 		return server, errors.Wrapf(err, "failed to init acp client")
 	}
@@ -82,12 +114,19 @@ func NewServer() (Server, error) {
 
 	server.SecureCookie = securecookie.New(securecookie.GenerateRandomKey(64), securecookie.GenerateRandomKey(32))
 
+	switch server.Config.Spec {
+	case OBUK:
+		server.SpecLogicHandler = &OBUKLogic{Server: &server}
+	case OBBR:
+		server.SpecLogicHandler = &OBBRLogic{Server: &server}
+	}
+
 	return server, nil
 }
 
 func (s *Server) Start() error {
 	r := gin.Default()
-	r.LoadHTMLGlob("templates/*")
+	r.LoadHTMLGlob("templates/*/*")
 	r.Static("/assets", "./assets")
 
 	r.GET("/", s.Get())
@@ -110,4 +149,48 @@ func main() {
 	if err = server.Start(); err != nil {
 		logrus.WithError(err).Fatalf("failed to start server")
 	}
+}
+
+func (s *Server) GetTemplate(name string) string {
+	switch s.Config.Spec {
+	case OBUK:
+		return string(OBUK) + "-" + name
+	case OBBR:
+		return string(OBBR) + "-" + name
+	default:
+		return ""
+	}
+}
+
+func (s *Server) GetEncryptionKey(ctx context.Context) (jose.JSONWebKey, error) {
+	var (
+		jwksResponse *oauth2.JwksOK
+		encKey       jose.JSONWebKey
+		b            []byte
+		err          error
+	)
+
+	if jwksResponse, err = s.Client.Oauth2.Jwks(
+		oauth2.NewJwksParamsWithContext(ctx).
+			WithTid(s.Client.TenantID).
+			WithAid(s.Client.ServerID),
+	); err != nil {
+		return encKey, errors.Wrapf(err, "failed to get jwks from acp server")
+	}
+
+	for _, key := range jwksResponse.Payload.Keys {
+		if key.Use == "enc" {
+			if b, err = json.Marshal(key); err != nil {
+				return encKey, errors.Wrapf(err, "failed to marshal key")
+			}
+
+			if err = encKey.UnmarshalJSON(b); err != nil {
+				return encKey, errors.Wrapf(err, "failed to unmarshal jwk")
+			}
+
+			break
+		}
+	}
+
+	return encKey, nil
 }

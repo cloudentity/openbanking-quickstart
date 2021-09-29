@@ -1,9 +1,11 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
 
 type EndpointLogicCommon interface {
@@ -33,18 +35,23 @@ func (s *Server) Get(factory GetEndpointLogicFactory) func(*gin.Context) {
 		)
 
 		if err = h.SetIntrospectionResponse(c); err != nil {
+			logrus.Info(fmt.Sprintf("err: %+v", err))
 			code, errResp = h.MapError(c, err)
 			c.PureJSON(code, errResp)
 			return
 		}
 
 		if err = h.Validate(c); err != nil {
+			logrus.Info(fmt.Sprintf("err: %+v", err))
+
 			code, errResp = h.MapError(c, err)
 			c.PureJSON(code, errResp)
 			return
 		}
 
 		if data, e = s.Storage.Get(h.GetUserIdentifier(c)); e != nil {
+			logrus.Info(fmt.Sprintf("err: %+v", err))
+
 			code, errResp = h.MapError(c, ErrNotFound)
 			c.PureJSON(code, errResp)
 			return

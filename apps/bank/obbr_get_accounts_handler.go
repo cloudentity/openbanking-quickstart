@@ -3,6 +3,7 @@ package main
 import (
 	"strings"
 
+	obbrAccountModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/models"
 	"github.com/gin-gonic/gin"
 
 	acpClient "github.com/cloudentity/acp-client-go/models"
@@ -54,15 +55,15 @@ func (h *OBBRGetAccountsHandler) GetUserIdentifier(c *gin.Context) string {
 
 func (h *OBBRGetAccountsHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
 	var (
-		filteredAccounts     []AccountData
+		filteredAccounts     []obbrAccountModels.AccountData
 		requestedAccountType = c.Query("accountType")
 	)
 
 	for _, account := range data.OBBRAccounts {
-		if !has(h.introspectionResponse.AccountIDs, account.AccountID) {
+		if !has(h.introspectionResponse.AccountIDs, *account.Number) {
 			continue
 		}
-		if requestedAccountType != "" && account.Type != requestedAccountType {
+		if requestedAccountType != "" && string(*account.Type) != requestedAccountType {
 			continue
 		}
 		filteredAccounts = append(filteredAccounts, account)

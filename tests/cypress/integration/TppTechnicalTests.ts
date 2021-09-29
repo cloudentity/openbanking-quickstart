@@ -19,8 +19,15 @@ describe(`Tpp technical app`, () => {
   const mfaPage: MfaPage = new MfaPage();
   const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
 
+  // obuk 
   const basicPermission: string = `ReadAccountsBasic`;
   const detailPermission: string = `ReadAccountsDetail`;
+
+
+  // obbr 
+  const accountsReadPermission: string = `ACCOUNTS_READ`;
+  const accountsOverdraftLimitsReadPermission: string = `ACCOUNTS_OVERDRAFT_LIMITS_READ`;
+  const resourcesReadPermission: string = `RESOURCES_READ`;
 
   beforeEach(() => {
     tppLoginPage.visit()
@@ -28,35 +35,68 @@ describe(`Tpp technical app`, () => {
     tppLoginPage.visit();
   });
 
-  [
-    [basicPermission, detailPermission],
-    [basicPermission],
-    [detailPermission]
-    // [] // todo add better error handling in the app
-  ].forEach(permissions => {
-    it(`Happy path with permissions: ${permissions}`, () => {
-      tppLoginPage.checkBasicPermission(permissions.includes(basicPermission))
-      tppLoginPage.checkDetailPermission(permissions.includes(detailPermission))
-      tppLoginPage.next();
-      if (!permissions.includes(basicPermission) && !permissions.includes(detailPermission)) {
-        errorPage.assertError(`Invalid consent request`)
-      } else {
+  if (environmentVariables.isOBBRSpecification()) {
+    [
+      [accountsReadPermission, accountsOverdraftLimitsReadPermission, resourcesReadPermission],
+      [accountsReadPermission]
+      // [] // todo add better error handling in the app
+    ].forEach(permissions => {
+      it(`Happy path with permissions: ${permissions}`, () => {
+        tppLoginPage.checkAccountsReadPermission(permissions.includes(accountsReadPermission))
+        tppLoginPage.checkAccountsOverdraftLimitsReadPermission(permissions.includes(accountsOverdraftLimitsReadPermission))
+        tppLoginPage.checkResourcesReadPermission(permissions.includes(resourcesReadPermission))
+        tppLoginPage.next();
+        if (!permissions.includes(accountsReadPermission) || !permissions.includes(accountsOverdraftLimitsReadPermission) || !permissions.includes(resourcesReadPermission)) {
+          errorPage.assertError(`failed to register account access consent`)
+          return 
+        } 
         tppIntentPage.login();
         acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
         if (environmentVariables.isMfaEnabled()) {
           mfaPage.typePin()
         }
-        consentPage.expandPermissions()
-        consentPage.assertPermissions(permissions.length)
+        // TODO: consent page needs work with obbr permissions 
+        //consentPage.expandPermissions()
+        //consentPage.assertPermissions(permissions.length)
         consentPage.confirm();
-        if (!permissions.includes(basicPermission) && permissions.includes(detailPermission)) {
-          errorPage.assertError(`failed to call bank get accounts`)
+        tppAuthenticatedPage.assertSuccess()
+      })
+    });
+  };
+
+  if (environmentVariables.isOBUKSpecification()) {
+    [
+      [basicPermission, detailPermission],
+      [basicPermission],
+      [detailPermission]
+      // [] // todo add better error handling in the app
+    ].forEach(permissions => {
+      it(`Happy path with permissions: ${permissions}`, () => {
+        tppLoginPage.checkBasicPermission(permissions.includes(basicPermission))
+        tppLoginPage.checkDetailPermission(permissions.includes(detailPermission))
+        tppLoginPage.next();
+        if (!permissions.includes(basicPermission) && !permissions.includes(detailPermission)) {
+          errorPage.assertError(`Invalid consent request`)
         } else {
-          tppAuthenticatedPage.assertSuccess()
+          tppIntentPage.login();
+          acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+          if (environmentVariables.isMfaEnabled()) {
+            mfaPage.typePin()
+          }
+          consentPage.expandPermissions()
+          consentPage.assertPermissions(permissions.length)
+          consentPage.confirm();
+          if (!permissions.includes(basicPermission) && permissions.includes(detailPermission)) {
+            errorPage.assertError(`failed to call bank get accounts`)
+          } else {
+            tppAuthenticatedPage.assertSuccess()
+          }
         }
-      }
-    })
-  })
+      })
+    });
+  };
+
+ 
 
   it(`Cancel on ACP login`, () => {
     tppLoginPage.next();
@@ -68,7 +108,7 @@ describe(`Tpp technical app`, () => {
   it(`Cancel on consent`, () => {
     tppLoginPage.next();
     tppIntentPage.login();
-    acpLoginPage.login(`user`, Credentials.defaultPassword);
+    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin()
     }
