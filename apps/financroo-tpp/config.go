@@ -48,6 +48,7 @@ type BankID string
 
 type BankConfig struct {
 	ID        BankID
+	BankType  string `mapstructure:"bank_type"`
 	URL       string
 	AcpClient AcpClient `mapstructure:"acp_client"`
 }
