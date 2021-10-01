@@ -6,6 +6,7 @@ login:
   timeout: 5s
 banks:
 - id: gobank
+  bank_type: obuk
   url: http://bank:8070
   acp_client:
     tenant_id: default
