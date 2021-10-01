@@ -6,12 +6,10 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/go-openapi/strfmt"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
 	acpclient "github.com/cloudentity/acp-client-go"
-	"github.com/cloudentity/acp-client-go/client/openbanking"
 	"github.com/cloudentity/acp-client-go/models"
 )
 
@@ -46,13 +44,12 @@ type ConnectBankRequest struct {
 func (s *Server) ConnectBank() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			bankID           = BankID(c.Param("bankId"))
-			clients          Clients
-			ok               bool
-			registerResponse *openbanking.CreateAccountAccessConsentRequestCreated
-			connectRequest   = ConnectBankRequest{}
-			user             User
-			err              error
+			bankID    = BankID(c.Param("bankId"))
+			clients   Clients
+			ok        bool
+			consentID string
+			user      User
+			err       error
 		)
 
 		if user, _, err = s.WithUser(c); err != nil {
@@ -60,33 +57,16 @@ func (s *Server) ConnectBank() func(*gin.Context) {
 			return
 		}
 
-		if err = c.BindJSON(&connectRequest); err != nil {
-			c.String(http.StatusBadRequest, fmt.Sprintf("failed to parse request body: %+v", err))
-			return
-		}
-
 		if clients, ok = s.Clients[bankID]; !ok {
 			c.String(http.StatusBadRequest, fmt.Sprintf("client not configured for bank: %s", bankID))
 		}
 
-		if registerResponse, err = clients.AcpAccountsClient.Openbanking.CreateAccountAccessConsentRequest(
-			openbanking.NewCreateAccountAccessConsentRequestParamsWithContext(c).
-				WithTid(clients.AcpAccountsClient.TenantID).
-				WithAid(clients.AcpAccountsClient.ServerID).
-				WithRequest(&models.AccountAccessConsentRequest{
-					Data: &models.OBReadConsent1Data{
-						Permissions:        connectRequest.Permissions,
-						ExpirationDateTime: strfmt.DateTime(time.Now().Add(time.Hour * 24 * 30)),
-					},
-					Risk: map[string]interface{}{},
-				}),
-			nil,
-		); err != nil {
+		if consentID, err = clients.ConsentClient.CreateAccountConsent(c); err != nil {
 			c.String(http.StatusBadRequest, fmt.Sprintf("failed to register account access consent: %+v", err))
 			return
 		}
 
-		s.CreateConsentResponse(c, bankID, registerResponse.Payload.Data.ConsentID, user, clients.AcpAccountsClient)
+		s.CreateConsentResponse(c, bankID, consentID, user, clients.AcpAccountsClient)
 	}
 }
 
