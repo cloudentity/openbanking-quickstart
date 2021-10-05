@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
-	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
@@ -108,16 +107,6 @@ func (s *Server) CreateConsentResponse(
 	data["login_url"] = loginURL
 
 	c.JSON(http.StatusOK, data)
-}
-
-func extendDynamicConsentIDScope(scopes []string, consentID string) []string {
-	for idx, scope := range scopes {
-		if strings.HasPrefix(scope, "consent:") {
-			scopes[idx] = "consent:" + consentID
-			break
-		}
-	}
-	return scopes
 }
 
 func getEncryptionKey(c *gin.Context, client acpclient.Client) (jose.JSONWebKey, error) {
