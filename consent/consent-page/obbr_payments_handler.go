@@ -40,10 +40,10 @@ func (s *OBBRPaymentConsentHandler) GetConsent(c *gin.Context, loginRequest Logi
 		return
 	}
 
-	/*if balances, err = s.BankClient.GetInternalBalances(response.Payload.Subject); err != nil {
+	if balances, err = s.BankClient.GetInternalBalances(response.Payload.Subject); err != nil {
 		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to load account balances"))
 		return
-	}*/
+	}
 
 	Render(c, s.GetTemplateNameForSpec("payment-consent.tmpl"), s.GetOBBRPaymentConsentTemplateData(loginRequest, response.Payload, accounts, balances.Data))
 }
