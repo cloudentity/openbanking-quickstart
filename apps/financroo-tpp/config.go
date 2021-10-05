@@ -75,6 +75,16 @@ type Config struct {
 	FeatureFlags   FeatureFlags `mapstructure:"feature_flags"`
 }
 
+func (s *Server) GetBankConfigByBankID(bankID BankID) BankConfig {
+	for _, config := range s.Config.Banks {
+		if bankID == config.ID {
+			return config
+		}
+	}
+
+	return BankConfig{}
+}
+
 var Validator = validator.New()
 
 func LoadConfig() (Config, error) {
