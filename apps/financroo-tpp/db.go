@@ -8,7 +8,7 @@ import (
 	bolt "go.etcd.io/bbolt"
 )
 
-var mode = os.FileMode(0600)
+var mode = os.FileMode(0o600)
 
 func InitDB(config Config) (*bolt.DB, error) {
 	var (
