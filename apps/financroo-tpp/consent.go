@@ -3,11 +3,12 @@ package main
 import (
 	"time"
 
-	"github.com/cloudentity/acp-client-go/client/openbanking"
-	"github.com/cloudentity/acp-client-go/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 	"github.com/google/uuid"
+
+	"github.com/cloudentity/acp-client-go/client/openbanking"
+	"github.com/cloudentity/acp-client-go/models"
 )
 
 func (o *OBUKConsentClient) CreateAccountConsent(c *gin.Context) (string, error) {

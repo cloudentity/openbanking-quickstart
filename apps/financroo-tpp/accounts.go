@@ -3,7 +3,6 @@ package main
 import (
 	obbrAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/client/accounts"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client/accounts"
-
 	"github.com/gin-gonic/gin"
 )
 

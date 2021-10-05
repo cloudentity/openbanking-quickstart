@@ -36,9 +36,7 @@ func NewOBBRLoginURLBuilder(c *gin.Context, client acpclient.Client) (LoginURLBu
 }
 
 func (o *OBBRLoginURLBuilder) BuildLoginURL(consentID string, client acpclient.Client) (string, acpclient.CSRF, error) {
-	var (
-		err error
-	)
+	var err error
 
 	config := client.Config
 	config.Scopes = append(config.Scopes, "consent:"+consentID)

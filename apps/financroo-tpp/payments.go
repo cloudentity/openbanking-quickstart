@@ -4,11 +4,11 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/cloudentity/acp-client-go/client/openbanking"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/client/domestic_payments"
 	obModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
-
 	"github.com/gin-gonic/gin"
+
+	"github.com/cloudentity/acp-client-go/client/openbanking"
 )
 
 type PaymentCreated struct {

@@ -5,9 +5,9 @@ import (
 	"net/http"
 	"net/url"
 
-	acpclient "github.com/cloudentity/acp-client-go"
-
 	"github.com/gin-gonic/gin"
+
+	acpclient "github.com/cloudentity/acp-client-go"
 )
 
 func (s *Server) CreateDomesticPaymentConsent() func(*gin.Context) {

@@ -8,12 +8,10 @@ import (
 	"time"
 
 	obbrAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/client"
-	obc "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client"
-	"github.com/gin-gonic/gin"
-
 	obbrPayments "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/client"
+	obc "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client"
 	payments_client "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/client"
-
+	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 
 	acpclient "github.com/cloudentity/acp-client-go"
