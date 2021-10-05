@@ -37,12 +37,12 @@ func (h *OBBRLogic) GetAccounts(c *gin.Context, token string) (interface{}, erro
 func (h *OBBRLogic) CreateConsent(c *gin.Context) (interface{}, error) {
 	var (
 		registerResponse *openbanking.CreateDataAccessConsentCreated
-		perms            []models.OpenbankingBrasilPermission
+		perms            []models.OpenbankingBrasilConsentPermission
 		err              error
 	)
 
 	for _, p := range c.PostFormArray("permissions") {
-		perms = append(perms, models.OpenbankingBrasilPermission(p))
+		perms = append(perms, models.OpenbankingBrasilConsentPermission(p))
 	}
 
 	if registerResponse, err = h.Client.Openbanking.CreateDataAccessConsent(
@@ -50,10 +50,10 @@ func (h *OBBRLogic) CreateConsent(c *gin.Context) (interface{}, error) {
 			WithTid(h.Client.TenantID).
 			WithAid(h.Client.ServerID).
 			WithRequest(&models.OBBRCustomerDataAccessConsentRequest{
-				Data: &models.OpenbankingBrasilData{
+				Data: &models.OpenbankingBrasilConsentData{
 					ExpirationDateTime: strfmt.DateTime(time.Now().Add(time.Hour * 24)),
-					LoggedUser: &models.OpenbankingBrasilLoggedUser{
-						Document: &models.OpenbankingBrasilDocument1{
+					LoggedUser: &models.OpenbankingBrasilConsentLoggedUser{
+						Document: &models.OpenbankingBrasilConsentDocument{
 							Identification: "11111111111",
 							Rel:            "CPF",
 						},

@@ -66,13 +66,13 @@ func (s *OBBRPaymentMFAConsentProvider) GetConsentMockData(loginRequest LoginReq
 		&models.GetOBBRCustomerPaymentConsentResponse{
 
 			CustomerPaymentConsent: &models.OBBRCustomerPaymentConsent{
-				Creditor: &models.OpenbankingBrasilIdentification{
+				Creditor: &models.OpenbankingBrasilPaymentIdentification{
 					Name: "ACME Inc",
 				},
-				DebtorAccount: &models.OpenbankingBrasilDebtorAccount{
+				DebtorAccount: &models.OpenbankingBrasilPaymentDebtorAccount{
 					Number: account,
 				},
-				Payment: &models.OpenbankingBrasilPaymentConsent{
+				Payment: &models.OpenbankingBrasilPaymentPaymentConsent{
 					Currency: "BRL",
 					Amount:   "100",
 				},

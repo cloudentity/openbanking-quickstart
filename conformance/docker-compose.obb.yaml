@@ -3,7 +3,7 @@ services:
   mongodb:
     image: mongo:4.2
     volumes:
-      - ./conformance/mongo/data:/data/db
+      - ./mount/conformance/obbr/_mongo/data:/data/db
   httpd:
     image: docker.cloudentity.io/obbr/httpd:0.0.2
     ports:

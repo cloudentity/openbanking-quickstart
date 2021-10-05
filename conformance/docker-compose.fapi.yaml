@@ -3,6 +3,8 @@ services:
   fapi-mongodb:
     container_name: fapi-mongodb
     image: docker.cloudentity.io/mongo:4
+    volumes:
+      - ./mount/conformance/fapi/_mongo/data:/data/db
     logging:
       driver: "json-file"
       options:
