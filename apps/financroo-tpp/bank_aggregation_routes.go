@@ -84,8 +84,7 @@ func (s *Server) GetAccounts() func(ctx *gin.Context) {
 		// todo parallel
 		for _, b := range user.Banks {
 			if client, accessToken, err = s.GetClientWithToken(b, tokens); err != nil {
-				c.String(http.StatusUnauthorized, err.Error())
-				return
+				continue
 			}
 
 			if accountsData, err = client.GetAccounts(c, accessToken, b); err != nil {
@@ -119,9 +118,9 @@ func (s *Server) GetBalances() func(ctx *gin.Context) {
 		// todo parallel
 		for _, b := range user.Banks {
 			if client, accessToken, err = s.GetClientWithToken(b, tokens); err != nil {
-				c.String(http.StatusUnauthorized, err.Error())
-				return
+				continue
 			}
+
 			if err = s.UserRepo.Set(user); err != nil {
 				c.String(http.StatusInternalServerError, fmt.Sprintf("failed to update user: %+v", err))
 			}
@@ -157,8 +156,7 @@ func (s *Server) GetTransactions() func(ctx *gin.Context) {
 		// todo parallel
 		for _, b := range user.Banks {
 			if client, accessToken, err = s.GetClientWithToken(b, tokens); err != nil {
-				c.String(http.StatusUnauthorized, err.Error())
-				return
+				continue
 			}
 
 			if transactionsData, err = client.GetTransactions(c, accessToken, b); err != nil {
