@@ -102,7 +102,7 @@
       "data": {
         "localInstrument": "DICT",
         "payment": {
-          "amount": "100000.13",
+          "amount": "100000.12",
           "currency": "BRL"
         },
         "creditorAccount": {
