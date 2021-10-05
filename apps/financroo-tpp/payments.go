@@ -38,7 +38,6 @@ func (o *OBUKClient) CreatePayment(c *gin.Context, data interface{}, accessToken
 
 	if risk, err = getRisk(resp); err != nil {
 		return created, fmt.Errorf("failed to map consent risk: %+v", err)
-
 	}
 
 	if createdResponse, err = o.DomesticPayments.CreateDomesticPayments(domestic_payments.NewCreateDomesticPaymentsParamsWithContext(c).

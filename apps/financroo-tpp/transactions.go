@@ -8,10 +8,6 @@ import (
 
 type Transaction struct {
 	models.OBTransaction6
-	/*AccountID       string          `json:"AccountID"`
-	Amount          string          `json:"Amount"`
-	BookingDateTime strfmt.DateTime `json:"BookingDateTime"`
-	TransactionCode string          `json:"TransactionCode"`*/
 	BankID string `json:"BankId"`
 }
 
@@ -29,16 +25,14 @@ func (o *OBUKClient) GetTransactions(c *gin.Context, accessToken string, bank Co
 	for _, a := range resp.Payload.Data.Transaction {
 		transactionsData = append(transactionsData, Transaction{
 			OBTransaction6: *a,
-			/*AccountID:       string(*a.AccountID),
-			Amount:          string(*a.Amount.Amount),
-			BookingDateTime: strfmt.DateTime(*a.BookingDateTime),*/
-			BankID: bank.BankID,
+			BankID:         bank.BankID,
 		})
 	}
 
 	return transactionsData, nil
 }
 
+// TODO: /accounts/v1/accounts/{accountId}/transactions needs to be implemented in bank application
 func (o *OBBRClient) GetTransactions(c *gin.Context, accessToken string, bank ConnectedBank) ([]Transaction, error) {
 	return []Transaction{}, nil
 }
