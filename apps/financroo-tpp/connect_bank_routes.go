@@ -44,12 +44,13 @@ type ConnectBankRequest struct {
 func (s *Server) ConnectBank() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			bankID    = BankID(c.Param("bankId"))
-			clients   Clients
-			ok        bool
-			consentID string
-			user      User
-			err       error
+			bankID          = BankID(c.Param("bankId"))
+			clients         Clients
+			ok              bool
+			consentID       string
+			user            User
+			loginUrlBuilder LoginURLBuilder
+			err             error
 		)
 
 		if user, _, err = s.WithUser(c); err != nil {
@@ -66,7 +67,18 @@ func (s *Server) ConnectBank() func(*gin.Context) {
 			return
 		}
 
-		s.CreateConsentResponse(c, bankID, consentID, user, clients.AcpAccountsClient)
+		switch s.GetBankConfigByBankID(bankID).BankType {
+		case "obuk":
+			loginUrlBuilder, err = NewOBUKLoginURLBuilder()
+		case "obbr":
+			loginUrlBuilder, err = NewOBBRLoginURLBuilder(c, clients.AcpAccountsClient)
+		}
+		if err != nil {
+			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to create login url builder: %+v", err))
+			return
+		}
+
+		s.CreateConsentResponse(c, bankID, consentID, user, clients.AcpAccountsClient, loginUrlBuilder)
 	}
 }
 

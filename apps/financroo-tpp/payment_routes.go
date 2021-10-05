@@ -13,12 +13,13 @@ import (
 func (s *Server) CreateDomesticPaymentConsent() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			clients   Clients
-			ok        bool
-			request   CreatePaymentRequest
-			consentID string
-			user      User
-			err       error
+			clients         Clients
+			ok              bool
+			request         CreatePaymentRequest
+			consentID       string
+			user            User
+			loginUrlBuilder LoginURLBuilder
+			err             error
 		)
 
 		if user, _, err = s.WithUser(c); err != nil {
@@ -40,7 +41,18 @@ func (s *Server) CreateDomesticPaymentConsent() func(*gin.Context) {
 			return
 		}
 
-		s.CreateConsentResponse(c, request.BankID, consentID, user, clients.AcpPaymentsClient)
+		switch s.GetBankConfigByBankID(request.BankID).BankType {
+		case "obuk":
+			loginUrlBuilder, err = NewOBUKLoginURLBuilder()
+		case "obbr":
+			loginUrlBuilder, err = NewOBBRLoginURLBuilder(c, clients.AcpAccountsClient)
+		}
+		if err != nil {
+			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to create login url builder: %+v", err))
+			return
+		}
+
+		s.CreateConsentResponse(c, request.BankID, consentID, user, clients.AcpPaymentsClient, loginUrlBuilder)
 	}
 }
 
