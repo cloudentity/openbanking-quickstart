@@ -20,7 +20,7 @@ jobs:
           password: ${{ secrets.PUBLIC_DOCKER_CLOUDENTITY_REPO_DEV_PASSWORD }}
 
       - name: Add authorization.cloudentity.com to hosts
-        run: echo "127.0.0.1       authorization.cloudentity.com" >> /etc/hosts
+        run: echo "127.0.0.1       authorization.cloudentity.com" | sudo tee -a /etc/hosts
 
       - name: Make run with disabled mfa
         run: make disable-mfa run

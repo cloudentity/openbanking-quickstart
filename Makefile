@@ -73,7 +73,7 @@ enable-spec-obbr:
 	./scripts/override_env.sh OPENBANKING_SERVER_ID openbanking_brasil
 	./scripts/override_env.sh DEVELOPER_CLIENT_ID bukj5p6k7qdmm5other1
 	./scripts/override_env.sh BANK_CLIENT_ID bukj5p6k7qdmm5pother2
-	./scripts/override_env.sh CONSENT_PAGE_CLIENT_ID bukj5p6k7qdmm5ppxxxx
+	./scripts/override_env.sh CONSENT_PAGE_CLIENT_ID bukj5p6k7qdMIIDfjCCAmagAwImm5ppxxxx
 
 .PHONY: set-version
 set-version:
