@@ -19,6 +19,12 @@ jobs:
           username: ${{ secrets.PUBLIC_DOCKER_CLOUDENTITY_REPO_DEV_USERNAME }}
           password: ${{ secrets.PUBLIC_DOCKER_CLOUDENTITY_REPO_DEV_PASSWORD }}
 
+      - name: Add authorization.cloudentity.com to hosts
+        run: echo "127.0.0.1       authorization.cloudentity.com" >> /etc/hosts
+
+      - name: Install deps
+        run: apt update && apt install -y make curl &&  curl -fsSL https://get.docker.com -o get-docker.sh | sh && groupadd docker && newgrp docker && curl -L "https://github.com/docker/compose/releases/download/1.29.2/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose && chmod +x /usr/local/bin/docker-compose
+
       - name: Make build
         run: make build
             
