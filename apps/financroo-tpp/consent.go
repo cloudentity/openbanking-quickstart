@@ -130,7 +130,37 @@ func (o *OBUKConsentClient) GetPaymentConsent(c *gin.Context, consentID string) 
 }
 
 func (o *OBBRConsentClient) CreateAccountConsent(c *gin.Context) (string, error) {
-	return "", nil
+	var (
+		registerResponse *openbanking.CreateDataAccessConsentCreated
+		err              error
+	)
+
+	if registerResponse, err = o.Accounts.Openbanking.CreateDataAccessConsent(
+		openbanking.NewCreateDataAccessConsentParamsWithContext(c).
+			WithTid(o.Accounts.TenantID).
+			WithAid(o.Accounts.ServerID).
+			WithRequest(&models.OBBRCustomerDataAccessConsentRequest{
+				Data: &models.OpenbankingBrasilData{
+					ExpirationDateTime: strfmt.DateTime(time.Now().Add(time.Hour * 24)),
+					LoggedUser: &models.OpenbankingBrasilLoggedUser{
+						Document: &models.OpenbankingBrasilDocument1{
+							Identification: "11111111111",
+							Rel:            "CPF",
+						},
+					},
+					Permissions: []models.OpenbankingBrasilPermission{
+						"ACCOUNTS_READ",
+						"RESOURCES_READ",
+						"ACCOUNTS_OVERDRAFT_LIMITS_READ",
+					},
+				},
+			}),
+		nil,
+	); err != nil {
+		return "", err
+	}
+
+	return registerResponse.Payload.Data.ConsentID, nil
 }
 
 func (o *OBBRConsentClient) CreatePaymentConsent(c *gin.Context, req CreatePaymentRequest) (string, error) {
