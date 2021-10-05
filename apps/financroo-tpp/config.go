@@ -22,8 +22,9 @@ func init() {
 }
 
 type ClientConfig struct {
-	ServerID string `mapstructure:"server_id"`
-	ClientID string `mapstructure:"client_id"`
+	ServerID string   `mapstructure:"server_id"`
+	ClientID string   `mapstructure:"client_id"`
+	Scopes   []string `mapstructure:"scopes"`
 }
 
 type LoginConfig struct {
