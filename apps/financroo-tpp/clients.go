@@ -132,7 +132,7 @@ func NewAcpClient(c Config, cfg BankConfig, redirect string) (acpclient.Client, 
 		RedirectURL:                 redirectURL,
 		RequestObjectSigningKeyFile: cfg.AcpClient.KeyFile,
 		RequestObjectExpiration:     &requestObjectExpiration,
-		Scopes:                      []string{"accounts", "payments", "openid", "offline_access"},
+		Scopes:                      cfg.AcpClient.Scopes,
 		Timeout:                     cfg.AcpClient.Timeout,
 		CertFile:                    cfg.AcpClient.CertFile,
 		KeyFile:                     cfg.AcpClient.KeyFile,
@@ -207,7 +207,28 @@ type OBBRClient struct {
 }
 
 func NewOBBRClient(config BankConfig) (BankClient, error) {
-	return nil, nil
+	var (
+		c   = &OBBRClient{}
+		hc  = &http.Client{}
+		u   *url.URL
+		err error
+	)
+
+	if u, err = url.Parse(config.URL); err != nil {
+		return c, errors.Wrapf(err, "failed to parse bank url")
+	}
+
+	tr := NewHTTPRuntimeWithClient(
+		u.Host,
+		"/accounts/v1",
+		[]string{u.Scheme},
+		hc,
+	)
+
+	c.Accounts = obbrAccounts.New(tr, nil)
+	c.PaymentConsentsBrasil = obbrPayments.New(tr, nil)
+
+	return c, nil
 }
 
 type OBUKConsentClient struct {
