@@ -23,7 +23,7 @@ type OBBRLoginURLBuilder struct {
 	key jose.JSONWebKey
 }
 
-func NewOBBRLoginURLBuilder(c *gin.Context, client acpclient.Client) (LoginURLBuilder, error) {
+func NewOBBRLoginURLBuilder(c context.Context, client acpclient.Client) (LoginURLBuilder, error) {
 	var (
 		key jose.JSONWebKey
 		err error

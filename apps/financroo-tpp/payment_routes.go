@@ -103,8 +103,8 @@ func (s *Server) DomesticPaymentCallback() func(*gin.Context) {
 			return
 		}
 
-		amount := url.QueryEscape(string(paymentCreated.Amount))
-		currency := url.QueryEscape(string(paymentCreated.Currency))
+		amount := url.QueryEscape(paymentCreated.Amount)
+		currency := url.QueryEscape(paymentCreated.Currency)
 
 		c.SetCookie("app", "", -1, "/", "", false, true)
 
