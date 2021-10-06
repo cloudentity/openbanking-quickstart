@@ -49,7 +49,7 @@ func (s *Server) ConnectBank() func(*gin.Context) {
 			ok              bool
 			consentID       string
 			user            User
-			loginUrlBuilder LoginURLBuilder
+			loginURLBuilder LoginURLBuilder
 			err             error
 		)
 
@@ -69,16 +69,16 @@ func (s *Server) ConnectBank() func(*gin.Context) {
 
 		switch s.GetBankConfigByBankID(bankID).BankType {
 		case "obuk":
-			loginUrlBuilder, err = NewOBUKLoginURLBuilder()
+			loginURLBuilder, err = NewOBUKLoginURLBuilder()
 		case "obbr":
-			loginUrlBuilder, err = NewOBBRLoginURLBuilder(c, clients.AcpAccountsClient)
+			loginURLBuilder, err = NewOBBRLoginURLBuilder(c, clients.AcpAccountsClient)
 		}
 		if err != nil {
 			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to create login url builder: %+v", err))
 			return
 		}
 
-		s.CreateConsentResponse(c, bankID, consentID, user, clients.AcpAccountsClient, loginUrlBuilder)
+		s.CreateConsentResponse(c, bankID, consentID, user, clients.AcpAccountsClient, loginURLBuilder)
 	}
 }
 

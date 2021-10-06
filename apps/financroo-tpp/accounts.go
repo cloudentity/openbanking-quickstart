@@ -8,10 +8,8 @@ import (
 )
 
 type Account struct {
-	//AccountID string `json:"AccountId"`
-	//Nickname  string `json:"Nickname"`
 	models.OBAccount6
-	//BankID string `json:"BankId"`
+	BankID string `json:"BankId"`
 }
 
 func (o *OBUKClient) GetAccounts(c *gin.Context, accessToken string, bank ConnectedBank) ([]Account, error) {
@@ -26,7 +24,11 @@ func (o *OBUKClient) GetAccounts(c *gin.Context, accessToken string, bank Connec
 	}
 
 	for _, a := range resp.Payload.Data.Account {
-		accountsData = append(accountsData, Account{*a})
+		accountsData = append(accountsData, Account{
+			OBAccount6: *a,
+			BankID:     bank.BankID,
+		},
+		)
 	}
 
 	return accountsData, nil
@@ -44,7 +46,7 @@ func (o *OBBRClient) GetAccounts(c *gin.Context, accessToken string, bank Connec
 
 	for _, a := range resp.Payload.Data {
 		accountsData = append(accountsData, Account{
-			models.OBAccount6{
+			OBAccount6: models.OBAccount6{
 				AccountID: (*models.AccountID)(a.Number),
 				Nickname:  models.Nickname(*a.AccountID),
 				Account: []*models.OBAccount6AccountItems0{
@@ -54,6 +56,7 @@ func (o *OBBRClient) GetAccounts(c *gin.Context, accessToken string, bank Connec
 					},
 				},
 			},
+			BankID: bank.BankID,
 		})
 	}
 

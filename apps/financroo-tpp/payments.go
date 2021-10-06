@@ -2,11 +2,11 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/client/domestic_payments"
 	obModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
 	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
 
 	"github.com/cloudentity/acp-client-go/client/openbanking"
 )
@@ -33,11 +33,11 @@ func (o *OBUKClient) CreatePayment(c *gin.Context, data interface{}, accessToken
 	}
 
 	if initiation, err = getInitiation(resp); err != nil {
-		return created, fmt.Errorf("failed to map consent data initiation: %+v", err)
+		return created, errors.Wrapf(err, "failed to map consent data initiation")
 	}
 
 	if risk, err = getRisk(resp); err != nil {
-		return created, fmt.Errorf("failed to map consent risk: %+v", err)
+		return created, errors.Wrapf(err, "failed to map consent risk")
 	}
 
 	if createdResponse, err = o.DomesticPayments.CreateDomesticPayments(domestic_payments.NewCreateDomesticPaymentsParamsWithContext(c).
@@ -49,7 +49,7 @@ func (o *OBUKClient) CreatePayment(c *gin.Context, data interface{}, accessToken
 			},
 			Risk: &risk,
 		}), nil); err != nil {
-		return created, fmt.Errorf("failed to create payment: %+v", err)
+		return created, errors.Wrapf(err, "failed to create payment")
 	}
 
 	return PaymentCreated{

@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -52,9 +53,7 @@ func (o *OBBRLoginURLBuilder) BuildLoginURL(consentID string, client acpclient.C
 	)
 }
 
-type OBUKLoginURLBuilder struct {
-	key jose.JSONWebKey
-}
+type OBUKLoginURLBuilder struct{}
 
 func NewOBUKLoginURLBuilder() (LoginURLBuilder, error) {
 	return &OBUKLoginURLBuilder{}, nil
@@ -71,7 +70,7 @@ func (s *Server) CreateConsentResponse(
 	consentID string,
 	user User,
 	client acpclient.Client,
-	loginUrlBuilder LoginURLBuilder) {
+	loginURLBuilder LoginURLBuilder) {
 	var (
 		loginURL           string
 		err                error
@@ -84,7 +83,7 @@ func (s *Server) CreateConsentResponse(
 		data = gin.H{}
 	)
 
-	if loginURL, app.CSRF, err = loginUrlBuilder.BuildLoginURL(consentID, client); err != nil {
+	if loginURL, app.CSRF, err = loginURLBuilder.BuildLoginURL(consentID, client); err != nil {
 		c.String(http.StatusInternalServerError, fmt.Sprintf("failed to build authorize url: %+v", err))
 		return
 	}
@@ -107,7 +106,7 @@ func (s *Server) CreateConsentResponse(
 	c.JSON(http.StatusOK, data)
 }
 
-func getEncryptionKey(c *gin.Context, client acpclient.Client) (jose.JSONWebKey, error) {
+func getEncryptionKey(c context.Context, client acpclient.Client) (jose.JSONWebKey, error) {
 	var (
 		jwksResponse *oauth2.JwksOK
 		encKey       jose.JSONWebKey

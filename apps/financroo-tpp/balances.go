@@ -8,9 +8,6 @@ import (
 
 type Balance struct {
 	models.OBReadBalance1DataBalanceItems0
-	/*AccountID string `json:"AccountId"`
-	Amount    string `json:"Amount"`
-	Currency  string `json:"Currency"`*/
 	BankID string `json:"BankId"`
 }
 
@@ -28,10 +25,7 @@ func (o *OBUKClient) GetBalances(c *gin.Context, accessToken string, bank Connec
 	for _, a := range resp.Payload.Data.Balance {
 		balancesData = append(balancesData, Balance{
 			OBReadBalance1DataBalanceItems0: *a,
-			//	AccountID:                       string(*a.AccountID),
-			//	Amount:                          string(*a.Amount.Amount),
-			//	Currency:                        string(*a.Amount.Currency),
-			BankID: bank.BankID,
+			BankID:                          bank.BankID,
 		})
 	}
 
