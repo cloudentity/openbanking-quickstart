@@ -98,7 +98,7 @@ func NewUserRepo(datafilepath string) (*UserRepo, error) {
 	)
 
 	// create db
-	if userRepo.DB, err = bolt.Open("data/my.db", os.FileMode(0644), &bolt.Options{Timeout: 3 * time.Second}); err != nil {
+	if userRepo.DB, err = bolt.Open("data/my.db", os.FileMode(0o644), &bolt.Options{Timeout: 3 * time.Second}); err != nil {
 		return nil, errors.Wrapf(err, "failed to open db")
 	}
 

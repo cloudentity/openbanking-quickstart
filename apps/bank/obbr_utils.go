@@ -35,7 +35,7 @@ func NewOBBRAccountsResponse(accounts []obbrAccountModels.AccountData) obbrAccou
 	}
 }
 
-func OBBRPermsToStringSlice(perms []acpClient.OpenbankingBrasilPermission) []string {
+func OBBRPermsToStringSlice(perms []acpClient.OpenbankingBrasilConsentPermission1) []string {
 	var slice []string
 	for _, perm := range perms {
 		slice = append(slice, string(perm))

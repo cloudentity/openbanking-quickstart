@@ -1,0 +1,35 @@
+version: "3.0"
+services:
+  mongodb:
+    image: mongo:4.2
+    volumes:
+      - ./mount/conformance/obbr/_mongo/data:/data/db
+  httpd:
+    image: docker.cloudentity.io/obbr/httpd:0.0.2
+    ports:
+      - "443:8445"
+    depends_on:
+      - server
+  server:
+    image: docker.cloudentity.io/obbr/server:0.0.2
+    networks:
+      default:
+        aliases:
+          - obbr-server
+    entrypoint: ""
+    command: >
+      java
+      -jar /server/fapi-test-suite.jar
+      --fintechlabs.base_url=https://fapi-test:443
+      --fintechlabs.devmode=true
+      --fintechlabs.startredir=true
+    links:
+      - mongodb:mongodb
+    depends_on:
+      - mongodb
+    logging:
+      # limit logs retained on host
+      driver: "json-file"
+      options:
+        max-size: "500k"
+        max-file: "5"

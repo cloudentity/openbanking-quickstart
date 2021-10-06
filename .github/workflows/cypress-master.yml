@@ -19,6 +19,9 @@ jobs:
           username: ${{ secrets.PUBLIC_DOCKER_CLOUDENTITY_REPO_DEV_USERNAME }}
           password: ${{ secrets.PUBLIC_DOCKER_CLOUDENTITY_REPO_DEV_PASSWORD }}
 
+      - name: Add authorization.cloudentity.com to hosts
+        run: echo "127.0.0.1       authorization.cloudentity.com" | sudo tee -a /etc/hosts
+
       - name: Make run with disabled mfa
         run: make disable-mfa run
 
@@ -55,16 +58,16 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           working-directory: tests
-      
+
       - name: clean
-        run: make clean    
+        run: make clean
 
       - name: Make run with OBBR environment
         run: make enable-spec-obbr run
-      
+
       - name: Run cypress tests with OBBR environment
         uses: cypress-io/github-action@v2
-        with: 
+        with:
           working-directory: tests
           spec: cypress/integration/TppTechnicalTests.ts
 

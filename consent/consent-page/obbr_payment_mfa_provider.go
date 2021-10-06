@@ -35,10 +35,10 @@ func (s *OBBRPaymentMFAConsentProvider) GetMFAData(c *gin.Context, loginRequest 
 	data.ClientName = s.GetClientName(response.Payload.ClientInfo)
 	data.Amount = fmt.Sprintf(
 		"%s%s",
-		response.Payload.CustomerDataAccessConsent.Payment.Amount,
-		response.Payload.CustomerDataAccessConsent.Payment.Currency,
+		response.Payload.CustomerPaymentConsent.Payment.Amount,
+		response.Payload.CustomerPaymentConsent.Payment.Currency,
 	)
-	data.Account = response.Payload.CustomerDataAccessConsent.DebtorAccount.Number
+	data.Account = response.Payload.CustomerPaymentConsent.DebtorAccount.Number
 
 	return data, nil
 }
@@ -65,14 +65,14 @@ func (s *OBBRPaymentMFAConsentProvider) GetConsentMockData(loginRequest LoginReq
 		loginRequest,
 		&models.GetOBBRCustomerPaymentConsentResponse{
 
-			CustomerDataAccessConsent: &models.OBBRCustomerPaymentConsent{
-				Creditor: &models.OpenbankingBrasilIdentification{
+			CustomerPaymentConsent: &models.OBBRCustomerPaymentConsent{
+				Creditor: &models.OpenbankingBrasilPaymentIdentification{
 					Name: "ACME Inc",
 				},
-				DebtorAccount: &models.OpenbankingBrasilDebtorAccount{
+				DebtorAccount: &models.OpenbankingBrasilPaymentDebtorAccount{
 					Number: account,
 				},
-				Payment: &models.OpenbankingBrasilPaymentConsent{
+				Payment: &models.OpenbankingBrasilPaymentPaymentConsent{
 					Currency: "BRL",
 					Amount:   "100",
 				},
