@@ -3,13 +3,15 @@ package main
 import (
 	obbrAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/client/accounts"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client/accounts"
+	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
 	"github.com/gin-gonic/gin"
 )
 
 type Account struct {
-	AccountID string `json:"AccountId"`
-	Nickname  string `json:"Nickname"`
-	BankID    string `json:"BankId"`
+	//AccountID string `json:"AccountId"`
+	//Nickname  string `json:"Nickname"`
+	models.OBAccount6
+	//BankID string `json:"BankId"`
 }
 
 func (o *OBUKClient) GetAccounts(c *gin.Context, accessToken string, bank ConnectedBank) ([]Account, error) {
@@ -24,11 +26,7 @@ func (o *OBUKClient) GetAccounts(c *gin.Context, accessToken string, bank Connec
 	}
 
 	for _, a := range resp.Payload.Data.Account {
-		accountsData = append(accountsData, Account{
-			AccountID: string(*a.AccountID),
-			Nickname:  string(a.Nickname),
-			BankID:    bank.BankID,
-		})
+		accountsData = append(accountsData, Account{*a})
 	}
 
 	return accountsData, nil
@@ -46,8 +44,16 @@ func (o *OBBRClient) GetAccounts(c *gin.Context, accessToken string, bank Connec
 
 	for _, a := range resp.Payload.Data {
 		accountsData = append(accountsData, Account{
-			AccountID: *a.Number,
-			Nickname:  *a.AccountID,
+			models.OBAccount6{
+				AccountID: (*models.AccountID)(a.Number),
+				Nickname:  models.Nickname(*a.AccountID),
+				Account: []*models.OBAccount6AccountItems0{
+					{
+						Name:           models.Name0(*a.AccountID),
+						Identification: (*models.Identification0)(a.Number),
+					},
+				},
+			},
 		})
 	}
 
