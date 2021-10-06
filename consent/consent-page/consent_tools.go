@@ -205,8 +205,7 @@ func (c *ConsentTools) GetOBBRPaymentConsentTemplateData(
 			"confirm": c.Trans.T("br.payment.confirm"),
 		},
 		"login_request": loginRequest,
-		// TODO use correct number from consent when it is present in ACP client
-		"accounts":    c.GetAccountsWithBalance(accounts, balances, "123456789"),
+		"accounts":    c.GetAccountsWithBalance(accounts, balances, consent.CustomerPaymentConsent.DebtorAccount.Number),
 		"client_name": clientName,
 		"consent":     OBBRPaymentConsentTemplateData(consent.CustomerPaymentConsent),
 		"ctx":         consent.AuthenticationContext,
