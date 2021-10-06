@@ -205,10 +205,10 @@ func (c *ConsentTools) GetOBBRPaymentConsentTemplateData(
 			"confirm": c.Trans.T("br.payment.confirm"),
 		},
 		"login_request": loginRequest,
-		"accounts":    c.GetAccountsWithBalance(accounts, balances, consent.CustomerPaymentConsent.DebtorAccount.Number),
-		"client_name": clientName,
-		"consent":     OBBRPaymentConsentTemplateData(consent.CustomerPaymentConsent),
-		"ctx":         consent.AuthenticationContext,
+		"accounts":      c.GetAccountsWithBalance(accounts, balances, consent.CustomerPaymentConsent.DebtorAccount.Number),
+		"client_name":   clientName,
+		"consent":       OBBRPaymentConsentTemplateData(consent.CustomerPaymentConsent),
+		"ctx":           consent.AuthenticationContext,
 	}
 }
 
