@@ -22,3 +22,8 @@ data/seed.yaml.generated
 tests/package-lock.json
 my.db
 mount/conformance/
+
+node_modules/*
+package-lock.json
+package.json
+
