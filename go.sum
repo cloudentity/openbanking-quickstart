@@ -74,20 +74,6 @@ github.com/chzyer/logex v1.1.10/go.mod h1:+Ywpsq7O8HXn0nuIou7OrIPyXbp3wmkHB+jjWR
 github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e/go.mod h1:nSuG5e5PlCu98SY8svDHJxuZscDgtXS6KTTbou5AhLI=
 github.com/chzyer/test v0.0.0-20180213035817-a1ea475d72b1/go.mod h1:Q3SI9o4m/ZMnBNeIyt5eFwwo7qiLfzFZmjNmxjkiQlU=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
-github.com/cloudentity/acp-client-go v0.0.0-20211005093807-7ad0b3fd16ef h1:P+rR0YBv0BOVGGFBeEMXx1EenLNiIYN0zmf7TeddawM=
-github.com/cloudentity/acp-client-go v0.0.0-20211005093807-7ad0b3fd16ef/go.mod h1:d1gwlsf+3OWS51a395JFpFykQXmJcgjgpqFBiX+dNYA=
-github.com/cloudentity/acp-client-go v0.0.0-20211012170404-88c8a1b5db2b h1:xOkc8x2sGmv7gWOtEJxywXyyjruMiLkWbabVOmxmejI=
-github.com/cloudentity/acp-client-go v0.0.0-20211012170404-88c8a1b5db2b/go.mod h1:d1gwlsf+3OWS51a395JFpFykQXmJcgjgpqFBiX+dNYA=
-github.com/cloudentity/acp-client-go v0.0.0-20211012185818-740fa2b36dd0 h1:FafvkCqS9id0UjeyQlxk/OHxahWHd8va3OPhYB6fa4s=
-github.com/cloudentity/acp-client-go v0.0.0-20211012185818-740fa2b36dd0/go.mod h1:NBZIC1K5DEil5H0Rm+lJ8tNZ9ukLHh/9mdOMLpPo2vM=
-github.com/cloudentity/acp-client-go v0.0.0-20211012190417-f09fbcd0028e h1:TkykWA7uMveLnrie7YWjNlU7StH1MX/z0AbKQcCma2w=
-github.com/cloudentity/acp-client-go v0.0.0-20211012190417-f09fbcd0028e/go.mod h1:d1gwlsf+3OWS51a395JFpFykQXmJcgjgpqFBiX+dNYA=
-github.com/cloudentity/acp-client-go v0.0.0-20211012193220-1edc1636a44c h1:cdDel9yTF/jJlP3y58WzZjetlmqAO4t8JKt2NxdT+sQ=
-github.com/cloudentity/acp-client-go v0.0.0-20211012193220-1edc1636a44c/go.mod h1:d1gwlsf+3OWS51a395JFpFykQXmJcgjgpqFBiX+dNYA=
-github.com/cloudentity/acp-client-go v0.0.0-20211012194729-4a424361e872 h1:CZtIAS8Zhw3K0xxbgNgFKPQc7vWjbKASPTXi6/HR/SU=
-github.com/cloudentity/acp-client-go v0.0.0-20211012194729-4a424361e872/go.mod h1:d1gwlsf+3OWS51a395JFpFykQXmJcgjgpqFBiX+dNYA=
-github.com/cloudentity/acp-client-go v0.0.0-20211012200139-94be5ddd706a h1:t1sDwh5B7I7jbwA4cYWzh9KeFlxOP0dPALOMwrlwWhY=
-github.com/cloudentity/acp-client-go v0.0.0-20211012200139-94be5ddd706a/go.mod h1:d1gwlsf+3OWS51a395JFpFykQXmJcgjgpqFBiX+dNYA=
 github.com/cloudentity/acp-client-go v0.0.0-20211012201916-f21dd547ac57 h1:dzuW3o3+VIekcMIUM4h7j8gMlNwC7tjY8Trhxn+DtTg=
 github.com/cloudentity/acp-client-go v0.0.0-20211012201916-f21dd547ac57/go.mod h1:d1gwlsf+3OWS51a395JFpFykQXmJcgjgpqFBiX+dNYA=
 github.com/cncf/udpa/go v0.0.0-20191209042840-269d4d468f6f/go.mod h1:M8M6+tZqaGXZJjfX53e64911xZQV5JYwmTeXPW+k8Sc=
@@ -124,6 +110,8 @@ github.com/globalsign/mgo v0.0.0-20181015135952-eeefdecb41b8/go.mod h1:xkRDCp4j0
 github.com/go-gl/glfw v0.0.0-20190409004039-e6da0acd62b1/go.mod h1:vR7hzQXu2zJy9AVAgeJqvqgH9Q5CA+iKCZ2gyEVpxRU=
 github.com/go-gl/glfw/v3.3/glfw v0.0.0-20191125211704-12ad95a8df72/go.mod h1:tQ2UAYgL5IevRw8kRxooKSPJfGvJ9fJQFa0TUsXzTg8=
 github.com/go-gl/glfw/v3.3/glfw v0.0.0-20200222043503-6f7a984d4dc4/go.mod h1:tQ2UAYgL5IevRw8kRxooKSPJfGvJ9fJQFa0TUsXzTg8=
+github.com/go-jose/go-jose/v3 v3.0.0 h1:s6rrhirfEP/CGIoc6p+PZAeogN2SxKav6Wp7+dyMWVo=
+github.com/go-jose/go-jose/v3 v3.0.0/go.mod h1:RNkWWRld676jZEYoV3+XK8L2ZnNSvIsxFMht0mSX+u8=
 github.com/go-kit/kit v0.8.0/go.mod h1:xBxKIO96dXMWWy0MnWVtmwkA9/13aqxPnvrjFYMA2as=
 github.com/go-logfmt/logfmt v0.3.0/go.mod h1:Qt1PoO58o5twSAckw1HlFXLmHsOX5/0LbT9GBnD5lWE=
 github.com/go-logfmt/logfmt v0.4.0/go.mod h1:3RMwSq7FuexP4Kalkev3ejPJsZTpXXBr9+V4qmtdjCk=
@@ -554,6 +542,7 @@ golang.org/x/crypto v0.0.0-20190530122614-20be4c3c3ed5/go.mod h1:yigFU9vqHzYiE8U
 golang.org/x/crypto v0.0.0-20190605123033-f99c8df09eb5/go.mod h1:yigFU9vqHzYiE8UmvKecakEJjdnWj3jj499lnFckfCI=
 golang.org/x/crypto v0.0.0-20190611184440-5c40567a22f8/go.mod h1:yigFU9vqHzYiE8UmvKecakEJjdnWj3jj499lnFckfCI=
 golang.org/x/crypto v0.0.0-20190617133340-57b3e21c3d56/go.mod h1:yigFU9vqHzYiE8UmvKecakEJjdnWj3jj499lnFckfCI=
+golang.org/x/crypto v0.0.0-20190911031432-227b76d455e7/go.mod h1:yigFU9vqHzYiE8UmvKecakEJjdnWj3jj499lnFckfCI=
 golang.org/x/crypto v0.0.0-20191011191535-87dc89f01550/go.mod h1:yigFU9vqHzYiE8UmvKecakEJjdnWj3jj499lnFckfCI=
 golang.org/x/crypto v0.0.0-20200302210943-78000ba7a073/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=
 golang.org/x/crypto v0.0.0-20200414173820-0848c9571904/go.mod h1:LzIPMQfyMNhhGPhUkYOs5KpL4U8rLKemX1yGLhDgUto=
