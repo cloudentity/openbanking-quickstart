@@ -5,24 +5,26 @@ import (
 	"crypto/x509"
 	"encoding/pem"
 	"fmt"
-	"github.com/shopspring/decimal"
 	"strconv"
 	"time"
 
 	"github.com/go-jose/go-jose/v3"
 	"github.com/pkg/errors"
 )
-type SignatureHeader struct {
-	Type        string          `json:"typ,omitempty"`
-	Kid         string          `json:"kid,omitempty"`
-	Alg         string          `json:"alg,omitempty"`
-	Ctype       string          `json:"cty,omitempty"`
-	Issuer      string          `json:"http://openbanking.org.uk/iss,omitempty"`
-	IssuedAt    decimal.Decimal `json:"http://openbanking.org.uk/iat,omitempty"`
-	TrustAnchor string          `json:"http://openbanking.org.uk/tan,omitempty"`
-	B64         *bool           `json:"b64,omitempty"`
-	Critical    []string        `json:"crit,omitempty"`
-}
+
+type OpenbankingHeaderName string
+
+const (
+	typ  OpenbankingHeaderName = "typ"
+	cty  OpenbankingHeaderName = "cty"
+	alg  OpenbankingHeaderName = "alg"
+	kid  OpenbankingHeaderName = "kid"
+	iat  OpenbankingHeaderName = "http://openbanking.org.uk/iat"
+	iss  OpenbankingHeaderName = "http://openbanking.org.uk/iss"
+	tan  OpenbankingHeaderName = "http://openbanking.org.uk/tan"
+	crit OpenbankingHeaderName = "crit"
+)
+
 func Sign(payload []byte, key jose.JSONWebKey, signingOpts *jose.SignerOptions, detached bool) (string, error) {
 	var (
 		err        error

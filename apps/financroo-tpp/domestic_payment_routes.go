@@ -1,10 +1,12 @@
 package main
 
 import (
+	"crypto/x509"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"github.com/go-jose/go-jose/v3"
+	"log"
 	"net/http"
 	"net/url"
 	"time"
@@ -38,7 +40,8 @@ func (s *Server) CreateDomesticPaymentConsent() func(*gin.Context) {
 			registerResponse      *openbanking.CreateDomesticPaymentConsentCreated
 			paymentConsentRequest = CreateDomesticPaymentConsentRequest{}
 			user                  User
-			jwsSig string
+			jwsSig                string
+			payload               []byte
 			err                   error
 		)
 
@@ -100,16 +103,23 @@ func (s *Server) CreateDomesticPaymentConsent() func(*gin.Context) {
 			Risk: &models.OBRisk1{},
 		}
 
-		if jwsSig, err = s.SigningKey(req); err != nil {
+		if payload, err = json.Marshal(req); err != nil {
+			c.String(http.StatusBadRequest, fmt.Sprintf("failed to register domestic payment consent unable to marshal paylaod: %+v", err))
+			return
+		}
+		log.Println("vvvvv")
+		if jwsSig, err = s.SigningKey(payload); err != nil {
 			c.String(http.StatusBadRequest, fmt.Sprintf("failed to register domestic payment consent unable to get cert: %+v", err))
 			return
+		} else {
+			log.Println("sigis", jwsSig)
 		}
 
 		if registerResponse, err = clients.AcpPaymentsClient.Openbanking.CreateDomesticPaymentConsent(
 			openbanking.NewCreateDomesticPaymentConsentParamsWithContext(c).
 				WithTid(clients.AcpPaymentsClient.TenantID).
 				WithAid(clients.AcpPaymentsClient.ServerID).
-				WithXJwsSignature(&jwsSig).
+				//WithXJwsSignature(&jwsSig).
 				WithRequest(&req),
 			nil,
 		); err != nil {
@@ -121,24 +131,21 @@ func (s *Server) CreateDomesticPaymentConsent() func(*gin.Context) {
 	}
 }
 
-func (s *Server) SigningKey(req models.DomesticPaymentConsentRequest) (string, error) {
+func (s *Server) SigningKey(payload []byte) (string, error) {
 	var (
+		cert   *x509.Certificate
 		jwsSig string
-		payload []byte
+		err    error
 	)
-	cert, err := ParseCertificate([]byte(s.Config.CertFile))
-	if err != nil {
+
+	if cert, err = ParseCertificate([]byte(s.Config.CertFile)); err != nil {
 		return "", errors.New(fmt.Sprintf("failed to register domestic payment consent unable to get cert: %+v", err))
 	}
 
 	key := jose.JSONWebKey{
-		Key:                         cert.PublicKey,
-		KeyID:                       cert.SerialNumber.String(),
-		Use:                         "sig",
-	}
-
-	if payload, err = json.Marshal(req); err != nil {
-		return "", errors.New(fmt.Sprintf("failed to register domestic payment consent unable to marshal paylaod: %+v", err))
+		Key:   cert.PublicKey,
+		KeyID: cert.SerialNumber.String(),
+		Use:   "sig",
 	}
 
 	if jwsSig, err = Sign(payload, key, GetOpenbankingUKSignerOptions("application/json", key), true); err != nil {
