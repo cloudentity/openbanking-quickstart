@@ -6,6 +6,7 @@ import (
 	"encoding/pem"
 	"errors"
 	"fmt"
+	"github.com/go-jose/go-jose/v3"
 	"io/ioutil"
 
 )
