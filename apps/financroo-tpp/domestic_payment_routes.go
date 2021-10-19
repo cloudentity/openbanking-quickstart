@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"net/url"
 	"time"
@@ -101,7 +100,6 @@ func (s *Server) CreateDomesticPaymentConsent() func(*gin.Context) {
 		}
 
 		if payload, err = json.Marshal(req); err != nil {
-			log.Printf("payload marshal %v", err)
 			c.String(http.StatusBadRequest, fmt.Sprintf("failed to register domestic payment consent unable to marshal paylaod: %+v", err))
 			return
 		}

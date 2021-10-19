@@ -4,11 +4,8 @@ import (
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
-	"errors"
-	"fmt"
 	"github.com/go-jose/go-jose/v3"
 	"io/ioutil"
-
 )
 
 // s.Config.KeyFile
@@ -49,13 +46,12 @@ func getPrivateKey(keyFile string) (*rsa.PrivateKey, error) {
 	)
 
 	if data, err = ioutil.ReadFile(keyFile); err != nil {
-		return nil, errors.New(fmt.Sprintf("failed read certificate %v", err))
+		return nil, err
 	}
 
 	block, _ = pem.Decode(data)
-	k, err = x509.ParsePKCS1PrivateKey(block.Bytes)
-	if err != nil {
-		return nil, errors.New("failed to parse request object signing key")
+	if k, err = x509.ParsePKCS1PrivateKey(block.Bytes); err != nil {
+		return nil, err
 	}
 
 	return k, nil
