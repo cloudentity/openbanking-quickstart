@@ -6,9 +6,9 @@ import (
 	"encoding/pem"
 	"github.com/go-jose/go-jose/v3"
 	"io/ioutil"
+
 )
 
-// s.Config.KeyFile
 func (s Server) JWSSignature(payload []byte) (string, error) {
 	var (
 		privateKey       *rsa.PrivateKey
