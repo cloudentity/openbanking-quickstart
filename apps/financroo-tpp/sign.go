@@ -1,93 +1,61 @@
 package main
 
 import (
-	"bytes"
+	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
+	"errors"
 	"fmt"
-	"strconv"
-	"time"
-
 	"github.com/go-jose/go-jose/v3"
-	"github.com/pkg/errors"
+	"io/ioutil"
 )
 
-type OpenbankingHeaderName string
-
-const (
-	typ  OpenbankingHeaderName = "typ"
-	cty  OpenbankingHeaderName = "cty"
-	alg  OpenbankingHeaderName = "alg"
-	kid  OpenbankingHeaderName = "kid"
-	iat  OpenbankingHeaderName = "http://openbanking.org.uk/iat"
-	iss  OpenbankingHeaderName = "http://openbanking.org.uk/iss"
-	tan  OpenbankingHeaderName = "http://openbanking.org.uk/tan"
-	crit OpenbankingHeaderName = "crit"
-)
-
-func Sign(payload []byte, key jose.JSONWebKey, signingOpts *jose.SignerOptions, detached bool) (string, error) {
+// s.Config.KeyFile
+func (s Server) JWSSignature(payload []byte) (string, error) {
 	var (
-		err        error
-		signer     jose.Signer
-		jws        *jose.JSONWebSignature
-		serialized string
+		privateKey       *rsa.PrivateKey
+		serializedJWS    string
+		signer           jose.Signer
+		jsonWebSignature *jose.JSONWebSignature
+		err              error
 	)
 
-	// algorithm must be ps256 as required by the 3.1.6 specification
-	if signer, err = jose.NewSigner(
-		jose.SigningKey{Algorithm: jose.PS256, Key: key.Key},
-		signingOpts,
-	); err != nil {
-		return "", errors.Wrapf(err, fmt.Sprintf("failed to create signer with key %+v", key))
+	if privateKey, err = getPrivateKey(s.Config.KeyFile); err != nil {
+		return "", err
 	}
 
-	if jws, err = signer.Sign(payload); err != nil {
-		return serialized, errors.Wrapf(err, "failed to sign data")
+	if signer, err = jose.NewSigner(jose.SigningKey{Algorithm: jose.PS256, Key: privateKey}, nil); err != nil {
+		return "", err
 	}
 
-	if detached {
-		return jws.DetachedCompactSerialize()
+	if jsonWebSignature, err = signer.Sign(payload); err != nil {
+		return "", err
 	}
 
-	return jws.CompactSerialize()
+	if serializedJWS, err = jsonWebSignature.CompactSerialize(); err != nil {
+		return "", err
+	}
+
+	return serializedJWS, nil
 }
 
-// TODO: this will need to take in a configuration for iss and tan
-func GetOpenbankingUKSignerOptions(contentType string, key jose.JSONWebKey) *jose.SignerOptions {
-	signerOptions := &jose.SignerOptions{}
-	signerOptions.WithType("JOSE")
-	signerOptions.WithContentType(jose.ContentType(contentType))
-	signerOptions.WithCritical(string(iat), string(iss), string(tan))
+func getPrivateKey(keyFile string) (*rsa.PrivateKey, error) {
+	var (
+		block *pem.Block
+		data  []byte
+		k     *rsa.PrivateKey
+		err   error
+	)
 
-	signerOptions.WithHeader(jose.HeaderKey(kid), key.KeyID)
-	signerOptions.WithHeader(jose.HeaderKey(iat), strconv.FormatInt(time.Now().Unix(), 10))
-	signerOptions.WithHeader(jose.HeaderKey(iss), "123456789123456789")
-	signerOptions.WithHeader(jose.HeaderKey(tan), "openbanking.org.uk")
-
-	return signerOptions
-}
-
-func GetOpenbankingBRSignerOptions(contentType string, key jose.JSONWebKey) *jose.SignerOptions {
-	signerOptions := &jose.SignerOptions{}
-	signerOptions.WithType("JWT")
-	signerOptions.WithContentType(jose.ContentType(cty))
-	signerOptions.WithHeader("kid", key.KeyID)
-	return signerOptions
-}
-
-func ParseCertificate(data []byte) (cert *x509.Certificate, err error) {
-	var block *pem.Block
-
-	if block, data = pem.Decode(data); block == nil {
-		data = bytes.TrimSpace(data)
-		if len(data) > 0 {
-			return nil, fmt.Errorf("certificate contains invalid data: %q", string(data))
-		}
+	if data, err = ioutil.ReadFile(keyFile); err != nil {
+		return nil, errors.New(fmt.Sprintf("failed read certificate %v", err))
 	}
 
-	if cert, err = x509.ParseCertificate(block.Bytes); err != nil {
-		return nil, errors.Wrapf(err, "failed to parse certificate")
+	block, _ = pem.Decode(data)
+	k, err = x509.ParsePKCS1PrivateKey(block.Bytes)
+	if err != nil {
+		return nil, errors.New("failed to parse request object signing key")
 	}
 
-	return cert, nil
+	return k, nil
 }
