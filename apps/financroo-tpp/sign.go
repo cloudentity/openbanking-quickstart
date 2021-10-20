@@ -6,7 +6,8 @@ import (
 	"encoding/pem"
 	"github.com/go-jose/go-jose/v3"
 	"io/ioutil"
-
+	"strconv"
+	"time"
 )
 
 func (s Server) JWSSignature(payload []byte) (string, error) {
@@ -18,11 +19,11 @@ func (s Server) JWSSignature(payload []byte) (string, error) {
 		err              error
 	)
 
-	if privateKey, err = getPrivateKey(s.Config.KeyFile); err != nil {
+	if privateKey,  err = getPrivateKey(s.Config.KeyFile); err != nil {
 		return "", err
 	}
 
-	if signer, err = jose.NewSigner(jose.SigningKey{Algorithm: jose.PS256, Key: privateKey}, nil); err != nil {
+	if signer, err = jose.NewSigner(jose.SigningKey{Algorithm: jose.PS256, Key: privateKey}, getSignerOptions()); err != nil {
 		return "", err
 	}
 
@@ -55,4 +56,18 @@ func getPrivateKey(keyFile string) (*rsa.PrivateKey, error) {
 	}
 
 	return k, nil
+}
+
+func getSignerOptions() *jose.SignerOptions {
+	signerOptions := &jose.SignerOptions{}
+	signerOptions.WithType("JOSE")
+	signerOptions.WithContentType(jose.ContentType("application/json"))
+	signerOptions.WithCritical(string("iat"), string("iss"), string("tan"))
+
+	signerOptions.WithHeader(jose.HeaderKey("kid"), "140891214065717661411211780568679883563") // TODO replace with dynamic value
+	signerOptions.WithHeader(jose.HeaderKey("iat"), strconv.FormatInt(time.Now().Unix(), 10))
+	signerOptions.WithHeader(jose.HeaderKey("iss"), "123456789123456789")
+	signerOptions.WithHeader(jose.HeaderKey("tan"), "openbanking.org.uk")
+
+	return signerOptions
 }
