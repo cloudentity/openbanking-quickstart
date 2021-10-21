@@ -10,13 +10,18 @@ import (
 	"time"
 )
 
+const (
+	iat = "http://openbanking.org.uk/iat"
+	iss = "http://openbanking.org.uk/iss"
+	tan = "http://openbanking.org.uk/tan"
+)
 func (s Server) JWSSignature(payload []byte) (string, error) {
 	var (
-		privateKey       *rsa.PrivateKey
-		serializedJWS    string
-		signer           jose.Signer
-		jsonWebSignature *jose.JSONWebSignature
-		err              error
+		privateKey  *rsa.PrivateKey
+		detachedJWS string
+		signer      jose.Signer
+		jws    *jose.JSONWebSignature
+		err    error
 	)
 
 	if privateKey,  err = getPrivateKey(s.Config.KeyFile); err != nil {
@@ -27,15 +32,15 @@ func (s Server) JWSSignature(payload []byte) (string, error) {
 		return "", err
 	}
 
-	if jsonWebSignature, err = signer.Sign(payload); err != nil {
+	if jws, err = signer.Sign(payload); err != nil {
 		return "", err
 	}
 
-	if serializedJWS, err = jsonWebSignature.CompactSerialize(); err != nil {
+	if detachedJWS, err = jws.DetachedCompactSerialize(); err != nil {
 		return "", err
 	}
 
-	return serializedJWS, nil
+	return detachedJWS, nil
 }
 
 func getPrivateKey(keyFile string) (*rsa.PrivateKey, error) {
@@ -62,12 +67,12 @@ func getSignerOptions() *jose.SignerOptions {
 	signerOptions := &jose.SignerOptions{}
 	signerOptions.WithType("JOSE")
 	signerOptions.WithContentType(jose.ContentType("application/json"))
-	signerOptions.WithCritical(string("iat"), string("iss"), string("tan"))
+	signerOptions.WithCritical(iat, iss, tan)
 
-	signerOptions.WithHeader(jose.HeaderKey("kid"), "140891214065717661411211780568679883563") // TODO replace with dynamic value
-	signerOptions.WithHeader(jose.HeaderKey("iat"), strconv.FormatInt(time.Now().Unix(), 10))
-	signerOptions.WithHeader(jose.HeaderKey("iss"), "123456789123456789")
-	signerOptions.WithHeader(jose.HeaderKey("tan"), "openbanking.org.uk")
+	signerOptions.WithHeader(jose.HeaderKey("kid"), "3d265648-ce22-462e-9659-7dc4a9adeb2d") // TODO replace with dynamic value
+	signerOptions.WithHeader(jose.HeaderKey(iat), strconv.FormatInt(time.Now().Unix(), 10))
+	signerOptions.WithHeader(jose.HeaderKey(iss), "123456789123456789")
+	signerOptions.WithHeader(jose.HeaderKey(tan), "openbanking.org.uk")
 
 	return signerOptions
 }
