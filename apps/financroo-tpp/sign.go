@@ -4,10 +4,11 @@ import (
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
-	"github.com/go-jose/go-jose/v3"
 	"io/ioutil"
 	"strconv"
 	"time"
+
+	"github.com/go-jose/go-jose/v3"
 )
 
 const (
@@ -16,16 +17,17 @@ const (
 	tan = "http://openbanking.org.uk/tan"
 	kid = "kid"
 )
+
 func (s Server) JWSSignature(payload []byte) (string, error) {
 	var (
 		privateKey  *rsa.PrivateKey
 		detachedJWS string
 		signer      jose.Signer
-		jws    *jose.JSONWebSignature
-		err    error
+		jws         *jose.JSONWebSignature
+		err         error
 	)
 
-	if privateKey,  err = getPrivateKey(s.Config.KeyFile); err != nil {
+	if privateKey, err = getPrivateKey(s.Config.KeyFile); err != nil {
 		return "", err
 	}
 
