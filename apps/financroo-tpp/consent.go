@@ -141,15 +141,15 @@ func (o *OBBRConsentClient) CreateAccountConsent(c *gin.Context) (string, error)
 			WithTid(o.Accounts.TenantID).
 			WithAid(o.Accounts.ServerID).
 			WithRequest(&models.OBBRCustomerDataAccessConsentRequest{
-				Data: &models.OpenbankingBrasilData{
+				Data: &models.OpenbankingBrasilConsentData{
 					ExpirationDateTime: strfmt.DateTime(time.Now().Add(time.Hour * 24)),
-					LoggedUser: &models.OpenbankingBrasilLoggedUser{
-						Document: &models.OpenbankingBrasilDocument1{
+					LoggedUser: &models.OpenbankingBrasilConsentLoggedUser{
+						Document: &models.OpenbankingBrasilConsentDocument{
 							Identification: "11111111111",
 							Rel:            "CPF",
 						},
 					},
-					Permissions: []models.OpenbankingBrasilPermission{
+					Permissions: []models.OpenbankingBrasilConsentPermission{
 						"ACCOUNTS_READ",
 						"RESOURCES_READ",
 						"ACCOUNTS_OVERDRAFT_LIMITS_READ",
