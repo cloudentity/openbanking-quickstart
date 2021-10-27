@@ -1,16 +1,76 @@
 package main
 
 import (
+	"context"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"net/url"
 
 	"github.com/gin-gonic/gin"
+	"github.com/pkg/errors"
+	"gopkg.in/square/go-jose.v2"
 
 	acpclient "github.com/cloudentity/acp-client-go"
+	"github.com/cloudentity/acp-client-go/client/oauth2"
 )
 
-func (s *Server) CreateConsentResponse(c *gin.Context, bankID BankID, consentID string, user User, client acpclient.Client) {
+type LoginURLBuilder interface {
+	BuildLoginURL(string, acpclient.Client) (string, acpclient.CSRF, error)
+}
+
+type OBBRLoginURLBuilder struct {
+	key jose.JSONWebKey
+}
+
+func NewOBBRLoginURLBuilder(c context.Context, client acpclient.Client) (LoginURLBuilder, error) {
+	var (
+		key jose.JSONWebKey
+		err error
+	)
+
+	if key, err = getEncryptionKey(c, client); err != nil {
+		return nil, err
+	}
+
+	return &OBBRLoginURLBuilder{key: key}, nil
+}
+
+func (o *OBBRLoginURLBuilder) BuildLoginURL(consentID string, client acpclient.Client) (string, acpclient.CSRF, error) {
+	var err error
+
+	config := client.Config
+	config.Scopes = append(config.Scopes, "consent:"+consentID)
+
+	if client, err = acpclient.New(config); err != nil {
+		return "", acpclient.CSRF{}, errors.Wrapf(err, "failed to create new acp client")
+	}
+
+	return client.AuthorizeURL(
+		acpclient.WithOpenbankingIntentID(consentID, []string{"urn:brasil:openbanking:loa2"}),
+		acpclient.WithRequestObjectEncryption(o.key),
+		acpclient.WithPKCE(),
+	)
+}
+
+type OBUKLoginURLBuilder struct{}
+
+func NewOBUKLoginURLBuilder() (LoginURLBuilder, error) {
+	return &OBUKLoginURLBuilder{}, nil
+}
+
+func (o *OBUKLoginURLBuilder) BuildLoginURL(consentID string, client acpclient.Client) (string, acpclient.CSRF, error) {
+	return client.AuthorizeURL(
+		acpclient.WithOpenbankingIntentID(consentID, []string{"urn:openbanking:psd2:sca"}),
+		acpclient.WithPKCE())
+}
+
+func (s *Server) CreateConsentResponse(
+	c *gin.Context, bankID BankID,
+	consentID string,
+	user User,
+	client acpclient.Client,
+	loginURLBuilder LoginURLBuilder) {
 	var (
 		loginURL           string
 		err                error
@@ -23,10 +83,7 @@ func (s *Server) CreateConsentResponse(c *gin.Context, bankID BankID, consentID 
 		data = gin.H{}
 	)
 
-	if loginURL, app.CSRF, err = client.AuthorizeURL(
-		acpclient.WithOpenbankingIntentID(app.IntentID, []string{"urn:openbanking:psd2:sca"}),
-		acpclient.WithPKCE(),
-	); err != nil {
+	if loginURL, app.CSRF, err = loginURLBuilder.BuildLoginURL(consentID, client); err != nil {
 		c.String(http.StatusInternalServerError, fmt.Sprintf("failed to build authorize url: %+v", err))
 		return
 	}
@@ -47,4 +104,37 @@ func (s *Server) CreateConsentResponse(c *gin.Context, bankID BankID, consentID 
 	data["login_url"] = loginURL
 
 	c.JSON(http.StatusOK, data)
+}
+
+func getEncryptionKey(c context.Context, client acpclient.Client) (jose.JSONWebKey, error) {
+	var (
+		jwksResponse *oauth2.JwksOK
+		encKey       jose.JSONWebKey
+		b            []byte
+		err          error
+	)
+
+	if jwksResponse, err = client.Oauth2.Jwks(
+		oauth2.NewJwksParamsWithContext(c).
+			WithTid(client.TenantID).
+			WithAid(client.ServerID),
+	); err != nil {
+		return encKey, errors.Wrapf(err, "failed to get jwks from acp server")
+	}
+
+	for _, key := range jwksResponse.Payload.Keys {
+		if key.Use == "enc" {
+			if b, err = json.Marshal(key); err != nil {
+				return encKey, errors.Wrapf(err, "failed to marshal key")
+			}
+
+			if err = encKey.UnmarshalJSON(b); err != nil {
+				return encKey, errors.Wrapf(err, "failed to unmarshal jwk")
+			}
+
+			break
+		}
+	}
+
+	return encKey, nil
 }
