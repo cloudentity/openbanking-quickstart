@@ -75,7 +75,7 @@ func ToInternalOBBRAccounts(data ResponseAccountList) InternalAccounts {
 	accounts := make([]InternalAccount, len(data.Data))
 	for i, account := range data.Data {
 		accounts[i] = InternalAccount{
-			ID:   account.AccountID,
+			ID:   account.Number,
 			Name: account.Number,
 		}
 	}

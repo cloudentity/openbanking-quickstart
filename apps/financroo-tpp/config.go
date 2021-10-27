@@ -22,9 +22,8 @@ func init() {
 }
 
 type ClientConfig struct {
-	ServerID string   `mapstructure:"server_id"`
-	ClientID string   `mapstructure:"client_id"`
-	Scopes   []string `mapstructure:"scopes"`
+	ServerID string `mapstructure:"server_id"`
+	ClientID string `mapstructure:"client_id"`
 }
 
 type LoginConfig struct {
@@ -49,7 +48,6 @@ type BankID string
 
 type BankConfig struct {
 	ID        BankID
-	BankType  string `mapstructure:"bank_type"`
 	URL       string
 	AcpClient AcpClient `mapstructure:"acp_client"`
 }
@@ -73,16 +71,6 @@ type Config struct {
 	Login          LoginConfig
 	Banks          []BankConfig
 	FeatureFlags   FeatureFlags `mapstructure:"feature_flags"`
-}
-
-func (s *Server) GetBankConfigByBankID(bankID BankID) BankConfig {
-	for _, config := range s.Config.Banks {
-		if bankID == config.ID {
-			return config
-		}
-	}
-
-	return BankConfig{}
 }
 
 var Validator = validator.New()
