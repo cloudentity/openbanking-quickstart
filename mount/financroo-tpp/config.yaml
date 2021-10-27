@@ -6,25 +6,11 @@ login:
   timeout: 5s
 banks:
 - id: gobank
-  bank_type: obuk
   url: http://bank:8070
   acp_client:
     tenant_id: default
     server_id: openbanking
-    scopes: ["accounts", "payments", "openid", "offline_access"]
     client_id: bugkgm23g9kregtu051g
-    cert_file: "/certs/tpp_cert.pem"
-    key_file: "/certs/tpp_key.pem"
-    root_ca: "/certs/ca.pem"
-    timeout: 5s
-- id: gobank2
-  bank_type: obbr
-  url: http://bank:8070
-  acp_client:
-    tenant_id: default
-    server_id: openbanking_brasil
-    scopes: ["accounts", "payments", "openid", "offline_access", "consents"]
-    client_id: bukj5p6k7qdmm5other1
     cert_file: "/certs/tpp_cert.pem"
     key_file: "/certs/tpp_key.pem"
     root_ca: "/certs/ca.pem"

@@ -5,6 +5,10 @@ import (
 	"net/http"
 	"strings"
 
+	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client/accounts"
+	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client/balances"
+	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client/transactions"
+	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 )
@@ -45,10 +49,10 @@ func (s *Server) WithUser(c *gin.Context) (User, BankTokens, error) {
 	return user, tokens, nil
 }
 
-func (s *Server) GetClientWithToken(bank ConnectedBank, tokens BankTokens) (BankClient, string, error) {
+func (s *Server) GetClientWithToken(bank ConnectedBank, tokens BankTokens) (OpenbankingClient, string, error) {
 	var (
 		clients Clients
-		client  BankClient
+		client  OpenbankingClient
 		ok      bool
 		token   string
 		err     error
@@ -65,10 +69,16 @@ func (s *Server) GetClientWithToken(bank ConnectedBank, tokens BankTokens) (Bank
 	return clients.BankClient, token, nil
 }
 
+type Account struct {
+	*models.OBAccount6
+	BankID string `json:"BankId"`
+}
+
 func (s *Server) GetAccounts() func(ctx *gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			client       BankClient
+			resp         *accounts.GetAccountsOK
+			client       OpenbankingClient
 			accessToken  string
 			accountsData = []Account{}
 			user         User
@@ -84,12 +94,20 @@ func (s *Server) GetAccounts() func(ctx *gin.Context) {
 		// todo parallel
 		for _, b := range user.Banks {
 			if client, accessToken, err = s.GetClientWithToken(b, tokens); err != nil {
-				continue
+				c.String(http.StatusUnauthorized, err.Error())
+				return
 			}
 
-			if accountsData, err = client.GetAccounts(c, accessToken, b); err != nil {
+			if resp, err = client.Accounts.GetAccounts(accounts.NewGetAccountsParamsWithContext(c).WithAuthorization(accessToken), nil); err != nil {
 				c.String(http.StatusUnauthorized, fmt.Sprintf("failed to call bank get accounts: %+v", err))
 				return
+			}
+
+			for _, a := range resp.Payload.Data.Account {
+				accountsData = append(accountsData, Account{
+					OBAccount6: a,
+					BankID:     b.BankID,
+				})
 			}
 		}
 
@@ -99,10 +117,16 @@ func (s *Server) GetAccounts() func(ctx *gin.Context) {
 	}
 }
 
+type Balance struct {
+	models.OBReadBalance1DataBalanceItems0
+	BankID string `json:"BankId"`
+}
+
 func (s *Server) GetBalances() func(ctx *gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			client       BankClient
+			resp         *balances.GetBalancesOK
+			client       OpenbankingClient
 			accessToken  string
 			balancesData = []Balance{}
 			tokens       BankTokens
@@ -118,16 +142,23 @@ func (s *Server) GetBalances() func(ctx *gin.Context) {
 		// todo parallel
 		for _, b := range user.Banks {
 			if client, accessToken, err = s.GetClientWithToken(b, tokens); err != nil {
-				continue
+				c.String(http.StatusUnauthorized, err.Error())
+				return
 			}
-
 			if err = s.UserRepo.Set(user); err != nil {
 				c.String(http.StatusInternalServerError, fmt.Sprintf("failed to update user: %+v", err))
 			}
 
-			if balancesData, err = client.GetBalances(c, accessToken, b); err != nil {
+			if resp, err = client.Balances.GetBalances(balances.NewGetBalancesParamsWithContext(c).WithAuthorization(accessToken), nil); err != nil {
 				c.String(http.StatusUnauthorized, fmt.Sprintf("failed to call bank get balances: %+v", err))
 				return
+			}
+
+			for _, a := range resp.Payload.Data.Balance {
+				balancesData = append(balancesData, Balance{
+					OBReadBalance1DataBalanceItems0: *a,
+					BankID:                          b.BankID,
+				})
 			}
 		}
 
@@ -137,10 +168,16 @@ func (s *Server) GetBalances() func(ctx *gin.Context) {
 	}
 }
 
+type Transaction struct {
+	models.OBTransaction6
+	BankID string `json:"BankId"`
+}
+
 func (s *Server) GetTransactions() func(ctx *gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			client           BankClient
+			resp             *transactions.GetTransactionsOK
+			client           OpenbankingClient
 			accessToken      string
 			transactionsData = []Transaction{}
 			tokens           BankTokens
@@ -156,12 +193,20 @@ func (s *Server) GetTransactions() func(ctx *gin.Context) {
 		// todo parallel
 		for _, b := range user.Banks {
 			if client, accessToken, err = s.GetClientWithToken(b, tokens); err != nil {
-				continue
+				c.String(http.StatusUnauthorized, err.Error())
+				return
 			}
 
-			if transactionsData, err = client.GetTransactions(c, accessToken, b); err != nil {
+			if resp, err = client.Transactions.GetTransactions(transactions.NewGetTransactionsParamsWithContext(c).WithAuthorization(accessToken), nil); err != nil {
 				c.String(http.StatusUnauthorized, fmt.Sprintf("failed to call bank get transactions: %+v", err))
 				return
+			}
+
+			for _, a := range resp.Payload.Data.Transaction {
+				transactionsData = append(transactionsData, Transaction{
+					OBTransaction6: *a,
+					BankID:         b.BankID,
+				})
 			}
 		}
 
