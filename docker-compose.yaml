@@ -77,7 +77,7 @@ services:
       # - OTP_REQUEST_URL= # this does not matter for totp
       # - OTP_VERIFY_URL=https://localhost:8080/demo/totp/verify
       # - OTP_AUTH_HEADER=Bearer this-is-some-test-token
-      # - MFA_CLAIM=sub # for mobile use mobile_verified
+      - MFA_CLAIM=sub # for mobile use mobile_verified
       # - TWILIO_ACCOUNT_SID=
       # - TWILIO_AUTH_TOKEN=
       - DEFAULT_LANGUAGE=en-us
