@@ -182,6 +182,7 @@ services:
       - SERVER_URL=${ACP_URL}
       - LOGGING_LEVEL=debug
       - SERVER_HTTP_LOGS=true
+      - SERVER_DISABLE_CSRF=true
     command:
       - server
       - start
