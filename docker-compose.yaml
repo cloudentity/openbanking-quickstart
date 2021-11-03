@@ -163,6 +163,7 @@ services:
       default:
         aliases:
         - authorization.cloudentity.com
+        - test-docker
     ports:
       - 8443:8443
     volumes:
@@ -177,7 +178,7 @@ services:
       - FEATURES_OPENBANKING_BRASIL_CONSENTS=true
       - FEATURES_OPENBANKING_BRASIL_PAYMENTS=true
       - FEATURES_DEV_MODE=true
-      - SERVER_MTLS_URL=${ACP_INTERNAL_URL} # Use template: https://{{tenantID}}.mtls.${ACP_BASE_URL}
+      - SERVER_MTLS_URL=https://test-docker:8443
       - SERVER_URL=${ACP_URL}
       - LOGGING_LEVEL=debug
       - SERVER_HTTP_LOGS=true
