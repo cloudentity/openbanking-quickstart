@@ -15,7 +15,7 @@ jobs:
       - name: Login to DockerHub
         uses: docker/login-action@v1
         with:
-          registry: docker-public.artifactory.cloudentity.com
+          registry: docker.cloudentity.io
           username: ${{ secrets.PUBLIC_DOCKER_CLOUDENTITY_REPO_DEV_USERNAME }}
           password: ${{ secrets.PUBLIC_DOCKER_CLOUDENTITY_REPO_DEV_PASSWORD }}
 
