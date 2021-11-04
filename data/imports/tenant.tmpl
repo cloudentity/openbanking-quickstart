@@ -1,0 +1,126 @@
+tenants:
+- id: default
+  name: default
+  authentication_context_settings:
+    attributes:
+    - name: sub
+      description: Subject
+      type: string
+      labels:
+      - advanced
+    - name: scp
+      description: List of scopes
+      type: string_array
+      labels:
+      - advanced
+    - name: groups
+      description: List of groups that user belongs to
+      type: string_array
+      labels: []
+    - name: email
+      description: Email
+      type: string
+      labels:
+      - simple
+    - name: email_verified
+      description: Email verified
+      type: bool
+      labels:
+      - advanced
+    - name: phone_number
+      description: Phone
+      type: string
+      labels:
+      - simple
+    - name: phone_number_verified
+      description: Phone verified
+      type: bool
+      labels:
+      - advanced
+    - name: address.formatted
+      description: Full mailing address
+      type: string
+      labels: []
+    - name: address.street_address
+      description: Full street address
+      type: string
+      labels: []
+    - name: address.locality
+      description: City or locality
+      type: string
+      labels: []
+    - name: address.region
+      description: Stage, province, prefecture or region
+      type: string
+      labels: []
+    - name: address.country
+      description: Country
+      type: string
+      labels: []
+    - name: address.postal_code
+      description: Postal code
+      type: string
+      labels: []
+    - name: name
+      description: Name
+      type: string
+      labels: []
+    - name: given_name
+      description: Given name
+      type: string
+      labels:
+      - simple
+    - name: middle_name
+      description: Middle name
+      type: string
+      labels: []
+    - name: family_name
+      description: Family name
+      type: string
+      labels:
+      - simple
+    - name: nickname
+      description: Nickname
+      type: string
+      labels: []
+    - name: preferred_username
+      description: The primary username that represents the user
+      type: string
+      labels:
+      - simple
+    - name: profile
+      description: URL of the profile page
+      type: string
+      labels: []
+    - name: picture
+      description: URL of the profile picture
+      type: string
+      labels: []
+    - name: website
+      description: URL of the web page
+      type: string
+      labels: []
+    - name: gender
+      description: Gender
+      type: string
+      labels: []
+    - name: birthdate
+      description: Birthdate
+      type: string
+      labels: []
+    - name: zoneinfo
+      description: Zoneinfo
+      type: string
+      labels: []
+    - name: locale
+      description: Locale
+      type: string
+      labels: []
+    - name: updated_at
+      description: Last update
+      type: number
+      labels: []
+    - name: cpf
+      description: cpf
+      type: string
+      labels: []
