@@ -64,7 +64,7 @@
   "resource": {
     "resourceUrl": "https://authorization.cloudentity.com:8443/default/openbanking_brasil/open-banking-brasil/accounts/v1/accounts",
     "consentUrl": "https://authorization.cloudentity.com:8443/default/openbanking_brasil/open-banking-brasil/open-banking/consents/v1/consents",
-    "brazilCpf": "00000000000",
+    "brazilCpf": "11111111111",
     "brazilPaymentConsent": {
       "data": {
         "loggedUser": {
