@@ -38,8 +38,8 @@ restart-acp:
 	docker-compose up -d --no-build acp
 
 .PHONY: lint
-lint:
-	golangci-lint run --fix --deadline=5m ./...
+lint: start-runner
+	docker-compose exec runner sh -c "golangci-lint run --fix --deadline=5m ./..."
 
 .PHONY: stop
 stop:
@@ -79,27 +79,30 @@ enable-spec-obbr:
 set-version:
 	./scripts/override_env.sh VERSION $(shell ./scripts/version.sh)
 
+.PHONY: start-runner
+start-runner:
+	docker build -t quickstart-runner -f build/runner.dockerfile .
+	docker-compose up -d runner
+
 .PHONY: generate-openbanking-integration-specs 
 generate-openbanking-integration-specs: generate-obuk-integration-spec 
 
 .PHONY: generate-obuk-integration-spec
-generate-obuk-integration-spec:
-	docker build -t quickstart-swagger -f build/swagger.dockerfile .
-	docker run  -v ${CURDIR}:/code quickstart-swagger \
-    swagger generate spec \
+generate-obuk-integration-spec: start-runner
+	docker exec runner sh -c  \
+    "swagger generate spec \
         -m \
         -o api/internal/bank.yaml \
-         -w ./apps/bank 
+         -w ./apps/bank"
 
 .PHONY: generate-obbr-clients
-generate-obbr-clients: 
-	docker build -t quickstart-swagger -f build/swagger.dockerfile .
+generate-obbr-clients: start-runner
 	rm -rf ./openbanking/obbr/accounts/*
-	docker run  -v ${CURDIR}:/code quickstart-swagger \
-	swagger generate client \
+	docker exec runner sh -c \
+	"swagger generate client \
 		-f api/obbr/accounts.yaml \
 		-A accounts  \
-		-t ./openbanking/obbr/accounts
+		-t ./openbanking/obbr/accounts"
 
 .PHONY: obbr
 obbr:
