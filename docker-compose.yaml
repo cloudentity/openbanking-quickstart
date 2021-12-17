@@ -156,7 +156,7 @@ services:
       - SPEC=${SPEC}
 
   acp:
-    container_name: acp
+    container_name: quickstart-acp
     restart: always
     image: ${ACP_DOCKER_IMAGE}:${ACP_VERSION}
     networks:
@@ -178,7 +178,7 @@ services:
       - FEATURES_OPENBANKING_BRASIL_CONSENTS=true
       - FEATURES_OPENBANKING_BRASIL_PAYMENTS=true
       - FEATURES_DEV_MODE=true
-      - SERVER_MTLS_URL=https://test-docker:8443
+      - SERVER_MTLS_URL=https://test-docker:8444
       - SERVER_URL=${ACP_URL}
       - LOGGING_LEVEL=debug
       - SERVER_HTTP_LOGS=true
@@ -200,12 +200,12 @@ services:
       - --create-default-tenant
 
   crdb:
-    container_name: crdb
+    container_name: quickstart-crdb
     image: cockroachdb/cockroach:v20.2.6
     restart: always
     ports:
-      - 26257:26257
-      - 8081:8080
+      - 26258:26257
+      - 8082:8080
     command: start-single-node --insecure
     volumes:
       - crdb:/cockroach/cockroach-data"
