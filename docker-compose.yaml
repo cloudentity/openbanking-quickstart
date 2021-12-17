@@ -245,5 +245,12 @@ services:
       - /variables.yaml
       - --verbose
 
+  runner:
+    image: quickstart-runner
+    command: /bin/sh
+    tty: true
+    volumes:
+      - .:/code
+
 volumes:
   crdb:

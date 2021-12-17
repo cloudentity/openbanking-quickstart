@@ -5,13 +5,13 @@ services:
     volumes:
       - ./mount/conformance/obbr/_mongo/data:/data/db
   httpd:
-    image: docker.cloudentity.io/obbr/httpd:0.0.2
+    image: docker.cloudentity.io/obbr/httpd:11c46886
     ports:
       - "443:8445"
     depends_on:
       - server
   server:
-    image: docker.cloudentity.io/obbr/server:0.0.2
+    image: docker.cloudentity.io/obbr/server:11c46886
     networks:
       default:
         aliases:
