@@ -54,6 +54,13 @@ stop:
 clean:
 	docker-compose down -v
 
+.PHONY: clean-saas 
+clean-saas: clean
+	go run ./scripts/clean_saas.go \
+	--client_id c79lsrgh5kre3dfd8kf0 \
+	--client_secret S4DYjFEowDmEKfwbXOtR-mqaHWuIae2Mt4i-6KimZYQ \
+	--tenant_id cloudentity-dmartin-c45bgbj0djbg6jf5hk50
+
 .PHONY: run-tests
 run-tests:
 	yarn --cwd tests run cypress open
