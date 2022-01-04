@@ -57,33 +57,29 @@ func main() {
 
 	client := cc.Client(context.WithValue(context.Background(), oauth2.HTTPClient, httpClient))
 
-	var (
-		workspaceIDs = []string{
-			"openbanking_brasil",
-			"openbanking",
-			"bank-admins",
-			"bank-customers",
-			"financroo",
-		}
-	)
-
-	for _, wid := range workspaceIDs {
-		func() {
-			if request, err = http.NewRequest("DELETE", fmt.Sprintf("%s/api/admin/%s/servers/%s", tURL.String(), config.TenantID, wid), nil); err != nil {
-				log.Fatalf("failed to create delete http request: %v", err)
-			}
-
-			if response, err = client.Do(request); err != nil {
-				log.Fatalf("http request failed: %+v", err)
-			}
-
-			if response.StatusCode != http.StatusNoContent {
-				log.Fatalf("expected response code %d, got %d", http.StatusNoContent, response.StatusCode)
-			}
-			defer response.Body.Close()
-		}()
+	workspaceIDs := []string{
+		"openbanking_brasil",
+		"openbanking",
+		"bank-admins",
+		"bank-customers",
+		"financroo",
 	}
 
+	for _, wid := range workspaceIDs {
+		if request, err = http.NewRequest("DELETE", fmt.Sprintf("%s/api/admin/%s/servers/%s", tURL.String(), config.TenantID, wid), nil); err != nil {
+			log.Fatalf("failed to create delete http request: %v", err)
+		}
+
+		if response, err = client.Do(request); err != nil {
+			log.Fatalf("http request failed: %+v", err)
+		}
+
+		if response.StatusCode != http.StatusNoContent {
+			log.Fatalf("expected response code %d, got %d", http.StatusNoContent, response.StatusCode)
+		}
+
+		response.Body.Close()
+	}
 }
 
 func LoadConfig() (config Config, err error) {
