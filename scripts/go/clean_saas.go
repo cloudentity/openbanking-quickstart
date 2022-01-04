@@ -3,32 +3,38 @@ package main
 import (
 	"context"
 	"crypto/tls"
-	"flag"
 	"fmt"
 	"log"
 	"net/http"
 	"net/url"
 	"time"
 
+	"github.com/caarlos0/env/v6"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/clientcredentials"
 )
 
+type Config struct {
+	TenantID          string `env:"TENANT"`
+	AdminClientID     string `env:"ADMIN_CLIENT_ID"`
+	AdminClientSecret string `env:"ADMIN_CLIENT_SECRET"`
+}
+
 func main() {
 	var (
-		clientID     = flag.String("client_id", "", "admin client id")
-		clientSecret = flag.String("client_secret", "", "admin client secret")
-		tenantID     = flag.String("tenant_id", "", "saas tenant id")
 		request      *http.Request
 		response     *http.Response
 		err          error
 		tURL         *url.URL
 		tenantURLRaw string
+		config       Config
 	)
 
-	flag.Parse()
+	if config, err = LoadConfig(); err != nil {
+		log.Fatalf("failed to load env %+v", err)
+	}
 
-	tenantURLRaw = fmt.Sprintf("https://%s.authz.cloudentity.io", *tenantID)
+	tenantURLRaw = fmt.Sprintf("https://%s.authz.cloudentity.io", config.TenantID)
 
 	if tURL, err = url.Parse(tenantURLRaw); err != nil {
 		log.Fatal(err)
@@ -44,9 +50,9 @@ func main() {
 	}
 
 	cc := clientcredentials.Config{
-		ClientID:     *clientID,
-		ClientSecret: *clientSecret,
-		TokenURL:     fmt.Sprintf("%s/%s/%s/oauth2/token", tURL.String(), *tenantID, "admin"),
+		ClientID:     config.AdminClientID,
+		ClientSecret: config.AdminClientSecret,
+		TokenURL:     fmt.Sprintf("%s/%s/%s/oauth2/token", tURL.String(), config.TenantID, "admin"),
 	}
 
 	client := cc.Client(context.WithValue(context.Background(), oauth2.HTTPClient, httpClient))
@@ -63,7 +69,7 @@ func main() {
 
 	for _, wid := range workspaceIDs {
 		func() {
-			if request, err = http.NewRequest("DELETE", fmt.Sprintf("%s/api/admin/%s/servers/%s", tURL.String(), *tenantID, wid), nil); err != nil {
+			if request, err = http.NewRequest("DELETE", fmt.Sprintf("%s/api/admin/%s/servers/%s", tURL.String(), config.TenantID, wid), nil); err != nil {
 				log.Fatalf("failed to create delete http request: %v", err)
 			}
 
@@ -78,4 +84,9 @@ func main() {
 		}()
 	}
 
+}
+
+func LoadConfig() (config Config, err error) {
+	err = env.Parse(&config)
+	return config, err
 }
