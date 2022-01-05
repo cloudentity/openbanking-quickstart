@@ -15,8 +15,8 @@ run-dev:
 	docker-compose -f docker-compose.yaml -f docker-compose.build.yaml up -d
 	./scripts/wait.sh
 
-.PHONY: run-acp
-run-acp-apps:
+.PHONY: run-acp-apps
+run-acp-apps: setup_local_env
 	docker-compose up -d --no-build ${ACP_APPS}
 	./scripts/wait.sh
 
@@ -25,7 +25,7 @@ stop-acp-apps:
 	docker-compose rm -s -f ${ACP_APPS}
 
 .PHONY: run-apps
-run-apps: setup_local_env
+run-apps:
 	docker-compose up -d --no-build ${OB_APPS}
 
 .PHONY: run-apps-with-saas
@@ -34,7 +34,7 @@ run-apps-with-saas: setup_saas_env
 	docker-compose up -d --no-build ${OB_APPS}
 
 .PHONY: run
-run:
+run: 
 	make run-acp-apps run-apps
 
 .PHONY: restart-acp
