@@ -56,7 +56,7 @@ type CreatePaymentRequest struct {
 	BankID               BankID `json:"bank_id" binding:"required"`
 }
 
-func (o *OBUKConsentClient) CreatePaymentConsent(c *gin.Context, signer Signer, req CreatePaymentRequest) (string, error) {
+func (o *OBUKConsentClient) CreatePaymentConsent(c *gin.Context, req CreatePaymentRequest) (string, error) {
 	var (
 		registerResponse *openbanking.CreateDomesticPaymentConsentCreated
 		jwsSig           string
@@ -112,7 +112,7 @@ func (o *OBUKConsentClient) CreatePaymentConsent(c *gin.Context, signer Signer, 
 		return "", errors.Wrapf(err, "failed to register domestic payment consent unable to marshal payload")
 	}
 
-	if jwsSig, err = signer.Sign(payload); err != nil {
+	if jwsSig, err = o.Sign(payload); err != nil {
 		return "", errors.Wrapf(err, "failed to create jws signature for payment consent request")
 	}
 
@@ -183,7 +183,7 @@ func (o *OBBRConsentClient) CreateAccountConsent(c *gin.Context) (string, error)
 	return registerResponse.Payload.Data.ConsentID, nil
 }
 
-func (o *OBBRConsentClient) CreatePaymentConsent(c *gin.Context, signer Signer, req CreatePaymentRequest) (string, error) {
+func (o *OBBRConsentClient) CreatePaymentConsent(c *gin.Context, req CreatePaymentRequest) (string, error) {
 	return "", nil
 }
 

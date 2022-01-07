@@ -36,7 +36,7 @@ func (s *Server) CreateDomesticPaymentConsent() func(*gin.Context) {
 			c.String(http.StatusBadRequest, fmt.Sprintf("client not configured for bank: %s", request.BankID))
 		}
 
-		if consentID, err = clients.ConsentClient.CreatePaymentConsent(c, s.Signer, request); err != nil {
+		if consentID, err = clients.ConsentClient.CreatePaymentConsent(c, request); err != nil {
 			c.String(http.StatusBadRequest, fmt.Sprintf("failed to register payment consent: %+v", err))
 			return
 		}

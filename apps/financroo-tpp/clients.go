@@ -34,9 +34,10 @@ type BankClient interface {
 }
 
 type ConsentClient interface {
-	CreatePaymentConsent(c *gin.Context, signer Signer, req CreatePaymentRequest) (string, error)
+	CreatePaymentConsent(c *gin.Context, req CreatePaymentRequest) (string, error)
 	GetPaymentConsent(c *gin.Context, consentID string) (interface{}, error)
 	CreateAccountConsent(c *gin.Context) (string, error)
+	Signer
 }
 
 func (c *Clients) RenewAccountsToken(ctx context.Context, bank ConnectedBank) (*models.TokenResponse, error) {
@@ -65,6 +66,7 @@ func InitClients(config Config) (map[BankID]Clients, error) {
 		acpPaymentsWebClient acpclient.Client
 		bankClient           BankClient
 		consentClient        ConsentClient
+		signer               Signer
 		err                  error
 	)
 
@@ -79,13 +81,19 @@ func InitClients(config Config) (map[BankID]Clients, error) {
 
 		switch bank.BankType {
 		case "obuk":
-			consentClient = &OBUKConsentClient{acpAccountsWebClient, acpPaymentsWebClient}
+			if signer, err = NewOBUKSigner(config.KeyFile); err != nil {
+				return clients, errors.Wrapf(err, "failed to init consent message signer for oguk bank: %s", bank.ID)
+			}
+			consentClient = &OBUKConsentClient{acpAccountsWebClient, acpPaymentsWebClient, signer}
 			if bankClient, err = NewOBUKClient(bank); err != nil {
 				return clients,
 					errors.Wrapf(err, "failed to init client for obuk bank: %s", bank.ID)
 			}
 		case "obbr":
-			consentClient = &OBBRConsentClient{acpAccountsWebClient, acpPaymentsWebClient}
+			if signer, err = NewOBBRSigner(config.KeyFile); err != nil {
+				return clients, errors.Wrapf(err, "failed to init consent message signer for obbr bank: %s", bank.ID)
+			}
+			consentClient = &OBBRConsentClient{acpAccountsWebClient, acpPaymentsWebClient, signer}
 			if bankClient, err = NewOBBRClient(bank); err != nil {
 				return clients,
 					errors.Wrapf(err, "failed to init client for obbr bank: %s", bank.ID)
@@ -232,9 +240,11 @@ func NewOBBRClient(config BankConfig) (BankClient, error) {
 type OBUKConsentClient struct {
 	Accounts acpclient.Client
 	Payments acpclient.Client
+	Signer
 }
 
 type OBBRConsentClient struct {
 	Accounts acpclient.Client
 	Payments acpclient.Client
+	Signer
 }
