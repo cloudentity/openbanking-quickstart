@@ -3,19 +3,28 @@ servers:
   id: openbanking_brasil
   name: Openbanking Brazil
   profile: openbanking_br
+  issuer_id: 1234-1234-1234-1234
+  consent_id_namespace: xxxxx
+  access_token_strategy: "jwt"
+  enforce_pkce: false
   enable_trust_anchor: true
+  grant_types:
+    - authorization_code
+    - implicit
+    - refresh_token
+    - client_credentials
   trust_anchor_configuration:
-    jwks_uri: "http://example.com"
+    jwks_uri: "https://authorization.cloudentity.com:8443/default/openbanking_brasil/open-banking-brasil/directory/jwks_uri"
   dynamic_client_registration:
     enabled: true
     initial_access_token:
       required: false
     payload:
-      format: json
+      format: "json"
       jws_payload:
         jwks:
           keys: null
-        jwks_uri:
+        jwks_uri: ""
   initialize: true
   {{ if .read_client_certificate_from_header }}
   read_client_certificate_from_header: {{ .read_client_certificate_from_header }}
@@ -23,6 +32,7 @@ servers:
   {{ end }}
   root_cas: |
 {{ readFile .ca_pem_file | indent 4 }}
+{{ readFile .conf_ca_pem_file | indent 4 }}
 
 idps:
 - tenant_id: default
@@ -30,6 +40,80 @@ idps:
   id: bugkgai3g9kregtu04u0
   name: Sandbox IDP
   method: static
+  attributes:
+  - name: name
+    description: Name
+    type: string
+    labels:
+  - name: given_name
+    description: Given name
+    type: string
+    labels:
+  - name: family_name
+    description: Family name
+    type: string
+    labels:
+  - name: email
+    description: Email
+    type: string
+    labels:
+  - name: email_verified
+    description: Email verified
+    type: bool
+    labels:
+  - name: phone_number
+    description: Phone number
+    type: string
+    labels:
+  - name: phone_number_verified
+    description: Phone number verified
+    type: bool
+    labels:
+  - name: cpf
+    description: cpf
+    type: string
+    labels:
+  - name: cnpj
+    description: cnpj
+    type: string
+    labels:
+  mappings:
+  - source: name
+    target: name
+    type: string
+    allow_weak_decoding: false
+  - source: given_name
+    target: given_name
+    type: string
+    allow_weak_decoding: false
+  - source: family_name
+    target: family_name
+    type: string
+    allow_weak_decoding: false
+  - source: email
+    target: email
+    type: string
+    allow_weak_decoding: false
+  - source: email_verified
+    target: email_verified
+    type: bool
+    allow_weak_decoding: false
+  - source: phone_number
+    target: phone_number
+    type: string
+    allow_weak_decoding: false
+  - source: phone_number_verified
+    target: phone_number_verified
+    type: bool
+    allow_weak_decoding: false
+  - source: cpf
+    target: cpf
+    type: string
+    allow_weak_decoding: false
+  - source: cnpj
+    target: cnpj
+    type: string
+    allow_weak_decoding: false
   credentials:
     static:
       users:
@@ -38,14 +122,18 @@ idps:
         authentication_context:
           name: user
           mobile_verified: "+48123456789"
+        additional_attributes:
+          cpf: "11111111111"
       - username: user2
         password: p@ssw0rd!
         authentication_context:
           name: user2
+          cpf: "11111111222"
       - username: user3
         password: p@ssw0rd!
         authentication_context:
           name: user3
+          cnpj: "22233344455566"
 server_consents:
 - tenant_id: default
   client_id: {{ default "bukj5p6k7qdmm5ppxxxx" .obbr_consent_page_client }}
@@ -57,7 +145,7 @@ clients:
 # consent page
 - tenant_id: default
   authorization_server_id: system
-  client_id: {{ default "bukj5p6k7qdmm5ppxxxx" .obbr_consent_page_client }}
+  client_id: {{ default "bukj5p6k7qdMIIDfjCCAmagAwImm5ppxxxx" .obbr_consent_page_client }}
   client_secret: {{ default "pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0" .consent_page_client_secret }}
   client_name: custom server consent
   grant_types:
@@ -116,6 +204,118 @@ clients:
   - refresh_token
   jwks:
 {{ readFile .financroo_pem_file | pemToPublicJwks | indent 4 }}
+- tenant_id: default
+  authorization_server_id: openbanking_brasil
+  organisation_id: 74e929d9-33b6-4d85-8ba7-c146c867a817
+  client_id: cid-1
+  client_name: client-with-jwks
+  client_uri: {{ .conf_tpp_1_url }}
+  tls_client_auth_subject_dn: {{ .conf_tpp_1_sub_dn }}
+  tls_client_certificate_bound_access_tokens: true
+  token_endpoint_auth_method: tls_client_auth
+  redirect_uris:
+    - {{ .conf_tpp_1_url }}/test/a/OBBConfTests/callback
+    - https://fapi-test:8444/test/a/OBBConfTests/callback
+    - https://fapi-test:8444/test/a/MtlsDcrFapiTests/callback
+    - https://fapi-test:8444/test/a/PrivateKeyJwtDcrFapiTests/callback
+  subject_type: pairwise
+  request_object_signing_alg: PS256
+  response_types:
+    - token
+    - code id_token
+  scopes:
+    - consent:*
+    - consents
+    - accounts
+    - payments
+    - customers
+    - introspect_tokens
+    - offline_access
+    - openid
+    - revoke_tokens
+    - directory:software
+  grant_types:
+    - client_credentials
+    - authorization_code
+    - refresh_token
+  jwks:
+        {{ readFile .conf_tpp_1_public_jwks | indent 4 }}
+- tenant_id: default
+  authorization_server_id: openbanking_brasil
+  organisation_id: 74e929d9-33b6-4d85-8ba7-c146c867a817
+  client_id: {{ .conf_tpp_1_id }}
+  client_name: Conformance-tpp-1
+  client_uri: {{ .conf_tpp_1_url }}
+  tls_client_auth_subject_dn: {{ .conf_tpp_1_sub_dn }}
+  tls_client_certificate_bound_access_tokens: true
+  token_endpoint_auth_method: tls_client_auth
+  redirect_uris:
+    - {{ .conf_tpp_1_url }}/test/a/OBBConfTests/callback
+    - https://fapi-test:8444/test/a/OBBConfTests/callback
+    - https://fapi-test:8444/test/a/MtlsDcrFapiTests/callback
+    - https://fapi-test:8444/test/a/PrivateKeyJwtDcrFapiTests/callback
+  subject_type: pairwise
+  request_object_signing_alg: PS256
+  response_types:
+    - token
+    - code id_token
+  scopes:
+    - consent:*
+    - consents
+    - accounts
+    - payments
+    - customers
+    - introspect_tokens
+    - offline_access
+    - openid
+    - revoke_tokens
+    - directory:software
+  grant_types:
+    - client_credentials
+    - authorization_code
+    - refresh_token
+  jwks:
+    {{ readFile .conf_tpp_1_public_jwks | indent 4 }}
+- tenant_id: default
+  authorization_server_id: openbanking_brasil
+  organisation_id: 74e929d9-33b6-4d85-8ba7-c146c867a817
+  client_id: {{ .conf_tpp_2_id }}
+  client_name: Conformance-tpp-2
+  client_uri: {{ .conf_tpp_2_url }}
+  tls_client_auth_subject_dn: {{ .conf_tpp_2_sub_dn }}
+  tls_client_certificate_bound_access_tokens: true
+  token_endpoint_auth_method: tls_client_auth
+  redirect_uris:
+    - {{ .conf_tpp_2_url }}/test/a/OBBConfTests/callback
+    - https://fapi-test:8444/test/a/OBBConfTests/callback
+    - https://fapi-test:8444/test/a/OBBConfTests/callback?dummy1=lorem&dummy2=ipsum
+    - https://fapi-test:8444/test/a/MtlsDcrFapiTests/callback
+    - https://fapi-test:8444/test/a/MtlsDcrFapiTests/callback?dummy1=lorem&dummy2=ipsum
+    - https://fapi-test:8444/test/a/PrivateKeyJwtDcrFapiTests/callback
+    - https://fapi-test:8444/test/a/PrivateKeyJwtDcrFapiTests/callback?dummy1=lorem&dummy2=ipsum
+  subject_type: pairwise
+  request_object_signing_alg: PS256
+  response_types:
+    - token
+    - code
+    - code id_token
+  scopes:
+    - consent:*
+    - consents
+    - accounts
+    - payments
+    - customers
+    - introspect_tokens
+    - offline_access
+    - openid
+    - revoke_tokens
+    - directory:software
+  grant_types:
+    - client_credentials
+    - authorization_code
+    - refresh_token
+  jwks:
+    {{ readFile .conf_tpp_2_public_jwks | indent 4 }}
 policies:
 - id: block_openbanking_brasil_dcr
   language: cloudentity
@@ -125,3 +325,13 @@ policies:
   type: dcr
   validators:
     - name: "true"
+services:
+- id: directory
+  tenant_id: default
+  name: directory
+  authorization_server_id: openbanking_brasil
+  scopes:
+  - tenant_id: default
+    authorization_server_id: openbanking_brasil
+    name: directory:software
+    id: directory-software

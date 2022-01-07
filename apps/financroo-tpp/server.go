@@ -23,6 +23,7 @@ type Server struct {
 	LoginClient       acpclient.Client
 	Validator         *validator.Validate
 	UserSecureStorage UserSecureStorage
+	Signer            Signer
 }
 
 func NewServer() (Server, error) {
@@ -53,6 +54,10 @@ func NewServer() (Server, error) {
 	}
 
 	server.UserSecureStorage = NewUserSecureStorage(server.SecureCookie)
+
+	if server.Signer, err = NewOBUKSigner(server.Config.KeyFile); err != nil {
+		return server, errors.Wrapf(err, "failed to create server message signer")
+	}
 
 	return server, nil
 }

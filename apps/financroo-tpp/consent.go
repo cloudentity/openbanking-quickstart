@@ -1,14 +1,19 @@
 package main
 
 import (
+	"encoding/json"
+	"fmt"
+	"net/http"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 	"github.com/google/uuid"
+	"github.com/pkg/errors"
 
 	"github.com/cloudentity/acp-client-go/client/openbanking"
 	"github.com/cloudentity/acp-client-go/models"
+	obModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
 )
 
 func (o *OBUKConsentClient) CreateAccountConsent(c *gin.Context) (string, error) {
@@ -51,9 +56,11 @@ type CreatePaymentRequest struct {
 	BankID               BankID `json:"bank_id" binding:"required"`
 }
 
-func (o *OBUKConsentClient) CreatePaymentConsent(c *gin.Context, req CreatePaymentRequest) (string, error) {
+func (o *OBUKConsentClient) CreatePaymentConsent(c *gin.Context, signer Signer, req CreatePaymentRequest) (string, error) {
 	var (
 		registerResponse *openbanking.CreateDomesticPaymentConsentCreated
+		jwsSig           string
+		payload          []byte
 		err              error
 	)
 
@@ -76,37 +83,49 @@ func (o *OBUKConsentClient) CreatePaymentConsent(c *gin.Context, req CreatePayme
 	currency := models.ActiveOrHistoricCurrencyCode("GBP")
 	amount := models.OBActiveCurrencyAndAmountSimpleType(req.Amount)
 
+	consentRequest := models.DomesticPaymentConsentRequest{
+		Data: &models.OBWriteDomesticConsent4Data{
+			Authorisation: &models.OBWriteDomesticConsent4DataAuthorisation{
+				AuthorisationType:  authorisationType,
+				CompletionDateTime: strfmt.DateTime(time.Now().Add(time.Hour)),
+			},
+			Initiation: &models.OBWriteDomesticConsent4DataInitiation{
+				CreditorAccount:        &account,
+				DebtorAccount:          &debtorAccount,
+				EndToEndIdentification: id,
+				InstructedAmount: &models.OBWriteDomesticConsent4DataInitiationInstructedAmount{
+					Amount:   &amount,
+					Currency: &currency,
+				},
+				InstructionIdentification: id,
+				RemittanceInformation: &models.OBWriteDomesticConsent4DataInitiationRemittanceInformation{
+					Reference:    req.PaymentReference,
+					Unstructured: "Unstructured todo",
+				},
+			},
+			ReadRefundAccount: "No",
+		},
+		Risk: &models.OBRisk1{},
+	}
+
+	if payload, err = json.Marshal(consentRequest); err != nil {
+		return "", errors.Wrapf(err, "failed to register domestic payment consent unable to marshal payload")
+	}
+
+	if jwsSig, err = signer.Sign(payload); err != nil {
+		return "", errors.Wrapf(err, "failed to create jws signature for payment consent request")
+	}
+
 	if registerResponse, err = o.Payments.Openbanking.CreateDomesticPaymentConsent(
 		openbanking.NewCreateDomesticPaymentConsentParamsWithContext(c).
 			WithTid(o.Payments.TenantID).
 			WithAid(o.Payments.ServerID).
-			WithRequest(&models.DomesticPaymentConsentRequest{
-				Data: &models.OBWriteDomesticConsent4Data{
-					Authorisation: &models.OBWriteDomesticConsent4DataAuthorisation{
-						AuthorisationType:  authorisationType,
-						CompletionDateTime: strfmt.DateTime(time.Now().Add(time.Hour)),
-					},
-					Initiation: &models.OBWriteDomesticConsent4DataInitiation{
-						CreditorAccount:        &account,
-						DebtorAccount:          &debtorAccount,
-						EndToEndIdentification: id,
-						InstructedAmount: &models.OBWriteDomesticConsent4DataInitiationInstructedAmount{
-							Amount:   &amount,
-							Currency: &currency,
-						},
-						InstructionIdentification: id,
-						RemittanceInformation: &models.OBWriteDomesticConsent4DataInitiationRemittanceInformation{
-							Reference:    req.PaymentReference,
-							Unstructured: "Unstructured todo", // TODO invoice info?
-						},
-					},
-					ReadRefundAccount: "No",
-				},
-				Risk: &models.OBRisk1{},
-			}),
+			WithXJwsSignature(&jwsSig).
+			WithRequest(&consentRequest),
 		nil,
 	); err != nil {
-		return "", err
+		c.String(http.StatusBadRequest, fmt.Sprintf("failed to register domestic payment consent: %+v", err))
+		return "", errors.Wrapf(err, "failed to register domestic payment consent")
 	}
 
 	return registerResponse.Payload.Data.ConsentID, nil
@@ -141,15 +160,15 @@ func (o *OBBRConsentClient) CreateAccountConsent(c *gin.Context) (string, error)
 			WithTid(o.Accounts.TenantID).
 			WithAid(o.Accounts.ServerID).
 			WithRequest(&models.OBBRCustomerDataAccessConsentRequest{
-				Data: &models.OpenbankingBrasilData{
+				Data: &models.OpenbankingBrasilConsentData{
 					ExpirationDateTime: strfmt.DateTime(time.Now().Add(time.Hour * 24)),
-					LoggedUser: &models.OpenbankingBrasilLoggedUser{
-						Document: &models.OpenbankingBrasilDocument1{
+					LoggedUser: &models.OpenbankingBrasilConsentLoggedUser{
+						Document: &models.OpenbankingBrasilConsentDocument{
 							Identification: "11111111111",
 							Rel:            "CPF",
 						},
 					},
-					Permissions: []models.OpenbankingBrasilPermission{
+					Permissions: []models.OpenbankingBrasilConsentPermission{
 						"ACCOUNTS_READ",
 						"RESOURCES_READ",
 						"ACCOUNTS_OVERDRAFT_LIMITS_READ",
@@ -164,10 +183,38 @@ func (o *OBBRConsentClient) CreateAccountConsent(c *gin.Context) (string, error)
 	return registerResponse.Payload.Data.ConsentID, nil
 }
 
-func (o *OBBRConsentClient) CreatePaymentConsent(c *gin.Context, req CreatePaymentRequest) (string, error) {
+func (o *OBBRConsentClient) CreatePaymentConsent(c *gin.Context, signer Signer, req CreatePaymentRequest) (string, error) {
 	return "", nil
 }
 
 func (o *OBBRConsentClient) GetPaymentConsent(c *gin.Context, consentID string) (interface{}, error) {
 	return nil, nil
+}
+
+func getInitiation(consentResponse *openbanking.GetDomesticPaymentConsentRequestOK) (pi obModels.OBWriteDomestic2DataInitiation, err error) {
+	var initiationPayload []byte
+
+	if initiationPayload, err = json.Marshal(consentResponse.Payload.Data.Initiation); err != nil {
+		return pi, err
+	}
+
+	if err = json.Unmarshal(initiationPayload, &pi); err != nil {
+		return pi, err
+	}
+
+	return pi, nil
+}
+
+func getRisk(consentResponse *openbanking.GetDomesticPaymentConsentRequestOK) (pi obModels.OBRisk1, err error) {
+	var riskPayload []byte
+
+	if riskPayload, err = json.Marshal(consentResponse.Payload.Risk); err != nil {
+		return pi, err
+	}
+
+	if err = json.Unmarshal(riskPayload, &pi); err != nil {
+		return pi, err
+	}
+
+	return pi, nil
 }

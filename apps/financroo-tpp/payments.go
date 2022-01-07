@@ -1,8 +1,6 @@
 package main
 
 import (
-	"encoding/json"
-
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/client/domestic_payments"
 	obModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
 	"github.com/gin-gonic/gin"
@@ -61,32 +59,4 @@ func (o *OBUKClient) CreatePayment(c *gin.Context, data interface{}, accessToken
 
 func (o *OBBRClient) CreatePayment(c *gin.Context, data interface{}, accessToken string) (PaymentCreated, error) {
 	return PaymentCreated{}, nil
-}
-
-func getInitiation(consentResponse *openbanking.GetDomesticPaymentConsentRequestOK) (pi obModels.OBWriteDomestic2DataInitiation, err error) {
-	var initiationPayload []byte
-
-	if initiationPayload, err = json.Marshal(consentResponse.Payload.Data.Initiation); err != nil {
-		return pi, err
-	}
-
-	if err = json.Unmarshal(initiationPayload, &pi); err != nil {
-		return pi, err
-	}
-
-	return pi, nil
-}
-
-func getRisk(consentResponse *openbanking.GetDomesticPaymentConsentRequestOK) (pi obModels.OBRisk1, err error) {
-	var riskPayload []byte
-
-	if riskPayload, err = json.Marshal(consentResponse.Payload.Risk); err != nil {
-		return pi, err
-	}
-
-	if err = json.Unmarshal(riskPayload, &pi); err != nil {
-		return pi, err
-	}
-
-	return pi, nil
 }

@@ -1,0 +1,33 @@
+version: "3.0"
+services:
+  fapi-mongodb:
+    container_name: fapi-mongodb
+    image: docker.cloudentity.io/mongo:4
+    volumes:
+      - ./mount/conformance/fapi/_mongo/data:/data/db
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 50m
+
+  fapi-test:
+    container_name: fapi-test
+    image: docker.cloudentity.io/fapi/httpd:4.1.25
+    ports:
+      - "8444:8444"
+    depends_on:
+      - fapi-server
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 50m
+
+  fapi-server:
+    container_name: fapi-server
+    image: docker.cloudentity.io/fapi/server:4.1.25
+    depends_on:
+      - fapi-mongodb
+    logging:
+      driver: "json-file"
+      options:
+        max-size: 50m

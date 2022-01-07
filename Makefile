@@ -38,8 +38,8 @@ restart-acp:
 	docker-compose up -d --no-build acp
 
 .PHONY: lint
-lint:
-	golangci-lint run --fix --deadline=5m ./...
+lint: start-runner
+	docker-compose exec runner sh -c "golangci-lint run --fix --deadline=5m ./..."
 
 .PHONY: stop
 stop:
@@ -73,30 +73,37 @@ enable-spec-obbr:
 	./scripts/override_env.sh OPENBANKING_SERVER_ID openbanking_brasil
 	./scripts/override_env.sh DEVELOPER_CLIENT_ID bukj5p6k7qdmm5other1
 	./scripts/override_env.sh BANK_CLIENT_ID bukj5p6k7qdmm5pother2
-	./scripts/override_env.sh CONSENT_PAGE_CLIENT_ID bukj5p6k7qdmm5ppxxxx
+	./scripts/override_env.sh CONSENT_PAGE_CLIENT_ID bukj5p6k7qdMIIDfjCCAmagAwImm5ppxxxx
 
 .PHONY: set-version
 set-version:
 	./scripts/override_env.sh VERSION $(shell ./scripts/version.sh)
 
+.PHONY: start-runner
+start-runner:
+	docker build -t quickstart-runner -f build/runner.dockerfile .
+	docker-compose up -d runner
+
 .PHONY: generate-openbanking-integration-specs 
 generate-openbanking-integration-specs: generate-obuk-integration-spec 
 
 .PHONY: generate-obuk-integration-spec
-generate-obuk-integration-spec:
-	docker build -t quickstart-swagger -f build/swagger.dockerfile .
-	docker run  -v ${CURDIR}:/code quickstart-swagger \
-    swagger generate spec \
+generate-obuk-integration-spec: start-runner
+	docker-compose exec runner sh -c  \
+    "swagger generate spec \
         -m \
         -o api/internal/bank.yaml \
-         -w ./apps/bank 
+         -w ./apps/bank"
 
 .PHONY: generate-obbr-clients
-generate-obbr-clients: 
-	docker build -t quickstart-swagger -f build/swagger.dockerfile .
+generate-obbr-clients: start-runner
 	rm -rf ./openbanking/obbr/accounts/*
-	docker run  -v ${CURDIR}:/code quickstart-swagger \
-	swagger generate client \
+	docker-compose exec runner sh -c \
+	"swagger generate client \
 		-f api/obbr/accounts.yaml \
 		-A accounts  \
-		-t ./openbanking/obbr/accounts
+		-t ./openbanking/obbr/accounts"
+
+.PHONY: obbr
+obbr:
+	docker-compose -f docker-compose.yaml -f docker-compose.brasil.yaml -f conformance/docker-compose.obb.yaml -f conformance/docker-compose.fapi.yaml ${cmd}

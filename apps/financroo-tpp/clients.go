@@ -34,7 +34,7 @@ type BankClient interface {
 }
 
 type ConsentClient interface {
-	CreatePaymentConsent(c *gin.Context, req CreatePaymentRequest) (string, error)
+	CreatePaymentConsent(c *gin.Context, signer Signer, req CreatePaymentRequest) (string, error)
 	GetPaymentConsent(c *gin.Context, consentID string) (interface{}, error)
 	CreateAccountConsent(c *gin.Context) (string, error)
 }
