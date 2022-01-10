@@ -1,3 +1,4 @@
+tenant_id: default
 consent_self_service_portal_url: https://localhost:8085
 consent_admin_portal_url: https://localhost:8086
 consent_page_url: https://localhost:8080

@@ -22,6 +22,18 @@ To run tests:
 > #### Note
 > Tests will be executed accordingly to the set load for `MFA`- see **Set up MFA**. 
 
+## How to use Quickstart with SAAS
+### How to start up quickstart with SAAS
+- Configure the `.env-saas` with correct parameters.
+  - There are two optional fields which are not crucial for quickstart to work with SAAS. These are `ADMIN_CLIENT_ID` and `ADMIN_CLIENT_SECRET`, which can be left unconfigured
+- Run `make run-apps-with-saas`
+### How to clean up SAAS tenant afterwards
+The quickstart project creates a lot of extra workspaces to showcase its capabilities. To quickly cleanup your SAAS tenant after turning off quickstart, do the following:
+- Navigate to admin workspace in SAAS and create an admin application with `client_credentials` grant flow enabled. 
+- Copy the client id and client secret from the UI into the `ADMIN_CLIENT_ID` and `ADMIN_CLIENT_SECRET` fields in the `.env-saas` file.
+- Run `make clean-saas`, and all of the workspaces created by quickstart will be deleted. 
+- Or if you don't want to do this, you can just manually delete all the workspaces via the UI. 
+
 ## Credentials
 
 - ACP admin portal: `https://localhost:8443/app/default/admin` `admin / admin`

@@ -221,8 +221,6 @@ services:
     container_name: configuration
     image: cloudentity/openbanking-quickstart-configuration:latest
     restart: on-failure
-    depends_on:
-      - acp
     volumes:
       - ./data/tpp_cert.pem:/certs/tpp_cert.pem
       - ./data/ca.pem:/certs/ca.pem
