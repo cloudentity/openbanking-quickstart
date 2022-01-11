@@ -41,7 +41,6 @@ func NewOBUKSigner(privateKeyPath string) (Signer, error) {
 
 func (s *OBUKSigner) Sign(payload []byte) (string, error) {
 	var (
-		detachedJWS   string
 		signer        jose.Signer
 		jws           *jose.JSONWebSignature
 		signerOptions = &jose.SignerOptions{}
@@ -64,11 +63,7 @@ func (s *OBUKSigner) Sign(payload []byte) (string, error) {
 		return "", err
 	}
 
-	if detachedJWS, err = jws.DetachedCompactSerialize(); err != nil {
-		return "", err
-	}
-
-	return detachedJWS, nil
+	return jws.DetachedCompactSerialize()
 }
 
 type OBBRSigner struct {
@@ -76,11 +71,37 @@ type OBBRSigner struct {
 }
 
 func NewOBBRSigner(privateKeyPath string) (Signer, error) {
-	return &OBBRSigner{}, nil
+	var (
+		privateKey *rsa.PrivateKey
+		err        error
+	)
+
+	if privateKey, err = getPrivateKey(privateKeyPath); err != nil {
+		return nil, err
+	}
+
+	return &OBBRSigner{privateKey: privateKey}, nil
 }
 
 func (s *OBBRSigner) Sign(payload []byte) (string, error) {
-	return "", nil
+	var (
+		signer        jose.Signer
+		jws           *jose.JSONWebSignature
+		signerOptions = &jose.SignerOptions{}
+		err           error
+	)
+
+	signerOptions.WithType("JWT")
+
+	if signer, err = jose.NewSigner(jose.SigningKey{Algorithm: jose.PS256, Key: s.privateKey}, signerOptions); err != nil {
+		return "", err
+	}
+
+	if jws, err = signer.Sign(payload); err != nil {
+		return "", err
+	}
+
+	return jws.CompactSerialize()
 }
 
 func getPrivateKey(keyFile string) (*rsa.PrivateKey, error) {
