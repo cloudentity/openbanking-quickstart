@@ -24,18 +24,18 @@ To run tests:
 
 ## How to use Quickstart with SAAS
 ### How to start up quickstart with SAAS
-- Configure the `.env-saas` with correct parameters.
-  - There are two optional fields which are not crucial for quickstart to work with SAAS. These are `ADMIN_CLIENT_ID` and `ADMIN_CLIENT_SECRET`, which can be left unconfigured
+- Enable Admin workspace and System workspace on SAAS Tenant
+- Go to "System" workspace and create a new application with `manage_configuration` scope and `client_credentials` grant type
+- Configure the `.env-saas` file.
 - Run `make run-apps-with-saas`
-### How to clean up SAAS tenant afterwards
-The quickstart project creates a lot of extra workspaces to showcase its capabilities. To quickly cleanup your SAAS tenant after turning off quickstart, do the following:
-- Navigate to admin workspace in SAAS and create an admin application with `client_credentials` grant flow enabled. 
-- Copy the client id and client secret from the UI into the `ADMIN_CLIENT_ID` and `ADMIN_CLIENT_SECRET` fields in the `.env-saas` file.
-- Run `make clean-saas`, and all of the workspaces created by quickstart will be deleted. 
-- Or if you don't want to do this, you can just manually delete all the workspaces via the UI. 
+### How to clean up SAAS tenant
+- Run `make-clean-saas`. This will turn off all services and delete all extra workspaces from tenant.
 
+## How to Run Quickstart with Different Open Banking Specifications
+- If you have any of the quickstart applications running, turn them all off first with `make clean`
+- To run in Open Banking UK mode: run `make enable-spec-obuk run` if running locally. Run `make enable-spec-obuk run-apps-with-saas` if running with saas
+- To run in Open Banking Brasil mode: run `make enable-spec-obbr run` if running locally. Run `make enable-spec-obbr run-apps-with-saas` if running with saas
 ## Credentials
-
 - ACP admin portal: `https://localhost:8443/app/default/admin` `admin / admin`
 - Developer TPP: `https://localhost:8090` `user | user2 | user3 / p@ssw0rd!`
 - Financroo TPP: `https://localhost:8091` `test / p@ssw0rd!`
@@ -43,7 +43,6 @@ The quickstart project creates a lot of extra workspaces to showcase its capabil
 - Consent admin portal: `https://localhost:8086` `admin / p@ssw0rd!`
 
 ## Licenses
-
 - [Bank](apps/bank/LICENSE) - Apache 2.0
 - [Developer TPP](apps/developer-tpp/LICENSE) - Apache 2.0
 - [Financroo TPP](apps/financroo-tpp/LICENSE) - Apache 2.0
@@ -53,7 +52,6 @@ The quickstart project creates a lot of extra workspaces to showcase its capabil
 - [Consent page](consent/consent-page/LICENSE) - Cloudentity
 
 ## Release process
-
 - `git checkout -b release/VERSION`
 - `make set-version`
 - update CHANGELOG.md

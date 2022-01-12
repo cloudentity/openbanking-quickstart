@@ -50,8 +50,8 @@ func main() {
 	}
 
 	cc := clientcredentials.Config{
-		ClientID:     config.AdminClientID,
-		ClientSecret: config.AdminClientSecret,
+		ClientID:     "c79lsrgh5kre3dfd8kf0",
+		ClientSecret: "S4DYjFEowDmEKfwbXOtR-mqaHWuIae2Mt4i-6KimZYQ",
 		TokenURL:     fmt.Sprintf("%s/%s/%s/oauth2/token", tURL.String(), config.TenantID, "admin"),
 	}
 
@@ -67,19 +67,39 @@ func main() {
 
 	for _, wid := range workspaceIDs {
 		if request, err = http.NewRequest("DELETE", fmt.Sprintf("%s/api/admin/%s/servers/%s", tURL.String(), config.TenantID, wid), nil); err != nil {
-			log.Fatalf("failed to create delete http request: %v", err)
+			log.Fatalf("failed to create server delete request: %v", err)
 		}
-
-		if response, err = client.Do(request); err != nil {
-			log.Fatalf("http request failed: %+v", err)
+		if response, err = doRequest(client, request); err != nil {
+			log.Fatalf("failed to delete server: %v", err)
 		}
-
-		if response.StatusCode != http.StatusNoContent {
-			log.Fatalf("expected response code %d, got %d", http.StatusNoContent, response.StatusCode)
-		}
-
 		response.Body.Close()
 	}
+
+	clientIDs := []string{
+		"c79lsrgh5kre3dfd8kf0",
+	}
+
+	for _, cid := range clientIDs {
+		if request, err = http.NewRequest("DELETE", fmt.Sprintf("%s/api/admin/%s/clients/%s", tURL.String(), config.TenantID, cid), nil); err != nil {
+			log.Fatalf("failed to create client delete request")
+		}
+		if response, err = doRequest(client, request); err != nil {
+			log.Fatalf("failed to delete client: %v", err)
+		}
+		response.Body.Close()
+	}
+}
+
+func doRequest(client *http.Client, request *http.Request) (response *http.Response, err error) {
+	if response, err = client.Do(request); err != nil {
+		return response, err
+	}
+
+	if response.StatusCode != http.StatusNoContent {
+		return response, fmt.Errorf("expected response code %d, got %d", http.StatusNoContent, response.StatusCode)
+	}
+
+	return response, nil
 }
 
 func LoadConfig() (config Config, err error) {
