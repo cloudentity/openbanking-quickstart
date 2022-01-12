@@ -1,0 +1,19 @@
+servers:
+- tenant_id: {{ .tenant_id }}
+  id: admin
+  name: Admin
+  grant_types:
+    - authorization_code
+    - client_credentials
+clients:
+- tenant_id: {{ .tenant_id }}
+  authorization_server_id: admin
+  client_id: c79lsrgh5kre3dfd8kf0
+  client_name: quickstart cleanup client
+  client_secret: S4DYjFEowDmEKfwbXOtR-mqaHWuIae2Mt4i-6KimZYQ
+  grant_types:
+  - client_credentials
+  scopes:
+  - introspect_tokens
+  - revoke_tokens
+  token_endpoint_auth_method: client_secret_post
