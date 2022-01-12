@@ -50,8 +50,8 @@ func main() {
 	}
 
 	cc := clientcredentials.Config{
-		ClientID:     config.AdminClientID,
-		ClientSecret: config.AdminClientSecret,
+		ClientID:     "c79lsrgh5kre3dfd8kf0",
+		ClientSecret: "S4DYjFEowDmEKfwbXOtR-mqaHWuIae2Mt4i-6KimZYQ",
 		TokenURL:     fmt.Sprintf("%s/%s/%s/oauth2/token", tURL.String(), config.TenantID, "admin"),
 	}
 
