@@ -11,7 +11,7 @@ func init() {
 	viper.SetDefault("PORT", "8091")
 	viper.SetDefault("DB_FILE", "./data/my.db")
 	viper.SetDefault("ACP_URL", "")
-	viper.SetDefault("ACP_INTERNAL_URL", "")
+	viper.SetDefault("ACP_MTLS_URL", "")
 	viper.SetDefault("APP_HOST", "")
 	viper.SetDefault("UI_URL", "")
 	viper.SetDefault("CERT_FILE", "")
@@ -60,7 +60,7 @@ type Config struct {
 	Port           int
 	DBFile         string `mapstructure:"db_file"`
 	ACPURL         string `mapstructure:"acp_url" validate:"required,url"`
-	ACPInternalURL string `mapstructure:"acp_internal_url" validate:"required,url"`
+	ACPInternalURL string `mapstructure:"ACP_MTLS_URL" validate:"required,url"`
 	AppHost        string `mapstructure:"app_host" validate:"required"`
 	Tenant         string `mapstructure:"tenant" validate:"required"`
 	UIURL          string `mapstructure:"ui_url" validate:"required,url"`
