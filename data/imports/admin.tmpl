@@ -1,10 +1,3 @@
-servers:
-- tenant_id: {{ .tenant_id }}
-  id: admin
-  name: Admin
-  grant_types:
-    - authorization_code
-    - client_credentials
 clients:
 - tenant_id: {{ .tenant_id }}
   authorization_server_id: admin
