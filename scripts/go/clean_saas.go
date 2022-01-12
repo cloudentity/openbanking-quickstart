@@ -76,6 +76,10 @@ func main() {
 	}
 
 	clientIDs := []string{
+		"bv0ocudfotn6edhsiu7g",
+		"buc3b1hhuc714r78env0",
+		"bv2fe0tpfc67lmeti340",
+		"bukj5p6k7qdMIIDfjCCAmagAwImm5ppxxxx",
 		"c79lsrgh5kre3dfd8kf0",
 	}
 
