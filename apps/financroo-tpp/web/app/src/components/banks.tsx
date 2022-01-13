@@ -4,6 +4,7 @@ import chase from "../assets/banks/chase-logo.svg";
 import deutcshebank from "../assets/banks/deutcshebank-logo.svg";
 import hsbc from "../assets/banks/hsbc-logo.svg";
 import santander from "../assets/banks/santander-logo.svg";
+import santanderIcon from "../assets/banks/santander-icon.svg";
 import gobankIcon from "../assets/banks/gobank-icon.svg";
 import apexfinancialIcon from "../assets/banks/apexfinancial-icon.svg";
 import chaseIcon from "../assets/banks/chase-icon.svg";
@@ -25,11 +26,10 @@ export const banks: Bank[] = [
     icon: gobankIcon,
   },
   {
-    value: "gobank2",
+    value: "santander",
     disabled: false,
-    name: "GO Bank 2",
-    logo: gobank,
-    icon: gobankIcon,
+    logo: santander,
+    icon: santanderIcon
   },
   {
     value: "apexfinancial",
@@ -53,10 +53,5 @@ export const banks: Bank[] = [
     value: "hsbc",
     disabled: true,
     logo: hsbc,
-  },
-  {
-    value: "santander",
-    disabled: true,
-    logo: santander,
   },
 ];
