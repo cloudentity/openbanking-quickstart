@@ -20,16 +20,16 @@ func NewOpenbankingClient(config Config) OpenbankingClient {
 	)
 
 	c.OBUK = obuk.New(httptransport.NewWithClient(
-		config.UKBankURL.Host,
+		config.BankURL.Host,
 		"/",
-		[]string{config.UKBankURL.Scheme},
+		[]string{config.BankURL.Scheme},
 		hc,
 	), nil)
 
 	c.OBBR = obbr.New(httptransport.NewWithClient(
-		config.BRBankURL.Host,
+		config.BankURL.Host,
 		"/accounts/v1",
-		[]string{config.BRBankURL.Scheme},
+		[]string{config.BankURL.Scheme},
 		hc,
 	), nil)
 

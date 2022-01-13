@@ -19,7 +19,6 @@ import AccordionSummary from "@material-ui/core/AccordionSummary";
 import AccordionDetails from "@material-ui/core/AccordionDetails";
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import financrooIcon from "../assets/banks/financroo-icon.svg";
-import requestAccessPermissions from './request-access-permissions.json';
 import {includes} from "ramda";
 import clsx from "clsx";
 
@@ -131,7 +130,7 @@ export default function ConnectAccount({connected, onAllowAccess, onClose}) {
                 </div>
                 <Paper style={{marginTop: 32, padding: 16, textAlign: 'left'}}>
                   <Typography variant={'h4'} style={{fontSize: 16, marginBottom: 24}}>What we need you to share</Typography>
-                  {requestAccessPermissions.permissions.map((permission, index) => (
+                  {selected?.permissions?.map((permission, index) => (
                       <Accordion elevation={0} key={permission.value + index}>
                         <AccordionSummary
                           expandIcon={<ExpandMoreIcon/>}
@@ -164,7 +163,7 @@ export default function ConnectAccount({connected, onAllowAccess, onClose}) {
             <Button size={'large'} variant={'outlined'} id={'cancel-button'} onClick={() => setSelected(null)}>Cancel</Button>
             <Button size={'large'} variant={'contained'} id={'allow-button'} color={'secondary'} style={{marginLeft: 16}} onClick={() => onAllowAccess({
               bankId: selected.value,
-              permissions: requestAccessPermissions.permissions.map(p => p.value).filter(p => p)
+              permissions: selected?.permissions?.map(p => p.value)?.filter(p => p)
             })}>Allow access</Button>
           </div>
         </div>

@@ -8,7 +8,6 @@ import Card from "@material-ui/core/Card";
 import Checkbox from "@material-ui/core/Checkbox";
 import {banks} from "./banks";
 import {filter, pathOr} from "ramda";
-import requestAccessPermissions from "./request-access-permissions.json";
 
 const useStyles = makeStyles((theme: Theme) => ({
   accountRoot: {
@@ -32,6 +31,8 @@ export default function BankCard({bankId, reconnect, accounts, balances, filteri
   }
   const isAccountChecked = id => filtering?.accounts?.includes(id);
 
+  let selectedBank = banks.find(b => b.value === bankId);
+
   return (
     <Card style={style} id={bankId}>
       <div style={{padding: 20, display: 'flex', alignItems: 'center', borderBottom: '1px solid #ECECEC'}}>
@@ -45,7 +46,7 @@ export default function BankCard({bankId, reconnect, accounts, balances, filteri
           justifyContent: 'center',
           boxShadow: '0px 0.574468px 0.574468px rgba(0, 0, 0, 0.08), 0px 0px 0.574468px rgba(0, 0, 0, 0.31)'
         }}>
-          <img src={banks.find(b => b.value === bankId)?.icon} style={{width: 24, height: 24}} alt={'bank icon'}/>
+          <img src={selectedBank?.icon} style={{width: 24, height: 24}} alt={'bank icon'}/>
         </div>
         <div style={{marginLeft: 24}}>
           <Typography>{banks.find(b => b.value === bankId)?.name}</Typography>
@@ -61,7 +62,7 @@ export default function BankCard({bankId, reconnect, accounts, balances, filteri
                     variant={'contained'}
                     color={'primary'}
                     style={{color: '#fff'}}
-                    onClick={onReconnect(bankId, requestAccessPermissions.permissions.map(p => p.value).filter(p => p))}>reconnect</Button>
+                    onClick={onReconnect(bankId, selectedBank?.permissions?.map(p => p.value).filter(p => p) ?? [])}>reconnect</Button>
           )}
           {!reconnect && (
             <Button size={"small"} className={'disconnect-button'} variant={'outlined'} onClick={onDisconnect(bankId)}>disconnect</Button>
