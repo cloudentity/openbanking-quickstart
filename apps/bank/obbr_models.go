@@ -1,6 +1,7 @@
 package main
 
 import (
+	obbrAccountModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/models"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/models"
 )
 
@@ -10,4 +11,9 @@ type CreateOBBRPaymentRequest struct {
 
 	// in:body
 	Request *models.OpenbankingBrasilCreatePixPayment
+}
+
+type OBBRBalance struct {
+	obbrAccountModels.AccountBalancesData
+	AccountID string `json:"accountID"`
 }

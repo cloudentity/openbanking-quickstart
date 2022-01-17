@@ -67,3 +67,15 @@ func NewOBBRPayment(introspectionResponse *acpClient.IntrospectOBBRPaymentConsen
 		Meta: &paymentModels.OpenbankingBrasilMeta{},
 	}
 }
+
+func NewOBBRBalancesResponse(data OBBRBalance, self strfmt.URI) interface{} {
+	selfLink := self.String()
+
+	return obbrAccountModels.ResponseAccountBalances{
+		Data: &data.AccountBalancesData,
+		Links: &obbrAccountModels.Links{
+			Self: &selfLink,
+		},
+		Meta: nil,
+	}
+}
