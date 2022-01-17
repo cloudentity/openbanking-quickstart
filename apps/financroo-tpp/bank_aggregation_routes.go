@@ -83,7 +83,6 @@ func (s *Server) GetAccounts() func(ctx *gin.Context) {
 
 		// todo parallel
 		for _, b := range user.Banks {
-
 			if client, accessToken, err = s.GetClientWithToken(b, tokens); err != nil {
 				continue
 			}

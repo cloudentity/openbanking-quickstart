@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	obModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 	"github.com/google/uuid"
@@ -13,7 +14,6 @@ import (
 
 	"github.com/cloudentity/acp-client-go/client/openbanking"
 	"github.com/cloudentity/acp-client-go/models"
-	obModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
 )
 
 func (o *OBUKConsentClient) CreateAccountConsent(c *gin.Context) (string, error) {
@@ -241,7 +241,6 @@ const (
 	OpenbankingBrasilConsentPermissionRESOURCESREAD models.OpenbankingBrasilConsentPermission = "RESOURCES_READ"
 )
 
-
 type PermissionGroup string
 
 const (
@@ -350,7 +349,7 @@ func (o *OBBRConsentClient) CreateAccountConsent(c *gin.Context) (string, error)
 		}
 	}
 
-	for uniquePerm, _ := range uniquePerms {
+	for uniquePerm := range uniquePerms {
 		permissions = append(permissions, uniquePerm)
 	}
 

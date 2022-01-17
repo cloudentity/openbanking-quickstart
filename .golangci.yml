@@ -143,7 +143,7 @@ linters-settings:
     ignore-words: [
       authorised,
       Autorised,
-      INSTALMENTS
+      instalments
     ]
   lll:
     # max line length, lines longer will be reported. Default is 120.
