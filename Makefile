@@ -67,7 +67,7 @@ enable-spec-obuk:
 	./scripts/override_env.sh DEVELOPER_CLIENT_ID bugkgm23g9kregtu051g
 	./scripts/override_env.sh CONSENT_PAGE_CLIENT_ID bv0ocudfotn6edhsiu7g
 	./scripts/override_env.sh BANK_CLIENT_ID bukj5p6k7qdmm5ppbi4g
-	./scripts/override_env.sh BANK_URL https://bank-uk:8070
+	./scripts/override_env.sh BANK_URL http://bank-uk:8070
 
 enable-spec-obbr:
 	./scripts/override_env.sh SPEC obbr 
@@ -75,7 +75,7 @@ enable-spec-obbr:
 	./scripts/override_env.sh DEVELOPER_CLIENT_ID bukj5p6k7qdmm5other1
 	./scripts/override_env.sh BANK_CLIENT_ID bukj5p6k7qdmm5pother2
 	./scripts/override_env.sh CONSENT_PAGE_CLIENT_ID bukj5p6k7qdMIIDfjCCAmagAwImm5ppxxxx
-	./scripts/override_env.sh BANK_URL https://bank-br:8070
+	./scripts/override_env.sh BANK_URL http://bank-br:8070
 
 
 .PHONY: set-version
