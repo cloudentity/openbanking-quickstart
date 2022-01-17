@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"time"
 
+	obbrModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/consents/models"
 	obModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
@@ -149,98 +150,6 @@ func (o *OBUKConsentClient) GetPaymentConsent(c *gin.Context, consentID string) 
 	return consentResponse, nil
 }
 
-const (
-	// OpenbankingBrasilConsentPermissionACCOUNTSREAD captures enum value "ACCOUNTS_READ"
-	OpenbankingBrasilConsentPermissionACCOUNTSREAD models.OpenbankingBrasilConsentPermission = "ACCOUNTS_READ"
-
-	// OpenbankingBrasilConsentPermissionACCOUNTSBALANCESREAD captures enum value "ACCOUNTS_BALANCES_READ"
-	OpenbankingBrasilConsentPermissionACCOUNTSBALANCESREAD models.OpenbankingBrasilConsentPermission = "ACCOUNTS_BALANCES_READ"
-
-	// OpenbankingBrasilConsentPermissionACCOUNTSTRANSACTIONSREAD captures enum value "ACCOUNTS_TRANSACTIONS_READ"
-	OpenbankingBrasilConsentPermissionACCOUNTSTRANSACTIONSREAD models.OpenbankingBrasilConsentPermission = "ACCOUNTS_TRANSACTIONS_READ"
-
-	// OpenbankingBrasilConsentPermissionACCOUNTSOVERDRAFTLIMITSREAD captures enum value "ACCOUNTS_OVERDRAFT_LIMITS_READ"
-	OpenbankingBrasilConsentPermissionACCOUNTSOVERDRAFTLIMITSREAD models.OpenbankingBrasilConsentPermission = "ACCOUNTS_OVERDRAFT_LIMITS_READ"
-
-	// OpenbankingBrasilConsentPermissionCREDITCARDSACCOUNTSREAD captures enum value "CREDIT_CARDS_ACCOUNTS_READ"
-	OpenbankingBrasilConsentPermissionCREDITCARDSACCOUNTSREAD models.OpenbankingBrasilConsentPermission = "CREDIT_CARDS_ACCOUNTS_READ"
-
-	// OpenbankingBrasilConsentPermissionCREDITCARDSACCOUNTSBILLSREAD captures enum value "CREDIT_CARDS_ACCOUNTS_BILLS_READ"
-	OpenbankingBrasilConsentPermissionCREDITCARDSACCOUNTSBILLSREAD models.OpenbankingBrasilConsentPermission = "CREDIT_CARDS_ACCOUNTS_BILLS_READ"
-
-	// OpenbankingBrasilConsentPermissionCREDITCARDSACCOUNTSBILLSTRANSACTIONSREAD captures enum value "CREDIT_CARDS_ACCOUNTS_BILLS_TRANSACTIONS_READ"
-	OpenbankingBrasilConsentPermissionCREDITCARDSACCOUNTSBILLSTRANSACTIONSREAD models.OpenbankingBrasilConsentPermission = "CREDIT_CARDS_ACCOUNTS_BILLS_TRANSACTIONS_READ"
-
-	// OpenbankingBrasilConsentPermissionCREDITCARDSACCOUNTSLIMITSREAD captures enum value "CREDIT_CARDS_ACCOUNTS_LIMITS_READ"
-	OpenbankingBrasilConsentPermissionCREDITCARDSACCOUNTSLIMITSREAD models.OpenbankingBrasilConsentPermission = "CREDIT_CARDS_ACCOUNTS_LIMITS_READ"
-
-	// OpenbankingBrasilConsentPermissionCREDITCARDSACCOUNTSTRANSACTIONSREAD captures enum value "CREDIT_CARDS_ACCOUNTS_TRANSACTIONS_READ"
-	OpenbankingBrasilConsentPermissionCREDITCARDSACCOUNTSTRANSACTIONSREAD models.OpenbankingBrasilConsentPermission = "CREDIT_CARDS_ACCOUNTS_TRANSACTIONS_READ"
-
-	// OpenbankingBrasilConsentPermissionCUSTOMERSPERSONALIDENTIFICATIONSREAD captures enum value "CUSTOMERS_PERSONAL_IDENTIFICATIONS_READ"
-	OpenbankingBrasilConsentPermissionCUSTOMERSPERSONALIDENTIFICATIONSREAD models.OpenbankingBrasilConsentPermission = "CUSTOMERS_PERSONAL_IDENTIFICATIONS_READ"
-
-	// OpenbankingBrasilConsentPermissionCUSTOMERSPERSONALADITTIONALINFOREAD captures enum value "CUSTOMERS_PERSONAL_ADITTIONALINFO_READ"
-	OpenbankingBrasilConsentPermissionCUSTOMERSPERSONALADITTIONALINFOREAD models.OpenbankingBrasilConsentPermission = "CUSTOMERS_PERSONAL_ADITTIONALINFO_READ"
-
-	// OpenbankingBrasilConsentPermissionCUSTOMERSBUSINESSIDENTIFICATIONSREAD captures enum value "CUSTOMERS_BUSINESS_IDENTIFICATIONS_READ"
-	OpenbankingBrasilConsentPermissionCUSTOMERSBUSINESSIDENTIFICATIONSREAD models.OpenbankingBrasilConsentPermission = "CUSTOMERS_BUSINESS_IDENTIFICATIONS_READ"
-
-	// OpenbankingBrasilConsentPermissionCUSTOMERSBUSINESSADITTIONALINFOREAD captures enum value "CUSTOMERS_BUSINESS_ADITTIONALINFO_READ"
-	OpenbankingBrasilConsentPermissionCUSTOMERSBUSINESSADITTIONALINFOREAD models.OpenbankingBrasilConsentPermission = "CUSTOMERS_BUSINESS_ADITTIONALINFO_READ"
-
-	// OpenbankingBrasilConsentPermissionFINANCINGSREAD captures enum value "FINANCINGS_READ"
-	OpenbankingBrasilConsentPermissionFINANCINGSREAD models.OpenbankingBrasilConsentPermission = "FINANCINGS_READ"
-
-	// OpenbankingBrasilConsentPermissionFINANCINGSSCHEDULEDINSTALMENTSREAD captures enum value "FINANCINGS_SCHEDULED_INSTALMENTS_READ"
-	OpenbankingBrasilConsentPermissionFINANCINGSSCHEDULEDINSTALMENTSREAD models.OpenbankingBrasilConsentPermission = "FINANCINGS_SCHEDULED_INSTALMENTS_READ"
-
-	// OpenbankingBrasilConsentPermissionFINANCINGSPAYMENTSREAD captures enum value "FINANCINGS_PAYMENTS_READ"
-	OpenbankingBrasilConsentPermissionFINANCINGSPAYMENTSREAD models.OpenbankingBrasilConsentPermission = "FINANCINGS_PAYMENTS_READ"
-
-	// OpenbankingBrasilConsentPermissionFINANCINGSWARRANTIESREAD captures enum value "FINANCINGS_WARRANTIES_READ"
-	OpenbankingBrasilConsentPermissionFINANCINGSWARRANTIESREAD models.OpenbankingBrasilConsentPermission = "FINANCINGS_WARRANTIES_READ"
-
-	// OpenbankingBrasilConsentPermissionINVOICEFINANCINGSREAD captures enum value "INVOICE_FINANCINGS_READ"
-	OpenbankingBrasilConsentPermissionINVOICEFINANCINGSREAD models.OpenbankingBrasilConsentPermission = "INVOICE_FINANCINGS_READ"
-
-	// OpenbankingBrasilConsentPermissionINVOICEFINANCINGSSCHEDULEDINSTALMENTSREAD captures enum value "INVOICE_FINANCINGS_SCHEDULED_INSTALMENTS_READ"
-	OpenbankingBrasilConsentPermissionINVOICEFINANCINGSSCHEDULEDINSTALMENTSREAD models.OpenbankingBrasilConsentPermission = "INVOICE_FINANCINGS_SCHEDULED_INSTALMENTS_READ"
-
-	// OpenbankingBrasilConsentPermissionINVOICEFINANCINGSPAYMENTSREAD captures enum value "INVOICE_FINANCINGS_PAYMENTS_READ"
-	OpenbankingBrasilConsentPermissionINVOICEFINANCINGSPAYMENTSREAD models.OpenbankingBrasilConsentPermission = "INVOICE_FINANCINGS_PAYMENTS_READ"
-
-	// OpenbankingBrasilConsentPermissionINVOICEFINANCINGSWARRANTIESREAD captures enum value "INVOICE_FINANCINGS_WARRANTIES_READ"
-	OpenbankingBrasilConsentPermissionINVOICEFINANCINGSWARRANTIESREAD models.OpenbankingBrasilConsentPermission = "INVOICE_FINANCINGS_WARRANTIES_READ"
-
-	// OpenbankingBrasilConsentPermissionLOANSREAD captures enum value "LOANS_READ"
-	OpenbankingBrasilConsentPermissionLOANSREAD models.OpenbankingBrasilConsentPermission = "LOANS_READ"
-
-	// OpenbankingBrasilConsentPermissionLOANSSCHEDULEDINSTALMENTSREAD captures enum value "LOANS_SCHEDULED_INSTALMENTS_READ"
-	OpenbankingBrasilConsentPermissionLOANSSCHEDULEDINSTALMENTSREAD models.OpenbankingBrasilConsentPermission = "LOANS_SCHEDULED_INSTALMENTS_READ"
-
-	// OpenbankingBrasilConsentPermissionLOANSPAYMENTSREAD captures enum value "LOANS_PAYMENTS_READ"
-	OpenbankingBrasilConsentPermissionLOANSPAYMENTSREAD models.OpenbankingBrasilConsentPermission = "LOANS_PAYMENTS_READ"
-
-	// OpenbankingBrasilConsentPermissionLOANSWARRANTIESREAD captures enum value "LOANS_WARRANTIES_READ"
-	OpenbankingBrasilConsentPermissionLOANSWARRANTIESREAD models.OpenbankingBrasilConsentPermission = "LOANS_WARRANTIES_READ"
-
-	// OpenbankingBrasilConsentPermissionUNARRANGEDACCOUNTSOVERDRAFTREAD captures enum value "UNARRANGED_ACCOUNTS_OVERDRAFT_READ"
-	OpenbankingBrasilConsentPermissionUNARRANGEDACCOUNTSOVERDRAFTREAD models.OpenbankingBrasilConsentPermission = "UNARRANGED_ACCOUNTS_OVERDRAFT_READ"
-
-	// OpenbankingBrasilConsentPermissionUNARRANGEDACCOUNTSOVERDRAFTSCHEDULEDINSTALMENTSREAD captures enum value "UNARRANGED_ACCOUNTS_OVERDRAFT_SCHEDULED_INSTALMENTS_READ"
-	OpenbankingBrasilConsentPermissionUNARRANGEDACCOUNTSOVERDRAFTSCHEDULEDINSTALMENTSREAD models.OpenbankingBrasilConsentPermission = "UNARRANGED_ACCOUNTS_OVERDRAFT_SCHEDULED_INSTALMENTS_READ"
-
-	// OpenbankingBrasilConsentPermissionUNARRANGEDACCOUNTSOVERDRAFTPAYMENTSREAD captures enum value "UNARRANGED_ACCOUNTS_OVERDRAFT_PAYMENTS_READ"
-	OpenbankingBrasilConsentPermissionUNARRANGEDACCOUNTSOVERDRAFTPAYMENTSREAD models.OpenbankingBrasilConsentPermission = "UNARRANGED_ACCOUNTS_OVERDRAFT_PAYMENTS_READ"
-
-	// OpenbankingBrasilConsentPermissionUNARRANGEDACCOUNTSOVERDRAFTWARRANTIESREAD captures enum value "UNARRANGED_ACCOUNTS_OVERDRAFT_WARRANTIES_READ"
-	OpenbankingBrasilConsentPermissionUNARRANGEDACCOUNTSOVERDRAFTWARRANTIESREAD models.OpenbankingBrasilConsentPermission = "UNARRANGED_ACCOUNTS_OVERDRAFT_WARRANTIES_READ"
-
-	// OpenbankingBrasilConsentPermissionRESOURCESREAD captures enum value "RESOURCES_READ"
-	OpenbankingBrasilConsentPermissionRESOURCESREAD models.OpenbankingBrasilConsentPermission = "RESOURCES_READ"
-)
-
 type PermissionGroup string
 
 const (
@@ -257,74 +166,74 @@ const (
 	OperacoesDeCreditoDadosDoContrato   PermissionGroup = "Operações de Crédito Dados do Contrato"
 )
 
-type Permissions []models.OpenbankingBrasilConsentPermission
+type Permissions []obbrModels.OpenbankingBrasilPermission
 
 var PermissionGroupMap = map[PermissionGroup]Permissions{
 	CadastroDadosCadastraisPF: {
-		OpenbankingBrasilConsentPermissionCUSTOMERSPERSONALIDENTIFICATIONSREAD,
-		OpenbankingBrasilConsentPermissionRESOURCESREAD,
+		obbrModels.OpenbankingBrasilPermissionCUSTOMERSPERSONALIDENTIFICATIONSREAD,
+		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
 	},
 	CadastroInformacoesComplementaresPF: {
-		OpenbankingBrasilConsentPermissionCUSTOMERSPERSONALADITTIONALINFOREAD,
-		OpenbankingBrasilConsentPermissionRESOURCESREAD,
+		obbrModels.OpenbankingBrasilPermissionCUSTOMERSPERSONALADITTIONALINFOREAD,
+		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
 	},
 	CadastroDadosCadastraisPJ: {
-		OpenbankingBrasilConsentPermissionCUSTOMERSBUSINESSIDENTIFICATIONSREAD,
-		OpenbankingBrasilConsentPermissionRESOURCESREAD,
+		obbrModels.OpenbankingBrasilPermissionCUSTOMERSBUSINESSIDENTIFICATIONSREAD,
+		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
 	},
 	CadastroInformacoesComplementaresPJ: {
-		OpenbankingBrasilConsentPermissionCUSTOMERSBUSINESSADITTIONALINFOREAD,
-		OpenbankingBrasilConsentPermissionRESOURCESREAD,
+		obbrModels.OpenbankingBrasilPermissionCUSTOMERSBUSINESSADITTIONALINFOREAD,
+		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
 	},
 	ContasSaldos: {
-		OpenbankingBrasilConsentPermissionACCOUNTSREAD,
-		OpenbankingBrasilConsentPermissionACCOUNTSBALANCESREAD,
-		OpenbankingBrasilConsentPermissionRESOURCESREAD,
+		obbrModels.OpenbankingBrasilPermissionACCOUNTSREAD,
+		obbrModels.OpenbankingBrasilPermissionACCOUNTSBALANCESREAD,
+		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
 	},
 	ContasLimites: {
-		OpenbankingBrasilConsentPermissionACCOUNTSREAD,
-		OpenbankingBrasilConsentPermissionACCOUNTSOVERDRAFTLIMITSREAD,
-		OpenbankingBrasilConsentPermissionRESOURCESREAD,
+		obbrModels.OpenbankingBrasilPermissionACCOUNTSREAD,
+		obbrModels.OpenbankingBrasilPermissionACCOUNTSOVERDRAFTLIMITSREAD,
+		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
 	},
 	ContasExtratos: {
-		OpenbankingBrasilConsentPermissionACCOUNTSREAD,
-		OpenbankingBrasilConsentPermissionACCOUNTSTRANSACTIONSREAD,
-		OpenbankingBrasilConsentPermissionRESOURCESREAD,
+		obbrModels.OpenbankingBrasilPermissionACCOUNTSREAD,
+		obbrModels.OpenbankingBrasilPermissionACCOUNTSTRANSACTIONSREAD,
+		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
 	},
 	CartaoDeCreditoLimites: {
-		OpenbankingBrasilConsentPermissionCREDITCARDSACCOUNTSREAD,
-		OpenbankingBrasilConsentPermissionCREDITCARDSACCOUNTSLIMITSREAD,
-		OpenbankingBrasilConsentPermissionRESOURCESREAD,
+		obbrModels.OpenbankingBrasilPermissionCREDITCARDSACCOUNTSREAD,
+		obbrModels.OpenbankingBrasilPermissionCREDITCARDSACCOUNTSLIMITSREAD,
+		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
 	},
 	CartaoDeCreditoTransacoes: {
-		OpenbankingBrasilConsentPermissionCREDITCARDSACCOUNTSREAD,
-		OpenbankingBrasilConsentPermissionCREDITCARDSACCOUNTSTRANSACTIONSREAD,
-		OpenbankingBrasilConsentPermissionRESOURCESREAD,
+		obbrModels.OpenbankingBrasilPermissionCREDITCARDSACCOUNTSREAD,
+		obbrModels.OpenbankingBrasilPermissionCREDITCARDSACCOUNTSTRANSACTIONSREAD,
+		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
 	},
 	CartaoDeCreditoFaturas: {
-		OpenbankingBrasilConsentPermissionCREDITCARDSACCOUNTSREAD,
-		OpenbankingBrasilConsentPermissionCREDITCARDSACCOUNTSBILLSREAD,
-		OpenbankingBrasilConsentPermissionCREDITCARDSACCOUNTSBILLSTRANSACTIONSREAD,
-		OpenbankingBrasilConsentPermissionRESOURCESREAD,
+		obbrModels.OpenbankingBrasilPermissionCREDITCARDSACCOUNTSREAD,
+		obbrModels.OpenbankingBrasilPermissionCREDITCARDSACCOUNTSBILLSREAD,
+		obbrModels.OpenbankingBrasilPermissionCREDITCARDSACCOUNTSBILLSTRANSACTIONSREAD,
+		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
 	},
 	OperacoesDeCreditoDadosDoContrato: {
-		OpenbankingBrasilConsentPermissionLOANSREAD,
-		OpenbankingBrasilConsentPermissionLOANSWARRANTIESREAD,
-		OpenbankingBrasilConsentPermissionLOANSSCHEDULEDINSTALMENTSREAD,
-		OpenbankingBrasilConsentPermissionLOANSPAYMENTSREAD,
-		OpenbankingBrasilConsentPermissionFINANCINGSREAD,
-		OpenbankingBrasilConsentPermissionFINANCINGSWARRANTIESREAD,
-		OpenbankingBrasilConsentPermissionFINANCINGSSCHEDULEDINSTALMENTSREAD,
-		OpenbankingBrasilConsentPermissionFINANCINGSPAYMENTSREAD,
-		OpenbankingBrasilConsentPermissionUNARRANGEDACCOUNTSOVERDRAFTREAD,
-		OpenbankingBrasilConsentPermissionUNARRANGEDACCOUNTSOVERDRAFTWARRANTIESREAD,
-		OpenbankingBrasilConsentPermissionUNARRANGEDACCOUNTSOVERDRAFTSCHEDULEDINSTALMENTSREAD,
-		OpenbankingBrasilConsentPermissionUNARRANGEDACCOUNTSOVERDRAFTPAYMENTSREAD,
-		OpenbankingBrasilConsentPermissionINVOICEFINANCINGSREAD,
-		OpenbankingBrasilConsentPermissionINVOICEFINANCINGSWARRANTIESREAD,
-		OpenbankingBrasilConsentPermissionINVOICEFINANCINGSSCHEDULEDINSTALMENTSREAD,
-		OpenbankingBrasilConsentPermissionINVOICEFINANCINGSPAYMENTSREAD,
-		OpenbankingBrasilConsentPermissionRESOURCESREAD,
+		obbrModels.OpenbankingBrasilPermissionLOANSREAD,
+		obbrModels.OpenbankingBrasilPermissionLOANSWARRANTIESREAD,
+		obbrModels.OpenbankingBrasilPermissionLOANSSCHEDULEDINSTALMENTSREAD,
+		obbrModels.OpenbankingBrasilPermissionLOANSPAYMENTSREAD,
+		obbrModels.OpenbankingBrasilPermissionFINANCINGSREAD,
+		obbrModels.OpenbankingBrasilPermissionFINANCINGSWARRANTIESREAD,
+		obbrModels.OpenbankingBrasilPermissionFINANCINGSSCHEDULEDINSTALMENTSREAD,
+		obbrModels.OpenbankingBrasilPermissionFINANCINGSPAYMENTSREAD,
+		obbrModels.OpenbankingBrasilPermissionUNARRANGEDACCOUNTSOVERDRAFTREAD,
+		obbrModels.OpenbankingBrasilPermissionUNARRANGEDACCOUNTSOVERDRAFTWARRANTIESREAD,
+		obbrModels.OpenbankingBrasilPermissionUNARRANGEDACCOUNTSOVERDRAFTSCHEDULEDINSTALMENTSREAD,
+		obbrModels.OpenbankingBrasilPermissionUNARRANGEDACCOUNTSOVERDRAFTPAYMENTSREAD,
+		obbrModels.OpenbankingBrasilPermissionINVOICEFINANCINGSREAD,
+		obbrModels.OpenbankingBrasilPermissionINVOICEFINANCINGSWARRANTIESREAD,
+		obbrModels.OpenbankingBrasilPermissionINVOICEFINANCINGSSCHEDULEDINSTALMENTSREAD,
+		obbrModels.OpenbankingBrasilPermissionINVOICEFINANCINGSPAYMENTSREAD,
+		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
 	},
 }
 
@@ -333,7 +242,7 @@ func (o *OBBRConsentClient) CreateAccountConsent(c *gin.Context) (string, error)
 		registerResponse *openbanking.CreateDataAccessConsentCreated
 		connectRequest   = ConnectBankRequest{}
 		permissions      []models.OpenbankingBrasilConsentPermission
-		uniquePerms      = map[models.OpenbankingBrasilConsentPermission]bool{}
+		uniquePerms      = map[obbrModels.OpenbankingBrasilPermission]bool{}
 		err              error
 	)
 
@@ -350,7 +259,7 @@ func (o *OBBRConsentClient) CreateAccountConsent(c *gin.Context) (string, error)
 	}
 
 	for uniquePerm := range uniquePerms {
-		permissions = append(permissions, uniquePerm)
+		permissions = append(permissions, models.OpenbankingBrasilConsentPermission(uniquePerm))
 	}
 
 	if registerResponse, err = o.Accounts.Openbanking.CreateDataAccessConsent(
