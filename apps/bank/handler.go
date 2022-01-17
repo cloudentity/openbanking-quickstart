@@ -69,7 +69,6 @@ func (s *Server) Get(factory GetEndpointLogicFactory) func(*gin.Context) {
 
 			return response, nil
 		})
-
 	}
 }
 
