@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+
 	obbrAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/client/accounts"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client/balances"
 	"github.com/gin-gonic/gin"

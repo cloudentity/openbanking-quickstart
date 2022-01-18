@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/sirupsen/logrus"
 	"strconv"
 	"strings"
+
+	"github.com/sirupsen/logrus"
 
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obbr/consents/models"
 	"github.com/gin-gonic/gin"

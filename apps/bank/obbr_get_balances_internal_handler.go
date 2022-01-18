@@ -2,9 +2,10 @@ package main
 
 import (
 	"fmt"
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
-	"strconv"
 )
 
 // swagger:route GET /internal/balances bank br getInternalBalancesRequest
