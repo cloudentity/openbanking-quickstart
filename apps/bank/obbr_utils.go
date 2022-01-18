@@ -68,14 +68,64 @@ func NewOBBRPayment(introspectionResponse *acpClient.IntrospectOBBRPaymentConsen
 	}
 }
 
-func NewOBBRBalancesResponse(data OBBRBalance, self strfmt.URI) interface{} {
-	selfLink := self.String()
+func NewOBBRBalanceResponse(data OBBRBalance, self strfmt.URI) interface{} {
+	var (
+		selfLink       = self.String()
+		now            = strfmt.DateTime(time.Now())
+		pages    int32 = 1
+		records  int32 = 1
+	)
 
 	return obbrAccountModels.ResponseAccountBalances{
 		Data: &data.AccountBalancesData,
 		Links: &obbrAccountModels.Links{
 			Self: &selfLink,
 		},
-		Meta: nil,
+		Meta: &obbrAccountModels.Meta{
+			RequestDateTime: &now,
+			TotalPages:      &pages,
+			TotalRecords:    &records,
+		},
+	}
+}
+
+// swagger:model OBBRBalances
+type OBBRBalances struct {
+	// data
+	// Required: true
+	Data []obbrAccountModels.AccountBalancesData `json:"data"`
+
+	// links
+	// Required: true
+	Links *obbrAccountModels.Links `json:"links"`
+
+	// meta
+	// Required: true
+	Meta *obbrAccountModels.Meta `json:"meta"`
+}
+
+func NewOBBRBalancesResponse(data []OBBRBalance, self strfmt.URI) interface{} {
+	var (
+		balances []obbrAccountModels.AccountBalancesData
+		selfLink       = self.String()
+		now            = strfmt.DateTime(time.Now())
+		pages    int32 = 1
+		records        = int32(len(data))
+	)
+
+	for _, b := range data {
+		balances = append(balances, b.AccountBalancesData)
+	}
+
+	return OBBRBalances{
+		Data: balances,
+		Links: &obbrAccountModels.Links{
+			Self: &selfLink,
+		},
+		Meta: &obbrAccountModels.Meta{
+			RequestDateTime: &now,
+			TotalPages:      &pages,
+			TotalRecords:    &records,
+		},
 	}
 }

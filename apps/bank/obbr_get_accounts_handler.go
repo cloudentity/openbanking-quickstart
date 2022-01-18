@@ -9,6 +9,19 @@ import (
 	acpClient "github.com/cloudentity/acp-client-go/models"
 )
 
+// swagger:route GET /accounts bank br getAccountsRequest
+//
+// get accounts
+//
+// Security:
+//   defaultcc: accounts
+//
+// Responses:
+//   200: ResponseAccountList
+//	 400: OpenbankingBrasilResponseError
+//   403: OpenbankingBrasilResponseError
+//   404: OpenbankingBrasilResponseError
+//   500: OpenbankingBrasilResponseError
 type OBBRGetAccountsHandler struct {
 	*Server
 	introspectionResponse *acpClient.IntrospectOBBRDataAccessConsentResponse

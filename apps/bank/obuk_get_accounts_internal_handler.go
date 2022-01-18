@@ -16,8 +16,8 @@ import (
 //   defaultcc: accounts
 //
 // Responses:
-//   200: OBReadAccount6
-//   404: OBErrorResponse1
+//   200: ResponseAccountList
+//   404: OpenbankingBrasilResponseError
 type OBUKGetAccountsInternalHandler struct {
 	*Server
 }
@@ -36,7 +36,7 @@ func (h *OBUKGetAccountsInternalHandler) MapError(c *gin.Context, err *Error) (c
 }
 
 func (h *OBUKGetAccountsInternalHandler) BuildResponse(c *gin.Context, data BankUserData) interface{} {
-	self := strfmt.URI(fmt.Sprintf("http://localhost:%s/accounts", strconv.Itoa(h.Config.Port)))
+	self := strfmt.URI(fmt.Sprintf("http://localhost:%s/internal/accounts", strconv.Itoa(h.Config.Port)))
 	return NewAccountsResponse(data.OBUKAccounts, self)
 }
 

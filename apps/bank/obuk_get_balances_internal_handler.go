@@ -8,7 +8,7 @@ import (
 	"github.com/go-openapi/strfmt"
 )
 
-// swagger:route GET /internal/balances/{sub} bank getInternalBalancesRequest
+// swagger:route GET /internal/balances bank getInternalBalancesRequest
 //
 // get all balances for user
 //

@@ -4,6 +4,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// swagger:route GET /internal/accounts bank br getInternalAccountsRequest
+//
+// get all accounts for user
+//
+// Security:
+//   defaultcc: accounts
+//
+// Responses:
+//   200: OBReadAccount6
+//   404: OBErrorResponse1
 type OBBRGetAccountsInternalHandler struct {
 	*Server
 }

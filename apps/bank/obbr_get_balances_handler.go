@@ -12,27 +12,27 @@ import (
 	acpClient "github.com/cloudentity/acp-client-go/models"
 )
 
-// swagger:route GET /balances bank getBalancesRequest
+// swagger:route GET /accounts/v1/accounts/:accountID/balance bank br getBalancesRequest
 //
-// get balances
+// get balance
 //
 // Security:
 //   defaultcc: accounts
 //
 // Responses:
-//   200: OBReadBalance1
-//   403: OBErrorResponse1
-//   404: OBErrorResponse1
-type OBBRGetBalancesHandler struct {
+//   200: AccountBalancesData
+//   403: OpenbankingBrasilResponseError
+//   404: OpenbankingBrasilResponseError
+type OBBRGetBalanceHandler struct {
 	*Server
 	introspectionResponse *acpClient.IntrospectOBBRDataAccessConsentResponse
 }
 
-func NewOBBRGetBalancesHandler(server *Server) GetEndpointLogic {
-	return &OBBRGetBalancesHandler{Server: server}
+func NewOBBRGetBalanceHandler(server *Server) GetEndpointLogic {
+	return &OBBRGetBalanceHandler{Server: server}
 }
 
-func (h *OBBRGetBalancesHandler) SetIntrospectionResponse(c *gin.Context) *Error {
+func (h *OBBRGetBalanceHandler) SetIntrospectionResponse(c *gin.Context) *Error {
 	var err error
 	if h.introspectionResponse, err = h.OBBRIntrospectAccountsToken(c); err != nil {
 		return ErrBadRequest.WithMessage("failed to introspect token")
@@ -40,12 +40,12 @@ func (h *OBBRGetBalancesHandler) SetIntrospectionResponse(c *gin.Context) *Error
 	return nil
 }
 
-func (h *OBBRGetBalancesHandler) MapError(c *gin.Context, err *Error) (code int, resp interface{}) {
+func (h *OBBRGetBalanceHandler) MapError(c *gin.Context, err *Error) (code int, resp interface{}) {
 	code, resp = OBBRMapError(c, err)
 	return
 }
 
-func (h *OBBRGetBalancesHandler) BuildResponse(c *gin.Context, data BankUserData) interface{} {
+func (h *OBBRGetBalanceHandler) BuildResponse(c *gin.Context, data BankUserData) interface{} {
 	accountID := c.Param("accountID")
 	self := strfmt.URI(fmt.Sprintf("http://localhost:%s/accounts/%s/balances", strconv.Itoa(h.Config.Port), accountID))
 
@@ -58,10 +58,10 @@ func (h *OBBRGetBalancesHandler) BuildResponse(c *gin.Context, data BankUserData
 		}
 	}
 
-	return NewOBBRBalancesResponse(balance, self)
+	return NewOBBRBalanceResponse(balance, self)
 }
 
-func (h *OBBRGetBalancesHandler) Validate(c *gin.Context) *Error {
+func (h *OBBRGetBalanceHandler) Validate(c *gin.Context) *Error {
 	scopes := strings.Split(h.introspectionResponse.Scope, " ")
 	if !has(scopes, "accounts") {
 		return ErrForbidden.WithMessage("token has no accounts scope granted")
@@ -76,20 +76,20 @@ func (h *OBBRGetBalancesHandler) Validate(c *gin.Context) *Error {
 	}
 
 	if !has(perms, string(models.OpenbankingBrasilPermissionACCOUNTSBALANCESREAD)) {
-		return ErrForbidden.WithMessage("ReadBalances permission has not been granted")
+		return ErrForbidden.WithMessage("ACCOUNTS_BALANCES_READ permission has not been granted")
 	}
 	return nil
 }
 
-func (h *OBBRGetBalancesHandler) GetUserIdentifier(c *gin.Context) string {
+func (h *OBBRGetBalanceHandler) GetUserIdentifier(c *gin.Context) string {
 	return h.introspectionResponse.Sub
 }
 
-func (h *OBBRGetBalancesHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
-	filteredBalances := []models.OBReadBalance1DataBalanceItems0{}
+func (h *OBBRGetBalanceHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
+	var filteredBalances []OBBRBalance
 
 	for _, balance := range data.OBBRBalances {
-		if has(h.introspectionResponse.AccountIDs, string(*balance.AccountID)) {
+		if has(h.introspectionResponse.AccountIDs, balance.AccountID) {
 			filteredBalances = append(filteredBalances, balance)
 		}
 	}
