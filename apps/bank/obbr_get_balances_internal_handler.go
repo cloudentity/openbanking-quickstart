@@ -34,10 +34,10 @@ func (h *OBBRGetBalancesInternalHandler) MapError(c *gin.Context, err *Error) (c
 	return
 }
 
-func (h *OBBRGetBalancesInternalHandler) BuildResponse(c *gin.Context, data BankUserData) interface{} {
+func (h *OBBRGetBalancesInternalHandler) BuildResponse(c *gin.Context, data BankUserData) (interface{}, *Error) {
 	self := strfmt.URI(fmt.Sprintf("http://localhost:%s/internal/balances", strconv.Itoa(h.Config.Port)))
 
-	return NewOBBRBalancesResponse(data.OBBRBalances, self)
+	return NewOBBRBalancesResponse(data.OBBRBalances, self), nil
 }
 
 func (h *OBBRGetBalancesInternalHandler) Validate(c *gin.Context) *Error {

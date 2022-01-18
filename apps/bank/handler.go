@@ -17,7 +17,7 @@ type EndpointLogicCommon interface {
 type GetEndpointLogicFactory func(server *Server) GetEndpointLogic
 
 type GetEndpointLogic interface {
-	BuildResponse(*gin.Context, BankUserData) interface{}
+	BuildResponse(*gin.Context, BankUserData) (interface{}, *Error)
 	Filter(*gin.Context, BankUserData) BankUserData
 	EndpointLogicCommon
 }
@@ -46,6 +46,7 @@ func (s *Server) Get(factory GetEndpointLogicFactory) func(*gin.Context) {
 		handler(c, func() (interface{}, *Error) {
 			var (
 				data BankUserData
+				resp interface{}
 				err  *Error
 				e    error
 			)
@@ -65,9 +66,12 @@ func (s *Server) Get(factory GetEndpointLogicFactory) func(*gin.Context) {
 			logrus.WithField("data", data).Debug("pulled data from database")
 
 			filtered := h.Filter(c, data)
-			response := h.BuildResponse(c, filtered)
 
-			return response, nil
+			if resp, err = h.BuildResponse(c, filtered); err != nil {
+				return nil, err
+			}
+
+			return resp, nil
 		})
 	}
 }

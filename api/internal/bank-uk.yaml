@@ -692,12 +692,12 @@ definitions:
     type: object
     x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/models
   ActiveOrHistoricCurrencyCode:
-    title: ActiveOrHistoricCurrencyCode ActiveOrHistoricCurrencyCode A code allocated
-      to a currency by a Maintenance Agency under an international identification
-      scheme, as described in the latest edition of the international standard ISO
-      4217 "Codes for the representation of currencies and funds".
+    title: ActiveOrHistoricCurrencyCode A code allocated to a currency by a Maintenance
+      Agency under an international identification scheme, as described in the latest
+      edition of the international standard ISO 4217 "Codes for the representation
+      of currencies and funds".
     type: string
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   ActiveOrHistoricCurrencyCode_0:
     description: |-
       Usage: Currency should only be used in case one and the same account number covers several currencies
@@ -1445,7 +1445,7 @@ definitions:
   BuildingNumber:
     title: BuildingNumber Number that identifies the position of a building on a street.
     type: string
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models
   CIBAAuthenticationService:
     description: CIBAAuthenticationService c i b a authentication service
     properties:
@@ -4072,14 +4072,14 @@ definitions:
     type: object
     x-go-package: github.com/cloudentity/acp-client-go/models
   CountryCode:
-    title: CountryCode CountryCode Nation with its own government.
+    title: CountryCode Nation with its own government, occupying a particular territory.
+    type: string
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models
+  CountrySubDivision:
+    title: CountrySubDivision CountrySubDivision Identifies a subdivision of a country
+      such as state, region, county.
     type: string
     x-go-package: github.com/cloudentity/acp-client-go/models
-  CountrySubDivision:
-    title: CountrySubDivision Identifies a subdivision of a country such as state,
-      region, county.
-    type: string
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   CreateClientAdminRequest:
     description: CreateClientAdminRequest create client admin request
     properties:
@@ -4878,10 +4878,11 @@ definitions:
       All date-time fields in responses must include the timezone. An example is below:
       2017-04-05T10:43:07+00:00
     format: date-time
-    title: CreationDateTime Date and time at which the resource was created.All dates
-      in the JSON payloads are represented in ISO 8601 date-time format.
+    title: CreationDateTime CreationDateTime Date and time at which the resource was
+      created.All dates in the JSON payloads are represented in ISO 8601 date-time
+      format.
     type: string
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   CrossTenantAPIPolicyBinding:
     description: CrossTenantAPIPolicyBinding cross tenant API policy binding
     properties:
@@ -8565,11 +8566,11 @@ definitions:
     x-go-name: Identification0
     x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   Identification_1:
-    title: Identification1 Unique and unambiguous identification of the servicing
-      institution.
+    title: Identification1 Identification1 Unique and unambiguous identification of
+      a financial institution or a branch of a financial institution.
     type: string
     x-go-name: Identification1
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   Identification_2:
     title: Identification2 Unique and unambiguous identification of a financial institution
       or a branch of a financial institution.
@@ -11381,53 +11382,41 @@ definitions:
     type: string
     x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models
   Links:
-    description: Referências para outros recusos da API requisitada.
+    description: Links Links relevant to the payload
     properties:
-      first:
-        description: URI da primeira página que originou essa lista de resultados.
-          Restrição - Obrigatório quando não for a primeira página da resposta
-        example: https://api.banco.com.br/open-banking/api/v1/resource
-        maxLength: 2000
-        pattern: ^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)$
+      First:
+        description: |-
+          first
+          Format: uri
+        format: uri
         type: string
-        x-go-name: First
-      last:
-        description: URI da última página dessa lista de resultados. Restrição - Obrigatório
-          quando não for a última página da resposta
-        example: https://api.banco.com.br/open-banking/api/v1/resource
-        maxLength: 2000
-        pattern: ^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)$
+      Last:
+        description: |-
+          last
+          Format: uri
+        format: uri
         type: string
-        x-go-name: Last
-      next:
-        description: URI da próxima página dessa lista de resultados. Restrição -
-          Obrigatório quando não for a última página da resposta
-        example: https://api.banco.com.br/open-banking/api/v1/resource
-        maxLength: 2000
-        pattern: ^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)$
+      Next:
+        description: |-
+          next
+          Format: uri
+        format: uri
         type: string
-        x-go-name: Next
-      prev:
-        description: "URI da página anterior dessa lista de resultados. Restrição
-          - \tObrigatório quando não for a primeira página da resposta"
-        example: https://api.banco.com.br/open-banking/api/v1/resource
-        maxLength: 2000
-        pattern: ^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)$
+      Prev:
+        description: |-
+          prev
+          Format: uri
+        format: uri
         type: string
-        x-go-name: Prev
-      self:
-        description: URI completo que gerou a resposta atual.
-        example: https://api.banco.com.br/open-banking/api/v1/resource
-        maxLength: 2000
-        pattern: ^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)$
+      Self:
+        description: self
+        format: uri
         type: string
-        x-go-name: Self
     required:
     - Self
     - self
-    title: Links Links
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   ListClientsWithAccess:
     description: ListClientsWithAccess list clients with access
     properties:
@@ -11759,7 +11748,7 @@ definitions:
     - totalRecords
     title: Meta MetaData
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models
   Metadata:
     additionalProperties:
       type: object
@@ -11767,10 +11756,10 @@ definitions:
     type: object
     x-go-package: github.com/cloudentity/acp-client-go/models
   Name:
-    title: Name Name Name by which an agent is known and which is usually used to
-      identify that agent.
+    title: Name Name by which an agent is known and which is usually used to identify
+      that agent.
     type: string
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   Name_0:
     description: Note, the account name is not the product name or the nickname of
       the account.
@@ -12402,12 +12391,12 @@ definitions:
     type: string
     x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models
   OBActiveCurrencyAndAmount_SimpleType:
-    title: OBActiveCurrencyAndAmountSimpleType A number of monetary units specified
-      in an active currency where the unit of currency is explicit and compliant with
-      ISO 4217.
+    title: OBActiveCurrencyAndAmountSimpleType OBActiveCurrencyAndAmountSimpleType
+      A number of monetary units specified in an active currency where the unit of
+      currency is explicit and compliant with ISO 4217.
     type: string
     x-go-name: OBActiveCurrencyAndAmountSimpleType
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBActiveOrHistoricCurrencyAndAmount:
     properties:
       Amount:
@@ -12417,10 +12406,10 @@ definitions:
     required:
     - Amount
     - Currency
-    title: OBActiveOrHistoricCurrencyAndAmount Amount of money associated with the
-      charge type.
+    title: OBActiveOrHistoricCurrencyAndAmount OBActiveOrHistoricCurrencyAndAmount
+      Amount of money associated with the charge type.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBActiveOrHistoricCurrencyAndAmount_0:
     properties:
       Amount:
@@ -12592,9 +12581,10 @@ definitions:
     x-go-name: OBActiveOrHistoricCurrencyAndAmount11
     x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models
   OBAddressTypeCode:
-    title: OBAddressTypeCode Identifies the nature of the postal address.
+    title: OBAddressTypeCode OBAddressTypeCode Identifies the nature of the postal
+      address.
     type: string
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBBCAData1:
     description: OBBCAData1 BCA
     properties:
@@ -15254,10 +15244,10 @@ definitions:
     x-go-name: OBCashAccount61
     x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models
   OBChargeBearerType1Code:
-    title: OBChargeBearerType1Code OBChargeBearerType1Code Specifies which party/parties
-      will bear the charges associated with the processing of the payment transaction.
+    title: OBChargeBearerType1Code Specifies which party/parties will bear the charges
+      associated with the processing of the payment transaction.
     type: string
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBConsent:
     description: OBConsent o b consent
     properties:
@@ -15494,10 +15484,10 @@ definitions:
         maxLength: 350
         minLength: 0
         type: string
-    title: OBDebtorIdentification1 Set of elements used to identify a person or an
-      organisation.
+    title: OBDebtorIdentification1 OBDebtorIdentification1 Set of elements used to
+      identify a person or an organisation.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBEntryStatus1Code:
     title: OBEntryStatus1Code Status of a transaction entry on the books of the account
       servicer.
@@ -15530,9 +15520,9 @@ definitions:
     required:
     - ErrorCode
     - Message
-    title: OBError1 OBError1 o b error1
+    title: OBError1 o b error1
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBErrorResponse1:
     properties:
       Code:
@@ -15566,13 +15556,12 @@ definitions:
     title: OBErrorResponse1 An array of detail error codes, and messages, and URLs
       to documentation to help remediation.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBExternalAccountIdentification4Code:
-    title: OBExternalAccountIdentification4Code OBExternalAccountIdentification4Code
-      Name of the identification scheme, in a coded form as published in an external
-      list.
+    title: OBExternalAccountIdentification4Code Name of the identification scheme,
+      in a coded form as published in an external list.
     type: string
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models
   OBExternalAccountRole1Code:
     title: OBExternalAccountRole1Code A party’s role with respect to the related account.
     type: string
@@ -15592,10 +15581,11 @@ definitions:
     type: string
     x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models
   OBExternalFinancialInstitutionIdentification4Code:
-    title: OBExternalFinancialInstitutionIdentification4Code Name of the identification
-      scheme, in a coded form as published in an external list.
+    title: OBExternalFinancialInstitutionIdentification4Code OBExternalFinancialInstitutionIdentification4Code
+      Name of the identification scheme, in a coded form as published in an external
+      list.
     type: string
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBExternalLegalStructureType1Code:
     title: OBExternalLegalStructureType1Code Legal standing of the party.
     type: string
@@ -17792,12 +17782,21 @@ definitions:
         $ref: '#/definitions/BuildingNumber'
       Country:
         $ref: '#/definitions/CountryCode'
+        description: Nation with its own government.
+        pattern: ^[A-Z]{2,2}$
         type: string
       CountrySubDivision:
         $ref: '#/definitions/CountrySubDivision'
+        description: Identifies a subdivision of a country such as state, region,
+          county.
+        maxLength: 35
+        minLength: 1
         type: string
       Department:
         $ref: '#/definitions/Department'
+        description: Identification of a division of a large organisation or building.
+        maxLength: 70
+        minLength: 1
         type: string
       PostCode:
         $ref: '#/definitions/PostCode'
@@ -17805,13 +17804,16 @@ definitions:
         $ref: '#/definitions/StreetName'
       SubDepartment:
         $ref: '#/definitions/SubDepartment'
+        description: Identification of a sub-division of a large organisation or building.
+        maxLength: 70
+        minLength: 1
         type: string
       TownName:
         $ref: '#/definitions/TownName'
-    title: OBPostalAddress6 Information that locates and identifies a specific address,
-      as defined by postal services.
+    title: OBPostalAddress6 OBPostalAddress6 Information that locates and identifies
+      a specific address, as defined by postal services.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBReadAccount6:
     description: OBReadAccount6 o b read account6
     properties:
@@ -17974,7 +17976,7 @@ definitions:
     type: object
     x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models
   OBReadConsent1Data:
-    description: OBReadConsent1Data o b read consent1 data
+    description: OBReadConsent1Data OBReadConsent1Data o b read consent1 data
     properties:
       ExpirationDateTime:
         description: |-
@@ -17982,6 +17984,7 @@ definitions:
           If this is not populated, the permissions will be open ended.All dates in the JSON payloads are represented in ISO 8601 date-time format.
           All date-time fields in responses must include the timezone. An example is below:
           2017-04-05T10:43:07+00:00
+          Format: date-time
           Format: date-time
         format: date-time
         type: string
@@ -17998,6 +18001,7 @@ definitions:
           All date-time fields in responses must include the timezone. An example is below:
           2017-04-05T10:43:07+00:00
           Format: date-time
+          Format: date-time
         format: date-time
         type: string
       TransactionToDateTime:
@@ -18007,12 +18011,13 @@ definitions:
           All date-time fields in responses must include the timezone. An example is below:
           2017-04-05T10:43:07+00:00
           Format: date-time
+          Format: date-time
         format: date-time
         type: string
     required:
     - Permissions
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBReadConsentResponse1:
     description: OBReadConsentResponse1 o b read consent response1
     properties:
@@ -18030,7 +18035,8 @@ definitions:
     type: object
     x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models
   OBReadConsentResponse1Data:
-    description: OBReadConsentResponse1Data o b read consent response1 data
+    description: OBReadConsentResponse1Data OBReadConsentResponse1Data o b read consent
+      response1 data
     properties:
       ConsentId:
         description: Unique identification as assigned to identify the account access
@@ -18047,6 +18053,7 @@ definitions:
           If this is not populated, the permissions will be open ended.All dates in the JSON payloads are represented in ISO 8601 date-time format.
           All date-time fields in responses must include the timezone. An example is below:
           2017-04-05T10:43:07+00:00
+          Format: date-time
           Format: date-time
         format: date-time
         type: string
@@ -18070,6 +18077,7 @@ definitions:
           All date-time fields in responses must include the timezone. An example is below:
           2017-04-05T10:43:07+00:00
           Format: date-time
+          Format: date-time
         format: date-time
         type: string
       TransactionToDateTime:
@@ -18078,6 +18086,7 @@ definitions:
           If this is not populated, the end date will be open ended, and data will be returned to the latest available transaction.All dates in the JSON payloads are represented in ISO 8601 date-time format.
           All date-time fields in responses must include the timezone. An example is below:
           2017-04-05T10:43:07+00:00
+          Format: date-time
           Format: date-time
         format: date-time
         type: string
@@ -18088,7 +18097,7 @@ definitions:
     - Status
     - StatusUpdateDateTime
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBReadDataStatement2:
     description: OBReadDataStatement2 o b read data statement2
     properties:
@@ -19984,10 +19993,10 @@ definitions:
         enum:
         - '[BillPayment EcommerceGoods EcommerceServices Other PartyToParty]'
         type: string
-    title: OBRisk1 The Risk section is sent by the initiating party to the ASPSP.
-      It is used to specify additional details for risk scoring for Payments.
+    title: OBRisk1 OBRisk1 The Risk section is sent by the initiating party to the
+      ASPSP. It is used to specify additional details for risk scoring for Payments.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBRisk1DeliveryAddress:
     properties:
       AddressLine:
@@ -20014,15 +20023,17 @@ definitions:
     required:
     - Country
     - TownName
-    title: OBRisk1DeliveryAddress Information that locates and identifies a specific
-      address, as defined by postal services or in free format text.
+    title: OBRisk1DeliveryAddress OBRisk1DeliveryAddress Information that locates
+      and identifies a specific address, as defined by postal services or in free
+      format text.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBRisk2:
-    title: OBRisk2 The Risk section is sent by the initiating party to the ASPSP.
-      It is used to specify additional details for risk scoring for Account Info.
+    title: OBRisk2 OBRisk2 The Risk section is sent by the initiating party to the
+      ASPSP. It is used to specify additional details for risk scoring for Account
+      Info.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBScheduledPayment3:
     description: OBScheduledPayment3 o b scheduled payment3
     properties:
@@ -20750,10 +20761,10 @@ definitions:
     type: object
     x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models
   OBSupplementaryData1:
-    title: OBSupplementaryData1 Additional information that can not be captured in
-      the structured fields and/or any other specific block.
+    title: OBSupplementaryData1 OBSupplementaryData1 Additional information that can
+      not be captured in the structured fields and/or any other specific block.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBTransaction6:
     properties:
       AccountId:
@@ -21192,14 +21203,15 @@ definitions:
           All date-time fields in responses must include the timezone. An example is below:
           2017-04-05T10:43:07+00:00
           Format: date-time
+          Format: date-time
         format: date-time
         type: string
     required:
     - AuthorisationType
-    title: OBWriteDomesticConsent4DataAuthorisation The authorisation type request
-      from the TPP.
+    title: OBWriteDomesticConsent4DataAuthorisation OBWriteDomesticConsent4DataAuthorisation
+      The authorisation type request from the TPP.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteDomesticConsent4DataInitiation:
     properties:
       CreditorAccount:
@@ -21236,12 +21248,11 @@ definitions:
     - EndToEndIdentification
     - InstructedAmount
     - InstructionIdentification
-    title: OBWriteDomesticConsent4DataInitiation OBWriteDomesticConsent4DataInitiation
-      The Initiation payload is sent by the initiating party to the ASPSP. It is used
-      to request movement of funds from the debtor account to a creditor for a single
-      domestic payment.
+    title: OBWriteDomesticConsent4DataInitiation The Initiation payload is sent by
+      the initiating party to the ASPSP. It is used to request movement of funds from
+      the debtor account to a creditor for a single domestic payment.
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteDomesticConsent4DataInitiationCreditorAccount:
     properties:
       Identification:
@@ -21301,11 +21312,11 @@ definitions:
     required:
     - Amount
     - Currency
-    title: OBWriteDomesticConsent4DataInitiationInstructedAmount OBWriteDomesticConsent4DataInitiationInstructedAmount
-      Amount of money to be moved between the debtor and creditor, before deduction
-      of charges, expressed in the currency as ordered by the initiating party.
+    title: OBWriteDomesticConsent4DataInitiationInstructedAmount Amount of money to
+      be moved between the debtor and creditor, before deduction of charges, expressed
+      in the currency as ordered by the initiating party.
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteDomesticConsent4DataInitiationRemittanceInformation:
     properties:
       Reference:
@@ -21355,10 +21366,10 @@ definitions:
         - '[BillPayment ContactlessTravel EcommerceGoods EcommerceServices Kiosk Parking
           PartyToParty]'
         type: string
-    title: OBWriteDomesticConsent4DataSCASupportData OBWriteDomesticConsent4DataSCASupportData
-      Supporting Data provided by TPP, when requesting SCA Exemption.
+    title: OBWriteDomesticConsent4DataSCASupportData Supporting Data provided by TPP,
+      when requesting SCA Exemption.
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteDomesticConsentResponse5:
     description: OBWriteDomesticConsentResponse5 o b write domestic consent response5
     properties:
@@ -21471,14 +21482,15 @@ definitions:
           All date-time fields in responses must include the timezone. An example is below:
           2017-04-05T10:43:07+00:00
           Format: date-time
+          Format: date-time
         format: date-time
         type: string
     required:
     - AuthorisationType
-    title: OBWriteDomesticConsentResponse5DataAuthorisation The authorisation type
-      request from the TPP.
+    title: OBWriteDomesticConsentResponse5DataAuthorisation OBWriteDomesticConsentResponse5DataAuthorisation
+      The authorisation type request from the TPP.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteDomesticConsentResponse5DataChargesItems0:
     properties:
       Amount:
@@ -21491,10 +21503,10 @@ definitions:
     - Amount
     - ChargeBearer
     - Type
-    title: OBWriteDomesticConsentResponse5DataChargesItems0 Set of elements used to
-      provide details of a charge for the payment initiation.
+    title: OBWriteDomesticConsentResponse5DataChargesItems0 OBWriteDomesticConsentResponse5DataChargesItems0
+      Set of elements used to provide details of a charge for the payment initiation.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteDomesticConsentResponse5DataInitiation:
     properties:
       CreditorAccount:
@@ -21531,12 +21543,11 @@ definitions:
     - EndToEndIdentification
     - InstructedAmount
     - InstructionIdentification
-    title: OBWriteDomesticConsentResponse5DataInitiation OBWriteDomesticConsentResponse5DataInitiation
-      The Initiation payload is sent by the initiating party to the ASPSP. It is used
-      to request movement of funds from the debtor account to a creditor for a single
-      domestic payment.
+    title: OBWriteDomesticConsentResponse5DataInitiation The Initiation payload is
+      sent by the initiating party to the ASPSP. It is used to request movement of
+      funds from the debtor account to a creditor for a single domestic payment.
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteDomesticConsentResponse5DataInitiationCreditorAccount:
     properties:
       Identification:
@@ -21596,11 +21607,11 @@ definitions:
     required:
     - Amount
     - Currency
-    title: OBWriteDomesticConsentResponse5DataInitiationInstructedAmount OBWriteDomesticConsentResponse5DataInitiationInstructedAmount
-      Amount of money to be moved between the debtor and creditor, before deduction
-      of charges, expressed in the currency as ordered by the initiating party.
+    title: OBWriteDomesticConsentResponse5DataInitiationInstructedAmount Amount of
+      money to be moved between the debtor and creditor, before deduction of charges,
+      expressed in the currency as ordered by the initiating party.
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteDomesticConsentResponse5DataInitiationRemittanceInformation:
     properties:
       Reference:
@@ -21620,12 +21631,12 @@ definitions:
         maxLength: 140
         minLength: 1
         type: string
-    title: OBWriteDomesticConsentResponse5DataInitiationRemittanceInformation OBWriteDomesticConsentResponse5DataInitiationRemittanceInformation
-      Information supplied to enable the matching of an entry with the items that
-      the transfer is intended to settle, such as commercial invoices in an accounts'
-      receivable system.
+    title: OBWriteDomesticConsentResponse5DataInitiationRemittanceInformation Information
+      supplied to enable the matching of an entry with the items that the transfer
+      is intended to settle, such as commercial invoices in an accounts' receivable
+      system.
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteDomesticConsentResponse5DataSCASupportData:
     properties:
       AppliedAuthenticationApproach:
@@ -21650,10 +21661,10 @@ definitions:
         - '[BillPayment ContactlessTravel EcommerceGoods EcommerceServices Kiosk Parking
           PartyToParty]'
         type: string
-    title: OBWriteDomesticConsentResponse5DataSCASupportData OBWriteDomesticConsentResponse5DataSCASupportData
-      Supporting Data provided by TPP, when requesting SCA Exemption.
+    title: OBWriteDomesticConsentResponse5DataSCASupportData Supporting Data provided
+      by TPP, when requesting SCA Exemption.
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteDomesticResponse5:
     description: OBWriteDomesticResponse5 o b write domestic response5
     properties:
@@ -22140,8 +22151,8 @@ definitions:
     type: object
     x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteDomesticScheduledConsent4Data:
-    description: OBWriteDomesticScheduledConsent4Data OBWriteDomesticScheduledConsent4Data
-      o b write domestic scheduled consent4 data
+    description: OBWriteDomesticScheduledConsent4Data o b write domestic scheduled
+      consent4 data
     properties:
       Authorisation:
         $ref: '#/definitions/OBWriteDomesticScheduledConsent4DataAuthorisation'
@@ -22163,7 +22174,7 @@ definitions:
     - Initiation
     - Permission
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteDomesticScheduledConsent4DataAuthorisation:
     properties:
       AuthorisationType:
@@ -22230,12 +22241,12 @@ definitions:
     - InstructedAmount
     - InstructionIdentification
     - RequestedExecutionDateTime
-    title: OBWriteDomesticScheduledConsent4DataInitiation OBWriteDomesticScheduledConsent4DataInitiation
-      The Initiation payload is sent by the initiating party to the ASPSP. It is used
-      to request movement of funds from the debtor account to a creditor for a single
-      scheduled domestic payment.
+    title: OBWriteDomesticScheduledConsent4DataInitiation The Initiation payload is
+      sent by the initiating party to the ASPSP. It is used to request movement of
+      funds from the debtor account to a creditor for a single scheduled domestic
+      payment.
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteDomesticScheduledConsent4DataInitiationCreditorAccount:
     properties:
       Identification:
@@ -22256,11 +22267,11 @@ definitions:
     - Identification
     - Name
     - SchemeName
-    title: OBWriteDomesticScheduledConsent4DataInitiationCreditorAccount Unambiguous
-      identification of the account of the creditor to which a credit entry will be
-      posted as a result of the payment transaction.
+    title: OBWriteDomesticScheduledConsent4DataInitiationCreditorAccount OBWriteDomesticScheduledConsent4DataInitiationCreditorAccount
+      Unambiguous identification of the account of the creditor to which a credit
+      entry will be posted as a result of the payment transaction.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteDomesticScheduledConsent4DataInitiationDebtorAccount:
     properties:
       Identification:
@@ -22279,11 +22290,11 @@ definitions:
     required:
     - Identification
     - SchemeName
-    title: OBWriteDomesticScheduledConsent4DataInitiationDebtorAccount Unambiguous
-      identification of the account of the debtor to which a debit entry will be made
-      as a result of the transaction.
+    title: OBWriteDomesticScheduledConsent4DataInitiationDebtorAccount OBWriteDomesticScheduledConsent4DataInitiationDebtorAccount
+      Unambiguous identification of the account of the debtor to which a debit entry
+      will be made as a result of the transaction.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteDomesticScheduledConsent4DataInitiationInstructedAmount:
     description: 'Usage: This amount has to be transported unchanged through the transaction
       chain.'
@@ -22319,12 +22330,12 @@ definitions:
         maxLength: 140
         minLength: 1
         type: string
-    title: OBWriteDomesticScheduledConsent4DataInitiationRemittanceInformation Information
-      supplied to enable the matching of an entry with the items that the transfer
-      is intended to settle, such as commercial invoices in an accounts' receivable
-      system.
+    title: OBWriteDomesticScheduledConsent4DataInitiationRemittanceInformation OBWriteDomesticScheduledConsent4DataInitiationRemittanceInformation
+      Information supplied to enable the matching of an entry with the items that
+      the transfer is intended to settle, such as commercial invoices in an accounts'
+      receivable system.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteDomesticScheduledConsent4DataSCASupportData:
     properties:
       AppliedAuthenticationApproach:
@@ -22349,10 +22360,10 @@ definitions:
         - '[BillPayment ContactlessTravel EcommerceGoods EcommerceServices Kiosk Parking
           PartyToParty]'
         type: string
-    title: OBWriteDomesticScheduledConsent4DataSCASupportData OBWriteDomesticScheduledConsent4DataSCASupportData
-      Supporting Data provided by TPP, when requesting SCA Exemption.
+    title: OBWriteDomesticScheduledConsent4DataSCASupportData Supporting Data provided
+      by TPP, when requesting SCA Exemption.
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteDomesticScheduledConsentResponse5:
     description: OBWriteDomesticScheduledConsentResponse5 o b write domestic scheduled
       consent response5
@@ -22371,8 +22382,8 @@ definitions:
     type: object
     x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteDomesticScheduledConsentResponse5Data:
-    description: OBWriteDomesticScheduledConsentResponse5Data o b write domestic scheduled
-      consent response5 data
+    description: OBWriteDomesticScheduledConsentResponse5Data OBWriteDomesticScheduledConsentResponse5Data
+      o b write domestic scheduled consent response5 data
     properties:
       Authorisation:
         $ref: '#/definitions/OBWriteDomesticScheduledConsentResponse5DataAuthorisation'
@@ -22401,6 +22412,7 @@ definitions:
           All date-time fields in responses must include the timezone. An example is below:
           2017-04-05T10:43:07+00:00
           Format: date-time
+          Format: date-time
         format: date-time
         type: string
       Debtor:
@@ -22411,6 +22423,7 @@ definitions:
           All date-time fields in responses must include the timezone. An example is below:
           2017-04-05T10:43:07+00:00
           Format: date-time
+          Format: date-time
         format: date-time
         type: string
       ExpectedSettlementDateTime:
@@ -22418,6 +22431,7 @@ definitions:
           Expected settlement date and time for the payment resource.All dates in the JSON payloads are represented in ISO 8601 date-time format.
           All date-time fields in responses must include the timezone. An example is below:
           2017-04-05T10:43:07+00:00
+          Format: date-time
           Format: date-time
         format: date-time
         type: string
@@ -22455,7 +22469,7 @@ definitions:
     - Status
     - StatusUpdateDateTime
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteDomesticScheduledConsentResponse5DataAuthorisation:
     properties:
       AuthorisationType:
@@ -22469,14 +22483,15 @@ definitions:
           All date-time fields in responses must include the timezone. An example is below:
           2017-04-05T10:43:07+00:00
           Format: date-time
+          Format: date-time
         format: date-time
         type: string
     required:
     - AuthorisationType
-    title: OBWriteDomesticScheduledConsentResponse5DataAuthorisation The authorisation
-      type request from the TPP.
+    title: OBWriteDomesticScheduledConsentResponse5DataAuthorisation OBWriteDomesticScheduledConsentResponse5DataAuthorisation
+      The authorisation type request from the TPP.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteDomesticScheduledConsentResponse5DataChargesItems0:
     properties:
       Amount:
@@ -22586,11 +22601,11 @@ definitions:
     required:
     - Identification
     - SchemeName
-    title: OBWriteDomesticScheduledConsentResponse5DataInitiationDebtorAccount Unambiguous
-      identification of the account of the debtor to which a debit entry will be made
-      as a result of the transaction.
+    title: OBWriteDomesticScheduledConsentResponse5DataInitiationDebtorAccount OBWriteDomesticScheduledConsentResponse5DataInitiationDebtorAccount
+      Unambiguous identification of the account of the debtor to which a debit entry
+      will be made as a result of the transaction.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteDomesticScheduledConsentResponse5DataInitiationInstructedAmount:
     description: 'Usage: This amount has to be transported unchanged through the transaction
       chain.'
@@ -22603,11 +22618,10 @@ definitions:
     - Amount
     - Currency
     title: OBWriteDomesticScheduledConsentResponse5DataInitiationInstructedAmount
-      OBWriteDomesticScheduledConsentResponse5DataInitiationInstructedAmount Amount
-      of money to be moved between the debtor and creditor, before deduction of charges,
-      expressed in the currency as ordered by the initiating party.
+      Amount of money to be moved between the debtor and creditor, before deduction
+      of charges, expressed in the currency as ordered by the initiating party.
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteDomesticScheduledConsentResponse5DataInitiationRemittanceInformation:
     properties:
       Reference:
@@ -22628,11 +22642,12 @@ definitions:
         minLength: 1
         type: string
     title: OBWriteDomesticScheduledConsentResponse5DataInitiationRemittanceInformation
+      OBWriteDomesticScheduledConsentResponse5DataInitiationRemittanceInformation
       Information supplied to enable the matching of an entry with the items that
       the transfer is intended to settle, such as commercial invoices in an accounts'
       receivable system.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteDomesticScheduledConsentResponse5DataSCASupportData:
     properties:
       AppliedAuthenticationApproach:
@@ -23198,8 +23213,8 @@ definitions:
     type: object
     x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteDomesticStandingOrderConsent5Data:
-    description: OBWriteDomesticStandingOrderConsent5Data o b write domestic standing
-      order consent5 data
+    description: OBWriteDomesticStandingOrderConsent5Data OBWriteDomesticStandingOrderConsent5Data
+      o b write domestic standing order consent5 data
     properties:
       Authorisation:
         $ref: '#/definitions/OBWriteDomesticStandingOrderConsent5DataAuthorisation'
@@ -23221,7 +23236,7 @@ definitions:
     - Initiation
     - Permission
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteDomesticStandingOrderConsent5DataAuthorisation:
     properties:
       AuthorisationType:
@@ -23399,7 +23414,8 @@ definitions:
     x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteDomesticStandingOrderConsent5DataInitiationFirstPaymentAmount:
     description: OBWriteDomesticStandingOrderConsent5DataInitiationFirstPaymentAmount
-      The amount of the first Standing Order
+      OBWriteDomesticStandingOrderConsent5DataInitiationFirstPaymentAmount The amount
+      of the first Standing Order
     properties:
       Amount:
         $ref: '#/definitions/OBActiveCurrencyAndAmount_SimpleType'
@@ -23409,10 +23425,11 @@ definitions:
     - Amount
     - Currency
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteDomesticStandingOrderConsent5DataInitiationRecurringPaymentAmount:
     description: OBWriteDomesticStandingOrderConsent5DataInitiationRecurringPaymentAmount
-      The amount of the recurring Standing Order
+      OBWriteDomesticStandingOrderConsent5DataInitiationRecurringPaymentAmount The
+      amount of the recurring Standing Order
     properties:
       Amount:
         $ref: '#/definitions/OBActiveCurrencyAndAmount_SimpleType'
@@ -23422,7 +23439,7 @@ definitions:
     - Amount
     - Currency
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteDomesticStandingOrderConsent5DataSCASupportData:
     properties:
       AppliedAuthenticationApproach:
@@ -23469,8 +23486,8 @@ definitions:
     type: object
     x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteDomesticStandingOrderConsentResponse6Data:
-    description: OBWriteDomesticStandingOrderConsentResponse6Data OBWriteDomesticStandingOrderConsentResponse6Data
-      o b write domestic standing order consent response6 data
+    description: OBWriteDomesticStandingOrderConsentResponse6Data o b write domestic
+      standing order consent response6 data
     properties:
       Authorisation:
         $ref: '#/definitions/OBWriteDomesticStandingOrderConsentResponse6DataAuthorisation'
@@ -23498,7 +23515,6 @@ definitions:
           Specified cut-off date and time for the payment consent.All dates in the JSON payloads are represented in ISO 8601 date-time format.
           All date-time fields in responses must include the timezone. An example is below:
           2017-04-05T10:43:07+00:00
-          Format: date-time
           Format: date-time
         format: date-time
         type: string
@@ -23538,7 +23554,7 @@ definitions:
     - Status
     - StatusUpdateDateTime
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteDomesticStandingOrderConsentResponse6DataAuthorisation:
     properties:
       AuthorisationType:
@@ -23552,15 +23568,14 @@ definitions:
           All date-time fields in responses must include the timezone. An example is below:
           2017-04-05T10:43:07+00:00
           Format: date-time
-          Format: date-time
         format: date-time
         type: string
     required:
     - AuthorisationType
-    title: OBWriteDomesticStandingOrderConsentResponse6DataAuthorisation OBWriteDomesticStandingOrderConsentResponse6DataAuthorisation
-      The authorisation type request from the TPP.
+    title: OBWriteDomesticStandingOrderConsentResponse6DataAuthorisation The authorisation
+      type request from the TPP.
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteDomesticStandingOrderConsentResponse6DataChargesItems0:
     properties:
       Amount:
@@ -23573,10 +23588,10 @@ definitions:
     - Amount
     - ChargeBearer
     - Type
-    title: OBWriteDomesticStandingOrderConsentResponse6DataChargesItems0 OBWriteDomesticStandingOrderConsentResponse6DataChargesItems0
-      Set of elements used to provide details of a charge for the payment initiation.
+    title: OBWriteDomesticStandingOrderConsentResponse6DataChargesItems0 Set of elements
+      used to provide details of a charge for the payment initiation.
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteDomesticStandingOrderConsentResponse6DataInitiation:
     properties:
       CreditorAccount:
@@ -23691,10 +23706,11 @@ definitions:
     - Name
     - SchemeName
     title: OBWriteDomesticStandingOrderConsentResponse6DataInitiationCreditorAccount
-      Identification assigned by an institution to identify an account. This identification
-      is known by the account owner.
+      OBWriteDomesticStandingOrderConsentResponse6DataInitiationCreditorAccount Identification
+      assigned by an institution to identify an account. This identification is known
+      by the account owner.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteDomesticStandingOrderConsentResponse6DataInitiationDebtorAccount:
     properties:
       Identification:
@@ -23734,7 +23750,6 @@ definitions:
     x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteDomesticStandingOrderConsentResponse6DataInitiationFirstPaymentAmount:
     description: OBWriteDomesticStandingOrderConsentResponse6DataInitiationFirstPaymentAmount
-      OBWriteDomesticStandingOrderConsentResponse6DataInitiationFirstPaymentAmount
       The amount of the first Standing Order
     properties:
       Amount:
@@ -23745,9 +23760,10 @@ definitions:
     - Amount
     - Currency
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteDomesticStandingOrderConsentResponse6DataInitiationRecurringPaymentAmount:
     description: OBWriteDomesticStandingOrderConsentResponse6DataInitiationRecurringPaymentAmount
+      OBWriteDomesticStandingOrderConsentResponse6DataInitiationRecurringPaymentAmount
       The amount of the recurring Standing Order
     properties:
       Amount:
@@ -23758,7 +23774,7 @@ definitions:
     - Amount
     - Currency
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteDomesticStandingOrderConsentResponse6DataSCASupportData:
     properties:
       AppliedAuthenticationApproach:
@@ -24332,7 +24348,6 @@ definitions:
           All date-time fields in responses must include the timezone. An example is below:
           2017-04-05T10:43:07+00:00
           Format: date-time
-          Format: date-time
         format: date-time
         type: string
       SupplementaryData:
@@ -24340,11 +24355,11 @@ definitions:
     required:
     - FileHash
     - FileType
-    title: OBWriteFileConsent3DataInitiation OBWriteFileConsent3DataInitiation The
-      Initiation payload is sent by the initiating party to the ASPSP. It is used
-      to request movement of funds using a payment file.
+    title: OBWriteFileConsent3DataInitiation The Initiation payload is sent by the
+      initiating party to the ASPSP. It is used to request movement of funds using
+      a payment file.
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteFileConsent3DataInitiationDebtorAccount:
     properties:
       Identification:
@@ -24387,12 +24402,11 @@ definitions:
         maxLength: 140
         minLength: 1
         type: string
-    title: OBWriteFileConsent3DataInitiationRemittanceInformation OBWriteFileConsent3DataInitiationRemittanceInformation
-      Information supplied to enable the matching of an entry with the items that
-      the transfer is intended to settle, such as commercial invoices in an accounts'
-      receivable system.
+    title: OBWriteFileConsent3DataInitiationRemittanceInformation Information supplied
+      to enable the matching of an entry with the items that the transfer is intended
+      to settle, such as commercial invoices in an accounts' receivable system.
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteFileConsent3DataSCASupportData:
     properties:
       AppliedAuthenticationApproach:
@@ -24435,8 +24449,8 @@ definitions:
     type: object
     x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteFileConsentResponse4Data:
-    description: OBWriteFileConsentResponse4Data o b write file consent response4
-      data
+    description: OBWriteFileConsentResponse4Data OBWriteFileConsentResponse4Data o
+      b write file consent response4 data
     properties:
       Authorisation:
         $ref: '#/definitions/OBWriteFileConsentResponse4DataAuthorisation'
@@ -24465,6 +24479,7 @@ definitions:
           All date-time fields in responses must include the timezone. An example is below:
           2017-04-05T10:43:07+00:00
           Format: date-time
+          Format: date-time
         format: date-time
         type: string
       Debtor:
@@ -24492,7 +24507,7 @@ definitions:
     - Status
     - StatusUpdateDateTime
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteFileConsentResponse4DataAuthorisation:
     properties:
       AuthorisationType:
@@ -24506,14 +24521,15 @@ definitions:
           All date-time fields in responses must include the timezone. An example is below:
           2017-04-05T10:43:07+00:00
           Format: date-time
+          Format: date-time
         format: date-time
         type: string
     required:
     - AuthorisationType
-    title: OBWriteFileConsentResponse4DataAuthorisation The authorisation type request
-      from the TPP.
+    title: OBWriteFileConsentResponse4DataAuthorisation OBWriteFileConsentResponse4DataAuthorisation
+      The authorisation type request from the TPP.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteFileConsentResponse4DataChargesItems0:
     properties:
       Amount:
@@ -25306,11 +25322,12 @@ definitions:
     - EndToEndIdentification
     - InstructedAmount
     - InstructionIdentification
-    title: OBWriteInternationalConsent5DataInitiation The Initiation payload is sent
-      by the initiating party to the ASPSP. It is used to request movement of funds
-      from the debtor account to a creditor for a single international payment.
+    title: OBWriteInternationalConsent5DataInitiation OBWriteInternationalConsent5DataInitiation
+      The Initiation payload is sent by the initiating party to the ASPSP. It is used
+      to request movement of funds from the debtor account to a creditor for a single
+      international payment.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteInternationalConsent5DataInitiationCreditor:
     properties:
       Name:
@@ -25345,11 +25362,11 @@ definitions:
     - Identification
     - Name
     - SchemeName
-    title: OBWriteInternationalConsent5DataInitiationCreditorAccount Unambiguous identification
-      of the account of the creditor to which a credit entry will be posted as a result
-      of the payment transaction.
+    title: OBWriteInternationalConsent5DataInitiationCreditorAccount OBWriteInternationalConsent5DataInitiationCreditorAccount
+      Unambiguous identification of the account of the creditor to which a credit
+      entry will be posted as a result of the payment transaction.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteInternationalConsent5DataInitiationCreditorAgent:
     properties:
       Identification:
@@ -25382,11 +25399,11 @@ definitions:
     required:
     - Identification
     - SchemeName
-    title: OBWriteInternationalConsent5DataInitiationDebtorAccount OBWriteInternationalConsent5DataInitiationDebtorAccount
-      Unambiguous identification of the account of the debtor to which a debit entry
-      will be made as a result of the transaction.
+    title: OBWriteInternationalConsent5DataInitiationDebtorAccount Unambiguous identification
+      of the account of the debtor to which a debit entry will be made as a result
+      of the transaction.
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteInternationalConsent5DataInitiationExchangeRateInformation:
     properties:
       ContractIdentification:
@@ -25414,10 +25431,10 @@ definitions:
     required:
     - RateType
     - UnitCurrency
-    title: OBWriteInternationalConsent5DataInitiationExchangeRateInformation OBWriteInternationalConsent5DataInitiationExchangeRateInformation
-      Provides details on the currency exchange rate and contract.
+    title: OBWriteInternationalConsent5DataInitiationExchangeRateInformation Provides
+      details on the currency exchange rate and contract.
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteInternationalConsent5DataInitiationInstructedAmount:
     description: 'Usage: This amount has to be transported unchanged through the transaction
       chain.'
@@ -25429,11 +25446,11 @@ definitions:
     required:
     - Amount
     - Currency
-    title: OBWriteInternationalConsent5DataInitiationInstructedAmount Amount of money
-      to be moved between the debtor and creditor, before deduction of charges, expressed
-      in the currency as ordered by the initiating party.
+    title: OBWriteInternationalConsent5DataInitiationInstructedAmount OBWriteInternationalConsent5DataInitiationInstructedAmount
+      Amount of money to be moved between the debtor and creditor, before deduction
+      of charges, expressed in the currency as ordered by the initiating party.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteInternationalConsent5DataInitiationRemittanceInformation:
     properties:
       Reference:
@@ -25483,10 +25500,10 @@ definitions:
         - '[BillPayment ContactlessTravel EcommerceGoods EcommerceServices Kiosk Parking
           PartyToParty]'
         type: string
-    title: OBWriteInternationalConsent5DataSCASupportData Supporting Data provided
-      by TPP, when requesting SCA Exemption.
+    title: OBWriteInternationalConsent5DataSCASupportData OBWriteInternationalConsent5DataSCASupportData
+      Supporting Data provided by TPP, when requesting SCA Exemption.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteInternationalConsentResponse6:
     description: OBWriteInternationalConsentResponse6 o b write international consent
       response6
@@ -25505,8 +25522,8 @@ definitions:
     type: object
     x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteInternationalConsentResponse6Data:
-    description: OBWriteInternationalConsentResponse6Data o b write international
-      consent response6 data
+    description: OBWriteInternationalConsentResponse6Data OBWriteInternationalConsentResponse6Data
+      o b write international consent response6 data
     properties:
       Authorisation:
         $ref: '#/definitions/OBWriteInternationalConsentResponse6DataAuthorisation'
@@ -25535,6 +25552,7 @@ definitions:
           All date-time fields in responses must include the timezone. An example is below:
           2017-04-05T10:43:07+00:00
           Format: date-time
+          Format: date-time
         format: date-time
         type: string
       Debtor:
@@ -25547,6 +25565,7 @@ definitions:
           All date-time fields in responses must include the timezone. An example is below:
           2017-04-05T10:43:07+00:00
           Format: date-time
+          Format: date-time
         format: date-time
         type: string
       ExpectedSettlementDateTime:
@@ -25554,6 +25573,7 @@ definitions:
           Expected settlement date and time for the payment resource.All dates in the JSON payloads are represented in ISO 8601 date-time format.
           All date-time fields in responses must include the timezone. An example is below:
           2017-04-05T10:43:07+00:00
+          Format: date-time
           Format: date-time
         format: date-time
         type: string
@@ -25585,7 +25605,7 @@ definitions:
     - Status
     - StatusUpdateDateTime
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteInternationalConsentResponse6DataAuthorisation:
     properties:
       AuthorisationType:
@@ -25783,11 +25803,11 @@ definitions:
     - Identification
     - Name
     - SchemeName
-    title: OBWriteInternationalConsentResponse6DataInitiationCreditorAccount Unambiguous
-      identification of the account of the creditor to which a credit entry will be
-      posted as a result of the payment transaction.
+    title: OBWriteInternationalConsentResponse6DataInitiationCreditorAccount OBWriteInternationalConsentResponse6DataInitiationCreditorAccount
+      Unambiguous identification of the account of the creditor to which a credit
+      entry will be posted as a result of the payment transaction.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteInternationalConsentResponse6DataInitiationCreditorAgent:
     properties:
       Identification:
@@ -25798,10 +25818,10 @@ definitions:
         $ref: '#/definitions/OBPostalAddress6'
       SchemeName:
         $ref: '#/definitions/OBExternalFinancialInstitutionIdentification4Code'
-    title: OBWriteInternationalConsentResponse6DataInitiationCreditorAgent OBWriteInternationalConsentResponse6DataInitiationCreditorAgent
-      Financial institution servicing an account for the creditor.
+    title: OBWriteInternationalConsentResponse6DataInitiationCreditorAgent Financial
+      institution servicing an account for the creditor.
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteInternationalConsentResponse6DataInitiationDebtorAccount:
     properties:
       Identification:
@@ -25820,11 +25840,11 @@ definitions:
     required:
     - Identification
     - SchemeName
-    title: OBWriteInternationalConsentResponse6DataInitiationDebtorAccount OBWriteInternationalConsentResponse6DataInitiationDebtorAccount
-      Unambiguous identification of the account of the debtor to which a debit entry
-      will be made as a result of the transaction.
+    title: OBWriteInternationalConsentResponse6DataInitiationDebtorAccount Unambiguous
+      identification of the account of the debtor to which a debit entry will be made
+      as a result of the transaction.
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteInternationalConsentResponse6DataInitiationExchangeRateInformation:
     properties:
       ContractIdentification:
@@ -25853,10 +25873,9 @@ definitions:
     - RateType
     - UnitCurrency
     title: OBWriteInternationalConsentResponse6DataInitiationExchangeRateInformation
-      OBWriteInternationalConsentResponse6DataInitiationExchangeRateInformation Provides
-      details on the currency exchange rate and contract.
+      Provides details on the currency exchange rate and contract.
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteInternationalConsentResponse6DataInitiationInstructedAmount:
     description: 'Usage: This amount has to be transported unchanged through the transaction
       chain.'
@@ -25923,10 +25942,10 @@ definitions:
         - '[BillPayment ContactlessTravel EcommerceGoods EcommerceServices Kiosk Parking
           PartyToParty]'
         type: string
-    title: OBWriteInternationalConsentResponse6DataSCASupportData OBWriteInternationalConsentResponse6DataSCASupportData
-      Supporting Data provided by TPP, when requesting SCA Exemption.
+    title: OBWriteInternationalConsentResponse6DataSCASupportData Supporting Data
+      provided by TPP, when requesting SCA Exemption.
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteInternationalResponse5:
     description: OBWriteInternationalResponse5 o b write international response5
     properties:
@@ -26692,8 +26711,8 @@ definitions:
     type: object
     x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteInternationalScheduledConsent5Data:
-    description: OBWriteInternationalScheduledConsent5Data OBWriteInternationalScheduledConsent5Data
-      o b write international scheduled consent5 data
+    description: OBWriteInternationalScheduledConsent5Data o b write international
+      scheduled consent5 data
     properties:
       Authorisation:
         $ref: '#/definitions/OBWriteInternationalScheduledConsent5DataAuthorisation'
@@ -26715,7 +26734,7 @@ definitions:
     - Initiation
     - Permission
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteInternationalScheduledConsent5DataAuthorisation:
     properties:
       AuthorisationType:
@@ -26822,12 +26841,12 @@ definitions:
     - InstructedAmount
     - InstructionIdentification
     - RequestedExecutionDateTime
-    title: OBWriteInternationalScheduledConsent5DataInitiation The Initiation payload
-      is sent by the initiating party to the ASPSP. It is used to request movement
-      of funds from the debtor account to a creditor for a single scheduled international
-      payment.
+    title: OBWriteInternationalScheduledConsent5DataInitiation OBWriteInternationalScheduledConsent5DataInitiation
+      The Initiation payload is sent by the initiating party to the ASPSP. It is used
+      to request movement of funds from the debtor account to a creditor for a single
+      scheduled international payment.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteInternationalScheduledConsent5DataInitiationCreditor:
     properties:
       Name:
@@ -26838,10 +26857,10 @@ definitions:
         type: string
       PostalAddress:
         $ref: '#/definitions/OBPostalAddress6'
-    title: OBWriteInternationalScheduledConsent5DataInitiationCreditor Party to which
-      an amount of money is due.
+    title: OBWriteInternationalScheduledConsent5DataInitiationCreditor OBWriteInternationalScheduledConsent5DataInitiationCreditor
+      Party to which an amount of money is due.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteInternationalScheduledConsent5DataInitiationCreditorAccount:
     properties:
       Identification:
@@ -26862,11 +26881,11 @@ definitions:
     - Identification
     - Name
     - SchemeName
-    title: OBWriteInternationalScheduledConsent5DataInitiationCreditorAccount OBWriteInternationalScheduledConsent5DataInitiationCreditorAccount
-      Unambiguous identification of the account of the creditor to which a credit
-      entry will be posted as a result of the payment transaction.
+    title: OBWriteInternationalScheduledConsent5DataInitiationCreditorAccount Unambiguous
+      identification of the account of the creditor to which a credit entry will be
+      posted as a result of the payment transaction.
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteInternationalScheduledConsent5DataInitiationCreditorAgent:
     properties:
       Identification:
@@ -26899,11 +26918,11 @@ definitions:
     required:
     - Identification
     - SchemeName
-    title: OBWriteInternationalScheduledConsent5DataInitiationDebtorAccount OBWriteInternationalScheduledConsent5DataInitiationDebtorAccount
-      Unambiguous identification of the account of the debtor to which a debit entry
-      will be made as a result of the transaction.
+    title: OBWriteInternationalScheduledConsent5DataInitiationDebtorAccount Unambiguous
+      identification of the account of the debtor to which a debit entry will be made
+      as a result of the transaction.
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteInternationalScheduledConsent5DataInitiationExchangeRateInformation:
     properties:
       ContractIdentification:
@@ -26947,11 +26966,11 @@ definitions:
     required:
     - Amount
     - Currency
-    title: OBWriteInternationalScheduledConsent5DataInitiationInstructedAmount Amount
-      of money to be moved between the debtor and creditor, before deduction of charges,
-      expressed in the currency as ordered by the initiating party.
+    title: OBWriteInternationalScheduledConsent5DataInitiationInstructedAmount OBWriteInternationalScheduledConsent5DataInitiationInstructedAmount
+      Amount of money to be moved between the debtor and creditor, before deduction
+      of charges, expressed in the currency as ordered by the initiating party.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteInternationalScheduledConsent5DataInitiationRemittanceInformation:
     properties:
       Reference:
@@ -27148,10 +27167,10 @@ definitions:
     - Amount
     - ChargeBearer
     - Type
-    title: OBWriteInternationalScheduledConsentResponse6DataChargesItems0 Set of elements
-      used to provide details of a charge for the payment initiation.
+    title: OBWriteInternationalScheduledConsentResponse6DataChargesItems0 OBWriteInternationalScheduledConsentResponse6DataChargesItems0
+      Set of elements used to provide details of a charge for the payment initiation.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteInternationalScheduledConsentResponse6DataExchangeRateInformation:
     properties:
       ContractIdentification:
@@ -27172,6 +27191,7 @@ definitions:
           All date-time fields in responses must include the timezone. An example is below:
           2017-04-05T10:43:07+00:00
           Format: date-time
+          Format: date-time
         format: date-time
         type: string
       RateType:
@@ -27189,10 +27209,11 @@ definitions:
     - RateType
     - UnitCurrency
     title: OBWriteInternationalScheduledConsentResponse6DataExchangeRateInformation
-      Further detailed information on the exchange rate that has been used in the
-      payment transaction.
+      OBWriteInternationalScheduledConsentResponse6DataExchangeRateInformation Further
+      detailed information on the exchange rate that has been used in the payment
+      transaction.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteInternationalScheduledConsentResponse6DataInitiation:
     properties:
       ChargeBearer:
@@ -27278,12 +27299,12 @@ definitions:
     - InstructedAmount
     - InstructionIdentification
     - RequestedExecutionDateTime
-    title: OBWriteInternationalScheduledConsentResponse6DataInitiation OBWriteInternationalScheduledConsentResponse6DataInitiation
-      The Initiation payload is sent by the initiating party to the ASPSP. It is used
-      to request movement of funds from the debtor account to a creditor for a single
-      scheduled international payment.
+    title: OBWriteInternationalScheduledConsentResponse6DataInitiation The Initiation
+      payload is sent by the initiating party to the ASPSP. It is used to request
+      movement of funds from the debtor account to a creditor for a single scheduled
+      international payment.
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteInternationalScheduledConsentResponse6DataInitiationCreditor:
     properties:
       Name:
@@ -27294,10 +27315,10 @@ definitions:
         type: string
       PostalAddress:
         $ref: '#/definitions/OBPostalAddress6'
-    title: OBWriteInternationalScheduledConsentResponse6DataInitiationCreditor Party
-      to which an amount of money is due.
+    title: OBWriteInternationalScheduledConsentResponse6DataInitiationCreditor OBWriteInternationalScheduledConsentResponse6DataInitiationCreditor
+      Party to which an amount of money is due.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteInternationalScheduledConsentResponse6DataInitiationCreditorAccount:
     properties:
       Identification:
@@ -27319,11 +27340,10 @@ definitions:
     - Name
     - SchemeName
     title: OBWriteInternationalScheduledConsentResponse6DataInitiationCreditorAccount
-      OBWriteInternationalScheduledConsentResponse6DataInitiationCreditorAccount Unambiguous
-      identification of the account of the creditor to which a credit entry will be
-      posted as a result of the payment transaction.
+      Unambiguous identification of the account of the creditor to which a credit
+      entry will be posted as a result of the payment transaction.
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteInternationalScheduledConsentResponse6DataInitiationCreditorAgent:
     properties:
       Identification:
@@ -27335,10 +27355,9 @@ definitions:
       SchemeName:
         $ref: '#/definitions/OBExternalFinancialInstitutionIdentification4Code'
     title: OBWriteInternationalScheduledConsentResponse6DataInitiationCreditorAgent
-      OBWriteInternationalScheduledConsentResponse6DataInitiationCreditorAgent Financial
-      institution servicing an account for the creditor.
+      Financial institution servicing an account for the creditor.
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteInternationalScheduledConsentResponse6DataInitiationDebtorAccount:
     properties:
       Identification:
@@ -28211,8 +28230,8 @@ definitions:
     type: object
     x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteInternationalStandingOrderConsent6Data:
-    description: OBWriteInternationalStandingOrderConsent6Data o b write international
-      standing order consent6 data
+    description: OBWriteInternationalStandingOrderConsent6Data OBWriteInternationalStandingOrderConsent6Data
+      o b write international standing order consent6 data
     properties:
       Authorisation:
         $ref: '#/definitions/OBWriteInternationalStandingOrderConsent6DataAuthorisation'
@@ -28234,7 +28253,7 @@ definitions:
     - Initiation
     - Permission
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteInternationalStandingOrderConsent6DataAuthorisation:
     properties:
       AuthorisationType:
@@ -28248,15 +28267,14 @@ definitions:
           All date-time fields in responses must include the timezone. An example is below:
           2017-04-05T10:43:07+00:00
           Format: date-time
-          Format: date-time
         format: date-time
         type: string
     required:
     - AuthorisationType
-    title: OBWriteInternationalStandingOrderConsent6DataAuthorisation OBWriteInternationalStandingOrderConsent6DataAuthorisation
-      The authorisation type request from the TPP.
+    title: OBWriteInternationalStandingOrderConsent6DataAuthorisation The authorisation
+      type request from the TPP.
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteInternationalStandingOrderConsent6DataInitiation:
     properties:
       ChargeBearer:
@@ -28464,10 +28482,11 @@ definitions:
     - Amount
     - Currency
     title: OBWriteInternationalStandingOrderConsent6DataInitiationInstructedAmount
-      Amount of money to be moved between the debtor and creditor, before deduction
-      of charges, expressed in the currency as ordered by the initiating party.
+      OBWriteInternationalStandingOrderConsent6DataInitiationInstructedAmount Amount
+      of money to be moved between the debtor and creditor, before deduction of charges,
+      expressed in the currency as ordered by the initiating party.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteInternationalStandingOrderConsent6DataSCASupportData:
     properties:
       AppliedAuthenticationApproach:
@@ -28514,8 +28533,8 @@ definitions:
     type: object
     x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteInternationalStandingOrderConsentResponse7Data:
-    description: OBWriteInternationalStandingOrderConsentResponse7Data o b write international
-      standing order consent response7 data
+    description: OBWriteInternationalStandingOrderConsentResponse7Data OBWriteInternationalStandingOrderConsentResponse7Data
+      o b write international standing order consent response7 data
     properties:
       Authorisation:
         $ref: '#/definitions/OBWriteInternationalStandingOrderConsentResponse7DataAuthorisation'
@@ -28543,6 +28562,7 @@ definitions:
           Specified cut-off date and time for the payment consent.All dates in the JSON payloads are represented in ISO 8601 date-time format.
           All date-time fields in responses must include the timezone. An example is below:
           2017-04-05T10:43:07+00:00
+          Format: date-time
           Format: date-time
         format: date-time
         type: string
@@ -28582,7 +28602,7 @@ definitions:
     - Status
     - StatusUpdateDateTime
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteInternationalStandingOrderConsentResponse7DataAuthorisation:
     properties:
       AuthorisationType:
@@ -28596,15 +28616,14 @@ definitions:
           All date-time fields in responses must include the timezone. An example is below:
           2017-04-05T10:43:07+00:00
           Format: date-time
-          Format: date-time
         format: date-time
         type: string
     required:
     - AuthorisationType
-    title: OBWriteInternationalStandingOrderConsentResponse7DataAuthorisation OBWriteInternationalStandingOrderConsentResponse7DataAuthorisation
-      The authorisation type request from the TPP.
+    title: OBWriteInternationalStandingOrderConsentResponse7DataAuthorisation The
+      authorisation type request from the TPP.
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteInternationalStandingOrderConsentResponse7DataChargesItems0:
     properties:
       Amount:
@@ -28657,7 +28676,6 @@ definitions:
           The date on which the final payment for a Standing Order schedule will be made.All dates in the JSON payloads are represented in ISO 8601 date-time format.
           All date-time fields in responses must include the timezone. An example is below:
           2017-04-05T10:43:07+00:00
-          Format: date-time
           Format: date-time
         format: date-time
         type: string
@@ -28730,12 +28748,12 @@ definitions:
     - FirstPaymentDateTime
     - Frequency
     - InstructedAmount
-    title: OBWriteInternationalStandingOrderConsentResponse7DataInitiation OBWriteInternationalStandingOrderConsentResponse7DataInitiation
-      The Initiation payload is sent by the initiating party to the ASPSP. It is used
-      to request movement of funds from the debtor account to a creditor for an international
+    title: OBWriteInternationalStandingOrderConsentResponse7DataInitiation The Initiation
+      payload is sent by the initiating party to the ASPSP. It is used to request
+      movement of funds from the debtor account to a creditor for an international
       standing order.
     type: object
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
   OBWriteInternationalStandingOrderConsentResponse7DataInitiationCreditor:
     properties:
       Name:
@@ -28747,9 +28765,10 @@ definitions:
       PostalAddress:
         $ref: '#/definitions/OBPostalAddress6'
     title: OBWriteInternationalStandingOrderConsentResponse7DataInitiationCreditor
-      Party to which an amount of money is due.
+      OBWriteInternationalStandingOrderConsentResponse7DataInitiationCreditor Party
+      to which an amount of money is due.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteInternationalStandingOrderConsentResponse7DataInitiationCreditorAccount:
     properties:
       Identification:
@@ -28771,9 +28790,10 @@ definitions:
     - Name
     - SchemeName
     title: OBWriteInternationalStandingOrderConsentResponse7DataInitiationCreditorAccount
+      OBWriteInternationalStandingOrderConsentResponse7DataInitiationCreditorAccount
       Provides the details to identify the beneficiary account.
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/acp-client-go/models
   OBWriteInternationalStandingOrderConsentResponse7DataInitiationCreditorAgent:
     description: This is the servicer of the beneficiary account.
     properties:
@@ -29685,16 +29705,17 @@ definitions:
     type: object
     x-go-package: github.com/cloudentity/acp-client-go/models
   OpenbankingBrasilBusinessEntity:
-    description: Titular, pessoa jurdica a quem se referem os dados que so objeto
-      de compartilhamento.
+    description: Usurio (pessoa jurdica) que encontra-se logado na instituio Iniciadora
+      de Pagamento. [Restrio] Preenchimento obrigatrio se usurio logado na instituio
+      Iniciadora de Pagamento for um CNPJ (pessoa jurdica).
     properties:
       document:
-        $ref: '#/definitions/OpenbankingBrasilDocument1'
+        $ref: '#/definitions/OpenbankingBrasilDocument'
     required:
     - document
     title: OpenbankingBrasilBusinessEntity BusinessEntity
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obbr/consents/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/models
   OpenbankingBrasilCode:
     description: |-
       Cdigos de erros previstos na criao de consentimento para a iniciao de pagamentos:
@@ -30433,19 +30454,19 @@ definitions:
       code:
         description: Cdigo de erro especfico do endpoint
         maxLength: 255
-        pattern: \w*\W*
+        pattern: '[\w\W\s]*'
         type: string
         x-go-name: Code
       detail:
         description: Descrio legvel por humanos deste erro especfico
         maxLength: 2048
-        pattern: \w*\W*
+        pattern: '[\w\W\s]*'
         type: string
         x-go-name: Detail
       title:
         description: Ttulo legvel por humanos deste erro especfico
         maxLength: 255
-        pattern: \w*\W*
+        pattern: '[\w\W\s]*'
         type: string
         x-go-name: Title
     required:
@@ -30453,7 +30474,7 @@ definitions:
     - detail
     - title
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obbr/consents/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/models
   OpenbankingBrasilError1:
     description: OpenbankingBrasilError1 Error1
     properties:
@@ -30568,6 +30589,38 @@ definitions:
   OpenbankingBrasilLinks:
     description: Referncias para outros recusos da API requisitada.
     properties:
+      first:
+        description: URI da primeira pgina que originou essa lista de resultados.
+          Restrio - Obrigatrio quando no for a primeira pgina da resposta
+        example: https://api.banco.com.br/open-banking/api/v1/resource
+        maxLength: 2000
+        pattern: ^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)$
+        type: string
+        x-go-name: First
+      last:
+        description: URI da ltima pgina dessa lista de resultados. Restrio - Obrigatrio
+          quando no for a ltima pgina da resposta
+        example: https://api.banco.com.br/open-banking/api/v1/resource
+        maxLength: 2000
+        pattern: ^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)$
+        type: string
+        x-go-name: Last
+      next:
+        description: URI da prxima pgina dessa lista de resultados. Restrio - Obrigatrio
+          quando no for a ltima pgina da resposta
+        example: https://api.banco.com.br/open-banking/api/v1/resource
+        maxLength: 2000
+        pattern: ^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)$
+        type: string
+        x-go-name: Next
+      prev:
+        description: "URI da pgina anterior dessa lista de resultados. Restrio - \tObrigatrio
+          quando no for a primeira pgina da resposta"
+        example: https://api.banco.com.br/open-banking/api/v1/resource
+        maxLength: 2000
+        pattern: ^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)$
+        type: string
+        x-go-name: Prev
       self:
         description: URI completo que gerou a resposta atual.
         example: https://api.banco.com.br/open-banking/api/v1/resource
@@ -30579,7 +30632,7 @@ definitions:
     - self
     title: OpenbankingBrasilLinks Links
     type: object
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obbr/consents/models
   OpenbankingBrasilLoggedUser:
     description: Usurio (pessoa natural) que encontra-se logado na instituio receptora
       e que iniciar o processo de consentimento para compartilhamento de dados.
@@ -31456,10 +31509,19 @@ definitions:
     type: object
     x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/models
   OpenbankingBrasilStatus:
-    description: Estado atual do consentimento cadastrado.
+    description: |-
+      Retorna o estado do consentimento, o qual no momento de sua criao ser AWAITING_AUTHORISATION.
+      Este estado ser alterado depois da autorizao do consentimento na detentora da conta do pagador (Debtor) para AUTHORISED ou REJECTED.
+      O consentimento fica no estado CONSUMED aps ocorrer a iniciao do pagamento referente ao consentimento.
+      Em caso de consentimento expirado a detentora dever retornar o status REJECTED.
+      Estados possveis:
+      AWAITING_AUTHORISATION - Aguardando autorizao
+      AUTHORISED - Autorizado
+      REJECTED - Rejeitado
+      CONSUMED - Consumido
     title: OpenbankingBrasilStatus Status
     type: string
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obbr/consents/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/models
   OpenbankingBrasilStatus1:
     description: |-
       Estado atual da iniciao de pagamento. O estado evolui na seguinte ordem:
@@ -32662,10 +32724,10 @@ definitions:
     type: object
     x-go-package: github.com/cloudentity/acp-client-go/models
   PostCode:
-    title: PostCode PostCode Identifier consisting of a group of letters and/or numbers
-      that is added to a postal address to assist the sorting of mail.
+    title: PostCode Identifier consisting of a group of letters and/or numbers that
+      is added to a postal address to assist the sorting of mail.
     type: string
-    x-go-package: github.com/cloudentity/acp-client-go/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models
   PreviousPaymentDateTime:
     description: |-
       All date-time fields in responses must include the timezone. An example is below:
@@ -33962,7 +34024,7 @@ definitions:
     title: SecondaryIdentification This is secondary identification of the account,
       as assigned by the account servicing institution.
     type: string
-    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models
+    x-go-package: github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models
   Server:
     description: Server Multi Tenant authorization server
     properties:
@@ -37343,6 +37405,204 @@ paths:
           schema:
             $ref: '#/definitions/OBErrorResponse1'
         "500":
+          description: OBErrorResponse1
+          schema:
+            $ref: '#/definitions/OBErrorResponse1'
+      security:
+      - defaultcc:
+        - accounts
+      tags:
+      - bank
+      - uk
+  /balances:
+    get:
+      description: get balances
+      operationId: getBalancesRequest
+      parameters:
+      - in: path
+        name: accountID
+        required: true
+        type: string
+        x-go-name: AccountID
+      - in: header
+        name: x-fapi-auth-date
+        type: string
+        x-go-name: AuthDate
+      - in: header
+        name: x-fapi-customer-ip-address
+        type: string
+        x-go-name: CustomerIPAddress
+      - in: header
+        name: authorization
+        type: string
+        x-go-name: Authorization
+      - in: header
+        name: x-fapi-interaction-id
+        type: string
+        x-go-name: InteractionID
+      - in: header
+        name: x-customer-user-agent
+        type: string
+        x-go-name: CustomerAgent
+      responses:
+        "200":
+          description: OBReadBalance1
+          schema:
+            $ref: '#/definitions/OBReadBalance1'
+        "403":
+          description: OBErrorResponse1
+          schema:
+            $ref: '#/definitions/OBErrorResponse1'
+        "404":
+          description: OBErrorResponse1
+          schema:
+            $ref: '#/definitions/OBErrorResponse1'
+      security:
+      - defaultcc:
+        - accounts
+      tags:
+      - bank
+      - uk
+  /domestic-payments/{DomesticPaymentId}:
+    get:
+      description: get domestic payment
+      operationId: getDomesticPaymentRequest
+      parameters:
+      - in: header
+        name: x-fapi-auth-date
+        type: string
+        x-go-name: AuthDate
+      - in: header
+        name: x-fapi-customer-ip-address
+        type: string
+        x-go-name: CustomerIPAddress
+      - in: header
+        name: authorization
+        type: string
+        x-go-name: Authorization
+      - in: header
+        name: x-fapi-interaction-id
+        type: string
+        x-go-name: InteractionID
+      - in: header
+        name: x-customer-user-agent
+        type: string
+        x-go-name: CustomerAgent
+      - in: path
+        name: DomesticPaymentId
+        required: true
+        type: string
+        x-go-name: DomesticPaymentID
+      responses:
+        "201":
+          description: OBWriteDomesticResponse5
+          schema:
+            $ref: '#/definitions/OBWriteDomesticResponse5'
+        "403":
+          description: OBErrorResponse1
+          schema:
+            $ref: '#/definitions/OBErrorResponse1'
+        "404":
+          description: OBErrorResponse1
+          schema:
+            $ref: '#/definitions/OBErrorResponse1'
+        "500":
+          description: OBErrorResponse1
+          schema:
+            $ref: '#/definitions/OBErrorResponse1'
+      security:
+      - defaultcc:
+        - payments
+      tags:
+      - bank
+      - uk
+  /internal/accounts/{sub}:
+    get:
+      description: get all accounts for user
+      operationId: getInternalAccountsRequest
+      parameters:
+      - in: query
+        name: id
+        type: string
+        x-go-name: ID
+      responses:
+        "200":
+          description: ResponseAccountList
+          schema:
+            $ref: '#/definitions/ResponseAccountList'
+        "404":
+          description: OpenbankingBrasilResponseError
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilResponseError'
+      security:
+      - defaultcc:
+        - accounts
+      tags:
+      - bank
+      - uk
+  /internal/balances:
+    get:
+      description: get all balances for user
+      operationId: getInternalBalancesRequest
+      parameters:
+      - in: query
+        name: id
+        type: string
+        x-go-name: ID
+      responses:
+        "200":
+          description: OBReadBalance1
+          schema:
+            $ref: '#/definitions/OBReadBalance1'
+        "404":
+          description: OBErrorResponse1
+          schema:
+            $ref: '#/definitions/OBErrorResponse1'
+      security:
+      - defaultcc:
+        - accounts
+      tags:
+      - bank
+      - uk
+  /transactions:
+    get:
+      description: get transactions
+      operationId: getTransactionsRequest
+      parameters:
+      - in: header
+        name: x-fapi-auth-date
+        type: string
+        x-go-name: AuthDate
+      - in: header
+        name: x-fapi-customer-ip-address
+        type: string
+        x-go-name: CustomerIPAddress
+      - in: header
+        name: authorization
+        type: string
+        x-go-name: Authorization
+      - in: header
+        name: x-fapi-interaction-id
+        type: string
+        x-go-name: InteractionID
+      - in: header
+        name: x-customer-user-agent
+        type: string
+        x-go-name: CustomerAgent
+      responses:
+        "200":
+          description: OBReadTransaction6
+          schema:
+            $ref: '#/definitions/OBReadTransaction6'
+        "400":
+          description: OBErrorResponse1
+          schema:
+            $ref: '#/definitions/OBErrorResponse1'
+        "403":
+          description: OBErrorResponse1
+          schema:
+            $ref: '#/definitions/OBErrorResponse1'
+        "404":
           description: OBErrorResponse1
           schema:
             $ref: '#/definitions/OBErrorResponse1'

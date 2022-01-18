@@ -31,8 +31,8 @@ func (h *OBBRGetAccountsInternalHandler) MapError(c *gin.Context, err *Error) (c
 	return
 }
 
-func (h *OBBRGetAccountsInternalHandler) BuildResponse(c *gin.Context, data BankUserData) interface{} {
-	return NewOBBRAccountsResponse(data.OBBRAccounts)
+func (h *OBBRGetAccountsInternalHandler) BuildResponse(c *gin.Context, data BankUserData) (interface{}, *Error) {
+	return NewOBBRAccountsResponse(data.OBBRAccounts), nil
 }
 
 func (h *OBBRGetAccountsInternalHandler) Validate(c *gin.Context) *Error {

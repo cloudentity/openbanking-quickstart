@@ -12,7 +12,7 @@ import (
 	acpClient "github.com/cloudentity/acp-client-go/models"
 )
 
-// swagger:route GET /transactions bank getTransactionsRequest
+// swagger:route GET /transactions bank uk getTransactionsRequest
 //
 // get transactions
 //
@@ -46,9 +46,9 @@ func (h *OBUKGetTransactionsHandler) MapError(c *gin.Context, err *Error) (code 
 	return
 }
 
-func (h *OBUKGetTransactionsHandler) BuildResponse(c *gin.Context, data BankUserData) interface{} {
+func (h *OBUKGetTransactionsHandler) BuildResponse(c *gin.Context, data BankUserData) (interface{}, *Error) {
 	self := strfmt.URI(fmt.Sprintf("http://localhost:%s/transactions", strconv.Itoa(h.Config.Port)))
-	return NewTransactionsResponse(data.OBUKTransactions, self)
+	return NewTransactionsResponse(data.OBUKTransactions, self), nil
 }
 
 func (h *OBUKGetTransactionsHandler) Validate(c *gin.Context) *Error {

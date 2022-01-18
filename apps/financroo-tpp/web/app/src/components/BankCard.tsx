@@ -25,7 +25,7 @@ export default function BankCard({bankId, reconnect, accounts, balances, filteri
   const getAccountAmountAsString = (accountId, balances) => {
     const accountBalance = getAccountBalance(accountId, balances);
     return accountBalance
-      ? `GBP ${pathOr(0, ['Amount', 'Amount'], accountBalance)}`
+      ? `${accountBalance.Currency} ${pathOr(0, ['Amount'], accountBalance)}`
       : 'N/A'
 
   }

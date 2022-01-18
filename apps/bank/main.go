@@ -109,7 +109,7 @@ func (s *Server) Start() error {
 	case OBBR:
 		r.GET("/accounts/v1/accounts", s.Get(NewOBBRGetAccountsHandler))
 		r.GET("/internal/accounts", s.Get(NewOBBRGetAccountsInternalHandler))
-		r.GET("/accounts/v1/accounts/:accountID/balance", s.Get(NewOBBRGetBalanceHandler))
+		r.GET("/accounts/v1/accounts/:accountID/balances", s.Get(NewOBBRGetBalanceHandler))
 		r.GET("/balances", s.Get(NewOBBRGetBalancesInternalHandler))
 		r.GET("/payments/v1/pix/payments", s.Post(NewOBBRCreatePaymentHandler))
 

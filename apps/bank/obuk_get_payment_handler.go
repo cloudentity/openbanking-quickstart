@@ -9,7 +9,7 @@ import (
 	acpClient "github.com/cloudentity/acp-client-go/models"
 )
 
-// swagger:route GET /domestic-payments/{DomesticPaymentId} bank getDomesticPaymentRequest
+// swagger:route GET /domestic-payments/{DomesticPaymentId} bank uk getDomesticPaymentRequest
 //
 // get domestic payment
 //
@@ -56,13 +56,13 @@ func (h *OBUKGetPaymentHandler) GetUserIdentifier(c *gin.Context) string {
 	return h.introspectionResponse.Sub
 }
 
-func (h *OBUKGetPaymentHandler) BuildResponse(c *gin.Context, data BankUserData) interface{} {
+func (h *OBUKGetPaymentHandler) BuildResponse(c *gin.Context, data BankUserData) (interface{}, *Error) {
 	if len(data.OBUKPayments) == 1 {
-		return data.OBUKPayments[0]
+		return data.OBUKPayments[0], nil
 	}
 
 	_, err := h.MapError(c, ErrNotFound.WithMessage("payment with consent id "+*data.OBUKPayments[0].Data.ConsentID))
-	return err
+	return err, nil
 }
 
 func (h *OBUKGetPaymentHandler) Filter(c *gin.Context, data BankUserData) BankUserData {

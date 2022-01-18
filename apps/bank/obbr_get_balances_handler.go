@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/sirupsen/logrus"
 	"strconv"
 	"strings"
 
@@ -12,7 +13,7 @@ import (
 	acpClient "github.com/cloudentity/acp-client-go/models"
 )
 
-// swagger:route GET /accounts/v1/accounts/{accountID}/balance bank br getBalancesRequest
+// swagger:route GET /accounts/v1/accounts/{accountID}/balances bank br getBalancesRequest
 //
 // get balance
 //
@@ -45,20 +46,19 @@ func (h *OBBRGetBalanceHandler) MapError(c *gin.Context, err *Error) (code int, 
 	return
 }
 
-func (h *OBBRGetBalanceHandler) BuildResponse(c *gin.Context, data BankUserData) interface{} {
+func (h *OBBRGetBalanceHandler) BuildResponse(c *gin.Context, data BankUserData) (interface{}, *Error) {
 	accountID := c.Param("accountID")
 	self := strfmt.URI(fmt.Sprintf("http://localhost:%s/accounts/%s/balances", strconv.Itoa(h.Config.Port), accountID))
 
-	var balance OBBRBalance
+	logrus.WithField("balances", data.OBBRBalances).Info("xxxxxxxxxxxxxx")
 
 	for _, b := range data.OBBRBalances {
 		if b.AccountID == accountID {
-			balance = b
-			break
+			return NewOBBRBalanceResponse(b, self), nil
 		}
 	}
 
-	return NewOBBRBalanceResponse(balance, self)
+	return nil, ErrNotFound.WithMessage(fmt.Sprintf("account %s not found", accountID))
 }
 
 func (h *OBBRGetBalanceHandler) Validate(c *gin.Context) *Error {

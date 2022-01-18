@@ -23,5 +23,5 @@ type GetOBBRBalanceRequest struct {
 
 type OBBRBalance struct {
 	obbrAccountModels.AccountBalancesData
-	AccountID string `json:"accountID"`
+	AccountID string `json:"accountId"`
 }
