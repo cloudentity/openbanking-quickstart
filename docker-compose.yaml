@@ -101,7 +101,7 @@ services:
     environment:
       - CLIENT_ID=bukj5p6k7qdMIIDfjCCAmagAwImm5ppxxxx
       - CLIENT_SECRET=pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0
-      - ISSUER_URL=${ACP_INTERNAL_URL}/${TENANT}/system
+      - ISSUER_URL=${ACP_URL}/${TENANT}/system
       - CERT_FILE=/bank_cert.pem
       - KEY_FILE=/bank_key.pem
       - ROOT_CA=/ca.pem
@@ -209,7 +209,7 @@ services:
       - ./mount/bank-br:/app/data
     environment:
       - CLIENT_ID=bukj5p6k7qdmm5pother2
-      - ISSUER_URL=${ACP_INTERNAL_URL}/${TENANT}/openbanking_brasil
+      - ISSUER_URL=${ACP_URL}/${TENANT}/openbanking_brasil
       - CERT_FILE=/bank_cert.pem
       - KEY_FILE=/bank_key.pem
       - ROOT_CA=/ca.pem
