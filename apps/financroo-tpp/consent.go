@@ -12,8 +12,6 @@ import (
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 
-	obModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
-
 	"github.com/cloudentity/acp-client-go/client/openbanking"
 	"github.com/cloudentity/acp-client-go/models"
 )
