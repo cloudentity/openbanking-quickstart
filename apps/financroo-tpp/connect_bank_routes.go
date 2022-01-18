@@ -154,7 +154,7 @@ func (s *Server) ConnectedBanks() func(c *gin.Context) {
 			}
 
 			if tokenResponse, err = clients.RenewAccountsToken(c, b); err != nil {
-				logrus.Warnf("failed to renew token for bank: %s", b.BankID)
+				logrus.WithError(err).Warnf("failed to renew token for bank: %s", b.BankID)
 				expiredBanks = append(expiredBanks, b.BankID)
 				continue
 			}

@@ -87,10 +87,12 @@ func (s *Server) GetAccounts() func(ctx *gin.Context) {
 				continue
 			}
 
-			if accountsData, err = client.GetAccounts(c, accessToken, b); err != nil {
+			var data []Account
+			if data, err = client.GetAccounts(c, accessToken, b); err != nil {
 				c.String(http.StatusUnauthorized, fmt.Sprintf("failed to call bank get accounts: %+v", err))
 				return
 			}
+			accountsData = append(accountsData, data...)
 		}
 
 		c.JSON(200, gin.H{
@@ -125,10 +127,12 @@ func (s *Server) GetBalances() func(ctx *gin.Context) {
 				c.String(http.StatusInternalServerError, fmt.Sprintf("failed to update user: %+v", err))
 			}
 
-			if balancesData, err = client.GetBalances(c, accessToken, b); err != nil {
+			var balances []Balance
+			if balances, err = client.GetBalances(c, accessToken, b); err != nil {
 				c.String(http.StatusUnauthorized, fmt.Sprintf("failed to call bank get balances: %+v", err))
 				return
 			}
+			balancesData = append(balancesData, balances...)
 		}
 
 		c.JSON(200, gin.H{
@@ -159,10 +163,13 @@ func (s *Server) GetTransactions() func(ctx *gin.Context) {
 				continue
 			}
 
-			if transactionsData, err = client.GetTransactions(c, accessToken, b); err != nil {
+			var transactions []Transaction
+			if transactions, err = client.GetTransactions(c, accessToken, b); err != nil {
 				c.String(http.StatusUnauthorized, fmt.Sprintf("failed to call bank get transactions: %+v", err))
 				return
 			}
+
+			transactionsData = append(transactionsData, transactions...)
 		}
 
 		c.JSON(200, gin.H{

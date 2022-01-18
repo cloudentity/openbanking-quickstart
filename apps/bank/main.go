@@ -30,6 +30,7 @@ type Config struct {
 	CertFile     string        `env:"CERT_FILE,required"`
 	KeyFile      string        `env:"KEY_FILE,required"`
 	Spec         Spec          `env:"SPEC,required"`
+	GINMODE      string        `env:"GIN_MODE"`
 	SeedFilePath string
 }
 
@@ -55,6 +56,10 @@ func LoadConfig() (config Config, err error) {
 		config.SeedFilePath = fmt.Sprintf("data/%s-data.json", OBUK)
 	case OBBR:
 		config.SeedFilePath = fmt.Sprintf("data/%s-data.json", OBBR)
+	}
+
+	if config.GINMODE == "debug" {
+		logrus.SetLevel(logrus.DebugLevel)
 	}
 
 	return config, err

@@ -3,7 +3,7 @@ export COMPOSE_DOCKER_CLI_BUILD=1
 
 .EXPORT_ALL_VARIABLES: ;
 
-OB_APPS=developer-tpp financroo-tpp consent-page consent-self-service-portal consent-admin-portal bank
+OB_APPS=developer-tpp financroo-tpp consent-page-uk consent-page-br consent-self-service-portal consent-admin-portal bank-uk bank-br
 ACP_APPS=acp crdb hazelcast configuration
 
 .PHONY: build
@@ -76,6 +76,7 @@ enable-spec-obuk:
 	./scripts/override_env.sh DEVELOPER_CLIENT_ID bugkgm23g9kregtu051g
 	./scripts/override_env.sh CONSENT_PAGE_CLIENT_ID bv0ocudfotn6edhsiu7g
 	./scripts/override_env.sh BANK_CLIENT_ID bukj5p6k7qdmm5ppbi4g
+	./scripts/override_env.sh BANK_URL http://bank-uk:8070
 
 enable-spec-obbr:
 	./scripts/override_env.sh SPEC obbr 
@@ -83,6 +84,8 @@ enable-spec-obbr:
 	./scripts/override_env.sh DEVELOPER_CLIENT_ID bukj5p6k7qdmm5other1
 	./scripts/override_env.sh BANK_CLIENT_ID bukj5p6k7qdmm5pother2
 	./scripts/override_env.sh CONSENT_PAGE_CLIENT_ID bukj5p6k7qdMIIDfjCCAmagAwImm5ppxxxx
+	./scripts/override_env.sh BANK_URL http://bank-br:8070
+
 
 .PHONY: set-version
 set-version:
