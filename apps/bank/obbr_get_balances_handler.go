@@ -5,11 +5,10 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/sirupsen/logrus"
-
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obbr/consents/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
+	"github.com/sirupsen/logrus"
 
 	acpClient "github.com/cloudentity/acp-client-go/models"
 )
