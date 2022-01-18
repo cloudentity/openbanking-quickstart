@@ -58,3 +58,7 @@ To run tests:
 - `git add . && git commit -m 'Release VERSION' && git push`
 - verify if github action build and pushed released images to public docker hub
 - `git tag -a VERSION && git push --tags`
+
+## FAQ
+### I've deployed my quickstart apps under a domain that's not "localhost", but after I run the configuration job, the client application redirect urls are all still localhost.
+-  Under `data/variables/yaml` edit the values for `consent_self_service_portal_url`, ` consent_admin_portal_url`, `consent_page_url`, `developer_tpp_url`, and `financroo_tpp_url`.
