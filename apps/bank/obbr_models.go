@@ -13,6 +13,14 @@ type CreateOBBRPaymentRequest struct {
 	Request *models.OpenbankingBrasilCreatePixPayment
 }
 
+// swagger:parameters getBalancesRequest
+type GetOBBRBalanceRequest struct {
+	RequestHeaders
+
+	// in:path
+	AccountID string `json:"accountID"`
+}
+
 type OBBRBalance struct {
 	obbrAccountModels.AccountBalancesData
 	AccountID string `json:"accountID"`

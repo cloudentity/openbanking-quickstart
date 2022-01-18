@@ -92,17 +92,21 @@ generate-openbanking-integration-specs: generate-obuk-integration-spec
 
 .PHONY: generate-obuk-integration-spec
 generate-obuk-integration-spec: start-runner
-	docker-compose exec runner sh -c  \
-    "swagger generate spec \
-        -m \
-        -o api/internal/bank.yaml \
-         -w ./apps/bank"
+	./scripts/generate_bank_spec.sh uk
+
+.PHONY: generate-obbr-integration-spec
+generate-obbr-integration-spec: start-runner
+	./scripts/generate_bank_spec.sh br
+
+.PHONY: generate-integration-specs
+generate-integration-specs: generate-obuk-integration-spec generate-obbr-integration-spec
 
 .PHONY: generate-obbr-clients
 generate-obbr-clients: start-runner
 	rm -rf ./openbanking/obbr/accounts/*
 	docker-compose exec runner sh -c \
 	"swagger generate client \
+	    --include-tag=obuk
 		-f api/obbr/accounts.yaml \
 		-A accounts  \
 		-t ./openbanking/obbr/accounts"

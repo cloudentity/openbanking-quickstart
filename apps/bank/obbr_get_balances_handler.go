@@ -12,7 +12,7 @@ import (
 	acpClient "github.com/cloudentity/acp-client-go/models"
 )
 
-// swagger:route GET /accounts/v1/accounts/:accountID/balance bank br getBalancesRequest
+// swagger:route GET /accounts/v1/accounts/{accountID}/balance bank br getBalancesRequest
 //
 // get balance
 //
