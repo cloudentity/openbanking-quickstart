@@ -25,6 +25,13 @@ export const banks: Bank[] = [
     icon: gobankIcon,
   },
   {
+    value: "gobank2",
+    disabled: false,
+    name: "GO Bank 2",
+    logo: gobank,
+    icon: gobankIcon,
+  },
+  {
     value: "apexfinancial",
     disabled: true,
     name: "Apex Financial",

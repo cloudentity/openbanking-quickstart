@@ -7,8 +7,11 @@ import (
 	"net/url"
 	"time"
 
+	obbrAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/client"
+	obbrPayments "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/client"
 	obc "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client"
 	payments_client "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/client"
+	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 
 	acpclient "github.com/cloudentity/acp-client-go"
@@ -19,7 +22,22 @@ import (
 type Clients struct {
 	AcpAccountsClient acpclient.Client
 	AcpPaymentsClient acpclient.Client
-	BankClient        OpenbankingClient
+	BankClient        BankClient
+	ConsentClient     ConsentClient
+}
+
+type BankClient interface {
+	GetAccounts(c *gin.Context, accessToken string, bank ConnectedBank) ([]Account, error)
+	GetTransactions(c *gin.Context, accessToken string, bank ConnectedBank) ([]Transaction, error)
+	GetBalances(c *gin.Context, accessToken string, bank ConnectedBank) ([]Balance, error)
+	CreatePayment(c *gin.Context, data interface{}, accessToken string) (PaymentCreated, error)
+}
+
+type ConsentClient interface {
+	CreatePaymentConsent(c *gin.Context, req CreatePaymentRequest) (string, error)
+	GetPaymentConsent(c *gin.Context, consentID string) (interface{}, error)
+	CreateAccountConsent(c *gin.Context) (string, error)
+	Signer
 }
 
 func (c *Clients) RenewAccountsToken(ctx context.Context, bank ConnectedBank) (*models.TokenResponse, error) {
@@ -46,7 +64,9 @@ func InitClients(config Config) (map[BankID]Clients, error) {
 		clients              = map[BankID]Clients{}
 		acpAccountsWebClient acpclient.Client
 		acpPaymentsWebClient acpclient.Client
-		bankClient           OpenbankingClient
+		bankClient           BankClient
+		consentClient        ConsentClient
+		signer               Signer
 		err                  error
 	)
 
@@ -59,14 +79,32 @@ func InitClients(config Config) (map[BankID]Clients, error) {
 			return clients, errors.Wrapf(err, "failed to init acp web client for bank: %s", bank.ID)
 		}
 
-		if bankClient, err = NewOpenbankingClient(bank); err != nil {
-			return clients, errors.Wrapf(err, "failed to init client for bank: %s", bank.ID)
+		switch bank.BankType {
+		case "obuk":
+			if signer, err = NewOBUKSigner(config.KeyFile); err != nil {
+				return clients, errors.Wrapf(err, "failed to init consent message signer for oguk bank: %s", bank.ID)
+			}
+			consentClient = &OBUKConsentClient{acpAccountsWebClient, acpPaymentsWebClient, signer}
+			if bankClient, err = NewOBUKClient(bank); err != nil {
+				return clients,
+					errors.Wrapf(err, "failed to init client for obuk bank: %s", bank.ID)
+			}
+		case "obbr":
+			if signer, err = NewOBBRSigner(config.KeyFile); err != nil {
+				return clients, errors.Wrapf(err, "failed to init consent message signer for obbr bank: %s", bank.ID)
+			}
+			consentClient = &OBBRConsentClient{acpAccountsWebClient, acpPaymentsWebClient, signer}
+			if bankClient, err = NewOBBRClient(bank); err != nil {
+				return clients,
+					errors.Wrapf(err, "failed to init client for obbr bank: %s", bank.ID)
+			}
 		}
 
 		clients[bank.ID] = Clients{
 			AcpAccountsClient: acpAccountsWebClient,
 			AcpPaymentsClient: acpPaymentsWebClient,
 			BankClient:        bankClient,
+			ConsentClient:     consentClient,
 		}
 	}
 
@@ -100,7 +138,7 @@ func NewAcpClient(c Config, cfg BankConfig, redirect string) (acpclient.Client, 
 		RedirectURL:                 redirectURL,
 		RequestObjectSigningKeyFile: cfg.AcpClient.KeyFile,
 		RequestObjectExpiration:     &requestObjectExpiration,
-		Scopes:                      []string{"accounts", "payments", "openid", "offline_access"},
+		Scopes:                      cfg.AcpClient.Scopes,
 		Timeout:                     cfg.AcpClient.Timeout,
 		CertFile:                    cfg.AcpClient.CertFile,
 		KeyFile:                     cfg.AcpClient.KeyFile,
@@ -139,15 +177,14 @@ func NewLoginClient(c Config) (acpclient.Client, error) {
 	return client, nil
 }
 
-type OpenbankingClient struct {
+type OBUKClient struct {
 	*obc.OpenbankingAccountsClient
-
 	*payments_client.OpenbankingPaymentsClient
 }
 
-func NewOpenbankingClient(config BankConfig) (OpenbankingClient, error) {
+func NewOBUKClient(config BankConfig) (BankClient, error) {
 	var (
-		c   = OpenbankingClient{}
+		c   = &OBUKClient{}
 		hc  = &http.Client{}
 		u   *url.URL
 		err error
@@ -168,4 +205,46 @@ func NewOpenbankingClient(config BankConfig) (OpenbankingClient, error) {
 	c.OpenbankingPaymentsClient = payments_client.New(tr, nil)
 
 	return c, nil
+}
+
+type OBBRClient struct {
+	*obbrAccounts.Accounts
+	*obbrPayments.PaymentConsentsBrasil
+}
+
+func NewOBBRClient(config BankConfig) (BankClient, error) {
+	var (
+		c   = &OBBRClient{}
+		hc  = &http.Client{}
+		u   *url.URL
+		err error
+	)
+
+	if u, err = url.Parse(config.URL); err != nil {
+		return c, errors.Wrapf(err, "failed to parse bank url")
+	}
+
+	tr := NewHTTPRuntimeWithClient(
+		u.Host,
+		"/accounts/v1",
+		[]string{u.Scheme},
+		hc,
+	)
+
+	c.Accounts = obbrAccounts.New(tr, nil)
+	c.PaymentConsentsBrasil = obbrPayments.New(tr, nil)
+
+	return c, nil
+}
+
+type OBUKConsentClient struct {
+	Accounts acpclient.Client
+	Payments acpclient.Client
+	Signer
+}
+
+type OBBRConsentClient struct {
+	Accounts acpclient.Client
+	Payments acpclient.Client
+	Signer
 }
