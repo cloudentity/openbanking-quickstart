@@ -140,7 +140,7 @@ services:
       - CERT_FILE=/bank_cert.pem
       - KEY_FILE=/bank_key.pem
       - ROOT_CA=/ca.pem
-      - BANK_URL=http://bank:8070
+      - BANK_URL=${BANK_URL}
       - LOGIN_AUTHORIZATION_SERVER_URL=${ACP_URL}
       - LOGIN_AUTHORIZATION_SERVER_ID=bank-customers
       - LOGIN_TENANT_ID=${TENANT}
@@ -194,6 +194,7 @@ services:
       - KEY_FILE=/bank_key.pem
       - ROOT_CA=/ca.pem
       - SPEC=obuk
+      - GIN_MODE=debug
 
   bank-br:
     image: cloudentity/openbanking-quickstart-bank:${VERSION}
@@ -213,6 +214,7 @@ services:
       - KEY_FILE=/bank_key.pem
       - ROOT_CA=/ca.pem
       - SPEC=obbr
+      - GIN_MODE=debug
 
   acp:
     container_name: quickstart-acp

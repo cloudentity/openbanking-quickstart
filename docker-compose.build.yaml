@@ -21,7 +21,11 @@ services:
     build:
       context: .
       dockerfile: consent/admin-portal/Dockerfile
-  bank:
+  bank-br:
+    build:
+      context: .
+      dockerfile: apps/bank/Dockerfile
+  bank-uk:
     build:
       context: .
       dockerfile: apps/bank/Dockerfile
