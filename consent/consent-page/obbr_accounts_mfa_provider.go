@@ -5,8 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/cloudentity/acp-client-go/client/openbanking"
-	"github.com/cloudentity/acp-client-go/models"
+	obbrModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_b_r"
+	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 )
 
 type OBBRAccountAccessMFAConsentProvider struct {
@@ -16,14 +16,13 @@ type OBBRAccountAccessMFAConsentProvider struct {
 
 func (s *OBBRAccountAccessMFAConsentProvider) GetMFAData(c *gin.Context, loginRequest LoginRequest) (MFAData, error) {
 	var (
-		response *openbanking.GetOBBRCustomerDataAccessConsentSystemOK
+		response *obbrModels.GetOBBRCustomerDataAccessConsentSystemOK
 		data     = MFAData{}
 		err      error
 	)
 
-	if response, err = s.Client.Openbanking.GetOBBRCustomerDataAccessConsentSystem(
-		openbanking.NewGetOBBRCustomerDataAccessConsentSystemParamsWithContext(c).
-			WithTid(s.Client.TenantID).
+	if response, err = s.Client.Openbanking.Openbankingbr.GetOBBRCustomerDataAccessConsentSystem(
+		obbrModels.NewGetOBBRCustomerDataAccessConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID),
 		nil,
 	); err != nil {
@@ -53,8 +52,8 @@ func (s *OBBRAccountAccessMFAConsentProvider) GetTemplateName() string {
 func (s *OBBRAccountAccessMFAConsentProvider) GetConsentMockData(loginRequest LoginRequest) map[string]interface{} {
 	return s.GetAccessConsentTemplateData(
 		loginRequest,
-		&models.GetAccountAccessConsentResponse{
-			AccountAccessConsent: &models.AccountAccessConsent{
+		&obModels.GetAccountAccessConsentResponse{
+			AccountAccessConsent: &obModels.AccountAccessConsent{
 				Permissions: []string{"ReadAccountsBasic"},
 			},
 		},

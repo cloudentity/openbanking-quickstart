@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/cloudentity/acp-client-go/models"
+	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 )
 
 type ConsentTools struct {
@@ -12,7 +12,7 @@ type ConsentTools struct {
 	Config Config
 }
 
-func (c *ConsentTools) GetInternalBankDataIdentifier(sub string, authCtx models.AuthenticationContext) string {
+func (c *ConsentTools) GetInternalBankDataIdentifier(sub string, authCtx obModels.AuthenticationContext) string {
 	if c.Config.BankIDClaim == "sub" {
 		return sub
 	}
@@ -37,7 +37,7 @@ func (c *ConsentTools) GetPermissionsWithDescription(requestedPermissions []stri
 	return permissions
 }
 
-func (c *ConsentTools) GrantScopes(requestedScopes []*models.RequestedScope) []string {
+func (c *ConsentTools) GrantScopes(requestedScopes []*obModels.RequestedScope) []string {
 	grantScopes := make([]string, len(requestedScopes))
 
 	for i, r := range requestedScopes {
@@ -64,7 +64,7 @@ func (c *ConsentTools) GetAccountsWithBalance(accounts InternalAccounts, balance
 	return filteredAccounts
 }
 
-func (c *ConsentTools) GetClientName(client *models.ClientInfo) string {
+func (c *ConsentTools) GetClientName(client *obModels.ClientInfo) string {
 	if client != nil {
 		return client.ClientName
 	}
@@ -74,7 +74,7 @@ func (c *ConsentTools) GetClientName(client *models.ClientInfo) string {
 
 func (c *ConsentTools) GetAccessConsentTemplateData(
 	loginRequest LoginRequest,
-	consent *models.GetAccountAccessConsentResponse,
+	consent *obModels.GetAccountAccessConsentResponse,
 	accounts InternalAccounts,
 ) map[string]interface{} {
 	var expirationDate string
@@ -112,7 +112,7 @@ func (c *ConsentTools) GetAccessConsentTemplateData(
 
 func (c *ConsentTools) GetDomesticPaymentTemplateData(
 	loginRequest LoginRequest,
-	consent *models.GetDomesticPaymentConsentResponse,
+	consent *obModels.GetDomesticPaymentConsentResponse,
 	accounts InternalAccounts,
 	balances BalanceData,
 ) map[string]interface{} {
@@ -144,7 +144,7 @@ func (c *ConsentTools) GetDomesticPaymentTemplateData(
 
 func (c *ConsentTools) GetOBBRDataAccessConsentTemplateData(
 	loginRequest LoginRequest,
-	consent *models.GetOBBRCustomerDataAccessConsentResponse,
+	consent *obModels.GetOBBRCustomerDataAccessConsentResponse,
 	accounts InternalAccounts,
 ) map[string]interface{} {
 	var expirationDate string
@@ -182,7 +182,7 @@ func (c *ConsentTools) GetOBBRDataAccessConsentTemplateData(
 
 func (c *ConsentTools) GetOBBRPaymentConsentTemplateData(
 	loginRequest LoginRequest,
-	consent *models.GetOBBRCustomerPaymentConsentResponse,
+	consent *obModels.GetOBBRCustomerPaymentConsentResponse,
 	accounts InternalAccounts,
 	balances BalanceData,
 ) map[string]interface{} {
@@ -221,7 +221,7 @@ type PaymentConsentTemplateData struct {
 	Amount         string
 }
 
-func OBUKPaymentConsentTemplateData(consent *models.DomesticPaymentConsent) PaymentConsentTemplateData {
+func OBUKPaymentConsentTemplateData(consent *obModels.DomesticPaymentConsent) PaymentConsentTemplateData {
 	return PaymentConsentTemplateData{
 		AccountName:    consent.Initiation.CreditorAccount.Name,
 		Identification: string(*consent.Initiation.DebtorAccount.Identification),
@@ -231,7 +231,7 @@ func OBUKPaymentConsentTemplateData(consent *models.DomesticPaymentConsent) Paym
 	}
 }
 
-func OBBRPaymentConsentTemplateData(consent *models.OBBRCustomerPaymentConsent) PaymentConsentTemplateData {
+func OBBRPaymentConsentTemplateData(consent *obModels.OBBRCustomerPaymentConsent) PaymentConsentTemplateData {
 	return PaymentConsentTemplateData{
 		AccountName:    consent.Creditor.Name,
 		Identification: consent.DebtorAccount.Number,

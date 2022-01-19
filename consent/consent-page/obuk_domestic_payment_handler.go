@@ -5,8 +5,8 @@ import (
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
-	"github.com/cloudentity/acp-client-go/client/openbanking"
-	"github.com/cloudentity/acp-client-go/models"
+	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
+	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 )
 
 type OBUKDomesticPaymentConsentHandler struct {
@@ -17,15 +17,14 @@ type OBUKDomesticPaymentConsentHandler struct {
 func (s *OBUKDomesticPaymentConsentHandler) GetConsent(c *gin.Context, loginRequest LoginRequest) {
 	var (
 		accounts InternalAccounts
-		response *openbanking.GetDomesticPaymentConsentSystemOK
+		response *obukModels.GetDomesticPaymentConsentSystemOK
 		balances BalanceResponse
 		err      error
 		id       string
 	)
 
-	if response, err = s.Client.Openbanking.GetDomesticPaymentConsentSystem(
-		openbanking.NewGetDomesticPaymentConsentSystemParamsWithContext(c).
-			WithTid(s.Client.TenantID).
+	if response, err = s.Client.Openbanking.Openbankinguk.GetDomesticPaymentConsentSystem(
+		obukModels.NewGetDomesticPaymentConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID),
 		nil,
 	); err != nil {
@@ -50,26 +49,24 @@ func (s *OBUKDomesticPaymentConsentHandler) GetConsent(c *gin.Context, loginRequ
 
 func (s *OBUKDomesticPaymentConsentHandler) ConfirmConsent(c *gin.Context, loginRequest LoginRequest) (string, error) {
 	var (
-		consent  *openbanking.GetDomesticPaymentConsentSystemOK
-		accept   *openbanking.AcceptDomesticPaymentConsentSystemOK
+		consent  *obukModels.GetDomesticPaymentConsentSystemOK
+		accept   *obukModels.AcceptDomesticPaymentConsentSystemOK
 		err      error
 		redirect string
 	)
 
-	if consent, err = s.Client.Openbanking.GetDomesticPaymentConsentSystem(
-		openbanking.NewGetDomesticPaymentConsentSystemParamsWithContext(c).
-			WithTid(s.Client.TenantID).
+	if consent, err = s.Client.Openbanking.Openbankinguk.GetDomesticPaymentConsentSystem(
+		obukModels.NewGetDomesticPaymentConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID),
 		nil,
 	); err != nil {
 		return "", err
 	}
 
-	if accept, err = s.Client.Openbanking.AcceptDomesticPaymentConsentSystem(
-		openbanking.NewAcceptDomesticPaymentConsentSystemParamsWithContext(c).
-			WithTid(s.Client.TenantID).
+	if accept, err = s.Client.Openbanking.Openbankinguk.AcceptDomesticPaymentConsentSystem(
+		obukModels.NewAcceptDomesticPaymentConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID).
-			WithAcceptConsent(&models.AcceptConsentRequest{
+			WithAcceptConsent(&obModels.AcceptConsentRequest{
 				AccountIds:    []string{string(*consent.Payload.DomesticPaymentConsent.Initiation.DebtorAccount.Identification)},
 				GrantedScopes: s.GrantScopes(consent.Payload.RequestedScopes),
 				LoginState:    loginRequest.State,
@@ -88,16 +85,15 @@ func (s *OBUKDomesticPaymentConsentHandler) ConfirmConsent(c *gin.Context, login
 
 func (s *OBUKDomesticPaymentConsentHandler) DenyConsent(c *gin.Context, loginRequest LoginRequest) (string, error) {
 	var (
-		reject   *openbanking.RejectDomesticPaymentConsentSystemOK
+		reject   *obukModels.RejectDomesticPaymentConsentSystemOK
 		redirect string
 		err      error
 	)
 
-	if reject, err = s.Client.Openbanking.RejectDomesticPaymentConsentSystem(
-		openbanking.NewRejectDomesticPaymentConsentSystemParamsWithContext(c).
-			WithTid(s.Client.TenantID).
+	if reject, err = s.Client.Openbanking.Openbankinguk.RejectDomesticPaymentConsentSystem(
+		obukModels.NewRejectDomesticPaymentConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID).
-			WithRejectConsent(&models.RejectConsentRequest{
+			WithRejectConsent(&obModels.RejectConsentRequest{
 				ID:         loginRequest.ID,
 				LoginState: loginRequest.State,
 				Error:      "rejected",

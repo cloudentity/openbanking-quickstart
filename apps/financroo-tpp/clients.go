@@ -12,8 +12,8 @@ import (
 	"github.com/pkg/errors"
 
 	acpclient "github.com/cloudentity/acp-client-go"
-	"github.com/cloudentity/acp-client-go/client/oauth2"
-	"github.com/cloudentity/acp-client-go/models"
+	"github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
+	oauth2Models "github.com/cloudentity/acp-client-go/clients/oauth2/models"
 )
 
 type Clients struct {
@@ -22,16 +22,14 @@ type Clients struct {
 	BankClient        OpenbankingClient
 }
 
-func (c *Clients) RenewAccountsToken(ctx context.Context, bank ConnectedBank) (*models.TokenResponse, error) {
+func (c *Clients) RenewAccountsToken(ctx context.Context, bank ConnectedBank) (*oauth2Models.TokenResponse, error) {
 	var (
 		resp *oauth2.TokenOK
 		err  error
 	)
 
-	if resp, err = c.AcpAccountsClient.Acp.Oauth2.Token(
-		oauth2.NewTokenParamsWithContext(ctx).
-			WithAid(c.AcpAccountsClient.ServerID).
-			WithTid(c.AcpAccountsClient.TenantID).
+	if resp, err = c.AcpAccountsClient.Oauth2.Oauth2.Token(
+		oauth2.NewTokenParams().
 			WithClientID(&c.AcpAccountsClient.Config.ClientID).
 			WithGrantType("refresh_token").
 			WithRefreshToken(&bank.RefreshToken)); err != nil {

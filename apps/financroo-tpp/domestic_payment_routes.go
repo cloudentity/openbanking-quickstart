@@ -8,14 +8,15 @@ import (
 	"time"
 
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/client/domestic_payments"
-	obModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
+	obukPaymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 	"github.com/google/uuid"
 
 	acpclient "github.com/cloudentity/acp-client-go"
-	"github.com/cloudentity/acp-client-go/client/openbanking"
-	"github.com/cloudentity/acp-client-go/models"
+
+	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
+	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 )
 
 type CreateDomesticPaymentConsentRequest struct {
@@ -33,7 +34,7 @@ func (s *Server) CreateDomesticPaymentConsent() func(*gin.Context) {
 		var (
 			clients               Clients
 			ok                    bool
-			registerResponse      *openbanking.CreateDomesticPaymentConsentCreated
+			registerResponse      *obukModels.CreateDomesticPaymentConsentCreated
 			paymentConsentRequest = CreateDomesticPaymentConsentRequest{}
 			user                  User
 			jwsSig                string
@@ -56,47 +57,47 @@ func (s *Server) CreateDomesticPaymentConsent() func(*gin.Context) {
 		}
 
 		authorisationType := "Single"
-		identification := models.Identification0(paymentConsentRequest.PayeeAccountNumber)
-		schemaName := models.OBExternalAccountIdentification4Code("UK.OBIE.SortCodeAccountNumber")
-		account := models.OBWriteDomesticConsent4DataInitiationCreditorAccount{
+		identification := obModels.Identification0(paymentConsentRequest.PayeeAccountNumber)
+		schemaName := obModels.OBExternalAccountIdentification4Code("UK.OBIE.SortCodeAccountNumber")
+		account := obModels.OBWriteDomesticConsent4DataInitiationCreditorAccount{
 			Identification: &identification,
 			Name:           paymentConsentRequest.PayeeAccountName,
 			SchemeName:     &schemaName,
 		}
 
-		debtorIdentification := models.Identification0(paymentConsentRequest.AccountID)
-		debtorAccount := models.OBWriteDomesticConsent4DataInitiationDebtorAccount{
+		debtorIdentification := obModels.Identification0(paymentConsentRequest.AccountID)
+		debtorAccount := obModels.OBWriteDomesticConsent4DataInitiationDebtorAccount{
 			Identification: &debtorIdentification,
 			Name:           "myAccount", // todo
 			SchemeName:     &schemaName,
 		}
 		id := uuid.New().String()[:10]
-		currency := models.ActiveOrHistoricCurrencyCode("GBP")
-		amount := models.OBActiveCurrencyAndAmountSimpleType(paymentConsentRequest.Amount)
+		currency := obModels.ActiveOrHistoricCurrencyCode("GBP")
+		amount := obModels.OBActiveCurrencyAndAmountSimpleType(paymentConsentRequest.Amount)
 
-		req := models.DomesticPaymentConsentRequest{
-			Data: &models.OBWriteDomesticConsent4Data{
-				Authorisation: &models.OBWriteDomesticConsent4DataAuthorisation{
+		req := obModels.DomesticPaymentConsentRequest{
+			Data: &obModels.OBWriteDomesticConsent4Data{
+				Authorisation: &obModels.OBWriteDomesticConsent4DataAuthorisation{
 					AuthorisationType:  authorisationType,
 					CompletionDateTime: strfmt.DateTime(time.Now().Add(time.Hour)),
 				},
-				Initiation: &models.OBWriteDomesticConsent4DataInitiation{
+				Initiation: &obModels.OBWriteDomesticConsent4DataInitiation{
 					CreditorAccount:        &account,
 					DebtorAccount:          &debtorAccount,
 					EndToEndIdentification: id,
-					InstructedAmount: &models.OBWriteDomesticConsent4DataInitiationInstructedAmount{
+					InstructedAmount: &obModels.OBWriteDomesticConsent4DataInitiationInstructedAmount{
 						Amount:   &amount,
 						Currency: &currency,
 					},
 					InstructionIdentification: id,
-					RemittanceInformation: &models.OBWriteDomesticConsent4DataInitiationRemittanceInformation{
+					RemittanceInformation: &obModels.OBWriteDomesticConsent4DataInitiationRemittanceInformation{
 						Reference:    paymentConsentRequest.PaymentReference,
 						Unstructured: "Unstructured todo", // TODO invoice info?
 					},
 				},
 				ReadRefundAccount: "No",
 			},
-			Risk: &models.OBRisk1{},
+			Risk: &obModels.OBRisk1{},
 		}
 
 		if payload, err = json.Marshal(req); err != nil {
@@ -109,10 +110,8 @@ func (s *Server) CreateDomesticPaymentConsent() func(*gin.Context) {
 			return
 		}
 
-		if registerResponse, err = clients.AcpPaymentsClient.Openbanking.CreateDomesticPaymentConsent(
-			openbanking.NewCreateDomesticPaymentConsentParamsWithContext(c).
-				WithTid(clients.AcpPaymentsClient.TenantID).
-				WithAid(clients.AcpPaymentsClient.ServerID).
+		if registerResponse, err = clients.AcpPaymentsClient.Openbanking.Openbankinguk.CreateDomesticPaymentConsent(
+			obukModels.NewCreateDomesticPaymentConsentParamsWithContext(c).
 				WithXJwsSignature(&jwsSig).
 				WithRequest(&req),
 			nil,
@@ -132,9 +131,9 @@ func (s *Server) DomesticPaymentCallback() func(*gin.Context) {
 			appStorage      = AppStorage{}
 			code            = c.Query("code")
 			state           = c.Query("state")
-			consentResponse *openbanking.GetDomesticPaymentConsentRequestOK
-			initiation      obModels.OBWriteDomestic2DataInitiation
-			risk            obModels.OBRisk1
+			consentResponse *obukModels.GetDomesticPaymentConsentRequestOK
+			initiation      obukPaymentModels.OBWriteDomestic2DataInitiation
+			risk            obukPaymentModels.OBRisk1
 			paymentCreated  *domestic_payments.CreateDomesticPaymentsCreated
 			token           acpclient.Token
 			err             error
@@ -159,9 +158,7 @@ func (s *Server) DomesticPaymentCallback() func(*gin.Context) {
 		acpClient := bank.AcpPaymentsClient
 		bankClient := bank.BankClient
 
-		params := openbanking.NewGetDomesticPaymentConsentRequestParamsWithContext(c).
-			WithTid(acpClient.TenantID).
-			WithAid(acpClient.ServerID).
+		params := obukModels.NewGetDomesticPaymentConsentRequestParamsWithContext(c).
 			WithConsentID(appStorage.IntentID)
 
 		if token, err = acpClient.Exchange(code, state, appStorage.CSRF); err != nil {
@@ -169,7 +166,7 @@ func (s *Server) DomesticPaymentCallback() func(*gin.Context) {
 			return
 		}
 
-		if consentResponse, err = acpClient.Openbanking.GetDomesticPaymentConsentRequest(params, nil); err != nil {
+		if consentResponse, err = acpClient.Openbanking.Openbankinguk.GetDomesticPaymentConsentRequest(params, nil); err != nil {
 			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to get consent: %+v", err))
 			return
 		}
@@ -186,8 +183,8 @@ func (s *Server) DomesticPaymentCallback() func(*gin.Context) {
 
 		if paymentCreated, err = bankClient.DomesticPayments.CreateDomesticPayments(domestic_payments.NewCreateDomesticPaymentsParamsWithContext(c).
 			WithAuthorization(token.AccessToken).
-			WithOBWriteDomestic2Param(&obModels.OBWriteDomestic2{
-				Data: &obModels.OBWriteDomestic2Data{
+			WithOBWriteDomestic2Param(&obukPaymentModels.OBWriteDomestic2{
+				Data: &obukPaymentModels.OBWriteDomestic2Data{
 					ConsentID:  &appStorage.IntentID,
 					Initiation: &initiation,
 				},
@@ -208,7 +205,7 @@ func (s *Server) DomesticPaymentCallback() func(*gin.Context) {
 	}
 }
 
-func getInitiation(consentResponse *openbanking.GetDomesticPaymentConsentRequestOK) (pi obModels.OBWriteDomestic2DataInitiation, err error) {
+func getInitiation(consentResponse *obukModels.GetDomesticPaymentConsentRequestOK) (pi obukPaymentModels.OBWriteDomestic2DataInitiation, err error) {
 	var initiationPayload []byte
 
 	if initiationPayload, err = json.Marshal(consentResponse.Payload.Data.Initiation); err != nil {
@@ -222,7 +219,7 @@ func getInitiation(consentResponse *openbanking.GetDomesticPaymentConsentRequest
 	return pi, nil
 }
 
-func getRisk(consentResponse *openbanking.GetDomesticPaymentConsentRequestOK) (pi obModels.OBRisk1, err error) {
+func getRisk(consentResponse *obukModels.GetDomesticPaymentConsentRequestOK) (pi obukPaymentModels.OBRisk1, err error) {
 	var riskPayload []byte
 
 	if riskPayload, err = json.Marshal(consentResponse.Payload.Risk); err != nil {

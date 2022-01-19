@@ -8,8 +8,11 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/cloudentity/acp-client-go/client/openbanking"
-	"github.com/cloudentity/acp-client-go/models"
+	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
+
+	obCommon "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_common"
+
+	oauth2 "github.com/cloudentity/acp-client-go/clients/oauth2/models"
 )
 
 func (s *Server) Index() func(*gin.Context) {
@@ -27,7 +30,7 @@ type Client struct {
 
 type ClientConsents struct {
 	Client
-	Consents []models.OpenbankingConsentWithClient `json:"consents"`
+	Consents []obModels.ConsentWithClient `json:"consents"`
 }
 
 type ConsentsResponse struct {
@@ -39,7 +42,7 @@ func (s *Server) ListConsents() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
 			consentsByAccounts *ConsentsAndAccounts
-			clientToConsents   = map[string][]models.OpenbankingConsentWithClient{}
+			clientToConsents   = map[string][]obModels.ConsentWithClient{}
 			clients            = map[string]Client{}
 			res                = []ClientConsents{}
 			err                error
@@ -75,8 +78,8 @@ func (s *Server) ListConsents() func(*gin.Context) {
 }
 
 type ConsentsAndAccounts struct {
-	Consents []*models.OpenbankingConsentWithClient `json:"consents"`
-	Accounts InternalAccounts                       `json:"accounts"`
+	Consents []*obModels.ConsentWithClient `json:"consents"`
+	Accounts InternalAccounts              `json:"accounts"`
 }
 
 func (s *Server) RevokeConsent() func(*gin.Context) {
@@ -108,9 +111,8 @@ func (s *Server) RevokeConsent() func(*gin.Context) {
 			return
 		}
 
-		if _, err = s.Client.Openbanking.RevokeOpenbankingConsent(
-			openbanking.NewRevokeOpenbankingConsentParamsWithContext(c).
-				WithTid(s.Client.TenantID).
+		if _, err = s.Client.Openbanking.OpenbankingCommon.RevokeOpenbankingConsent(
+			obCommon.NewRevokeOpenbankingConsentParamsWithContext(c).
 				WithAid(s.Config.SystemClientsServerID).
 				WithConsentID(id),
 			nil,
@@ -131,8 +133,8 @@ var (
 func (s *Server) FetchConsents(c *gin.Context) (*ConsentsAndAccounts, error) {
 	var (
 		accounts InternalAccounts
-		response *openbanking.ListOBConsentsOK
-		at       *models.IntrospectResponse
+		response *obCommon.ListOBConsentsOK
+		at       *oauth2.IntrospectResponse
 		err      error
 		types    []string
 		ok       bool
@@ -149,7 +151,7 @@ func (s *Server) FetchConsents(c *gin.Context) (*ConsentsAndAccounts, error) {
 		types = nil
 	}
 
-	if at, err = s.IntrospectClient.IntrospectToken(c, token); err != nil {
+	if at, err = s.IntrospectClient.IntrospectToken(token); err != nil {
 		return nil, fmt.Errorf("failed to introspect client: %w", err)
 	}
 
@@ -166,11 +168,10 @@ func (s *Server) FetchConsents(c *gin.Context) (*ConsentsAndAccounts, error) {
 		accountIDs[i] = a.ID
 	}
 
-	if response, err = s.Client.Openbanking.ListOBConsents(
-		openbanking.NewListOBConsentsParamsWithContext(c).
-			WithTid(s.Client.TenantID).
+	if response, err = s.Client.Openbanking.OpenbankingCommon.ListOBConsents(
+		obCommon.NewListOBConsentsParamsWithContext(c).
 			WithAid(s.Config.SystemClientsServerID).
-			WithConsentsRequest(&models.ConsentsRequest{
+			WithConsentsRequest(&obModels.ConsentsRequest{
 				Accounts: accountIDs,
 				Types:    types,
 			}),

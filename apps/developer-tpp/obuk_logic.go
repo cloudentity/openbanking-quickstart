@@ -5,8 +5,8 @@ import (
 	"github.com/gin-gonic/gin"
 
 	acpclient "github.com/cloudentity/acp-client-go"
-	"github.com/cloudentity/acp-client-go/client/openbanking"
-	"github.com/cloudentity/acp-client-go/models"
+	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
+	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 )
 
 type OBUKLogic struct {
@@ -32,16 +32,14 @@ func (h *OBUKLogic) DoRequestObjectEncryption() bool {
 
 func (h *OBUKLogic) CreateConsent(c *gin.Context) (interface{}, error) {
 	var (
-		registerResponse *openbanking.CreateAccountAccessConsentRequestCreated
+		registerResponse *obukModels.CreateAccountAccessConsentRequestCreated
 		err              error
 	)
 
-	if registerResponse, err = h.Client.Openbanking.CreateAccountAccessConsentRequest(
-		openbanking.NewCreateAccountAccessConsentRequestParamsWithContext(c).
-			WithTid(h.Client.TenantID).
-			WithAid(h.Client.ServerID).
-			WithRequest(&models.AccountAccessConsentRequest{
-				Data: &models.OBReadConsent1Data{
+	if registerResponse, err = h.Client.Openbanking.Openbankinguk.CreateAccountAccessConsentRequest(
+		obukModels.NewCreateAccountAccessConsentRequestParamsWithContext(c).
+			WithRequest(&obModels.AccountAccessConsentRequest{
+				Data: &obModels.OBReadConsent1Data{
 					Permissions: c.PostFormArray("permissions"),
 				},
 				Risk: map[string]interface{}{},
@@ -56,11 +54,11 @@ func (h *OBUKLogic) CreateConsent(c *gin.Context) (interface{}, error) {
 
 func (h *OBUKLogic) GetConsentID(data interface{}) string {
 	var (
-		registerResponse *openbanking.CreateAccountAccessConsentRequestCreated
+		registerResponse *obukModels.CreateAccountAccessConsentRequestCreated
 		ok               bool
 	)
 
-	if registerResponse, ok = data.(*openbanking.CreateAccountAccessConsentRequestCreated); !ok {
+	if registerResponse, ok = data.(*obukModels.CreateAccountAccessConsentRequestCreated); !ok {
 		return ""
 	}
 	return registerResponse.Payload.Data.ConsentID

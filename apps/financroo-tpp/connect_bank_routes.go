@@ -11,8 +11,9 @@ import (
 	"github.com/sirupsen/logrus"
 
 	acpclient "github.com/cloudentity/acp-client-go"
-	"github.com/cloudentity/acp-client-go/client/openbanking"
-	"github.com/cloudentity/acp-client-go/models"
+	oauth2 "github.com/cloudentity/acp-client-go/clients/oauth2/models"
+	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
+	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 )
 
 type AppStorage struct {
@@ -49,7 +50,7 @@ func (s *Server) ConnectBank() func(*gin.Context) {
 			bankID           = BankID(c.Param("bankId"))
 			clients          Clients
 			ok               bool
-			registerResponse *openbanking.CreateAccountAccessConsentRequestCreated
+			registerResponse *obukModels.CreateAccountAccessConsentRequestCreated
 			connectRequest   = ConnectBankRequest{}
 			user             User
 			err              error
@@ -69,12 +70,10 @@ func (s *Server) ConnectBank() func(*gin.Context) {
 			c.String(http.StatusBadRequest, fmt.Sprintf("client not configured for bank: %s", bankID))
 		}
 
-		if registerResponse, err = clients.AcpAccountsClient.Openbanking.CreateAccountAccessConsentRequest(
-			openbanking.NewCreateAccountAccessConsentRequestParamsWithContext(c).
-				WithTid(clients.AcpAccountsClient.TenantID).
-				WithAid(clients.AcpAccountsClient.ServerID).
-				WithRequest(&models.AccountAccessConsentRequest{
-					Data: &models.OBReadConsent1Data{
+		if registerResponse, err = clients.AcpAccountsClient.Openbanking.Openbankinguk.CreateAccountAccessConsentRequest(
+			obukModels.NewCreateAccountAccessConsentRequestParamsWithContext(c).
+				WithRequest(&obModels.AccountAccessConsentRequest{
+					Data: &obModels.OBReadConsent1Data{
 						Permissions:        connectRequest.Permissions,
 						ExpirationDateTime: strfmt.DateTime(time.Now().Add(time.Hour * 24 * 30)),
 					},
@@ -143,7 +142,7 @@ func (s *Server) ConnectedBanks() func(c *gin.Context) {
 			user           User
 			err            error
 			clients        Clients
-			tokenResponse  *models.TokenResponse
+			tokenResponse  *oauth2.TokenResponse
 			ok             bool
 			connectedBanks = []string{}
 			expiredBanks   = []string{}
