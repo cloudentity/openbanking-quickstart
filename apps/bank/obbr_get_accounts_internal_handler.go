@@ -12,8 +12,8 @@ import (
 //   defaultcc: accounts
 //
 // Responses:
-//   200: OBReadAccount6
-//   404: OBErrorResponse1
+//   200: ResponseAccountList
+//   404: OpenbankingBrasilResponseError
 type OBBRGetAccountsInternalHandler struct {
 	*Server
 }
