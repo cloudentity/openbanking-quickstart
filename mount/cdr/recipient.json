@@ -1,0 +1,48 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Data Source=/tmp/mdr.db"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Debug",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  },
+  "Serilog": {
+    "Using": [ "Serilog.Sinks.Console", "Serilog.Sinks.File" ],
+    "MinimumLevel": "Debug",
+    "WriteTo": [
+      { "Name": "Console" },
+      {
+        "Name": "File",
+        "Args": { "path": "/tmp/cdr-mdr-web.log" }
+      }
+    ],
+    "Enrich": [ "FromLogContext", "WithMachineName", "WithThreadId" ],
+    "Properties": {
+      "Application": "CDR.DataRecipient.Web"
+    }
+  },
+  "MockDataRecipient": {
+    "Register": {
+      "tlsBaseUri": "https://mock-register:7000",
+      "mtlsBaseUri": "https://mock-register:7001",
+      "oidcDiscoveryUri": "https://mock-register:7000/idp/.well-known/openid-configuration",
+      "tokenEndpoint": "https://mock-register:7001/idp/connect/token"
+    },
+    "SoftwareProduct": {
+      "jwksUri": "https://mock-data-recipient:9001/jwks",
+      "redirectUris": "https://mock-data-recipient:9001/consent/callback",
+      "recipientBaseUri": "https://mock-data-recipient:9001"
+    },
+    "DataHolder": {
+      "infosecBaseUri": "https://authorization.cloudentity.com:8443/default/cdr",
+      "resourceBaseUri": "https://mock-data-holder:8002",
+      "publicBaseUri": "https://mock-data-holder:8000",
+      "oidcDiscoveryUri": "https://authorization.cloudentity.com:8443/default/cdr/.well-known/openid-configuration",
+      "jwksUri": "https://authorization.cloudentity.com:8443/default/cdr/.well-known/jwks.json",
+      "registrationEndpoint": "https://authorization.cloudentity.com:8443/default/cdr/oauth2/register"
+    }
+  }
+}

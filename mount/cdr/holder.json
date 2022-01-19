@@ -1,0 +1,48 @@
+{
+  "ConnectionStrings": {
+    "IdentityServerStoreDatabase": "Data Source=/tmp/idsvr.db",
+    "ResourceDatabase": "Data Source=/tmp/mdh.db"
+  },
+  "IssuerUri": "https://authorization.cloudentity.com:8443/default/cdr",
+  "JwksUri": "https://authorization.cloudentity.com:8443/default/cdr/.well-known/jwks.json",
+  "AuthorizeUri": "https://authorization.cloudentity.com:8443/default/cdr/oauth2/authorize",
+  "TokenUri": "https://authorization.cloudentity.com:8443/default/cdr/oauth2/token",
+  "IntrospectionUri": "https://authorization.cloudentity.com:8443/default/cdr/oauth2/introspect",
+  "UserinfoUri": "https://authorization.cloudentity.com:8443/default/cdr/userinfo",
+  "RegisterUri": "https://authorization.cloudentity.com:8443/default/cdr/oauth2/register",
+  "ParUri": "https://authorization.cloudentity.com:8443/default/cdr/par",
+  "RevocationUri": "https://authorization.cloudentity.com:8443/default/cdr/oauth2/revoke",
+  "ArrangementRevocationUri": "https://authorization.cloudentity.com:8443/default/cdr/arrangements/revoke",
+  "Register": {
+    "SsaJwksUri": "https://mock-register:7000/cdr-register/v1/jwks"
+  },
+  "Registration": {
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Information",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  },
+  "Serilog": {
+    "Using": [ "Serilog.Sinks.Console", "Serilog.Sinks.File" ],
+    "MinimumLevel": "Debug",
+    "WriteTo": [
+      { "Name": "Console" },
+      {
+        "Name": "File",
+        "Args": {
+          "path": "/tmp/cdr-mdh-identityserver.log",
+          "rollingInterval": "Day",
+          "rollOnFileSizeLimit": true,
+          "fileSizeLimitBytes": "1000000"
+        }
+      }
+    ],
+    "Enrich": [ "FromLogContext", "WithMachineName", "WithThreadId" ],
+    "Properties": {
+      "Application": "CDR.DataHolder.IdentityServer"
+    }
+  }
+}
