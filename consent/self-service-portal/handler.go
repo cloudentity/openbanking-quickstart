@@ -8,11 +8,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
-
-	obCommon "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_common"
-
 	oauth2 "github.com/cloudentity/acp-client-go/clients/oauth2/models"
+	obCommon "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_common"
+	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 )
 
 func (s *Server) Index() func(*gin.Context) {

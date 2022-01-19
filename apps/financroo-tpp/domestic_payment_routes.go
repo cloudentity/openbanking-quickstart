@@ -14,7 +14,6 @@ import (
 	"github.com/google/uuid"
 
 	acpclient "github.com/cloudentity/acp-client-go"
-
 	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
 	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 )
