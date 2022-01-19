@@ -241,6 +241,7 @@ linters:
     - gomnd
     - wsl
     - rowserrcheck
+    - interfacer
   fast: false
   
 

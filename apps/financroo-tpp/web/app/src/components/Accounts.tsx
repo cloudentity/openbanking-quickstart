@@ -7,7 +7,7 @@ import Card from "@material-ui/core/Card";
 
 export default function Accounts ({banks, reconnectBank, accounts, balances, filtering, onChangeFiltering, onConnectClick, onDisconnect, onReconnect}) {
 
-  const totalBalance = balances.reduce((total, b) => total + parseFloat(b.Amount.Amount), 0).toFixed(2);
+  const totalBalance = balances.reduce((total, b) => total + parseFloat(b.Amount), 0).toFixed(2);
 
   return (
     <div style={{height: '100%', display: 'flex', flexDirection: 'column'}}>

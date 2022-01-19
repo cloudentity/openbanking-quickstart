@@ -9,6 +9,19 @@ import (
 	acpClient "github.com/cloudentity/acp-client-go/models"
 )
 
+// swagger:route GET /accounts bank br getAccountsRequest
+//
+// get accounts
+//
+// Security:
+//   defaultcc: accounts
+//
+// Responses:
+//   200: ResponseAccountList
+//	 400: OpenbankingBrasilResponseError
+//   403: OpenbankingBrasilResponseError
+//   404: OpenbankingBrasilResponseError
+//   500: OpenbankingBrasilResponseError
 type OBBRGetAccountsHandler struct {
 	*Server
 	introspectionResponse *acpClient.IntrospectOBBRDataAccessConsentResponse
@@ -31,8 +44,8 @@ func (h *OBBRGetAccountsHandler) MapError(c *gin.Context, err *Error) (code int,
 	return
 }
 
-func (h *OBBRGetAccountsHandler) BuildResponse(c *gin.Context, data BankUserData) interface{} {
-	return NewOBBRAccountsResponse(data.OBBRAccounts)
+func (h *OBBRGetAccountsHandler) BuildResponse(c *gin.Context, data BankUserData) (interface{}, *Error) {
+	return NewOBBRAccountsResponse(data.OBBRAccounts), nil
 }
 
 func (h *OBBRGetAccountsHandler) Validate(c *gin.Context) *Error {
@@ -60,7 +73,7 @@ func (h *OBBRGetAccountsHandler) Filter(c *gin.Context, data BankUserData) BankU
 	)
 
 	for _, account := range data.OBBRAccounts {
-		if !has(h.introspectionResponse.AccountIDs, *account.Number) {
+		if !has(h.introspectionResponse.AccountIDs, *account.AccountID) {
 			continue
 		}
 		if requestedAccountType != "" && string(*account.Type) != requestedAccountType {

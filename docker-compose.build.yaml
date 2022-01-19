@@ -9,7 +9,11 @@ services:
     build:
       context: .
       dockerfile: apps/financroo-tpp/Dockerfile
-  consent-page:
+  consent-page-uk:
+    build:
+      context: .
+      dockerfile: consent/consent-page/Dockerfile
+  consent-page-br:
     build:
       context: .
       dockerfile: consent/consent-page/Dockerfile

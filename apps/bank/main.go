@@ -70,17 +70,6 @@ type Server struct {
 	Client  acpclient.Client
 	Storage Storage
 	// PaymentQueue PaymentQueue
-
-	MakeGetAccountsHandler         GetEndpointLogicFactory
-	MakeGetAccountsInternalHandler GetEndpointLogicFactory
-
-	MakeGetBalancesHandler         GetEndpointLogicFactory
-	MakeGetBalancesInternalHandler GetEndpointLogicFactory
-
-	MakeGetTransactionsHandler GetEndpointLogicFactory
-
-	MakeCreatePaymentHandler CreateEndpointLogicFactory
-	MakeGetPaymentHandler    GetEndpointLogicFactory
 }
 
 func NewServer() (Server, error) {
@@ -101,43 +90,28 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to init repo")
 	}
 
-	switch server.Config.Spec {
-	case OBUK:
-		server.MakeGetAccountsHandler = NewOBUKGetAccountsHandler
-		server.MakeGetAccountsInternalHandler = NewOBUKGetAccountsInternalHandler
-		server.MakeGetBalancesHandler = NewOBUKGetBalancesHandler
-		server.MakeGetBalancesInternalHandler = NewOBUKGetBalancesInternalHandler
-		server.MakeGetTransactionsHandler = NewOBUKGetTransactionsHandler
-		server.MakeCreatePaymentHandler = NewOBUKCreatePaymentHandler
-		server.MakeGetPaymentHandler = NewOBUKGetPaymentHandler
-	case OBBR:
-		server.MakeGetAccountsHandler = NewOBBRGetAccountsHandler
-		server.MakeGetAccountsInternalHandler = NewOBBRGetAccountsInternalHandler
-		server.MakeCreatePaymentHandler = NewOBBRCreatePaymentHandler
-	default:
-		return server, errors.Wrapf(err, "unsupported spec %s", server.Config.Spec)
-	}
-
 	return server, nil
 }
 
 func (s *Server) Start() error {
 	r := gin.Default()
 
-	r.GET("/internal/accounts", s.Get(s.MakeGetAccountsInternalHandler))
-
 	switch s.Config.Spec {
 	case OBUK:
-		r.GET("/accounts", s.Get(s.MakeGetAccountsHandler))
-		r.GET("/balances", s.Get(s.MakeGetBalancesHandler))
-		r.GET("/internal/balances", s.Get(s.MakeGetBalancesInternalHandler))
-		r.GET("/transactions", s.Get(s.MakeGetTransactionsHandler))
-		r.POST("/domestic-payments", s.Post(s.MakeCreatePaymentHandler))
-		r.GET("/domestic-payments/:DomesticPaymentId", s.Get(s.MakeGetPaymentHandler))
+		r.GET("/accounts", s.Get(NewOBUKGetAccountsHandler))
+		r.GET("/internal/accounts", s.Get(NewOBUKGetAccountsInternalHandler))
+		r.GET("/balances", s.Get(NewOBUKGetBalancesHandler))
+		r.GET("/internal/balances", s.Get(NewOBUKGetBalancesInternalHandler))
+		r.GET("/transactions", s.Get(NewOBUKGetTransactionsHandler))
+		r.POST("/domestic-payments", s.Post(NewOBUKCreatePaymentHandler))
+		r.GET("/domestic-payments/:DomesticPaymentId", s.Get(NewOBUKGetPaymentHandler))
 
 	case OBBR:
-		r.GET("/accounts/v1/accounts", s.Get(s.MakeGetAccountsHandler))
-		r.GET("/payments/v1/pix/payments", s.Post(s.MakeCreatePaymentHandler))
+		r.GET("/accounts/v1/accounts", s.Get(NewOBBRGetAccountsHandler))
+		r.GET("/internal/accounts", s.Get(NewOBBRGetAccountsInternalHandler))
+		r.GET("/accounts/v1/accounts/:accountID/balances", s.Get(NewOBBRGetBalanceHandler))
+		r.GET("/balances", s.Get(NewOBBRGetBalancesInternalHandler))
+		r.GET("/payments/v1/pix/payments", s.Post(NewOBBRCreatePaymentHandler))
 
 	default:
 		return fmt.Errorf("unsupported spec %s", s.Config.Spec)

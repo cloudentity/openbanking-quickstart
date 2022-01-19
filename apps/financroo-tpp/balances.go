@@ -1,14 +1,18 @@
 package main
 
 import (
+	"fmt"
+
+	obbrAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/client/accounts"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client/balances"
-	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
 	"github.com/gin-gonic/gin"
 )
 
 type Balance struct {
-	models.OBReadBalance1DataBalanceItems0
-	BankID string `json:"BankId"`
+	AccountID string `json:"AccountId"`
+	Amount    string `json:"Amount"`
+	Currency  string `json:"Currency"`
+	BankID    string `json:"BankId"`
 }
 
 func (o *OBUKClient) GetBalances(c *gin.Context, accessToken string, bank ConnectedBank) ([]Balance, error) {
@@ -23,9 +27,12 @@ func (o *OBUKClient) GetBalances(c *gin.Context, accessToken string, bank Connec
 	}
 
 	for _, a := range resp.Payload.Data.Balance {
+		amount := a.Amount
 		balancesData = append(balancesData, Balance{
-			OBReadBalance1DataBalanceItems0: *a,
-			BankID:                          bank.BankID,
+			AccountID: string(*a.AccountID),
+			Amount:    string(*amount.Amount),
+			Currency:  string(*amount.Currency),
+			BankID:    bank.BankID,
 		})
 	}
 
@@ -33,5 +40,34 @@ func (o *OBUKClient) GetBalances(c *gin.Context, accessToken string, bank Connec
 }
 
 func (o *OBBRClient) GetBalances(c *gin.Context, accessToken string, bank ConnectedBank) ([]Balance, error) {
-	return []Balance{}, nil
+	var (
+		resp         *obbrAccounts.AccountsGetAccountsAccountIDBalancesOK
+		balancesData = []Balance{}
+		err          error
+		accounts     []Account
+	)
+
+	if accounts, err = o.GetAccounts(c, accessToken, bank); err != nil {
+		return nil, err
+	}
+
+	for _, acc := range accounts {
+		accountID := string(*acc.AccountID)
+
+		if resp, err = o.Accounts.Accounts.AccountsGetAccountsAccountIDBalances(obbrAccounts.NewAccountsGetAccountsAccountIDBalancesParamsWithContext(c).
+			WithAccountID(accountID).
+			WithAuthorization(accessToken), nil); err != nil {
+			return balancesData, err
+		}
+
+		data := resp.Payload.Data
+		balancesData = append(balancesData, Balance{
+			AccountID: accountID,
+			Amount:    fmt.Sprintf("%f", *data.AvailableAmount),
+			Currency:  *data.AvailableAmountCurrency,
+			BankID:    bank.BankID,
+		})
+	}
+
+	return balancesData, nil
 }

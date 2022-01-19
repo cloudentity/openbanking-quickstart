@@ -8,7 +8,7 @@
 				"branchCode": "6272",
 				"number": "94088392",
 				"checkDigit": "4",
-				"accountId": "92792126019929279212650822221989319252576"
+				"accountId": "94088392"
 			},
 			{
 				"brandName": "Organização A",
@@ -16,11 +16,28 @@
 				"type": "CONTA_DEPOSITO_A_VISTA",
 				"compeCode": "001",
 				"branchCode": "6272",
-				"number": "94088392",
+				"number": "94088400",
 				"checkDigit": "4",
-				"accountId": "92792126019929279212650822221989319252576"
+				"accountId": "94088400"
 			}
-		]
+		],
+		"obbr_balances": [{
+			"accountId": "94088392",
+			"availableAmount": 100000.04,
+			"availableAmountCurrency": "GBP",
+			"blockedAmount": 99.9999,
+			"blockedAmountCurrency": "GBP",
+			"automaticallyInvestedAmount": 100000.04,
+			"automaticallyInvestedAmountCurrency": "GBP"
+		},{
+			"accountId": "94088400",
+			"availableAmount": 3200.04,
+			"availableAmountCurrency": "GBP",
+			"blockedAmount": 0,
+			"blockedAmountCurrency": "GBP",
+			"automaticallyInvestedAmount": 3200.04,
+			"automaticallyInvestedAmountCurrency": "GBP"
+		}]
 	},
 	"user2": {
 		"obbr_accounts": [{
@@ -31,7 +48,7 @@
 				"branchCode": "6272",
 				"number": "94088392",
 				"checkDigit": "4",
-				"accountId": "92792126019929279212650822221989319252576"
+				"accountId": "94088400"
 			},
 			{
 				"brandName": "Organização A",
@@ -41,7 +58,7 @@
 				"branchCode": "6272",
 				"number": "94088392",
 				"checkDigit": "4",
-				"accountId": "92792126019929279212650822221989319252576"
+				"accountId": "94088400"
 			}
 		]
 	},
@@ -54,7 +71,7 @@
 				"branchCode": "6272",
 				"number": "94088392",
 				"checkDigit": "4",
-				"accountId": "92792126019929279212650822221989319252576"
+				"accountId": "94088400"
 			},
 			{
 				"brandName": "Organização A",
@@ -64,7 +81,7 @@
 				"branchCode": "6272",
 				"number": "94088392",
 				"checkDigit": "4",
-				"accountId": "92792126019929279212650822221989319252576"
+				"accountId": "94088400"
 			}
 		]
 	}
