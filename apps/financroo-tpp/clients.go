@@ -29,7 +29,7 @@ func (c *Clients) RenewAccountsToken(ctx context.Context, bank ConnectedBank) (*
 	)
 
 	if resp, err = c.AcpAccountsClient.Oauth2.Oauth2.Token(
-		oauth2.NewTokenParams().
+		oauth2.NewTokenParamsWithContext(ctx).
 			WithClientID(&c.AcpAccountsClient.Config.ClientID).
 			WithGrantType("refresh_token").
 			WithRefreshToken(&bank.RefreshToken)); err != nil {
