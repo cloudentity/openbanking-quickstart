@@ -7,6 +7,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
+	o2Params "github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
+
 	obCommonModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_common"
 	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 	system "github.com/cloudentity/acp-client-go/clients/system/client/clients"
@@ -159,7 +161,8 @@ func (s *Server) IntrospectToken(c *gin.Context) error {
 	token := c.GetHeader("Authorization")
 	token = strings.ReplaceAll(token, "Bearer ", "")
 
-	if _, err = s.IntrospectClient.IntrospectToken(token); err != nil {
+	if _, err = s.IntrospectClient.Oauth2.Oauth2.Introspect(o2Params.NewIntrospectParamsWithContext(c).
+		WithToken(&token), nil); err != nil {
 		return fmt.Errorf("failed to introspect client: %w", err)
 	}
 

@@ -7,8 +7,10 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 
-	oauth2 "github.com/cloudentity/acp-client-go/clients/oauth2/models"
+	o2Params "github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
+
 	obCommon "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_common"
 	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 )
@@ -50,6 +52,8 @@ func (s *Server) ListConsents() func(*gin.Context) {
 			Error(c, ToAPIError(err))
 			return
 		}
+
+		logrus.Infof("consents by accounts %v", consentsByAccounts)
 
 		for _, c := range consentsByAccounts.Consents {
 			if _, ok := clients[c.Client.ID]; !ok {
@@ -130,12 +134,12 @@ var (
 
 func (s *Server) FetchConsents(c *gin.Context) (*ConsentsAndAccounts, error) {
 	var (
-		accounts InternalAccounts
-		response *obCommon.ListOBConsentsOK
-		at       *oauth2.IntrospectResponse
-		err      error
-		types    []string
-		ok       bool
+		accounts       InternalAccounts
+		response       *obCommon.ListOBConsentsOK
+		introspectResp *o2Params.IntrospectOK
+		err            error
+		types          []string
+		ok             bool
 	)
 
 	token := c.GetHeader("Authorization")
@@ -149,17 +153,20 @@ func (s *Server) FetchConsents(c *gin.Context) (*ConsentsAndAccounts, error) {
 		types = nil
 	}
 
-	if at, err = s.IntrospectClient.IntrospectToken(token); err != nil {
-		return nil, fmt.Errorf("failed to introspect client: %w", err)
+	if introspectResp, err = s.IntrospectClient.Oauth2.Oauth2.Introspect(o2Params.NewIntrospectParamsWithContext(c).
+		WithToken(&token), nil); err != nil {
+		return nil, err
 	}
 
-	if !at.Active {
+	if !introspectResp.Payload.Active {
 		return nil, ErrTokenNotActive
 	}
 
-	if accounts, err = s.BankClient.GetInternalAccounts(at.Sub); err != nil {
+	if accounts, err = s.BankClient.GetInternalAccounts(introspectResp.Payload.Sub); err != nil {
 		return nil, fmt.Errorf("failed to get accounts from bank: %w", err)
 	}
+
+	logrus.Infof("accounts %v", accounts)
 
 	accountIDs := make([]string, len(accounts.Accounts))
 	for i, a := range accounts.Accounts {
@@ -177,6 +184,8 @@ func (s *Server) FetchConsents(c *gin.Context) (*ConsentsAndAccounts, error) {
 	); err != nil {
 		return nil, err
 	}
+
+	logrus.Infof("list ob consents response %v", response.Payload)
 
 	return &ConsentsAndAccounts{
 		Consents: response.Payload.Consents,
