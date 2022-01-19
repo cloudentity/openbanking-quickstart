@@ -14,7 +14,7 @@ COPY consent/self-service-portal/web/app/src src
 
 RUN npm run build
 
-FROM golang:1.15.2 as go-builder
+FROM golang:1.16 as go-builder
 
 WORKDIR /app
 
