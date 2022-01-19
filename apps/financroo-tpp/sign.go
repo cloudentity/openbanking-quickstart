@@ -18,20 +18,44 @@ const (
 	kid = "kid"
 )
 
-func (s Server) JWSSignature(payload []byte) (string, error) {
+type Signer interface {
+	Sign([]byte) (string, error)
+}
+
+type OBUKSigner struct {
+	privateKey *rsa.PrivateKey
+}
+
+func NewOBUKSigner(privateKeyPath string) (Signer, error) {
 	var (
-		privateKey  *rsa.PrivateKey
-		detachedJWS string
-		signer      jose.Signer
-		jws         *jose.JSONWebSignature
-		err         error
+		privateKey *rsa.PrivateKey
+		err        error
 	)
 
-	if privateKey, err = getPrivateKey(s.Config.KeyFile); err != nil {
-		return "", err
+	if privateKey, err = getPrivateKey(privateKeyPath); err != nil {
+		return nil, err
 	}
 
-	if signer, err = jose.NewSigner(jose.SigningKey{Algorithm: jose.PS256, Key: privateKey}, getSignerOptions()); err != nil {
+	return &OBUKSigner{privateKey: privateKey}, nil
+}
+
+func (s *OBUKSigner) Sign(payload []byte) (string, error) {
+	var (
+		signer        jose.Signer
+		jws           *jose.JSONWebSignature
+		signerOptions = &jose.SignerOptions{}
+		err           error
+	)
+
+	signerOptions.WithType("JOSE")
+	signerOptions.WithContentType(jose.ContentType("application/json"))
+	signerOptions.WithCritical(iat, iss, tan)
+	signerOptions.WithHeader(jose.HeaderKey(kid), "167467200346518873990055631921812347975180003245")
+	signerOptions.WithHeader(jose.HeaderKey(iat), strconv.FormatInt(time.Now().Unix(), 10))
+	signerOptions.WithHeader(jose.HeaderKey(iss), "123456789123456789")
+	signerOptions.WithHeader(jose.HeaderKey(tan), "openbanking.org.uk")
+
+	if signer, err = jose.NewSigner(jose.SigningKey{Algorithm: jose.PS256, Key: s.privateKey}, signerOptions); err != nil {
 		return "", err
 	}
 
@@ -39,11 +63,45 @@ func (s Server) JWSSignature(payload []byte) (string, error) {
 		return "", err
 	}
 
-	if detachedJWS, err = jws.DetachedCompactSerialize(); err != nil {
+	return jws.DetachedCompactSerialize()
+}
+
+type OBBRSigner struct {
+	privateKey *rsa.PrivateKey
+}
+
+func NewOBBRSigner(privateKeyPath string) (Signer, error) {
+	var (
+		privateKey *rsa.PrivateKey
+		err        error
+	)
+
+	if privateKey, err = getPrivateKey(privateKeyPath); err != nil {
+		return nil, err
+	}
+
+	return &OBBRSigner{privateKey: privateKey}, nil
+}
+
+func (s *OBBRSigner) Sign(payload []byte) (string, error) {
+	var (
+		signer        jose.Signer
+		jws           *jose.JSONWebSignature
+		signerOptions = &jose.SignerOptions{}
+		err           error
+	)
+
+	signerOptions.WithType("JWT")
+
+	if signer, err = jose.NewSigner(jose.SigningKey{Algorithm: jose.PS256, Key: s.privateKey}, signerOptions); err != nil {
 		return "", err
 	}
 
-	return detachedJWS, nil
+	if jws, err = signer.Sign(payload); err != nil {
+		return "", err
+	}
+
+	return jws.CompactSerialize()
 }
 
 func getPrivateKey(keyFile string) (*rsa.PrivateKey, error) {
@@ -64,18 +122,4 @@ func getPrivateKey(keyFile string) (*rsa.PrivateKey, error) {
 	}
 
 	return k, nil
-}
-
-func getSignerOptions() *jose.SignerOptions {
-	signerOptions := &jose.SignerOptions{}
-	signerOptions.WithType("JOSE")
-	signerOptions.WithContentType(jose.ContentType("application/json"))
-	signerOptions.WithCritical(iat, iss, tan)
-
-	signerOptions.WithHeader(jose.HeaderKey(kid), "167467200346518873990055631921812347975180003245")
-	signerOptions.WithHeader(jose.HeaderKey(iat), strconv.FormatInt(time.Now().Unix(), 10))
-	signerOptions.WithHeader(jose.HeaderKey(iss), "123456789123456789")
-	signerOptions.WithHeader(jose.HeaderKey(tan), "openbanking.org.uk")
-
-	return signerOptions
 }
