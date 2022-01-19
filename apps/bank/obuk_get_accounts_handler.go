@@ -8,6 +8,8 @@ import (
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
+
+	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
 )
 
 // swagger:route GET /accounts bank getAccountsRequest
@@ -25,7 +27,7 @@ import (
 //   500: OBErrorResponse1
 type OBUKGetAccountsHandler struct {
 	*Server
-	introspectionResponse *obukModels.IntrospectOpenbankingAccountAccessConsentResponse
+	introspectionResponse *obukModels.OpenbankingAccountAccessConsentIntrospectOKBody
 }
 
 func NewOBUKGetAccountsHandler(server *Server) GetEndpointLogic {

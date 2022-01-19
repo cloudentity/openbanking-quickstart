@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 
-	acpClient "github.com/cloudentity/acp-client-go/models"
+	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
 )
 
 // swagger:route GET /transactions bank getTransactionsRequest
@@ -26,7 +26,7 @@ import (
 //   404: OBErrorResponse1
 type OBUKGetTransactionsHandler struct {
 	*Server
-	introspectionResponse *acpClient.IntrospectOpenbankingAccountAccessConsentResponse
+	introspectionResponse *obukModels.OpenbankingAccountAccessConsentIntrospectOKBody
 }
 
 func NewOBUKGetTransactionsHandler(server *Server) GetEndpointLogic {
