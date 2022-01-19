@@ -1,10 +1,10 @@
 servers:
-- tenant_id: default
+- tenant_id: {{ .tenant_id }}
   id: bank-admins
   name: Bank admins
   initialize: true
 idps:
-- tenant_id: default
+- tenant_id: {{ .tenant_id }}
   id: sandbox
   authorization_server_id: bank-admins
   name: Sandbox IDP
@@ -17,7 +17,7 @@ idps:
         authentication_context:
           name: admin
 clients:
-- tenant_id: default
+- tenant_id: {{ .tenant_id }}
   authorization_server_id: bank-admins
   client_id: bv2f80aed9c9is80f2d0
   client_name: Consent admin web app
@@ -30,7 +30,7 @@ clients:
   - introspect_tokens
   - revoke_tokens
   token_endpoint_auth_method: none
-- tenant_id: default
+- tenant_id: {{ .tenant_id }}
   authorization_server_id: bank-admins
   client_id: bv2fddlpfc67lmeti32g
   client_name: Consent admin backend

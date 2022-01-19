@@ -1,5 +1,5 @@
 servers:
-- tenant_id: default
+- tenant_id: {{ .tenant_id }}
   id: openbanking
   name: Openbanking
   profile: openbanking_uk
@@ -12,7 +12,7 @@ servers:
 {{ readFile .ca_pem_file | indent 4 }}
 
 idps:
-- tenant_id: default
+- tenant_id: {{ .tenant_id }}
   authorization_server_id: openbanking
   id: bugkgai3g9kregtu04u0
   name: Sandbox IDP
@@ -34,7 +34,7 @@ idps:
         authentication_context:
           name: user3
 server_consents:
-- tenant_id: default
+- tenant_id: {{ .tenant_id }}
   client_id: {{ default "bv0ocudfotn6edhsiu7g" .consent_page_client_id }}
   custom:
     server_consent_url: {{ .consent_page_url }}
@@ -42,7 +42,7 @@ server_consents:
   type: custom
 clients:
 # consent page
-- tenant_id: default
+- tenant_id: {{ .tenant_id }}
   authorization_server_id: system
   client_id: {{ default "bv0ocudfotn6edhsiu7g" .consent_page_client_id }}
   client_secret: {{ default "pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0" .consent_page_client_secret }}
@@ -52,7 +52,7 @@ clients:
   scopes:
   - manage_openbanking_consents
   token_endpoint_auth_method: client_secret_basic
-- tenant_id: default
+- tenant_id: {{ .tenant_id }}
   authorization_server_id: openbanking
   client_id: bukj5p6k7qdmm5ppbi4g
   client_name: bank
@@ -70,7 +70,7 @@ clients:
   tls_client_certificate_bound_access_tokens: true
   token_endpoint_auth_method: tls_client_auth
 # financroo / developer tpp
-- tenant_id: default
+- tenant_id: {{ .tenant_id }}
   authorization_server_id: openbanking
   client_id: bugkgm23g9kregtu051g
   client_name: Financroo

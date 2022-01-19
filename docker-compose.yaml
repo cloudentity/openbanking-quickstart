@@ -14,9 +14,9 @@ services:
     environment:
       - CLIENT_ID=${DEVELOPER_CLIENT_ID}
       - AUTHORIZE_URL=${ACP_URL}/${TENANT}/${OPENBANKING_SERVER_ID}/oauth2/authorize
-      - TOKEN_URL=${ACP_INTERNAL_URL}/${TENANT}/${OPENBANKING_SERVER_ID}/oauth2/token
-      - ISSUER_URL=${ACP_INTERNAL_URL}/${TENANT}/${OPENBANKING_SERVER_ID}
-      - USERINFO_URL=${ACP_INTERNAL_URL}/${TENANT}/${OPENBANKING_SERVER_ID}/userinfo
+      - TOKEN_URL=${ACP_MTLS_URL}/${TENANT}/${OPENBANKING_SERVER_ID}/oauth2/token
+      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/${OPENBANKING_SERVER_ID}
+      - USERINFO_URL=${ACP_MTLS_URL}/${TENANT}/${OPENBANKING_SERVER_ID}/userinfo
       - REDIRECT_URL=https://${APP_HOST}:8090/callback
       - CERT_FILE=/tpp_cert.pem
       - KEY_FILE=/tpp_key.pem
@@ -61,7 +61,7 @@ services:
     environment:
       - CLIENT_ID=bv0ocudfotn6edhsiu7g
       - CLIENT_SECRET=pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0
-      - ISSUER_URL=${ACP_INTERNAL_URL}/${TENANT}/system
+      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
       - CERT_FILE=/bank_cert.pem
       - KEY_FILE=/bank_key.pem
       - ROOT_CA=/ca.pem
@@ -135,7 +135,7 @@ services:
     environment:
       - SYSTEM_CLIENT_ID=buc3b1hhuc714r78env0
       - SYSTEM_CLIENT_SECRET=PBV7q0akoP603rZbU0EFdxbhZ-djxF7FIVwyKaLnBYU
-      - SYSTEM_ISSUER_URL=${ACP_INTERNAL_URL}/${TENANT}/system
+      - SYSTEM_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
       - SYSTEM_CLIENTS_SERVER_ID=${OPENBANKING_SERVER_ID}
       - CERT_FILE=/bank_cert.pem
       - KEY_FILE=/bank_key.pem
@@ -147,7 +147,7 @@ services:
       - LOGIN_CLIENT_ID=bv0nab0mekk67nekvq7g
       - INTROSPECT_CLIENT_ID=bv2dkff8mll9cf6pvd6g
       - INTROSPECT_CLIENT_SECRET=KThGH68f-gMC4cscGLFeOpIU4EYriYhKspOV9IwHbnw
-      - INTROSPECT_ISSUER_URL=${ACP_INTERNAL_URL}/${TENANT}/bank-customers
+      - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/bank-customers
 
   consent-admin-portal:
     image: cloudentity/openbanking-quickstart-consent-admin-portal:${VERSION}
@@ -162,7 +162,7 @@ services:
     environment:
       - SYSTEM_CLIENT_ID=bv2fe0tpfc67lmeti340
       - SYSTEM_CLIENT_SECRET=v6yYaApda9juR_DrlI5mpdsdm9u2-D0rQIG9ynakyDE
-      - SYSTEM_ISSUER_URL=${ACP_INTERNAL_URL}/${TENANT}/system
+      - SYSTEM_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
       - SYSTEM_CLIENTS_SERVER_ID=${OPENBANKING_SERVER_ID}
       - CERT_FILE=/bank_cert.pem
       - KEY_FILE=/bank_key.pem
@@ -174,7 +174,7 @@ services:
       - LOGIN_CLIENT_ID=bv2f80aed9c9is80f2d0
       - INTROSPECT_CLIENT_ID=bv2fddlpfc67lmeti32g
       - INTROSPECT_CLIENT_SECRET=RkAIOVRlP6ZLhDvYixT1wBb8DG3bVkXAouoIrX7cwzA
-      - INTROSPECT_ISSUER_URL=${ACP_INTERNAL_URL}/${TENANT}/bank-admins
+      - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/bank-admins
 
   bank-uk:
     image: cloudentity/openbanking-quickstart-bank:${VERSION}
@@ -189,7 +189,7 @@ services:
       - ./mount/bank-uk:/app/data
     environment:
       - CLIENT_ID=bukj5p6k7qdmm5ppbi4g
-      - ISSUER_URL=${ACP_INTERNAL_URL}/${TENANT}/openbanking
+      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/openbanking
       - CERT_FILE=/bank_cert.pem
       - KEY_FILE=/bank_key.pem
       - ROOT_CA=/ca.pem
@@ -282,8 +282,6 @@ services:
     container_name: configuration
     image: cloudentity/openbanking-quickstart-configuration:latest
     restart: on-failure
-    depends_on:
-      - acp
     volumes:
       - ./data/tpp_cert.pem:/certs/tpp_cert.pem
       - ./data/ca.pem:/certs/ca.pem

@@ -15,8 +15,8 @@ run-dev:
 	docker-compose -f docker-compose.yaml -f docker-compose.build.yaml up -d
 	./scripts/wait.sh
 
-.PHONY: run-acp
-run-acp-apps:
+.PHONY: run-acp-apps
+run-acp-apps: setup_local_env
 	docker-compose up -d --no-build ${ACP_APPS}
 	./scripts/wait.sh
 
@@ -26,6 +26,11 @@ stop-acp-apps:
 
 .PHONY: run-apps
 run-apps:
+	docker-compose up -d --no-build ${OB_APPS}
+
+.PHONY: run-apps-with-saas
+run-apps-with-saas: setup_saas_env
+	docker-compose up -d --no-build configuration
 	docker-compose up -d --no-build ${OB_APPS}
 
 .PHONY: run
@@ -48,6 +53,10 @@ stop:
 .PHONY: clean
 clean:
 	docker-compose down -v
+
+.PHONY: clean-saas
+clean-saas: clean
+	./scripts/clean_saas.sh
 
 .PHONY: run-tests
 run-tests:
@@ -114,3 +123,11 @@ generate-obbr-clients: start-runner
 .PHONY: obbr
 obbr:
 	docker-compose -f docker-compose.yaml -f conformance/docker-compose.obb.yaml -f conformance/docker-compose.fapi.yaml ${cmd}
+
+.PHONY: setup_saas_env
+setup_saas_env:
+	cp -f .env-saas .env
+
+.PHONY: setup_local_env
+setup_local_env:
+	cp -f .env-local .env

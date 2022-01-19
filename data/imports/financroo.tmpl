@@ -1,10 +1,10 @@
 servers:
-- tenant_id: default
+- tenant_id: {{ .tenant_id }}
   id: financroo
   name: Financroo
   initialize: true
 idps:
-- tenant_id: default
+- tenant_id: {{ .tenant_id }}
   id: sandbox
   authorization_server_id: financroo
   name: Sandbox IDP
@@ -17,7 +17,7 @@ idps:
         authentication_context:
           name: test
 clients:
-- tenant_id: default
+- tenant_id: {{ .tenant_id }}
   authorization_server_id: financroo
   client_id: bv3p4uo557ouq8rha2bg
   client_name: Financroo App
