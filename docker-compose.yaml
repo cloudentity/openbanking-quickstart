@@ -183,13 +183,13 @@ services:
       - LOGGING_LEVEL=debug
       - SERVER_HTTP_LOGS=true
       - SERVER_DISABLE_CSRF=true
+      - REDIS_ENABLED=true
+      - REDIS_ADDRESS=redis:6379
     command:
       - server
       - start
       - --sql.url
       - postgres://root@crdb:26257/defaultdb?sslmode=disable
-      - --hazelcast.address
-      - hazelcast:5701
       - --secret.key
       - KNEcLGdDqpwrXDubqPgDSUkMMsLPXaHh
       - --server.cert.path
@@ -210,12 +210,15 @@ services:
     volumes:
       - crdb:/cockroach/cockroach-data"
 
-  hazelcast:
-    container_name: hazelcast
-    image: hazelcast/hazelcast:3.12
+  redis:
+    container_name: redis
+    image: redis:6.2.6
     restart: on-failure
+    command: redis-server /usr/local/etc/redis/redis.conf
+    volumes:
+      - ./config/redis.conf:/usr/local/etc/redis/redis.conf
     ports:
-      - 5701:5701
+      - 6379:6379
 
   configuration:
     container_name: configuration
