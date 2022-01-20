@@ -1,0 +1,151 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+
+<html>
+<head>
+  {{ template "imports.tmpl" }}
+  <title>{{.trans.headTitle}}</title>
+</head>
+
+<body>
+<div class="header">
+  <img src="/assets/images/bank_logo.svg"/>
+</div>
+<div id="background-image">
+  <img src="/assets/images/background_image.svg"/>
+</div>
+
+{{ if or .mfaRequest .mfaConfirmation }}
+<div class="content mfa-required">
+  {{ else }}
+  <div class="content">
+    {{ end }}
+
+    <div class="icon-logo">
+      <img src="/assets/images/account_access_logo.svg"/>
+    </div>
+
+    <p class="consent-title">{{ .trans.title }}</p>
+
+    <form action="?login_id={{ .login_request.ID }}&login_state={{ .login_request.State }}&consent_type={{ .login_request.ConsentType }}"
+          method="post">
+      <div class="form-block">
+        <div class="form-block-title">{{.trans.selectAccounts}} {{ .client_name }}</div>
+        <div class="accounts-block">
+          {{ range .accounts }}
+            <div class="account-row">
+              <div class="account-header">
+                <div>
+                  <div class="account-header-title">{{ .Name }}</div>
+                  <div class="caption account-header-subtitle">**** **** **** {{ .ID }}</div>
+                </div>
+                <div class="mdc-switch">
+                  <div class="mdc-switch__track"></div>
+                  <div class="mdc-switch__thumb-underlay">
+                    <div class="mdc-switch__thumb"></div>
+                    <input
+                            type="checkbox"
+                            id="{{ . }}"
+                            name="account_ids"
+                            value="{{ .ID }}"
+                            class="mdc-switch__native-control"
+                            role="switch"
+                            aria-checked="true"
+                            checked
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          {{ end }}
+        </div>
+
+        <div class="form-block-title">{{.trans.reviewData}}</div>
+        <div class="permissions-block">
+
+          <div class="account-row">
+            <div class="account-header">
+              <div class="account-header-title" style="margin-left: 16px; margin-right: 16px;">{{.trans.permissions}}</div>
+              <button id="show-description"
+                      class="mdc-icon-button"
+                      aria-label="Show description"
+                      aria-hidden="true"
+                      aria-pressed="false"
+                      onclick="return toggle('account_permissions');">
+                <i class="material-icons mdc-icon-button__icon" data-icon-id="account_permissions">
+                  keyboard_arrow_down</i>
+              </button>
+            </div>
+            <div class="account-description account-description-hidden" data-desc-id="account_permissions">
+              <div class="permission-name">{{.trans.purpose}}</div>
+              <div class="caption" style="margin-top: 8px;">
+                {{.trans.purposeDetail}}
+              </div>
+              {{ range $key, $value := .permissions }}
+                <div class="permission-name" style="margin-top: 16px;">{{ $key }}</div>
+                <div class="caption" style="margin-top: 8px;">
+                  <ul>
+                    {{range $value }}
+                      <li>
+                        {{ .Language }}
+                      </li>
+                    {{end}}
+                  </ul>
+                </div>
+              {{ end }}
+            </div>
+          </div>
+        </div>
+
+        {{ if .expiration_date }}
+        <p class="caption" style="text-align: center; margin: 32px 0;">{{.trans.expiration}}</p>
+        {{ end }}
+
+        <div class="form-actions">
+          <button class="mdc-button mdc-button--outlined cancel-button" type="submit" name="action" value="deny"
+                  {{ if or .mfaRequest .mfaConfirmation }} disabled {{end}}
+          >
+            <div class="mdc-button__ripple"></div>
+            <span class="mdc-button__label">{{.trans.cancel}}</span>
+          </button>
+          <button class="mdc-button mdc-button--raised confirm-button" type="submit" name="action" value="confirm"
+                  {{ if or .mfaRequest .mfaConfirmation }} disabled {{end}}
+          >
+            <div class="mdc-button__ripple"></div>
+            <span class="mdc-button__label">{{.trans.agree}}</span>
+          </button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+  {{ if .mfaRequest }}
+    {{ template "mfa-request.tmpl" . }}
+  {{ end }}
+
+  {{ if .mfaConfirmation }}
+    {{ template "mfa-verify.tmpl" .}}
+  {{ end }}
+    </div>
+</body>
+
+<script>
+  function toggle(value) {
+    var el = document.querySelector("[data-desc-id='" + value + "']");
+    if (el.classList.contains('account-description-visible')) {
+      el.classList.remove("account-description-visible");
+      el.classList.add("account-description-hidden");
+      document.querySelector("[data-icon-id='" + value + "']").innerText = "keyboard_arrow_down";
+    } else {
+      el.classList.remove("account-description-hidden");
+      el.classList.add("account-description-visible");
+      document.querySelector("[data-icon-id='" + value + "']").innerText = "keyboard_arrow_up";
+    }
+
+    return false;
+  }
+
+  var switchControls = [].map.call(document.querySelectorAll('.mdc-switch'), function (el) {
+    return new window.mdc.switchControl.MDCSwitch(el)
+  });
+</script>
+</html>
