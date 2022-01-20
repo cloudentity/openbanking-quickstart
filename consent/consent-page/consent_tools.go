@@ -212,6 +212,44 @@ func (c *ConsentTools) GetOBBRPaymentConsentTemplateData(
 	}
 }
 
+func (c *ConsentTools) GetCDRAccountAccessConsentTemplateData(
+	loginRequest LoginRequest,
+	arrangement *obModels.GetCDRConsentResponse,
+	accounts InternalAccounts,
+) map[string]interface{} {
+	var expirationDate string
+
+	edt := time.Time(arrangement.CdrArrangement.Expiry)
+	if !edt.IsZero() {
+		expirationDate = edt.Format("02/01/2006")
+	}
+
+	clientName := c.GetClientName(nil)
+	return map[string]interface{}{
+		"trans": map[string]interface{}{
+			"headTitle":      c.Trans.T("cdr.account.headTitle"),
+			"title":          c.Trans.T("cdr.account.title"),
+			"selectAccounts": c.Trans.T("cdr.account.selectAccounts"),
+			"reviewData":     c.Trans.T("cdr.account.review_data"),
+			"permissions":    c.Trans.T("cdr.account.permissions"),
+			"purpose":        c.Trans.T("cdr.account.purpose"),
+			"purposeDetail":  c.Trans.T("cdr.account.purposeDetail"),
+			"expiration": c.Trans.TD("cdr.account.expiration", map[string]interface{}{
+				"client_name":     clientName,
+				"expiration_date": expirationDate,
+			}),
+			"cancel": c.Trans.T("cdr.account.cancel"),
+			"agree":  c.Trans.T("cdr.account.agree"),
+		},
+		"login_request": loginRequest,
+		"accounts":      accounts.Accounts,
+		//"permissions":     c.GetPermissionsWithDescription(consent.AccountAccessConsent.Permissions),
+		"client_name":     clientName,
+		"expiration_date": expirationDate,
+		"ctx":             arrangement.AuthenticationContext,
+	}
+}
+
 type PaymentConsentTemplateData struct {
 	AccountName    string
 	SortCode       string
