@@ -62,3 +62,14 @@ mfa.postRequest.caption1: We just {{ if .resend }}re-{{ end }}send you a verific
 mfa.postRequest.resend: Re-send the code
 mfa.postRequest.authenticationCode: Authentication code
 mfa.postRequest.errorInfo: Invalid code. Try again or re-send the code.
+
+cdr.account.headTitle: Account Access Consent
+cdr.account.title: Account selection
+cdr.account.selectAccounts: Select accounts to share with
+cdr.account.review_data: Review the data you will be sharing
+cdr.account.permissions: Account permissions
+cdr.account.purpose: Purpose for sharing data
+cdr.account.purposeDetail: To uncover insights that can improve your financial well being.
+cdr.account.expiration: <strong>{{ .client_name }}</strong> will have access to your account information until <strong>{{ .expiration_date }}</strong>
+cdr.account.cancel: Cancel
+cdr.account.agree: I Agree
