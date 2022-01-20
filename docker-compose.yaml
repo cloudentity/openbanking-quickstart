@@ -169,6 +169,7 @@ services:
     volumes:
       - ./data/acp_cert.pem:/acp_cert.pem
       - ./data/acp_key.pem:/acp_key.pem
+      - ./data/ca.pem:/acp_ca.pem
     environment:
       - FEATURES_SWAGGER_UI=true
       - FEATURES_INTEGRATION_ENDPOINTS=true
@@ -179,11 +180,13 @@ services:
       - FEATURES_OPENBANKING_BRASIL_PAYMENTS=true
       - FEATURES_DEV_MODE=true
       - FEATURES_CDR_AUSTRALIA=true
+      - FEATURES_PAR=true
       - SERVER_MTLS_URL=https://test-docker:8443
       - SERVER_URL=${ACP_URL}
       - LOGGING_LEVEL=debug
-      - SERVER_HTTP_LOGS=true
+      - SERVER_HTTP_LOGS=false
       - SERVER_DISABLE_CSRF=true
+      - CLIENT_ROOT_CA=/acp_ca.pem
     command:
       - server
       - start
