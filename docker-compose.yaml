@@ -202,7 +202,7 @@ services:
 
   crdb:
     container_name: quickstart-crdb
-    image: cockroachdb/cockroach:v20.2.6
+    image: cockroachdb/cockroach:v21.2.3
     restart: always
     ports:
       - 26258:26257
@@ -217,7 +217,7 @@ services:
     restart: on-failure
     command: redis-server /usr/local/etc/redis/redis.conf
     volumes:
-      - ./config/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./mount/redis/redis.conf:/usr/local/etc/redis/redis.conf
     ports:
       - 6379:6379
 
