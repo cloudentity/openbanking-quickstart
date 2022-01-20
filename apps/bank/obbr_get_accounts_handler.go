@@ -6,12 +6,12 @@ import (
 	obbrAccountModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/models"
 	"github.com/gin-gonic/gin"
 
-	acpClient "github.com/cloudentity/acp-client-go/models"
+	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 )
 
 type OBBRGetAccountsHandler struct {
 	*Server
-	introspectionResponse *acpClient.IntrospectOBBRDataAccessConsentResponse
+	introspectionResponse *obModels.IntrospectOBBRDataAccessConsentResponse
 }
 
 func NewOBBRGetAccountsHandler(server *Server) GetEndpointLogic {

@@ -9,8 +9,8 @@ import (
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
-	"github.com/cloudentity/acp-client-go/client/openbanking"
-	"github.com/cloudentity/acp-client-go/models"
+	obuk "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
+	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 )
 
 type MFAData struct {
@@ -48,14 +48,13 @@ type OBUKAccountAccessMFAConsentProvider struct {
 
 func (s *OBUKAccountAccessMFAConsentProvider) GetMFAData(c *gin.Context, loginRequest LoginRequest) (MFAData, error) {
 	var (
-		response *openbanking.GetAccountAccessConsentSystemOK
+		response *obuk.GetAccountAccessConsentSystemOK
 		data     = MFAData{}
 		err      error
 	)
 
-	if response, err = s.Client.Openbanking.GetAccountAccessConsentSystem(
-		openbanking.NewGetAccountAccessConsentSystemParamsWithContext(c).
-			WithTid(s.Client.TenantID).
+	if response, err = s.Client.Openbanking.Openbankinguk.GetAccountAccessConsentSystem(
+		obuk.NewGetAccountAccessConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID),
 		nil,
 	); err != nil {
@@ -85,8 +84,8 @@ func (s *OBUKAccountAccessMFAConsentProvider) GetTemplateName() string {
 func (s *OBUKAccountAccessMFAConsentProvider) GetConsentMockData(loginRequest LoginRequest) map[string]interface{} {
 	return s.GetAccessConsentTemplateData(
 		loginRequest,
-		&models.GetAccountAccessConsentResponse{
-			AccountAccessConsent: &models.AccountAccessConsent{
+		&obModels.GetAccountAccessConsentResponse{
+			AccountAccessConsent: &obModels.AccountAccessConsent{
 				Permissions: []string{"ReadAccountsBasic"},
 			},
 		},
@@ -112,14 +111,13 @@ type DomesticPaymentMFAConsentProvider struct {
 
 func (s *DomesticPaymentMFAConsentProvider) GetMFAData(c *gin.Context, loginRequest LoginRequest) (MFAData, error) {
 	var (
-		response *openbanking.GetDomesticPaymentConsentSystemOK
+		response *obuk.GetDomesticPaymentConsentSystemOK
 		data     = MFAData{}
 		err      error
 	)
 
-	if response, err = s.Client.Openbanking.GetDomesticPaymentConsentSystem(
-		openbanking.NewGetDomesticPaymentConsentSystemParamsWithContext(c).
-			WithTid(s.Client.TenantID).
+	if response, err = s.Client.Openbanking.Openbankinguk.GetDomesticPaymentConsentSystem(
+		obuk.NewGetDomesticPaymentConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID),
 		nil,
 	); err != nil {
@@ -155,28 +153,28 @@ func (s *DomesticPaymentMFAConsentProvider) GetTemplateName() string {
 }
 
 func (s *DomesticPaymentMFAConsentProvider) GetConsentMockData(loginRequest LoginRequest) map[string]interface{} {
-	amount := models.OBActiveCurrencyAndAmountSimpleType("100")
-	currency := models.ActiveOrHistoricCurrencyCode("GBP")
+	amount := obModels.OBActiveCurrencyAndAmountSimpleType("100")
+	currency := obModels.ActiveOrHistoricCurrencyCode("GBP")
 	creditorAccountName := "ACME Inc"
-	debtorAccount := models.Identification0("08080021325698")
+	debtorAccount := obModels.Identification0("08080021325698")
 
 	return s.GetDomesticPaymentTemplateData(
 		loginRequest,
-		&models.GetDomesticPaymentConsentResponse{
-			DomesticPaymentConsent: &models.DomesticPaymentConsent{
-				OBWriteDomesticConsentResponse5Data: models.OBWriteDomesticConsentResponse5Data{
-					Initiation: &models.OBWriteDomesticConsentResponse5DataInitiation{
-						CreditorAccount: &models.OBWriteDomesticConsentResponse5DataInitiationCreditorAccount{
+		&obModels.GetDomesticPaymentConsentResponse{
+			DomesticPaymentConsent: &obModels.DomesticPaymentConsent{
+				OBWriteDomesticConsentResponse5Data: obModels.OBWriteDomesticConsentResponse5Data{
+					Initiation: &obModels.OBWriteDomesticConsentResponse5DataInitiation{
+						CreditorAccount: &obModels.OBWriteDomesticConsentResponse5DataInitiationCreditorAccount{
 							Name: creditorAccountName,
 						},
-						DebtorAccount: &models.OBWriteDomesticConsentResponse5DataInitiationDebtorAccount{
+						DebtorAccount: &obModels.OBWriteDomesticConsentResponse5DataInitiationDebtorAccount{
 							Identification: &debtorAccount,
 						},
-						InstructedAmount: &models.OBWriteDomesticConsentResponse5DataInitiationInstructedAmount{
+						InstructedAmount: &obModels.OBWriteDomesticConsentResponse5DataInitiationInstructedAmount{
 							Amount:   &amount,
 							Currency: &currency,
 						},
-						RemittanceInformation: &models.OBWriteDomesticConsentResponse5DataInitiationRemittanceInformation{
+						RemittanceInformation: &obModels.OBWriteDomesticConsentResponse5DataInitiationRemittanceInformation{
 							Reference: "FRESCO-101",
 						},
 					},

@@ -9,7 +9,8 @@ import (
 	paymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
 	"github.com/go-openapi/strfmt"
 
-	acpClient "github.com/cloudentity/acp-client-go/models"
+	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
+	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 )
 
 func OBUKMapError(err *Error) (int, models.OBError1) {
@@ -81,7 +82,7 @@ func NewTransactionsResponse(transactions []models.OBTransaction6, self strfmt.U
 	}
 }
 
-func NewOBUKPayment(introspectionResponse *acpClient.IntrospectOpenbankingDomesticPaymentConsentResponse, self strfmt.URI, id string) paymentModels.OBWriteDomesticResponse5 {
+func NewOBUKPayment(introspectionResponse *obukModels.OpenbankingDomesticPaymentConsentIntrospectOKBody, self strfmt.URI, id string) paymentModels.OBWriteDomesticResponse5 {
 	status := string(AcceptedSettlementInProcess)
 	return paymentModels.OBWriteDomesticResponse5{
 		Data: &paymentModels.OBWriteDomesticResponse5Data{
@@ -128,7 +129,7 @@ func initiationsAreEqual(initiation1, initiation2 interface{}) bool {
 	return bytes.Equal(initiation1Bytes, initiation2Bytes)
 }
 
-func toDomesticResponse5DataInitiation(initiation *acpClient.OBWriteDomesticConsentResponse5DataInitiation) *paymentModels.OBWriteDomesticResponse5DataInitiation {
+func toDomesticResponse5DataInitiation(initiation *obModels.OBWriteDomesticConsentResponse5DataInitiation) *paymentModels.OBWriteDomesticResponse5DataInitiation {
 	var (
 		initiationBytes []byte
 		err             error

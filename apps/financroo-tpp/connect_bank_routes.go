@@ -10,7 +10,6 @@ import (
 	"github.com/sirupsen/logrus"
 
 	acpclient "github.com/cloudentity/acp-client-go"
-	"github.com/cloudentity/acp-client-go/models"
 )
 
 type AppStorage struct {
@@ -135,7 +134,7 @@ func (s *Server) ConnectedBanks() func(c *gin.Context) {
 			user           User
 			err            error
 			clients        Clients
-			tokenResponse  *models.TokenResponse
+			tokenResponse  *oauth2.TokenResponse
 			ok             bool
 			connectedBanks = []string{}
 			expiredBanks   = []string{}

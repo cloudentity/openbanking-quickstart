@@ -128,7 +128,7 @@ func (s *Server) GetConsentHandler(loginRequest LoginRequest) (ConsentHandler, b
 	switch loginRequest.ConsentType {
 	case "domestic_payment", "payments":
 		return s.PaymentConsentHandler, true
-	case "account_access", "consents":
+	case "account_access", "consents", "cdr_arrangement":
 		return s.AccountAccessConsentHandler, true
 	default:
 		return nil, false
