@@ -199,6 +199,9 @@ services:
       - /acp_key.pem
       - --demo
       - --create-default-tenant
+    depends_on:
+      - crdb
+      - redis
 
   crdb:
     container_name: quickstart-crdb
@@ -246,6 +249,8 @@ services:
       - --variables-file
       - /variables.yaml
       - --verbose
+    depends_on:
+      - acp
 
   runner:
     image: quickstart-runner
