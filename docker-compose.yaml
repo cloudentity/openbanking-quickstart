@@ -41,6 +41,7 @@ services:
       - KEY_FILE=/certs/tpp_key.pem
       - DB_FILE=/app/data/my.db
       - TENANT=${TENANT}
+      - GIN_MODE=debug # change to release to disable gin debug
 
   consent-page:
     image: cloudentity/openbanking-quickstart-consent-page:${VERSION}
@@ -154,6 +155,7 @@ services:
       - KEY_FILE=/bank_key.pem
       - ROOT_CA=/ca.pem
       - SPEC=${SPEC}
+      - GIN_MODE=debug # change to release to disable gin debug
 
   acp:
     container_name: quickstart-acp
