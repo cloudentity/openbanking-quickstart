@@ -37,7 +37,7 @@
                   "PolicyUri": "https://mocksoftware/mybudgetapp/policy",
                   "RecipientBaseUri": "https://datarecipient.mock:9001",
                   "RevocationUri": "https://datarecipient.mock:9001/revocation",
-                  "RedirectUris": "https://datarecipient.mock:9001/consent/callback",
+                  "RedirectUris": "https://datarecipient.mock:9001/consent/callback https://datarecipient.mock:9001/consent/callback2",
                   "JwksUri": "https://datarecipient.mock:9001/jwks",
                   "Scope": "openid profile bank:accounts.basic:read bank:accounts.detail:read bank:transactions:read bank:payees:read bank:regular_payments:read common:customer.basic:read common:customer.detail:read cdr:registration",
                   "StatusId": 1,

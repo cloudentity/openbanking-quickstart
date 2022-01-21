@@ -31,6 +31,5 @@ require (
 	golang.org/x/text v0.3.6
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/go-playground/validator.v9 v9.31.0
-	gopkg.in/h2non/gock.v1 v1.1.2 // indirect
 	gopkg.in/square/go-jose.v2 v2.6.0
 )
