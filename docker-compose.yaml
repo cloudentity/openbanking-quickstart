@@ -225,8 +225,8 @@ services:
       - FEATURES_PAR=true
       - SERVER_MTLS_URL=https://test-docker:8443
       - SERVER_URL=${ACP_URL}
-      # - LOGGING_LEVEL=debug
-      # - SERVER_HTTP_LOGS=true
+      - LOGGING_LEVEL=debug
+      - SERVER_HTTP_LOGS=true
       - SERVER_DISABLE_CSRF=true
       - CLIENT_ROOT_CA=/acp_ca.pem
       - REDIS_ENABLED=true
