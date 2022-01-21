@@ -33,7 +33,7 @@
     },
     "SoftwareProduct": {
       "jwksUri": "https://datarecipient.mock:9001/jwks",
-      "redirectUris": "https://datarecipient.mock:9001/consent/callback",
+      "redirectUris": "https://datarecipient.mock:9001/consent/callback https://datarecipient.mock:9001/consent/callback2",
       "recipientBaseUri": "https://datarecipient.mock:9001"
     },
     "DataHolder": {
