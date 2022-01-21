@@ -4,7 +4,7 @@ export COMPOSE_DOCKER_CLI_BUILD=1
 .EXPORT_ALL_VARIABLES: ;
 
 OB_APPS=developer-tpp financroo-tpp consent-page-cdr consent-self-service-portal consent-admin-portal bank
-ACP_APPS=acp crdb hazelcast configuration
+ACP_APPS=acp crdb redis configuration
 CDR_APPS=mock-data-recipient mock-register mock-data-holder
 
 .PHONY: build
