@@ -32,18 +32,6 @@ servers:
       jws_payload:
         jwks:
           keys:
-          - 'use': sig
-            'kty': RSA
-            'kid': B548C914A02787A3B5F15583C8EB030D94BC2424
-            'alg': PS256
-            'n': 0Iv8ocA0NvV7dd9hHI-n21OuRD-9bnLw213Y3q7VFwg2tufu0Z8TPOoHDjWVkbxaq1K8nPDtBAdR5HXnbjXFxPGwRV8UgGMDSI6Z_M0j1bUGV9D9rukcvJ8Z7QpDbKuZzeIg6LrXfIpvyNisEXjMJI14zz9dX1EtWUYQTRq5r2UF8C8pHE1yUtaVnsOZBLmLqMPOPNG1JsK2WhL1uOa0ef-UTQSjN1fw5D2d9K8azUPQL2ecsJA_ZTDZovVzS0fP0MdRXZ_uNRmaww2zg0tIJLQH1Z7AmwAP4LrPIGma6nWo6-57ZJ263k84o9fdR5-hVIcQDEGlKpZDoeNLOBg09w
-            'e': AQAB
-          - 'use': enc
-            'kty': RSA
-            'kid': B548C914A02787A3B5F15583C8EB030D94BC2425
-            'alg': RSA-OAEP
-            'n': 0Iv8ocA0NvV7dd9hHI-n21OuRD-9bnLw213Y3q7VFwg2tufu0Z8TPOoHDjWVkbxaq1K8nPDtBAdR5HXnbjXFxPGwRV8UgGMDSI6Z_M0j1bUGV9D9rukcvJ8Z7QpDbKuZzeIg6LrXfIpvyNisEXjMJI14zz9dX1EtWUYQTRq5r2UF8C8pHE1yUtaVnsOZBLmLqMPOPNG1JsK2WhL1uOa0ef-UTQSjN1fw5D2d9K8azUPQL2ecsJA_ZTDZovVzS0fP0MdRXZ_uNRmaww2zg0tIJLQH1Z7AmwAP4LrPIGma6nWo6-57ZJ263k84o9fdR5-hVIcQDEGlKpZDoeNLOBg09w
-            'e': AQAB
         jwks_uri: ""
   initialize: true
   {{ if .read_client_certificate_from_header }}
