@@ -219,10 +219,10 @@ func (c *ConsentTools) GetCDRAccountAccessConsentTemplateData(
 ) map[string]interface{} {
 	var expirationDate string
 
-	edt := time.Time(arrangement.CdrArrangement.Expiry)
-	if !edt.IsZero() {
-		expirationDate = edt.Format("02/01/2006")
-	}
+	/*	edt := time.Time(arrangement.CdrArrangement.Expiry)
+		if !edt.IsZero() {
+			expirationDate = edt.Format("02/01/2006")
+		}*/
 
 	clientName := c.GetClientName(nil)
 	return map[string]interface{}{

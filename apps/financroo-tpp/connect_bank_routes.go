@@ -10,6 +10,7 @@ import (
 	"github.com/sirupsen/logrus"
 
 	acpclient "github.com/cloudentity/acp-client-go"
+	oauth2 "github.com/cloudentity/acp-client-go/clients/oauth2/models"
 )
 
 type AppStorage struct {

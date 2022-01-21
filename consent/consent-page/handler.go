@@ -37,6 +37,8 @@ func (s *Server) GetTemplateNameForSpec(basename string) string {
 		return string(OBUK) + "-" + basename
 	case OBBR:
 		return string(OBUK) + "-" + basename
+	case CDR:
+		return string(CDR) + "-" + basename
 	}
 
 	return basename

@@ -12,7 +12,7 @@ import (
 	"gopkg.in/square/go-jose.v2"
 
 	acpclient "github.com/cloudentity/acp-client-go"
-	"github.com/cloudentity/acp-client-go/client/oauth2"
+	oauth2 "github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
 )
 
 type LoginURLBuilder interface {
@@ -48,7 +48,7 @@ func (o *OBBRLoginURLBuilder) BuildLoginURL(consentID string, client acpclient.C
 
 	return client.AuthorizeURL(
 		acpclient.WithOpenbankingIntentID(consentID, []string{"urn:brasil:openbanking:loa2"}),
-		acpclient.WithRequestObjectEncryption(o.key),
+		//	acpclient.WithRequestObjectEncryption(o.key),
 		acpclient.WithPKCE(),
 	)
 }
@@ -114,10 +114,8 @@ func getEncryptionKey(c context.Context, client acpclient.Client) (jose.JSONWebK
 		err          error
 	)
 
-	if jwksResponse, err = client.Oauth2.Jwks(
-		oauth2.NewJwksParamsWithContext(c).
-			WithTid(client.TenantID).
-			WithAid(client.ServerID),
+	if jwksResponse, err = client.Oauth2.Oauth2.Jwks(
+		oauth2.NewJwksParamsWithContext(c),
 	); err != nil {
 		return encKey, errors.Wrapf(err, "failed to get jwks from acp server")
 	}
