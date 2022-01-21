@@ -8,5 +8,6 @@
     "tpp_url": "https://localhost:8090",
     "financroo_url": "https://localhost:8091"
   },
-  "projectId": "icwsy8"
+  "projectId": "icwsy8",
+  "defaultCommandTimeout": 10000
 }
