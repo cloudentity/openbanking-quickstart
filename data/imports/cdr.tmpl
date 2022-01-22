@@ -48,80 +48,6 @@ idps:
   id: bugkgai3g9kregtu04u0
   name: Sandbox IDP
   method: static
-  attributes:
-  - name: name
-    description: Name
-    type: string
-    labels:
-  - name: given_name
-    description: Given name
-    type: string
-    labels:
-  - name: family_name
-    description: Family name
-    type: string
-    labels:
-  - name: email
-    description: Email
-    type: string
-    labels:
-  - name: email_verified
-    description: Email verified
-    type: bool
-    labels:
-  - name: phone_number
-    description: Phone number
-    type: string
-    labels:
-  - name: phone_number_verified
-    description: Phone number verified
-    type: bool
-    labels:
-  - name: cpf
-    description: cpf
-    type: string
-    labels:
-  - name: cnpj
-    description: cnpj
-    type: string
-    labels:
-  mappings:
-  - source: name
-    target: name
-    type: string
-    allow_weak_decoding: false
-  - source: given_name
-    target: given_name
-    type: string
-    allow_weak_decoding: false
-  - source: family_name
-    target: family_name
-    type: string
-    allow_weak_decoding: false
-  - source: email
-    target: email
-    type: string
-    allow_weak_decoding: false
-  - source: email_verified
-    target: email_verified
-    type: bool
-    allow_weak_decoding: false
-  - source: phone_number
-    target: phone_number
-    type: string
-    allow_weak_decoding: false
-  - source: phone_number_verified
-    target: phone_number_verified
-    type: bool
-    allow_weak_decoding: false
-  - source: cpf
-    target: cpf
-    type: string
-    allow_weak_decoding: false
-  - source: cnpj
-    target: cnpj
-    type: string
-    allow_weak_decoding: false
   credentials:
     static:
       users:
@@ -130,18 +56,14 @@ idps:
         authentication_context:
           name: user
           mobile_verified: "+48123456789"
-        additional_attributes:
-          cpf: "11111111111"
       - username: user2
         password: p@ssw0rd!
         authentication_context:
           name: user2
-          cpf: "11111111222"
       - username: user3
         password: p@ssw0rd!
         authentication_context:
           name: user3
-          cnpj: "22233344455566"
 server_consents:
 - tenant_id: {{ .tenant_id }}
   client_id: bv0ocudfotn6edhsiu7gcdrconsentpage
