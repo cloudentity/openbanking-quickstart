@@ -2,7 +2,7 @@ version: "3.0"
 
 services:
   custom-idp:
-    image: docker.cloudentity.io/custom-idp
+    image: custom-idp
     container_name: custom-idp
     restart: always
     volumes:
