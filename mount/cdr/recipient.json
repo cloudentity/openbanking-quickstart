@@ -24,6 +24,7 @@
       "Application": "CDR.DataRecipient.Web"
     }
   },
+  "ConsumerDataStandardsSwagger": "https://consumerdatastandardsaustralia.github.io/standards/includes/swagger/cds_banking.json",
   "MockDataRecipient": {
     "Register": {
       "tlsBaseUri": "https://mock-register:7000",

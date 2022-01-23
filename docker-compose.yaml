@@ -297,6 +297,32 @@ services:
     depends_on:
       - acp
 
+  configuration-cdr:
+    container_name: configuration-cdr
+    image: cloudentity/openbanking-quickstart-configuration:latest
+    restart: on-failure
+    volumes:
+      - ./data/ca.pem:/certs/ca.pem
+      - ./data/variables.yaml:/variables.yaml
+      - ./data/imports-cdr:/app/imports
+    command:
+      - /app/main
+      - --tenant-url
+      - ${CONFIGURATION_TENANT_URL}
+      - --tenant
+      - ${CONFIGURATION_TENANT}
+      - --client-id
+      - ${CONFIGURATION_CLIENT_ID}
+      - --client-secret
+      - ${CONFIGURATION_CLIENT_SECRET}
+      - --templates-dirs
+      - /app/imports
+      - --variables-file
+      - /variables.yaml
+      - --verbose
+    depends_on:
+      - acp    
+
   runner:
     image: quickstart-runner
     command: /bin/sh
