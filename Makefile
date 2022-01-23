@@ -42,8 +42,8 @@ run-cdr-apps-with-acp-local:
 
 .PHONY: run-cdr-apps-with-saas
 run-cdr-apps-with-saas:
-	docker-compose up -d --no-build ${CDR_ACP_CONFIG_APPS}
-	docker-compose up -d --no-build ${CDR_CONSENT_APPS}
+	docker-compose up -d --no-build --no-deps ${CDR_ACP_CONFIG_APPS}
+	docker-compose up -d --no-build --no-deps ${CDR_CONSENT_APPS}
 	docker-compose -f docker-compose.cdr.yaml up -d ${CDR_APPS}
 
 .PHONY: run-apps-with-saas
