@@ -8,7 +8,7 @@
 # Then flush the DNS cache, on Windows use: ipconfig /flushdns
 ################################################################################
 
-version: '2.4'
+version: '3.0'
 
 services:
   mock-register:
