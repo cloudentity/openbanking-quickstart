@@ -223,6 +223,7 @@ services:
       - FEATURES_DEV_MODE=true
       - FEATURES_CDR_AUSTRALIA=true
       - FEATURES_PAR=true
+      - FEATURES_SCRIPTS=true
       - SERVER_MTLS_URL=https://test-docker:8443
       - SERVER_URL=${ACP_URL}
       - LOGGING_LEVEL=debug
