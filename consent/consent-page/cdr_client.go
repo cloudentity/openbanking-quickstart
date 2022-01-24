@@ -10,15 +10,14 @@ func NewCDREnergyClient(config Config) *CDREnergyClient {
 	return &c
 }
 
-// TODO pull data from mock data holder
 func (c *CDREnergyClient) GetInternalAccounts(id string) (InternalAccounts, error) {
 	return InternalAccounts{
 		Accounts: []InternalAccount{
 			{
-				ID:   "1234567890",
-				Name: "Test Account 1",
+				ID:   "96534987",
+				Name: "Digital banking account",
 				Balance: Balance{
-					AccountID: "1234567890",
+					AccountID: "96534987",
 					Amount: BalanceAmount{
 						Amount:   "100",
 						Currency: "USD",
@@ -26,12 +25,23 @@ func (c *CDREnergyClient) GetInternalAccounts(id string) (InternalAccounts, erro
 				},
 			},
 			{
-				ID:   "0987654321",
-				Name: "Test Account 2",
+				ID:   "1000001",
+				Name: "Savings",
 				Balance: Balance{
-					AccountID: "0987654321",
+					AccountID: "1000001",
 					Amount: BalanceAmount{
 						Amount:   "150",
+						Currency: "USD",
+					},
+				},
+			},
+			{
+				ID:   "1000002",
+				Name: "Savings 2",
+				Balance: Balance{
+					AccountID: "1000002",
+					Amount: BalanceAmount{
+						Amount:   "175",
 						Currency: "USD",
 					},
 				},
@@ -40,7 +50,7 @@ func (c *CDREnergyClient) GetInternalAccounts(id string) (InternalAccounts, erro
 	}, nil
 }
 
-// TODO pull data from mock data holder
+// TODO: mock data holder cdr app doesn't even have this data yet
 func (c *CDREnergyClient) GetInternalBalances(id string) (BalanceResponse, error) {
 	return BalanceResponse{}, nil
 }
