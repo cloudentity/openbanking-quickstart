@@ -31,7 +31,7 @@ type LoginRequestInput struct {
 }
 
 func (s *Server) Login(c *gin.Context) {
-	var input = c.Request.Context().Value(httpin.Input).(*LoginRequestInput)
+	input, _ := c.Request.Context().Value(httpin.Input).(*LoginRequestInput)
 
 	// Authenticate the user in the external IDP, using the ACR values.
 	user, err := AuthenticateUser(input.ACRValues)
@@ -131,7 +131,6 @@ func (s *Server) RejectLogin(c *gin.Context, input *LoginRequestInput) {
 	}
 	logrus.WithField("location", s.Config.FailureURL).Info("login rejected, redirecting")
 	c.Redirect(http.StatusTemporaryRedirect, s.Config.FailureURL)
-	return
 }
 
 // BindInput instances an httpin engine for a input struct as a gin middleware.
@@ -162,7 +161,7 @@ func BindInput(inputStruct interface{}) gin.HandlerFunc {
 
 // ErrorPayload returns the *models.Error for errors that have it.
 func ErrorPayload(err error) (*models.Error, bool) {
-	switch e := err.(type) {
+	switch e := err.(type) { // nolint
 	case *logins.AcceptLoginRequestUnauthorized:
 		return e.Payload, true
 	case *logins.AcceptLoginRequestForbidden:

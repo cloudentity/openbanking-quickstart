@@ -8,7 +8,6 @@ import (
 )
 
 func TestLoadConfig(t *testing.T) {
-
 	envVars := map[string]string{
 		"CLIENT_ID":     "client id",
 		"CLIENT_SECRET": "client secret",
@@ -36,7 +35,7 @@ func TestLoadConfig(t *testing.T) {
 	assert.Equal(t, envVars["FAILURE_URL"], config.FailureURL)
 	assert.Equal(t, envVars["LOG_LEVEL"], config.LogLevel)
 	assert.Equal(t, 8443, config.Port)
-	assert.Equal(t, time.Duration(time.Second*30), config.Timeout)
+	assert.Equal(t, time.Second*30, config.Timeout)
 
 	acpClient := config.AcpClientConfig()
 	assert.Equal(t, config.ClientID, acpClient.ClientID)

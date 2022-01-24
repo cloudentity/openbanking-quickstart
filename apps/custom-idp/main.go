@@ -74,12 +74,12 @@ type HTTPClient interface {
 type Server struct {
 	Config     Config
 	AcpClient  acpclient.Client
-	HttpClient HTTPClient
+	HTTPClient HTTPClient
 }
 
 func NewServer() (Server, error) {
 	var (
-		server = Server{HttpClient: http.DefaultClient}
+		server = Server{HTTPClient: http.DefaultClient}
 		err    error
 	)
 

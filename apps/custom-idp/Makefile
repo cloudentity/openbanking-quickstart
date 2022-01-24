@@ -1,14 +1,17 @@
 #
 # See the README.md for instructions how to obtain CLIENT_ID, CLIENT_SECRET and ISSUER_URL.
 #
-CLIENT_ID	= c7lom1c885j1ctju447g
-CLIENT_SECRET	= WdmhAW0lKtqRxPSOnTYIsGA-wuwgNuRC1i7OjO9X1JU
+CLIENT_ID	= c7lqugk885j1ctju4d80
+CLIENT_SECRET	= TERXhnEh3U4ci2x2taovrImmImT8w3VMtQ9oSw1x7Vs
 ISSUER_URL	= https://localhost:8443/default/system
 
-format:
+fmt:
 	go fmt ./...
 
-vet:
+lint:
+	golangci-lint run --disable varnamelen
+
+vet:	lint
 	go vet ./...
 
 test:	vet
@@ -23,8 +26,8 @@ run:	build
 	CLIENT_SECRET=${CLIENT_SECRET} \
 	ISSUER_URL=${ISSUER_URL} \
 	PORT=8080 \
-	CERT_FILE=../../data/acp_cert.pem \
-	KEY_FILE=../../data/acp_key.pem \
+	CERT_FILE=../../data/bank_cert.pem \
+	KEY_FILE=../../data/bank_key.pem \
 	ROOT_CA=../../data/ca.pem \
 	FAILURE_URL=https://localhost:8443/default/default/demo?something+went+wrong \
 	LOG_LEVEL=debug \
