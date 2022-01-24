@@ -93,3 +93,276 @@ policies:
   validators:
     - name: 'true'
       conf: {}
+ciba_authentication_services:
+- tenant_id: default
+  server_id: cdr
+  client_id:
+  type: mock
+  external:
+    url: ''
+    credentials:
+      username: ''
+      password: ''
+      api_key_name: ''
+      api_key_value: ''
+      api_key_in: ''
+claims:
+- tenant_id: default
+  authorization_server_id: cdr
+  id: c7ne0ang7hkf37a3m9n0
+  name: website
+  mapping: website
+  source_type: authnCtx
+  source_path: website
+  type: id_token
+  scopes:
+  - profile
+- tenant_id: default
+  authorization_server_id: cdr
+  id: c7ne0ang7hkf37a3m9ng
+  name: gender
+  mapping: gender
+  source_type: authnCtx
+  source_path: gender
+  type: id_token
+  scopes:
+  - profile
+- tenant_id: default
+  authorization_server_id: cdr
+  id: c7ne0ang7hkf37a3m9o0
+  name: birthdate
+  mapping: birthdate
+  source_type: authnCtx
+  source_path: birthdate
+  type: id_token
+  scopes:
+  - profile
+- tenant_id: default
+  authorization_server_id: cdr
+  id: c7ne0ang7hkf37a3m9og
+  name: locale
+  mapping: locale
+  source_type: authnCtx
+  source_path: locale
+  type: id_token
+  scopes:
+  - profile
+- tenant_id: default
+  authorization_server_id: cdr
+  id: c7ne0ang7hkf37a3m9p0
+  name: address.region
+  mapping: address.region
+  source_type: authnCtx
+  source_path: address.region
+  type: id_token
+  scopes:
+  - address
+- tenant_id: default
+  authorization_server_id: cdr
+  id: c7ne0ang7hkf37a3m9pg
+  name: name
+  mapping: name
+  source_type: authnCtx
+  source_path: name
+  type: id_token
+  scopes:
+  - profile
+- tenant_id: default
+  authorization_server_id: cdr
+  id: c7ne0ang7hkf37a3m9q0
+  name: middle_name
+  mapping: middle_name
+  source_type: authnCtx
+  source_path: middle_name
+  type: id_token
+  scopes:
+  - profile
+- tenant_id: default
+  authorization_server_id: cdr
+  id: c7ne0ang7hkf37a3m9qg
+  name: preferred_username
+  mapping: preferred_username
+  source_type: authnCtx
+  source_path: preferred_username
+  type: id_token
+  scopes:
+  - profile
+- tenant_id: default
+  authorization_server_id: cdr
+  id: c7ne0ang7hkf37a3m9r0
+  name: phone_number
+  mapping: phone_number
+  source_type: authnCtx
+  source_path: phone_number
+  type: id_token
+  scopes:
+  - phone
+- tenant_id: default
+  authorization_server_id: cdr
+  id: c7ne0ang7hkf37a3m9rg
+  name: phone_number_verified
+  mapping: phone_number_verified
+  source_type: authnCtx
+  source_path: phone_number_verified
+  type: id_token
+  scopes:
+  - phone
+- tenant_id: default
+  authorization_server_id: cdr
+  id: c7ne0ang7hkf37a3m9s0
+  name: picture
+  mapping: picture
+  source_type: authnCtx
+  source_path: picture
+  type: id_token
+  scopes:
+  - profile
+- tenant_id: default
+  authorization_server_id: cdr
+  id: c7ne0ang7hkf37a3m9sg
+  name: email_verified
+  mapping: email_verified
+  source_type: authnCtx
+  source_path: email_verified
+  type: id_token
+  scopes:
+  - email
+- tenant_id: default
+  authorization_server_id: cdr
+  id: c7ne0ang7hkf37a3m9t0
+  name: address.street_address
+  mapping: address.street_address
+  source_type: authnCtx
+  source_path: address.street_address
+  type: id_token
+  scopes:
+  - address
+- tenant_id: default
+  authorization_server_id: cdr
+  id: c7ne0ang7hkf37a3m9tg
+  name: updated_at
+  mapping: updated_at
+  source_type: authnCtx
+  source_path: updated_at
+  type: id_token
+  scopes:
+  - profile
+- tenant_id: default
+  authorization_server_id: cdr
+  id: c7ne0ang7hkf37a3m9u0
+  name: address.formatted
+  mapping: address.formatted
+  source_type: authnCtx
+  source_path: address.formatted
+  type: id_token
+  scopes:
+  - address
+- tenant_id: default
+  authorization_server_id: cdr
+  id: c7ne0ang7hkf37a3m9ug
+  name: address.locality
+  mapping: address.locality
+  source_type: authnCtx
+  source_path: address.locality
+  type: id_token
+  scopes:
+  - address
+- tenant_id: default
+  authorization_server_id: cdr
+  id: c7ne0ang7hkf37a3m9v0
+  name: address.postal_code
+  mapping: address.postal_code
+  source_type: authnCtx
+  source_path: address.postal_code
+  type: id_token
+  scopes:
+  - address
+- tenant_id: default
+  authorization_server_id: cdr
+  id: c7ne0ang7hkf37a3m9vg
+  name: given_name
+  mapping: given_name
+  source_type: authnCtx
+  source_path: given_name
+  type: id_token
+  scopes:
+  - profile
+- tenant_id: default
+  authorization_server_id: cdr
+  id: c7ne0ang7hkf37a3ma00
+  name: nickname
+  mapping: nickname
+  source_type: authnCtx
+  source_path: nickname
+  type: id_token
+  scopes:
+  - profile
+- tenant_id: default
+  authorization_server_id: cdr
+  id: c7ne0ang7hkf37a3ma0g
+  name: zoneinfo
+  mapping: zoneinfo
+  source_type: authnCtx
+  source_path: zoneinfo
+  type: id_token
+  scopes:
+  - profile
+- tenant_id: default
+  authorization_server_id: cdr
+  id: c7ne0ang7hkf37a3ma10
+  name: address.country
+  mapping: address.country
+  source_type: authnCtx
+  source_path: address.country
+  type: id_token
+  scopes:
+  - address
+- tenant_id: default
+  authorization_server_id: cdr
+  id: c7ne0ang7hkf37a3ma1g
+  name: family_name
+  mapping: family_name
+  source_type: authnCtx
+  source_path: family_name
+  type: id_token
+  scopes:
+  - profile
+- tenant_id: default
+  authorization_server_id: cdr
+  id: c7ne0ang7hkf37a3ma20
+  name: profile
+  mapping: profile
+  source_type: authnCtx
+  source_path: profile
+  type: id_token
+  scopes:
+  - profile
+- tenant_id: default
+  authorization_server_id: cdr
+  id: c7ne0ang7hkf37a3ma2g
+  name: email
+  mapping: email
+  source_type: authnCtx
+  source_path: email
+  type: id_token
+  scopes:
+  - email
+- tenant_id: default
+  authorization_server_id: cdr
+  id: c7ne2jvg7hkf37a3mcb0
+  name: software_id
+  mapping: software_id
+  source_type: client
+  source_path: software_id
+  type: id_token
+  scopes: []
+- tenant_id: default
+  authorization_server_id: cdr
+  id: c7ne2png7hkf37a3mcbg
+  name: software_id
+  mapping: software_id
+  source_type: client
+  source_path: software_id
+  type: access_token
+  scopes: []
+

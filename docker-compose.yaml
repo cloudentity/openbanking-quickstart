@@ -231,6 +231,7 @@ services:
       - CLIENT_ROOT_CA=/acp_ca.pem
       - REDIS_ENABLED=true
       - REDIS_ADDRESS=redis:6379
+      - FEATURES_CIBA=true
     command:
       - server
       - start
