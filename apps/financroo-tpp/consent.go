@@ -12,11 +12,9 @@ import (
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 
-	ob "github.com/cloudentity/acp-client-go/clients/openbanking/models"
-
-	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
-
 	obbrModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_b_r"
+	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
+	ob "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 )
 
 func (o *OBUKConsentClient) CreateAccountConsent(c *gin.Context) (string, error) {

@@ -4,9 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 
-	"github.com/cloudentity/acp-client-go/clients/openbanking/models"
-
 	"github.com/cloudentity/acp-client-go/clients/openbanking/client/cdr"
+	"github.com/cloudentity/acp-client-go/clients/openbanking/models"
 )
 
 type CDRAccountAccessConsentHandler struct {
