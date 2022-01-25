@@ -70,15 +70,16 @@ func (c OidcConfig) NewClient() (client OidcClient, err error) {
 
 // AuthorizeURL builds the URL where the client will redirect the user upon accessing /login endpoint.
 // Challenge is a string used only when PKCE is enabled.
-func (c OidcConfig) AuthorizeURL(challenge string, redirectURL string) string {
+func (c OidcConfig) AuthorizeURL(challenge string, state string) string {
 	var (
 		buf bytes.Buffer
 
 		queryParams = url.Values{
 			"response_type": {"code"},
 			"client_id":     {c.ClientID},
-			"redirect_uri":  {redirectURL},
+			"redirect_uri":  {c.RedirectURL},
 			"scope":         {strings.Join(c.Scopes, " ")},
+			"state":         {state},
 		}
 	)
 

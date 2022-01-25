@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
-	"net/url"
 	"time"
 
 	"github.com/ggicci/httpin"
@@ -21,6 +20,17 @@ func (s *Server) Alive(c *gin.Context) {
 	c.String(http.StatusOK, "OK")
 }
 
+type LoginState struct {
+	ID       string `json:"login_id"`
+	State    string `json:"login_state"`
+	TenantID string `json:"tenant_id"`
+}
+
+func ParseLoginState(jsn string) (state LoginState, err error) {
+	err = json.Unmarshal([]byte(jsn), &state)
+	return state, err
+}
+
 type LoginRequestInput struct {
 	ID          string `in:"form=login_id;required"`
 	State       string `in:"form=login_state;required"`
@@ -34,20 +44,25 @@ type LoginRequestInput struct {
 func (s *Server) Login(c *gin.Context) {
 	input, _ := c.Request.Context().Value(httpin.Input).(*LoginRequestInput)
 
-	redirectURL := s.Config.OIDC.GetRedirectURL(url.Values{
-		"login_id":    {input.ID},
-		"login_state": {input.State},
-		"tenant_id":   {input.TenantID},
+	state, err := json.Marshal(LoginState{
+		ID:       input.ID,
+		State:    input.State,
+		TenantID: input.TenantID,
 	})
+	if err != nil {
+		logrus.WithError(err).Error("marshal state")
+		return
+	}
 
-	c.Redirect(http.StatusTemporaryRedirect, s.Config.OIDC.AuthorizeURL("", redirectURL))
+	authorizeURL := s.Config.OIDC.AuthorizeURL("", string(state))
+	logrus.WithField("location", authorizeURL).Info("/login redirecting to external oauth/authorize")
+
+	c.Redirect(http.StatusTemporaryRedirect, authorizeURL)
 }
 
 type CallbackInput struct {
-	Code     string `in:"form=code;required"`
-	ID       string `in:"form=login_id;required"`
-	State    string `in:"form=login_state;required"`
-	TenantID string `in:"form=tenant_id;required"`
+	Code  string `in:"form=code;required"`
+	State string `in:"form=state;required"`
 }
 
 type TokenData struct {
@@ -60,11 +75,17 @@ type TokenData struct {
 
 func (s *Server) Callback(c *gin.Context) {
 	var (
-		body []byte
-		data TokenData
-		err  error
+		body  []byte
+		data  TokenData
+		state LoginState
+		err   error
 	)
 	input, _ := c.Request.Context().Value(httpin.Input).(*CallbackInput)
+
+	if err = json.Unmarshal([]byte(input.State), &state); err != nil {
+		logrus.WithError(err).WithField("state", input.State).Error("unmarshal state")
+		return
+	}
 
 	// Exchange code for access and ID tokens.
 	if body, err = s.OidcClient.Exchange(input.Code, ""); err != nil {
@@ -78,22 +99,22 @@ func (s *Server) Callback(c *gin.Context) {
 	}
 
 	if err == nil {
-		s.AcceptLogin(c, input, data)
+		s.AcceptLogin(c, state, data)
 	} else {
-		s.RejectLogin(c, input)
+		s.RejectLogin(c, state)
 	}
 }
 
-func (s *Server) AcceptLogin(c *gin.Context, input *CallbackInput, data TokenData) {
+func (s *Server) AcceptLogin(c *gin.Context, login LoginState, data TokenData) {
 	var err error
 
 	acceptLogin := models.AcceptSession{
 		Acr:        "",         // authentication context class reference
 		Amr:        []string{}, // authentication methods references
 		AuthTime:   strfmt.DateTime(time.Now()),
-		ID:         input.ID,
-		LoginState: input.State,
-		Subject:    "",
+		ID:         login.ID,
+		LoginState: login.State,
+		Subject:    "5675309",
 		AuthenticationContext: map[string]interface{}{
 			"access_token": data.AccessToken,
 			"id_token":     data.IDToken,
@@ -108,8 +129,8 @@ func (s *Server) AcceptLogin(c *gin.Context, input *CallbackInput, data TokenDat
 	res, err := s.AcpClient.Logins.AcceptLoginRequest(
 		logins.NewAcceptLoginRequestParams().
 			WithContext(c).
-			WithLogin(input.ID).
-			WithTid(input.TenantID).
+			WithLogin(login.ID).
+			WithTid(login.TenantID).
 			WithAcceptLogin(&acceptLogin),
 		nil, // When would this authinfo param be needed?
 	)
@@ -123,7 +144,7 @@ func (s *Server) AcceptLogin(c *gin.Context, input *CallbackInput, data TokenDat
 		return
 	}
 	if res.Payload.RedirectTo != "" {
-		logrus.WithField("location", res.Payload.RedirectTo).Info("login accepted, redirecting")
+		logrus.WithField("location", res.Payload.RedirectTo).Info("acp login accepted, redirecting")
 		c.Redirect(http.StatusTemporaryRedirect, res.Payload.RedirectTo)
 		return
 	}
@@ -131,12 +152,12 @@ func (s *Server) AcceptLogin(c *gin.Context, input *CallbackInput, data TokenDat
 	c.String(http.StatusOK, "AcceptLoginRequest succeeded")
 }
 
-func (s *Server) RejectLogin(c *gin.Context, input *CallbackInput) {
+func (s *Server) RejectLogin(c *gin.Context, login LoginState) {
 	var err error
 
 	rejectLogin := models.RejectSession{
-		ID:         input.ID,
-		LoginState: input.State,
+		ID:         login.ID,
+		LoginState: login.State,
 		// There are also fields for Error, ErrorDescription and StatusCode.
 	}
 	if err = rejectLogin.Validate(nil); err != nil {
@@ -148,8 +169,8 @@ func (s *Server) RejectLogin(c *gin.Context, input *CallbackInput) {
 	res, err := s.AcpClient.Logins.RejectLoginRequest(
 		logins.NewRejectLoginRequestParams().
 			WithContext(c).
-			WithLogin(input.ID).
-			WithTid(input.TenantID).
+			WithLogin(login.ID).
+			WithTid(login.TenantID).
 			WithRejectLogin(&rejectLogin),
 		nil,
 	)
@@ -163,7 +184,7 @@ func (s *Server) RejectLogin(c *gin.Context, input *CallbackInput) {
 		return
 	}
 	if res.Payload.RedirectTo != "" {
-		logrus.WithField("location", res.Payload.RedirectTo).Info("login rejected, redirecting")
+		logrus.WithField("location", res.Payload.RedirectTo).Info("acp login rejected, redirecting")
 		c.Redirect(http.StatusTemporaryRedirect, res.Payload.RedirectTo)
 		return
 	}
