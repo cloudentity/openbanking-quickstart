@@ -26,6 +26,8 @@ type Config struct {
 	LogLevel     string        `env:"LOG_LEVEL" envDefault:"info"`
 	Port         int           `env:"PORT" envDefault:"8080"`
 	Timeout      time.Duration `env:"TIMEOUT" envDefault:"5s"`
+
+	OIDC OidcConfig
 }
 
 func (c *Config) AcpClientConfig() acpclient.Config {
@@ -61,6 +63,7 @@ func LoadConfig() (config Config, err error) {
 	// Log the config with an obscured client secret.
 	cf := config
 	cf.ClientSecret = cf.ClientSecret[0:4] + "..."
+	cf.OIDC.ClientSecret = cf.OIDC.ClientSecret[0:4] + "..."
 	logrus.WithField("config", cf).Debug("loaded config")
 
 	return config, err
@@ -75,6 +78,7 @@ type Server struct {
 	Config     Config
 	AcpClient  acpclient.Client
 	HTTPClient HTTPClient
+	OidcClient OidcClient
 }
 
 func NewServer() (Server, error) {
@@ -91,6 +95,10 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to init acp client")
 	}
 
+	if server.OidcClient, err = server.Config.OIDC.NewClient(); err != nil {
+		return server, errors.Wrapf(err, "failed to init oidc client")
+	}
+
 	return server, nil
 }
 
@@ -103,6 +111,7 @@ func (s *Server) Start() error {
 	base.GET("/alive", s.Alive)
 	base.GET("/health", s.Alive)
 	base.GET("/login", BindInput(LoginRequestInput{}), s.Login)
+	base.GET("/callback", BindInput(CallbackInput{}), s.Callback)
 
 	if s.Config.CertFile != "" && s.Config.KeyFile != "" {
 		return r.RunTLS(fmt.Sprintf(":%d", s.Config.Port), s.Config.CertFile, s.Config.KeyFile)
