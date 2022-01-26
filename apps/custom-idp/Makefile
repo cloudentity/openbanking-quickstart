@@ -12,9 +12,9 @@ PORT		= 8080
 
 # Populate these settings from your Web Server Application.
 
-OIDC_CLIENT_ID		= c7o84nv4dqkttnd43alg
-OIDC_CLIENT_SECRET	= Hw-saihBP1HHXYUBbKVy8fAvxSY2icE1zucJM02Y_9w
-OIDC_ISSUER_URL		= https://host.docker.internal:8443/default/external-authn
+OIDC_CLIENT_ID		= c7ob5jf4dqkttnd43ilg
+OIDC_CLIENT_SECRET	= w7GLTQWNVwVu2D9VeNzZDMj-2tDLbxtaEx690NwcD4A
+OIDC_ISSUER_URL		= https://host.docker.internal:8443/default/external-authorizer
 OIDC_REDIRECT_URL	= https://host.docker.internal:${PORT}/callback
 OIDC_CERT_PATH		= ../../data/acp_cert.pem
 OIDC_KEY_PATH		= ../../data/acp_key.pem
