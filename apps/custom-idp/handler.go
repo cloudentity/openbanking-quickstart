@@ -74,7 +74,7 @@ type TokenData struct {
 	TokenType   string `json:"token_type"`
 }
 
-/// Callback handles the redirect from the external IDP to /callback.
+// Callback handles the redirect from the external IDP to /callback.
 func (s *Server) Callback(c *gin.Context) {
 	var (
 		body  []byte
