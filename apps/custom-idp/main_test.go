@@ -24,8 +24,6 @@ func TestLoadConfig(t *testing.T) {
 		"OIDC_CLIENT_SECRET": "oidc_client_secret",
 		"OIDC_ISSUER_URL":    "oidc_issuer_url",
 		"OIDC_REDIRECT_URL":  "oidc_redirect_url",
-		"OIDC_CERT_PATH":     "oidc_cert_path",
-		"OIDC_KEY_PATH":      "oidc_key_path",
 		"OIDC_CA_PATH":       "oidc_ca_path",
 	}
 	for k, v := range envVars {
@@ -49,8 +47,6 @@ func TestLoadConfig(t *testing.T) {
 	assert.Equal(t, envVars["OIDC_CLIENT_SECRET"], config.OIDC.ClientSecret)
 	assert.Equal(t, envVars["OIDC_ISSUER_URL"], config.OIDC.IssuerURL)
 	assert.Equal(t, envVars["OIDC_REDIRECT_URL"], config.OIDC.RedirectURL)
-	assert.Equal(t, envVars["OIDC_CERT_PATH"], config.OIDC.CertPath)
-	assert.Equal(t, envVars["OIDC_KEY_PATH"], config.OIDC.KeyPath)
 	assert.Equal(t, envVars["OIDC_CA_PATH"], config.OIDC.CAPath)
 
 	// test default values

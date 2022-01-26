@@ -143,7 +143,7 @@ This application obtains its configuration from environment variables:
 | ISSUER_URL         | req      |         | The Issuer URL from your custom IDP settings               |
 | CERT_FILE          | req      |         | Path to the TLS public certificate PEM file                |
 | KEY_FILE           | req      |         | Path to the TLS private key PEM file                       |
-| ROOT_CA            | req      |         | Path to the root (Certificate Authority) cert PEM for ACP  |
+| ROOT_CA            | opt      |         | Path to the Certificate Authority cert PEM for ACP         |
 | FAILURE_URL        | req      |         | URL to redirect user to in case of failure.                |
 | GIN_MODE           | opt      | debug   | Sets log level for gin-gonic. Use 'release' for production |
 | LOG_LEVEL          | opt      | info    | Sets the level of detail in log output                     |
@@ -153,9 +153,7 @@ This application obtains its configuration from environment variables:
 | OIDC_CLIENT_SECRET | req      |         | The Client Secret from the external OIDC provider          |
 | OIDC_ISSUER_URL    | req      |         | The Issuer URL from the external OIDC provider             |
 | OIDC_REDIRECT_URL  | req      |         | The URL of this server's /callback endpoint                |
-| OIDC_CERT_PATH     | req      |         | TLS client cert to connect to the OIDC provider            |
-| OIDC_KEY_PATH      | req      |         | TLS client key for the client cert                         |
-| OIDC_CA_PATH       | req      |         | Certificate Authority cert for the OIDC provider           |
+| OIDC_CA_PATH       | opt      |         | Certificate Authority cert for the OIDC provider           |
 
 
 The files `docker-compose.yaml` and `.env` file in this directory provide an example

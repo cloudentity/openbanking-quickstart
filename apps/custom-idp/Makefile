@@ -5,19 +5,20 @@
 CLIENT_ID	= c7o7a1f4dqkttnd4356g
 CLIENT_SECRET	= h8udwSBfgfGkwUkHVsrlQjPAKDM9Ng6w995HPh_j1BY
 ISSUER_URL	= https://host.docker.internal:8443/default/system
+
+# The CA cert is optional, unless ACP uses a self-signed cert.
+ROOT_CA		= ../../data/ca.pem
 CERT_FILE	= ../../data/bank_cert.pem
 KEY_FILE	= ../../data/bank_key.pem
-ROOT_CA		= ../../data/ca.pem
 PORT		= 8080
 
 # Populate these settings from your Web Server Application.
-
 OIDC_CLIENT_ID		= c7ob5jf4dqkttnd43ilg
 OIDC_CLIENT_SECRET	= w7GLTQWNVwVu2D9VeNzZDMj-2tDLbxtaEx690NwcD4A
 OIDC_ISSUER_URL		= https://host.docker.internal:8443/default/external-authorizer
 OIDC_REDIRECT_URL	= https://host.docker.internal:${PORT}/callback
-OIDC_CERT_PATH		= ../../data/acp_cert.pem
-OIDC_KEY_PATH		= ../../data/acp_key.pem
+
+# The CA cert is optional, unless the OIDC server uses a self-signed cert.
 OIDC_CA_PATH		= ../../data/ca.pem
 
 fmt:
@@ -51,8 +52,6 @@ run:	build
 	OIDC_CLIENT_SECRET=${OIDC_CLIENT_SECRET} \
 	OIDC_ISSUER_URL=${OIDC_ISSUER_URL} \
 	OIDC_REDIRECT_URL=${OIDC_REDIRECT_URL} \
-	OIDC_CERT_PATH=${OIDC_CERT_PATH} \
-	OIDC_KEY_PATH=${OIDC_KEY_PATH} \
 	OIDC_CA_PATH=${OIDC_CA_PATH} \
 	./custom-idp
 

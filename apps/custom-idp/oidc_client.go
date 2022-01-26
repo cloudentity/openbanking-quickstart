@@ -31,35 +31,27 @@ type OidcConfig struct {
 	RedirectURL string `env:"OIDC_REDIRECT_URL"`
 	// Scopes must be a subset of scopes assigned to our application in ACP.
 	Scopes []string `env:"OIDC_SCOPES" envDefault:"openid"`
-
-	CertPath string `env:"OIDC_CERT_PATH"`
-	KeyPath  string `env:"OIDC_KEY_PATH"`
-	CAPath   string `env:"OIDC_CA_PATH"`
+	// CAPath optionally indicates a CA cert. Only needed when the OIDC provider uses a self-signed TLS cert.
+	CAPath string `env:"OIDC_CA_PATH"`
 }
 
 // NewClient creates new instance of the Oidc client.
 func (c OidcConfig) NewClient() (client OidcClient, err error) {
-	var cert tls.Certificate
-
-	// Set up the certificate HTTP client needs for TLS communication with a server.
-	clientCACert, err := os.ReadFile(c.CAPath)
-	if err != nil {
-		return OidcClient{}, fmt.Errorf("could not open cert file %v: %w", c.CAPath, err)
-	}
 
 	clientCertPool := x509.NewCertPool()
-	clientCertPool.AppendCertsFromPEM(clientCACert)
 
-	// Assign a pool with certificates to the HTTP client.
-	if cert, err = tls.LoadX509KeyPair(c.CertPath, c.KeyPath); err != nil {
-		return OidcClient{}, fmt.Errorf("could not create acp client: %w", err)
+	if c.CAPath != "" {
+		// Set up the certificate HTTP client needs for TLS communication with a server.
+		clientCACert, err := os.ReadFile(c.CAPath)
+		if err != nil {
+			return OidcClient{}, fmt.Errorf("could not open cert file %v: %w", c.CAPath, err)
+		}
+		clientCertPool.AppendCertsFromPEM(clientCACert)
 	}
 
 	httpClient := &http.Client{
 		Transport: &http.Transport{
-			// Assign a pool with certificates to the HTTP client.
 			TLSClientConfig: &tls.Config{
-				Certificates:             []tls.Certificate{cert},
 				RootCAs:                  clientCertPool,
 				MinVersion:               tls.VersionTLS12,
 				PreferServerCipherSuites: true,
