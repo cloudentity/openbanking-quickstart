@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	o2Params "github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
-	obCommonModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_common"
+	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
 	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 	system "github.com/cloudentity/acp-client-go/clients/system/client/clients"
 )
@@ -42,9 +42,9 @@ func (s *Server) Index() func(*gin.Context) {
 }
 
 type Client struct {
-	ID       string                        `json:"client_id"`
-	Name     string                        `json:"client_name,omitempty"`
-	Consents []*obModels.ConsentWithClient `json:"consents"`
+	ID       string                            `json:"client_id"`
+	Name     string                            `json:"client_name,omitempty"`
+	Consents []*obModels.OBUKConsentWithClient `json:"consents"`
 }
 
 type ListClientsResponse struct {
@@ -55,7 +55,7 @@ func (s *Server) ListClients() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
 			cs                  *system.ListClientsSystemOK
-			consents            *obCommonModels.ListOBConsentsOK
+			consents            *obukModels.ListOBConsentsOK
 			clientsWithConsents []Client
 			err                 error
 		)
@@ -74,9 +74,9 @@ func (s *Server) ListClients() func(*gin.Context) {
 		}
 
 		for _, oc := range cs.Payload.Clients {
-			if consents, err = s.Client.Openbanking.OpenbankingCommon.ListOBConsents(
-				obCommonModels.NewListOBConsentsParamsWithContext(c).
-					WithAid(s.Config.SystemClientsServerID).
+			if consents, err = s.Client.Openbanking.Openbankinguk.ListOBConsents(
+				obukModels.NewListOBConsentsParamsWithContext(c).
+					WithWid(s.Config.SystemClientsServerID).
 					WithConsentsRequest(&obModels.ConsentsRequest{
 						ClientID: oc.ClientID,
 					}),
@@ -113,9 +113,9 @@ func (s *Server) RevokeConsent() func(*gin.Context) {
 			return
 		}
 
-		if _, err = s.Client.Openbanking.OpenbankingCommon.RevokeOpenbankingConsent(
-			obCommonModels.NewRevokeOpenbankingConsentParamsWithContext(c).
-				WithAid(s.Config.SystemClientsServerID).
+		if _, err = s.Client.Openbanking.Openbankinguk.RevokeOpenbankingConsent(
+			obukModels.NewRevokeOpenbankingConsentParamsWithContext(c).
+				WithWid(s.Config.SystemClientsServerID).
 				WithConsentID(id),
 			nil,
 		); err != nil {
@@ -139,9 +139,9 @@ func (s *Server) RevokeConsentsForClient() func(*gin.Context) {
 			return
 		}
 
-		if _, err = s.Client.Openbanking.OpenbankingCommon.RevokeOpenbankingConsents(
-			obCommonModels.NewRevokeOpenbankingConsentsParamsWithContext(c).
-				WithAid(s.Config.SystemClientsServerID).
+		if _, err = s.Client.Openbanking.Openbankinguk.RevokeOpenbankingConsents(
+			obukModels.NewRevokeOpenbankingConsentsParamsWithContext(c).
+				WithWid(s.Config.SystemClientsServerID).
 				WithConsentTypes(ConsentTypes).
 				WithClientID(&id),
 			nil,

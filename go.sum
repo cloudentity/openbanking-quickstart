@@ -76,6 +76,8 @@ github.com/chzyer/test v0.0.0-20180213035817-a1ea475d72b1/go.mod h1:Q3SI9o4m/ZMn
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
 github.com/cloudentity/acp-client-go v0.0.0-20220119152915-7af3030fb923 h1:XBPK/20iW4npPJW8AmtHRNt5W01+DsOENCLFis4OqRA=
 github.com/cloudentity/acp-client-go v0.0.0-20220119152915-7af3030fb923/go.mod h1:nRUiNujsej6C82GU7GBlBGToKqY8jrIfb3R66SWmlw4=
+github.com/cloudentity/acp-client-go v0.0.0-20220125182135-92b12234eb28 h1:a6G6dCg6ODkbzIFCKyOX6qOuvI3GehELKmhA7AS5E6c=
+github.com/cloudentity/acp-client-go v0.0.0-20220125182135-92b12234eb28/go.mod h1:nRUiNujsej6C82GU7GBlBGToKqY8jrIfb3R66SWmlw4=
 github.com/cncf/udpa/go v0.0.0-20191209042840-269d4d468f6f/go.mod h1:M8M6+tZqaGXZJjfX53e64911xZQV5JYwmTeXPW+k8Sc=
 github.com/coreos/bbolt v1.3.2/go.mod h1:iRUV2dpdMOn7Bo10OQBFzIJO9kkE559Wcmn+qkEiiKk=
 github.com/coreos/etcd v3.3.13+incompatible/go.mod h1:uF7uidLiAD3TWHmW31ZFd/JWoc32PjwdhPthX9715RE=

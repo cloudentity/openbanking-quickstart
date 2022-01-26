@@ -95,7 +95,7 @@ func (h *OBBRCreatePaymentHandler) Validate(c *gin.Context) *Error {
 		return ErrForbidden.WithMessage("token has no openid scope granted")
 	}
 
-	consentDynamicScope := fmt.Sprintf("consent:%s", h.introspectionResponse.ConsentID)
+	consentDynamicScope := fmt.Sprintf("consent:%s", *h.introspectionResponse.ConsentID)
 	if !has(scopes, consentDynamicScope) {
 		return ErrForbidden.WithMessage("token has no " + consentDynamicScope + " scope granted")
 	}
