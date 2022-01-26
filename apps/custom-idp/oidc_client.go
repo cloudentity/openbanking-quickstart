@@ -37,7 +37,6 @@ type OidcConfig struct {
 
 // NewClient creates new instance of the Oidc client.
 func (c OidcConfig) NewClient() (client OidcClient, err error) {
-
 	clientCertPool := x509.NewCertPool()
 
 	if c.CAPath != "" {
