@@ -1,6 +1,8 @@
 export class FinancrooAccountsPage {
   private readonly accountsLocator: string = `.account-name`;
   private readonly investmentsTabLocator: string = `#investments-tab`;
+  private readonly accountsTabLocator: string = `#accounts-tab`;
+  private readonly disconnectAccountsButtonLocator: string = `[class*='disconnect-button']`;
 
   public assertAccounts(accounts: string[]): void {
     const accountElements = cy.get(this.accountsLocator);
@@ -13,6 +15,12 @@ export class FinancrooAccountsPage {
 
   public goToInvestmentsTab(): void {
     cy.get(this.investmentsTabLocator).click()
+  }
+
+  public assertThatPageIsDisplayed(): void {
+    cy.get(this.accountsTabLocator).should('have.text', 'Accounts');
+    cy.get(this.disconnectAccountsButtonLocator).should('have.text', 'disconnect')
+    cy.get(this.accountsLocator).should('be.visible');
   }
 
 }
