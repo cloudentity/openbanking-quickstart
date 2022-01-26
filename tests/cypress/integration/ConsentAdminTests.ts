@@ -39,6 +39,7 @@ describe(`Consent admin app`, () => {
       Credentials.consentAdminUsername,
       Credentials.defaultPassword
     );
+    consentAdminPage.assertThatConsentManagementTabIsDisplayed()
     consentAdminPage.revokeClientConsent();
   });
 
@@ -53,6 +54,7 @@ describe(`Consent admin app`, () => {
       Credentials.consentAdminUsername,
       Credentials.defaultPassword
     );
+    consentAdminPage.assertThatConsentManagementTabIsDisplayed()
     consentAdminPage.searchAccount("22289");
     consentAdminPage.assertAccountResult("22289");
     consentAdminPage.assertClientAccountWithStatus("Financroo", "Active");
