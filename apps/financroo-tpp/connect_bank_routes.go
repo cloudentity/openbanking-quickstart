@@ -142,22 +142,32 @@ func (s *Server) ConnectedBanks() func(c *gin.Context) {
 			tokens         = []BankToken{}
 		)
 
+		logrus.Infof("XXX get banks, at: %s", c.GetHeader("Authorization"))
+
 		if user, _, err = s.WithUser(c); err != nil {
 			c.String(http.StatusUnauthorized, err.Error())
 			return
 		}
 
+		logrus.Infof("XXX user banks %+v", user.Banks)
+
 		for i, b := range user.Banks {
+			logrus.Infof("XXX bank %+v", b)
+
 			if clients, ok = s.Clients[BankID(b.BankID)]; !ok {
 				c.String(http.StatusInternalServerError, fmt.Sprintf("client not configured for bank: %s", b.BankID))
 				return
 			}
 
+			logrus.Infof("XXX clients %+v", clients)
+
 			if tokenResponse, err = clients.RenewAccountsToken(c, b); err != nil {
-				logrus.Warnf("failed to renew token for bank: %s", b.BankID)
+				logrus.Errorf("failed to renew token for bank: %s, err: %+v", b.BankID, err)
 				expiredBanks = append(expiredBanks, b.BankID)
 				continue
 			}
+
+			logrus.Infof("XXX token response %+v", tokenResponse.RefreshToken)
 
 			connectedBanks = append(connectedBanks, b.BankID)
 
@@ -180,10 +190,14 @@ func (s *Server) ConnectedBanks() func(c *gin.Context) {
 			return
 		}
 
-		c.JSON(200, gin.H{
+		resp := gin.H{
 			"connected_banks": connectedBanks,
 			"expired_banks":   expiredBanks,
-		})
+		}
+
+		logrus.Infof("XXX bank resp %+v", resp)
+
+		c.JSON(200, resp)
 	}
 }
 

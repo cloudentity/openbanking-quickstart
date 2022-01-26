@@ -34,15 +34,19 @@ func (s *Server) Get(factory GetEndpointLogicFactory) func(*gin.Context) {
 			errResp interface{}
 		)
 
+		logrus.Infof("XXX get %+v", c.Request.URL.Path)
+
 		if err = h.SetIntrospectionResponse(c); err != nil {
-			logrus.Info(fmt.Sprintf("err: %+v", err))
+			logrus.Errorf("failed to introspect token: %+v", err)
+			// logrus.Info(fmt.Sprintf("err: %+v", err))
 			code, errResp = h.MapError(c, err)
 			c.PureJSON(code, errResp)
 			return
 		}
 
 		if err = h.Validate(c); err != nil {
-			logrus.Info(fmt.Sprintf("err: %+v", err))
+			logrus.Errorf("failed to validate: %+v", err)
+			// logrus.Info(fmt.Sprintf("err: %+v", err))
 
 			code, errResp = h.MapError(c, err)
 			c.PureJSON(code, errResp)
@@ -57,8 +61,17 @@ func (s *Server) Get(factory GetEndpointLogicFactory) func(*gin.Context) {
 			return
 		}
 
+		logrus.Infof("XXX data %+v", data)
+
 		filtered := h.Filter(c, data)
-		c.PureJSON(http.StatusOK, h.BuildResponse(c, filtered))
+
+		logrus.Infof("XXX data filtered %+v", filtered)
+
+		resp := h.BuildResponse(c, filtered)
+
+		logrus.Infof("XXX resp: %+v", resp)
+
+		c.PureJSON(http.StatusOK, resp)
 	}
 }
 
