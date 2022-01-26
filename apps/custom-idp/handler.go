@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/dgrijalva/jwt-go"
 	"github.com/ggicci/httpin"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
@@ -20,17 +21,14 @@ func (s *Server) Alive(c *gin.Context) {
 	c.String(http.StatusOK, "OK")
 }
 
+// LoginState holds the session keys that we will encode into the OAuth state.
 type LoginState struct {
 	ID       string `json:"login_id"`
 	State    string `json:"login_state"`
 	TenantID string `json:"tenant_id"`
 }
 
-func ParseLoginState(jsn string) (state LoginState, err error) {
-	err = json.Unmarshal([]byte(jsn), &state)
-	return state, err
-}
-
+// LoginRequestInput holds the parameters from the request URL.
 type LoginRequestInput struct {
 	ID          string `in:"form=login_id;required"`
 	State       string `in:"form=login_state;required"`
@@ -41,6 +39,7 @@ type LoginRequestInput struct {
 	TenantURL   string `in:"form=tenant_url;required"`
 }
 
+// Login is the handler for the /login endpoint.
 func (s *Server) Login(c *gin.Context) {
 	input, _ := c.Request.Context().Value(httpin.Input).(*LoginRequestInput)
 
@@ -60,11 +59,13 @@ func (s *Server) Login(c *gin.Context) {
 	c.Redirect(http.StatusTemporaryRedirect, authorizeURL)
 }
 
+// CallbackInput holds the parameters from the request URL.
 type CallbackInput struct {
 	Code  string `in:"form=code;required"`
 	State string `in:"form=state;required"`
 }
 
+// TokenData holds OAuth tokens from the external IDP.
 type TokenData struct {
 	AccessToken string `json:"access_token"`
 	ExpiresIn   int    `json:"expires_in"`
@@ -73,6 +74,7 @@ type TokenData struct {
 	TokenType   string `json:"token_type"`
 }
 
+/// Callback handles the redirect from the external IDP to /callback.
 func (s *Server) Callback(c *gin.Context) {
 	var (
 		body  []byte
@@ -98,6 +100,13 @@ func (s *Server) Callback(c *gin.Context) {
 		return
 	}
 
+	// At this point you have the OAuth Access and ID tokes in `data`.
+	// So you can interact with your system, before accepting the login in ACP.
+	if err = DoMyCustomStuff(s, c, data); err != nil {
+		logrus.WithError(err).Error("DoMyCustomStuff failed")
+		return
+	}
+
 	if err == nil {
 		s.AcceptLogin(c, state, data)
 	} else {
@@ -105,8 +114,27 @@ func (s *Server) Callback(c *gin.Context) {
 	}
 }
 
+// DoMyCustomStuff can be used to implement your own interactions.
+// The gin.Context can access the http.Request and ResponseWriter.
+func DoMyCustomStuff(s *Server, c *gin.Context, data TokenData) error {
+	return nil
+}
+
 func (s *Server) AcceptLogin(c *gin.Context, login LoginState, data TokenData) {
-	var err error
+	var (
+		parser  jwt.Parser
+		claims  jwt.MapClaims
+		subject string
+		ok      bool
+		err     error
+	)
+
+	if _, _, err = parser.ParseUnverified(data.IDToken, &claims); err != nil {
+		logrus.WithError(err).Error("parsing id token")
+	}
+	if subject, ok = claims["sub"].(string); !ok {
+		logrus.Error("IDToken subject is not a string")
+	}
 
 	acceptLogin := models.AcceptSession{
 		Acr:        "",         // authentication context class reference
@@ -114,7 +142,7 @@ func (s *Server) AcceptLogin(c *gin.Context, login LoginState, data TokenData) {
 		AuthTime:   strfmt.DateTime(time.Now()),
 		ID:         login.ID,
 		LoginState: login.State,
-		Subject:    "5675309",
+		Subject:    subject,
 		AuthenticationContext: map[string]interface{}{
 			"access_token": data.AccessToken,
 			"id_token":     data.IDToken,

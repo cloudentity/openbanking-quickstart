@@ -2,9 +2,9 @@
 # See the README.md for instructions how to obtain these parameters.
 #
 # Populate these settings from the Custom IDP OAuth credentials.
-CLIENT_ID	= c7neprc3tlitkp4ruaog
-CLIENT_SECRET	= jIgg1LtVGBHMp_RxYdi_PgCIqG_90cxT0_NbR8luTXY
-ISSUER_URL	= https://localhost:8443/default/system
+CLIENT_ID	= c7o7a1f4dqkttnd4356g
+CLIENT_SECRET	= h8udwSBfgfGkwUkHVsrlQjPAKDM9Ng6w995HPh_j1BY
+ISSUER_URL	= https://host.docker.internal:8443/default/system
 CERT_FILE	= ../../data/bank_cert.pem
 KEY_FILE	= ../../data/bank_key.pem
 ROOT_CA		= ../../data/ca.pem
@@ -12,20 +12,19 @@ PORT		= 8080
 
 # Populate these settings from your Web Server Application.
 
-OIDC_CLIENT_ID		= c7niscs3tlitkp4rubsg
-OIDC_CLIENT_SECRET	= vP-wqzcIowQg1rQrSY_FN_XgumW9MRO6-MqMk6_KFcQ
-OIDC_ISSUER_URL		= https://host.docker.internal:8443/default/default
-OIDC_REDIRECT_URL	= https://localhost:${PORT}/callback
+OIDC_CLIENT_ID		= c7o84nv4dqkttnd43alg
+OIDC_CLIENT_SECRET	= Hw-saihBP1HHXYUBbKVy8fAvxSY2icE1zucJM02Y_9w
+OIDC_ISSUER_URL		= https://host.docker.internal:8443/default/external-authn
+OIDC_REDIRECT_URL	= https://host.docker.internal:${PORT}/callback
 OIDC_CERT_PATH		= ../../data/acp_cert.pem
 OIDC_KEY_PATH		= ../../data/acp_key.pem
 OIDC_CA_PATH		= ../../data/ca.pem
-
 
 fmt:
 	go fmt ./...
 
 lint:
-	golangci-lint run --disable varnamelen
+	golangci-lint run --disable varnamelen --disable tagliatelle
 
 vet:
 	go vet ./...
