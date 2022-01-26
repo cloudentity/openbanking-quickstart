@@ -6,6 +6,7 @@ import (
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 
 	"github.com/cloudentity/acp-client-go/client/clients"
 	"github.com/cloudentity/acp-client-go/client/openbanking"
@@ -59,10 +60,14 @@ func (s *Server) ListClients() func(*gin.Context) {
 			err                 error
 		)
 
+		logrus.Infof("XXX %+v", "list clients")
+
 		if err = s.IntrospectToken(c); err != nil {
 			c.String(http.StatusBadRequest, err.Error())
 			return
 		}
+
+		logrus.Infof("XXX list clients tid: %s, aid: %+v", s.Client.TenantID, s.Config.SystemClientsServerID)
 
 		if cs, err = s.Client.Clients.ListClientsSystem(
 			clients.NewListClientsSystemParamsWithContext(c).
@@ -74,7 +79,12 @@ func (s *Server) ListClients() func(*gin.Context) {
 			return
 		}
 
+		logrus.Infof("XXX clients: %d", len(cs.Payload.Clients))
+
 		for _, oc := range cs.Payload.Clients {
+
+			logrus.Infof("XXX list consent for client: %+v", oc.ClientID)
+
 			if consents, err = s.Client.Openbanking.ListOBConsents(
 				openbanking.NewListOBConsentsParamsWithContext(c).
 					WithTid(s.Client.TenantID).
@@ -98,6 +108,8 @@ func (s *Server) ListClients() func(*gin.Context) {
 		}
 
 		resp := ListClientsResponse{Clients: clientsWithConsents}
+
+		logrus.Infof("XXX %+v", resp)
 
 		c.JSON(http.StatusOK, &resp)
 	}
