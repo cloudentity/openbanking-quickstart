@@ -11,7 +11,7 @@ func TestLoadConfig(t *testing.T) {
 	envVars := map[string]string{
 		"CLIENT_ID":     "client id",
 		"CLIENT_SECRET": "client secret",
-		"ISSUER_URL":    "issuer url",
+		"ISSUER_URL":    "https://localhost:8443/default/system",
 		"CERT_FILE":     "cert file",
 		"KEY_FILE":      "key file",
 		"ROOT_CA":       "root ca",
@@ -36,7 +36,7 @@ func TestLoadConfig(t *testing.T) {
 	assert.NoError(t, err)
 	assert.Equal(t, envVars["CLIENT_ID"], config.ClientID)
 	assert.Equal(t, envVars["CLIENT_SECRET"], config.ClientSecret)
-	assert.NotNil(t, config.IssuerURL)
+	assert.Equal(t, envVars["ISSUER_URL"], config.IssuerURL)
 	assert.Equal(t, envVars["ROOT_CA"], config.RootCA)
 	assert.Equal(t, envVars["CERT_FILE"], config.CertFile)
 	assert.Equal(t, envVars["KEY_FILE"], config.KeyFile)
@@ -57,10 +57,11 @@ func TestLoadConfig(t *testing.T) {
 	assert.False(t, config.OIDC.PKCEEnabled)
 	assert.Equal(t, []string{"openid"}, config.OIDC.Scopes)
 
-	acpClient := config.AcpClientConfig()
+	acpClient, err := config.AcpClientConfig()
+	assert.NoError(t, err)
 	assert.Equal(t, config.ClientID, acpClient.ClientID)
 	assert.Equal(t, config.ClientSecret, acpClient.ClientSecret)
-	assert.Equal(t, config.IssuerURL, acpClient.IssuerURL)
+	assert.Equal(t, config.IssuerURL, acpClient.IssuerURL.String())
 	assert.Equal(t, config.CertFile, acpClient.CertFile)
 	assert.Equal(t, config.KeyFile, acpClient.KeyFile)
 	assert.Equal(t, config.RootCA, acpClient.RootCA)

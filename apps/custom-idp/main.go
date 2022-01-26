@@ -18,7 +18,7 @@ import (
 type Config struct {
 	ClientID     string        `env:"CLIENT_ID,required"`
 	ClientSecret string        `env:"CLIENT_SECRET,required"`
-	IssuerURL    *url.URL      `env:"ISSUER_URL,required"`
+	IssuerURL    string        `env:"ISSUER_URL,required"`
 	CertFile     string        `env:"CERT_FILE"`
 	KeyFile      string        `env:"KEY_FILE"`
 	RootCA       string        `env:"ROOT_CA"`
@@ -30,17 +30,22 @@ type Config struct {
 	OIDC OidcConfig
 }
 
-func (c *Config) AcpClientConfig() acpclient.Config {
+func (c *Config) AcpClientConfig() (acpclient.Config, error) {
+	issuerURL, err := url.Parse(c.IssuerURL)
+	if err != nil {
+		return acpclient.Config{}, err
+	}
+
 	return acpclient.Config{
 		ClientID:     c.ClientID,
 		ClientSecret: c.ClientSecret,
-		IssuerURL:    c.IssuerURL,
+		IssuerURL:    issuerURL,
 		Scopes:       []string{},
 		Timeout:      c.Timeout,
 		CertFile:     c.CertFile,
 		KeyFile:      c.KeyFile,
 		RootCA:       c.RootCA,
-	}
+	}, nil
 }
 
 func LoadConfig() (config Config, err error) {
@@ -83,15 +88,20 @@ type Server struct {
 
 func NewServer() (Server, error) {
 	var (
-		server = Server{HTTPClient: http.DefaultClient}
-		err    error
+		acpConfig acpclient.Config
+		err       error
+		server    = Server{HTTPClient: http.DefaultClient}
 	)
 
 	if server.Config, err = LoadConfig(); err != nil {
 		return server, errors.Wrapf(err, "failed to load config")
 	}
 
-	if server.AcpClient, err = acpclient.New(server.Config.AcpClientConfig()); err != nil {
+	if acpConfig, err = server.Config.AcpClientConfig(); err != nil {
+		return server, errors.Wrapf(err, "invalid acp client config")
+	}
+
+	if server.AcpClient, err = acpclient.New(acpConfig); err != nil {
 		return server, errors.Wrapf(err, "failed to init acp client")
 	}
 
