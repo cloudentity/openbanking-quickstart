@@ -76,8 +76,17 @@ export class ConsentAdminPage {
   }
 
   public assertThatConsentManagementTabIsDisplayed(): void {
-    cy.get(this.searchByAccountNumberSelector).should('be.visible')
-    cy.get(this.searchButtonSelector).should('be.visible')
-    cy.get(this.searchLabelSelector).should('have.text', 'Search and manage consents on behalf of bank members')
+    this.interceptClientsRequest();
+    cy.get(this.searchByAccountNumberSelector).should('be.visible');
+    cy.get(this.searchButtonSelector).should('be.visible');
+    cy.get(this.searchLabelSelector).should('have.text', 'Search and manage consents on behalf of bank members');
+  }
+
+  private interceptClientsRequest(): void {
+    cy.intercept('GET', '/clients').as('getClients').then
+    cy.wait('@getClients', { timeout: 30000 })
+          .then((xhr) => {
+            cy.log(JSON.stringify(xhr.response.body))
+          })
   }
 }

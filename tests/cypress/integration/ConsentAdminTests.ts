@@ -39,15 +39,6 @@ describe(`Consent admin app`, () => {
       Credentials.consentAdminUsername,
       Credentials.defaultPassword
     );
-    // cy.pause()
-
-    cy.intercept('GET', '/clients').as('getClients').then
-
-    cy.wait('@getClients', { timeout: 30000 })
-          .then((xhr) => {
-            cy.log(JSON.stringify(xhr.response.body))
-          })
-
     consentAdminPage.assertThatConsentManagementTabIsDisplayed()
     consentAdminPage.revokeClientConsent();
   });
