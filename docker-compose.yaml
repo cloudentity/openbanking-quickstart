@@ -191,6 +191,8 @@ services:
     command:
       - server
       - start
+      - --config
+      - /config/reference.yaml
       - --sql.url
       - postgres://root@crdb:26257/defaultdb?sslmode=disable
       - --secret.key
