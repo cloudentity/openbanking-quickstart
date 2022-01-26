@@ -7,6 +7,7 @@ require (
 	github.com/caarlos0/env/v6 v6.4.0
 	github.com/cloudentity/acp-client-go v0.0.0-20211106210355-ec03ad736b9c
 	github.com/dgrijalva/jwt-go v3.2.1-0.20200107013213-dc14462fd587+incompatible
+	github.com/ggicci/httpin v0.7.1 // indirect
 	github.com/ghodss/yaml v1.0.0
 	github.com/gin-gonic/gin v1.7.3
 	github.com/go-jose/go-jose/v3 v3.0.0
