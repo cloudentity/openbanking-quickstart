@@ -43,7 +43,7 @@ describe(`Consent admin app`, () => {
 
     cy.intercept('GET', '/clients').as('getClients').then
 
-    cy.wait('@getClients', { timeout: 3000 })
+    cy.wait('@getClients', { timeout: 30000 })
           .then((xhr) => {
             cy.log(JSON.stringify(xhr.response.body))
           })
