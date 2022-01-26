@@ -39,6 +39,16 @@ describe(`Consent admin app`, () => {
       Credentials.consentAdminUsername,
       Credentials.defaultPassword
     );
+    // cy.pause()
+
+    cy.intercept('GET', '/clients').as('getClients').then
+
+    cy.wait('@getClients', { timeout: 30000 })
+          .then((xhr) => {
+            cy.log(JSON.stringify(xhr.response.body))
+          })
+
+    consentAdminPage.assertThatConsentManagementTabIsDisplayed()
     consentAdminPage.revokeClientConsent();
   });
 
@@ -53,6 +63,7 @@ describe(`Consent admin app`, () => {
       Credentials.consentAdminUsername,
       Credentials.defaultPassword
     );
+    consentAdminPage.assertThatConsentManagementTabIsDisplayed()
     consentAdminPage.searchAccount("22289");
     consentAdminPage.assertAccountResult("22289");
     consentAdminPage.assertClientAccountWithStatus("Financroo", "Active");

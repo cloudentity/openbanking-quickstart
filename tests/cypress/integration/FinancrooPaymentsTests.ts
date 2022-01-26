@@ -41,6 +41,7 @@ describe(`Financroo payments app test`, () => {
 
   it(`Happy path with confirm consent to add new amount`, () => {
     financrooLoginPage.visit()
+    financrooAccountsPage.assertThatPageIsDisplayed()
     financrooAccountsPage.goToInvestmentsTab()
     financrooInvestmentsPage.invest()
     financrooContributePage.contribute(amount)
@@ -55,6 +56,7 @@ describe(`Financroo payments app test`, () => {
 
   it(`Reject path with decline consent to add new amount`, () => {
     financrooLoginPage.visit()
+    financrooAccountsPage.assertThatPageIsDisplayed()
     financrooAccountsPage.goToInvestmentsTab()
     financrooInvestmentsPage.invest()
     financrooContributePage.contribute(amount + 1)
@@ -68,6 +70,7 @@ describe(`Financroo payments app test`, () => {
 
   it(`Cancel on ACP login`, () => {
     financrooLoginPage.visit()
+    financrooAccountsPage.assertThatPageIsDisplayed()
     financrooAccountsPage.goToInvestmentsTab()
     financrooInvestmentsPage.invest()
     financrooContributePage.contribute(amount + 2)

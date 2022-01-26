@@ -5,6 +5,7 @@ export class ConsentAdminPage {
     "#third-party-providers-tab";
   private readonly consentManagementTabSelector: string =
     "#consent-management-tab";
+  private readonly searchLabelSelector: string = "#search-content"
   private readonly searchByAccountNumberSelector: string =
     "#outlined-adornment-password";
   private readonly searchButtonSelector: string = "#search-account";
@@ -72,5 +73,11 @@ export class ConsentAdminPage {
     cy.get(this.clientRevokeAccessAcceptCheckboxSelector).click();
     cy.get(this.revokeConfirmButtonSelector).click();
     cy.get(this.revokeConfirmDrawerSelector).should("not.exist");
+  }
+
+  public assertThatConsentManagementTabIsDisplayed(): void {
+    cy.get(this.searchByAccountNumberSelector).should('be.visible')
+    cy.get(this.searchButtonSelector).should('be.visible')
+    cy.get(this.searchLabelSelector).should('have.text', 'Search and manage consents on behalf of bank members')
   }
 }
