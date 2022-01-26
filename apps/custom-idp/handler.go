@@ -221,7 +221,7 @@ func (s *Server) RejectLogin(c *gin.Context, login LoginState) {
 }
 
 // BindInput instances an httpin engine for a input struct as a gin middleware.
-// See https://github.com/ggicci/httpin/wiki/Integrate-with-gin
+// See github.com/ggicci/httpin/wiki/Integrate-with-gin
 func BindInput(inputStruct interface{}) gin.HandlerFunc {
 	engine, err := httpin.New(inputStruct)
 	if err != nil {

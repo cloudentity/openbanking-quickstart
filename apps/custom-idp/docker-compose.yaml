@@ -18,8 +18,15 @@ services:
       - CLIENT_ID=${CLIENT_ID}
       - CLIENT_SECRET=${CLIENT_SECRET}
       - ISSUER_URL=${ISSUER_URL}
-      - ROOT_CA=/certs/ca.pem
       - CERT_FILE=/certs/acp_cert.pem
       - KEY_FILE=/certs/acp_key.pem
+      - ROOT_CA=/certs/ca.pem
       - LOG_LEVEL=info
       - GIN_MODE=debug
+      - OIDC_CLIENT_ID=${OIDC_CLIENT_ID}
+      - OIDC_CLIENT_SECRET=${OIDC_CLIENT_SECRET}
+      - OIDC_ISSUER_URL=${OIDC_ISSUER_URL}
+      - OIDC_REDIRECT_URL=${OIDC_REDIRECT_URL}
+      - OIDC_CERT_PATH=${OIDC_CERT_PATH}
+      - OIDC_KEY_PATH=${OIDC_KEY_PATH}
+      - OIDC_CA_PATH=${OIDC_CA_PATH}

@@ -56,14 +56,14 @@ run:	build
 	OIDC_CA_PATH=${OIDC_CA_PATH} \
 	./custom-idp
 
-#
+
 # Run the app with docker-compose
 #
 docker-build:
 	docker build -f Dockerfile -t custom-idp ../..
 
 up:
-	docker-compose up --detach custom-idp
+	docker-compose up --detach --force-recreate custom-idp
 
 logs:
 	docker logs --follow custom-idp
