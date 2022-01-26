@@ -113,6 +113,15 @@ generate-obbr-clients: start-runner
 		-A accounts  \
 		-t ./openbanking/obbr/accounts"
 
+.PHONY: generate-cdr-clients 
+generate-cdr-clients: start-runner 
+	rm -rf ./openbanking/cdr/banking/*
+	docker-compose exec runner sh -c \
+	"swagger generate client \
+		-f api/cdr/cds_banking.yaml \
+		-A banking \
+		-t ./openbanking/cdr/banking"
+
 .PHONY: obbr
 obbr:
 	docker-compose -f docker-compose.yaml -f docker-compose.brasil.yaml -f conformance/docker-compose.obb.yaml -f conformance/docker-compose.fapi.yaml ${cmd}
