@@ -82,20 +82,20 @@ function ApplicationSimpleCard({ client, clickable = true }) {
   const history = useHistory();
 
   const nonZeroStatusDateContents = client?.consents?.filter((v) => {
-    const d = new Date(v?.account_access_consent?.StatusUpdateDateTime);
+    const d = new Date(v?.StatusUpdateDateTime);
     return d.getFullYear() !== 1;
   });
 
   const newestConsent = nonZeroStatusDateContents?.reduce((prev, curr) =>
-    prev?.account_access_consent?.StatusUpdateDateTime <
-    curr?.account_access_consent?.StatusUpdateDateTime
+    prev?.StatusUpdateDateTime <
+    curr?.StatusUpdateDateTime
       ? curr
       : prev
   );
 
   const oldestConsent = nonZeroStatusDateContents?.reduce((prev, curr) =>
-    prev?.account_access_consent?.StatusUpdateDateTime >
-    curr?.account_access_consent?.StatusUpdateDateTime
+    prev?.StatusUpdateDateTime >
+    curr?.StatusUpdateDateTime
       ? curr
       : prev
   );
@@ -112,7 +112,7 @@ function ApplicationSimpleCard({ client, clickable = true }) {
   ).join(", ");
 
   const expirationDateTime = new Date(
-    newestConsent?.account_access_consent?.ExpirationDateTime
+    newestConsent?.ExpirationDateTime
   );
 
   const status =
@@ -150,19 +150,19 @@ function ApplicationSimpleCard({ client, clickable = true }) {
         <div>
           <div className={classes.label}>Authorised</div>
           <div className={classes.caption}>
-            {getDate(oldestConsent.account_access_consent.CreationDateTime)}
+            {getDate(oldestConsent.CreationDateTime)}
           </div>
         </div>
         <div>
           <div className={classes.label}>Last updated</div>
           <div className={classes.caption}>
-            {getDate(newestConsent.account_access_consent.StatusUpdateDateTime)}
+            {getDate(newestConsent.StatusUpdateDateTime)}
           </div>
         </div>
         <div>
           <div className={classes.label}>Active until</div>
           <div className={classes.caption}>
-            {getDate(newestConsent.account_access_consent.ExpirationDateTime)}
+            {getDate(newestConsent.ExpirationDateTime)}
           </div>
         </div>
         <div>

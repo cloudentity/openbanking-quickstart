@@ -37,7 +37,7 @@ function ApplicationAccessPaymentDrawer({
       currencyDict.GBP
     } ${details?.Initiation?.InstructedAmount?.Amount}`,
     Status: details?.Status,
-    "Consent id": details?.ConsentId,
+    "Consent id": details?.ConsentID,
     "Debtor Account": {
       id: details?.Initiation?.DebtorAccount?.Identification,
       name: details?.Initiation?.DebtorAccount?.Name,

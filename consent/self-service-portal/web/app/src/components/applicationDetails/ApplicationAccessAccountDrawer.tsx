@@ -104,22 +104,22 @@ function ApplicationAccessPaymentDrawer({
   const [revokeAccessAgree, setRevokeAccessAgree] = useState(false);
 
   const accountsDetails = getAccounts(
-    drawerData?.account_access_consent?.AccountIDs ?? [],
+    drawerData?.AccountIDs ?? [],
     accounts
   ).reduce((acc, curr) => ({ ...acc, [curr.name]: "*" + curr.id }), {});
 
   const permissionDates = {
-    Authorised: getDate(drawerData?.account_access_consent?.CreationDateTime),
+    Authorised: getDate(drawerData?.CreationDateTime),
     "Last updated": getDate(
-      drawerData?.account_access_consent?.StatusUpdateDateTime
+      drawerData?.StatusUpdateDateTime
     ),
     "Active until": getDate(
-      drawerData?.account_access_consent?.ExpirationDateTime
+      drawerData?.ExpirationDateTime
     ),
   };
 
   const clusters = uniq(
-    drawerData?.account_access_consent?.Permissions.map(
+    drawerData?.Permissions.map(
       (v) => permissionsDict[v].Cluster
     )
   ) as any;
@@ -180,7 +180,7 @@ function ApplicationAccessPaymentDrawer({
             disabled={revokeAccess && !revokeAccessAgree}
             onClick={() => {
               if (revokeAccess) {
-                handleRevoke(drawerData?.consent_id);
+                handleRevoke(drawerData?.ConsentID);
                 setRevokeAccess(false);
                 setDrawerData(null);
               } else {

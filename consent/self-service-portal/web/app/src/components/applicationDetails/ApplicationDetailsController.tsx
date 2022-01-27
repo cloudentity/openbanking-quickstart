@@ -73,19 +73,19 @@ function ApplicationDetailsController({
   };
 
   const nonZeroStatusDateContents = clientConsent?.consents?.filter((v) => {
-    const d = new Date(v?.account_access_consent?.StatusUpdateDateTime);
+    const d = new Date(v?.StatusUpdateDateTime);
     return d.getFullYear() !== 1;
   });
 
   const newestConsent = nonZeroStatusDateContents?.reduce((prev, curr) =>
-    prev?.account_access_consent?.StatusUpdateDateTime <
-    curr?.account_access_consent?.StatusUpdateDateTime
+    prev?.StatusUpdateDateTime <
+    curr?.StatusUpdateDateTime
       ? curr
       : prev
   );
 
   const expirationDateTime = new Date(
-    newestConsent?.account_access_consent?.ExpirationDateTime
+    newestConsent?.ExpirationDateTime
   );
 
   const status =

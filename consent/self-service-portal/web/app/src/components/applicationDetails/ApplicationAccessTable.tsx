@@ -80,7 +80,7 @@ function getTableBody(type: "account" | "payment", rows, setDrawerData, data) {
             key={row.id}
             className={`consent-row`}
             onClick={() => {
-              setDrawerData(data.find((v) => row.id === v.consent_id));
+              setDrawerData(data.find((v) => row.id === v.ConsentID));
             }}
           >
             <TableCell>{row.authorised}</TableCell>
@@ -122,7 +122,7 @@ function getTableBody(type: "account" | "payment", rows, setDrawerData, data) {
             key={row.id}
             className={`consent-row`}
             onClick={() => {
-              setDrawerData(data.find((v) => row.id === v.consent_id));
+              setDrawerData(data.find((v) => row.id === v.ConsentID));
             }}
           >
             <TableCell>{row.authorised}</TableCell>
@@ -195,13 +195,13 @@ function ApplicationAccessTable({
 
   const rowsAccount =
     type === "account"
-      ? data.map(({ account_ids, account_access_consent }) =>
+      ? data.map(({ AccountIDs, CreationDateTime, ExpirationDateTime, ConsentID, Status }) =>
           createDataAccount(
-            getDate(account_access_consent?.CreationDateTime),
-            getAccountNames(account_ids ?? [], accounts),
-            account_access_consent?.Status,
-            getDate(account_access_consent?.ExpirationDateTime),
-            account_access_consent?.ConsentId
+            getDate(CreationDateTime),
+            getAccountNames(AccountIDs ?? [], accounts),
+            Status,
+            getDate(ExpirationDateTime),
+            ConsentID
           )
         )
       : [];
@@ -218,7 +218,7 @@ function ApplicationAccessTable({
             domestic_payment_consent?.Initiation?.CreditorAccount?.Name,
             domestic_payment_consent?.Status,
             domestic_payment_consent?.Initiation?.InstructedAmount?.Amount,
-            domestic_payment_consent?.ConsentId
+            domestic_payment_consent?.ConsentID
           )
         )
       : [];
