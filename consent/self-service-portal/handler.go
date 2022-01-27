@@ -28,6 +28,15 @@ type ClientConsents struct {
 	Consents []Consent `json:"consents"`
 }
 
+func (c *ClientConsents) ConsentIDExists(consentID string) bool {
+	for _, consent := range c.Consents {
+		if consent.ConsentID == consentID {
+			return true
+		}
+	}
+	return false
+}
+
 type Client struct {
 	ID        string `json:"id"`
 	Name      string `json:"name"`
@@ -88,9 +97,9 @@ func (s *Server) ListConsents() func(*gin.Context) {
 			return
 		}
 
-		fetcher := NewOBUKConsentFetcher(s)
+		fetcher := NewOBUKConsentImpl(s)
 
-		if clientsAndConsents, err = fetcher.Fetch(c); err != nil {
+		if clientsAndConsents, err = fetcher.FetchConsents(c); err != nil {
 			Error(c, ToAPIError(err))
 			return
 		}
@@ -109,44 +118,41 @@ type ConsentsAndAccounts struct {
 
 func (s *Server) RevokeConsent() func(*gin.Context) {
 	return func(c *gin.Context) {
-		/*	var (
-				id                 = c.Param("id")
-				consentsByAccounts *ConsentsAndAccounts
-				canBeRevoked       bool
-				err                error
-			)
+		var (
+			id                 = c.Param("id")
+			clientsAndConsents []ClientConsents
+			canBeRevoked       bool
+			err                error
+		)
 
-			if consentsByAccounts, err = s.FetchConsents(c); err != nil {
-				Error(c, ToAPIError(err))
-				return
+		obukConsentImpl := NewOBUKConsentImpl(s)
+
+		if clientsAndConsents, err = obukConsentImpl.FetchConsents(c); err != nil {
+			Error(c, ToAPIError(err))
+			return
+		}
+
+		for _, c := range clientsAndConsents {
+			if c.ConsentIDExists(id) {
+				canBeRevoked = true
+				break
 			}
+		}
 
-			for _, c := range consentsByAccounts.Consents {
-				if c.ConsentID == id {
-					canBeRevoked = true
-					break
-				}
-			}
+		if !canBeRevoked {
+			Error(c, APIError{
+				Code:    http.StatusUnauthorized,
+				Message: "user is not authorized to revoke this consent",
+			})
+			return
+		}
 
-			if !canBeRevoked {
-				Error(c, APIError{
-					Code:    http.StatusUnauthorized,
-					Message: "user is not authorized to revoke this consent",
-				})
-				return
-			}
+		if err = obukConsentImpl.RevokeConsent(c, id); err != nil {
+			Error(c, ToAPIError(err))
+			return
+		}
 
-			if _, err = s.Client.Openbanking.Openbankinguk.RevokeOpenbankingConsent(
-				obukModels.NewRevokeOpenbankingConsentParamsWithContext(c).
-					WithWid(s.Config.SystemClientsServerID).
-					WithConsentID(id),
-				nil,
-			); err != nil {
-				Error(c, ToAPIError(err))
-				return
-			}
-
-			c.Status(http.StatusNoContent)*/
+		c.Status(http.StatusNoContent)
 	}
 }
 
