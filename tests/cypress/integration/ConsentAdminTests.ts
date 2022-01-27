@@ -41,7 +41,6 @@ describe(`Consent admin app`, () => {
     );
     consentAdminPage.assertThatConsentManagementTabIsDisplayed()
     consentAdminPage.revokeClientConsent();
-    cy.wait(5000)
   });
 
   it(`Happy path with revoking consent from Consent management page`, () => {
