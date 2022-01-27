@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"net/http"
 	"strings"
+	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -62,13 +63,15 @@ func (s *Server) ListClients() func(*gin.Context) {
 
 		logrus.Infof("XXX %+v", "list clients")
 
+		start := time.Now()
 		if err = s.IntrospectToken(c); err != nil {
 			c.String(http.StatusBadRequest, err.Error())
 			return
 		}
-
+		logrus.Infof("XXX introspection took: %+v", time.Since(start))
 		logrus.Infof("XXX list clients tid: %s, aid: %+v", s.Client.TenantID, s.Config.SystemClientsServerID)
 
+		start = time.Now()
 		if cs, err = s.Client.Clients.ListClientsSystem(
 			clients.NewListClientsSystemParamsWithContext(c).
 				WithTid(s.Client.TenantID).
@@ -78,13 +81,14 @@ func (s *Server) ListClients() func(*gin.Context) {
 			c.String(http.StatusBadRequest, fmt.Sprintf("failed to list clients from acp: %+v", err))
 			return
 		}
+		logrus.Infof("XXX list clients took: %+v", time.Since(start))
 
 		logrus.Infof("XXX clients: %d", len(cs.Payload.Clients))
 
 		for _, oc := range cs.Payload.Clients {
-
 			logrus.Infof("XXX list consent for client: %+v", oc.ClientID)
 
+			start = time.Now()
 			if consents, err = s.Client.Openbanking.ListOBConsents(
 				openbanking.NewListOBConsentsParamsWithContext(c).
 					WithTid(s.Client.TenantID).
@@ -97,6 +101,7 @@ func (s *Server) ListClients() func(*gin.Context) {
 				c.String(http.StatusBadRequest, fmt.Sprintf("failed to list consents for client: %s, err: %+v", oc.ClientID, err))
 				return
 			}
+			logrus.Infof("XXX list consents for client: %s took: %+v", oc.ClientID, time.Since(start))
 
 			if !oc.System {
 				clientsWithConsents = append(clientsWithConsents, Client{

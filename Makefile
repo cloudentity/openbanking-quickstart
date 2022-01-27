@@ -62,6 +62,10 @@ clean-saas: clean
 run-tests:
 	yarn --cwd tests run cypress open
 
+.PHONY: run-tests-headless
+run-tests-headless:
+	yarn --cwd tests run cypress run
+
 .PHONY: enable-mfa
 enable-mfa:
 	./scripts/override_env.sh ENABLE_MFA true

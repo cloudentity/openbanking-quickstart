@@ -183,8 +183,8 @@ services:
       - FEATURES_CDR_AUSTRALIA=true
       - SERVER_MTLS_URL=https://test-docker:8443
       - SERVER_URL=${ACP_URL}
-      # - LOGGING_LEVEL=debug
-      # - SERVER_HTTP_LOGS=true
+      - LOGGING_LEVEL=debug
+      - SERVER_HTTP_LOGS=true
       - SERVER_DISABLE_CSRF=true
       - REDIS_ENABLED=true
       - REDIS_ADDRESS=redis:6379

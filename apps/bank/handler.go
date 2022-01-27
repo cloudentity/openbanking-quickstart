@@ -37,16 +37,14 @@ func (s *Server) Get(factory GetEndpointLogicFactory) func(*gin.Context) {
 		logrus.Infof("XXX get %+v", c.Request.URL.Path)
 
 		if err = h.SetIntrospectionResponse(c); err != nil {
-			logrus.Errorf("failed to introspect token: %+v", err)
-			// logrus.Info(fmt.Sprintf("err: %+v", err))
+			logrus.Info(fmt.Sprintf("err: %+v", err))
 			code, errResp = h.MapError(c, err)
 			c.PureJSON(code, errResp)
 			return
 		}
 
 		if err = h.Validate(c); err != nil {
-			logrus.Errorf("failed to validate: %+v", err)
-			// logrus.Info(fmt.Sprintf("err: %+v", err))
+			logrus.Info(fmt.Sprintf("err: %+v", err))
 
 			code, errResp = h.MapError(c, err)
 			c.PureJSON(code, errResp)
