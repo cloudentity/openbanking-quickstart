@@ -10,7 +10,6 @@ import (
 	"github.com/sirupsen/logrus"
 
 	o2Params "github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
-
 	obCommon "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_common"
 	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 )

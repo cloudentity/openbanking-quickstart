@@ -219,6 +219,7 @@ func (c *ConsentTools) GetCDRAccountAccessConsentTemplateData(
 ) map[string]interface{} {
 	var expirationDate string
 
+	// nolint
 	/*	edt := time.Time(arrangement.CdrArrangement.Expiry)
 		if !edt.IsZero() {
 			expirationDate = edt.Format("02/01/2006")
@@ -243,7 +244,7 @@ func (c *ConsentTools) GetCDRAccountAccessConsentTemplateData(
 		},
 		"login_request": loginRequest,
 		"accounts":      accounts.Accounts,
-		//"permissions":     c.GetPermissionsWithDescription(consent.AccountAccessConsent.Permissions),
+		// "permissions":     c.GetPermissionsWithDescription(consent.AccountAccessConsent.Permissions), // nolint
 		"client_name":     clientName,
 		"expiration_date": expirationDate,
 		"ctx":             arrangement.AuthenticationContext,

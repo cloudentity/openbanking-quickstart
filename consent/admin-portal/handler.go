@@ -8,7 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 
 	o2Params "github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
-
 	obCommonModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_common"
 	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 	system "github.com/cloudentity/acp-client-go/clients/system/client/clients"
