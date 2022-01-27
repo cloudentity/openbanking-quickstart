@@ -25,6 +25,9 @@ jobs:
       - name: Add test-docker to hosts
         run: echo "127.0.0.1       test-docker" | sudo tee -a /etc/hosts
 
+      - name: Check hosts
+        run: cat /etc/hosts
+
       - name: Make build
         run: make build
             
