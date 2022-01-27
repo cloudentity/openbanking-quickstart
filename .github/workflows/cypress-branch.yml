@@ -30,7 +30,12 @@ jobs:
 
       - name: Make build
         run: make build
-            
+
+      - name: Docker stats
+        run: |
+          nohup docker stats --no-trunc > stats 2>&1 &
+          echo $! > save_pid.txt
+
       - name: Make run with disabled mfa
         run: make disable-mfa run
 
@@ -42,6 +47,12 @@ jobs:
         env:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Dump stats
+        if: failure()
+        run: |
+          cat stats
+          kill -9 `cat save_pid.txt`
 
       - name: Dump docker logs on failure
         if: failure()
