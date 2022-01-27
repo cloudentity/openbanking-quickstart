@@ -97,9 +97,9 @@ func (s *Server) ListConsents() func(*gin.Context) {
 			return
 		}
 
-		fetcher := NewOBUKConsentImpl(s)
+		cdrImpl := NewCDRArrangementImpl(s)
 
-		if clientsAndConsents, err = fetcher.FetchConsents(c); err != nil {
+		if clientsAndConsents, err = cdrImpl.FetchConsents(c); err != nil {
 			Error(c, ToAPIError(err))
 			return
 		}
@@ -123,11 +123,15 @@ func (s *Server) RevokeConsent() func(*gin.Context) {
 			clientsAndConsents []ClientConsents
 			canBeRevoked       bool
 			err                error
+			//consentImpls       []ConsentInteractor
 		)
 
-		obukConsentImpl := NewOBUKConsentImpl(s)
+		//consentImpls = append(consentImpls, NewOBUKConsentImpl(s))
+		//consentImpls = append(consentImpls, NewCDRArrangementImpl(s))
 
-		if clientsAndConsents, err = obukConsentImpl.FetchConsents(c); err != nil {
+		cdrImpl := NewCDRArrangementImpl(s)
+
+		if clientsAndConsents, err = cdrImpl.FetchConsents(c); err != nil {
 			Error(c, ToAPIError(err))
 			return
 		}
@@ -147,7 +151,7 @@ func (s *Server) RevokeConsent() func(*gin.Context) {
 			return
 		}
 
-		if err = obukConsentImpl.RevokeConsent(c, id); err != nil {
+		if err = cdrImpl.RevokeConsent(c, id); err != nil {
 			Error(c, ToAPIError(err))
 			return
 		}
