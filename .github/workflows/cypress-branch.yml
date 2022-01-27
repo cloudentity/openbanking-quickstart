@@ -49,7 +49,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Dump stats
-        if: failure()
         run: |
           cat stats
           kill -9 `cat save_pid.txt`
@@ -69,6 +68,11 @@ jobs:
           name: logs.tgz
           path: ./logs.tgz
 
+      - name: Docker stats
+        run: |
+          nohup docker stats --no-trunc > stats2 2>&1 &
+          echo $! > save_pid2.txt
+
       - name: Make with enabled mfa
         run: make enable-mfa run
 
@@ -76,6 +80,11 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           working-directory: tests
+
+      - name: Dump stats
+        run: |
+          cat stats2
+          kill -9 `cat save_pid2.txt`
 
       - name: clean
         run: make clean
