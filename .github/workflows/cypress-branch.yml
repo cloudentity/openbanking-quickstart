@@ -25,17 +25,9 @@ jobs:
       - name: Add test-docker to hosts
         run: echo "127.0.0.1       test-docker" | sudo tee -a /etc/hosts
 
-      - name: Check hosts
-        run: cat /etc/hosts
-
       - name: Make build
         run: make build
-
-      - name: Docker stats
-        run: |
-          nohup docker stats --no-trunc > stats 2>&1 &
-          echo $! > save_pid.txt
-
+            
       - name: Make run with disabled mfa
         run: make disable-mfa run
 
@@ -48,11 +40,6 @@ jobs:
           CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Dump stats
-        run: |
-          cat stats
-          kill -9 `cat save_pid.txt`
-
       - name: Dump docker logs on failure
         if: failure()
         uses: jwalton/gh-docker-logs@v1
@@ -67,11 +54,6 @@ jobs:
         with:
           name: logs.tgz
           path: ./logs.tgz
-
-      - name: Docker stats
-        run: |
-          nohup docker stats --no-trunc > stats2 2>&1 &
-          echo $! > save_pid2.txt
 
       - name: Make with enabled mfa
         run: make enable-mfa run
@@ -80,30 +62,6 @@ jobs:
         uses: cypress-io/github-action@v2
         with:
           working-directory: tests
-          record: true
-        env:
-          CYPRESS_RECORD_KEY: ${{ secrets.CYPRESS_RECORD_KEY }}
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Dump docker logs on failure
-        if: failure()
-        uses: jwalton/gh-docker-logs@v1
-        with:
-          dest: './logs'
-      - name: Tar logs
-        if: failure()
-        run: tar cvzf ./logs.tgz ./logs
-      - name: Upload logs to GitHub
-        if: failure()
-        uses: actions/upload-artifact@master
-        with:
-          name: logs.tgz
-          path: ./logs.tgz
-
-      - name: Dump stats
-        run: |
-          cat stats2
-          kill -9 `cat save_pid2.txt`
 
       - name: clean
         run: make clean
