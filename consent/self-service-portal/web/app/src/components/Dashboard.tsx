@@ -43,7 +43,7 @@ export default function Dashboard({
     setProgress(true);
     api
       .getConsents()
-      .then((res) => setClientConsents(res.client_consents))
+      .then((res) => setClientConsents((res.client_consents) ? res.client_consents : []))
       .catch((err) => console.log(err))
       .finally(() => setProgress(false));
   }, []);
