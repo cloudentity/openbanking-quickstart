@@ -27,6 +27,7 @@ stop-acp-apps:
 .PHONY: run-apps
 run-apps:
 	docker-compose up -d --no-build ${OB_APPS}
+	./scripts/wait.sh
 
 .PHONY: run-apps-with-saas
 run-apps-with-saas: setup_saas_env
