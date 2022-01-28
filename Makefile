@@ -3,7 +3,7 @@ export COMPOSE_DOCKER_CLI_BUILD=1
 
 .EXPORT_ALL_VARIABLES: ;
 
-OB_APPS=developer-tpp financroo-tpp consent-page-cdr consent-self-service-portal consent-admin-portal bank
+OB_APPS=developer-tpp financroo-tpp consent-page consent-self-service-portal consent-admin-portal bank
 ACP_APPS=acp crdb redis configuration
 ACP_ONLY_APPS=acp crdb redis
 CDR_ACP_CONFIG_APPS=configuration-cdr
