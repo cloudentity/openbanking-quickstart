@@ -20,6 +20,7 @@ func TestLoadConfig(t *testing.T) {
 		"PORT":          "8443",
 		"TIMEOUT":       "30s",
 
+		"OIDC_AUTH_STYLE":    "client_secret_basic",
 		"OIDC_CLIENT_ID":     "oidc_client_id",
 		"OIDC_CLIENT_SECRET": "oidc_client_secret",
 		"OIDC_ISSUER_URL":    "oidc_issuer_url",
@@ -43,6 +44,7 @@ func TestLoadConfig(t *testing.T) {
 	assert.Equal(t, 8443, config.Port)
 	assert.Equal(t, time.Second*30, config.Timeout)
 
+	assert.Equal(t, envVars["OIDC_AUTH_STYLE"], config.OIDC.AuthStyle)
 	assert.Equal(t, envVars["OIDC_CLIENT_ID"], config.OIDC.ClientID)
 	assert.Equal(t, envVars["OIDC_CLIENT_SECRET"], config.OIDC.ClientSecret)
 	assert.Equal(t, envVars["OIDC_ISSUER_URL"], config.OIDC.IssuerURL)
@@ -52,14 +54,4 @@ func TestLoadConfig(t *testing.T) {
 	// test default values
 	assert.False(t, config.OIDC.PKCEEnabled)
 	assert.Equal(t, []string{"openid"}, config.OIDC.Scopes)
-
-	acpClient, err := config.AcpClientConfig()
-	assert.NoError(t, err)
-	assert.Equal(t, config.ClientID, acpClient.ClientID)
-	assert.Equal(t, config.ClientSecret, acpClient.ClientSecret)
-	assert.Equal(t, config.IssuerURL, acpClient.IssuerURL.String())
-	assert.Equal(t, config.CertFile, acpClient.CertFile)
-	assert.Equal(t, config.KeyFile, acpClient.KeyFile)
-	assert.Equal(t, config.RootCA, acpClient.RootCA)
-	assert.Equal(t, config.Timeout, acpClient.Timeout)
 }
