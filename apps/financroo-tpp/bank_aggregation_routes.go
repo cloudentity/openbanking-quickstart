@@ -114,7 +114,6 @@ func (s *Server) GetBalances() func(ctx *gin.Context) {
 			c.String(http.StatusUnauthorized, err.Error())
 			return
 		}
-
 		// todo parallel
 		for _, b := range user.Banks {
 			if client, accessToken, err = s.GetClientWithToken(b, tokens); err != nil {
@@ -130,7 +129,6 @@ func (s *Server) GetBalances() func(ctx *gin.Context) {
 				return
 			}
 		}
-
 		c.JSON(200, gin.H{
 			"balances": balancesData,
 		})

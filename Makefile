@@ -4,7 +4,7 @@ export COMPOSE_DOCKER_CLI_BUILD=1
 .EXPORT_ALL_VARIABLES: ;
 
 OB_APPS=developer-tpp financroo-tpp consent-page consent-self-service-portal consent-admin-portal bank
-ACP_APPS=acp crdb hazelcast configuration
+ACP_APPS=acp crdb redis configuration
 
 .PHONY: build
 build:
@@ -27,6 +27,7 @@ stop-acp-apps:
 .PHONY: run-apps
 run-apps:
 	docker-compose up -d --no-build ${OB_APPS}
+	./scripts/wait.sh
 
 .PHONY: run-apps-with-saas
 run-apps-with-saas: setup_saas_env
@@ -61,6 +62,11 @@ clean-saas: clean
 .PHONY: run-tests
 run-tests:
 	yarn --cwd tests run cypress open
+
+.PHONY: run-tests-headless
+run-tests-headless:
+	yarn --cwd tests run cypress verify
+	yarn --cwd tests run cypress run
 
 .PHONY: enable-mfa
 enable-mfa:

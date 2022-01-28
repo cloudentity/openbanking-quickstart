@@ -185,13 +185,15 @@ services:
       - LOGGING_LEVEL=debug
       - SERVER_HTTP_LOGS=true
       - SERVER_DISABLE_CSRF=true
+      - REDIS_ENABLED=true
+      - REDIS_ADDRESS=redis:6379
     command:
       - server
       - start
+      - --config
+      - /config/reference.yaml
       - --sql.url
       - postgres://root@crdb:26257/defaultdb?sslmode=disable
-      - --hazelcast.address
-      - hazelcast:5701
       - --secret.key
       - KNEcLGdDqpwrXDubqPgDSUkMMsLPXaHh
       - --server.cert.path
@@ -200,10 +202,13 @@ services:
       - /acp_key.pem
       - --demo
       - --create-default-tenant
+    depends_on:
+      - crdb
+      - redis
 
   crdb:
     container_name: quickstart-crdb
-    image: cockroachdb/cockroach:v20.2.6
+    image: cockroachdb/cockroach:v21.2.3
     restart: always
     ports:
       - 26258:26257
@@ -212,12 +217,15 @@ services:
     volumes:
       - crdb:/cockroach/cockroach-data"
 
-  hazelcast:
-    container_name: hazelcast
-    image: hazelcast/hazelcast:3.12
+  redis:
+    container_name: redis
+    image: redis:6.2.6
     restart: on-failure
+    command: redis-server /usr/local/etc/redis/redis.conf
+    volumes:
+      - ./mount/redis/redis.conf:/usr/local/etc/redis/redis.conf
     ports:
-      - 5701:5701
+      - 6379:6379
 
   configuration:
     container_name: configuration
@@ -244,6 +252,8 @@ services:
       - --variables-file
       - /variables.yaml
       - --verbose
+    depends_on:
+      - acp
 
   runner:
     image: quickstart-runner
