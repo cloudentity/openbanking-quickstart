@@ -9,6 +9,14 @@ pipeline {
         timeout(time: 1, unit: 'HOURS')
     }
     stages {
+        stage('Prepare') {
+            steps {
+                 sh '''#!/bin/bash
+                        echo "127.0.0.1       authorization.cloudentity.com test-docker" | sudo tee -a /etc/hosts
+                        cd tests && yarn install
+                 '''
+            }
+        }
         stage('Build') {
             steps {
                 sh 'rm -f docker-compose.log'
