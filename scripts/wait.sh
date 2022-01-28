@@ -1,7 +1,19 @@
 #!/bin/bash
+set -e
 
-TIMEOUT="${TIMEOUT:-90}"
+pendingServices=0
 
-echo "Waiting ${TIMEOUT} sec for ACP to be ready"
-timeout "${TIMEOUT}" bash -c 'while [[ "$(curl -s -k -o /dev/null -w "%{http_code}" https://localhost:8443/alive)" != 200 ]]; do docker ps -a; free; docker stats --no-stream; sleep 1; done' || exit 1
-echo "ACP is ready"
+function checkServices() {
+    pendingServices=$(docker ps --format "{{.Status}}" | grep -E "starting|unhealthy" | wc -l)
+}
+
+checkServices
+
+while [ $pendingServices -gt 0 ]; do
+    echo "Waiting for $pendingServices services to become healthy..."
+    docker ps -a
+    sleep 1
+    checkServices
+done
+
+echo "All services are healthy"
