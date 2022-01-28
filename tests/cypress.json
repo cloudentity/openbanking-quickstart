@@ -7,7 +7,5 @@
     "consent_admin_url": "https://localhost:8086",
     "tpp_url": "https://localhost:8090",
     "financroo_url": "https://localhost:8091"
-  },
-  "projectId": "icwsy8",
-  "defaultCommandTimeout": 10000
+  }
 }

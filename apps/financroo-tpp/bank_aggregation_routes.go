@@ -111,19 +111,12 @@ func (s *Server) GetBalances() func(ctx *gin.Context) {
 			err          error
 		)
 
-		logrus.Infof("XXX get balances, at: %s", c.GetHeader("Authorization"))
-
 		if user, tokens, err = s.WithUser(c); err != nil {
 			c.String(http.StatusUnauthorized, err.Error())
 			return
 		}
-
-		logrus.Infof("XXX user banks %+v", user.Banks)
-
 		// todo parallel
 		for _, b := range user.Banks {
-			logrus.Infof("XXX bank %+v", b)
-
 			if client, accessToken, err = s.GetClientWithToken(b, tokens); err != nil {
 				logrus.Errorf("get client with token failed: %+v", err)
 				continue
@@ -133,16 +126,11 @@ func (s *Server) GetBalances() func(ctx *gin.Context) {
 				c.String(http.StatusInternalServerError, fmt.Sprintf("failed to update user: %+v", err))
 			}
 
-			logrus.Infof("XXX client get balances, at: %+v", accessToken)
-
 			if balancesData, err = client.GetBalances(c, accessToken, b); err != nil {
 				c.String(http.StatusUnauthorized, fmt.Sprintf("failed to call bank get balances: %+v", err))
 				return
 			}
 		}
-
-		logrus.Infof("XXX balances: %+v", balancesData)
-
 		c.JSON(200, gin.H{
 			"balances": balancesData,
 		})

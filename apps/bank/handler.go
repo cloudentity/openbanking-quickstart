@@ -34,8 +34,6 @@ func (s *Server) Get(factory GetEndpointLogicFactory) func(*gin.Context) {
 			errResp interface{}
 		)
 
-		logrus.Infof("XXX get %+v", c.Request.URL.Path)
-
 		if err = h.SetIntrospectionResponse(c); err != nil {
 			logrus.Info(fmt.Sprintf("err: %+v", err))
 			code, errResp = h.MapError(c, err)
@@ -59,16 +57,9 @@ func (s *Server) Get(factory GetEndpointLogicFactory) func(*gin.Context) {
 			return
 		}
 
-		logrus.Infof("XXX data %+v", data)
-
 		filtered := h.Filter(c, data)
 
-		logrus.Infof("XXX data filtered %+v", filtered)
-
 		resp := h.BuildResponse(c, filtered)
-
-		logrus.Infof("XXX resp: %+v", resp)
-
 		c.PureJSON(http.StatusOK, resp)
 	}
 }
