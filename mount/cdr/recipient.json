@@ -24,6 +24,7 @@
       "Application": "CDR.DataRecipient.Web"
     }
   },
+  "ConsumerDataStandardsSwagger": "https://consumerdatastandardsaustralia.github.io/standards/includes/swagger/cds_banking.json",
   "MockDataRecipient": {
     "Register": {
       "tlsBaseUri": "https://mock-register:7000",
@@ -32,9 +33,10 @@
       "tokenEndpoint": "https://mock-register:7001/idp/connect/token"
     },
     "SoftwareProduct": {
-      "jwksUri": "https://mock-data-recipient:9001/jwks",
-      "redirectUris": "https://mock-data-recipient:9001/consent/callback",
-      "recipientBaseUri": "https://mock-data-recipient:9001"
+      "scope": "openid profile bank:accounts.basic:read bank:accounts.detail:read bank:transactions:read common:customer.basic:read introspect_tokens revoke_tokens",
+      "jwksUri": "https://datarecipient.mock:9001/jwks",
+      "redirectUris": "https://datarecipient.mock:9001/consent/callback,https://datarecipient.mock:9001/consent/callback2",
+      "recipientBaseUri": "https://datarecipient.mock:9001"
     },
     "DataHolder": {
       "infosecBaseUri": "https://authorization.cloudentity.com:8443/default/cdr",

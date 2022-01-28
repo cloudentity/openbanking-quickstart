@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 
-	"github.com/cloudentity/acp-client-go/client/openbanking"
+	obuk "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
 )
 
 type PaymentCreated struct {
@@ -17,7 +17,7 @@ type PaymentCreated struct {
 
 func (o *OBUKClient) CreatePayment(c *gin.Context, data interface{}, accessToken string) (PaymentCreated, error) {
 	var (
-		resp            *openbanking.GetDomesticPaymentConsentRequestOK
+		resp            *obuk.GetDomesticPaymentConsentRequestOK
 		initiation      obModels.OBWriteDomestic2DataInitiation
 		risk            obModels.OBRisk1
 		createdResponse *domestic_payments.CreateDomesticPaymentsCreated
@@ -26,7 +26,7 @@ func (o *OBUKClient) CreatePayment(c *gin.Context, data interface{}, accessToken
 		err             error
 	)
 
-	if resp, ok = data.(*openbanking.GetDomesticPaymentConsentRequestOK); !ok {
+	if resp, ok = data.(*obuk.GetDomesticPaymentConsentRequestOK); !ok {
 		return PaymentCreated{}, nil
 	}
 

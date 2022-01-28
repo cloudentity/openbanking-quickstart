@@ -13,8 +13,9 @@ import (
 	"github.com/go-openapi/strfmt"
 	"github.com/sirupsen/logrus"
 
-	"github.com/cloudentity/acp-client-go/client/logins"
-	"github.com/cloudentity/acp-client-go/models"
+	acpclient "github.com/cloudentity/acp-client-go"
+	"github.com/cloudentity/acp-client-go/clients/system/client/logins"
+	"github.com/cloudentity/acp-client-go/clients/system/models"
 )
 
 func (s *Server) Alive(c *gin.Context) {
@@ -65,20 +66,10 @@ type CallbackInput struct {
 	State string `in:"form=state;required"`
 }
 
-// TokenData holds OAuth tokens from the external IDP.
-type TokenData struct {
-	AccessToken string `json:"access_token"`
-	ExpiresIn   int    `json:"expires_in"`
-	IDToken     string `json:"id_token"`
-	Scope       string `json:"scope"`
-	TokenType   string `json:"token_type"`
-}
-
 // Callback handles the redirect from the external IDP to /callback.
 func (s *Server) Callback(c *gin.Context) {
 	var (
-		body  []byte
-		data  TokenData
+		token acpclient.Token
 		state LoginState
 		err   error
 	)
@@ -90,37 +81,19 @@ func (s *Server) Callback(c *gin.Context) {
 	}
 
 	// Exchange code for access and ID tokens.
-	if body, err = s.OidcClient.Exchange(input.Code, ""); err != nil {
+	if token, err = s.OidcClient.Exchange(input.Code, "", acpclient.CSRF{}); err != nil {
 		logrus.WithError(err).Error("Exchange code for token")
 		return
 	}
 
-	if err = json.Unmarshal(body, &data); err != nil {
-		logrus.WithError(err).Error("decoding Exchange response")
-		return
-	}
-
-	// At this point you have the OAuth Access and ID tokes in `data`.
-	// So you can interact with your system, before accepting the login in ACP.
-	if err = DoMyCustomStuff(s, c, data); err != nil {
-		logrus.WithError(err).Error("DoMyCustomStuff failed")
-		return
-	}
-
 	if err == nil {
-		s.AcceptLogin(c, state, data)
+		s.AcceptLogin(c, state, token)
 	} else {
 		s.RejectLogin(c, state)
 	}
 }
 
-// DoMyCustomStuff can be used to implement your own interactions.
-// The gin.Context can access the http.Request and ResponseWriter.
-func DoMyCustomStuff(s *Server, c *gin.Context, data TokenData) error {
-	return nil
-}
-
-func (s *Server) AcceptLogin(c *gin.Context, login LoginState, data TokenData) {
+func (s *Server) AcceptLogin(c *gin.Context, login LoginState, token acpclient.Token) {
 	var (
 		parser  jwt.Parser
 		claims  jwt.MapClaims
@@ -129,7 +102,7 @@ func (s *Server) AcceptLogin(c *gin.Context, login LoginState, data TokenData) {
 		err     error
 	)
 
-	if _, _, err = parser.ParseUnverified(data.IDToken, &claims); err != nil {
+	if _, _, err = parser.ParseUnverified(token.IDToken, &claims); err != nil {
 		logrus.WithError(err).Error("parsing id token")
 	}
 	if subject, ok = claims["sub"].(string); !ok {
@@ -144,8 +117,8 @@ func (s *Server) AcceptLogin(c *gin.Context, login LoginState, data TokenData) {
 		LoginState: login.State,
 		Subject:    subject,
 		AuthenticationContext: map[string]interface{}{
-			"access_token": data.AccessToken,
-			"id_token":     data.IDToken,
+			"access_token": token.AccessToken,
+			"id_token":     token.IDToken,
 		},
 	}
 	if err = acceptLogin.Validate(nil); err != nil {
@@ -154,11 +127,10 @@ func (s *Server) AcceptLogin(c *gin.Context, login LoginState, data TokenData) {
 		return
 	}
 
-	res, err := s.AcpClient.Logins.AcceptLoginRequest(
+	res, err := s.AcpClient.System.Logins.AcceptLoginRequest(
 		logins.NewAcceptLoginRequestParams().
 			WithContext(c).
 			WithLogin(login.ID).
-			WithTid(login.TenantID).
 			WithAcceptLogin(&acceptLogin),
 		nil, // When would this authinfo param be needed?
 	)
@@ -194,11 +166,10 @@ func (s *Server) RejectLogin(c *gin.Context, login LoginState) {
 		return
 	}
 
-	res, err := s.AcpClient.Logins.RejectLoginRequest(
+	res, err := s.AcpClient.System.Logins.RejectLoginRequest(
 		logins.NewRejectLoginRequestParams().
 			WithContext(c).
 			WithLogin(login.ID).
-			WithTid(login.TenantID).
 			WithRejectLogin(&rejectLogin),
 		nil,
 	)

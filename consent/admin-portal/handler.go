@@ -7,9 +7,10 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/cloudentity/acp-client-go/client/clients"
-	"github.com/cloudentity/acp-client-go/client/openbanking"
-	"github.com/cloudentity/acp-client-go/models"
+	o2Params "github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
+	obCommonModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_common"
+	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
+	system "github.com/cloudentity/acp-client-go/clients/system/client/clients"
 )
 
 const (
@@ -41,9 +42,9 @@ func (s *Server) Index() func(*gin.Context) {
 }
 
 type Client struct {
-	ID       string                                 `json:"client_id"`
-	Name     string                                 `json:"client_name,omitempty"`
-	Consents []*models.OpenbankingConsentWithClient `json:"consents"`
+	ID       string                        `json:"client_id"`
+	Name     string                        `json:"client_name,omitempty"`
+	Consents []*obModels.ConsentWithClient `json:"consents"`
 }
 
 type ListClientsResponse struct {
@@ -53,8 +54,8 @@ type ListClientsResponse struct {
 func (s *Server) ListClients() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			cs                  *clients.ListClientsSystemOK
-			consents            *openbanking.ListOBConsentsOK
+			cs                  *system.ListClientsSystemOK
+			consents            *obCommonModels.ListOBConsentsOK
 			clientsWithConsents []Client
 			err                 error
 		)
@@ -64,10 +65,8 @@ func (s *Server) ListClients() func(*gin.Context) {
 			return
 		}
 
-		if cs, err = s.Client.Clients.ListClientsSystem(
-			clients.NewListClientsSystemParamsWithContext(c).
-				WithTid(s.Client.TenantID).
-				WithAid(s.Config.SystemClientsServerID),
+		if cs, err = s.Client.System.Clients.ListClientsSystem(
+			system.NewListClientsSystemParamsWithContext(c),
 			nil,
 		); err != nil {
 			c.String(http.StatusBadRequest, fmt.Sprintf("failed to list clients from acp: %+v", err))
@@ -75,11 +74,10 @@ func (s *Server) ListClients() func(*gin.Context) {
 		}
 
 		for _, oc := range cs.Payload.Clients {
-			if consents, err = s.Client.Openbanking.ListOBConsents(
-				openbanking.NewListOBConsentsParamsWithContext(c).
-					WithTid(s.Client.TenantID).
+			if consents, err = s.Client.Openbanking.OpenbankingCommon.ListOBConsents(
+				obCommonModels.NewListOBConsentsParamsWithContext(c).
 					WithAid(s.Config.SystemClientsServerID).
-					WithConsentsRequest(&models.ConsentsRequest{
+					WithConsentsRequest(&obModels.ConsentsRequest{
 						ClientID: oc.ClientID,
 					}),
 				nil,
@@ -115,9 +113,8 @@ func (s *Server) RevokeConsent() func(*gin.Context) {
 			return
 		}
 
-		if _, err = s.Client.Openbanking.RevokeOpenbankingConsent(
-			openbanking.NewRevokeOpenbankingConsentParamsWithContext(c).
-				WithTid(s.Client.TenantID).
+		if _, err = s.Client.Openbanking.OpenbankingCommon.RevokeOpenbankingConsent(
+			obCommonModels.NewRevokeOpenbankingConsentParamsWithContext(c).
 				WithAid(s.Config.SystemClientsServerID).
 				WithConsentID(id),
 			nil,
@@ -142,9 +139,8 @@ func (s *Server) RevokeConsentsForClient() func(*gin.Context) {
 			return
 		}
 
-		if _, err = s.Client.Openbanking.RevokeOpenbankingConsents(
-			openbanking.NewRevokeOpenbankingConsentsParamsWithContext(c).
-				WithTid(s.Client.TenantID).
+		if _, err = s.Client.Openbanking.OpenbankingCommon.RevokeOpenbankingConsents(
+			obCommonModels.NewRevokeOpenbankingConsentsParamsWithContext(c).
 				WithAid(s.Config.SystemClientsServerID).
 				WithConsentTypes(ConsentTypes).
 				WithClientID(&id),
@@ -164,7 +160,8 @@ func (s *Server) IntrospectToken(c *gin.Context) error {
 	token := c.GetHeader("Authorization")
 	token = strings.ReplaceAll(token, "Bearer ", "")
 
-	if _, err = s.IntrospectClient.IntrospectToken(c, token); err != nil {
+	if _, err = s.IntrospectClient.Oauth2.Oauth2.Introspect(o2Params.NewIntrospectParamsWithContext(c).
+		WithToken(&token), nil); err != nil {
 		return fmt.Errorf("failed to introspect client: %w", err)
 	}
 

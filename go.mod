@@ -5,13 +5,13 @@ go 1.15
 require (
 	github.com/Masterminds/sprig/v3 v3.2.2
 	github.com/caarlos0/env/v6 v6.4.0
-	github.com/cloudentity/acp-client-go v0.0.0-20211106210355-ec03ad736b9c
+	github.com/cloudentity/acp-client-go v0.0.0-20220119152915-7af3030fb923
 	github.com/dgrijalva/jwt-go v3.2.1-0.20200107013213-dc14462fd587+incompatible
 	github.com/ggicci/httpin v0.7.1 // indirect
 	github.com/ghodss/yaml v1.0.0
 	github.com/gin-gonic/gin v1.7.3
 	github.com/go-jose/go-jose/v3 v3.0.0
-	github.com/go-openapi/errors v0.20.0
+	github.com/go-openapi/errors v0.20.1
 	github.com/go-openapi/runtime v0.19.29-0.20210426171411-539cabc131b0
 	github.com/go-openapi/strfmt v0.20.1
 	github.com/go-openapi/swag v0.19.15

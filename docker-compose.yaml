@@ -41,6 +41,7 @@ services:
       - KEY_FILE=/certs/tpp_key.pem
       - DB_FILE=/app/data/my.db
       - TENANT=${TENANT}
+      - GIN_MODE=debug # change to release to disable gin debug
 
   consent-page:
     image: cloudentity/openbanking-quickstart-consent-page:${VERSION}
@@ -69,6 +70,72 @@ services:
       - DB_FILE=/data/my.db
       - LOG_LEVEL=debug
       - SPEC=${SPEC}
+      - GIN_MODE=debug # change to release to disable gin debug
+      # - ENABLE_MFA=true
+      # - DEV_MODE=true
+      - OTP_MODE=mock # change to custom to enable custom OTP handling
+      # - OTP_TYPE=totp
+      # - OTP_REQUEST_URL= # this does not matter for totp
+      # - OTP_VERIFY_URL=https://localhost:8080/demo/totp/verify
+      # - OTP_AUTH_HEADER=Bearer this-is-some-test-token
+      - MFA_CLAIM=sub # for mobile use mobile_verified
+      # - TWILIO_ACCOUNT_SID=
+      # - TWILIO_AUTH_TOKEN=
+      - DEFAULT_LANGUAGE=en-us
+
+  configuration-cdr:
+    container_name: configuration-cdr
+    image: cloudentity/openbanking-quickstart-configuration:latest
+    restart: on-failure
+    volumes:
+      - ./data/ca.pem:/certs/ca.pem
+      - ./data/variables.yaml:/variables.yaml
+      - ./data/imports-cdr:/app/imports
+    command:
+      - /app/main
+      - --tenant-url
+      - ${CONFIGURATION_TENANT_URL}
+      - --tenant
+      - ${CONFIGURATION_TENANT}
+      - --client-id
+      - ${CONFIGURATION_CLIENT_ID}
+      - --client-secret
+      - ${CONFIGURATION_CLIENT_SECRET}
+      - --templates-dirs
+      - /app/imports
+      - --variables-file
+      - /variables.yaml
+      - --verbose
+    depends_on:
+      - acp
+
+  consent-page-cdr:
+    image: cloudentity/openbanking-quickstart-consent-page:${VERSION}
+    container_name: consent-page-cdr
+    restart: always
+    ports:
+      - "8083:8080"
+    volumes:
+      - ./mount/consent-page-cdr:/data
+      - ./data/ca.pem:/ca.pem
+      - ./data/bank_cert.pem:/bank_cert.pem
+      - ./data/bank_key.pem:/bank_key.pem
+      # sample extensions:
+      # - ./consent/consent-page/examples/custom-styles.css:/app/assets/extend-styles.css
+      # - ./consent/consent-page/examples/custom-mfa-verify.tmpl:/app/templates/custom/mfa-verify.tmpl
+    env_file:
+      - .env
+    environment:
+      - CLIENT_ID=bv0ocudfotn6edhsiu7gcdrconsentpage
+      - CLIENT_SECRET=pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0
+      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
+      - CERT_FILE=/bank_cert.pem
+      - KEY_FILE=/bank_key.pem
+      - ROOT_CA=/ca.pem
+      - BANK_URL=http://bank:8070
+      - DB_FILE=/data/my.db
+      - LOG_LEVEL=debug
+      - SPEC=cdr
       - GIN_MODE=debug # change to release to disable gin debug
       # - ENABLE_MFA=true
       # - DEV_MODE=true
@@ -154,6 +221,7 @@ services:
       - KEY_FILE=/bank_key.pem
       - ROOT_CA=/ca.pem
       - SPEC=${SPEC}
+      - GIN_MODE=debug # change to release to disable gin debug
 
   acp:
     container_name: quickstart-acp
@@ -169,6 +237,7 @@ services:
     volumes:
       - ./data/acp_cert.pem:/acp_cert.pem
       - ./data/acp_key.pem:/acp_key.pem
+      - ./data/ca.pem:/acp_ca.pem
     environment:
       - FEATURES_SWAGGER_UI=true
       - FEATURES_INTEGRATION_ENDPOINTS=true
@@ -179,14 +248,17 @@ services:
       - FEATURES_OPENBANKING_BRASIL_PAYMENTS=true
       - FEATURES_DEV_MODE=true
       - FEATURES_CDR_AUSTRALIA=true
-      - FEATURES_CIBA=true
+      - FEATURES_PAR=true
+      - FEATURES_SCRIPTS=true
       - SERVER_MTLS_URL=https://test-docker:8443
       - SERVER_URL=${ACP_URL}
       - LOGGING_LEVEL=debug
       - SERVER_HTTP_LOGS=true
       - SERVER_DISABLE_CSRF=true
+      - CLIENT_ROOT_CA=/acp_ca.pem
       - REDIS_ENABLED=true
       - REDIS_ADDRESS=redis:6379
+      - FEATURES_CIBA=true
     command:
       - server
       - start

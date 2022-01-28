@@ -17,7 +17,7 @@ import (
 	"gopkg.in/square/go-jose.v2"
 
 	acpclient "github.com/cloudentity/acp-client-go"
-	"github.com/cloudentity/acp-client-go/client/oauth2"
+	oauth2 "github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
 )
 
 type Spec string
@@ -170,11 +170,8 @@ func (s *Server) GetEncryptionKey(ctx context.Context) (jose.JSONWebKey, error) 
 		err          error
 	)
 
-	if jwksResponse, err = s.Client.Oauth2.Jwks(
-		oauth2.NewJwksParamsWithContext(ctx).
-			WithTid(s.Client.TenantID).
-			WithAid(s.Client.ServerID),
-	); err != nil {
+	if jwksResponse, err = s.Client.Oauth2.Oauth2.Jwks(
+		oauth2.NewJwksParamsWithContext(ctx)); err != nil {
 		return encKey, errors.Wrapf(err, "failed to get jwks from acp server")
 	}
 

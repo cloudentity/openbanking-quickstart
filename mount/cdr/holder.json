@@ -17,12 +17,13 @@
     "SsaJwksUri": "https://mock-register:7000/cdr-register/v1/jwks"
   },
   "Registration": {
+    "AudienceUri": "https://authorization.cloudentity.com:8443/default/cdr"
   },
   "Logging": {
     "LogLevel": {
-      "Default": "Information",
-      "Microsoft": "Warning",
-      "Microsoft.Hosting.Lifetime": "Information"
+      "Default": "Debug",
+      "Microsoft": "Debug",
+      "Microsoft.Hosting.Lifetime": "Debug"
     }
   },
   "Serilog": {

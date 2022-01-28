@@ -8,7 +8,7 @@
 # Then flush the DNS cache, on Windows use: ipconfig /flushdns
 ################################################################################
 
-version: '2.4'
+version: '3.0'
 
 services:
   mock-register:
@@ -19,16 +19,18 @@ services:
     ports:
       - "7000:7000"
       - "7001:7001"
+      - "7005:7005"
       - "7006:7006"
     environment:
       - ASPNETCORE_ENVIRONMENT=Production
 
   mock-data-holder:
     container_name: mock-data-holder
-    image: consumerdataright/mock-data-holder
+    image: docker.cloudentity.io/cdr-mock-data-holder:0.0.3
     volumes:
       - ./mount/cdr/holder.json:/app/idsvr/appsettings.Production.json
       - ./mount/cdr/holder-seed.json:/app/manage/Data/seed-data.json
+      - ./mount/cdr/mock-data-holder/resource-api-appsettings.json:/app/resource/appsettings.Production.json
     ports:
       - "8000:8000"
       - "8001:8001"
@@ -41,7 +43,7 @@ services:
 
   mock-data-recipient:
     container_name: mock-data-recipient
-    image: consumerdataright/mock-data-recipient
+    image: docker.cloudentity.io/cdr-mock-data-recipient:0.0.2
     networks:
       default:
         aliases:

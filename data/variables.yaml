@@ -2,6 +2,7 @@ tenant_id: default
 consent_self_service_portal_url: https://localhost:8085
 consent_admin_portal_url: https://localhost:8086
 consent_page_url: https://localhost:8080
+cdr_consent_page_url: https://localhost:8083
 developer_tpp_url: https://localhost:8090
 financroo_tpp_url: https://localhost:8091
 financroo_tls_client_auth_subject_dn: CN=cid1.authorization.cloudentity.com,OU=Authorization,O=Cloudentity,L=Seattle,ST=Washinghton,C=US
@@ -9,6 +10,7 @@ bank_tls_client_auth_subject_dn: CN=cid2.authorization.cloudentity.com,OU=Author
 financroo_pem_file: /certs/tpp_cert.pem
 ca_pem_file: /certs/ca.pem
 consent_page_client_id: bv0ocudfotn6edhsiu7g
+cdr_consent_page_client_id: bv0ocudfotn6edhsiu7gcdrconsentpage
 consent_page_client_secret: pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0
 obbr_consent_page_client: bukj5p6k7qdMIIDfjCCAmagAwImm5ppxxxx
 conf_ca_pem_file: /certs/brasil/ca.pem

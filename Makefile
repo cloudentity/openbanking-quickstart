@@ -5,6 +5,10 @@ export COMPOSE_DOCKER_CLI_BUILD=1
 
 OB_APPS=developer-tpp financroo-tpp consent-page consent-self-service-portal consent-admin-portal bank
 ACP_APPS=acp crdb redis configuration
+ACP_ONLY_APPS=acp crdb redis
+CDR_ACP_CONFIG_APPS=configuration-cdr
+CDR_CONSENT_APPS=consent-page-cdr consent-self-service-portal consent-admin-portal
+CDR_APPS=mock-data-recipient mock-register mock-data-holder
 
 .PHONY: build
 build:
@@ -27,7 +31,21 @@ stop-acp-apps:
 .PHONY: run-apps
 run-apps:
 	docker-compose up -d --no-build ${OB_APPS}
+	docker-compose -f docker-compose.cdr.yaml up -d ${CDR_APPS}
 	./scripts/wait.sh
+
+.PHONY: run-cdr-apps-with-acp-local
+run-cdr-apps-with-acp-local:
+	docker-compose up -d --no-build ${ACP_ONLY_APPS}
+	docker-compose up -d --no-build ${CDR_ACP_CONFIG_APPS}
+	docker-compose up -d --no-build ${CDR_CONSENT_APPS}
+	docker-compose -f docker-compose.cdr.yaml up -d ${CDR_APPS}
+
+.PHONY: run-cdr-apps-with-saas
+run-cdr-apps-with-saas:
+	docker-compose up -d --no-build --no-deps ${CDR_ACP_CONFIG_APPS}
+	docker-compose up -d --no-build --no-deps ${CDR_CONSENT_APPS}
+	docker-compose -f docker-compose.cdr.yaml up -d ${CDR_APPS}
 
 .PHONY: run-apps-with-saas
 run-apps-with-saas: setup_saas_env
@@ -53,7 +71,7 @@ stop:
 
 .PHONY: clean
 clean:
-	docker-compose down -v
+	docker-compose down -v --remove-orphans
 
 .PHONY: clean-saas 
 clean-saas: clean
