@@ -7,7 +7,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
 )
 
 func (s *Server) WithUser(c *gin.Context) (User, BankTokens, error) {
@@ -118,7 +117,6 @@ func (s *Server) GetBalances() func(ctx *gin.Context) {
 		// todo parallel
 		for _, b := range user.Banks {
 			if client, accessToken, err = s.GetClientWithToken(b, tokens); err != nil {
-				logrus.Errorf("get client with token failed: %+v", err)
 				continue
 			}
 

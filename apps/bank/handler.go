@@ -59,8 +59,7 @@ func (s *Server) Get(factory GetEndpointLogicFactory) func(*gin.Context) {
 
 		filtered := h.Filter(c, data)
 
-		resp := h.BuildResponse(c, filtered)
-		c.PureJSON(http.StatusOK, resp)
+		c.PureJSON(http.StatusOK, h.BuildResponse(c, filtered))
 	}
 }
 

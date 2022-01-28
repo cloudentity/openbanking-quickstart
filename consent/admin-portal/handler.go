@@ -98,6 +98,7 @@ func (s *Server) ListClients() func(*gin.Context) {
 		}
 
 		resp := ListClientsResponse{Clients: clientsWithConsents}
+
 		c.JSON(http.StatusOK, &resp)
 	}
 }
