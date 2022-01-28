@@ -2,69 +2,43 @@ package main
 
 import (
 	"bytes"
-	"crypto/tls"
-	"crypto/x509"
-	"fmt"
-	"io"
-	"net/http"
 	"net/url"
-	"os"
 	"strings"
+	"time"
+
+	acpclient "github.com/cloudentity/acp-client-go"
 )
 
-// OidcClient simple HTTP OIDC client.
-type OidcClient struct {
-	Config     OidcConfig
-	HttpClient *http.Client // nolint
-}
-
 type OidcConfig struct {
-	// ClientID is the ID of our client registered in ACP.
-	ClientID string `env:"OIDC_CLIENT_ID"`
-	// ClientSecret is the Secret of our client registered in ACP.
-	ClientSecret string `env:"OIDC_CLIENT_SECRET"`
-	// IssuerURL is the Issuer AuthURL
-	IssuerURL string `env:"OIDC_ISSUER_URL"`
-	// PKCEEnabled pkce on/off flag.
-	PKCEEnabled bool `env:"OIDC_PKCE_ENABLED"`
-	// RedirectURL holds information where to redirect the user after successful authentication.
-	RedirectURL string `env:"OIDC_REDIRECT_URL"`
-	// Scopes must be a subset of scopes assigned to our application in ACP.
-	Scopes []string `env:"OIDC_SCOPES" envDefault:"openid"`
-	// CAPath optionally indicates a CA cert. Only needed when the OIDC provider uses a self-signed TLS cert.
-	CAPath string `env:"OIDC_CA_PATH"`
+	AuthStyle    string        `env:"OIDC_AUTH_STYLE"` // Enum: [client_secret_basic client_secret_post tls_client_auth ]
+	ClientID     string        `env:"OIDC_CLIENT_ID"`
+	ClientSecret string        `env:"OIDC_CLIENT_SECRET"`
+	IssuerURL    string        `env:"OIDC_ISSUER_URL"`
+	PKCEEnabled  bool          `env:"OIDC_PKCE_ENABLED"`
+	RedirectURL  string        `env:"OIDC_REDIRECT_URL"`
+	Scopes       []string      `env:"OIDC_SCOPES" envDefault:"openid"`
+	Timeout      time.Duration `env:"OIDC_TIMEOUT" envDefault:"5s"`
+	CAPath       string        `env:"OIDC_CA_PATH"`
 }
 
-// NewClient creates new instance of the Oidc client.
-func (c OidcConfig) NewClient() (client OidcClient, err error) {
-	clientCertPool := x509.NewCertPool()
-
-	if c.CAPath != "" {
-		// Set up the certificate HTTP client needs for TLS communication with a server.
-		clientCACert, err := os.ReadFile(c.CAPath)
-		if err != nil {
-			return OidcClient{}, fmt.Errorf("could not open cert file %v: %w", c.CAPath, err)
-		}
-		clientCertPool.AppendCertsFromPEM(clientCACert)
+func (c OidcConfig) Client() (acpclient.Client, error) {
+	issuerURL, err := url.Parse(c.IssuerURL)
+	if err != nil {
+		return acpclient.Client{}, err
 	}
-
-	httpClient := &http.Client{
-		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{
-				RootCAs:                  clientCertPool,
-				MinVersion:               tls.VersionTLS12,
-				PreferServerCipherSuites: true,
-				CipherSuites: []uint16{
-					tls.TLS_ECDHE_RSA_WITH_AES_128_GCM_SHA256,
-					tls.TLS_ECDHE_RSA_WITH_AES_256_GCM_SHA384,
-					tls.TLS_ECDHE_ECDSA_WITH_AES_128_GCM_SHA256,
-					tls.TLS_ECDHE_ECDSA_WITH_AES_256_GCM_SHA384,
-				},
-			},
-		},
+	redirectURL, err := url.Parse(c.RedirectURL)
+	if err != nil {
+		return acpclient.Client{}, err
 	}
-
-	return OidcClient{HttpClient: httpClient, Config: c}, nil
+	return acpclient.New(acpclient.Config{
+		ClientID:     c.ClientID,
+		ClientSecret: c.ClientSecret,
+		IssuerURL:    issuerURL,
+		RedirectURL:  redirectURL,
+		Scopes:       c.Scopes,
+		Timeout:      c.Timeout,
+		RootCA:       c.CAPath,
+	})
 }
 
 // AuthorizeURL builds the URL where the client will redirect the user upon accessing /login endpoint.
@@ -88,8 +62,9 @@ func (c OidcConfig) AuthorizeURL(challenge string, state string) string {
 		queryParams.Add("code_challenge_method", "S256")
 	}
 
-	buf.WriteString(c.AuthURL())
-	if strings.Contains(c.AuthURL(), "?") {
+	authURL := c.IssuerURL + "/oauth2/authorize"
+	buf.WriteString(authURL)
+	if strings.Contains(authURL, "?") {
 		buf.WriteByte('&')
 	} else {
 		buf.WriteByte('?')
@@ -97,48 +72,4 @@ func (c OidcConfig) AuthorizeURL(challenge string, state string) string {
 
 	buf.WriteString(queryParams.Encode())
 	return buf.String()
-}
-
-// AuthURL is an endpoint where ACP verifies the identity of the resource owner, and gain authorization grant.
-func (c OidcConfig) AuthURL() string {
-	return c.IssuerURL + "/oauth2/authorize"
-}
-
-// TokenURL holds information about the endpoint where we can exchange code for an access token.
-func (c OidcConfig) TokenURL() string {
-	return c.IssuerURL + "/oauth2/token"
-}
-
-func (c OidcConfig) GetRedirectURL(values url.Values) string {
-	return c.RedirectURL + "?" + values.Encode()
-}
-
-func (c OidcClient) Exchange(code string, verifier string) (body []byte, err error) {
-	values := url.Values{
-		"grant_type":    {"authorization_code"},
-		"code":          {code},
-		"client_id":     {c.Config.ClientID},
-		"client_secret": {c.Config.ClientSecret},
-		"redirect_uri":  {c.Config.RedirectURL},
-	}
-
-	if c.Config.PKCEEnabled {
-		values.Add("code_verifier", verifier)
-	}
-
-	response, err := c.HttpClient.PostForm(c.Config.TokenURL(), values)
-	if err != nil {
-		return []byte{}, fmt.Errorf("error while obtaining token: %w", err)
-	}
-	defer response.Body.Close()
-
-	if response.StatusCode != http.StatusOK {
-		return []byte{}, fmt.Errorf("ACP responded with status code: %v", response.Status)
-	}
-
-	if body, err = io.ReadAll(response.Body); err != nil {
-		return []byte{}, fmt.Errorf("error during decoding exchange body: %w", err)
-	}
-
-	return body, nil
 }

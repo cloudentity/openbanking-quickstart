@@ -30,24 +30,6 @@ type Config struct {
 	OIDC OidcConfig
 }
 
-func (c *Config) AcpClientConfig() (acpclient.Config, error) {
-	issuerURL, err := url.Parse(c.IssuerURL)
-	if err != nil {
-		return acpclient.Config{}, err
-	}
-
-	return acpclient.Config{
-		ClientID:     c.ClientID,
-		ClientSecret: c.ClientSecret,
-		IssuerURL:    issuerURL,
-		Scopes:       []string{},
-		Timeout:      c.Timeout,
-		CertFile:     c.CertFile,
-		KeyFile:      c.KeyFile,
-		RootCA:       c.RootCA,
-	}, nil
-}
-
 func LoadConfig() (config Config, err error) {
 	var level logrus.Level
 
@@ -65,13 +47,31 @@ func LoadConfig() (config Config, err error) {
 	logrus.SetLevel(level)
 	logrus.SetReportCaller(true)
 
-	// Log the config with an obscured client secret.
+	// Log the config with obscured client secrets.
 	cf := config
 	cf.ClientSecret = cf.ClientSecret[0:4] + "..."
 	cf.OIDC.ClientSecret = cf.OIDC.ClientSecret[0:4] + "..."
 	logrus.WithField("config", cf).Debug("loaded config")
 
 	return config, err
+}
+
+func (c Config) Client() (acpclient.Client, error) {
+	issuerURL, err := url.Parse(c.IssuerURL)
+	if err != nil {
+		return acpclient.Client{}, err
+	}
+
+	return acpclient.New(acpclient.Config{
+		ClientID:     c.ClientID,
+		ClientSecret: c.ClientSecret,
+		IssuerURL:    issuerURL,
+		Scopes:       []string{},
+		Timeout:      c.Timeout,
+		CertFile:     c.CertFile,
+		KeyFile:      c.KeyFile,
+		RootCA:       c.RootCA,
+	})
 }
 
 // This interface lets us substitute a mock http.Client.
@@ -82,31 +82,26 @@ type HTTPClient interface {
 type Server struct {
 	Config     Config
 	AcpClient  acpclient.Client
-	HTTPClient HTTPClient
-	OidcClient OidcClient
+	OidcClient acpclient.Client
+	HttpClient HTTPClient // nolint
 }
 
 func NewServer() (Server, error) {
 	var (
-		acpConfig acpclient.Config
-		err       error
-		server    = Server{HTTPClient: http.DefaultClient}
+		server = Server{HttpClient: http.DefaultClient}
+		err    error
 	)
 
 	if server.Config, err = LoadConfig(); err != nil {
 		return server, errors.Wrapf(err, "failed to load config")
 	}
 
-	if acpConfig, err = server.Config.AcpClientConfig(); err != nil {
-		return server, errors.Wrapf(err, "invalid acp client config")
-	}
-
-	if server.AcpClient, err = acpclient.New(acpConfig); err != nil {
+	if server.AcpClient, err = server.Config.Client(); err != nil {
 		return server, errors.Wrapf(err, "failed to init acp client")
 	}
 
-	if server.OidcClient, err = server.Config.OIDC.NewClient(); err != nil {
-		return server, errors.Wrapf(err, "failed to init oidc client")
+	if server.OidcClient, err = server.Config.OIDC.Client(); err != nil {
+		return server, errors.Wrapf(err, "failed to init acp client")
 	}
 
 	return server, nil
