@@ -18,9 +18,9 @@ services:
       - CLIENT_ID=${CLIENT_ID}
       - CLIENT_SECRET=${CLIENT_SECRET}
       - ISSUER_URL=${ISSUER_URL}
-      - CERT_FILE=/certs/acp_cert.pem
-      - KEY_FILE=/certs/acp_key.pem
-      - ROOT_CA=/certs/ca.pem
+      - CERT_FILE=${CERT_FILE}
+      - KEY_FILE=${KEY_FILE}
+      - ROOT_CA=${ROOT_CA}
       - LOG_LEVEL=info
       - GIN_MODE=debug
       - OIDC_CLIENT_ID=${OIDC_CLIENT_ID}
