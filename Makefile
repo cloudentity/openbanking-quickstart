@@ -64,6 +64,7 @@ run-tests:
 
 .PHONY: run-tests-headless
 run-tests-headless:
+	yarn --cwd tests run cypress verify
 	yarn --cwd tests run cypress run
 
 .PHONY: enable-mfa
