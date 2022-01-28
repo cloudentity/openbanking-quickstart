@@ -236,6 +236,8 @@ services:
     command:
       - server
       - start
+      - --config
+      - /config/reference.yaml
       - --sql.url
       - postgres://root@crdb:26257/defaultdb?sslmode=disable
       - --secret.key
@@ -262,14 +264,14 @@ services:
       - crdb:/cockroach/cockroach-data"
 
   redis:
-    container_name: quickstart-redis
+    container_name: redis
     image: redis:6.2.6
     restart: on-failure
     command: redis-server /usr/local/etc/redis/redis.conf
     volumes:
       - ./mount/redis/redis.conf:/usr/local/etc/redis/redis.conf
     ports:
-      - 6378:6379
+      - 6379:6379
 
   configuration:
     container_name: configuration
@@ -298,32 +300,6 @@ services:
       - --verbose
     depends_on:
       - acp
-
-  configuration-cdr:
-    container_name: configuration-cdr
-    image: cloudentity/openbanking-quickstart-configuration:latest
-    restart: on-failure
-    volumes:
-      - ./data/ca.pem:/certs/ca.pem
-      - ./data/variables.yaml:/variables.yaml
-      - ./data/imports-cdr:/app/imports
-    command:
-      - /app/main
-      - --tenant-url
-      - ${CONFIGURATION_TENANT_URL}
-      - --tenant
-      - ${CONFIGURATION_TENANT}
-      - --client-id
-      - ${CONFIGURATION_CLIENT_ID}
-      - --client-secret
-      - ${CONFIGURATION_CLIENT_SECRET}
-      - --templates-dirs
-      - /app/imports
-      - --variables-file
-      - /variables.yaml
-      - --verbose
-    depends_on:
-      - acp    
 
   runner:
     image: quickstart-runner

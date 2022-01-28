@@ -32,13 +32,14 @@ stop-acp-apps:
 run-apps:
 	docker-compose up -d --no-build ${OB_APPS}
 	docker-compose -f docker-compose.cdr.yaml up -d ${CDR_APPS}
+	./scripts/wait.sh
 
 .PHONY: run-cdr-apps-with-acp-local
 run-cdr-apps-with-acp-local:
 	docker-compose up -d --no-build ${ACP_ONLY_APPS}
 	docker-compose up -d --no-build ${CDR_ACP_CONFIG_APPS}
 	docker-compose up -d --no-build ${CDR_CONSENT_APPS}
-	docker-compose -f docker-compose.cdr.yaml up -d ${CDR_APPS}	
+	docker-compose -f docker-compose.cdr.yaml up -d ${CDR_APPS}
 
 .PHONY: run-cdr-apps-with-saas
 run-cdr-apps-with-saas:
@@ -79,6 +80,11 @@ clean-saas: clean
 .PHONY: run-tests
 run-tests:
 	yarn --cwd tests run cypress open
+
+.PHONY: run-tests-headless
+run-tests-headless:
+	yarn --cwd tests run cypress verify
+	yarn --cwd tests run cypress run
 
 .PHONY: enable-mfa
 enable-mfa:

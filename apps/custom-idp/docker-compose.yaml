@@ -1,0 +1,30 @@
+version: "3.0"
+
+services:
+  custom-idp:
+    image: custom-idp
+    container_name: custom-idp
+    restart: always
+    volumes:
+      - ../../data:/certs
+    ports:
+      - ${PUBLISH}:8080
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    env_file:
+    - .env
+    environment:
+      # Set these variables in your .env file.
+      - CLIENT_ID=${CLIENT_ID}
+      - CLIENT_SECRET=${CLIENT_SECRET}
+      - ISSUER_URL=${ISSUER_URL}
+      - CERT_FILE=/certs/acp_cert.pem
+      - KEY_FILE=/certs/acp_key.pem
+      - ROOT_CA=/certs/ca.pem
+      - LOG_LEVEL=info
+      - GIN_MODE=debug
+      - OIDC_CLIENT_ID=${OIDC_CLIENT_ID}
+      - OIDC_CLIENT_SECRET=${OIDC_CLIENT_SECRET}
+      - OIDC_ISSUER_URL=${OIDC_ISSUER_URL}
+      - OIDC_REDIRECT_URL=${OIDC_REDIRECT_URL}
+      - OIDC_CA_PATH=${OIDC_CA_PATH}
