@@ -76,7 +76,7 @@ function ApplicationAccessTabs({
       <div>
         {tab === "account" && (
           <ApplicationAccessTable
-            data={data.consents.filter((v) => v.type === "account_access")}
+            data={data.consents.filter((v) => v.type === "account_access" || v.type == "cdr_arrangement")}
             type="account"
             handleRevoke={handleRevoke}
             accounts={accounts}

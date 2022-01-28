@@ -76,7 +76,6 @@ func (o *CDRArrangementImpl) RevokeConsent(c *gin.Context, id string) (err error
 	if _, err = o.Client.Openbanking.Cdr.RevokeCDRArrangement(
 		cdr.NewRevokeCDRArrangementParamsWithContext(c).
 			WithCdrArrangementID(&id),
-		nil,
 	); err != nil {
 		return err
 	}

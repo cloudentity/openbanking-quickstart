@@ -97,6 +97,23 @@ func (s *Server) ListConsents() func(*gin.Context) {
 			return
 		}
 
+		accounts = InternalAccounts{
+			Accounts: []InternalAccount{
+				{
+					ID:   "96534987",
+					Name: "Digital banking account",
+				},
+				{
+					ID:   "1000001",
+					Name: "Savings",
+				},
+				{
+					ID:   "1000002",
+					Name: "Savings 2",
+				},
+			},
+		}
+
 		cdrImpl := NewCDRArrangementImpl(s)
 
 		if clientsAndConsents, err = cdrImpl.FetchConsents(c); err != nil {
