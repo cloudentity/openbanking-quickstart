@@ -2,6 +2,7 @@ package main
 
 import (
 	"bytes"
+	"fmt"
 	"net/url"
 	"strings"
 	"time"
@@ -10,7 +11,7 @@ import (
 )
 
 type OidcConfig struct {
-	AuthStyle    string        `env:"OIDC_AUTH_STYLE"` // Enum: [client_secret_basic client_secret_post tls_client_auth ]
+	AuthMethod   string        `env:"OIDC_AUTH_METHOD" envDefault:"client_secret_post"`
 	ClientID     string        `env:"OIDC_CLIENT_ID"`
 	ClientSecret string        `env:"OIDC_CLIENT_SECRET"`
 	IssuerURL    string        `env:"OIDC_ISSUER_URL"`
@@ -22,6 +23,10 @@ type OidcConfig struct {
 }
 
 func (c OidcConfig) Client() (acpclient.Client, error) {
+	authMethod, err := c.AuthenticationMethod()
+	if err != nil {
+		return acpclient.Client{}, err
+	}
 	issuerURL, err := url.Parse(c.IssuerURL)
 	if err != nil {
 		return acpclient.Client{}, err
@@ -31,6 +36,7 @@ func (c OidcConfig) Client() (acpclient.Client, error) {
 		return acpclient.Client{}, err
 	}
 	return acpclient.New(acpclient.Config{
+		AuthMethod:   authMethod,
 		ClientID:     c.ClientID,
 		ClientSecret: c.ClientSecret,
 		IssuerURL:    issuerURL,
@@ -39,6 +45,28 @@ func (c OidcConfig) Client() (acpclient.Client, error) {
 		Timeout:      c.Timeout,
 		RootCA:       c.CAPath,
 	})
+}
+
+func (c OidcConfig) AuthenticationMethod() (method acpclient.AuthMethod, err error) {
+	switch c.AuthMethod {
+	case "client_secret_basic":
+		method = acpclient.ClientSecretBasicAuthnMethod
+	case "client_secret_post":
+		method = acpclient.ClientSecretPostAuthnMethod
+	case "client_secret_jwt":
+		method = acpclient.ClientSecretJwtAuthnMethod
+	case "private_key_jwt":
+		method = acpclient.PrivateKeyJwtAuthnMethod
+	case "self_signed_tls_client_auth":
+		method = acpclient.SelfSignedTLSAuthnMethod
+	case "tls_client_auth":
+		method = acpclient.TLSClientAuthnMethod
+	case "none":
+		method = acpclient.NoneAuthnMethod
+	default:
+		err = fmt.Errorf("Unsupported OIDC AuthMethod %q", c.AuthMethod)
+	}
+	return method, err
 }
 
 // AuthorizeURL builds the URL where the client will redirect the user upon accessing /login endpoint.

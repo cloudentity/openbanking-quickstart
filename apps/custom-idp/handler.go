@@ -86,6 +86,13 @@ func (s *Server) Callback(c *gin.Context) {
 		return
 	}
 
+	// At this point you have the OAuth Access and ID tokes in `data`.
+	// So you can interact with your system, before accepting the login in ACP.
+	if err = DoMyCustomStuff(s, c, token); err != nil {
+		logrus.WithError(err).Error("DoMyCustomStuff failed")
+		return
+	}
+
 	if err == nil {
 		s.AcceptLogin(c, state, token)
 	} else {
@@ -93,32 +100,34 @@ func (s *Server) Callback(c *gin.Context) {
 	}
 }
 
-func (s *Server) AcceptLogin(c *gin.Context, login LoginState, token acpclient.Token) {
+// DoMyCustomStuff can be used to implement your own interactions.
+// The gin.Context can access the http.Request and ResponseWriter.
+func DoMyCustomStuff(s *Server, c *gin.Context, token acpclient.Token) error {
+	return nil
+}
+
+func (s *Server) AcceptLogin(c *gin.Context, login LoginState, tokens acpclient.Token) {
 	var (
-		parser  jwt.Parser
-		claims  jwt.MapClaims
-		subject string
-		ok      bool
-		err     error
+		parser jwt.Parser
+		claims jwt.MapClaims
+		err    error
 	)
 
-	if _, _, err = parser.ParseUnverified(token.IDToken, &claims); err != nil {
+	if _, _, err = parser.ParseUnverified(tokens.IDToken, &claims); err != nil {
 		logrus.WithError(err).Error("parsing id token")
 	}
-	if subject, ok = claims["sub"].(string); !ok {
-		logrus.Error("IDToken subject is not a string")
-	}
+	logrus.Debugf("claims: %#v", claims)
 
 	acceptLogin := models.AcceptSession{
-		Acr:        "",         // authentication context class reference
-		Amr:        []string{}, // authentication methods references
+		Acr:        ClaimAsString(claims, "acr"),      // authentication context class reference
+		Amr:        ClaimAsStringSlice(claims, "amr"), // authentication methods references
 		AuthTime:   strfmt.DateTime(time.Now()),
 		ID:         login.ID,
 		LoginState: login.State,
-		Subject:    subject,
+		Subject:    ClaimAsString(claims, "sub"),
 		AuthenticationContext: map[string]interface{}{
-			"access_token": token.AccessToken,
-			"id_token":     token.IDToken,
+			"access_token": tokens.AccessToken,
+			"id_token":     tokens.IDToken,
 		},
 	}
 	if err = acceptLogin.Validate(nil); err != nil {
@@ -132,7 +141,7 @@ func (s *Server) AcceptLogin(c *gin.Context, login LoginState, token acpclient.T
 			WithContext(c).
 			WithLogin(login.ID).
 			WithAcceptLogin(&acceptLogin),
-		nil, // When would this authinfo param be needed?
+		nil,
 	)
 	if err != nil {
 		if payload, ok := ErrorPayload(err); ok {
@@ -198,7 +207,6 @@ func BindInput(inputStruct interface{}) gin.HandlerFunc {
 	if err != nil {
 		panic(err)
 	}
-
 	return func(c *gin.Context) {
 		input, err := engine.Decode(c.Request)
 		if err != nil {
@@ -210,11 +218,32 @@ func BindInput(inputStruct interface{}) gin.HandlerFunc {
 			c.AbortWithStatus(http.StatusInternalServerError)
 			return
 		}
-
 		ctx := context.WithValue(c.Request.Context(), httpin.Input, input)
 		c.Request = c.Request.WithContext(ctx)
 		c.Next()
 	}
+}
+
+func ClaimAsString(claims jwt.MapClaims, name string) string {
+	if val, ok := claims[name].(string); ok {
+		return string(val)
+	}
+	logrus.Errorf("claim %q is not a string", name)
+	return ""
+}
+
+func ClaimAsStringSlice(claims jwt.MapClaims, name string) []string {
+	if vals, ok := claims[name].([]interface{}); ok {
+		strs := make([]string, 0, len(vals))
+		for _, val := range vals {
+			if str, ok := val.(string); ok {
+				strs = append(strs, str)
+			}
+		}
+		return strs
+	}
+	logrus.Errorf("claim %q is not a slice", name)
+	return []string{}
 }
 
 // ErrorPayload returns the *models.Error for errors that have it.

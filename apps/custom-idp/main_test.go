@@ -20,7 +20,7 @@ func TestLoadConfig(t *testing.T) {
 		"PORT":          "8443",
 		"TIMEOUT":       "30s",
 
-		"OIDC_AUTH_STYLE":    "client_secret_basic",
+		"OIDC_AUTH_METHOD":   "client_secret_basic",
 		"OIDC_CLIENT_ID":     "oidc_client_id",
 		"OIDC_CLIENT_SECRET": "oidc_client_secret",
 		"OIDC_ISSUER_URL":    "oidc_issuer_url",
@@ -44,7 +44,7 @@ func TestLoadConfig(t *testing.T) {
 	assert.Equal(t, 8443, config.Port)
 	assert.Equal(t, time.Second*30, config.Timeout)
 
-	assert.Equal(t, envVars["OIDC_AUTH_STYLE"], config.OIDC.AuthStyle)
+	assert.Equal(t, envVars["OIDC_AUTH_METHOD"], config.OIDC.AuthMethod)
 	assert.Equal(t, envVars["OIDC_CLIENT_ID"], config.OIDC.ClientID)
 	assert.Equal(t, envVars["OIDC_CLIENT_SECRET"], config.OIDC.ClientSecret)
 	assert.Equal(t, envVars["OIDC_ISSUER_URL"], config.OIDC.IssuerURL)
