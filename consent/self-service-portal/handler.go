@@ -10,7 +10,7 @@ import (
 	"github.com/sirupsen/logrus"
 
 	o2Params "github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
-	obCommon "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_common"
+	obuk "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
 	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 )
 
@@ -29,7 +29,7 @@ type Client struct {
 
 type ClientConsents struct {
 	Client
-	Consents []obModels.ConsentWithClient `json:"consents"`
+	Consents []obModels.OBUKConsentWithClient `json:"consents"`
 }
 
 type ConsentsResponse struct {
@@ -41,7 +41,7 @@ func (s *Server) ListConsents() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
 			consentsByAccounts *ConsentsAndAccounts
-			clientToConsents   = map[string][]obModels.ConsentWithClient{}
+			clientToConsents   = map[string][]obModels.OBUKConsentWithClient{}
 			clients            = map[string]Client{}
 			res                = []ClientConsents{}
 			err                error
@@ -79,8 +79,8 @@ func (s *Server) ListConsents() func(*gin.Context) {
 }
 
 type ConsentsAndAccounts struct {
-	Consents []*obModels.ConsentWithClient `json:"consents"`
-	Accounts InternalAccounts              `json:"accounts"`
+	Consents []*obModels.OBUKConsentWithClient `json:"consents"`
+	Accounts InternalAccounts                  `json:"accounts"`
 }
 
 func (s *Server) RevokeConsent() func(*gin.Context) {
@@ -112,9 +112,9 @@ func (s *Server) RevokeConsent() func(*gin.Context) {
 			return
 		}
 
-		if _, err = s.Client.Openbanking.OpenbankingCommon.RevokeOpenbankingConsent(
-			obCommon.NewRevokeOpenbankingConsentParamsWithContext(c).
-				WithAid(s.Config.SystemClientsServerID).
+		if _, err = s.Client.Openbanking.Openbankinguk.RevokeOpenbankingConsent(
+			obuk.NewRevokeOpenbankingConsentParamsWithContext(c).
+				WithWid(s.Config.SystemClientsServerID).
 				WithConsentID(id),
 			nil,
 		); err != nil {
@@ -134,7 +134,7 @@ var (
 func (s *Server) FetchConsents(c *gin.Context) (*ConsentsAndAccounts, error) {
 	var (
 		accounts       InternalAccounts
-		response       *obCommon.ListOBConsentsOK
+		response       *obuk.ListOBConsentsOK
 		introspectResp *o2Params.IntrospectOK
 		err            error
 		types          []string
@@ -172,9 +172,9 @@ func (s *Server) FetchConsents(c *gin.Context) (*ConsentsAndAccounts, error) {
 		accountIDs[i] = a.ID
 	}
 
-	if response, err = s.Client.Openbanking.OpenbankingCommon.ListOBConsents(
-		obCommon.NewListOBConsentsParamsWithContext(c).
-			WithAid(s.Config.SystemClientsServerID).
+	if response, err = s.Client.Openbanking.Openbankinguk.ListOBConsents(
+		obuk.NewListOBConsentsParamsWithContext(c).
+			WithWid(s.Config.SystemClientsServerID).
 			WithConsentsRequest(&obModels.ConsentsRequest{
 				Accounts: accountIDs,
 				Types:    types,
