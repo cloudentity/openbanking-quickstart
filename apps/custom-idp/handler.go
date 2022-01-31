@@ -226,7 +226,7 @@ func BindInput(inputStruct interface{}) gin.HandlerFunc {
 
 func ClaimAsString(claims jwt.MapClaims, name string) string {
 	if val, ok := claims[name].(string); ok {
-		return string(val)
+		return val
 	}
 	logrus.Errorf("claim %q is not a string", name)
 	return ""

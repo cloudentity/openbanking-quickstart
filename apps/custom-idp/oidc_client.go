@@ -64,7 +64,7 @@ func (c OidcConfig) AuthenticationMethod() (method acpclient.AuthMethod, err err
 	case "none":
 		method = acpclient.NoneAuthnMethod
 	default:
-		err = fmt.Errorf("Unsupported OIDC AuthMethod %q", c.AuthMethod)
+		err = fmt.Errorf("unsupported OIDC AuthMethod %q", c.AuthMethod)
 	}
 	return method, err
 }
