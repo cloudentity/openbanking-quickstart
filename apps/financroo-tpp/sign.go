@@ -4,7 +4,7 @@ import (
 	"crypto/rsa"
 	"crypto/x509"
 	"encoding/pem"
-	"io/ioutil"
+	"os"
 	"strconv"
 	"time"
 
@@ -112,7 +112,7 @@ func getPrivateKey(keyFile string) (*rsa.PrivateKey, error) {
 		err   error
 	)
 
-	if data, err = ioutil.ReadFile(keyFile); err != nil {
+	if data, err = os.ReadFile(keyFile); err != nil {
 		return nil, err
 	}
 
