@@ -5,7 +5,7 @@ go 1.15
 require (
 	github.com/Masterminds/sprig/v3 v3.2.2
 	github.com/caarlos0/env/v6 v6.4.0
-	github.com/cloudentity/acp-client-go v0.0.0-20220125182135-92b12234eb28
+	github.com/cloudentity/acp-client-go v0.0.0-20220201180806-0d1951ffb454
 	github.com/dgrijalva/jwt-go v3.2.1-0.20200107013213-dc14462fd587+incompatible
 	github.com/ghodss/yaml v1.0.0
 	github.com/gin-gonic/gin v1.7.3
@@ -27,7 +27,7 @@ require (
 	github.com/stretchr/testify v1.7.0
 	github.com/tidwall/pretty v1.0.2 // indirect
 	go.etcd.io/bbolt v1.3.5
-	golang.org/x/oauth2 v0.0.0-20210514164344-f6687ab2804c
+	golang.org/x/oauth2 v0.0.0-20211104180415-d3ed0bb246c8
 	golang.org/x/text v0.3.6
 	gopkg.in/go-playground/assert.v1 v1.2.1 // indirect
 	gopkg.in/go-playground/validator.v9 v9.31.0
