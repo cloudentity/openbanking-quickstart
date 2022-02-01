@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -28,7 +29,7 @@ type ClientConsents struct {
 	Consents []Consent `json:"consents"`
 }
 
-func (c *ClientConsents) ConsentIDExists(consentID string) bool {
+func (c *ClientConsents) HasConsentID(consentID string) bool {
 	for _, consent := range c.Consents {
 		if consent.ConsentID == consentID {
 			return true
@@ -81,10 +82,10 @@ func MapClientsToConsents(clients []Client, consents []Consent) []ClientConsents
 func (s *Server) ListConsents() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			sub                string
-			accounts           InternalAccounts
-			clientsAndConsents []ClientConsents
-			err                error
+			sub                    string
+			accounts, acc          InternalAccounts
+			clientsAndConsents, cc []ClientConsents
+			err                    error
 		)
 
 		if sub, err = s.GetSubject(c); err != nil {
@@ -92,33 +93,20 @@ func (s *Server) ListConsents() func(*gin.Context) {
 			return
 		}
 
-		if accounts, err = s.BankClient.GetInternalAccounts(sub); err != nil {
-			Error(c, ToAPIError(err))
-			return
-		}
+		for _, spec := range []Spec{OBUK, CDR} {
+			if acc, err = s.BankClients[spec].GetInternalAccounts(sub); err != nil {
+				Error(c, ToAPIError(err))
+				return
+			}
 
-		accounts = InternalAccounts{
-			Accounts: []InternalAccount{
-				{
-					ID:   "96534987",
-					Name: "Digital banking account",
-				},
-				{
-					ID:   "1000001",
-					Name: "Savings",
-				},
-				{
-					ID:   "1000002",
-					Name: "Savings 2",
-				},
-			},
-		}
+			accounts.Accounts = append(accounts.Accounts, acc.Accounts...)
 
-		cdrImpl := NewCDRArrangementImpl(s)
+			if cc, err = s.ConsentClients[spec].FetchConsents(c); err != nil {
+				Error(c, ToAPIError(err))
+				return
+			}
 
-		if clientsAndConsents, err = cdrImpl.FetchConsents(c); err != nil {
-			Error(c, ToAPIError(err))
-			return
+			clientsAndConsents = append(clientsAndConsents, cc...)
 		}
 
 		c.JSON(http.StatusOK, &ConsentsResponse{
@@ -137,24 +125,28 @@ func (s *Server) RevokeConsent() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
 			id                 = c.Param("id")
+			consentType        = c.Query("consent_type")
 			clientsAndConsents []ClientConsents
 			canBeRevoked       bool
+			consentClient      ConsentClient = s.GetConsentClientByConsentType(consentType)
 			err                error
-			//consentImpls       []ConsentInteractor
 		)
 
-		//consentImpls = append(consentImpls, NewOBUKConsentImpl(s))
-		//consentImpls = append(consentImpls, NewCDRArrangementImpl(s))
+		if consentClient == nil {
+			Error(c, APIError{
+				Code:    http.StatusBadRequest,
+				Message: fmt.Sprintf("unable to retrieve consent client for consent type [%s]", consentType),
+			})
+			return
+		}
 
-		cdrImpl := NewCDRArrangementImpl(s)
-
-		if clientsAndConsents, err = cdrImpl.FetchConsents(c); err != nil {
+		if clientsAndConsents, err = consentClient.FetchConsents(c); err != nil {
 			Error(c, ToAPIError(err))
 			return
 		}
 
 		for _, c := range clientsAndConsents {
-			if c.ConsentIDExists(id) {
+			if c.HasConsentID(id) {
 				canBeRevoked = true
 				break
 			}
@@ -168,7 +160,7 @@ func (s *Server) RevokeConsent() func(*gin.Context) {
 			return
 		}
 
-		if err = cdrImpl.RevokeConsent(c, id); err != nil {
+		if err = consentClient.RevokeConsent(c, id); err != nil {
 			Error(c, ToAPIError(err))
 			return
 		}
@@ -227,4 +219,14 @@ func ToAPIError(err error) APIError {
 		http.StatusText(http.StatusInternalServerError),
 		err,
 	}
+}
+
+func (s *Server) GetConsentClientByConsentType(consentType string) ConsentClient {
+	switch consentType {
+	case "account_access", "domestic_payment":
+		return s.ConsentClients[OBUK]
+	case "cdr_arrangement":
+		return s.ConsentClients[CDR]
+	}
+	return nil
 }
