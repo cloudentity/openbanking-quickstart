@@ -10,7 +10,6 @@ import (
 	"github.com/go-openapi/strfmt"
 
 	o2Params "github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
-	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 )
 
 func (s *Server) Index() func(*gin.Context) {
@@ -141,13 +140,7 @@ func (s *Server) ListConsents() func(*gin.Context) {
 			ClientConsents: clientsAndConsents,
 			Accounts:       accounts,
 		})
-
 	}
-}
-
-type ConsentsAndAccounts struct {
-	Consents []*obModels.OBUKConsentWithClient `json:"consents"`
-	Accounts InternalAccounts                  `json:"accounts"`
 }
 
 func (s *Server) RevokeConsent() func(*gin.Context) {

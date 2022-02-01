@@ -18,7 +18,6 @@ type Spec string
 
 const (
 	OBUK Spec = "obuk"
-	OBBR Spec = "obbr"
 	CDR  Spec = "cdr"
 )
 

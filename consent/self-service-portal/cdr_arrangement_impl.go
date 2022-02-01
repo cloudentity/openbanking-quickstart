@@ -1,9 +1,10 @@
 package main
 
 import (
+	"github.com/gin-gonic/gin"
+
 	cdr "github.com/cloudentity/acp-client-go/clients/openbanking/client/c_d_r"
 	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
-	"github.com/gin-gonic/gin"
 )
 
 type CDRArrangementImpl struct {
