@@ -106,7 +106,8 @@ function ApplicationSimpleCard({ client, clickable = true }) {
         (v) =>
           (v.type === "account_access" && "Accounts") ||
           (v.type === "domestic_payment" && "Payments") ||
-          null
+          (v.type === "cdr_arrangement" && "Accounts") ||
+          null 
       )
       .filter((v) => v)
   ).join(", ");

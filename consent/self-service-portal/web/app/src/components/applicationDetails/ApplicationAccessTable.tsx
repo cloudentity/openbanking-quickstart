@@ -208,17 +208,17 @@ function ApplicationAccessTable({
 
   const rowsPayment =
     type === "payment"
-      ? data.map(({ account_ids, domestic_payment_consent }) =>
+      ? data.map(({ AccountIDs, CreationDateTime, Status, ConsentID, Amount, CreditorAccountName }) =>
           createDataPayment(
-            getDate(domestic_payment_consent?.CreationDateTime),
+            getDate(CreationDateTime),
             getAccountNames(
-              account_ids ?? [],
+              AccountIDs ?? [],
               accounts
             ),
-            domestic_payment_consent?.Initiation?.CreditorAccount?.Name,
-            domestic_payment_consent?.Status,
-            domestic_payment_consent?.Initiation?.InstructedAmount?.Amount,
-            domestic_payment_consent?.ConsentID
+            CreditorAccountName,
+            Status,
+            Amount,
+            ConsentID
           )
         )
       : [];
