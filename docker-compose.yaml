@@ -137,7 +137,8 @@ services:
       - SYSTEM_CLIENT_ID=buc3b1hhuc714r78env0
       - SYSTEM_CLIENT_SECRET=PBV7q0akoP603rZbU0EFdxbhZ-djxF7FIVwyKaLnBYU
       - SYSTEM_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
-      - SYSTEM_CLIENTS_SERVER_ID=${OPENBANKING_SERVER_ID}
+      - OPENBANKING_UK_WORKSPACE_ID=openbanking
+      - CDR_WORKSPACE_ID=cdr
       - CERT_FILE=/bank_cert.pem
       - KEY_FILE=/bank_key.pem
       - ROOT_CA=/ca.pem

@@ -25,7 +25,8 @@ type Config struct {
 	SystemClientID              string        `env:"SYSTEM_CLIENT_ID,required"`
 	SystemClientSecret          string        `env:"SYSTEM_CLIENT_SECRET,required"`
 	SystemIssuerURL             *url.URL      `env:"SYSTEM_ISSUER_URL,required"`
-	SystemClientsServerID       string        `env:"SYSTEM_CLIENTS_SERVER_ID,required"`
+	OpenbankingUKWorkspaceID    string        `env:"OPENBANKING_UK_WORKSPACE_ID,required"`
+	CDRWorkspaceID              string        `env:"CDR_WORKSPACE_ID,required"`
 	Timeout                     time.Duration `env:"TIMEOUT" envDefault:"5s"`
 	RootCA                      string        `env:"ROOT_CA"`
 	CertFile                    string        `env:"CERT_FILE,required"`
