@@ -11,7 +11,7 @@ type OBUKConsentImpl struct {
 	*Server
 }
 
-func NewOBUKConsentImpl(s *Server) ConsentInteractor {
+func NewOBUKConsentImpl(s *Server) ConsentClient {
 	return &OBUKConsentImpl{s}
 }
 

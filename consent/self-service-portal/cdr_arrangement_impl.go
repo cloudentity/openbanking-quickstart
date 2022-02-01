@@ -10,7 +10,7 @@ type CDRArrangementImpl struct {
 	*Server
 }
 
-func NewCDRArrangementImpl(s *Server) ConsentInteractor {
+func NewCDRArrangementImpl(s *Server) ConsentClient {
 	return &CDRArrangementImpl{s}
 }
 
