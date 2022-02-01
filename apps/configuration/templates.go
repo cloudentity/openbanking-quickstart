@@ -34,7 +34,7 @@ func LoadTemplates(dirs []string, variablesFile *string) (Templates, error) {
 	)
 
 	if variablesFile != nil && *variablesFile != "" {
-		if bs, err = ioutil.ReadFile(*variablesFile); err != nil {
+		if bs, err = os.ReadFile(*variablesFile); err != nil {
 			return templates, err
 		}
 
@@ -59,7 +59,7 @@ func LoadTemplates(dirs []string, variablesFile *string) (Templates, error) {
 			file := fmt.Sprintf("%s/%s", d, f.Name())
 			logrus.Debugf("read file: %+v", file)
 
-			if bs, err = ioutil.ReadFile(file); err != nil {
+			if bs, err = os.ReadFile(file); err != nil {
 				return templates, errors.Wrapf(err, "failed to read template: %s", file)
 			}
 

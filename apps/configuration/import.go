@@ -3,7 +3,7 @@ package main
 import (
 	"bytes"
 	"fmt"
-	"io/ioutil"
+	"io"
 	"net/http"
 	"net/url"
 
@@ -43,7 +43,7 @@ func ImportConfiguration(tenantURL *url.URL, tenant *string, client *http.Client
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusNoContent {
-		if bs, err = ioutil.ReadAll(resp.Body); err != nil {
+		if bs, err = io.ReadAll(resp.Body); err != nil {
 			return err
 		}
 

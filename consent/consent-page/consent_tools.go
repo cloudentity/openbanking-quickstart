@@ -270,7 +270,7 @@ func OBUKPaymentConsentTemplateData(consent *obModels.DomesticPaymentConsent) Pa
 	}
 }
 
-func OBBRPaymentConsentTemplateData(consent *obModels.OBBRCustomerPaymentConsent) PaymentConsentTemplateData {
+func OBBRPaymentConsentTemplateData(consent *obModels.BrazilCustomerPaymentConsent) PaymentConsentTemplateData {
 	return PaymentConsentTemplateData{
 		AccountName:    consent.Creditor.Name,
 		Identification: consent.DebtorAccount.Number,

@@ -46,7 +46,7 @@ func (h *OBBRLogic) CreateConsent(c *gin.Context) (interface{}, error) {
 
 	if registerResponse, err = h.Client.Openbanking.Openbankingbr.CreateDataAccessConsent(
 		obbrModels.NewCreateDataAccessConsentParamsWithContext(c).
-			WithRequest(&obModels.OBBRCustomerDataAccessConsentRequest{
+			WithRequest(&obModels.BrazilCustomerDataAccessConsentRequest{
 				Data: &obModels.OpenbankingBrasilConsentData{
 					ExpirationDateTime: strfmt.DateTime(time.Now().Add(time.Hour * 24)),
 					LoggedUser: &obModels.OpenbankingBrasilConsentLoggedUser{

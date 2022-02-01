@@ -13,6 +13,7 @@ KEY_FILE	= ../../data/bank_key.pem
 PORT		= 8080
 
 # Populate these settings from your Web Server Application.
+OIDC_AUTH_METHOD	= client_secret_post # Enum: [client_secret_basic client_secret_post tls_client_auth ]
 OIDC_CLIENT_ID		= c7ob5jf4dqkttnd43ilg
 OIDC_CLIENT_SECRET	= w7GLTQWNVwVu2D9VeNzZDMj-2tDLbxtaEx690NwcD4A
 OIDC_ISSUER_URL		= https://host.docker.internal:8443/default/external-authorizer
@@ -48,6 +49,7 @@ run:	build
 	FAILURE_URL=https://localhost:8443/default/default/demo?something+went+wrong \
 	LOG_LEVEL=debug \
 	GIN_MODE=debug \
+	OIDC_AUTH_METHOD=${OIDC_AUTH_METHOD} \
 	OIDC_CLIENT_ID=${OIDC_CLIENT_ID} \
 	OIDC_CLIENT_SECRET=${OIDC_CLIENT_SECRET} \
 	OIDC_ISSUER_URL=${OIDC_ISSUER_URL} \

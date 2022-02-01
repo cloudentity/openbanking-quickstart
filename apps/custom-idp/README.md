@@ -4,7 +4,8 @@ This application demonstrates a Custom Identity Provider that integrates with an
 
 Briefly, we are going to create a Custom Identity Provider (Custom IDP) in ACP,
 that delegates authentication and authorization to an external OpenID Connect (OIDC) provider.
-For convenience in the demonstration, ACP will also serve as the external OIDC provider,
+The process is documented in [Connecting with a custom IDP](https://docs.authorization.cloudentity.com/guides/workspace_admin/connect/custom_idp/).
+For convenience in the demonstration, ACP will also play the role of the external OIDC provider,
 but it is intended to represent a pre-existing OIDC provider that you wish to integrate with ACP.
 
 ## Prerequisites
@@ -30,19 +31,18 @@ Choose **Custom IDP**, click **Next**, and enter the following properies:
 - Name: _Custom-IDP_
 - Login URL: `https://127.0.0.1:8080/login`
 
-In the _Custom-IDP_'s _Attributes_ tab, add the following authentication context attributes:
+In the _Custom-IDP_'s _Attributes_ tab, add the following attributes:
 
-| Source | Name            | Variable     | Type            |
-| ------ | --------------- | ------------ | --------------- |
-| Root   | Phone number    | phone_number | string          |
+| Name         | Display Name | Type   |
+|--------------|--------------|--------|
+| access_token | Access Token | string |
+| id_token     | ID Token     | string |
+|              |              |        |
 
-Then in the _Custom-IDP_'s _Mappings_ tab, set up the following mappings and click **Save Mappings**:
+Then, go to the Data Lineage page, and copy each attribute to the **Authentication Context**,
+and from there to the _Demo Portal_ box in the **Applications** column.
 
-| Source Name     | Target_Name                   |
-| --------------- | ----------------------------- |
-| Phone Number    | Phone                         |
-
-From the _Configuration_ tab, copy the *CLIENT_ID*, *CLIENT_SECRET* and *ISSUER_URL* settings
+From the _Custom-IDP_'s _Configuration_ tab, copy the *CLIENT_ID*, *CLIENT_SECRET* and *ISSUER_URL* settings
 into the `.env` file. These values are used in the `docker-compose.yaml` file.
 
 ```
@@ -136,25 +136,27 @@ When you wish to stop the container:
 
 This application obtains its configuration from environment variables:
 
-| Variable           | Required | Default | Description                                                |
-|--------------------|----------|---------|------------------------------------------------------------|
-| CLIENT_ID          | req      |         | The Client ID from your custom IDP settings                |
-| CLIENT_SECRET      | req      |         | The Client Secret from your custom IDP settings            |
-| ISSUER_URL         | req      |         | The Issuer URL from your custom IDP settings               |
-| CERT_FILE          | req      |         | Path to the TLS public certificate PEM file                |
-| KEY_FILE           | req      |         | Path to the TLS private key PEM file                       |
-| ROOT_CA            | opt      |         | Path to the Certificate Authority cert PEM for ACP         |
-| FAILURE_URL        | req      |         | URL to redirect user to in case of failure.                |
-| GIN_MODE           | opt      | debug   | Sets log level for gin-gonic. Use 'release' for production |
-| LOG_LEVEL          | opt      | info    | Sets the level of detail in log output                     |
-| PORT               | opt      | 8080    | TCP port where this service will listen for connections    |
-| TIMEOUT            | opt      | 5 sec   | Timeout for connections to ACP                             |
-| OIDC_CLIENT_ID     | req      |         | The Client ID from the external OIDC provider              |
-| OIDC_CLIENT_SECRET | req      |         | The Client Secret from the external OIDC provider          |
-| OIDC_ISSUER_URL    | req      |         | The Issuer URL from the external OIDC provider             |
-| OIDC_REDIRECT_URL  | req      |         | The URL of this server's /callback endpoint                |
-| OIDC_CA_PATH       | opt      |         | Certificate Authority cert for the OIDC provider           |
+| Variable           | Required | Default            | Description                                                |
+|--------------------|----------|--------------------|------------------------------------------------------------|
+| CLIENT_ID          | req      |                    | The Client ID from your custom IDP settings                |
+| CLIENT_SECRET      | req      |                    | The Client Secret from your custom IDP settings            |
+| ISSUER_URL         | req      |                    | The Issuer URL from your custom IDP settings               |
+| CERT_FILE          | req      |                    | Path to the TLS public certificate PEM file                |
+| KEY_FILE           | req      |                    | Path to the TLS private key PEM file                       |
+| ROOT_CA            | opt      |                    | Path to the Certificate Authority cert PEM for ACP         |
+| FAILURE_URL        | req      |                    | URL to redirect user to in case of failure.                |
+| GIN_MODE           | opt      | debug              | Sets log level for gin-gonic. Use 'release' for production |
+| LOG_LEVEL          | opt      | info               | Sets the level of detail in log output                     |
+| PORT               | opt      | 8080               | TCP port where this service will listen for connections    |
+| TIMEOUT            | opt      | 5 sec              | Timeout for connections to ACP                             |
+| OIDC_AUTH_METHOD   | opt      | client_secret_post | Client Authentication Method(*)                            |
+| OIDC_CLIENT_ID     | req      |                    | The Client ID from the external OIDC provider              |
+| OIDC_CLIENT_SECRET | req      |                    | The Client Secret from the external OIDC provider          |
+| OIDC_ISSUER_URL    | req      |                    | The Issuer URL from the external OIDC provider             |
+| OIDC_REDIRECT_URL  | req      |                    | The URL of this server's /callback endpoint                |
+| OIDC_CA_PATH       | opt      |                    | Certificate Authority cert for the OIDC provider           |
 
+_*_ Refer to [Client secret authentication methods](https://docs.authorization.cloudentity.com/features/oauth/client_auth/client_secrets/)
 
 The files `docker-compose.yaml` and `.env` file in this directory provide an example
 how these environment variables can be used to configure this application.

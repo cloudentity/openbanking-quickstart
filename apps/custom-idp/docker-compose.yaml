@@ -23,6 +23,7 @@ services:
       - ROOT_CA=${ROOT_CA}
       - LOG_LEVEL=info
       - GIN_MODE=debug
+      - OIDC_AUTH_METHOD=${OIDC_AUTH_METHOD}
       - OIDC_CLIENT_ID=${OIDC_CLIENT_ID}
       - OIDC_CLIENT_SECRET=${OIDC_CLIENT_SECRET}
       - OIDC_ISSUER_URL=${OIDC_ISSUER_URL}

@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	"net/http"
 	"net/url"
 	"strings"
 	"time"
@@ -74,24 +73,13 @@ func (c Config) Client() (acpclient.Client, error) {
 	})
 }
 
-// This interface lets us substitute a mock http.Client.
-type HTTPClient interface {
-	Do(*http.Request) (*http.Response, error)
-}
-
 type Server struct {
 	Config     Config
 	AcpClient  acpclient.Client
 	OidcClient acpclient.Client
-	HttpClient HTTPClient // nolint
 }
 
-func NewServer() (Server, error) {
-	var (
-		server = Server{HttpClient: http.DefaultClient}
-		err    error
-	)
-
+func NewServer() (server Server, err error) {
 	if server.Config, err = LoadConfig(); err != nil {
 		return server, errors.Wrapf(err, "failed to load config")
 	}

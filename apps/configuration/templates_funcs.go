@@ -3,7 +3,7 @@ package main
 import (
 	"crypto/x509"
 	"encoding/json"
-	"io/ioutil"
+	"os"
 	"text/template"
 
 	sprig "github.com/Masterminds/sprig/v3"
@@ -58,7 +58,7 @@ func MustPemToPublicJwks(v string) string {
 }
 
 func MustReadFile(v string) string {
-	f, err := ioutil.ReadFile(v)
+	f, err := os.ReadFile(v)
 	if err != nil {
 		return ""
 	}

@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"time"
 
@@ -143,7 +142,7 @@ func readUserToDataFile(filepath string) (UserToDataFile, error) {
 		err  error
 	)
 
-	if bs, err = ioutil.ReadFile(filepath); err != nil {
+	if bs, err = os.ReadFile(filepath); err != nil {
 		return u2df, errors.Wrapf(err, "failed to read file")
 	}
 

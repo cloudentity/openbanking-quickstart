@@ -50,14 +50,14 @@ func NewOBBRPayment(introspectionResponse *obModels.IntrospectOBBRPaymentConsent
 	return paymentModels.OpenbankingBrasilResponsePixPayment{
 		Data: &paymentModels.OpenbankingBrasilResponsePixPaymentData{
 			PaymentID:            id,
-			ConsentID:            introspectionResponse.ConsentID,
+			ConsentID:            *introspectionResponse.ConsentID,
 			CreationDateTime:     now,
 			StatusUpdateDateTime: now,
 			Status:               &status,
 			LocalInstrument:      &localInstrument,
 			Payment: &paymentModels.OpenbankingBrasilPaymentPix{
-				Amount:   introspectionResponse.OBBRCustomerPaymentConsent.Payment.Amount,
-				Currency: introspectionResponse.OBBRCustomerPaymentConsent.Payment.Currency,
+				Amount:   introspectionResponse.Payment.Amount,
+				Currency: introspectionResponse.Payment.Currency,
 			},
 			CreditorAccount: &paymentModels.OpenbankingBrasilCreditorAccount{},
 		},
