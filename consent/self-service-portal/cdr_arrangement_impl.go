@@ -41,19 +41,29 @@ func (o *CDRArrangementImpl) FetchConsents(c *gin.Context) ([]ClientConsents, er
 	return MapClientsToConsents(o.getClients(response), o.getConsents(response)), nil
 }
 
-func (o *CDRArrangementImpl) getClients(response *cdr.ListCDRArrangementsOK) (clients []Client) {
+func (o *CDRArrangementImpl) getClients(response *cdr.ListCDRArrangementsOK) []Client {
+	var clients Clients
+
 	for _, arrangement := range response.Payload.Arrangements {
+		if arrangement.Status == "Rejected" {
+			continue
+		}
 		// TODO: cdr arrangement api does not return any additional client info
 		clients = append(clients, Client{
 			ID:   arrangement.ClientID,
 			Name: "Babaloo",
 		})
 	}
-	return clients
+	return clients.Unique()
 }
 
-func (o *CDRArrangementImpl) getConsents(response *cdr.ListCDRArrangementsOK) (consents []Consent) {
+func (o *CDRArrangementImpl) getConsents(response *cdr.ListCDRArrangementsOK) []Consent {
+	var consents []Consent
+
 	for _, arrangement := range response.Payload.Arrangements {
+		if arrangement.Status == "Rejected" {
+			continue
+		}
 		consents = append(consents, Consent{
 			AccountIDs: arrangement.AccountIds,
 			ConsentID:  string(arrangement.CdrArrangementID),
@@ -73,9 +83,11 @@ func (o *CDRArrangementImpl) getConsents(response *cdr.ListCDRArrangementsOK) (c
 }
 
 func (o *CDRArrangementImpl) RevokeConsent(c *gin.Context, id string) (err error) {
-	if _, err = o.Client.Openbanking.Cdr.RevokeCDRArrangement(
-		cdr.NewRevokeCDRArrangementParamsWithContext(c).
-			WithCdrArrangementID(&id),
+	if _, err = o.Client.Openbanking.Cdr.RevokeCDRArrangementByID(
+		cdr.NewRevokeCDRArrangementByIDParamsWithContext(c).
+			WithWid("cdr").
+			WithArrangementID(id),
+		nil,
 	); err != nil {
 		return err
 	}
