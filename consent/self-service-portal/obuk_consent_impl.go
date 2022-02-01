@@ -43,7 +43,7 @@ func (o *OBUKConsentImpl) FetchConsents(c *gin.Context) ([]ClientConsents, error
 }
 
 func (o *OBUKConsentImpl) getClients(resp *obukModels.ListOBConsentsOK) []Client {
-	var clients []Client
+	var clients Clients
 
 	for _, consent := range resp.Payload.Consents {
 		if consent.Client != nil {
@@ -56,7 +56,7 @@ func (o *OBUKConsentImpl) getClients(resp *obukModels.ListOBConsentsOK) []Client
 		}
 	}
 
-	return clients
+	return clients.Unique()
 }
 
 func (o *OBUKConsentImpl) getConsents(resp *obukModels.ListOBConsentsOK) []Consent {
@@ -69,16 +69,7 @@ func (o *OBUKConsentImpl) getConsents(resp *obukModels.ListOBConsentsOK) []Conse
 			permissions []string
 		)
 
-		switch consent.Type {
-		case "account_access":
-			expiresAt = consent.AccountAccessConsent.ExpirationDateTime
-			updatedAt = strfmt.DateTime(*consent.AccountAccessConsent.StatusUpdateDateTime)
-			permissions = consent.AccountAccessConsent.Permissions
-		case "domestic_payment":
-			updatedAt = consent.DomesticPaymentConsent.StatusUpdateDateTime
-		}
-
-		consents = append(consents, Consent{
+		c := Consent{
 			AccountIDs:  consent.AccountIds,
 			ConsentID:   consent.ConsentID,
 			TenantID:    consent.TenantID,
@@ -90,7 +81,25 @@ func (o *OBUKConsentImpl) getConsents(resp *obukModels.ListOBConsentsOK) []Conse
 			ExpiresAt:   expiresAt,
 			UpdatedAt:   updatedAt,
 			Permissions: permissions,
-		})
+		}
+
+		switch consent.Type {
+		case "account_access":
+			c.ExpiresAt = consent.AccountAccessConsent.ExpirationDateTime
+			c.UpdatedAt = strfmt.DateTime(*consent.AccountAccessConsent.StatusUpdateDateTime)
+			c.Permissions = consent.AccountAccessConsent.Permissions
+		case "domestic_payment":
+			c.UpdatedAt = consent.DomesticPaymentConsent.StatusUpdateDateTime
+			c.DebtorAccountIdentification = string(*consent.DomesticPaymentConsent.Initiation.DebtorAccount.Identification)
+			c.DebtorAccountName = consent.DomesticPaymentConsent.Initiation.DebtorAccount.Name
+			c.CreditorAccountIdentification = string(*consent.DomesticPaymentConsent.Initiation.CreditorAccount.Identification)
+			c.CreditorAccountName = consent.DomesticPaymentConsent.Initiation.CreditorAccount.Name
+			c.Currency = string(*consent.DomesticPaymentConsent.Initiation.InstructedAmount.Currency)
+			c.Amount = string(*consent.DomesticPaymentConsent.Initiation.InstructedAmount.Amount)
+			c.CompletionDateTime = consent.DomesticPaymentConsent.Authorisation.CompletionDateTime
+		}
+
+		consents = append(consents, c)
 	}
 
 	return consents
