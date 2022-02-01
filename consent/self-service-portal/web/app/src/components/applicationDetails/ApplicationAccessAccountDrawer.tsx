@@ -88,7 +88,7 @@ type Props = {
   drawerData: any;
   accounts: any;
   setDrawerData: (data: string | null) => void;
-  handleRevoke: (id: string) => void;
+  handleRevoke: (id: string, consent_type: string) => void;
   status: string;
 };
 
@@ -180,7 +180,7 @@ function ApplicationAccessPaymentDrawer({
             disabled={revokeAccess && !revokeAccessAgree}
             onClick={() => {
               if (revokeAccess) {
-                handleRevoke(drawerData?.ConsentID);
+                handleRevoke(drawerData?.ConsentID, drawerData?.type);
                 setRevokeAccess(false);
                 setDrawerData(null);
               } else {

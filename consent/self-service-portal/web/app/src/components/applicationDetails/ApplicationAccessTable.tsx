@@ -163,7 +163,7 @@ type Props = {
   data: any;
   accounts: any;
   type: "account" | "payment";
-  handleRevoke: (id: string) => void;
+  handleRevoke: (id: string, consent_type: string) => void;
   status: string;
 };
 

@@ -58,10 +58,10 @@ function ApplicationDetailsController({
       .finally(() => setProgress(false));
   }, [id]);
 
-  const handleRevoke = (id) => {
+  const handleRevoke = (id, consent_type) => {
     setProgress(true);
     api
-      .deleteConsent({ id })
+      .deleteConsent({ id, consent_type })
       .then(api.getConsents)
       .then((res) => setClientConsent(res.client_consents))
       .then(() => history.push("/"))

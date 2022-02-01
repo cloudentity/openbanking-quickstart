@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 type Props = {
   data: any; // FIXME
   accounts: any; // FIXME
-  handleRevoke: (id: string) => void;
+  handleRevoke: (id: string, consent_type: string) => void;
   status: string;
 };
 
