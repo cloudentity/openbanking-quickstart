@@ -45,6 +45,23 @@ type Client struct {
 	ClientURI string `json:"client_uri"`
 }
 
+type Clients []Client
+
+func (c *Clients) Unique() []Client {
+	var clients []Client
+	m := make(map[string]bool)
+
+	for _, client := range *c {
+		if _, exists := m[client.ID]; exists {
+			continue
+		}
+		m[client.ID] = true
+		clients = append(clients, client)
+	}
+
+	return clients
+}
+
 type Consent struct {
 	AccountIDs  []string        `json:"AccountIDs"`
 	ConsentID   string          `json:"ConsentID"`
@@ -57,6 +74,17 @@ type Consent struct {
 	ExpiresAt   strfmt.DateTime `json:"ExpirationDateTime"`
 	UpdatedAt   strfmt.DateTime `json:"StatusUpdateDateTime"`
 	Permissions []string        `json:"Permissions"`
+
+	DebtorAccountIdentification string `json:"DebtorAccountIdentification"`
+	DebtorAccountName           string `json:"DebtorAccountName"`
+
+	CreditorAccountIdentification string `json:"CreditorAccountIdentification"`
+	CreditorAccountName           string `json:"CreditorAccountName"`
+
+	Currency string `json:"Currency"`
+	Amount   string `json:"Amount"`
+
+	CompletionDateTime strfmt.DateTime `json:"CompletionDateTime"`
 }
 
 func MapClientsToConsents(clients []Client, consents []Consent) []ClientConsents {
@@ -113,6 +141,7 @@ func (s *Server) ListConsents() func(*gin.Context) {
 			ClientConsents: clientsAndConsents,
 			Accounts:       accounts,
 		})
+
 	}
 }
 
