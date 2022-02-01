@@ -14,6 +14,14 @@ import (
 	acpclient "github.com/cloudentity/acp-client-go"
 )
 
+type Spec string
+
+const (
+	OBUK Spec = "obuk"
+	OBBR Spec = "obbr"
+	CDR  Spec = "cdr"
+)
+
 type Config struct {
 	SystemClientID              string        `env:"SYSTEM_CLIENT_ID,required"`
 	SystemClientSecret          string        `env:"SYSTEM_CLIENT_SECRET,required"`
@@ -72,7 +80,8 @@ type Server struct {
 	Config           Config
 	Client           acpclient.Client
 	IntrospectClient acpclient.Client
-	BankClient       BankClient
+	BankClients      map[Spec]BankClient
+	ConsentClients   map[Spec]ConsentClient
 }
 
 func NewServer() (Server, error) {
@@ -93,7 +102,15 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to init introspect acp client")
 	}
 
-	server.BankClient = NewBankClient(server.Config)
+	server.BankClients = map[Spec]BankClient{
+		OBUK: NewOBUKBankClient(server.Config),
+		CDR:  &CDRBankClient{},
+	}
+
+	server.ConsentClients = map[Spec]ConsentClient{
+		OBUK: NewOBUKConsentImpl(&server),
+		CDR:  NewCDRArrangementImpl(&server),
+	}
 
 	return server, nil
 }
