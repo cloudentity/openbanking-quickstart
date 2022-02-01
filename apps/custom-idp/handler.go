@@ -69,9 +69,9 @@ type CallbackInput struct {
 // Callback handles the redirect from the external IDP to /callback.
 func (s *Server) Callback(c *gin.Context) {
 	var (
-		token acpclient.Token
-		state LoginState
-		err   error
+		tokens acpclient.Token
+		state  LoginState
+		err    error
 	)
 	input, _ := c.Request.Context().Value(httpin.Input).(*CallbackInput)
 
@@ -81,20 +81,20 @@ func (s *Server) Callback(c *gin.Context) {
 	}
 
 	// Exchange code for access and ID tokens.
-	if token, err = s.OidcClient.Exchange(input.Code, "", acpclient.CSRF{}); err != nil {
-		logrus.WithError(err).Error("Exchange code for token")
+	if tokens, err = s.OidcClient.Exchange(input.Code, "", acpclient.CSRF{}); err != nil {
+		logrus.WithError(err).Error("Exchange code for tokens")
 		return
 	}
 
-	// At this point you have the OAuth Access and ID tokes in `data`.
+	// At this point you have the OAuth Access and ID tokens in `tokens`.
 	// So you can interact with your system, before accepting the login in ACP.
-	if err = DoMyCustomStuff(s, c, token); err != nil {
+	if err = DoMyCustomStuff(s, c, tokens); err != nil {
 		logrus.WithError(err).Error("DoMyCustomStuff failed")
 		return
 	}
 
 	if err == nil {
-		s.AcceptLogin(c, state, token)
+		s.AcceptLogin(c, state, tokens)
 	} else {
 		s.RejectLogin(c, state)
 	}
@@ -102,7 +102,7 @@ func (s *Server) Callback(c *gin.Context) {
 
 // DoMyCustomStuff can be used to implement your own interactions.
 // The gin.Context can access the http.Request and ResponseWriter.
-func DoMyCustomStuff(s *Server, c *gin.Context, token acpclient.Token) error {
+func DoMyCustomStuff(s *Server, c *gin.Context, tokens acpclient.Token) error {
 	return nil
 }
 
