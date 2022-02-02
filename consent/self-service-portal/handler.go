@@ -46,11 +46,11 @@ type Client struct {
 
 type Clients []Client
 
-func (c *Clients) Unique() []Client {
+func (c Clients) Unique() []Client {
 	var clients []Client
 	m := make(map[string]bool)
 
-	for _, client := range *c {
+	for _, client := range c {
 		if _, exists := m[client.ID]; exists {
 			continue
 		}

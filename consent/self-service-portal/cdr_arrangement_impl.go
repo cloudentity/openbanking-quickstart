@@ -5,6 +5,7 @@ import (
 
 	cdr "github.com/cloudentity/acp-client-go/clients/openbanking/client/c_d_r"
 	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
+	system "github.com/cloudentity/acp-client-go/clients/system/client/clients"
 )
 
 type CDRArrangementImpl struct {
@@ -17,18 +18,19 @@ func NewCDRArrangementImpl(s *Server) ConsentClient {
 
 func (o *CDRArrangementImpl) FetchConsents(c *gin.Context) ([]ClientConsents, error) {
 	var (
-		response *cdr.ListCDRArrangementsOK
-		err      error
-		types    []string
-		cac      []ClientConsents
-		ok       bool
+		arrangementsResponse *cdr.ListCDRArrangementsOK
+		clientsResponse      *system.ListClientsSystemOK
+		err                  error
+		types                []string
+		cac                  []ClientConsents
+		ok                   bool
 	)
 
 	if types, ok = c.GetQueryArray("types"); !ok {
 		types = nil
 	}
 
-	if response, err = o.Client.Openbanking.Cdr.ListCDRArrangements(
+	if arrangementsResponse, err = o.Client.Openbanking.Cdr.ListCDRArrangements(
 		cdr.NewListCDRArrangementsParamsWithContext(c).
 			WithWid(o.Config.CDRWorkspaceID).
 			WithConsentsRequest(&obModels.ConsentsRequest{
@@ -39,23 +41,29 @@ func (o *CDRArrangementImpl) FetchConsents(c *gin.Context) ([]ClientConsents, er
 		return cac, err
 	}
 
-	return MapClientsToConsents(o.getClients(response), o.getConsents(response)), nil
+	if clientsResponse, err = o.Client.System.Clients.ListClientsSystem(
+		system.NewListClientsSystemParamsWithContext(c).
+			WithWid(o.Config.CDRWorkspaceID),
+		nil,
+	); err != nil {
+		return cac, err
+	}
+
+	return MapClientsToConsents(o.getClients(clientsResponse), o.getConsents(arrangementsResponse)), nil
 }
 
-func (o *CDRArrangementImpl) getClients(response *cdr.ListCDRArrangementsOK) []Client {
+func (o *CDRArrangementImpl) getClients(response *system.ListClientsSystemOK) []Client {
 	var clients Clients
 
-	for _, arrangement := range response.Payload.Arrangements {
-		if arrangement.Status == "Rejected" {
-			continue
-		}
-		// TODO: cdr arrangement api does not return any additional client info
+	for _, c := range response.Payload.Clients {
 		clients = append(clients, Client{
-			ID:   arrangement.ClientID,
-			Name: "Babaloo",
+			ID:        c.ClientID,
+			Name:      c.ClientName,
+			LogoURI:   c.LogoURI,
+			ClientURI: c.ClientURI,
 		})
 	}
-	return clients.Unique()
+	return clients
 }
 
 func (o *CDRArrangementImpl) getConsents(response *cdr.ListCDRArrangementsOK) []Consent {
