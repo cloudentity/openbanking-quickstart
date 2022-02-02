@@ -47,7 +47,7 @@ func (c *Config) SystemClientConfig() acpclient.Config {
 		ClientID:     c.SystemClientID,
 		ClientSecret: c.SystemClientSecret,
 		IssuerURL:    c.SystemIssuerURL,
-		Scopes:       []string{"manage_openbanking_consents"},
+		Scopes:       []string{"manage_openbanking_consents", "view_clients"},
 		Timeout:      c.Timeout,
 		CertFile:     c.CertFile,
 		KeyFile:      c.KeyFile,
