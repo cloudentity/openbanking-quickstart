@@ -290,14 +290,14 @@ services:
       - crdb:/cockroach/cockroach-data"
 
   redis:
-    container_name: redis
+    container_name: quickstart-redis
     image: redis:6.2.6
     restart: on-failure
     command: redis-server /usr/local/etc/redis/redis.conf
     volumes:
       - ./mount/redis/redis.conf:/usr/local/etc/redis/redis.conf
     ports:
-      - 6379:6379
+      - 6380:6379
 
   configuration:
     container_name: configuration
