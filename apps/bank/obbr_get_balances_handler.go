@@ -10,7 +10,7 @@ import (
 	"github.com/go-openapi/strfmt"
 	"github.com/sirupsen/logrus"
 
-	acpClient "github.com/cloudentity/acp-client-go/models"
+	acpClient "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 )
 
 // swagger:route GET /accounts/v1/accounts/{accountID}/balances bank br getBalancesRequest

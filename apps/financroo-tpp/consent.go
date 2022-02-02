@@ -13,7 +13,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 
-	obbrModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_b_r"
+	obbrClientModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_b_r"
 	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
 	ob "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 )
@@ -166,6 +166,7 @@ type Permissions []obbrModels.OpenbankingBrasilPermission
 var PermissionGroupMap = map[PermissionGroup]Permissions{
 	CadastroDadosCadastraisPF: {
 		obbrModels.OpenbankingBrasilPermissionCUSTOMERSPERSONALIDENTIFICATIONSREAD,
+		obbrModels.OpenbankingBrasilPermissionCUSTOMERSPERSONALIDENTIFICATIONSREAD,
 		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
 	},
 	CadastroInformacoesComplementaresPF: {
@@ -234,9 +235,9 @@ var PermissionGroupMap = map[PermissionGroup]Permissions{
 
 func (o *OBBRConsentClient) CreateAccountConsent(c *gin.Context) (string, error) {
 	var (
-		registerResponse *obbrModels.CreateDataAccessConsentCreated
+		registerResponse *obbrClientModels.CreateDataAccessConsentCreated
 		connectRequest   = ConnectBankRequest{}
-		permissions      []models.OpenbankingBrasilConsentPermission
+		permissions      []ob.OpenbankingBrasilConsentPermission
 		uniquePerms      = map[obbrModels.OpenbankingBrasilPermission]bool{}
 		err              error
 	)
@@ -254,11 +255,11 @@ func (o *OBBRConsentClient) CreateAccountConsent(c *gin.Context) (string, error)
 	}
 
 	for uniquePerm := range uniquePerms {
-		permissions = append(permissions, models.OpenbankingBrasilConsentPermission(uniquePerm))
+		permissions = append(permissions, ob.OpenbankingBrasilConsentPermission(uniquePerm))
 	}
 
 	if registerResponse, err = o.Accounts.Openbanking.Openbankingbr.CreateDataAccessConsent(
-		obbrModels.NewCreateDataAccessConsentParamsWithContext(c).
+		obbrClientModels.NewCreateDataAccessConsentParamsWithContext(c).
 			WithRequest(&ob.BrazilCustomerDataAccessConsentRequest{
 				Data: &ob.OpenbankingBrasilConsentData{
 					ExpirationDateTime: strfmt.DateTime(time.Now().Add(time.Hour * 24)),
