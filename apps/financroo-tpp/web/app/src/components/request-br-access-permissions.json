@@ -1,0 +1,48 @@
+{
+  "permissions": [
+    {
+      "value": "Cadastros Dados Cadastrais PF",
+      "title": "PF Registration Data"
+    },
+    {
+      "value": "Cadastro Informações complementares PF",
+      "title": "Registration Complementary information PF"
+    },
+    {
+      "value": "Cadastro Dados Cadastrais PJ ",
+      "title": "Registration PJ Registration Data"
+    },
+    {
+      "value": "Cadastro Informações complementares PJ",
+      "title": "Registration Complementary information PJ"
+    },
+    {
+      "value": "Contas Saldos",
+      "title": "Accounts Balances"
+    },
+    {
+      "value": "Contas Limites",
+      "title": "Accounts Limits"
+    },
+    {
+      "value": "Contas Extratos",
+      "title": "Accounts Statements"
+    },
+    {
+      "value": "Cartão de Crédito Limites",
+      "title": "Credit Card Limits"
+    },
+    {
+      "value": "Cartão de Crédito Transações",
+      "title": "Credit Card Transactions"
+    },
+    {
+      "value": "Cartão de Crédito Faturas",
+      "title": "Credit Card Invoices"
+    },
+    {
+      "value": "Operações de Crédito Dados do Contrato",
+      "title": "Credit Operations Contract Data"
+    }
+  ]
+}

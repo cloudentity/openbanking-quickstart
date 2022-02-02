@@ -8,7 +8,7 @@ import (
 	"github.com/go-openapi/strfmt"
 )
 
-// swagger:route GET /internal/accounts/{sub} bank getInternalAccountsRequest
+// swagger:route GET /internal/accounts/{sub} bank uk getInternalAccountsRequest
 //
 // get all accounts for user
 //
@@ -35,9 +35,9 @@ func (h *OBUKGetAccountsInternalHandler) MapError(c *gin.Context, err *Error) (c
 	return
 }
 
-func (h *OBUKGetAccountsInternalHandler) BuildResponse(c *gin.Context, data BankUserData) interface{} {
-	self := strfmt.URI(fmt.Sprintf("http://localhost:%s/accounts", strconv.Itoa(h.Config.Port)))
-	return NewAccountsResponse(data.OBUKAccounts, self)
+func (h *OBUKGetAccountsInternalHandler) BuildResponse(c *gin.Context, data BankUserData) (interface{}, *Error) {
+	self := strfmt.URI(fmt.Sprintf("http://localhost:%s/internal/accounts", strconv.Itoa(h.Config.Port)))
+	return NewAccountsResponse(data.OBUKAccounts, self), nil
 }
 
 func (h *OBUKGetAccountsInternalHandler) Validate(c *gin.Context) *Error {

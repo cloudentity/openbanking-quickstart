@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -18,48 +17,62 @@ type EndpointLogicCommon interface {
 type GetEndpointLogicFactory func(server *Server) GetEndpointLogic
 
 type GetEndpointLogic interface {
-	BuildResponse(*gin.Context, BankUserData) interface{}
+	BuildResponse(*gin.Context, BankUserData) (interface{}, *Error)
 	Filter(*gin.Context, BankUserData) BankUserData
 	EndpointLogicCommon
 }
 
 func (s *Server) Get(factory GetEndpointLogicFactory) func(*gin.Context) {
+	var (
+		h       = factory(s)
+		handler = func(c *gin.Context, f func() (interface{}, *Error)) {
+			var (
+				resp interface{}
+				err  *Error
+			)
+			if resp, err = f(); err != nil {
+				code, errResp := h.MapError(c, err)
+				logrus.WithField("response", errResp).Warnf("GET %s", c.FullPath())
+				c.PureJSON(code, errResp)
+				return
+			}
+
+			logrus.WithField("response", resp).Debugf("GET %s", c.FullPath())
+			c.PureJSON(http.StatusOK, resp)
+		}
+	)
+
 	return func(c *gin.Context) {
-		var (
-			h       = factory(s)
-			data    BankUserData
-			err     *Error
-			e       error
-			code    int
-			errResp interface{}
-		)
+		handler(c, func() (interface{}, *Error) {
+			var (
+				data BankUserData
+				resp interface{}
+				err  *Error
+				e    error
+			)
 
-		if err = h.SetIntrospectionResponse(c); err != nil {
-			logrus.Info(fmt.Sprintf("err: %+v", err))
-			code, errResp = h.MapError(c, err)
-			c.PureJSON(code, errResp)
-			return
-		}
+			if err = h.SetIntrospectionResponse(c); err != nil {
+				return nil, err
+			}
 
-		if err = h.Validate(c); err != nil {
-			logrus.Info(fmt.Sprintf("err: %+v", err))
+			if err = h.Validate(c); err != nil {
+				return nil, err
+			}
 
-			code, errResp = h.MapError(c, err)
-			c.PureJSON(code, errResp)
-			return
-		}
+			if data, e = s.Storage.Get(h.GetUserIdentifier(c)); e != nil {
+				return nil, err
+			}
 
-		if data, e = s.Storage.Get(h.GetUserIdentifier(c)); e != nil {
-			logrus.Info(fmt.Sprintf("err: %+v", err))
+			logrus.WithField("data", data).Debug("pulled data from database")
 
-			code, errResp = h.MapError(c, ErrNotFound)
-			c.PureJSON(code, errResp)
-			return
-		}
+			filtered := h.Filter(c, data)
 
-		filtered := h.Filter(c, data)
+			if resp, err = h.BuildResponse(c, filtered); err != nil {
+				return nil, err
+			}
 
-		c.PureJSON(http.StatusOK, h.BuildResponse(c, filtered))
+			return resp, nil
+		})
 	}
 }
 
@@ -72,39 +85,49 @@ type CreateEndpointLogic interface {
 }
 
 func (s *Server) Post(factory CreateEndpointLogicFactory) func(*gin.Context) {
+	var (
+		h       = factory(s)
+		handler = func(c *gin.Context, f func() (interface{}, *Error)) {
+			var (
+				resp interface{}
+				err  *Error
+			)
+			if resp, err = f(); err != nil {
+				code, errResp := h.MapError(c, err)
+				logrus.WithField("response", errResp).Warnf("POST %s", c.FullPath())
+				c.PureJSON(code, errResp)
+				return
+			}
+
+			logrus.WithField("response", resp).Infof("POST %s", c.FullPath())
+			c.PureJSON(http.StatusCreated, resp)
+		}
+	)
+
 	return func(c *gin.Context) {
-		var (
-			h       = factory(s)
-			created interface{}
-			err     *Error
-			code    int
-			errResp interface{}
-		)
+		handler(c, func() (interface{}, *Error) {
+			var (
+				created interface{}
+				err     *Error
+			)
 
-		if err = h.SetRequest(c); err != nil {
-			code, errResp = h.MapError(c, err)
-			c.PureJSON(code, errResp)
-			return
-		}
+			if err = h.SetRequest(c); err != nil {
+				return nil, err
+			}
 
-		if err = h.SetIntrospectionResponse(c); err != nil {
-			code, errResp = h.MapError(c, err)
-			c.PureJSON(code, errResp)
-			return
-		}
+			if err = h.SetIntrospectionResponse(c); err != nil {
+				return nil, err
+			}
 
-		if err = h.Validate(c); err != nil {
-			code, errResp = h.MapError(c, err)
-			c.PureJSON(code, errResp)
-			return
-		}
+			if err = h.Validate(c); err != nil {
+				return nil, err
+			}
 
-		if created, err = h.CreateResource(c, h.GetUserIdentifier(c)); err != nil {
-			code, errResp = h.MapError(c, err)
-			c.PureJSON(code, errResp)
-			return
-		}
+			if created, err = h.CreateResource(c, h.GetUserIdentifier(c)); err != nil {
+				return nil, err
+			}
 
-		c.PureJSON(http.StatusCreated, created)
+			return created, nil
+		})
 	}
 }

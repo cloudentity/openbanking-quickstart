@@ -21,6 +21,7 @@ type BankUserData struct {
 	OBUKPayments     []paymentModels.OBWriteDomesticResponse5 `json:"obuk_payments"`
 
 	OBBRAccounts []obbrAccountModels.AccountData                         `json:"obbr_accounts"`
+	OBBRBalances []OBBRBalance                                           `json:"obbr_balances"`
 	OBBRPayments []obbrPaymentModels.OpenbankingBrasilResponsePixPayment `json:"obbr_payments"`
 }
 

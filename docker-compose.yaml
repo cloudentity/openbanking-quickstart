@@ -21,7 +21,7 @@ services:
       - CERT_FILE=/tpp_cert.pem
       - KEY_FILE=/tpp_key.pem
       - ROOT_CA=/ca.pem
-      - BANK_URL=http://bank:8070
+      - BANK_URL=${BANK_URL}
       - SPEC=${SPEC}
 
   financroo-tpp:
@@ -43,14 +43,14 @@ services:
       - TENANT=${TENANT}
       - GIN_MODE=debug # change to release to disable gin debug
 
-  consent-page:
+  consent-page-uk:
     image: cloudentity/openbanking-quickstart-consent-page:${VERSION}
-    container_name: consent-page
+    container_name: consent-page-uk
     restart: always
     ports:
       - "8080:8080"
     volumes:
-      - ./mount/consent-page:/data
+      - ./mount/consent-page-uk:/data
       - ./data/ca.pem:/ca.pem
       - ./data/bank_cert.pem:/bank_cert.pem
       - ./data/bank_key.pem:/bank_key.pem
@@ -60,16 +60,56 @@ services:
     env_file:
       - .env
     environment:
-      - CLIENT_ID=${CONSENT_PAGE_CLIENT_ID}
+      - CLIENT_ID=bv0ocudfotn6edhsiu7g
       - CLIENT_SECRET=pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0
       - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
       - CERT_FILE=/bank_cert.pem
       - KEY_FILE=/bank_key.pem
       - ROOT_CA=/ca.pem
-      - BANK_URL=http://bank:8070
+      - BANK_URL=http://bank-uk:8070
       - DB_FILE=/data/my.db
       - LOG_LEVEL=debug
-      - SPEC=${SPEC}
+      - SPEC=obuk
+      - GIN_MODE=debug # change to release to disable gin debug
+      # - ENABLE_MFA=true
+      # - DEV_MODE=true
+      - OTP_MODE=mock # change to custom to enable custom OTP handling
+      # - OTP_TYPE=totp
+      # - OTP_REQUEST_URL= # this does not matter for totp
+      # - OTP_VERIFY_URL=https://localhost:8080/demo/totp/verify
+      # - OTP_AUTH_HEADER=Bearer this-is-some-test-token
+      - MFA_CLAIM=sub # for mobile use mobile_verified
+      # - TWILIO_ACCOUNT_SID=
+      # - TWILIO_AUTH_TOKEN=
+      - DEFAULT_LANGUAGE=en-us
+
+  consent-page-br:
+    image: cloudentity/openbanking-quickstart-consent-page:${VERSION}
+    container_name: consent-page-br
+    restart: always
+    ports:
+      - "8081:8080"
+    volumes:
+      - ./mount/consent-page-br:/data
+      - ./data/ca.pem:/ca.pem
+      - ./data/bank_cert.pem:/bank_cert.pem
+      - ./data/bank_key.pem:/bank_key.pem
+      # sample extensions:
+      # - ./consent/consent-page/examples/custom-styles.css:/app/assets/extend-styles.css
+      # - ./consent/consent-page/examples/custom-mfa-verify.tmpl:/app/templates/custom/mfa-verify.tmpl
+    env_file:
+      - .env
+    environment:
+      - CLIENT_ID=bukj5p6k7qdMIIDfjCCAmagAwImm5ppxxxx
+      - CLIENT_SECRET=pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0
+      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
+      - CERT_FILE=/bank_cert.pem
+      - KEY_FILE=/bank_key.pem
+      - ROOT_CA=/ca.pem
+      - BANK_URL=http://bank-br:8070
+      - DB_FILE=/data/my.db
+      - LOG_LEVEL=debug
+      - SPEC=obbr
       - GIN_MODE=debug # change to release to disable gin debug
       # - ENABLE_MFA=true
       # - DEV_MODE=true
@@ -167,7 +207,7 @@ services:
       - CERT_FILE=/bank_cert.pem
       - KEY_FILE=/bank_key.pem
       - ROOT_CA=/ca.pem
-      - BANK_URL=http://bank:8070
+      - BANK_URL=${BANK_URL}
       - LOGIN_AUTHORIZATION_SERVER_URL=${ACP_URL}
       - LOGIN_AUTHORIZATION_SERVER_ID=bank-customers
       - LOGIN_TENANT_ID=${TENANT}
@@ -203,9 +243,9 @@ services:
       - INTROSPECT_CLIENT_SECRET=RkAIOVRlP6ZLhDvYixT1wBb8DG3bVkXAouoIrX7cwzA
       - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/bank-admins
 
-  bank:
+  bank-uk:
     image: cloudentity/openbanking-quickstart-bank:${VERSION}
-    container_name: bank
+    container_name: bank-uk
     restart: always
     ports:
       - "8070:8070"
@@ -213,15 +253,35 @@ services:
       - ./data/ca.pem:/ca.pem
       - ./data/bank_cert.pem:/bank_cert.pem
       - ./data/bank_key.pem:/bank_key.pem
-      - ./mount/bank:/app/data
+      - ./mount/bank-uk:/app/data
     environment:
-      - CLIENT_ID=${BANK_CLIENT_ID}
-      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/${OPENBANKING_SERVER_ID}
+      - CLIENT_ID=bukj5p6k7qdmm5ppbi4g
+      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/openbanking
       - CERT_FILE=/bank_cert.pem
       - KEY_FILE=/bank_key.pem
       - ROOT_CA=/ca.pem
-      - SPEC=${SPEC}
-      - GIN_MODE=debug # change to release to disable gin debug
+      - SPEC=obuk
+      - GIN_MODE=debug
+
+  bank-br:
+    image: cloudentity/openbanking-quickstart-bank:${VERSION}
+    container_name: bank-br
+    restart: always
+    ports:
+      - "8075:8070"
+    volumes:
+      - ./data/ca.pem:/ca.pem
+      - ./data/bank_cert.pem:/bank_cert.pem
+      - ./data/bank_key.pem:/bank_key.pem
+      - ./mount/bank-br:/app/data
+    environment:
+      - CLIENT_ID=bukj5p6k7qdmm5pother2
+      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/openbanking_brasil
+      - CERT_FILE=/bank_cert.pem
+      - KEY_FILE=/bank_key.pem
+      - ROOT_CA=/ca.pem
+      - SPEC=obbr
+      - GIN_MODE=debug
 
   acp:
     container_name: quickstart-acp

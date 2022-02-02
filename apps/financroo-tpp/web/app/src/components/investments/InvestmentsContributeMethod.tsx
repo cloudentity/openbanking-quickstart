@@ -176,7 +176,7 @@ export default function InvestmentsContributeMethod({
 
   useEffect(() => {
     if (selectedAccount) {
-      if (Number(amount) <= Number(selectedAccount.Amount.Amount)) {
+      if (Number(amount) <= Number(selectedAccount.Amount)) {
         setAlert("");
       } else {
         setAlert("Payment amount exceeds account balance");
@@ -252,7 +252,7 @@ export default function InvestmentsContributeMethod({
         <div id="accounts-list" className={classes.accountSelect}>
           {balances
             .filter((b) => b.BankId === bank)
-            .map(({ AccountId, Amount: { Amount } }) => (
+            .map(({ AccountId, Amount}) => (
               <div
                 key={AccountId}
                 className={clsx([

@@ -4,9 +4,19 @@ import chase from "../assets/banks/chase-logo.svg";
 import deutcshebank from "../assets/banks/deutcshebank-logo.svg";
 import hsbc from "../assets/banks/hsbc-logo.svg";
 import santander from "../assets/banks/santander-logo.svg";
+import santanderIcon from "../assets/banks/santander-icon.svg";
 import gobankIcon from "../assets/banks/gobank-icon.svg";
 import apexfinancialIcon from "../assets/banks/apexfinancial-icon.svg";
 import chaseIcon from "../assets/banks/chase-icon.svg";
+import requestAccessPermissionsUK from './request-uk-access-permissions.json';
+import requestAccessPermissionsBR from './request-br-access-permissions.json';
+
+
+export type Permission = {
+  title: string
+  value: string
+  description?: string
+}
 
 export type Bank = {
   value: string;
@@ -14,6 +24,7 @@ export type Bank = {
   name?: string;
   logo: string;
   icon?: string;
+  permissions?: Permission[]
 };
 
 export const banks: Bank[] = [
@@ -23,6 +34,15 @@ export const banks: Bank[] = [
     name: "GO Bank",
     logo: gobank,
     icon: gobankIcon,
+    permissions: requestAccessPermissionsUK.permissions
+  },
+  {
+    value: "santander",
+    name: "Santander",
+    disabled: false,
+    logo: santander,
+    icon: santanderIcon,
+    permissions: requestAccessPermissionsBR.permissions
   },
   {
     value: "gobank2",
@@ -53,10 +73,5 @@ export const banks: Bank[] = [
     value: "hsbc",
     disabled: true,
     logo: hsbc,
-  },
-  {
-    value: "santander",
-    disabled: true,
-    logo: santander,
   },
 ];

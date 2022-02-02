@@ -14,7 +14,7 @@ import (
 	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 )
 
-// swagger:route POST /payments/v1/pix/payments bank createOBBRPaymentRequest
+// swagger:route POST /payments/v1/pix/payments bank br createOBBRPaymentRequest
 //
 // create obbr  payment
 //

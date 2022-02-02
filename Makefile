@@ -3,7 +3,7 @@ export COMPOSE_DOCKER_CLI_BUILD=1
 
 .EXPORT_ALL_VARIABLES: ;
 
-OB_APPS=developer-tpp financroo-tpp consent-page consent-self-service-portal consent-admin-portal bank
+OB_APPS=developer-tpp financroo-tpp consent-page-uk consent-page-br consent-self-service-portal consent-admin-portal bank-uk bank-br
 ACP_APPS=acp crdb redis configuration
 ACP_ONLY_APPS=acp crdb redis
 CDR_ACP_CONFIG_APPS=configuration-cdr
@@ -53,7 +53,7 @@ run-apps-with-saas: setup_saas_env
 	docker-compose up -d --no-build ${OB_APPS}
 
 .PHONY: run
-run: 
+run:
 	make run-acp-apps run-apps
 
 .PHONY: restart-acp
@@ -73,7 +73,7 @@ stop:
 clean:
 	docker-compose down -v --remove-orphans
 
-.PHONY: clean-saas 
+.PHONY: clean-saas
 clean-saas: clean
 	./scripts/clean_saas.sh
 
@@ -100,6 +100,7 @@ enable-spec-obuk:
 	./scripts/override_env.sh DEVELOPER_CLIENT_ID bugkgm23g9kregtu051g
 	./scripts/override_env.sh CONSENT_PAGE_CLIENT_ID bv0ocudfotn6edhsiu7g
 	./scripts/override_env.sh BANK_CLIENT_ID bukj5p6k7qdmm5ppbi4g
+	./scripts/override_env.sh BANK_URL http://bank-uk:8070
 
 enable-spec-obbr:
 	./scripts/override_env.sh SPEC obbr 
@@ -107,6 +108,8 @@ enable-spec-obbr:
 	./scripts/override_env.sh DEVELOPER_CLIENT_ID bukj5p6k7qdmm5other1
 	./scripts/override_env.sh BANK_CLIENT_ID bukj5p6k7qdmm5pother2
 	./scripts/override_env.sh CONSENT_PAGE_CLIENT_ID bukj5p6k7qdMIIDfjCCAmagAwImm5ppxxxx
+	./scripts/override_env.sh BANK_URL http://bank-br:8070
+
 
 .PHONY: set-version
 set-version:
@@ -122,23 +125,27 @@ generate-openbanking-integration-specs: generate-obuk-integration-spec
 
 .PHONY: generate-obuk-integration-spec
 generate-obuk-integration-spec: start-runner
-	docker-compose exec runner sh -c  \
-    "swagger generate spec \
-        -m \
-        -o api/internal/bank.yaml \
-         -w ./apps/bank"
+	./scripts/generate_bank_spec.sh uk
+
+.PHONY: generate-obbr-integration-spec
+generate-obbr-integration-spec: start-runner
+	./scripts/generate_bank_spec.sh br
+
+.PHONY: generate-integration-specs
+generate-integration-specs: generate-obuk-integration-spec generate-obbr-integration-spec
 
 .PHONY: generate-obbr-clients
 generate-obbr-clients: start-runner
 	rm -rf ./openbanking/obbr/accounts/*
 	docker-compose exec runner sh -c \
 	"swagger generate client \
+	    --include-tag=obuk
 		-f api/obbr/accounts.yaml \
 		-A accounts  \
 		-t ./openbanking/obbr/accounts"
 
-.PHONY: generate-cdr-clients 
-generate-cdr-clients: start-runner 
+.PHONY: generate-cdr-clients
+generate-cdr-clients: start-runner
 	rm -rf ./openbanking/cdr/banking/*
 	docker-compose exec runner sh -c \
 	"swagger generate client \
@@ -148,9 +155,9 @@ generate-cdr-clients: start-runner
 
 .PHONY: obbr
 obbr:
-	docker-compose -f docker-compose.yaml -f docker-compose.brasil.yaml -f conformance/docker-compose.obb.yaml -f conformance/docker-compose.fapi.yaml ${cmd}
+	docker-compose -f docker-compose.yaml -f conformance/docker-compose.obb.yaml -f conformance/docker-compose.fapi.yaml ${cmd}
 
-.PHONY: setup_saas_env 
+.PHONY: setup_saas_env
 setup_saas_env:
 	cp -f .env-saas .env
 

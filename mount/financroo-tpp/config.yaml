@@ -7,7 +7,7 @@ login:
 banks:
 - id: gobank
   bank_type: obuk
-  url: http://bank:8070
+  url: http://bank-uk:8070
   acp_client:
     tenant_id: default
     server_id: openbanking
@@ -17,9 +17,9 @@ banks:
     key_file: "/certs/tpp_key.pem"
     root_ca: "/certs/ca.pem"
     timeout: 5s
-- id: gobank2
+- id: santander
   bank_type: obbr
-  url: http://bank:8070
+  url: http://bank-br:8070
   acp_client:
     tenant_id: default
     server_id: openbanking_brasil

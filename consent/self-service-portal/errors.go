@@ -21,7 +21,7 @@ func (e *APIError) Unwrap() error {
 
 func Error(c *gin.Context, e APIError) {
 	if e.Error != nil {
-		logrus.WithError(e.Error).Errorf(e.Error.Error())
+		logrus.WithError(e.Error).Errorf("error while processing request")
 	}
 
 	body := APIErrorBody{Error: e.Message}

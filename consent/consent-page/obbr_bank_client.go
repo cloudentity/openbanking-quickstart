@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/models"
 )
 
 type OBBRBankClient struct {
@@ -23,27 +25,12 @@ func NewOBBRBankClient(config Config) *OBBRBankClient {
 	return &c
 }
 
-type ResponseAccountList struct {
-	Data []AccountData `json:"data"`
-}
-
-type AccountData struct {
-	BrandName   string `json:"brandName"`
-	CompanyCnpj string `json:"companyCnpj"`
-	Type        string `json:"type"`
-	CompeCode   string `json:"compeCode"`
-	BranchCode  string `json:"branchCode"`
-	Number      string `json:"number"`
-	CheckDigit  string `json:"checkDigit"`
-	AccountID   string `json:"accountId"`
-}
-
 func (c *OBBRBankClient) GetInternalAccounts(id string) (InternalAccounts, error) {
 	var (
 		request  *http.Request
 		response *http.Response
 		bytes    []byte
-		resp     = ResponseAccountList{}
+		resp     = models.ResponseAccountList{}
 		err      error
 	)
 
@@ -71,12 +58,12 @@ func (c *OBBRBankClient) GetInternalAccounts(id string) (InternalAccounts, error
 	return ToInternalOBBRAccounts(resp), nil
 }
 
-func ToInternalOBBRAccounts(data ResponseAccountList) InternalAccounts {
+func ToInternalOBBRAccounts(data models.ResponseAccountList) InternalAccounts {
 	accounts := make([]InternalAccount, len(data.Data))
 	for i, account := range data.Data {
 		accounts[i] = InternalAccount{
-			ID:   account.AccountID,
-			Name: account.Number,
+			ID:   *account.AccountID,
+			Name: *account.Number,
 		}
 	}
 	return InternalAccounts{Accounts: accounts}
