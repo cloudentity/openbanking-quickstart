@@ -7,11 +7,10 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 	"github.com/pkg/errors"
-	"gopkg.in/square/go-jose.v2"
 
 	acpclient "github.com/cloudentity/acp-client-go"
-	"github.com/cloudentity/acp-client-go/client/openbanking"
-	"github.com/cloudentity/acp-client-go/models"
+	obbrModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_b_r"
+	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 )
 
 type OBBRLogic struct {
@@ -36,24 +35,22 @@ func (h *OBBRLogic) GetAccounts(c *gin.Context, token string) (interface{}, erro
 
 func (h *OBBRLogic) CreateConsent(c *gin.Context) (interface{}, error) {
 	var (
-		registerResponse *openbanking.CreateDataAccessConsentCreated
-		perms            []models.OpenbankingBrasilConsentPermission
+		registerResponse *obbrModels.CreateDataAccessConsentCreated
+		perms            []obModels.OpenbankingBrasilConsentPermission
 		err              error
 	)
 
 	for _, p := range c.PostFormArray("permissions") {
-		perms = append(perms, models.OpenbankingBrasilConsentPermission(p))
+		perms = append(perms, obModels.OpenbankingBrasilConsentPermission(p))
 	}
 
-	if registerResponse, err = h.Client.Openbanking.CreateDataAccessConsent(
-		openbanking.NewCreateDataAccessConsentParamsWithContext(c).
-			WithTid(h.Client.TenantID).
-			WithAid(h.Client.ServerID).
-			WithRequest(&models.OBBRCustomerDataAccessConsentRequest{
-				Data: &models.OpenbankingBrasilConsentData{
+	if registerResponse, err = h.Client.Openbanking.Openbankingbr.CreateDataAccessConsent(
+		obbrModels.NewCreateDataAccessConsentParamsWithContext(c).
+			WithRequest(&obModels.BrazilCustomerDataAccessConsentRequest{
+				Data: &obModels.OpenbankingBrasilConsentData{
 					ExpirationDateTime: strfmt.DateTime(time.Now().Add(time.Hour * 24)),
-					LoggedUser: &models.OpenbankingBrasilConsentLoggedUser{
-						Document: &models.OpenbankingBrasilConsentDocument{
+					LoggedUser: &obModels.OpenbankingBrasilConsentLoggedUser{
+						Document: &obModels.OpenbankingBrasilConsentDocument{
 							Identification: "11111111111",
 							Rel:            "CPF",
 						},
@@ -71,11 +68,11 @@ func (h *OBBRLogic) CreateConsent(c *gin.Context) (interface{}, error) {
 
 func (h *OBBRLogic) GetConsentID(data interface{}) string {
 	var (
-		registerResponse *openbanking.CreateDataAccessConsentCreated
+		registerResponse *obbrModels.CreateDataAccessConsentCreated
 		ok               bool
 	)
 
-	if registerResponse, ok = data.(*openbanking.CreateDataAccessConsentCreated); !ok {
+	if registerResponse, ok = data.(*obbrModels.CreateDataAccessConsentCreated); !ok {
 		return ""
 	}
 	return registerResponse.Payload.Data.ConsentID
@@ -87,15 +84,10 @@ func (h *OBBRLogic) DoRequestObjectEncryption() bool {
 
 func (h *OBBRLogic) BuildLoginURL(c *gin.Context, consentID string, doRequestObjectEncryption bool) (string, acpclient.CSRF, error) {
 	var (
-		key    jose.JSONWebKey
 		client acpclient.Client
 		config = h.Config.ExtendConsentScope(consentID).ClientConfig()
 		err    error
 	)
-
-	if key, err = h.GetEncryptionKey(c); err != nil {
-		return "", acpclient.CSRF{}, errors.Wrapf(err, "failed to retrieve encryption key")
-	}
 
 	if client, err = acpclient.New(config); err != nil {
 		return "", acpclient.CSRF{}, errors.Wrapf(err, "failed to create new acp client")
@@ -104,7 +96,6 @@ func (h *OBBRLogic) BuildLoginURL(c *gin.Context, consentID string, doRequestObj
 	if doRequestObjectEncryption {
 		return client.AuthorizeURL(
 			acpclient.WithOpenbankingIntentID(consentID, []string{"urn:brasil:openbanking:loa2"}),
-			acpclient.WithRequestObjectEncryption(key),
 			acpclient.WithPKCE(),
 		)
 	}

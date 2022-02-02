@@ -10,7 +10,7 @@ import (
 	"github.com/sirupsen/logrus"
 
 	acpclient "github.com/cloudentity/acp-client-go"
-	"github.com/cloudentity/acp-client-go/models"
+	oauth2 "github.com/cloudentity/acp-client-go/clients/oauth2/models"
 )
 
 type AppStorage struct {
@@ -135,7 +135,7 @@ func (s *Server) ConnectedBanks() func(c *gin.Context) {
 			user           User
 			err            error
 			clients        Clients
-			tokenResponse  *models.TokenResponse
+			tokenResponse  *oauth2.TokenResponse
 			ok             bool
 			connectedBanks = []string{}
 			expiredBanks   = []string{}
@@ -146,15 +146,13 @@ func (s *Server) ConnectedBanks() func(c *gin.Context) {
 			c.String(http.StatusUnauthorized, err.Error())
 			return
 		}
-
 		for i, b := range user.Banks {
 			if clients, ok = s.Clients[BankID(b.BankID)]; !ok {
 				c.String(http.StatusInternalServerError, fmt.Sprintf("client not configured for bank: %s", b.BankID))
 				return
 			}
-
 			if tokenResponse, err = clients.RenewAccountsToken(c, b); err != nil {
-				logrus.WithError(err).Warnf("failed to renew token for bank: %s", b.BankID)
+				logrus.WithError(err).Warnf("failed to renew token for bank: %s, err: %+v", b.BankID, err)
 				expiredBanks = append(expiredBanks, b.BankID)
 				continue
 			}

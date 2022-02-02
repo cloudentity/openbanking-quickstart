@@ -11,7 +11,7 @@ import (
 	"github.com/go-openapi/strfmt"
 	"github.com/google/uuid"
 
-	acpClient "github.com/cloudentity/acp-client-go/models"
+	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 )
 
 // swagger:route POST /payments/v1/pix/payments bank br createOBBRPaymentRequest
@@ -35,7 +35,7 @@ import (
 //   500: ResponseError
 type OBBRCreatePaymentHandler struct {
 	*Server
-	introspectionResponse *acpClient.IntrospectOBBRPaymentConsentResponse
+	introspectionResponse *obModels.IntrospectOBBRPaymentConsentResponse
 	request               models.OpenbankingBrasilCreatePixPayment
 }
 
@@ -95,7 +95,7 @@ func (h *OBBRCreatePaymentHandler) Validate(c *gin.Context) *Error {
 		return ErrForbidden.WithMessage("token has no openid scope granted")
 	}
 
-	consentDynamicScope := fmt.Sprintf("consent:%s", h.introspectionResponse.ConsentID)
+	consentDynamicScope := fmt.Sprintf("consent:%s", *h.introspectionResponse.ConsentID)
 	if !has(scopes, consentDynamicScope) {
 		return ErrForbidden.WithMessage("token has no " + consentDynamicScope + " scope granted")
 	}

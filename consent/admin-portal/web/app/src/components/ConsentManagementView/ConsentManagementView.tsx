@@ -116,7 +116,7 @@ export default function ConsentManagementView({
                     backgroundSize: "contain",
                   }}
                 >
-                  <div className={classes.subtitle}>
+                  <div id='search-content' className={classes.subtitle}>
                     Search and manage consents on behalf of bank members
                   </div>
                   <div style={{ marginTop: 32 }}>

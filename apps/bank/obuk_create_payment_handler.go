@@ -13,7 +13,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jinzhu/copier"
 
-	acpClient "github.com/cloudentity/acp-client-go/models"
+	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
 )
 
 // swagger:route POST /domestic-payments bank createDomesticPaymentRequest
@@ -31,7 +31,7 @@ import (
 //   500: OBErrorResponse1
 type OBUKCreatePaymentHandler struct {
 	*Server
-	introspectionResponse *acpClient.IntrospectOpenbankingDomesticPaymentConsentResponse
+	introspectionResponse *obukModels.OpenbankingDomesticPaymentConsentIntrospectOKBody
 	request               *paymentModels.OBWriteDomestic2
 }
 

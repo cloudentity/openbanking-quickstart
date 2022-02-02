@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 
-	acpClient "github.com/cloudentity/acp-client-go/models"
+	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 )
 
 func OBBRMapError(c *gin.Context, err *Error) (code int, resp interface{}) {
@@ -35,7 +35,7 @@ func NewOBBRAccountsResponse(accounts []obbrAccountModels.AccountData) obbrAccou
 	}
 }
 
-func OBBRPermsToStringSlice(perms []acpClient.OpenbankingBrasilConsentPermission1) []string {
+func OBBRPermsToStringSlice(perms []obModels.OpenbankingBrasilConsentPermission1) []string {
 	var slice []string
 	for _, perm := range perms {
 		slice = append(slice, string(perm))
@@ -43,21 +43,21 @@ func OBBRPermsToStringSlice(perms []acpClient.OpenbankingBrasilConsentPermission
 	return slice
 }
 
-func NewOBBRPayment(introspectionResponse *acpClient.IntrospectOBBRPaymentConsentResponse, self strfmt.URI, id string) paymentModels.OpenbankingBrasilResponsePixPayment {
+func NewOBBRPayment(introspectionResponse *obModels.IntrospectOBBRPaymentConsentResponse, self strfmt.URI, id string) paymentModels.OpenbankingBrasilResponsePixPayment {
 	now := strfmt.DateTime(time.Now())
 	status := paymentModels.OpenbankingBrasilStatus1PDNG
 	localInstrument := paymentModels.OpenbankingBrasilEnumLocalInstrumentMANU
 	return paymentModels.OpenbankingBrasilResponsePixPayment{
 		Data: &paymentModels.OpenbankingBrasilResponsePixPaymentData{
 			PaymentID:            id,
-			ConsentID:            introspectionResponse.ConsentID,
+			ConsentID:            *introspectionResponse.ConsentID,
 			CreationDateTime:     now,
 			StatusUpdateDateTime: now,
 			Status:               &status,
 			LocalInstrument:      &localInstrument,
 			Payment: &paymentModels.OpenbankingBrasilPaymentPix{
-				Amount:   introspectionResponse.OBBRCustomerPaymentConsent.Payment.Amount,
-				Currency: introspectionResponse.OBBRCustomerPaymentConsent.Payment.Currency,
+				Amount:   introspectionResponse.Payment.Amount,
+				Currency: introspectionResponse.Payment.Currency,
 			},
 			CreditorAccount: &paymentModels.OpenbankingBrasilCreditorAccount{},
 		},

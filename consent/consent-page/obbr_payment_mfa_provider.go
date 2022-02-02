@@ -5,8 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/cloudentity/acp-client-go/client/openbanking"
-	"github.com/cloudentity/acp-client-go/models"
+	obbrModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_b_r"
+	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 )
 
 type OBBRPaymentMFAConsentProvider struct {
@@ -16,14 +16,13 @@ type OBBRPaymentMFAConsentProvider struct {
 
 func (s *OBBRPaymentMFAConsentProvider) GetMFAData(c *gin.Context, loginRequest LoginRequest) (MFAData, error) {
 	var (
-		response *openbanking.GetOBBRCustomerPaymentConsentSystemOK
+		response *obbrModels.GetOBBRCustomerPaymentConsentSystemOK
 		data     = MFAData{}
 		err      error
 	)
 
-	if response, err = s.Client.Openbanking.GetOBBRCustomerPaymentConsentSystem(
-		openbanking.NewGetOBBRCustomerPaymentConsentSystemParamsWithContext(c).
-			WithTid(s.Client.TenantID).
+	if response, err = s.Client.Openbanking.Openbankingbr.GetOBBRCustomerPaymentConsentSystem(
+		obbrModels.NewGetOBBRCustomerPaymentConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID),
 		nil,
 	); err != nil {
@@ -63,16 +62,16 @@ func (s *OBBRPaymentMFAConsentProvider) GetConsentMockData(loginRequest LoginReq
 
 	return s.GetOBBRPaymentConsentTemplateData(
 		loginRequest,
-		&models.GetOBBRCustomerPaymentConsentResponse{
+		&obModels.GetOBBRCustomerPaymentConsentResponse{
 
-			CustomerPaymentConsent: &models.OBBRCustomerPaymentConsent{
-				Creditor: &models.OpenbankingBrasilPaymentIdentification{
+			CustomerPaymentConsent: &obModels.BrazilCustomerPaymentConsent{
+				Creditor: &obModels.OpenbankingBrasilPaymentIdentification{
 					Name: "ACME Inc",
 				},
-				DebtorAccount: &models.OpenbankingBrasilPaymentDebtorAccount{
+				DebtorAccount: &obModels.OpenbankingBrasilPaymentDebtorAccount{
 					Number: account,
 				},
-				Payment: &models.OpenbankingBrasilPaymentPaymentConsent{
+				Payment: &obModels.OpenbankingBrasilPaymentPaymentConsent{
 					Currency: "BRL",
 					Amount:   "100",
 				},

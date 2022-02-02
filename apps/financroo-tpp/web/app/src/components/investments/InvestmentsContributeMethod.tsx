@@ -249,7 +249,7 @@ export default function InvestmentsContributeMethod({
       </Field>
 
       <Field>
-        <div className={classes.accountSelect}>
+        <div id="accounts-list" className={classes.accountSelect}>
           {balances
             .filter((b) => b.BankId === bank)
             .map(({ AccountId, Amount}) => (

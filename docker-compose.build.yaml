@@ -17,6 +17,10 @@ services:
     build:
       context: .
       dockerfile: consent/consent-page/Dockerfile
+  consent-page-cdr: 
+    build: 
+      context: . 
+      dockerfile: consent/consent-page/Dockerfile 
   consent-self-service-portal:
     build:
       context: .

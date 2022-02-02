@@ -6,7 +6,7 @@ import (
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
 	"github.com/gin-gonic/gin"
 
-	acpClient "github.com/cloudentity/acp-client-go/models"
+	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
 )
 
 // swagger:route GET /domestic-payments/{DomesticPaymentId} bank uk getDomesticPaymentRequest
@@ -24,7 +24,7 @@ import (
 
 type OBUKGetPaymentHandler struct {
 	*Server
-	introspectionResponse *acpClient.IntrospectOpenbankingDomesticPaymentConsentResponse
+	introspectionResponse *obukModels.OpenbankingDomesticPaymentConsentIntrospectOKBody
 }
 
 func NewOBUKGetPaymentHandler(server *Server) GetEndpointLogic {

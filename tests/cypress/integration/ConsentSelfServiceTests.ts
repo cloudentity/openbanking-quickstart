@@ -43,6 +43,7 @@ describe(`Consent self service app`, () => {
     consentPage.confirm()
 
     financrooLoginPage.visit()
+    financrooAccountsPage.assertThatPageIsDisplayed()
     financrooAccountsPage.goToInvestmentsTab()
     financrooInvestmentsPage.invest()
     financrooContributePage.contribute(amount)

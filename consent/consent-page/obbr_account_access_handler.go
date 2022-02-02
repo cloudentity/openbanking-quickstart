@@ -4,8 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 
-	"github.com/cloudentity/acp-client-go/client/openbanking"
-	"github.com/cloudentity/acp-client-go/models"
+	obbrModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_b_r"
+	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 )
 
 type OBBRAccountAccessConsentHandler struct {
@@ -16,15 +16,14 @@ type OBBRAccountAccessConsentHandler struct {
 func (s *OBBRAccountAccessConsentHandler) GetConsent(c *gin.Context, loginRequest LoginRequest) {
 	var (
 		accounts InternalAccounts
-		response *openbanking.GetOBBRCustomerDataAccessConsentSystemOK
+		response *obbrModels.GetOBBRCustomerDataAccessConsentSystemOK
 		err      error
 		id       string
 	)
 
-	if response, err = s.Client.Openbanking.GetOBBRCustomerDataAccessConsentSystem(
-		openbanking.NewGetOBBRCustomerDataAccessConsentSystemParamsWithContext(c).
+	if response, err = s.Client.Openbanking.Openbankingbr.GetOBBRCustomerDataAccessConsentSystem(
+		obbrModels.NewGetOBBRCustomerDataAccessConsentSystemParamsWithContext(c).
 			WithDefaults().
-			WithTid(s.Client.TenantID).
 			WithLogin(loginRequest.ID),
 		nil,
 	); err != nil {
@@ -44,25 +43,23 @@ func (s *OBBRAccountAccessConsentHandler) GetConsent(c *gin.Context, loginReques
 
 func (s *OBBRAccountAccessConsentHandler) ConfirmConsent(c *gin.Context, loginRequest LoginRequest) (string, error) {
 	var (
-		consent *openbanking.GetOBBRCustomerDataAccessConsentSystemOK
-		accept  *openbanking.AcceptOBBRCustomerDataAccessConsentSystemOK
+		consent *obbrModels.GetOBBRCustomerDataAccessConsentSystemOK
+		accept  *obbrModels.AcceptOBBRCustomerDataAccessConsentSystemOK
 		err     error
 	)
 
-	if consent, err = s.Client.Openbanking.GetOBBRCustomerDataAccessConsentSystem(
-		openbanking.NewGetOBBRCustomerDataAccessConsentSystemParamsWithContext(c).
-			WithTid(s.Client.TenantID).
+	if consent, err = s.Client.Openbanking.Openbankingbr.GetOBBRCustomerDataAccessConsentSystem(
+		obbrModels.NewGetOBBRCustomerDataAccessConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID),
 		nil,
 	); err != nil {
 		return "", err
 	}
 
-	if accept, err = s.Client.Openbanking.AcceptOBBRCustomerDataAccessConsentSystem(
-		openbanking.NewAcceptOBBRCustomerDataAccessConsentSystemParamsWithContext(c).
-			WithTid(s.Client.TenantID).
+	if accept, err = s.Client.Openbanking.Openbankingbr.AcceptOBBRCustomerDataAccessConsentSystem(
+		obbrModels.NewAcceptOBBRCustomerDataAccessConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID).
-			WithAcceptConsent(&models.AcceptConsentRequest{
+			WithAcceptConsent(&obModels.AcceptConsentRequest{
 				GrantedScopes: s.GrantScopes(consent.Payload.RequestedScopes),
 				AccountIds:    c.PostFormArray("account_ids"),
 				LoginState:    loginRequest.State,
@@ -77,15 +74,14 @@ func (s *OBBRAccountAccessConsentHandler) ConfirmConsent(c *gin.Context, loginRe
 
 func (s *OBBRAccountAccessConsentHandler) DenyConsent(c *gin.Context, loginRequest LoginRequest) (string, error) {
 	var (
-		reject *openbanking.RejectOBBRCustomerDataAccessConsentSystemOK
+		reject *obbrModels.RejectOBBRCustomerDataAccessConsentSystemOK
 		err    error
 	)
 
-	if reject, err = s.Client.Openbanking.RejectOBBRCustomerDataAccessConsentSystem(
-		openbanking.NewRejectOBBRCustomerDataAccessConsentSystemParamsWithContext(c).
-			WithTid(s.Client.TenantID).
+	if reject, err = s.Client.Openbanking.Openbankingbr.RejectOBBRCustomerDataAccessConsentSystem(
+		obbrModels.NewRejectOBBRCustomerDataAccessConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID).
-			WithRejectConsent(&models.RejectConsentRequest{
+			WithRejectConsent(&obModels.RejectConsentRequest{
 				ID:               loginRequest.ID,
 				LoginState:       loginRequest.State,
 				Error:            "access_denied",

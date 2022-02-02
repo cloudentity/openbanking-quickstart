@@ -4,7 +4,11 @@ export COMPOSE_DOCKER_CLI_BUILD=1
 .EXPORT_ALL_VARIABLES: ;
 
 OB_APPS=developer-tpp financroo-tpp consent-page-uk consent-page-br consent-self-service-portal consent-admin-portal bank-uk bank-br
-ACP_APPS=acp crdb hazelcast configuration
+ACP_APPS=acp crdb redis configuration
+ACP_ONLY_APPS=acp crdb redis
+CDR_ACP_CONFIG_APPS=configuration-cdr
+CDR_CONSENT_APPS=consent-page-cdr consent-self-service-portal consent-admin-portal
+CDR_APPS=mock-data-recipient mock-register mock-data-holder
 
 .PHONY: build
 build:
@@ -27,6 +31,21 @@ stop-acp-apps:
 .PHONY: run-apps
 run-apps:
 	docker-compose up -d --no-build ${OB_APPS}
+	docker-compose -f docker-compose.cdr.yaml up -d ${CDR_APPS}
+	./scripts/wait.sh
+
+.PHONY: run-cdr-apps-with-acp-local
+run-cdr-apps-with-acp-local:
+	docker-compose up -d --no-build ${ACP_ONLY_APPS}
+	docker-compose up -d --no-build ${CDR_ACP_CONFIG_APPS}
+	docker-compose up -d --no-build ${CDR_CONSENT_APPS}
+	docker-compose -f docker-compose.cdr.yaml up -d ${CDR_APPS}
+
+.PHONY: run-cdr-apps-with-saas
+run-cdr-apps-with-saas:
+	docker-compose up -d --no-build --no-deps ${CDR_ACP_CONFIG_APPS}
+	docker-compose up -d --no-build --no-deps ${CDR_CONSENT_APPS}
+	docker-compose -f docker-compose.cdr.yaml up -d ${CDR_APPS}
 
 .PHONY: run-apps-with-saas
 run-apps-with-saas: setup_saas_env
@@ -52,7 +71,7 @@ stop:
 
 .PHONY: clean
 clean:
-	docker-compose down -v
+	docker-compose down -v --remove-orphans
 
 .PHONY: clean-saas
 clean-saas: clean
@@ -61,6 +80,11 @@ clean-saas: clean
 .PHONY: run-tests
 run-tests:
 	yarn --cwd tests run cypress open
+
+.PHONY: run-tests-headless
+run-tests-headless:
+	yarn --cwd tests run cypress verify
+	yarn --cwd tests run cypress run
 
 .PHONY: enable-mfa
 enable-mfa:
@@ -119,6 +143,15 @@ generate-obbr-clients: start-runner
 		-f api/obbr/accounts.yaml \
 		-A accounts  \
 		-t ./openbanking/obbr/accounts"
+
+.PHONY: generate-cdr-clients
+generate-cdr-clients: start-runner
+	rm -rf ./openbanking/cdr/banking/*
+	docker-compose exec runner sh -c \
+	"swagger generate client \
+		-f api/cdr/cds_banking.yaml \
+		-A banking \
+		-t ./openbanking/cdr/banking"
 
 .PHONY: obbr
 obbr:

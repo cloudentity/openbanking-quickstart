@@ -6,7 +6,7 @@ import (
 	obbrAccountModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/models"
 	"github.com/gin-gonic/gin"
 
-	acpClient "github.com/cloudentity/acp-client-go/models"
+	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 )
 
 // swagger:route GET /accounts bank br getAccountsRequest
@@ -24,7 +24,7 @@ import (
 //   500: OpenbankingBrasilResponseError
 type OBBRGetAccountsHandler struct {
 	*Server
-	introspectionResponse *acpClient.IntrospectOBBRDataAccessConsentResponse
+	introspectionResponse *obModels.IntrospectOBBRDataAccessConsentResponse
 }
 
 func NewOBBRGetAccountsHandler(server *Server) GetEndpointLogic {

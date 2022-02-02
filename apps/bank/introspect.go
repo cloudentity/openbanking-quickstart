@@ -7,23 +7,22 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 
-	"github.com/cloudentity/acp-client-go/client/openbanking"
-	acpClient "github.com/cloudentity/acp-client-go/models"
+	obbr "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_b_r"
+	obuk "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
+	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 )
 
-func (s *Server) OBUKIntrospectAccountsToken(c *gin.Context) (*acpClient.IntrospectOpenbankingAccountAccessConsentResponse, error) {
+func (s *Server) OBUKIntrospectAccountsToken(c *gin.Context) (*obuk.OpenbankingAccountAccessConsentIntrospectOKBody, error) {
 	var (
-		introspectionResponse *openbanking.OpenbankingAccountAccessConsentIntrospectOK
+		introspectionResponse *obuk.OpenbankingAccountAccessConsentIntrospectOK
 		err                   error
 	)
 
 	token := c.GetHeader("Authorization")
 	token = strings.ReplaceAll(token, "Bearer ", "")
 
-	if introspectionResponse, err = s.Client.Openbanking.OpenbankingAccountAccessConsentIntrospect(
-		openbanking.NewOpenbankingAccountAccessConsentIntrospectParamsWithContext(c).
-			WithTid(s.Client.TenantID).
-			WithAid(s.Client.ServerID).
+	if introspectionResponse, err = s.Client.Openbanking.Openbankinguk.OpenbankingAccountAccessConsentIntrospect(
+		obuk.NewOpenbankingAccountAccessConsentIntrospectParamsWithContext(c).
 			WithToken(&token),
 		nil,
 	); err != nil {
@@ -37,19 +36,17 @@ func (s *Server) OBUKIntrospectAccountsToken(c *gin.Context) (*acpClient.Introsp
 	return introspectionResponse.Payload, nil
 }
 
-func (s *Server) OBUKIntrospectPaymentsToken(c *gin.Context) (*acpClient.IntrospectOpenbankingDomesticPaymentConsentResponse, error) {
+func (s *Server) OBUKIntrospectPaymentsToken(c *gin.Context) (*obuk.OpenbankingDomesticPaymentConsentIntrospectOKBody, error) {
 	var (
-		introspectionResponse *openbanking.OpenbankingDomesticPaymentConsentIntrospectOK
+		introspectionResponse *obuk.OpenbankingDomesticPaymentConsentIntrospectOK
 		err                   error
 	)
 
 	token := c.GetHeader("Authorization")
 	token = strings.ReplaceAll(token, "Bearer ", "")
 
-	if introspectionResponse, err = s.Client.Openbanking.OpenbankingDomesticPaymentConsentIntrospect(
-		openbanking.NewOpenbankingDomesticPaymentConsentIntrospectParamsWithContext(c).
-			WithTid(s.Client.TenantID).
-			WithAid(s.Client.ServerID).
+	if introspectionResponse, err = s.Client.Openbanking.Openbankinguk.OpenbankingDomesticPaymentConsentIntrospect(
+		obuk.NewOpenbankingDomesticPaymentConsentIntrospectParamsWithContext(c).
 			WithToken(&token),
 		nil,
 	); err != nil {
@@ -60,19 +57,17 @@ func (s *Server) OBUKIntrospectPaymentsToken(c *gin.Context) (*acpClient.Introsp
 	return introspectionResponse.Payload, nil
 }
 
-func (s *Server) OBBRIntrospectAccountsToken(c *gin.Context) (*acpClient.IntrospectOBBRDataAccessConsentResponse, error) {
+func (s *Server) OBBRIntrospectAccountsToken(c *gin.Context) (*obModels.IntrospectOBBRDataAccessConsentResponse, error) {
 	var (
-		introspectionResponse *openbanking.ObbrDataAccessConsentIntrospectOK
+		introspectionResponse *obbr.ObbrDataAccessConsentIntrospectOK
 		err                   error
 	)
 
 	token := c.GetHeader("Authorization")
 	token = strings.ReplaceAll(token, "Bearer ", "")
 
-	if introspectionResponse, err = s.Client.Openbanking.ObbrDataAccessConsentIntrospect(
-		openbanking.NewObbrDataAccessConsentIntrospectParamsWithContext(c).
-			WithTid(s.Client.TenantID).
-			WithAid(s.Client.ServerID).
+	if introspectionResponse, err = s.Client.Openbanking.Openbankingbr.ObbrDataAccessConsentIntrospect(
+		obbr.NewObbrDataAccessConsentIntrospectParamsWithContext(c).
 			WithToken(&token),
 		nil,
 	); err != nil {
@@ -86,19 +81,17 @@ func (s *Server) OBBRIntrospectAccountsToken(c *gin.Context) (*acpClient.Introsp
 	return introspectionResponse.Payload, nil
 }
 
-func (s *Server) OBBRIntrospectPaymentsToken(c *gin.Context) (*acpClient.IntrospectOBBRPaymentConsentResponse, error) {
+func (s *Server) OBBRIntrospectPaymentsToken(c *gin.Context) (*obModels.IntrospectOBBRPaymentConsentResponse, error) {
 	var (
-		introspectionResponse *openbanking.ObbrPaymentConsentIntrospectOK
+		introspectionResponse *obbr.ObbrPaymentConsentIntrospectOK
 		err                   error
 	)
 
 	token := c.GetHeader("Authorization")
 	token = strings.ReplaceAll(token, "Bearer ", "")
 
-	if introspectionResponse, err = s.Client.Openbanking.ObbrPaymentConsentIntrospect(
-		openbanking.NewObbrPaymentConsentIntrospectParamsWithContext(c).
-			WithTid(s.Client.TenantID).
-			WithAid(s.Client.ServerID).
+	if introspectionResponse, err = s.Client.Openbanking.Openbankingbr.ObbrPaymentConsentIntrospect(
+		obbr.NewObbrPaymentConsentIntrospectParamsWithContext(c).
 			WithToken(&token),
 		nil,
 	); err != nil {
