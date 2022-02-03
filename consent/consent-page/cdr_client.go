@@ -78,7 +78,6 @@ func (c *CDREnergyClient) GetInternalAccounts(id string) (InternalAccounts, erro
 			},
 		},
 	}, nil
-
 }
 
 // TODO: mock data holder cdr app doesn't even have this data yet
