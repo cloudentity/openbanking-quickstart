@@ -22,8 +22,8 @@ type GetAccountsRequest struct {
 
 // swagger:parameters getInternalAccountsRequest
 type GetInternalAccountsRequest struct {
-	// in:path
-	Sub string `json:"sub"`
+	// in:query
+	ID string `json:"id"`
 }
 
 // swagger:parameters getBalancesRequest
@@ -33,8 +33,8 @@ type GetBalancesRequest struct {
 
 // swagger:parameters getInternalBalancesRequest
 type GetInternalBalancesRequest struct {
-	// in:path
-	Sub string `json:"sub"`
+	// in:query
+	ID string `json:"id"`
 }
 
 type DomesticPaymentStatus string

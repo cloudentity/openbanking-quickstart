@@ -68,16 +68,16 @@ func (c *OBUKBankClient) GetInternalAccounts(subject string) (InternalAccounts, 
 	)
 
 	if request, err = http.NewRequest("GET", fmt.Sprintf("%s/internal/accounts?id=%s", c.baseURL, subject), nil); err != nil {
-		return InternalAccounts{}, nil
+		return InternalAccounts{}, err
 	}
 
 	if response, err = c.Client.Do(request); err != nil {
-		return InternalAccounts{}, nil
+		return InternalAccounts{}, err
 	}
 	defer response.Body.Close()
 
 	if bytes, err = ioutil.ReadAll(response.Body); err != nil {
-		return InternalAccounts{}, nil
+		return InternalAccounts{}, err
 	}
 
 	if response.StatusCode != 200 {

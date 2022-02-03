@@ -1,0 +1,3826 @@
+swagger: '2.0'
+info:
+  version: '1.15.0'
+  title: CDR Banking API
+  description: Consumer Data Standards APIs created by the Data Standards Body (DSB), with the Data Standards Chair as the decision maker to meet the needs of the Consumer Data Right
+  contact:
+    email: contact@consumerdatastandards.gov.au
+    name: Consumer Data Standards
+    url: https://consumerdatastandards.gov.au
+host: data.holder.com.au
+basePath: /cds-au/v1
+securityDefinitions: {}
+schemes:
+- https
+consumes:
+- application/json
+produces:
+- application/json
+paths:
+  /banking/accounts:
+    get:
+      description: Obtain a list of accounts
+      summary: listAccounts
+      tags:
+      - Banking
+      - Accounts
+      operationId: listAccounts
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: product-category
+        in: query
+        required: false
+        enum:
+        - BUSINESS_LOANS
+        - CRED_AND_CHRG_CARDS
+        - LEASES
+        - MARGIN_LOANS
+        - OVERDRAFTS
+        - PERS_LOANS
+        - REGULATED_TRUST_ACCOUNTS
+        - RESIDENTIAL_MORTGAGES
+        - TERM_DEPOSITS
+        - TRADE_FINANCE
+        - TRANS_AND_SAVINGS_ACCOUNTS
+        - TRAVEL_CARDS
+        type: string
+        description: Used to filter results on the productCategory field applicable to accounts. Any one of the valid values for this field can be supplied. If absent then all accounts returned.
+      - name: open-status
+        in: query
+        required: false
+        enum:
+        - ALL
+        - CLOSED
+        - OPEN
+        default: ALL
+        type: string
+        description: Used to filter results according to open/closed status. Values can be OPEN, CLOSED or ALL. If absent then ALL is assumed
+      - name: is-owned
+        in: query
+        required: false
+        type: boolean
+        description: Filters accounts based on whether they are owned by the authorised customer.  True for owned accounts, false for unowned accounts and absent for all accounts
+      - name: page
+        in: query
+        required: false
+        default: 1
+        type: integer
+        format: int32
+        description: Page of results to request (standard pagination)
+      - name: page-size
+        in: query
+        required: false
+        default: 25
+        type: integer
+        format: int32
+        description: Page size to request. Default is 25 (standard pagination)
+      - name: x-v
+        in: header
+        required: true
+        type: string
+        description: Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If the value of [x-min-v](#request-headers) is equal to or higher than the value of [x-v](#request-headers) then the [x-min-v](#request-headers) header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See [HTTP Headers](#request-headers)
+      - name: x-min-v
+        in: header
+        required: false
+        type: string
+        description: Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
+      - name: x-fapi-interaction-id
+        in: header
+        required: false
+        type: string
+        description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+      - name: x-fapi-auth-date
+        in: header
+        required: false
+        type: string
+        description: The time when the customer last logged in to the Data Recipient Software Product. Required for all resource calls (customer present and unattended) if the customer has logged in. Not to be included for unauthenticated calls.
+      - name: x-fapi-customer-ip-address
+        in: header
+        required: false
+        type: string
+        description: The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
+      - name: x-cds-client-headers
+        in: header
+        required: false
+        type: string
+        description: The customer's original standard http headers [Base64](#common-field-types) encoded, including the original User Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls.  Not required for unattended or unauthenticated calls.
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ResponseBankingAccountList'
+          headers:
+            x-v:
+              description: The [version](#response-headers) of the API end point that the data holder has responded with.
+              type: string
+            x-fapi-interaction-id:
+              description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+              type: string
+        '400':
+          description: The following error codes MUST be supported:<br/><ul class="error-code-list"><li>[400 - Invalid Field](#error-400-field-invalid)</li><li>[400 - Invalid Page Size](#error-400-field-invalid-page-size)</li><li>[400 - Invalid Version](#error-400-header-invalid-version)</li><li>[406 - Unsupported Version](#error-406-header-unsupported-version)</li><li>[422 - Invalid Page](#error-422-field-invalid-page)</li></ul>
+          schema:
+            $ref: '#/definitions/ResponseErrorListV2'
+          headers:
+            x-fapi-interaction-id:
+              description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+              type: string
+  /banking/accounts/balances:
+    get:
+      description: Obtain balances for multiple, filtered accounts
+      summary: listBalancesBulk
+      tags:
+      - Banking
+      - Accounts
+      operationId: listBalancesBulk
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: product-category
+        in: query
+        required: false
+        enum:
+        - BUSINESS_LOANS
+        - CRED_AND_CHRG_CARDS
+        - LEASES
+        - MARGIN_LOANS
+        - OVERDRAFTS
+        - PERS_LOANS
+        - REGULATED_TRUST_ACCOUNTS
+        - RESIDENTIAL_MORTGAGES
+        - TERM_DEPOSITS
+        - TRADE_FINANCE
+        - TRANS_AND_SAVINGS_ACCOUNTS
+        - TRAVEL_CARDS
+        type: string
+        description: Used to filter results on the productCategory field applicable to accounts. Any one of the valid values for this field can be supplied. If absent then all accounts returned.
+      - name: open-status
+        in: query
+        required: false
+        enum:
+        - ALL
+        - CLOSED
+        - OPEN
+        default: ALL
+        type: string
+        description: Used to filter results according to open/closed status. Values can be OPEN, CLOSED or ALL. If absent then ALL is assumed
+      - name: is-owned
+        in: query
+        required: false
+        type: boolean
+        description: Filters accounts based on whether they are owned by the authorised customer.  True for owned accounts, false for unowned accounts and absent for all accounts
+      - name: page
+        in: query
+        required: false
+        default: 1
+        type: integer
+        format: int32
+        description: Page of results to request (standard pagination)
+      - name: page-size
+        in: query
+        required: false
+        default: 25
+        type: integer
+        format: int32
+        description: Page size to request. Default is 25 (standard pagination)
+      - name: x-v
+        in: header
+        required: true
+        type: string
+        description: Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If the value of [x-min-v](#request-headers) is equal to or higher than the value of [x-v](#request-headers) then the [x-min-v](#request-headers) header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See [HTTP Headers](#request-headers)
+      - name: x-min-v
+        in: header
+        required: false
+        type: string
+        description: Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
+      - name: x-fapi-interaction-id
+        in: header
+        required: false
+        type: string
+        description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+      - name: x-fapi-auth-date
+        in: header
+        required: false
+        type: string
+        description: The time when the customer last logged in to the Data Recipient Software Product. Required for all resource calls (customer present and unattended) if the customer has logged in. Not to be included for unauthenticated calls.
+      - name: x-fapi-customer-ip-address
+        in: header
+        required: false
+        type: string
+        description: The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
+      - name: x-cds-client-headers
+        in: header
+        required: false
+        type: string
+        description: The customer's original standard http headers [Base64](#common-field-types) encoded, including the original User Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls.  Not required for unattended or unauthenticated calls.
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ResponseBankingAccountsBalanceList'
+          headers:
+            x-v:
+              description: The [version](#response-headers) of the API end point that the data holder has responded with.
+              type: string
+            x-fapi-interaction-id:
+              description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+              type: string
+        '400':
+          description: The following error codes MUST be supported:<br/><ul class="error-code-list"><li>[400 - Invalid Field](#error-400-field-invalid)</li><li>[400 - Invalid Page Size](#error-400-field-invalid-page-size)</li><li>[400 - Invalid Version](#error-400-header-invalid-version)</li><li>[406 - Unsupported Version](#error-406-header-unsupported-version)</li><li>[422 - Invalid Page](#error-422-field-invalid-page)</li></ul>
+          schema:
+            $ref: '#/definitions/ResponseErrorListV2'
+          headers:
+            x-fapi-interaction-id:
+              description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+              type: string
+    post:
+      description: Obtain balances for a specified list of accounts
+      summary: listBalancesSpecificAccounts
+      tags:
+      - Banking
+      - Accounts
+      operationId: listBalancesSpecificAccounts
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: accountIds
+        in: body
+        required: true
+        description: The list of account IDs to obtain balances for
+        schema:
+          $ref: '#/definitions/RequestAccountIds'
+      - name: page
+        in: query
+        required: false
+        default: 1
+        type: integer
+        format: int32
+        description: Page of results to request (standard pagination)
+      - name: page-size
+        in: query
+        required: false
+        default: 25
+        type: integer
+        format: int32
+        description: Page size to request. Default is 25 (standard pagination)
+      - name: x-v
+        in: header
+        required: true
+        type: string
+        description: Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If the value of [x-min-v](#request-headers) is equal to or higher than the value of [x-v](#request-headers) then the [x-min-v](#request-headers) header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See [HTTP Headers](#request-headers)
+      - name: x-min-v
+        in: header
+        required: false
+        type: string
+        description: Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
+      - name: x-fapi-interaction-id
+        in: header
+        required: false
+        type: string
+        description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+      - name: x-fapi-auth-date
+        in: header
+        required: false
+        type: string
+        description: The time when the customer last logged in to the Data Recipient Software Product. Required for all resource calls (customer present and unattended) if the customer has logged in. Not to be included for unauthenticated calls.
+      - name: x-fapi-customer-ip-address
+        in: header
+        required: false
+        type: string
+        description: The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
+      - name: x-cds-client-headers
+        in: header
+        required: false
+        type: string
+        description: The customer's original standard http headers [Base64](#common-field-types) encoded, including the original User Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls.  Not required for unattended or unauthenticated calls.
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ResponseBankingAccountsBalanceList'
+          headers:
+            x-v:
+              description: The [version](#response-headers) of the API end point that the data holder has responded with.
+              type: string
+            x-fapi-interaction-id:
+              description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+              type: string
+        '400':
+          description: The following error codes MUST be supported:<br/><ul class="error-code-list"><li>[400 - Invalid Field](#error-400-field-invalid)</li><li>[400 - Invalid Page Size](#error-400-field-invalid-page-size)</li><li>[400 - Invalid Version](#error-400-header-invalid-version)</li><li>[406 - Unsupported Version](#error-406-header-unsupported-version)</li><li>[422 - Invalid Page](#error-422-field-invalid-page)</li><li>[422 - Unavailable Banking Account](#error-422-authorisation-unavailable-banking-account)</li><li>[422 - Invalid Banking Account](#error-422-authorisation-invalid-banking-account)</li></ul>
+          schema:
+            $ref: '#/definitions/ResponseErrorListV2'
+          headers:
+            x-fapi-interaction-id:
+              description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+              type: string
+  /banking/accounts/{accountId}/balance:
+    get:
+      description: Obtain the balance for a single specified account
+      summary: getBalance
+      tags:
+      - Banking
+      - Accounts
+      operationId: getBalance
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        type: string
+        description: ID of the specific account requested
+      - name: x-v
+        in: header
+        required: true
+        type: string
+        description: Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If the value of [x-min-v](#request-headers) is equal to or higher than the value of [x-v](#request-headers) then the [x-min-v](#request-headers) header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See [HTTP Headers](#request-headers)
+      - name: x-min-v
+        in: header
+        required: false
+        type: string
+        description: Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
+      - name: x-fapi-interaction-id
+        in: header
+        required: false
+        type: string
+        description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+      - name: x-fapi-auth-date
+        in: header
+        required: false
+        type: string
+        description: The time when the customer last logged in to the Data Recipient Software Product. Required for all resource calls (customer present and unattended) if the customer has logged in. Not to be included for unauthenticated calls.
+      - name: x-fapi-customer-ip-address
+        in: header
+        required: false
+        type: string
+        description: The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
+      - name: x-cds-client-headers
+        in: header
+        required: false
+        type: string
+        description: The customer's original standard http headers [Base64](#common-field-types) encoded, including the original User Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls.  Not required for unattended or unauthenticated calls.
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ResponseBankingAccountsBalanceById'
+          headers:
+            x-v:
+              description: The [version](#response-headers) of the API end point that the data holder has responded with.
+              type: string
+            x-fapi-interaction-id:
+              description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+              type: string
+        '400':
+          description: The following error codes MUST be supported:<br/><ul class="error-code-list"><li>[400 - Invalid Field](#error-400-field-invalid)</li><li>[400 - Invalid Version](#error-400-header-invalid-version)</li><li>[404 - Unavailable Banking Account](#error-404-authorisation-unavailable-banking-account)</li><li>[404 - Invalid Banking Account](#error-404-authorisation-invalid-banking-account)</li><li>[406 - Unsupported Version](#error-406-header-unsupported-version)</li></ul>
+          schema:
+            $ref: '#/definitions/ResponseErrorListV2'
+          headers:
+            x-fapi-interaction-id:
+              description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+              type: string
+  /banking/accounts/{accountId}:
+    get:
+      description: >-
+        Obtain detailed information on a single account.
+
+
+        Obsolete versions: [v1](includes/obsolete/get-account-detail-v1.html)
+      summary: getAccountDetail
+      tags:
+      - Banking
+      - Accounts
+      operationId: getAccountDetail
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        type: string
+        description: A tokenised identifier for the account which is unique but not shareable
+      - name: x-v
+        in: header
+        required: true
+        type: string
+        description: Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If the value of [x-min-v](#request-headers) is equal to or higher than the value of [x-v](#request-headers) then the [x-min-v](#request-headers) header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See [HTTP Headers](#request-headers)
+      - name: x-min-v
+        in: header
+        required: false
+        type: string
+        description: Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
+      - name: x-fapi-interaction-id
+        in: header
+        required: false
+        type: string
+        description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+      - name: x-fapi-auth-date
+        in: header
+        required: false
+        type: string
+        description: The time when the customer last logged in to the Data Recipient Software Product. Required for all resource calls (customer present and unattended) if the customer has logged in. Not to be included for unauthenticated calls.
+      - name: x-fapi-customer-ip-address
+        in: header
+        required: false
+        type: string
+        description: The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
+      - name: x-cds-client-headers
+        in: header
+        required: false
+        type: string
+        description: The customer's original standard http headers [Base64](#common-field-types) encoded, including the original User Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls.  Not required for unattended or unauthenticated calls.
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ResponseBankingAccountByIdV2'
+          headers:
+            x-v:
+              description: The [version](#response-headers) of the API end point that the data holder has responded with.
+              type: string
+            x-fapi-interaction-id:
+              description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+              type: string
+        '400':
+          description: The following error codes MUST be supported:<br/><ul class="error-code-list"><li>[400 - Invalid Field](#error-400-field-invalid)</li><li>[400 - Invalid Version](#error-400-header-invalid-version)</li><li>[404 - Unavailable Banking Account](#error-404-authorisation-unavailable-banking-account)</li><li>[404 - Invalid Banking Account](#error-404-authorisation-invalid-banking-account)</li><li>[406 - Unsupported Version](#error-406-header-unsupported-version)</li></ul>
+          schema:
+            $ref: '#/definitions/ResponseErrorListV2'
+          headers:
+            x-fapi-interaction-id:
+              description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+              type: string
+  /banking/accounts/{accountId}/transactions:
+    get:
+      description: >-
+        Obtain transactions for a specific account.
+
+
+        Some general notes that apply to all end points that retrieve transactions:
+
+
+        - Where multiple transactions are returned, transactions should be ordered according to effective date in descending order
+
+        - As the date and time for a transaction can alter depending on status and transaction type two separate date/times are included in the payload. There are still some scenarios where neither of these time stamps is available. For the purpose of filtering and ordering it is expected that the data holder will use the "effective" date/time which will be defined as:
+          - Posted date/time if available, then
+          - Execution date/time if available, then
+          - A reasonable date/time nominated by the data holder using internal data structures
+        - For transaction amounts it should be assumed that a negative value indicates a reduction of the available balance on the account while a positive value indicates an increase in the available balance on the account
+
+        - For aggregated transactions (ie. groups of sub transactions reported as a single entry for the account) only the aggregated information, with as much consistent information accross the subsidiary transactions as possible, is required to be shared
+      summary: getTransactions
+      tags:
+      - Banking
+      - Accounts
+      operationId: getTransactions
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        type: string
+        description: ID of the account to get transactions for.  Must have previously been returned by one of the account list end points.
+      - name: oldest-time
+        in: query
+        required: false
+        type: string
+        description: Constrain the transaction history request to transactions with effective time at or after this date/time. If absent defaults to newest-time minus 90 days.  Format is aligned to DateTimeString common type
+      - name: newest-time
+        in: query
+        required: false
+        type: string
+        description: Constrain the transaction history request to transactions with effective time at or before this date/time.  If absent defaults to today.  Format is aligned to DateTimeString common type
+      - name: min-amount
+        in: query
+        required: false
+        type: string
+        description: Filter transactions to only transactions with amounts higher or equal to than this amount
+      - name: max-amount
+        in: query
+        required: false
+        type: string
+        description: Filter transactions to only transactions with amounts less than or equal to than this amount
+      - name: text
+        in: query
+        required: false
+        type: string
+        description: Filter transactions to only transactions where this string value is found as a substring of either the reference or description fields. Format is arbitrary ASCII string. This parameter is optionally implemented by data holders. If it is not implemented then a response should be provided as normal without text filtering applied and an additional boolean field named isQueryParamUnsupported should be included in the meta object and set to true (whether the text parameter is supplied or not)
+      - name: page
+        in: query
+        required: false
+        default: 1
+        type: integer
+        format: int32
+        description: Page of results to request (standard pagination)
+      - name: page-size
+        in: query
+        required: false
+        default: 25
+        type: integer
+        format: int32
+        description: Page size to request. Default is 25 (standard pagination)
+      - name: x-v
+        in: header
+        required: true
+        type: string
+        description: Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If the value of [x-min-v](#request-headers) is equal to or higher than the value of [x-v](#request-headers) then the [x-min-v](#request-headers) header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See [HTTP Headers](#request-headers)
+      - name: x-min-v
+        in: header
+        required: false
+        type: string
+        description: Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
+      - name: x-fapi-interaction-id
+        in: header
+        required: false
+        type: string
+        description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+      - name: x-fapi-auth-date
+        in: header
+        required: false
+        type: string
+        description: The time when the customer last logged in to the Data Recipient Software Product. Required for all resource calls (customer present and unattended) if the customer has logged in. Not to be included for unauthenticated calls.
+      - name: x-fapi-customer-ip-address
+        in: header
+        required: false
+        type: string
+        description: The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
+      - name: x-cds-client-headers
+        in: header
+        required: false
+        type: string
+        description: The customer's original standard http headers [Base64](#common-field-types) encoded, including the original User Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls.  Not required for unattended or unauthenticated calls.
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ResponseBankingTransactionList'
+          headers:
+            x-v:
+              description: The [version](#response-headers) of the API end point that the data holder has responded with.
+              type: string
+            x-fapi-interaction-id:
+              description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+              type: string
+        '400':
+          description: The following error codes MUST be supported:<br/><ul class="error-code-list"><li>[400 - Invalid Field](#error-400-field-invalid)</li><li>[400 - Invalid Page Size](#error-400-field-invalid-page-size)</li><li>[400 - Invalid Version](#error-400-header-invalid-version)</li><li>[400 - Invalid Date](#error-400-field-invalid-date-time)</li><li>[404 - Unavailable Banking Account](#error-404-authorisation-unavailable-banking-account)</li><li>[404 - Invalid Banking Account](#error-404-authorisation-invalid-banking-account)</li><li>[406 - Unsupported Version](#error-406-header-unsupported-version)</li><li>[422 - Invalid Page](#error-422-field-invalid-page)</li></ul>
+          schema:
+            $ref: '#/definitions/ResponseErrorListV2'
+          headers:
+            x-fapi-interaction-id:
+              description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+              type: string
+  /banking/accounts/{accountId}/transactions/{transactionId}:
+    get:
+      description: Obtain detailed information on a transaction for a specific account
+      summary: getTransactionDetail
+      tags:
+      - Banking
+      - Accounts
+      operationId: getTransactionDetail
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        type: string
+        description: ID of the account to get transactions for.  Must have previously been returned by one of the account list end points
+      - name: transactionId
+        in: path
+        required: true
+        type: string
+        description: ID of the transaction obtained from a previous call to one of the other transaction end points
+      - name: x-v
+        in: header
+        required: true
+        type: string
+        description: Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If the value of [x-min-v](#request-headers) is equal to or higher than the value of [x-v](#request-headers) then the [x-min-v](#request-headers) header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See [HTTP Headers](#request-headers)
+      - name: x-min-v
+        in: header
+        required: false
+        type: string
+        description: Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
+      - name: x-fapi-interaction-id
+        in: header
+        required: false
+        type: string
+        description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+      - name: x-fapi-auth-date
+        in: header
+        required: false
+        type: string
+        description: The time when the customer last logged in to the Data Recipient Software Product. Required for all resource calls (customer present and unattended) if the customer has logged in. Not to be included for unauthenticated calls.
+      - name: x-fapi-customer-ip-address
+        in: header
+        required: false
+        type: string
+        description: The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
+      - name: x-cds-client-headers
+        in: header
+        required: false
+        type: string
+        description: The customer's original standard http headers [Base64](#common-field-types) encoded, including the original User Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls.  Not required for unattended or unauthenticated calls.
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ResponseBankingTransactionById'
+          headers:
+            x-v:
+              description: The [version](#response-headers) of the API end point that the data holder has responded with.
+              type: string
+            x-fapi-interaction-id:
+              description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+              type: string
+        '400':
+          description: The following error codes MUST be supported:<br/><ul class="error-code-list"><li>[400 - Invalid Field](#error-400-field-invalid)</li><li>[400 - Invalid Version](#error-400-header-invalid-version)</li><li>[400 - Invalid Date](#error-400-field-invalid-date-time)</li><li>[404 - Unavailable Banking Account](#error-404-authorisation-unavailable-banking-account)</li><li>[404 - Invalid Banking Account](#error-404-authorisation-invalid-banking-account)</li><li>[Unavailable Resource](#error-404-resource-unavailable)</li><li>[Invalid Resource](#error-404-resource-invalid)</li><li>[406 - Unsupported Version](#error-406-header-unsupported-version)</li></ul>
+          schema:
+            $ref: '#/definitions/ResponseErrorListV2'
+          headers:
+            x-fapi-interaction-id:
+              description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+              type: string
+  /banking/accounts/{accountId}/direct-debits:
+    get:
+      description: Obtain direct debit authorisations for a specific account
+      summary: listDirectDebits
+      tags:
+      - Banking
+      - Direct Debits
+      operationId: listDirectDebits
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        type: string
+        description: ID of the account to get direct debit authorisations for.  Must have previously been returned by one of the account list end points.
+      - name: page
+        in: query
+        required: false
+        default: 1
+        type: integer
+        format: int32
+        description: Page of results to request (standard pagination)
+      - name: page-size
+        in: query
+        required: false
+        default: 25
+        type: integer
+        format: int32
+        description: Page size to request. Default is 25 (standard pagination)
+      - name: x-v
+        in: header
+        required: true
+        type: string
+        description: Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If the value of [x-min-v](#request-headers) is equal to or higher than the value of [x-v](#request-headers) then the [x-min-v](#request-headers) header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See [HTTP Headers](#request-headers)
+      - name: x-min-v
+        in: header
+        required: false
+        type: string
+        description: Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
+      - name: x-fapi-interaction-id
+        in: header
+        required: false
+        type: string
+        description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+      - name: x-fapi-auth-date
+        in: header
+        required: false
+        type: string
+        description: The time when the customer last logged in to the Data Recipient Software Product. Required for all resource calls (customer present and unattended) if the customer has logged in. Not to be included for unauthenticated calls.
+      - name: x-fapi-customer-ip-address
+        in: header
+        required: false
+        type: string
+        description: The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
+      - name: x-cds-client-headers
+        in: header
+        required: false
+        type: string
+        description: The customer's original standard http headers [Base64](#common-field-types) encoded, including the original User Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls.  Not required for unattended or unauthenticated calls.
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ResponseBankingDirectDebitAuthorisationList'
+          headers:
+            x-v:
+              description: The [version](#response-headers) of the API end point that the data holder has responded with.
+              type: string
+            x-fapi-interaction-id:
+              description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+              type: string
+        '400':
+          description: The following error codes MUST be supported:<br/><ul class="error-code-list"><li>[400 - Invalid Field](#error-400-field-invalid)</li><li>[400 - Invalid Page Size](#error-400-field-invalid-page-size)</li><li>[400 - Invalid Version](#error-400-header-invalid-version)</li><li>[404 - Unavailable Banking Account](#error-404-authorisation-unavailable-banking-account)</li><li>[404 - Invalid Banking Account](#error-404-authorisation-invalid-banking-account)</li><li>[406 - Unsupported Version](#error-406-header-unsupported-version)</li><li>[422 - Invalid Page](#error-422-field-invalid-page)</li></ul>
+          schema:
+            $ref: '#/definitions/ResponseErrorListV2'
+          headers:
+            x-fapi-interaction-id:
+              description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+              type: string
+  /banking/accounts/direct-debits:
+    get:
+      description: Obtain direct debit authorisations for multiple, filtered accounts
+      summary: listDirectDebitsBulk
+      tags:
+      - Banking
+      - Direct Debits
+      operationId: listDirectDebitsBulk
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: product-category
+        in: query
+        required: false
+        enum:
+        - BUSINESS_LOANS
+        - CRED_AND_CHRG_CARDS
+        - LEASES
+        - MARGIN_LOANS
+        - OVERDRAFTS
+        - PERS_LOANS
+        - REGULATED_TRUST_ACCOUNTS
+        - RESIDENTIAL_MORTGAGES
+        - TERM_DEPOSITS
+        - TRADE_FINANCE
+        - TRANS_AND_SAVINGS_ACCOUNTS
+        - TRAVEL_CARDS
+        type: string
+        description: Used to filter results on the productCategory field applicable to accounts. Any one of the valid values for this field can be supplied. If absent then all accounts returned.
+      - name: open-status
+        in: query
+        required: false
+        enum:
+        - ALL
+        - CLOSED
+        - OPEN
+        default: ALL
+        type: string
+        description: Used to filter results according to open/closed status. Values can be OPEN, CLOSED or ALL. If absent then ALL is assumed
+      - name: is-owned
+        in: query
+        required: false
+        type: boolean
+        description: Filters accounts based on whether they are owned by the authorised customer.  True for owned accounts, false for unowned accounts and absent for all accounts
+      - name: page
+        in: query
+        required: false
+        default: 1
+        type: integer
+        format: int32
+        description: Page of results to request (standard pagination)
+      - name: page-size
+        in: query
+        required: false
+        default: 25
+        type: integer
+        format: int32
+        description: Page size to request. Default is 25 (standard pagination)
+      - name: x-v
+        in: header
+        required: true
+        type: string
+        description: Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If the value of [x-min-v](#request-headers) is equal to or higher than the value of [x-v](#request-headers) then the [x-min-v](#request-headers) header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See [HTTP Headers](#request-headers)
+      - name: x-min-v
+        in: header
+        required: false
+        type: string
+        description: Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
+      - name: x-fapi-interaction-id
+        in: header
+        required: false
+        type: string
+        description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+      - name: x-fapi-auth-date
+        in: header
+        required: false
+        type: string
+        description: The time when the customer last logged in to the Data Recipient Software Product. Required for all resource calls (customer present and unattended) if the customer has logged in. Not to be included for unauthenticated calls.
+      - name: x-fapi-customer-ip-address
+        in: header
+        required: false
+        type: string
+        description: The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
+      - name: x-cds-client-headers
+        in: header
+        required: false
+        type: string
+        description: The customer's original standard http headers [Base64](#common-field-types) encoded, including the original User Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls.  Not required for unattended or unauthenticated calls.
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ResponseBankingDirectDebitAuthorisationList'
+          headers:
+            x-v:
+              description: The [version](#response-headers) of the API end point that the data holder has responded with.
+              type: string
+            x-fapi-interaction-id:
+              description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+              type: string
+        '400':
+          description: The following error codes MUST be supported:<br/><ul class="error-code-list"><li>[400 - Invalid Field](#error-400-field-invalid)</li><li>[400 - Invalid Page Size](#error-400-field-invalid-page-size)</li><li>[400 - Invalid Version](#error-400-header-invalid-version)</li><li>[406 - Unsupported Version](#error-406-header-unsupported-version)</li><li>[422 - Invalid Page](#error-422-field-invalid-page)</li></ul>
+          schema:
+            $ref: '#/definitions/ResponseErrorListV2'
+          headers:
+            x-fapi-interaction-id:
+              description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+              type: string
+    post:
+      description: Obtain direct debit authorisations for a specified list of accounts
+      summary: listDirectDebitsSpecificAccounts
+      tags:
+      - Banking
+      - Direct Debits
+      operationId: listDirectDebitsSpecificAccounts
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: accountIds
+        in: body
+        required: true
+        description: Array of specific accountIds to obtain authorisations for
+        schema:
+          $ref: '#/definitions/RequestAccountIds'
+      - name: page
+        in: query
+        required: false
+        default: 1
+        type: integer
+        format: int32
+        description: Page of results to request (standard pagination)
+      - name: page-size
+        in: query
+        required: false
+        default: 25
+        type: integer
+        format: int32
+        description: Page size to request. Default is 25 (standard pagination)
+      - name: x-v
+        in: header
+        required: true
+        type: string
+        description: Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If the value of [x-min-v](#request-headers) is equal to or higher than the value of [x-v](#request-headers) then the [x-min-v](#request-headers) header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See [HTTP Headers](#request-headers)
+      - name: x-min-v
+        in: header
+        required: false
+        type: string
+        description: Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
+      - name: x-fapi-interaction-id
+        in: header
+        required: false
+        type: string
+        description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+      - name: x-fapi-auth-date
+        in: header
+        required: false
+        type: string
+        description: The time when the customer last logged in to the Data Recipient Software Product. Required for all resource calls (customer present and unattended) if the customer has logged in. Not to be included for unauthenticated calls.
+      - name: x-fapi-customer-ip-address
+        in: header
+        required: false
+        type: string
+        description: The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
+      - name: x-cds-client-headers
+        in: header
+        required: false
+        type: string
+        description: The customer's original standard http headers [Base64](#common-field-types) encoded, including the original User Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls.  Not required for unattended or unauthenticated calls.
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ResponseBankingDirectDebitAuthorisationList'
+          headers:
+            x-v:
+              description: The [version](#response-headers) of the API end point that the data holder has responded with.
+              type: string
+            x-fapi-interaction-id:
+              description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+              type: string
+        '400':
+          description: The following error codes MUST be supported:<br/><ul class="error-code-list"><li>[400 - Invalid Field](#error-400-field-invalid)</li><li>[400 - Invalid Page Size](#error-400-field-invalid-page-size)</li><li>[400 - Invalid Version](#error-400-header-invalid-version)</li><li>[406 - Unsupported Version](#error-406-header-unsupported-version)</li><li>[422 - Invalid Page](#error-422-field-invalid-page)</li><li>[422 - Unavailable Banking Account](#error-422-authorisation-unavailable-banking-account)</li><li>[422 - Invalid Banking Account](#error-422-authorisation-invalid-banking-account)</li></ul>
+          schema:
+            $ref: '#/definitions/ResponseErrorListV2'
+          headers:
+            x-fapi-interaction-id:
+              description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+              type: string
+  /banking/accounts/{accountId}/payments/scheduled:
+    get:
+      description: Obtain scheduled, outgoing payments for a specific account
+      summary: listScheduledPayments
+      tags:
+      - Banking
+      - Scheduled Payments
+      operationId: listScheduledPayments
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: accountId
+        in: path
+        required: true
+        type: string
+        description: ID of the account to get scheduled payments for. Must have previously been returned by one of the account list end points. The account specified is the source account for the payment
+      - name: page
+        in: query
+        required: false
+        default: 1
+        type: integer
+        format: int32
+        description: Page of results to request (standard pagination)
+      - name: page-size
+        in: query
+        required: false
+        default: 25
+        type: integer
+        format: int32
+        description: Page size to request. Default is 25 (standard pagination)
+      - name: x-v
+        in: header
+        required: true
+        type: string
+        description: Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If the value of [x-min-v](#request-headers) is equal to or higher than the value of [x-v](#request-headers) then the [x-min-v](#request-headers) header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See [HTTP Headers](#request-headers)
+      - name: x-min-v
+        in: header
+        required: false
+        type: string
+        description: Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
+      - name: x-fapi-interaction-id
+        in: header
+        required: false
+        type: string
+        description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+      - name: x-fapi-auth-date
+        in: header
+        required: false
+        type: string
+        description: The time when the customer last logged in to the Data Recipient Software Product. Required for all resource calls (customer present and unattended) if the customer has logged in. Not to be included for unauthenticated calls.
+      - name: x-fapi-customer-ip-address
+        in: header
+        required: false
+        type: string
+        description: The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
+      - name: x-cds-client-headers
+        in: header
+        required: false
+        type: string
+        description: The customer's original standard http headers [Base64](#common-field-types) encoded, including the original User Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls.  Not required for unattended or unauthenticated calls.
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ResponseBankingScheduledPaymentsList'
+          headers:
+            x-v:
+              description: The [version](#response-headers) of the API end point that the data holder has responded with.
+              type: string
+            x-fapi-interaction-id:
+              description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+              type: string
+        '400':
+          description: The following error codes MUST be supported:<br/><ul class="error-code-list"><li>[400 - Invalid Field](#error-400-field-invalid)</li><li>[400 - Invalid Page Size](#error-400-field-invalid-page-size)</li><li>[400 - Invalid Version](#error-400-header-invalid-version)</li><li>[404 - Unavailable Banking Account](#error-404-authorisation-unavailable-banking-account)</li><li>[404 - Invalid Banking Account](#error-404-authorisation-invalid-banking-account)</li><li>[406 - Unsupported Version](#error-406-header-unsupported-version)</li><li>[422 - Invalid Page](#error-422-field-invalid-page)</li></ul>
+          schema:
+            $ref: '#/definitions/ResponseErrorListV2'
+          headers:
+            x-fapi-interaction-id:
+              description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+              type: string
+  /banking/payments/scheduled:
+    get:
+      description: Obtain scheduled payments for multiple, filtered accounts that are the source of funds for the payments
+      summary: listScheduledPaymentsBulk
+      tags:
+      - Banking
+      - Scheduled Payments
+      operationId: listScheduledPaymentsBulk
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: product-category
+        in: query
+        required: false
+        enum:
+        - BUSINESS_LOANS
+        - CRED_AND_CHRG_CARDS
+        - LEASES
+        - MARGIN_LOANS
+        - OVERDRAFTS
+        - PERS_LOANS
+        - REGULATED_TRUST_ACCOUNTS
+        - RESIDENTIAL_MORTGAGES
+        - TERM_DEPOSITS
+        - TRADE_FINANCE
+        - TRANS_AND_SAVINGS_ACCOUNTS
+        - TRAVEL_CARDS
+        type: string
+        description: Used to filter results on the productCategory field applicable to accounts. Any one of the valid values for this field can be supplied. If absent then all accounts returned.
+      - name: open-status
+        in: query
+        required: false
+        enum:
+        - ALL
+        - CLOSED
+        - OPEN
+        default: ALL
+        type: string
+        description: Used to filter results according to open/closed status. Values can be OPEN, CLOSED or ALL. If absent then ALL is assumed
+      - name: is-owned
+        in: query
+        required: false
+        type: boolean
+        description: Filters accounts based on whether they are owned by the authorised customer.  True for owned accounts, false for unowned accounts and absent for all accounts
+      - name: page
+        in: query
+        required: false
+        default: 1
+        type: integer
+        format: int32
+        description: Page of results to request (standard pagination)
+      - name: page-size
+        in: query
+        required: false
+        default: 25
+        type: integer
+        format: int32
+        description: Page size to request. Default is 25 (standard pagination)
+      - name: x-v
+        in: header
+        required: true
+        type: string
+        description: Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If the value of [x-min-v](#request-headers) is equal to or higher than the value of [x-v](#request-headers) then the [x-min-v](#request-headers) header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See [HTTP Headers](#request-headers)
+      - name: x-min-v
+        in: header
+        required: false
+        type: string
+        description: Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
+      - name: x-fapi-interaction-id
+        in: header
+        required: false
+        type: string
+        description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+      - name: x-fapi-auth-date
+        in: header
+        required: false
+        type: string
+        description: The time when the customer last logged in to the Data Recipient Software Product. Required for all resource calls (customer present and unattended) if the customer has logged in. Not to be included for unauthenticated calls.
+      - name: x-fapi-customer-ip-address
+        in: header
+        required: false
+        type: string
+        description: The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
+      - name: x-cds-client-headers
+        in: header
+        required: false
+        type: string
+        description: The customer's original standard http headers [Base64](#common-field-types) encoded, including the original User Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls.  Not required for unattended or unauthenticated calls.
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ResponseBankingScheduledPaymentsList'
+          headers:
+            x-v:
+              description: The [version](#response-headers) of the API end point that the data holder has responded with.
+              type: string
+            x-fapi-interaction-id:
+              description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+              type: string
+        '400':
+          description: The following error codes MUST be supported:<br/><ul class="error-code-list"><li>[400 - Invalid Field](#error-400-field-invalid)</li><li>[400 - Invalid Page Size](#error-400-field-invalid-page-size)</li><li>[400 - Invalid Version](#error-400-header-invalid-version)</li><li>[406 - Unsupported Version](#error-406-header-unsupported-version)</li><li>[422 - Invalid Page](#error-422-field-invalid-page)</li></ul>
+          schema:
+            $ref: '#/definitions/ResponseErrorListV2'
+          headers:
+            x-fapi-interaction-id:
+              description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+              type: string
+    post:
+      description: Obtain scheduled payments for a specified list of accounts
+      summary: listScheduledPaymentsSpecificAccounts
+      tags:
+      - Banking
+      - Scheduled Payments
+      operationId: listScheduledPaymentsSpecificAccounts
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: accountIds
+        in: body
+        required: true
+        description: Array of specific accountIds to obtain scheduled payments for.  The accounts specified are the source of funds for the payments returned
+        schema:
+          $ref: '#/definitions/RequestAccountIds'
+      - name: page
+        in: query
+        required: false
+        default: 1
+        type: integer
+        format: int32
+        description: Page of results to request (standard pagination)
+      - name: page-size
+        in: query
+        required: false
+        default: 25
+        type: integer
+        format: int32
+        description: Page size to request. Default is 25 (standard pagination)
+      - name: x-v
+        in: header
+        required: true
+        type: string
+        description: Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If the value of [x-min-v](#request-headers) is equal to or higher than the value of [x-v](#request-headers) then the [x-min-v](#request-headers) header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See [HTTP Headers](#request-headers)
+      - name: x-min-v
+        in: header
+        required: false
+        type: string
+        description: Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
+      - name: x-fapi-interaction-id
+        in: header
+        required: false
+        type: string
+        description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+      - name: x-fapi-auth-date
+        in: header
+        required: false
+        type: string
+        description: The time when the customer last logged in to the Data Recipient Software Product. Required for all resource calls (customer present and unattended) if the customer has logged in. Not to be included for unauthenticated calls.
+      - name: x-fapi-customer-ip-address
+        in: header
+        required: false
+        type: string
+        description: The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
+      - name: x-cds-client-headers
+        in: header
+        required: false
+        type: string
+        description: The customer's original standard http headers [Base64](#common-field-types) encoded, including the original User Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls.  Not required for unattended or unauthenticated calls.
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ResponseBankingScheduledPaymentsList'
+          headers:
+            x-v:
+              description: The [version](#response-headers) of the API end point that the data holder has responded with.
+              type: string
+            x-fapi-interaction-id:
+              description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+              type: string
+        '400':
+          description: The following error codes MUST be supported:<br/><ul class="error-code-list"><li>[400 - Invalid Field](#error-400-field-invalid)</li><li>[400 - Invalid Page Size](#error-400-field-invalid-page-size)</li><li>[400 - Invalid Version](#error-400-header-invalid-version)</li><li>[406 - Unsupported Version](#error-406-header-unsupported-version)</li><li>[422 - Invalid Page](#error-422-field-invalid-page)</li><li>[422 - Unavailable Banking Account](#error-422-authorisation-unavailable-banking-account)</li><li>[422 - Invalid Banking Account](#error-422-authorisation-invalid-banking-account)</li></ul>
+          schema:
+            $ref: '#/definitions/ResponseErrorListV2'
+          headers:
+            x-fapi-interaction-id:
+              description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+              type: string
+  /banking/payees:
+    get:
+      description: >-
+        Obtain a list of pre-registered payees.
+
+
+        Obsolete versions: [v1](includes/obsolete/get-payees-v1.html)
+      summary: listPayees
+      tags:
+      - Banking
+      - Payees
+      operationId: listPayees
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: type
+        in: query
+        required: false
+        enum:
+        - ALL
+        - BILLER
+        - DIGITAL_WALLET
+        - DOMESTIC
+        - INTERNATIONAL
+        default: ALL
+        type: string
+        description: Filter on the payee type field.  In addition to normal type field values, ALL can be specified to retrieve all payees.  If absent the assumed value is ALL
+      - name: page
+        in: query
+        required: false
+        default: 1
+        type: integer
+        format: int32
+        description: Page of results to request (standard pagination)
+      - name: page-size
+        in: query
+        required: false
+        default: 25
+        type: integer
+        format: int32
+        description: Page size to request. Default is 25 (standard pagination)
+      - name: x-v
+        in: header
+        required: true
+        type: string
+        description: Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If the value of [x-min-v](#request-headers) is equal to or higher than the value of [x-v](#request-headers) then the [x-min-v](#request-headers) header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See [HTTP Headers](#request-headers)
+      - name: x-min-v
+        in: header
+        required: false
+        type: string
+        description: Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
+      - name: x-fapi-interaction-id
+        in: header
+        required: false
+        type: string
+        description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+      - name: x-fapi-auth-date
+        in: header
+        required: false
+        type: string
+        description: The time when the customer last logged in to the Data Recipient Software Product. Required for all resource calls (customer present and unattended) if the customer has logged in. Not to be included for unauthenticated calls.
+      - name: x-fapi-customer-ip-address
+        in: header
+        required: false
+        type: string
+        description: The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
+      - name: x-cds-client-headers
+        in: header
+        required: false
+        type: string
+        description: The customer's original standard http headers [Base64](#common-field-types) encoded, including the original User Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls.  Not required for unattended or unauthenticated calls.
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ResponseBankingPayeeListV2'
+          headers:
+            x-v:
+              description: The [version](#response-headers) of the API end point that the data holder has responded with.
+              type: string
+            x-fapi-interaction-id:
+              description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+              type: string
+        '400':
+          description: The following error codes MUST be supported:<br/><ul class="error-code-list"><li>[400 - Invalid Field](#error-400-field-invalid)</li><li>[400 - Invalid Page Size](#error-400-field-invalid-page-size)</li><li>[400 - Invalid Version](#error-400-header-invalid-version)</li><li>[406 - Unsupported Version](#error-406-header-unsupported-version)</li><li>[422 - Invalid Page](#error-422-field-invalid-page)</li></ul>
+          schema:
+            $ref: '#/definitions/ResponseErrorListV2'
+          headers:
+            x-fapi-interaction-id:
+              description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+              type: string
+  /banking/payees/{payeeId}:
+    get:
+      description: >-
+        Obtain detailed information on a single payee.
+
+
+        Note that the payee sub-structure should be selected to represent the payment destination only rather than any known characteristics of the payment recipient.
+
+
+        Obsolete versions: [v1](includes/obsolete/get-payee-detail-v1.html)
+      summary: getPayeeDetail
+      tags:
+      - Banking
+      - Payees
+      operationId: getPayeeDetail
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: payeeId
+        in: path
+        required: true
+        type: string
+        description: The ID used to locate the details of a particular payee
+      - name: x-v
+        in: header
+        required: true
+        type: string
+        description: Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If the value of [x-min-v](#request-headers) is equal to or higher than the value of [x-v](#request-headers) then the [x-min-v](#request-headers) header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See [HTTP Headers](#request-headers)
+      - name: x-min-v
+        in: header
+        required: false
+        type: string
+        description: Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
+      - name: x-fapi-interaction-id
+        in: header
+        required: false
+        type: string
+        description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+      - name: x-fapi-auth-date
+        in: header
+        required: false
+        type: string
+        description: The time when the customer last logged in to the Data Recipient Software Product. Required for all resource calls (customer present and unattended) if the customer has logged in. Not to be included for unauthenticated calls.
+      - name: x-fapi-customer-ip-address
+        in: header
+        required: false
+        type: string
+        description: The customer's original IP address if the customer is currently logged in to the Data Recipient Software Product. The presence of this header indicates that the API is being called in a customer present context. Not to be included for unauthenticated calls.
+      - name: x-cds-client-headers
+        in: header
+        required: false
+        type: string
+        description: The customer's original standard http headers [Base64](#common-field-types) encoded, including the original User Agent header, if the customer is currently logged in to the Data Recipient Software Product. Mandatory for customer present calls.  Not required for unattended or unauthenticated calls.
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ResponseBankingPayeeByIdV2'
+          headers:
+            x-v:
+              description: The [version](#response-headers) of the API end point that the data holder has responded with.
+              type: string
+            x-fapi-interaction-id:
+              description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+              type: string
+        '400':
+          description: The following error codes MUST be supported:<br/><ul class="error-code-list"><li>[400 - Invalid Field](#error-400-field-invalid)</li><li>[400 - Invalid Page Size](#error-400-field-invalid-page-size)</li><li>[400 - Invalid Version](#error-400-header-invalid-version)</li><li>[404 - Unavailable Resource](#error-404-resource-unavailable)</li><li>[404 - Invalid Resource](#error-404-resource-invalid)</li><li>[406 - Unsupported Version](#error-406-header-unsupported-version)</li><li>[422 - Invalid Page](#error-422-field-invalid-page)</li></ul>
+          schema:
+            $ref: '#/definitions/ResponseErrorListV2'
+          headers:
+            x-fapi-interaction-id:
+              description: An [RFC4122](https://tools.ietf.org/html/rfc4122) UUID used as a correlation id. If provided, the data holder must play back this value in the x-fapi-interaction-id response header. If not provided a [RFC4122] UUID value is required to be provided in the response header to track the interaction.
+              type: string
+  /banking/products:
+    get:
+      description: >-
+        Obtain a list of products that are currently openly offered to the market
+
+
+        Note that the results returned by this end point are expected to be ordered in descending order according to ``lastUpdated``.
+
+
+        ### Conventions
+
+        In the product reference payloads there are a number of recurring conventions that are explained here, in one place.
+
+
+        #### Arrays Of Features
+
+
+        In the product detail payload there are a number of arrays articulating generic features, constraints, prices, etc. The intent of these arrays is as follows:
+
+
+        - Each element in an array has the same structure so that clients can reliably interpret the payloads
+
+        - Each element as a type element that is an enumeration of the specific aspect of a product being described, such as types of fees.
+
+        - Each element has a field name [additionalValue](#productfeaturetypedoc).  This is a generic field with contents that will vary based on the type of object being described. The contents of this field for the ADDITIONAL_CARDS feature is the number of cards allowed while the contents of this field for the MAX_LIMIT constraint would be the maximum credit limit allowed for the product.
+
+        - An element in these arrays of the same type may appear more than once. For instance, a product may offer two separate loyalty programs that the customer can select from. A fixed term mortgage may have different rates for different term lengths.
+
+        - An element in these arrays may contain an additionalInfo and additionalInfoUri field. The additionalInfo field is used to provide displayable text clarifying the purpose of the element in some way when the product is presented to a customer. The additionalInfoUri provides a link to externally hosted information specifically relevant to that feature of the product.
+
+        - Depending on the type of data being represented there may be additional specific fields.
+
+
+        #### URIs To More Information
+
+
+        As the complexities and nuances of a financial product can not easily be fully expressed in a data structure without a high degree of complexity it is necessary to provide additional reference information that a potential customer can access so that they are fully informed of the features and implications of the product. The payloads for product reference therefore contain numerous fields that are provided to allow the product holder to describe the product more fully using a web page hosted on their online channels.
+
+
+        These URIs do not need to all link to different pages. If desired, they can all link to a single hosted page and use difference HTML anchors to focus on a specific topic such as eligibility or fees.
+
+
+        #### Linkage To Accounts
+
+        From the moment that a customer applies for a product and an account is created the account and the product that spawned it will diverge.  Rates and features of the product may change and a discount may be negotiated for the account.
+
+
+        For this reason, while productCategory is a common field between accounts and products, there is no specific ID that can be used to link an account to a product within the regime.
+
+
+        Similarly, many of the fields and objects in the product payload will appear in the account detail payload but the structures and semantics are not identical as one refers to a product that can potentially be originated and one refers to an account that actual has been instantiated and created along with the associated decisions inherent in that process.
+
+
+        #### Dates
+
+        It is expected that data consumers needing this data will call relatively frequently to ensure the data they have is representative of the current offering from a bank.  To minimise the volume and frequency of these calls the ability to set a lastUpdated field with the date and time of the last update to this product is included.  A call for a list of products can then be filtered to only return products that have been updated since the last time that data was obtained using the updated-since query parameter.
+
+
+        In addition, the concept of effective date and time has also been included.  This allows for a product to be marked for obsolescence, or introduction, from a certain time without the need for an update to show that a product has been changed.  The inclusion of these dates also removes the need to represent deleted products in the payload.  Products that are no long offered can be marked not effective for a few weeks before they are then removed from the product set as an option entirely.
+
+
+        Obsolete versions: [v1](includes/obsolete/get-products-v1.html) [v2](includes/obsolete/get-products-v2.html)
+      summary: listProducts
+      tags:
+      - Banking
+      - Products
+      operationId: listProducts
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: effective
+        in: query
+        required: false
+        enum:
+        - ALL
+        - CURRENT
+        - FUTURE
+        default: CURRENT
+        type: string
+        description: Allows for the filtering of products based on whether the current time is within the period of time defined as effective by the effectiveFrom and effectiveTo fields. Valid values are ‘CURRENT’, ‘FUTURE’ and ‘ALL’. If absent defaults to 'CURRENT'
+      - name: updated-since
+        in: query
+        required: false
+        type: string
+        description: Only include products that have been updated after the specified date and time. If absent defaults to include all products
+      - name: brand
+        in: query
+        required: false
+        type: string
+        description: Filter results based on a specific brand
+      - name: product-category
+        in: query
+        required: false
+        enum:
+        - BUSINESS_LOANS
+        - CRED_AND_CHRG_CARDS
+        - LEASES
+        - MARGIN_LOANS
+        - OVERDRAFTS
+        - PERS_LOANS
+        - REGULATED_TRUST_ACCOUNTS
+        - RESIDENTIAL_MORTGAGES
+        - TERM_DEPOSITS
+        - TRADE_FINANCE
+        - TRANS_AND_SAVINGS_ACCOUNTS
+        - TRAVEL_CARDS
+        type: string
+        description: Used to filter results on the productCategory field applicable to accounts. Any one of the valid values for this field can be supplied. If absent then all accounts returned.
+      - name: page
+        in: query
+        required: false
+        default: 1
+        type: integer
+        format: int32
+        description: Page of results to request (standard pagination)
+      - name: page-size
+        in: query
+        required: false
+        default: 25
+        type: integer
+        format: int32
+        description: Page size to request. Default is 25 (standard pagination)
+      - name: x-v
+        in: header
+        required: true
+        type: string
+        description: Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If the value of [x-min-v](#request-headers) is equal to or higher than the value of [x-v](#request-headers) then the [x-min-v](#request-headers) header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See [HTTP Headers](#request-headers)
+      - name: x-min-v
+        in: header
+        required: false
+        type: string
+        description: Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ResponseBankingProductListV2'
+          headers:
+            x-v:
+              description: The [version](#response-headers) of the API end point that the data holder has responded with.
+              type: string
+        '400':
+          description: The following error codes MUST be supported:<br/><ul class="error-code-list"><li>[400 - Invalid Field](#error-400-field-invalid)</li><li>[400 - Invalid Date](#error-400-field-invalid-date-time)</li><li>[400 - Invalid Page Size](#error-400-field-invalid-page-size)</li><li>[400 - Invalid Version](#error-400-header-invalid-version)</li><li>[406 - Unsupported Version](#error-406-header-unsupported-version)</li><li>[422 - Invalid Page](#error-422-field-invalid-page)</li></ul>
+          schema:
+            $ref: '#/definitions/ResponseErrorListV2'
+          headers: {}
+  /banking/products/{productId}:
+    get:
+      description: >-
+        Obtain detailed information on a single product offered openly to the market.
+
+
+        Obsolete versions: [v1](includes/obsolete/get-product-detail-v1.html) [v2](includes/obsolete/get-product-detail-v2.html) [v3](includes/obsolete/get-product-detail-v3.html)
+      summary: getProductDetail
+      tags:
+      - Banking
+      - Products
+      operationId: getProductDetail
+      deprecated: false
+      produces:
+      - application/json
+      parameters:
+      - name: productId
+        in: path
+        required: true
+        type: string
+        description: ID of the specific product requested
+      - name: x-v
+        in: header
+        required: true
+        type: string
+        description: Version of the API end point requested by the client. Must be set to a positive integer. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If the value of [x-min-v](#request-headers) is equal to or higher than the value of [x-v](#request-headers) then the [x-min-v](#request-headers) header should be treated as absent. If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable. See [HTTP Headers](#request-headers)
+      - name: x-min-v
+        in: header
+        required: false
+        type: string
+        description: Minimum version of the API end point requested by the client. Must be set to a positive integer if provided. The data holder should respond with the highest supported version between [x-min-v](#request-headers) and [x-v](#request-headers). If all versions requested are not supported then the data holder must respond with a 406 Not Acceptable.
+      responses:
+        '200':
+          description: Success
+          schema:
+            $ref: '#/definitions/ResponseBankingProductByIdV4'
+          headers:
+            x-v:
+              description: The [version](#response-headers) of the API end point that the data holder has responded with.
+              type: string
+        '400':
+          description: The following error codes MUST be supported:<br/><ul class="error-code-list"><li>[400 - Invalid Field](#error-400-field-invalid)</li><li>[400 - Invalid Version](#error-400-header-invalid-version)</li><li>[404 - Unavailable Resource](#error-404-resource-unavailable)</li><li>[404 - Invalid Resource](#error-404-resource-invalid)</li><li>[406 - Unsupported Version](#error-406-header-unsupported-version)</li></ul>
+          schema:
+            $ref: '#/definitions/ResponseErrorListV2'
+          headers: {}
+definitions:
+  RequestAccountIds:
+    title: RequestAccountIds
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/Data'
+      meta:
+        type: object
+    required:
+    - data
+  ResponseBankingProductListV2:
+    title: ResponseBankingProductListV2
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/Data1'
+      links:
+        $ref: '#/definitions/LinksPaginated'
+      meta:
+        $ref: '#/definitions/MetaPaginated'
+    required:
+    - data
+    - links
+    - meta
+  BankingProductV4:
+    title: BankingProductV4
+    type: object
+    properties:
+      productId:
+        description: A data holder specific unique identifier for this product. This identifier must be unique to a product but does not otherwise need to adhere to ID permanence guidelines.
+        type: string
+      effectiveFrom:
+        description: The date and time from which this product is effective (ie. is available for origination).  Used to enable the articulation of products to the regime before they are available for customers to originate
+        type: string
+      effectiveTo:
+        description: The date and time at which this product will be retired and will no longer be offered.  Used to enable the managed deprecation of products
+        type: string
+      lastUpdated:
+        description: The last date and time that the information for this product was changed (or the creation date for the product if it has never been altered)
+        type: string
+      productCategory:
+        $ref: '#/definitions/BankingProductCategory'
+      name:
+        description: The display name of the product
+        type: string
+      description:
+        description: A description of the product
+        type: string
+      brand:
+        description: A label of the brand for the product. Able to be used for filtering. For data holders with single brands this value is still required
+        type: string
+      brandName:
+        description: An optional display name of the brand
+        type: string
+      applicationUri:
+        description: A link to an application web page where this product can be applied for.
+        type: string
+      isTailored:
+        description: Indicates whether the product is specifically tailored to a circumstance.  In this case fees and prices are significantly negotiated depending on context. While all products are open to a degree of tailoring this flag indicates that tailoring is expected and thus that the provision of specific fees and rates is not applicable
+        type: boolean
+      additionalInformation:
+        $ref: '#/definitions/BankingProductAdditionalInformationV2'
+      cardArt:
+        description: An array of card art images
+        type: array
+        items:
+          $ref: '#/definitions/CardArt'
+    required:
+    - productId
+    - lastUpdated
+    - productCategory
+    - name
+    - description
+    - brand
+    - isTailored
+  BankingProductAdditionalInformationV2:
+    title: BankingProductAdditionalInformationV2
+    description: Object that contains links to additional information on specific topics
+    type: object
+    properties:
+      overviewUri:
+        description: General overview of the product. Mandatory if `additionalOverviewUris` includes one or more supporting documents.
+        type: string
+      termsUri:
+        description: Terms and conditions for the product. Mandatory if `additionalTermsUris` includes one or more supporting documents.
+        type: string
+      eligibilityUri:
+        description: Eligibility rules and criteria for the product. Mandatory if `additionalEligibilityUris` includes one or more supporting documents.
+        type: string
+      feesAndPricingUri:
+        description: Description of fees, pricing, discounts, exemptions and bonuses for the product. Mandatory if `additionalFeesAndPricingUris` includes one or more supporting documents.
+        type: string
+      bundleUri:
+        description: Description of a bundle that this product can be part of. Mandatory if `additionalBundleUris` includes one or more supporting documents.
+        type: string
+      additionalOverviewUris:
+        description: An array of additional general overviews for the product or features of the product, if applicable. To be treated as secondary documents to the `overviewUri`. Only to be used if there is a primary `overviewUri`.
+        type: array
+        items:
+          $ref: '#/definitions/BankingProductAdditionalInformationV2_additionalInformationUris'
+      additionalTermsUris:
+        description: An array of additional terms and conditions for the product, if applicable. To be treated as secondary documents to the `termsUri`. Only to be used if there is a primary `termsUri`.
+        type: array
+        items:
+          $ref: '#/definitions/BankingProductAdditionalInformationV2_additionalInformationUris'
+      additionalEligibilityUris:
+        description: An array of additional eligibility rules and criteria for the product, if applicable. To be treated as secondary documents to the `eligibilityUri`. Only to be used if there is a primary `eligibilityUri`.
+        type: array
+        items:
+          $ref: '#/definitions/BankingProductAdditionalInformationV2_additionalInformationUris'
+      additionalFeesAndPricingUris:
+        description: An array of additional fees, pricing, discounts, exemptions and bonuses for the product, if applicable. To be treated as secondary documents to the `feesAndPricingUri`. Only to be used if there is a primary `feesAndPricingUri`.
+        type: array
+        items:
+          $ref: '#/definitions/BankingProductAdditionalInformationV2_additionalInformationUris'
+      additionalBundleUris:
+        description: An array of additional bundles for the product, if applicable. To be treated as secondary documents to the `bundleUri`. Only to be used if there is a primary `bundleUri`.
+        type: array
+        items:
+          $ref: '#/definitions/BankingProductAdditionalInformationV2_additionalInformationUris'
+  BankingProductAdditionalInformationV2_additionalInformationUris:
+    title: BankingProductAdditionalInformationV2_additionalInformationUris
+    type: object
+    properties:
+      description:
+        description: Display text providing more information about the document URI
+        type: string
+      additionalInfoUri:
+        description: The URI describing the additional information
+        type: string
+    required:
+    - additionalInfoUri
+  ResponseBankingProductByIdV4:
+    title: ResponseBankingProductByIdV4
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/BankingProductDetailV4'
+      links:
+        $ref: '#/definitions/Links'
+      meta:
+        type: object
+    required:
+    - data
+    - links
+  BankingProductDetailV4:
+    title: BankingProductDetailV4
+    type: object
+    properties:
+      productId:
+        description: A data holder specific unique identifier for this product. This identifier must be unique to a product but does not otherwise need to adhere to ID permanence guidelines.
+        type: string
+      effectiveFrom:
+        description: The date and time from which this product is effective (ie. is available for origination).  Used to enable the articulation of products to the regime before they are available for customers to originate
+        type: string
+      effectiveTo:
+        description: The date and time at which this product will be retired and will no longer be offered.  Used to enable the managed deprecation of products
+        type: string
+      lastUpdated:
+        description: The last date and time that the information for this product was changed (or the creation date for the product if it has never been altered)
+        type: string
+      productCategory:
+        $ref: '#/definitions/BankingProductCategory'
+      name:
+        description: The display name of the product
+        type: string
+      description:
+        description: A description of the product
+        type: string
+      brand:
+        description: A label of the brand for the product. Able to be used for filtering. For data holders with single brands this value is still required
+        type: string
+      brandName:
+        description: An optional display name of the brand
+        type: string
+      applicationUri:
+        description: A link to an application web page where this product can be applied for.
+        type: string
+      isTailored:
+        description: Indicates whether the product is specifically tailored to a circumstance.  In this case fees and prices are significantly negotiated depending on context. While all products are open to a degree of tailoring this flag indicates that tailoring is expected and thus that the provision of specific fees and rates is not applicable
+        type: boolean
+      additionalInformation:
+        $ref: '#/definitions/BankingProductAdditionalInformationV2'
+      cardArt:
+        description: An array of card art images
+        type: array
+        items:
+          $ref: '#/definitions/CardArt'
+      bundles:
+        description: An array of bundles that this product participates in.  Each bundle is described by free form information but also by a list of product IDs of the other products that are included in the bundle.  It is assumed that the current product is included in the bundle also
+        type: array
+        items:
+          $ref: '#/definitions/BankingProductBundle'
+      features:
+        description: Array of features available for the product
+        type: array
+        items:
+          $ref: '#/definitions/BankingProductFeatureV2'
+      constraints:
+        description: Constraints on the application for or operation of the product such as minimum balances or limit thresholds
+        type: array
+        items:
+          $ref: '#/definitions/BankingProductConstraint'
+      eligibility:
+        description: Eligibility criteria for the product
+        type: array
+        items:
+          $ref: '#/definitions/BankingProductEligibility'
+      fees:
+        description: Fees applicable for the product
+        type: array
+        items:
+          $ref: '#/definitions/BankingProductFee'
+      depositRates:
+        description: Interest rates available for deposits
+        type: array
+        items:
+          $ref: '#/definitions/BankingProductDepositRate'
+      lendingRates:
+        description: Interest rates charged against lending balances
+        type: array
+        items:
+          $ref: '#/definitions/BankingProductLendingRateV2'
+    required:
+    - productId
+    - lastUpdated
+    - productCategory
+    - name
+    - description
+    - brand
+    - isTailored
+  BankingProductBundle:
+    title: BankingProductBundle
+    type: object
+    properties:
+      name:
+        description: Name of the bundle
+        type: string
+      description:
+        description: Description of the bundle
+        type: string
+      additionalInfo:
+        description: Display text providing more information on the bundle
+        type: string
+      additionalInfoUri:
+        description: Link to a web page with more information on the bundle criteria and benefits
+        type: string
+      productIds:
+        description: Array of product IDs for products included in the bundle that are available via the product end points.  Note that this array is not intended to represent a comprehensive model of the products included in the bundle and some products available for the bundle may not be available via the product reference end points
+        type: array
+        items:
+          type: string
+    required:
+    - name
+    - description
+  BankingProductFeatureV2:
+    title: BankingProductFeatureV2
+    type: object
+    properties:
+      featureType:
+        $ref: '#/definitions/FeatureType'
+      additionalValue:
+        description: Generic field containing additional information relevant to the [featureType](#tocSproductfeaturetypedoc) specified. Whether mandatory or not is dependent on the value of the [featureType.](#tocSproductfeaturetypedoc)
+        type: string
+      additionalInfo:
+        description: Display text providing more information on the feature. Mandatory if the [feature type](#tocSproductfeaturetypedoc) is set to OTHER
+        type: string
+      additionalInfoUri:
+        description: Link to a web page with more information on this feature
+        type: string
+    required:
+    - featureType
+  BankingProductConstraint:
+    title: BankingProductConstraint
+    type: object
+    properties:
+      constraintType:
+        $ref: '#/definitions/ConstraintType'
+      additionalValue:
+        description: Generic field containing additional information relevant to the [constraintType](#tocSproductconstrainttypedoc) specified.  Whether mandatory or not is dependent on the value of [constraintType](#tocSproductconstrainttypedoc)
+        type: string
+      additionalInfo:
+        description: Display text providing more information the constraint
+        type: string
+      additionalInfoUri:
+        description: Link to a web page with more information on the constraint
+        type: string
+    required:
+    - constraintType
+  BankingProductEligibility:
+    title: BankingProductEligibility
+    type: object
+    properties:
+      eligibilityType:
+        $ref: '#/definitions/EligibilityType'
+      additionalValue:
+        description: Generic field containing additional information relevant to the [eligibilityType](#tocSproducteligibilitytypedoc) specified. Whether mandatory or not is dependent on the value of [eligibilityType](#tocSproducteligibilitytypedoc)
+        type: string
+      additionalInfo:
+        description: Display text providing more information on the [eligibility](#tocSproducteligibilitytypedoc) criteria. Mandatory if the field is set to OTHER
+        type: string
+      additionalInfoUri:
+        description: Link to a web page with more information on this eligibility criteria
+        type: string
+    required:
+    - eligibilityType
+  BankingProductFee:
+    title: BankingProductFee
+    type: object
+    properties:
+      name:
+        description: Name of the fee
+        type: string
+      feeType:
+        $ref: '#/definitions/FeeType'
+      amount:
+        description: The amount charged for the fee. One of amount, balanceRate, transactionRate and accruedRate is mandatory unless the *feeType* "VARIABLE" is supplied
+        type: string
+      balanceRate:
+        description: A fee rate calculated based on a proportion of the balance. One of amount, balanceRate, transactionRate and accruedRate is mandatory unless the *feeType* "VARIABLE" is supplied.
+        type: string
+      transactionRate:
+        description: A fee rate calculated based on a proportion of a transaction. One of amount, balanceRate, transactionRate and accruedRate is mandatory unless the *feeType* "VARIABLE" is supplied
+        type: string
+      accruedRate:
+        description: A fee rate calculated based on a proportion of the calculated interest accrued on the account. One of amount, balanceRate, transactionRate and accruedRate is mandatory unless the *feeType* "VARIABLE" is supplied
+        type: string
+      accrualFrequency:
+        description: The indicative frequency with which the fee is calculated on the account. Only applies if balanceRate or accruedRate is also present. Formatted according to [ISO 8601 Durations](https://en.wikipedia.org/wiki/ISO_8601#Durations) (excludes recurrence syntax)
+        type: string
+      currency:
+        description: The currency the fee will be charged in. Assumes AUD if absent
+        type: string
+      additionalValue:
+        description: Generic field containing additional information relevant to the [feeType](#tocSproductfeetypedoc) specified. Whether mandatory or not is dependent on the value of [feeType](#tocSproductfeetypedoc)
+        type: string
+      additionalInfo:
+        description: Display text providing more information on the fee
+        type: string
+      additionalInfoUri:
+        description: Link to a web page with more information on this fee
+        type: string
+      discounts:
+        description: An optional list of discounts to this fee that may be available
+        type: array
+        items:
+          $ref: '#/definitions/BankingProductDiscount'
+    required:
+    - name
+    - feeType
+  BankingProductDiscount:
+    title: BankingProductDiscount
+    type: object
+    properties:
+      description:
+        description: Description of the discount
+        type: string
+      discountType:
+        $ref: '#/definitions/DiscountType'
+      amount:
+        description: Dollar value of the discount. One of amount, balanceRate, transactionRate, accruedRate and feeRate is mandatory.
+        type: string
+      balanceRate:
+        description: A discount rate calculated based on a proportion of the balance. Note that the currency of the fee discount is expected to be the same as the currency of the fee itself. One of amount, balanceRate, transactionRate, accruedRate and feeRate is mandatory. Unless noted in additionalInfo, assumes the application and calculation frequency are the same as the corresponding fee
+        type: string
+      transactionRate:
+        description: A discount rate calculated based on a proportion of a transaction. Note that the currency of the fee discount is expected to be the same as the currency of the fee itself. One of amount, balanceRate, transactionRate, accruedRate and feeRate is mandatory
+        type: string
+      accruedRate:
+        description: A discount rate calculated based on a proportion of the calculated interest accrued on the account. Note that the currency of the fee discount is expected to be the same as the currency of the fee itself. One of amount, balanceRate, transactionRate, accruedRate and feeRate is mandatory. Unless noted in additionalInfo, assumes the application and calculation frequency are the same as the corresponding fee
+        type: string
+      feeRate:
+        description: A discount rate calculated based on a proportion of the fee to which this discount is attached. Note that the currency of the fee discount is expected to be the same as the currency of the fee itself. One of amount, balanceRate, transactionRate, accruedRate and feeRate is mandatory. Unless noted in additionalInfo, assumes the application and calculation frequency are the same as the corresponding fee
+        type: string
+      additionalValue:
+        description: Generic field containing additional information relevant to the [discountType](#tocSproductdiscounttypedoc) specified. Whether mandatory or not is dependent on the value of [discountType](#tocSproductdiscounttypedoc)
+        type: string
+      additionalInfo:
+        description: Display text providing more information on the discount
+        type: string
+      additionalInfoUri:
+        description: Link to a web page with more information on this discount
+        type: string
+      eligibility:
+        description: Eligibility constraints that apply to this discount. Mandatory if ``discountType`` is ``ELIGIBILITY_ONLY``.
+        type: array
+        items:
+          $ref: '#/definitions/BankingProductDiscountEligibility'
+    required:
+    - description
+    - discountType
+  BankingProductDiscountEligibility:
+    title: BankingProductDiscountEligibility
+    type: object
+    properties:
+      discountEligibilityType:
+        $ref: '#/definitions/DiscountEligibilityType'
+      additionalValue:
+        description: Generic field containing additional information relevant to the [discountEligibilityType](#tocSproductdiscounteligibilitydoc) specified. Whether mandatory or not is dependent on the value of [discountEligibilityType](#tocSproductdiscounteligibilitydoc)
+        type: string
+      additionalInfo:
+        description: Display text providing more information on this eligibility constraint. Whether mandatory or not is dependent on the value of [discountEligibilityType](#tocSproductdiscounteligibilitydoc)
+        type: string
+      additionalInfoUri:
+        description: Link to a web page with more information on this eligibility constraint
+        type: string
+    required:
+    - discountEligibilityType
+  BankingProductDepositRate:
+    title: BankingProductDepositRate
+    type: object
+    properties:
+      depositRateType:
+        $ref: '#/definitions/DepositRateType'
+      rate:
+        description: The rate to be applied
+        type: string
+      calculationFrequency:
+        description: The period after which the rate is applied to the balance to calculate the amount due for the period. Calculation of the amount is often daily (as balances may change) but accumulated until the total amount is 'applied' to the account (see applicationFrequency). Formatted according to [ISO 8601 Durations](https://en.wikipedia.org/wiki/ISO_8601#Durations) (excludes recurrence syntax)
+        type: string
+      applicationFrequency:
+        description: The period after which the calculated amount(s) (see calculationFrequency) are 'applied' (i.e. debited or credited) to the account. Formatted according to [ISO 8601 Durations](https://en.wikipedia.org/wiki/ISO_8601#Durations) (excludes recurrence syntax)
+        type: string
+      tiers:
+        description: Rate tiers applicable for this rate
+        type: array
+        items:
+          $ref: '#/definitions/BankingProductRateTierV3'
+      additionalValue:
+        description: Generic field containing additional information relevant to the [depositRateType](#tocSproductdepositratetypedoc) specified. Whether mandatory or not is dependent on the value of [depositRateType](#tocSproductdepositratetypedoc)
+        type: string
+      additionalInfo:
+        description: Display text providing more information on the rate
+        type: string
+      additionalInfoUri:
+        description: Link to a web page with more information on this rate
+        type: string
+    required:
+    - depositRateType
+    - rate
+  BankingProductLendingRateV2:
+    title: BankingProductLendingRateV2
+    type: object
+    properties:
+      lendingRateType:
+        $ref: '#/definitions/LendingRateType'
+      rate:
+        description: The rate to be applied
+        type: string
+      comparisonRate:
+        description: A comparison rate equivalent for this rate
+        type: string
+      calculationFrequency:
+        description: The period after which the rate is applied to the balance to calculate the amount due for the period. Calculation of the amount is often daily (as balances may change) but accumulated until the total amount is 'applied' to the account (see applicationFrequency). Formatted according to [ISO 8601 Durations](https://en.wikipedia.org/wiki/ISO_8601#Durations) (excludes recurrence syntax)
+        type: string
+      applicationFrequency:
+        description: The period after which the calculated amount(s) (see calculationFrequency) are 'applied' (i.e. debited or credited) to the account. Formatted according to [ISO 8601 Durations](https://en.wikipedia.org/wiki/ISO_8601#Durations) (excludes recurrence syntax)
+        type: string
+      interestPaymentDue:
+        $ref: '#/definitions/InterestPaymentDue'
+      repaymentType:
+        $ref: '#/definitions/RepaymentType'
+      loanPurpose:
+        $ref: '#/definitions/LoanPurpose'
+      tiers:
+        description: Rate tiers applicable for this rate
+        type: array
+        items:
+          $ref: '#/definitions/BankingProductRateTierV3'
+      additionalValue:
+        description: Generic field containing additional information relevant to the [lendingRateType](#tocSproductlendingratetypedoc) specified. Whether mandatory or not is dependent on the value of [lendingRateType](#tocSproductlendingratetypedoc)
+        type: string
+      additionalInfo:
+        description: Display text providing more information on the rate.
+        type: string
+      additionalInfoUri:
+        description: Link to a web page with more information on this rate
+        type: string
+    required:
+    - lendingRateType
+    - rate
+  BankingProductRateTierV3:
+    title: BankingProductRateTierV3
+    description: Defines the criteria and conditions for which a rate applies
+    type: object
+    properties:
+      name:
+        description: A display name for the tier
+        type: string
+      unitOfMeasure:
+        $ref: '#/definitions/UnitOfMeasure'
+      minimumValue:
+        description: The number of tierUnitOfMeasure units that form the lower bound of the tier. The tier should be inclusive of this value
+        type: number
+        format: double
+      maximumValue:
+        description: "The number of tierUnitOfMeasure units that form the upper bound of the tier or band. For a tier with a discrete value (as opposed to a range of values e.g. 1 month) this must be the same as tierValueMinimum. Where this is the same as the tierValueMinimum value of the next-higher tier the referenced tier should be exclusive of this value. For example a term deposit of 2 months falls into the upper tier of the following tiers: (1 – 2 months, 2 – 3 months). If absent the tier's range has no upper bound."
+        type: number
+        format: double
+      rateApplicationMethod:
+        $ref: '#/definitions/RateApplicationMethod'
+      applicabilityConditions:
+        $ref: '#/definitions/BankingProductRateCondition'
+      additionalInfo:
+        description: Display text providing more information on the rate tier.
+        type: string
+      additionalInfoUri:
+        description: Link to a web page with more information on this rate tier
+        type: string
+    required:
+    - name
+    - unitOfMeasure
+    - minimumValue
+  BankingProductRateCondition:
+    title: BankingProductRateCondition
+    description: Defines a condition for the applicability of a tiered rate
+    type: object
+    properties:
+      additionalInfo:
+        description: Display text providing more information on the condition
+        type: string
+      additionalInfoUri:
+        description: Link to a web page with more information on this condition
+        type: string
+  ResponseBankingAccountList:
+    title: ResponseBankingAccountList
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/Data2'
+      links:
+        $ref: '#/definitions/LinksPaginated'
+      meta:
+        $ref: '#/definitions/MetaPaginated'
+    required:
+    - data
+    - links
+    - meta
+  BankingAccount:
+    title: BankingAccount
+    type: object
+    properties:
+      accountId:
+        description: A unique ID of the account adhering to the standards for ID permanence
+        type: string
+      creationDate:
+        description: Date that the account was created (if known)
+        type: string
+      displayName:
+        description: The display name of the account as defined by the bank. This should not incorporate account numbers or PANs. If it does the values should be masked according to the rules of the MaskedAccountString common type.
+        type: string
+      nickname:
+        description: A customer supplied nick name for the account
+        type: string
+      openStatus:
+        $ref: '#/definitions/OpenStatus'
+      isOwned:
+        description: Flag indicating that the customer associated with the authorisation is an owner of the account. Does not indicate sole ownership, however. If not present then 'true' is assumed
+        example: true
+        type: boolean
+        default: true
+      maskedNumber:
+        description: A masked version of the account. Whether BSB/Account Number, Credit Card PAN or another number
+        type: string
+      productCategory:
+        $ref: '#/definitions/BankingProductCategory'
+      productName:
+        description: The unique identifier of the account as defined by the data holder (akin to model number for the account)
+        type: string
+    required:
+    - accountId
+    - displayName
+    - maskedNumber
+    - productCategory
+    - productName
+  ResponseBankingAccountByIdV2:
+    title: ResponseBankingAccountByIdV2
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/BankingAccountDetailV2'
+      links:
+        $ref: '#/definitions/Links'
+      meta:
+        type: object
+    required:
+    - data
+    - links
+  BankingAccountDetailV2:
+    title: BankingAccountDetailV2
+    type: object
+    properties:
+      accountId:
+        description: A unique ID of the account adhering to the standards for ID permanence
+        type: string
+      creationDate:
+        description: Date that the account was created (if known)
+        type: string
+      displayName:
+        description: The display name of the account as defined by the bank. This should not incorporate account numbers or PANs. If it does the values should be masked according to the rules of the MaskedAccountString common type.
+        type: string
+      nickname:
+        description: A customer supplied nick name for the account
+        type: string
+      openStatus:
+        $ref: '#/definitions/OpenStatus'
+      isOwned:
+        description: Flag indicating that the customer associated with the authorisation is an owner of the account. Does not indicate sole ownership, however. If not present then 'true' is assumed
+        example: true
+        type: boolean
+        default: true
+      maskedNumber:
+        description: A masked version of the account. Whether BSB/Account Number, Credit Card PAN or another number
+        type: string
+      productCategory:
+        $ref: '#/definitions/BankingProductCategory'
+      productName:
+        description: The unique identifier of the account as defined by the data holder (akin to model number for the account)
+        type: string
+      bsb:
+        description: The unmasked BSB for the account. Is expected to be formatted as digits only with leading zeros included and no punctuation or spaces
+        type: string
+      accountNumber:
+        description: The unmasked account number for the account. Should not be supplied if the account number is a PAN requiring PCI compliance. Is expected to be formatted as digits only with leading zeros included and no punctuation or spaces
+        type: string
+      bundleName:
+        description: Optional field to indicate if this account is part of a bundle that is providing additional benefit for to the customer
+        type: string
+      specificAccountUType:
+        $ref: '#/definitions/SpecificAccountUType'
+      termDeposit:
+        type: array
+        items:
+          $ref: '#/definitions/BankingTermDepositAccount'
+      creditCard:
+        $ref: '#/definitions/BankingCreditCardAccount'
+      loan:
+        $ref: '#/definitions/BankingLoanAccountV2'
+      depositRate:
+        description: current rate to calculate interest earned being applied to deposit balances as it stands at the time of the API call
+        type: string
+      lendingRate:
+        description: The current rate to calculate interest payable being applied to lending balances as it stands at the time of the API call
+        type: string
+      depositRates:
+        description: Fully described deposit rates for this account based on the equivalent structure in Product Reference
+        type: array
+        items:
+          $ref: '#/definitions/BankingProductDepositRate'
+      lendingRates:
+        description: Fully described deposit rates for this account based on the equivalent structure in Product Reference
+        type: array
+        items:
+          $ref: '#/definitions/BankingProductLendingRateV2'
+      features:
+        description: Array of features of the account based on the equivalent structure in Product Reference with the following additional field
+        type: array
+        items:
+          $ref: '#/definitions/Feature'
+      fees:
+        description: Fees and charges applicable to the account based on the equivalent structure in Product Reference
+        type: array
+        items:
+          $ref: '#/definitions/BankingProductFee'
+      addresses:
+        description: The addresses for the account to be used for correspondence
+        type: array
+        items:
+          $ref: '#/definitions/CommonPhysicalAddress'
+    required:
+    - accountId
+    - displayName
+    - maskedNumber
+    - productCategory
+    - productName
+  BankingTermDepositAccount:
+    title: BankingTermDepositAccount
+    type: object
+    properties:
+      lodgementDate:
+        description: The lodgement date of the original deposit
+        type: string
+      maturityDate:
+        description: Maturity date for the term deposit
+        type: string
+      maturityAmount:
+        description: Amount to be paid upon maturity. If absent it implies the amount to paid is variable and cannot currently be calculated
+        type: string
+      maturityCurrency:
+        description: If absent assumes AUD
+        type: string
+      maturityInstructions:
+        $ref: '#/definitions/MaturityInstructions'
+    required:
+    - lodgementDate
+    - maturityDate
+    - maturityInstructions
+  BankingCreditCardAccount:
+    title: BankingCreditCardAccount
+    type: object
+    properties:
+      minPaymentAmount:
+        description: The minimum payment amount due for the next card payment
+        type: string
+      paymentDueAmount:
+        description: The amount due for the next card payment
+        type: string
+      paymentCurrency:
+        description: If absent assumes AUD
+        type: string
+      paymentDueDate:
+        description: Date that the next payment for the card is due
+        type: string
+    required:
+    - minPaymentAmount
+    - paymentDueAmount
+    - paymentDueDate
+  BankingLoanAccountV2:
+    title: BankingLoanAccountV2
+    type: object
+    properties:
+      originalStartDate:
+        description: Optional original start date for the loan
+        type: string
+      originalLoanAmount:
+        description: Optional original loan value
+        type: string
+      originalLoanCurrency:
+        description: If absent assumes AUD
+        type: string
+      loanEndDate:
+        description: Date that the loan is due to be repaid in full
+        type: string
+      nextInstalmentDate:
+        description: Next date that an instalment is required
+        type: string
+      minInstalmentAmount:
+        description: Minimum amount of next instalment
+        type: string
+      minInstalmentCurrency:
+        description: If absent assumes AUD
+        type: string
+      maxRedraw:
+        description: Maximum amount of funds that can be redrawn. If not present redraw is not available even if the feature exists for the account
+        type: string
+      maxRedrawCurrency:
+        description: If absent assumes AUD
+        type: string
+      minRedraw:
+        description: Minimum redraw amount
+        type: string
+      minRedrawCurrency:
+        description: If absent assumes AUD
+        type: string
+      offsetAccountEnabled:
+        description: Set to true if one or more offset accounts are configured for this loan account
+        type: boolean
+      offsetAccountIds:
+        description: The accountIDs of the configured offset accounts attached to this loan. Only offset accounts that can be accessed under the current authorisation should be included. It is expected behaviour that offsetAccountEnabled is set to true but the offsetAccountIds field is absent or empty. This represents a situation where an offset account exists but details can not be accessed under the current authorisation
+        type: array
+        items:
+          type: string
+      repaymentType:
+        $ref: '#/definitions/RepaymentType1'
+      repaymentFrequency:
+        description: The expected or required repayment frequency. Formatted according to [ISO 8601 Durations](https://en.wikipedia.org/wiki/ISO_8601#Durations) (excludes recurrence syntax)
+        type: string
+  ResponseBankingTransactionList:
+    title: ResponseBankingTransactionList
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/Data3'
+      links:
+        $ref: '#/definitions/LinksPaginated'
+      meta:
+        $ref: '#/definitions/MetaPaginated'
+    required:
+    - data
+    - links
+    - meta
+  BankingTransaction:
+    title: BankingTransaction
+    type: object
+    properties:
+      accountId:
+        description: ID of the account for which transactions are provided
+        type: string
+      transactionId:
+        description: A unique ID of the transaction adhering to the standards for ID permanence.  This is mandatory (through hashing if necessary) unless there are specific and justifiable technical reasons why a transaction cannot be uniquely identified for a particular account type. It is mandatory if `isDetailAvailable` is set to true.
+        type: string
+      isDetailAvailable:
+        description: True if extended information is available using the transaction detail end point. False if extended data is not available
+        type: boolean
+      type:
+        $ref: '#/definitions/Type'
+      status:
+        $ref: '#/definitions/Status'
+      description:
+        description: The transaction description as applied by the financial institution
+        type: string
+      postingDateTime:
+        description: The time the transaction was posted. This field is Mandatory if the transaction has status POSTED.  This is the time that appears on a standard statement
+        type: string
+      valueDateTime:
+        description: Date and time at which assets become available to the account owner in case of a credit entry, or cease to be available to the account owner in case of a debit transaction entry
+        type: string
+      executionDateTime:
+        description: The time the transaction was executed by the originating customer, if available
+        type: string
+      amount:
+        description: The value of the transaction. Negative values mean money was outgoing from the account
+        type: string
+      currency:
+        description: The currency for the transaction amount. AUD assumed if not present
+        type: string
+      reference:
+        description: The reference for the transaction provided by the originating institution. Empty string if no data provided
+        type: string
+      merchantName:
+        description: Name of the merchant for an outgoing payment to a merchant
+        type: string
+      merchantCategoryCode:
+        description: The merchant category code (or MCC) for an outgoing payment to a merchant
+        type: string
+      billerCode:
+        description: BPAY Biller Code for the transaction (if available)
+        type: string
+      billerName:
+        description: Name of the BPAY biller for the transaction (if available)
+        type: string
+      crn:
+        description: BPAY CRN for the transaction (if available).<br/>Where the CRN contains sensitive information, it should be masked in line with how the Data Holder currently displays account identifiers in their existing online banking channels. If the contents of the CRN match the format of a Credit Card PAN they should be masked according to the rules applicable for MaskedPANString. If the contents are are otherwise sensitive, then it should be masked using the rules applicable for the MaskedAccountString common type.
+        type: string
+      apcaNumber:
+        description: 6 Digit APCA number for the initiating institution. The field is fixed-width and padded with leading zeros if applicable.
+        type: string
+    required:
+    - accountId
+    - isDetailAvailable
+    - type
+    - status
+    - description
+    - amount
+    - reference
+  ResponseBankingTransactionById:
+    title: ResponseBankingTransactionById
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/BankingTransactionDetail'
+      links:
+        $ref: '#/definitions/Links'
+      meta:
+        type: object
+    required:
+    - data
+    - links
+  BankingTransactionDetail:
+    title: BankingTransactionDetail
+    type: object
+    properties:
+      accountId:
+        description: ID of the account for which transactions are provided
+        type: string
+      transactionId:
+        description: A unique ID of the transaction adhering to the standards for ID permanence.  This is mandatory (through hashing if necessary) unless there are specific and justifiable technical reasons why a transaction cannot be uniquely identified for a particular account type. It is mandatory if `isDetailAvailable` is set to true.
+        type: string
+      isDetailAvailable:
+        description: True if extended information is available using the transaction detail end point. False if extended data is not available
+        type: boolean
+      type:
+        $ref: '#/definitions/Type'
+      status:
+        $ref: '#/definitions/Status'
+      description:
+        description: The transaction description as applied by the financial institution
+        type: string
+      postingDateTime:
+        description: The time the transaction was posted. This field is Mandatory if the transaction has status POSTED.  This is the time that appears on a standard statement
+        type: string
+      valueDateTime:
+        description: Date and time at which assets become available to the account owner in case of a credit entry, or cease to be available to the account owner in case of a debit transaction entry
+        type: string
+      executionDateTime:
+        description: The time the transaction was executed by the originating customer, if available
+        type: string
+      amount:
+        description: The value of the transaction. Negative values mean money was outgoing from the account
+        type: string
+      currency:
+        description: The currency for the transaction amount. AUD assumed if not present
+        type: string
+      reference:
+        description: The reference for the transaction provided by the originating institution. Empty string if no data provided
+        type: string
+      merchantName:
+        description: Name of the merchant for an outgoing payment to a merchant
+        type: string
+      merchantCategoryCode:
+        description: The merchant category code (or MCC) for an outgoing payment to a merchant
+        type: string
+      billerCode:
+        description: BPAY Biller Code for the transaction (if available)
+        type: string
+      billerName:
+        description: Name of the BPAY biller for the transaction (if available)
+        type: string
+      crn:
+        description: BPAY CRN for the transaction (if available).<br/>Where the CRN contains sensitive information, it should be masked in line with how the Data Holder currently displays account identifiers in their existing online banking channels. If the contents of the CRN match the format of a Credit Card PAN they should be masked according to the rules applicable for MaskedPANString. If the contents are are otherwise sensitive, then it should be masked using the rules applicable for the MaskedAccountString common type.
+        type: string
+      apcaNumber:
+        description: 6 Digit APCA number for the initiating institution. The field is fixed-width and padded with leading zeros if applicable.
+        type: string
+      extendedData:
+        $ref: '#/definitions/ExtendedData'
+    required:
+    - accountId
+    - isDetailAvailable
+    - type
+    - status
+    - description
+    - amount
+    - reference
+    - extendedData
+  ResponseBankingAccountsBalanceList:
+    title: ResponseBankingAccountsBalanceList
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/Data4'
+      links:
+        $ref: '#/definitions/LinksPaginated'
+      meta:
+        $ref: '#/definitions/MetaPaginated'
+    required:
+    - data
+    - links
+    - meta
+  ResponseBankingAccountsBalanceById:
+    title: ResponseBankingAccountsBalanceById
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/BankingBalance'
+      links:
+        $ref: '#/definitions/Links'
+      meta:
+        type: object
+    required:
+    - data
+    - links
+  BankingBalance:
+    title: BankingBalance
+    type: object
+    properties:
+      accountId:
+        description: A unique ID of the account adhering to the standards for ID permanence
+        type: string
+      currentBalance:
+        description: The balance of the account at this time. Should align to the balance available via other channels such as Internet Banking. Assumed to be negative if the customer has money owing
+        type: string
+      availableBalance:
+        description: Balance representing the amount of funds available for transfer. Assumed to be zero or positive
+        type: string
+      creditLimit:
+        description: Object representing the maximum amount of credit that is available for this account. Assumed to be zero if absent
+        type: string
+      amortisedLimit:
+        description: Object representing the available limit amortised according to payment schedule. Assumed to be zero if absent
+        type: string
+      currency:
+        description: The currency for the balance amounts. If absent assumed to be AUD
+        type: string
+      purses:
+        description: Optional array of balances for the account in other currencies. Included to support accounts that support multi-currency purses such as Travel Cards
+        type: array
+        items:
+          $ref: '#/definitions/BankingBalancePurse'
+    required:
+    - accountId
+    - currentBalance
+    - availableBalance
+  BankingBalancePurse:
+    title: BankingBalancePurse
+    type: object
+    properties:
+      amount:
+        description: The balance available for this additional currency purse
+        type: string
+      currency:
+        description: The currency for the purse
+        type: string
+    required:
+    - amount
+  ResponseBankingPayeeListV2:
+    title: ResponseBankingPayeeListV2
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/Data5'
+      links:
+        $ref: '#/definitions/LinksPaginated'
+      meta:
+        $ref: '#/definitions/MetaPaginated'
+    required:
+    - data
+    - links
+    - meta
+  ResponseBankingPayeeByIdV2:
+    title: ResponseBankingPayeeByIdV2
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/BankingPayeeDetailV2'
+      links:
+        $ref: '#/definitions/Links'
+      meta:
+        type: object
+    required:
+    - data
+    - links
+  BankingPayeeV2:
+    title: BankingPayeeV2
+    type: object
+    properties:
+      payeeId:
+        description: ID of the payee adhering to the rules of ID permanence
+        type: string
+      nickname:
+        description: The short display name of the payee as provided by the customer. Where a customer has not provided a nickname, a display name derived by the bank for the payee consistent with existing digital banking channels
+        type: string
+      description:
+        description: A description of the payee provided by the customer
+        type: string
+      type:
+        $ref: '#/definitions/Type1'
+      creationDate:
+        description: The date the payee was created by the customer
+        type: string
+    required:
+    - payeeId
+    - nickname
+    - type
+  BankingPayeeDetailV2:
+    title: BankingPayeeDetailV2
+    type: object
+    properties:
+      payeeId:
+        description: ID of the payee adhering to the rules of ID permanence
+        type: string
+      nickname:
+        description: The short display name of the payee as provided by the customer. Where a customer has not provided a nickname, a display name derived by the bank for the payee consistent with existing digital banking channels
+        type: string
+      description:
+        description: A description of the payee provided by the customer
+        type: string
+      type:
+        $ref: '#/definitions/Type1'
+      creationDate:
+        description: The date the payee was created by the customer
+        type: string
+      payeeUType:
+        $ref: '#/definitions/PayeeUType'
+      biller:
+        $ref: '#/definitions/BankingBillerPayee'
+      domestic:
+        $ref: '#/definitions/BankingDomesticPayee'
+      digitalWallet:
+        $ref: '#/definitions/BankingDigitalWalletPayee'
+      international:
+        $ref: '#/definitions/BankingInternationalPayee'
+    required:
+    - payeeId
+    - nickname
+    - type
+    - payeeUType
+  BankingDomesticPayee:
+    title: BankingDomesticPayee
+    type: object
+    properties:
+      payeeAccountUType:
+        $ref: '#/definitions/PayeeAccountUType'
+      account:
+        $ref: '#/definitions/BankingDomesticPayeeAccount'
+      card:
+        $ref: '#/definitions/BankingDomesticPayeeCard'
+      payId:
+        $ref: '#/definitions/BankingDomesticPayeePayId'
+    required:
+    - payeeAccountUType
+  BankingDomesticPayeeAccount:
+    title: BankingDomesticPayeeAccount
+    type: object
+    properties:
+      accountName:
+        description: Name of the account to pay to
+        type: string
+      bsb:
+        description: BSB of the account to pay to
+        type: string
+      accountNumber:
+        description: Number of the account to pay to
+        type: string
+    required:
+    - bsb
+    - accountNumber
+  BankingDomesticPayeeCard:
+    title: BankingDomesticPayeeCard
+    type: object
+    properties:
+      cardNumber:
+        description: Name of the account to pay to
+        type: string
+    required:
+    - cardNumber
+  BankingDomesticPayeePayId:
+    title: BankingDomesticPayeePayId
+    type: object
+    properties:
+      name:
+        description: The name assigned to the PayID by the owner of the PayID
+        type: string
+      identifier:
+        description: The identifier of the PayID (dependent on type)
+        type: string
+      type:
+        $ref: '#/definitions/Type2'
+    required:
+    - identifier
+    - type
+  BankingBillerPayee:
+    title: BankingBillerPayee
+    type: object
+    properties:
+      billerCode:
+        description: BPAY Biller Code of the Biller
+        type: string
+      crn:
+        description: BPAY CRN of the Biller (if available).<br/>Where the CRN contains sensitive information, it should be masked in line with how the Data Holder currently displays account identifiers in their existing online banking channels. If the contents of the CRN match the format of a Credit Card PAN they should be masked according to the rules applicable for MaskedPANString. If the contents are are otherwise sensitive, then it should be masked using the rules applicable for the MaskedAccountString common type.
+        type: string
+      billerName:
+        description: Name of the Biller
+        type: string
+    required:
+    - billerCode
+    - billerName
+  BankingInternationalPayee:
+    title: BankingInternationalPayee
+    type: object
+    properties:
+      beneficiaryDetails:
+        $ref: '#/definitions/BeneficiaryDetails'
+      bankDetails:
+        $ref: '#/definitions/BankDetails'
+    required:
+    - beneficiaryDetails
+    - bankDetails
+  BankingDigitalWalletPayee:
+    title: BankingDigitalWalletPayee
+    type: object
+    properties:
+      name:
+        description: The name assigned to the digital wallet by the owner of the wallet, else the display name provided by the digital wallet provider
+        type: string
+      identifier:
+        description: The identifier of the digital wallet (dependent on type)
+        type: string
+      type:
+        $ref: '#/definitions/Type3'
+      provider:
+        $ref: '#/definitions/Provider'
+    required:
+    - name
+    - identifier
+    - type
+    - provider
+  ResponseBankingDirectDebitAuthorisationList:
+    title: ResponseBankingDirectDebitAuthorisationList
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/Data6'
+      links:
+        $ref: '#/definitions/LinksPaginated'
+      meta:
+        $ref: '#/definitions/MetaPaginated'
+    required:
+    - data
+    - links
+    - meta
+  BankingDirectDebit:
+    title: BankingDirectDebit
+    type: object
+    properties:
+      accountId:
+        description: A unique ID of the account adhering to the standards for ID permanence.
+        type: string
+      authorisedEntity:
+        $ref: '#/definitions/BankingAuthorisedEntity'
+      lastDebitDateTime:
+        description: The date and time of the last debit executed under this authorisation
+        type: string
+      lastDebitAmount:
+        description: The amount of the last debit executed under this authorisation
+        type: string
+    required:
+    - accountId
+    - authorisedEntity
+  BankingAuthorisedEntity:
+    title: BankingAuthorisedEntity
+    type: object
+    properties:
+      description:
+        description: Description of the authorised entity derived from previously executed direct debits
+        type: string
+      financialInstitution:
+        description: Name of the financial institution through which the direct debit will be executed. Is required unless the payment is made via a credit card scheme
+        type: string
+      abn:
+        description: Australian Business Number for the authorised entity
+        type: string
+      acn:
+        description: Australian Company Number for the authorised entity
+        type: string
+      arbn:
+        description: Australian Registered Body Number for the authorised entity
+        type: string
+  ResponseBankingScheduledPaymentsList:
+    title: ResponseBankingScheduledPaymentsList
+    type: object
+    properties:
+      data:
+        $ref: '#/definitions/Data7'
+      links:
+        $ref: '#/definitions/LinksPaginated'
+      meta:
+        $ref: '#/definitions/MetaPaginated'
+    required:
+    - data
+    - links
+    - meta
+  BankingScheduledPayment:
+    title: BankingScheduledPayment
+    type: object
+    properties:
+      scheduledPaymentId:
+        description: A unique ID of the scheduled payment adhering to the standards for ID permanence
+        type: string
+      nickname:
+        description: The short display name of the scheduled payment as provided by the customer if provided. Where a customer has not provided a nickname, a display name derived by the bank for the scheduled payment should be provided that is consistent with existing digital banking channels
+        type: string
+      payerReference:
+        description: The reference for the transaction that will be used by the originating institution for the purposes of constructing a statement narrative on the payer’s account. Empty string if no data provided
+        type: string
+      payeeReference:
+        description: The reference for the transaction, if applicable, that will be provided by the originating institution for all payments in the payment set. Empty string if no data provided
+        type: string
+      status:
+        $ref: '#/definitions/Status1'
+      from:
+        $ref: '#/definitions/BankingScheduledPaymentFrom'
+      paymentSet:
+        type: array
+        items:
+          $ref: '#/definitions/BankingScheduledPaymentSet'
+      recurrence:
+        $ref: '#/definitions/BankingScheduledPaymentRecurrence'
+    required:
+    - scheduledPaymentId
+    - payerReference
+    - status
+    - from
+    - paymentSet
+    - recurrence
+  BankingScheduledPaymentSet:
+    title: BankingScheduledPaymentSet
+    description: The set of payment amounts and destination accounts for this payment accommodating multi-part payments. A single entry indicates a simple payment with one destination account. Must have at least one entry
+    type: object
+    properties:
+      to:
+        $ref: '#/definitions/BankingScheduledPaymentTo'
+      isAmountCalculated:
+        description: Flag indicating whether the amount of the payment is calculated based on the context of the event. For instance a payment to reduce the balance of a credit card to zero. If absent then false is assumed
+        type: boolean
+      amount:
+        description: The amount of the next payment if known. Mandatory unless the isAmountCalculated field is set to true. Must be zero or positive if present
+        type: string
+      currency:
+        description: The currency for the payment. AUD assumed if not present
+        type: string
+    required:
+    - to
+  BankingScheduledPaymentTo:
+    title: BankingScheduledPaymentTo
+    description: Object containing details of the destination of the payment. Used to specify a variety of payment destination types
+    type: object
+    properties:
+      toUType:
+        $ref: '#/definitions/ToUType'
+      accountId:
+        description: Present if toUType is set to accountId. Indicates that the payment is to another account that is accessible under the current consent
+        type: string
+      payeeId:
+        description: Present if toUType is set to payeeId. Indicates that the payment is to registered payee that can be accessed using the payee end point. If the Bank Payees scope has not been consented to then a payeeId should not be provided and the full payee details should be provided instead
+        type: string
+      nickname:
+        description: The short display name of the payee as provided by the customer unless toUType is set to payeeId. Where a customer has not provided a nickname, a display name derived by the bank for payee should be provided that is consistent with existing digital banking channels
+        type: string
+      payeeReference:
+        description: The reference for the transaction, if applicable, that will be provided by the originating institution for the specific payment. If not empty, it overrides the value provided at the BankingScheduledPayment level.
+        type: string
+      domestic:
+        $ref: '#/definitions/BankingDomesticPayee'
+      biller:
+        $ref: '#/definitions/BankingBillerPayee'
+      international:
+        $ref: '#/definitions/BankingInternationalPayee'
+    required:
+    - toUType
+  BankingScheduledPaymentFrom:
+    title: BankingScheduledPaymentFrom
+    description: Object containing details of the source of the payment. Currently only specifies an account ID but provided as an object to facilitate future extensibility and consistency with the to object
+    type: object
+    properties:
+      accountId:
+        description: ID of the account that is the source of funds for the payment
+        type: string
+    required:
+    - accountId
+  BankingScheduledPaymentRecurrence:
+    title: BankingScheduledPaymentRecurrence
+    description: Object containing the detail of the schedule for the payment
+    type: object
+    properties:
+      nextPaymentDate:
+        description: The date of the next payment under the recurrence schedule
+        type: string
+      recurrenceUType:
+        $ref: '#/definitions/RecurrenceUType'
+      onceOff:
+        $ref: '#/definitions/BankingScheduledPaymentRecurrenceOnceOff'
+      intervalSchedule:
+        $ref: '#/definitions/BankingScheduledPaymentRecurrenceIntervalSchedule'
+      lastWeekDay:
+        $ref: '#/definitions/BankingScheduledPaymentRecurrenceLastWeekday'
+      eventBased:
+        $ref: '#/definitions/BankingScheduledPaymentRecurrenceEventBased'
+    required:
+    - recurrenceUType
+  BankingScheduledPaymentRecurrenceOnceOff:
+    title: BankingScheduledPaymentRecurrenceOnceOff
+    description: Indicates that the payment is a once off payment on a specific future date. Mandatory if recurrenceUType is set to onceOff
+    type: object
+    properties:
+      paymentDate:
+        description: The scheduled date for the once off payment
+        type: string
+    required:
+    - paymentDate
+  BankingScheduledPaymentRecurrenceIntervalSchedule:
+    title: BankingScheduledPaymentRecurrenceIntervalSchedule
+    description: Indicates that the schedule of payments is defined by a series of intervals. Mandatory if recurrenceUType is set to intervalSchedule
+    type: object
+    properties:
+      finalPaymentDate:
+        description: The limit date after which no more payments should be made using this schedule. If both finalPaymentDate and paymentsRemaining are present then payments will stop according to the most constraining value. If neither field is present the payments will continue indefinitely
+        type: string
+      paymentsRemaining:
+        description: Indicates the number of payments remaining in the schedule. If both finalPaymentDate and paymentsRemaining are present then payments will stop according to the most constraining value, If neither field is present the payments will continue indefinitely
+        example: 1
+        type: integer
+        format: int32
+      nonBusinessDayTreatment:
+        $ref: '#/definitions/NonBusinessDayTreatment'
+      intervals:
+        description: An array of interval objects defining the payment schedule.  Each entry in the array is additive, in that it adds payments to the overall payment schedule.  If multiple intervals result in a payment on the same day then only one payment will be made. Must have at least one entry
+        type: array
+        items:
+          $ref: '#/definitions/BankingScheduledPaymentInterval'
+    required:
+    - intervals
+  BankingScheduledPaymentInterval:
+    title: BankingScheduledPaymentInterval
+    type: object
+    properties:
+      interval:
+        description: An interval for the payment. Formatted according to [ISO 8601 Durations](https://en.wikipedia.org/wiki/ISO_8601#Durations)  (excludes recurrence syntax) with components less than a day in length ignored. This duration defines the period between payments starting with nextPaymentDate
+        type: string
+      dayInInterval:
+        description: Uses an interval to define the ordinal day within the interval defined by the interval field on which the payment occurs. If the resulting duration is 0 days in length or larger than the number of days in the interval then the payment will occur on the last day of the interval. A duration of 1 day indicates the first day of the interval. If absent the assumed value is P1D. Formatted according to [ISO 8601 Durations](https://en.wikipedia.org/wiki/ISO_8601#Durations) (excludes recurrence syntax) with components less than a day in length ignored. The first day of a week is considered to be Monday.
+        type: string
+    required:
+    - interval
+  BankingScheduledPaymentRecurrenceLastWeekday:
+    title: BankingScheduledPaymentRecurrenceLastWeekday
+    description: Indicates that the schedule of payments is defined according to the last occurrence of a specific weekday in an interval. Mandatory if recurrenceUType is set to lastWeekDay
+    type: object
+    properties:
+      finalPaymentDate:
+        description: The limit date after which no more payments should be made using this schedule. If both finalPaymentDate and paymentsRemaining are present then payments will stop according to the most constraining value. If neither field is present the payments will continue indefinitely
+        type: string
+      paymentsRemaining:
+        description: Indicates the number of payments remaining in the schedule. If both finalPaymentDate and paymentsRemaining are present then payments will stop according to the most constraining value. If neither field is present the payments will continue indefinitely
+        example: 1
+        type: integer
+        format: int32
+      interval:
+        description: The interval for the payment. Formatted according to [ISO 8601 Durations](https://en.wikipedia.org/wiki/ISO_8601#Durations) (excludes recurrence syntax) with components less than a day in length ignored. This duration defines the period between payments starting with nextPaymentDate
+        type: string
+      lastWeekDay:
+        $ref: '#/definitions/LastWeekDay'
+      nonBusinessDayTreatment:
+        $ref: '#/definitions/NonBusinessDayTreatment'
+    required:
+    - interval
+    - lastWeekDay
+  BankingScheduledPaymentRecurrenceEventBased:
+    title: BankingScheduledPaymentRecurrenceEventBased
+    description: Indicates that the schedule of payments is defined according to an external event that cannot be predetermined. Mandatory if recurrenceUType is set to eventBased
+    type: object
+    properties:
+      description:
+        description: Description of the event and conditions that will result in the payment. Expected to be formatted for display to a customer
+        type: string
+    required:
+    - description
+  CommonPhysicalAddress:
+    title: CommonPhysicalAddress
+    type: object
+    properties:
+      addressUType:
+        $ref: '#/definitions/AddressUType'
+      simple:
+        $ref: '#/definitions/CommonSimpleAddress'
+      paf:
+        $ref: '#/definitions/CommonPAFAddress'
+    required:
+    - addressUType
+  CommonSimpleAddress:
+    title: CommonSimpleAddress
+    type: object
+    properties:
+      mailingName:
+        description: Name of the individual or business formatted for inclusion in an address used for physical mail
+        type: string
+      addressLine1:
+        description: First line of the standard address object
+        type: string
+      addressLine2:
+        description: Second line of the standard address object
+        type: string
+      addressLine3:
+        description: Third line of the standard address object
+        type: string
+      postcode:
+        description: Mandatory for Australian addresses
+        type: string
+      city:
+        description: Name of the city or locality
+        type: string
+      state:
+        description: Free text if the country is not Australia. If country is Australia then must be one of the values defined by the [State Type Abbreviation](https://auspost.com.au/content/dam/auspost_corp/media/documents/australia-post-data-guide.pdf) in the PAF file format. NSW, QLD, VIC, NT, WA, SA, TAS, ACT, AAT
+        type: string
+      country:
+        description: A valid [ISO 3166 Alpha-3](https://www.iso.org/iso-3166-country-codes.html) country code. Australia (AUS) is assumed if country is not present.
+        example: AUS
+        type: string
+        default: AUS
+    required:
+    - addressLine1
+    - city
+    - state
+  CommonPAFAddress:
+    title: CommonPAFAddress
+    description: Australian address formatted according to the file format defined by the [PAF file format](https://auspost.com.au/content/dam/auspost_corp/media/documents/australia-post-data-guide.pdf)
+    type: object
+    properties:
+      dpid:
+        description: Unique identifier for an address as defined by Australia Post.  Also known as Delivery Point Identifier
+        type: string
+      thoroughfareNumber1:
+        description: Thoroughfare number for a property (first number in a property ranged address)
+        type: integer
+        format: int32
+      thoroughfareNumber1Suffix:
+        description: Suffix for the thoroughfare number. Only relevant is thoroughfareNumber1 is populated
+        type: string
+      thoroughfareNumber2:
+        description: Second thoroughfare number (only used if the property has a ranged address eg 23-25)
+        type: integer
+        format: int32
+      thoroughfareNumber2Suffix:
+        description: Suffix for the second thoroughfare number. Only relevant is thoroughfareNumber2 is populated
+        type: string
+      flatUnitType:
+        description: Type of flat or unit for the address
+        type: string
+      flatUnitNumber:
+        description: Unit number (including suffix, if applicable)
+        type: string
+      floorLevelType:
+        description: Type of floor or level for the address
+        type: string
+      floorLevelNumber:
+        description: Floor or level number (including alpha characters)
+        type: string
+      lotNumber:
+        description: Allotment number for the address
+        type: string
+      buildingName1:
+        description: Building/Property name 1
+        type: string
+      buildingName2:
+        description: Building/Property name 2
+        type: string
+      streetName:
+        description: The name of the street
+        type: string
+      streetType:
+        description: The street type. Valid enumeration defined by Australia Post PAF code file
+        type: string
+      streetSuffix:
+        description: The street type suffix. Valid enumeration defined by Australia Post PAF code file
+        type: string
+      postalDeliveryType:
+        description: Postal delivery type. (eg. PO BOX). Valid enumeration defined by Australia Post PAF code file
+        type: string
+      postalDeliveryNumber:
+        description: Postal delivery number if the address is a postal delivery type
+        type: integer
+        format: int32
+      postalDeliveryNumberPrefix:
+        description: Postal delivery number prefix related to the postal delivery number
+        type: string
+      postalDeliveryNumberSuffix:
+        description: Postal delivery number suffix related to the postal delivery number
+        type: string
+      localityName:
+        description: Full name of locality
+        type: string
+      postcode:
+        description: Postcode for the locality
+        type: string
+      state:
+        description: State in which the address belongs. Valid enumeration defined by Australia Post PAF code file [State Type Abbreviation](https://auspost.com.au/content/dam/auspost_corp/media/documents/australia-post-data-guide.pdf). NSW, QLD, VIC, NT, WA, SA, TAS, ACT, AAT
+        type: string
+    required:
+    - localityName
+    - postcode
+    - state
+  Links:
+    title: Links
+    type: object
+    properties:
+      self:
+        description: Fully qualified link that generated the current response document
+        type: string
+    required:
+    - self
+  LinksPaginated:
+    title: LinksPaginated
+    type: object
+    properties:
+      self:
+        description: Fully qualified link that generated the current response document
+        type: string
+      first:
+        description: URI to the first page of this set. Mandatory if this response is not the first page
+        type: string
+      prev:
+        description: URI to the previous page of this set. Mandatory if this response is not the first page
+        type: string
+      next:
+        description: URI to the next page of this set. Mandatory if this response is not the last page
+        type: string
+      last:
+        description: URI to the last page of this set. Mandatory if this response is not the last page
+        type: string
+    required:
+    - self
+  MetaPaginated:
+    title: MetaPaginated
+    type: object
+    properties:
+      totalRecords:
+        description: The total number of records in the full set. See [pagination](#pagination).
+        type: integer
+        format: int32
+      totalPages:
+        description: The total number of pages in the full set. See [pagination](#pagination).
+        type: integer
+        format: int32
+    required:
+    - totalRecords
+    - totalPages
+  MetaError:
+    title: MetaError
+    description: Additional data for customised error codes
+    type: object
+    properties:
+      urn:
+        description: The CDR error code URN which the application-specific error code extends. Mandatory if the error `code` is an application-specific error rather than a standardised error code.
+        type: string
+  ResponseErrorListV2:
+    title: ResponseErrorListV2
+    type: object
+    properties:
+      errors:
+        type: array
+        items:
+          $ref: '#/definitions/Error'
+    required:
+    - errors
+  BankingProductCategory:
+    title: BankingProductCategory
+    description: The category to which a product or account belongs. See [here](#product-categories) for more details
+    example: BUSINESS_LOANS
+    type: string
+    enum:
+    - BUSINESS_LOANS
+    - CRED_AND_CHRG_CARDS
+    - LEASES
+    - MARGIN_LOANS
+    - OVERDRAFTS
+    - PERS_LOANS
+    - REGULATED_TRUST_ACCOUNTS
+    - RESIDENTIAL_MORTGAGES
+    - TERM_DEPOSITS
+    - TRADE_FINANCE
+    - TRANS_AND_SAVINGS_ACCOUNTS
+    - TRAVEL_CARDS
+  AddressUType:
+    title: AddressUType
+    description: The type of address object present
+    example: paf
+    type: string
+    enum:
+    - paf
+    - simple
+  BankAddress:
+    title: BankAddress
+    type: object
+    properties:
+      name:
+        description: Name of the recipient Bank
+        type: string
+      address:
+        description: Address of the recipient Bank
+        type: string
+    required:
+    - name
+    - address
+  BankDetails:
+    title: BankDetails
+    type: object
+    properties:
+      country:
+        description: Country of the recipient institution. A valid [ISO 3166 Alpha-3](https://www.iso.org/iso-3166-country-codes.html) country code
+        type: string
+      accountNumber:
+        description: Account Targeted for payment
+        type: string
+      bankAddress:
+        $ref: '#/definitions/BankAddress'
+      beneficiaryBankBIC:
+        description: Swift bank code.  Aligns with standard [ISO 9362](https://www.iso.org/standard/60390.html)
+        type: string
+      fedWireNumber:
+        description: Number for Fedwire payment (Federal Reserve Wire Network)
+        type: string
+      sortCode:
+        description: Sort code used for account identification in some jurisdictions
+        type: string
+      chipNumber:
+        description: Number for the Clearing House Interbank Payments System
+        type: string
+      routingNumber:
+        description: International bank routing number
+        type: string
+      legalEntityIdentifier:
+        description: The legal entity identifier (LEI) for the beneficiary.  Aligns with [ISO 17442](https://www.iso.org/standard/59771.html)
+        type: string
+    required:
+    - country
+    - accountNumber
+  BeneficiaryDetails:
+    title: BeneficiaryDetails
+    type: object
+    properties:
+      name:
+        description: Name of the beneficiary
+        type: string
+      country:
+        description: Country where the beneficiary resides. A valid [ISO 3166 Alpha-3](https://www.iso.org/iso-3166-country-codes.html) country code
+        type: string
+      message:
+        description: Response message for the payment
+        type: string
+    required:
+    - country
+  CardArt:
+    title: CardArt
+    type: object
+    properties:
+      title:
+        description: Display label for the specific image
+        type: string
+      imageUri:
+        description: URI reference to a PNG, JPG or GIF image with proportions defined by ISO 7810 ID-1 and width no greater than 512 pixels. The URI reference may be a link or url-encoded data URI [RFC 2397](https://tools.ietf.org/html/rfc2397)
+        type: string
+    required:
+    - imageUri
+  ConstraintType:
+    title: ConstraintType
+    description: The type of constraint described.  See the next section for an overview of valid values and their meaning
+    example: MAX_BALANCE
+    type: string
+    enum:
+    - MAX_BALANCE
+    - MAX_LIMIT
+    - MIN_BALANCE
+    - MIN_LIMIT
+    - OPENING_BALANCE
+  Data:
+    title: Data
+    type: object
+    properties:
+      accountIds:
+        type: array
+        items:
+          type: string
+    required:
+    - accountIds
+  Data1:
+    title: Data1
+    type: object
+    properties:
+      products:
+        description: The list of products returned.  If the filter results in an empty set then this array may have no records
+        type: array
+        items:
+          $ref: '#/definitions/BankingProductV4'
+    required:
+    - products
+  Data2:
+    title: Data2
+    type: object
+    properties:
+      accounts:
+        description: The list of accounts returned. If the filter results in an empty set then this array may have no records
+        type: array
+        items:
+          $ref: '#/definitions/BankingAccount'
+    required:
+    - accounts
+  Data3:
+    title: Data3
+    type: object
+    properties:
+      transactions:
+        type: array
+        items:
+          $ref: '#/definitions/BankingTransaction'
+    required:
+    - transactions
+  Data4:
+    title: Data4
+    type: object
+    properties:
+      balances:
+        description: The list of balances returned
+        type: array
+        items:
+          $ref: '#/definitions/BankingBalance'
+    required:
+    - balances
+  Data5:
+    title: Data5
+    type: object
+    properties:
+      payees:
+        description: The list of payees returned
+        type: array
+        items:
+          $ref: '#/definitions/BankingPayeeV2'
+    required:
+    - payees
+  Data6:
+    title: Data6
+    type: object
+    properties:
+      directDebitAuthorisations:
+        description: The list of authorisations returned
+        type: array
+        items:
+          $ref: '#/definitions/BankingDirectDebit'
+    required:
+    - directDebitAuthorisations
+  Data7:
+    title: Data7
+    type: object
+    properties:
+      scheduledPayments:
+        description: The list of scheduled payments to return
+        type: array
+        items:
+          $ref: '#/definitions/BankingScheduledPayment'
+    required:
+    - scheduledPayments
+  DepositRateType:
+    title: DepositRateType
+    description: The type of rate (base, bonus, etc). See the next section for an overview of valid values and their meaning
+    example: BONUS
+    type: string
+    enum:
+    - BONUS
+    - BUNDLE_BONUS
+    - FIXED
+    - FLOATING
+    - INTRODUCTORY
+    - MARKET_LINKED
+    - VARIABLE
+  DiscountEligibilityType:
+    title: DiscountEligibilityType
+    description: The type of the specific eligibility constraint for a discount
+    example: BUSINESS
+    type: string
+    enum:
+    - BUSINESS
+    - EMPLOYMENT_STATUS
+    - INTRODUCTORY
+    - MAX_AGE
+    - MIN_AGE
+    - MIN_INCOME
+    - MIN_TURNOVER
+    - NATURAL_PERSON
+    - OTHER
+    - PENSION_RECIPIENT
+    - RESIDENCY_STATUS
+    - STAFF
+    - STUDENT
+  DiscountType:
+    title: DiscountType
+    description: The type of discount. See the next section for an overview of valid values and their meaning
+    example: BALANCE
+    type: string
+    enum:
+    - BALANCE
+    - DEPOSITS
+    - ELIGIBILITY_ONLY
+    - FEE_CAP
+    - PAYMENTS
+  effective:
+    title: effective
+    example: ALL
+    type: string
+    enum:
+    - ALL
+    - CURRENT
+    - FUTURE
+  EligibilityType:
+    title: EligibilityType
+    description: The type of eligibility criteria described.  See the next section for an overview of valid values and their meaning
+    example: BUSINESS
+    type: string
+    enum:
+    - BUSINESS
+    - EMPLOYMENT_STATUS
+    - MAX_AGE
+    - MIN_AGE
+    - MIN_INCOME
+    - MIN_TURNOVER
+    - NATURAL_PERSON
+    - OTHER
+    - PENSION_RECIPIENT
+    - RESIDENCY_STATUS
+    - STAFF
+    - STUDENT
+  Error:
+    title: Error
+    type: object
+    properties:
+      code:
+        description: The code of the error encountered. Where the error is specific to the respondent, an application-specific error code, expressed as a string value. If the error is application-specific, the URN code that the specific error extends must be provided in the meta object. Otherwise, the value is the error code URN.
+        type: string
+      title:
+        description: A short, human-readable summary of the problem that MUST NOT change from occurrence to occurrence of the problem represented by the error code.
+        type: string
+      detail:
+        description: A human-readable explanation specific to this occurrence of the problem.
+        type: string
+      meta:
+        $ref: '#/definitions/MetaError'
+    required:
+    - code
+    - title
+    - detail
+  ExtendedData:
+    title: ExtendedData
+    type: object
+    properties:
+      payer:
+        description: Label of the originating payer. Mandatory for inbound payment
+        type: string
+      payee:
+        description: Label of the target PayID.  Mandatory for an outbound payment. The name assigned to the BSB/Account Number or PayID (by the owner of the PayID)
+        type: string
+      extensionUType:
+        $ref: '#/definitions/ExtensionUType'
+      x2p101Payload:
+        $ref: '#/definitions/X2p101Payload'
+      service:
+        description: 'Identifier of the applicable overlay service. Valid values are: X2P1.01'
+        example: X2P1.01
+        type: string
+        default: X2P1.01
+    required:
+    - service
+  ExtensionUType:
+    title: ExtensionUType
+    description: Optional extended data provided specific to transaction originated via NPP
+    example: x2p101Payload
+    type: string
+    enum:
+    - x2p101Payload
+  Feature:
+    title: Feature
+    type: object
+    properties:
+      featureType:
+        $ref: '#/definitions/FeatureType'
+      additionalValue:
+        description: Generic field containing additional information relevant to the [featureType](#tocSproductfeaturetypedoc) specified. Whether mandatory or not is dependent on the value of the [featureType.](#tocSproductfeaturetypedoc)
+        type: string
+      additionalInfo:
+        description: Display text providing more information on the feature. Mandatory if the [feature type](#tocSproductfeaturetypedoc) is set to OTHER
+        type: string
+      additionalInfoUri:
+        description: Link to a web page with more information on this feature
+        type: string
+      isActivated:
+        description: True if the feature is already activated and false if the feature is available for activation. Defaults to true if absent. (note this is an additional field appended to the feature object defined in the Product Reference payload)
+        example: true
+        type: boolean
+        default: true
+    required:
+    - featureType
+  FeatureType:
+    title: FeatureType
+    description: The type of feature described
+    example: ADDITIONAL_CARDS
+    type: string
+    enum:
+    - ADDITIONAL_CARDS
+    - BALANCE_TRANSFERS
+    - BILL_PAYMENT
+    - BONUS_REWARDS
+    - CARD_ACCESS
+    - CASHBACK_OFFER
+    - COMPLEMENTARY_PRODUCT_DISCOUNTS
+    - DIGITAL_BANKING
+    - DIGITAL_WALLET
+    - DONATE_INTEREST
+    - EXTRA_REPAYMENTS
+    - FRAUD_PROTECTION
+    - FREE_TXNS
+    - FREE_TXNS_ALLOWANCE
+    - GUARANTOR
+    - INSURANCE
+    - INSTALMENT_PLAN
+    - INTEREST_FREE
+    - INTEREST_FREE_TRANSFERS
+    - LOYALTY_PROGRAM
+    - NOTIFICATIONS
+    - NPP_ENABLED
+    - NPP_PAYID
+    - OFFSET
+    - OTHER
+    - OVERDRAFT
+    - REDRAW
+    - RELATIONSHIP_MANAGEMENT
+    - UNLIMITED_TXNS
+  FeeType:
+    title: FeeType
+    description: The type of fee
+    example: DEPOSIT
+    type: string
+    enum:
+    - DEPOSIT
+    - EVENT
+    - EXIT
+    - PAYMENT
+    - PERIODIC
+    - PURCHASE
+    - TRANSACTION
+    - UPFRONT
+    - VARIABLE
+    - WITHDRAWAL
+  InterestPaymentDue:
+    title: InterestPaymentDue
+    description: When loan payments are due to be paid within each period. The investment benefit of earlier payments affect the rate that can be offered
+    example: IN_ADVANCE
+    type: string
+    enum:
+    - IN_ADVANCE
+    - IN_ARREARS
+  LastWeekDay:
+    title: LastWeekDay
+    description: The weekDay specified. The payment will occur on the last occurrence of this weekday in the interval.
+    example: FRI
+    type: string
+    enum:
+    - FRI
+    - MON
+    - SAT
+    - SUN
+    - THU
+    - TUE
+    - WED
+  LendingRateType:
+    title: LendingRateType
+    description: The type of rate (fixed, variable, etc). See the next section for an overview of valid values and their meaning
+    example: BUNDLE_DISCOUNT_FIXED
+    type: string
+    enum:
+    - BUNDLE_DISCOUNT_FIXED
+    - BUNDLE_DISCOUNT_VARIABLE
+    - CASH_ADVANCE
+    - DISCOUNT
+    - FIXED
+    - FLOATING
+    - INTRODUCTORY
+    - MARKET_LINKED
+    - PENALTY
+    - PURCHASE
+    - VARIABLE
+  LoanPurpose:
+    title: LoanPurpose
+    description: The reason for taking out the loan. If absent, the lending rate is applicable to all loan purposes
+    example: INVESTMENT
+    type: string
+    enum:
+    - INVESTMENT
+    - OWNER_OCCUPIED
+  MaturityInstructions:
+    title: MaturityInstructions
+    description: Current instructions on action to be taken at maturity. This includes default actions that may be specified in the terms and conditions for the product e.g. roll-over to the same term and frequency of interest payments
+    example: HOLD_ON_MATURITY
+    type: string
+    enum:
+    - HOLD_ON_MATURITY
+    - PAID_OUT_AT_MATURITY
+    - ROLLED_OVER
+  NonBusinessDayTreatment:
+    title: NonBusinessDayTreatment
+    description: Enumerated field giving the treatment where a scheduled payment date is not a business day. If absent assumed to be ON.<br/>**AFTER** - If a scheduled payment date is a non-business day the payment will be made on the first business day after the scheduled payment date.<br/>**BEFORE** - If a scheduled payment date is a non-business day the payment will be made on the first business day before the scheduled payment date.<br/>**ON** - If a scheduled payment date is a non-business day the payment will be made on that day regardless.<br/>**ONLY** - Payments only occur on business days. If a scheduled payment date is a non-business day the payment will be ignored
+    example: AFTER
+    type: string
+    enum:
+    - AFTER
+    - BEFORE
+    - "ON"
+    - ONLY
+  OpenStatus:
+    title: OpenStatus
+    description: Open or closed status for the account. If not present then OPEN is assumed
+    example: CLOSED
+    type: string
+    enum:
+    - CLOSED
+    - OPEN
+  open-status1:
+    title: open-status1
+    example: ALL
+    type: string
+    enum:
+    - ALL
+    - CLOSED
+    - OPEN
+  PayeeAccountUType:
+    title: PayeeAccountUType
+    description: 'Type of account object included. Valid values are: **account** A standard Australian account defined by BSB/Account Number. **card** A credit or charge card to pay to (note that PANs are masked). **payId** A PayID recognised by NPP'
+    example: account
+    type: string
+    enum:
+    - account
+    - card
+    - payId
+  PayeeUType:
+    title: PayeeUType
+    description: Type of object included that describes the payee in detail
+    example: biller
+    type: string
+    enum:
+    - biller
+    - digitalWallet
+    - domestic
+    - international
+  product-category:
+    title: product-category
+    example: BUSINESS_LOANS
+    type: string
+    enum:
+    - BUSINESS_LOANS
+    - CRED_AND_CHRG_CARDS
+    - LEASES
+    - MARGIN_LOANS
+    - OVERDRAFTS
+    - PERS_LOANS
+    - REGULATED_TRUST_ACCOUNTS
+    - RESIDENTIAL_MORTGAGES
+    - TERM_DEPOSITS
+    - TRADE_FINANCE
+    - TRANS_AND_SAVINGS_ACCOUNTS
+    - TRAVEL_CARDS
+  Provider:
+    title: Provider
+    description: The provider of the digital wallet
+    example: PAYPAL_AU
+    type: string
+    enum:
+    - PAYPAL_AU
+    - OTHER
+  RateApplicationMethod:
+    title: RateApplicationMethod
+    description: The method used to calculate the amount to be applied using one or more tiers. A single rate may be applied to the entire balance or each applicable tier rate is applied to the portion of the balance that falls into that tier (referred to as 'bands' or 'steps')
+    example: PER_TIER
+    type: string
+    enum:
+    - PER_TIER
+    - WHOLE_BALANCE
+  RecurrenceUType:
+    title: RecurrenceUType
+    description: The type of recurrence used to define the schedule
+    example: eventBased
+    type: string
+    enum:
+    - eventBased
+    - intervalSchedule
+    - lastWeekDay
+    - onceOff
+  RepaymentType:
+    title: RepaymentType
+    description: Options in place for repayments. If absent, the lending rate is applicable to all repayment types
+    example: INTEREST_ONLY
+    type: string
+    enum:
+    - INTEREST_ONLY
+    - PRINCIPAL_AND_INTEREST
+  RepaymentType1:
+    title: RepaymentType1
+    description: Options in place for repayments. If absent defaults to PRINCIPAL_AND_INTEREST
+    example: INTEREST_ONLY
+    type: string
+    enum:
+    - INTEREST_ONLY
+    - PRINCIPAL_AND_INTEREST
+  SpecificAccountUType:
+    title: SpecificAccountUType
+    description: The type of structure to present account specific fields.
+    example: creditCard
+    type: string
+    enum:
+    - creditCard
+    - loan
+    - termDeposit
+  Status:
+    title: Status
+    description: Status of the transaction whether pending or posted. Note that there is currently no provision in the standards to guarantee the ability to correlate a pending transaction with an associated posted transaction
+    example: PENDING
+    type: string
+    enum:
+    - PENDING
+    - POSTED
+  Status1:
+    title: Status1
+    description: Indicates whether the schedule is currently active. The value SKIP is equivalent to ACTIVE except that the customer has requested the next normal occurrence to be skipped.
+    example: ACTIVE
+    type: string
+    enum:
+    - ACTIVE
+    - INACTIVE
+    - SKIP
+  ToUType:
+    title: ToUType
+    description: The type of object provided that specifies the destination of the funds for the payment.
+    example: accountId
+    type: string
+    enum:
+    - accountId
+    - biller
+    - domestic
+    - international
+    - payeeId
+  Type:
+    title: Type
+    description: The type of the transaction
+    example: DIRECT_DEBIT
+    type: string
+    enum:
+    - DIRECT_DEBIT
+    - FEE
+    - INTEREST_CHARGED
+    - INTEREST_PAID
+    - OTHER
+    - PAYMENT
+    - TRANSFER_INCOMING
+    - TRANSFER_OUTGOING
+  Type1:
+    title: Type1
+    description: The type of payee.<br/>DOMESTIC means a registered payee for domestic payments including NPP. <br/>INTERNATIONAL means a registered payee for international payments. <br/>BILLER means a registered payee for BPAY. <br/>DIGITAL_WALLET means a registered payee for a bank's digital wallet
+    example: BILLER
+    type: string
+    enum:
+    - BILLER
+    - DIGITAL_WALLET
+    - DOMESTIC
+    - INTERNATIONAL
+  Type2:
+    title: Type2
+    description: The type of the PayID
+    example: ABN
+    type: string
+    enum:
+    - ABN
+    - EMAIL
+    - ORG_IDENTIFIER
+    - TELEPHONE
+  Type3:
+    title: Type3
+    description: The type of the digital wallet identifier
+    example: EMAIL
+    type: string
+    enum:
+    - EMAIL
+    - CONTACT_NAME
+    - TELEPHONE
+  type4:
+    title: type4
+    example: ALL
+    type: string
+    enum:
+    - ALL
+    - BILLER
+    - DIGITAL_WALLET
+    - DOMESTIC
+    - INTERNATIONAL
+  UnitOfMeasure:
+    title: UnitOfMeasure
+    description: The unit of measure that applies to the tierValueMinimum and tierValueMaximum values e.g. a **DOLLAR** amount. **PERCENT** (in the case of loan-to-value ratio or LVR). Tier term period representing a discrete number of **MONTH**'s or **DAY**'s (in the case of term deposit tiers)
+    example: DAY
+    type: string
+    enum:
+    - DAY
+    - DOLLAR
+    - MONTH
+    - PERCENT
+  X2p101Payload:
+    title: X2p101Payload
+    type: object
+    properties:
+      extendedDescription:
+        description: An extended string description. Only present if specified by the extensionUType field
+        type: string
+      endToEndId:
+        description: An end to end ID for the payment created at initiation
+        type: string
+      purposeCode:
+        description: Purpose of the payment.  Format is defined by NPP standards for the x2p1.01 overlay service
+        type: string
+    required:
+    - extendedDescription
+tags:
+- name: Banking
+  description: ''

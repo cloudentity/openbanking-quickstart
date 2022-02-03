@@ -47,7 +47,7 @@ func (o *OBBRClient) GetAccounts(c *gin.Context, accessToken string, bank Connec
 	for _, a := range resp.Payload.Data {
 		accountsData = append(accountsData, Account{
 			OBAccount6: models.OBAccount6{
-				AccountID: (*models.AccountID)(a.Number),
+				AccountID: (*models.AccountID)(a.AccountID),
 				Nickname:  models.Nickname(*a.AccountID),
 				Account: []*models.OBAccount6AccountItems0{
 					{

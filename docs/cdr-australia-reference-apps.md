@@ -27,8 +27,8 @@ In this article we will be walking through connecting to Cloudentity authorizati
 For the demonstration in this articles, we will use following software components:
 
 * `mock-registry` - https://github.com/ConsumerDataRight/mock-register
-* `mock-data-holder` - https://github.com/ConsumerDataRight/mock-data-holder
-* `mock-data-recipient` - https://github.com/ConsumerDataRight/mock-data-recipient
+* `mock-data-holder` - https://github.com/cloudentity/mock-data-holder
+* `mock-data-recipient` - https://github.com/cloudentity/mock-data-recipient
 
 Above reference applications have a built in Identity Server implementation but we will be swapping that out with a more powerful, flexible and dynamic platform offered by Cloudentity.
 

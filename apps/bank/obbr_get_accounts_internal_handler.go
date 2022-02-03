@@ -4,6 +4,16 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// swagger:route GET /internal/accounts bank br getInternalAccountsRequest
+//
+// get all accounts for user
+//
+// Security:
+//   defaultcc: accounts
+//
+// Responses:
+//   200: ResponseAccountList
+//   404: OpenbankingBrasilResponseError
 type OBBRGetAccountsInternalHandler struct {
 	*Server
 }
@@ -21,8 +31,8 @@ func (h *OBBRGetAccountsInternalHandler) MapError(c *gin.Context, err *Error) (c
 	return
 }
 
-func (h *OBBRGetAccountsInternalHandler) BuildResponse(c *gin.Context, data BankUserData) interface{} {
-	return NewOBBRAccountsResponse(data.OBBRAccounts)
+func (h *OBBRGetAccountsInternalHandler) BuildResponse(c *gin.Context, data BankUserData) (interface{}, *Error) {
+	return NewOBBRAccountsResponse(data.OBBRAccounts), nil
 }
 
 func (h *OBBRGetAccountsInternalHandler) Validate(c *gin.Context) *Error {

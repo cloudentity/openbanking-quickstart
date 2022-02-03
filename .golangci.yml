@@ -143,6 +143,7 @@ linters-settings:
     ignore-words: [
       authorised,
       Autorised,
+      instalments
     ]
   lll:
     # max line length, lines longer will be reported. Default is 120.
@@ -240,6 +241,7 @@ linters:
     - gomnd
     - wsl
     - rowserrcheck
+    - interfacer
   fast: false
   
 

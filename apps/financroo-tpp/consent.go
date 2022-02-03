@@ -6,13 +6,14 @@ import (
 	"net/http"
 	"time"
 
+	obbrModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/consents/models"
 	obModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
 
-	obbrModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_b_r"
+	obbrClientModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_b_r"
 	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
 	ob "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 )
@@ -144,14 +145,121 @@ func (o *OBUKConsentClient) GetPaymentConsent(c *gin.Context, consentID string) 
 	return consentResponse, nil
 }
 
+type PermissionGroup string
+
+const (
+	CadastroDadosCadastraisPF           PermissionGroup = "Cadastros Dados Cadastrais PF"
+	CadastroInformacoesComplementaresPF PermissionGroup = "Cadastro Informações complementares PF"
+	CadastroDadosCadastraisPJ           PermissionGroup = "Cadastro Dados Cadastrais PJ "
+	CadastroInformacoesComplementaresPJ PermissionGroup = "Cadastro Informações complementares PJ"
+	ContasSaldos                        PermissionGroup = "Contas Saldos"
+	ContasLimites                       PermissionGroup = "Contas Limites"
+	ContasExtratos                      PermissionGroup = "Contas Extratos"
+	CartaoDeCreditoLimites              PermissionGroup = "Cartão de Crédito Limites"
+	CartaoDeCreditoTransacoes           PermissionGroup = "Cartão de Crédito Transações"
+	CartaoDeCreditoFaturas              PermissionGroup = "Cartão de Crédito Faturas"
+	OperacoesDeCreditoDadosDoContrato   PermissionGroup = "Operações de Crédito Dados do Contrato"
+)
+
+type Permissions []obbrModels.OpenbankingBrasilPermission
+
+var PermissionGroupMap = map[PermissionGroup]Permissions{
+	CadastroDadosCadastraisPF: {
+		obbrModels.OpenbankingBrasilPermissionCUSTOMERSPERSONALIDENTIFICATIONSREAD,
+		obbrModels.OpenbankingBrasilPermissionCUSTOMERSPERSONALIDENTIFICATIONSREAD,
+		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
+	},
+	CadastroInformacoesComplementaresPF: {
+		obbrModels.OpenbankingBrasilPermissionCUSTOMERSPERSONALADITTIONALINFOREAD,
+		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
+	},
+	CadastroDadosCadastraisPJ: {
+		obbrModels.OpenbankingBrasilPermissionCUSTOMERSBUSINESSIDENTIFICATIONSREAD,
+		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
+	},
+	CadastroInformacoesComplementaresPJ: {
+		obbrModels.OpenbankingBrasilPermissionCUSTOMERSBUSINESSADITTIONALINFOREAD,
+		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
+	},
+	ContasSaldos: {
+		obbrModels.OpenbankingBrasilPermissionACCOUNTSREAD,
+		obbrModels.OpenbankingBrasilPermissionACCOUNTSBALANCESREAD,
+		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
+	},
+	ContasLimites: {
+		obbrModels.OpenbankingBrasilPermissionACCOUNTSREAD,
+		obbrModels.OpenbankingBrasilPermissionACCOUNTSOVERDRAFTLIMITSREAD,
+		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
+	},
+	ContasExtratos: {
+		obbrModels.OpenbankingBrasilPermissionACCOUNTSREAD,
+		obbrModels.OpenbankingBrasilPermissionACCOUNTSTRANSACTIONSREAD,
+		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
+	},
+	CartaoDeCreditoLimites: {
+		obbrModels.OpenbankingBrasilPermissionCREDITCARDSACCOUNTSREAD,
+		obbrModels.OpenbankingBrasilPermissionCREDITCARDSACCOUNTSLIMITSREAD,
+		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
+	},
+	CartaoDeCreditoTransacoes: {
+		obbrModels.OpenbankingBrasilPermissionCREDITCARDSACCOUNTSREAD,
+		obbrModels.OpenbankingBrasilPermissionCREDITCARDSACCOUNTSTRANSACTIONSREAD,
+		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
+	},
+	CartaoDeCreditoFaturas: {
+		obbrModels.OpenbankingBrasilPermissionCREDITCARDSACCOUNTSREAD,
+		obbrModels.OpenbankingBrasilPermissionCREDITCARDSACCOUNTSBILLSREAD,
+		obbrModels.OpenbankingBrasilPermissionCREDITCARDSACCOUNTSBILLSTRANSACTIONSREAD,
+		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
+	},
+	OperacoesDeCreditoDadosDoContrato: {
+		obbrModels.OpenbankingBrasilPermissionLOANSREAD,
+		obbrModels.OpenbankingBrasilPermissionLOANSWARRANTIESREAD,
+		obbrModels.OpenbankingBrasilPermissionLOANSSCHEDULEDINSTALMENTSREAD,
+		obbrModels.OpenbankingBrasilPermissionLOANSPAYMENTSREAD,
+		obbrModels.OpenbankingBrasilPermissionFINANCINGSREAD,
+		obbrModels.OpenbankingBrasilPermissionFINANCINGSWARRANTIESREAD,
+		obbrModels.OpenbankingBrasilPermissionFINANCINGSSCHEDULEDINSTALMENTSREAD,
+		obbrModels.OpenbankingBrasilPermissionFINANCINGSPAYMENTSREAD,
+		obbrModels.OpenbankingBrasilPermissionUNARRANGEDACCOUNTSOVERDRAFTREAD,
+		obbrModels.OpenbankingBrasilPermissionUNARRANGEDACCOUNTSOVERDRAFTWARRANTIESREAD,
+		obbrModels.OpenbankingBrasilPermissionUNARRANGEDACCOUNTSOVERDRAFTSCHEDULEDINSTALMENTSREAD,
+		obbrModels.OpenbankingBrasilPermissionUNARRANGEDACCOUNTSOVERDRAFTPAYMENTSREAD,
+		obbrModels.OpenbankingBrasilPermissionINVOICEFINANCINGSREAD,
+		obbrModels.OpenbankingBrasilPermissionINVOICEFINANCINGSWARRANTIESREAD,
+		obbrModels.OpenbankingBrasilPermissionINVOICEFINANCINGSSCHEDULEDINSTALMENTSREAD,
+		obbrModels.OpenbankingBrasilPermissionINVOICEFINANCINGSPAYMENTSREAD,
+		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
+	},
+}
+
 func (o *OBBRConsentClient) CreateAccountConsent(c *gin.Context) (string, error) {
 	var (
-		registerResponse *obbrModels.CreateDataAccessConsentCreated
+		registerResponse *obbrClientModels.CreateDataAccessConsentCreated
+		connectRequest   = ConnectBankRequest{}
+		permissions      []ob.OpenbankingBrasilConsentPermission
+		uniquePerms      = map[obbrModels.OpenbankingBrasilPermission]bool{}
 		err              error
 	)
 
+	if err = c.BindJSON(&connectRequest); err != nil {
+		return "", err
+	}
+
+	for _, p := range connectRequest.Permissions {
+		if perms, ok := PermissionGroupMap[PermissionGroup(p)]; ok {
+			for _, p1 := range perms {
+				uniquePerms[p1] = true
+			}
+		}
+	}
+
+	for uniquePerm := range uniquePerms {
+		permissions = append(permissions, ob.OpenbankingBrasilConsentPermission(uniquePerm))
+	}
+
 	if registerResponse, err = o.Accounts.Openbanking.Openbankingbr.CreateDataAccessConsent(
-		obbrModels.NewCreateDataAccessConsentParamsWithContext(c).
+		obbrClientModels.NewCreateDataAccessConsentParamsWithContext(c).
 			WithRequest(&ob.BrazilCustomerDataAccessConsentRequest{
 				Data: &ob.OpenbankingBrasilConsentData{
 					ExpirationDateTime: strfmt.DateTime(time.Now().Add(time.Hour * 24)),
@@ -161,11 +269,7 @@ func (o *OBBRConsentClient) CreateAccountConsent(c *gin.Context) (string, error)
 							Rel:            "CPF",
 						},
 					},
-					Permissions: []ob.OpenbankingBrasilConsentPermission{
-						"ACCOUNTS_READ",
-						"RESOURCES_READ",
-						"ACCOUNTS_OVERDRAFT_LIMITS_READ",
-					},
+					Permissions: permissions,
 				},
 			}),
 		nil,

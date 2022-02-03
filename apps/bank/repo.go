@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"os"
 	"time"
 
@@ -22,6 +21,7 @@ type BankUserData struct {
 	OBUKPayments     []paymentModels.OBWriteDomesticResponse5 `json:"obuk_payments"`
 
 	OBBRAccounts []obbrAccountModels.AccountData                         `json:"obbr_accounts"`
+	OBBRBalances []OBBRBalance                                           `json:"obbr_balances"`
 	OBBRPayments []obbrPaymentModels.OpenbankingBrasilResponsePixPayment `json:"obbr_payments"`
 }
 
@@ -143,7 +143,7 @@ func readUserToDataFile(filepath string) (UserToDataFile, error) {
 		err  error
 	)
 
-	if bs, err = ioutil.ReadFile(filepath); err != nil {
+	if bs, err = os.ReadFile(filepath); err != nil {
 		return u2df, errors.Wrapf(err, "failed to read file")
 	}
 

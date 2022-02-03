@@ -2,14 +2,14 @@ package main
 
 import (
 	"encoding/json"
-	"io/ioutil"
+	"os"
 	"testing"
 
 	"github.com/stretchr/testify/require"
 )
 
 func TestPemToJWKS(t *testing.T) {
-	bs, err := ioutil.ReadFile("../../data/tpp_cert.pem")
+	bs, err := os.ReadFile("../../data/tpp_cert.pem")
 	require.NoError(t, err)
 	require.NotNil(t, bs)
 

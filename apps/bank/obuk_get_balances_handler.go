@@ -12,7 +12,7 @@ import (
 	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
 )
 
-// swagger:route GET /balances bank getBalancesRequest
+// swagger:route GET /balances bank uk getBalancesRequest
 //
 // get balances
 //
@@ -45,9 +45,9 @@ func (h *OBUKGetBalancesHandler) MapError(c *gin.Context, err *Error) (code int,
 	return
 }
 
-func (h *OBUKGetBalancesHandler) BuildResponse(c *gin.Context, data BankUserData) interface{} {
+func (h *OBUKGetBalancesHandler) BuildResponse(c *gin.Context, data BankUserData) (interface{}, *Error) {
 	self := strfmt.URI(fmt.Sprintf("http://localhost:%s/balances", strconv.Itoa(h.Config.Port)))
-	return NewBalancesResponse(data.OBUKBalances, self)
+	return NewBalancesResponse(data.OBUKBalances, self), nil
 }
 
 func (h *OBUKGetBalancesHandler) Validate(c *gin.Context) *Error {

@@ -26,7 +26,7 @@ services:
 
   mock-data-holder:
     container_name: mock-data-holder
-    image: docker.cloudentity.io/cdr-mock-data-holder:0.0.1
+    image: docker.cloudentity.io/cdr-mock-data-holder:0.0.3
     volumes:
       - ./mount/cdr/holder.json:/app/idsvr/appsettings.Production.json
       - ./mount/cdr/holder-seed.json:/app/manage/Data/seed-data.json
