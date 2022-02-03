@@ -87,7 +87,11 @@ type Consent struct {
 }
 
 func MapClientsToConsents(clients []Client, consents []Consent) []ClientConsents {
-	consentMap := make(map[string][]Consent)
+	var (
+		consentMap        = make(map[string][]Consent)
+		clientAndConsents []ClientConsents
+	)
+
 	for _, consent := range consents {
 		if _, ok := consentMap[consent.ClientID]; !ok {
 			consentMap[consent.ClientID] = []Consent{}
@@ -95,11 +99,16 @@ func MapClientsToConsents(clients []Client, consents []Consent) []ClientConsents
 		consentMap[consent.ClientID] = append(consentMap[consent.ClientID], consent)
 	}
 
-	var clientAndConsents []ClientConsents
 	for _, client := range clients {
+		consents := consentMap[client.ID]
+
+		if len(consents) == 0 {
+			continue
+		}
+
 		clientAndConsents = append(clientAndConsents, ClientConsents{
 			Client:   client,
-			Consents: consentMap[client.ID],
+			Consents: consents,
 		})
 	}
 
