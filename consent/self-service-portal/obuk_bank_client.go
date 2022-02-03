@@ -9,32 +9,6 @@ import (
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
 )
 
-type BankClient interface {
-	GetInternalAccounts(subject string) (InternalAccounts, error)
-}
-
-type CDRBankClient struct{}
-
-func (c *CDRBankClient) GetInternalAccounts(subject string) (InternalAccounts, error) {
-	return InternalAccounts{
-			Accounts: []InternalAccount{
-				{
-					ID:   "96534987",
-					Name: "Digital banking account",
-				},
-				{
-					ID:   "1000001",
-					Name: "Savings",
-				},
-				{
-					ID:   "1000002",
-					Name: "Savings 2",
-				},
-			},
-		},
-		nil
-}
-
 type OBUKBankClient struct {
 	baseURL string
 	*http.Client
@@ -47,15 +21,6 @@ func NewOBUKBankClient(config Config) BankClient {
 	c.baseURL = config.BankURL.String()
 
 	return &c
-}
-
-type InternalAccounts struct {
-	Accounts []InternalAccount `json:"accounts"`
-}
-
-type InternalAccount struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
 }
 
 func (c *OBUKBankClient) GetInternalAccounts(subject string) (InternalAccounts, error) {

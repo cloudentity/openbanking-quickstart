@@ -16,7 +16,7 @@ func NewCDRArrangementImpl(s *Server) ConsentClient {
 	return &CDRArrangementImpl{s}
 }
 
-func (o *CDRArrangementImpl) FetchConsents(c *gin.Context) ([]ClientConsents, error) {
+func (o *CDRArrangementImpl) FetchConsents(c *gin.Context, accountIDs []string) ([]ClientConsents, error) {
 	var (
 		arrangementsResponse *cdr.ListCDRArrangementsOK
 		clientsResponse      *system.ListClientsSystemOK
@@ -28,7 +28,7 @@ func (o *CDRArrangementImpl) FetchConsents(c *gin.Context) ([]ClientConsents, er
 		cdr.NewListCDRArrangementsParamsWithContext(c).
 			WithWid(o.Config.CDRWorkspaceID).
 			WithConsentsRequest(&obModels.ConsentsRequest{
-				// TODO: account ids
+				Accounts: accountIDs,
 			}),
 		nil,
 	); err != nil {
@@ -61,7 +61,9 @@ func (o *CDRArrangementImpl) getClients(response *system.ListClientsSystemOK) []
 }
 
 func (o *CDRArrangementImpl) getConsents(response *cdr.ListCDRArrangementsOK) []Consent {
-	var consents []Consent
+	var (
+		consents []Consent
+	)
 
 	for _, arrangement := range response.Payload.Arrangements {
 		if arrangement.Status == "Rejected" {
@@ -78,8 +80,9 @@ func (o *CDRArrangementImpl) getConsents(response *cdr.ListCDRArrangementsOK) []
 			CreatedAt:  arrangement.CreatedAt,
 			ExpiresAt:  arrangement.Expiry,
 			UpdatedAt:  arrangement.UpdatedAt,
-			// TODO: I think permissions are bound to the scopes in the access token?
-			Permissions: []string{},
+			// permission language is dependent on authorisation scope: https://consumerdatastandardsaustralia.github.io/standards/#banking-language
+			// TODO: unmock this
+			Permissions: []string{"CommonCustomerBasicRead"},
 		})
 	}
 	return consents
