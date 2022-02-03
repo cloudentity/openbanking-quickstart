@@ -16,7 +16,7 @@ func NewOBUKConsentImpl(s *Server) ConsentClient {
 	return &OBUKConsentImpl{s}
 }
 
-func (o *OBUKConsentImpl) FetchConsents(c *gin.Context) ([]ClientConsents, error) {
+func (o *OBUKConsentImpl) FetchConsents(c *gin.Context, accountIDs []string) ([]ClientConsents, error) {
 	var (
 		response *obukModels.ListOBConsentsOK
 		err      error
@@ -33,7 +33,8 @@ func (o *OBUKConsentImpl) FetchConsents(c *gin.Context) ([]ClientConsents, error
 		obukModels.NewListOBConsentsParamsWithContext(c).
 			WithWid(o.Config.OpenbankingUKWorkspaceID).
 			WithConsentsRequest(&obModels.ConsentsRequest{
-				Types: types,
+				Types:    types,
+				Accounts: accountIDs,
 			}),
 		nil,
 	); err != nil {

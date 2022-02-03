@@ -137,7 +137,7 @@ func (s *Server) ListConsents() func(*gin.Context) {
 
 			accounts.Accounts = append(accounts.Accounts, acc.Accounts...)
 
-			if cc, err = s.ConsentClients[spec].FetchConsents(c); err != nil {
+			if cc, err = s.ConsentClients[spec].FetchConsents(c, accounts.GetAccountIDs()); err != nil {
 				Error(c, ToAPIError(err))
 				return
 			}
@@ -171,7 +171,7 @@ func (s *Server) RevokeConsent() func(*gin.Context) {
 			return
 		}
 
-		if clientsAndConsents, err = consentClient.FetchConsents(c); err != nil {
+		if clientsAndConsents, err = consentClient.FetchConsents(c, []string{}); err != nil {
 			Error(c, ToAPIError(err))
 			return
 		}
@@ -258,6 +258,16 @@ func (s *Server) GetConsentClientByConsentType(consentType string) ConsentClient
 		return s.ConsentClients[OBUK]
 	case "cdr_arrangement":
 		return s.ConsentClients[CDR]
+	}
+	return nil
+}
+
+func (s *Server) GetBankClientByConsentType(consentType string) BankClient {
+	switch consentType {
+	case "account_access", "domestic_payment":
+		return s.BankClients[OBUK]
+	case "cdr_arrangement":
+		return s.BankClients[CDR]
 	}
 	return nil
 }
