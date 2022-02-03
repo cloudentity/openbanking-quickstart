@@ -8,7 +8,7 @@ type ConsentClient interface {
 }
 
 type ConsentFetcher interface {
-	FetchConsents(c *gin.Context) ([]ClientConsents, error)
+	FetchConsents(c *gin.Context, accountIDs []string) ([]ClientConsents, error)
 }
 
 type ConsentRevoker interface {
