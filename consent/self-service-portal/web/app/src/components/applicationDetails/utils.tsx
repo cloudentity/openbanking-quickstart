@@ -1,6 +1,11 @@
 import { theme } from "../../theme";
 
 export const permissionsDict = {
+  CommonCustomerBasicRead: {
+    Cluster: "Your Name and occupation", 
+    Language: 
+    "Name Occupation", 
+  },
   ReadAccountsBasic: {
     Cluster: "Your Account Details",
     Language:
