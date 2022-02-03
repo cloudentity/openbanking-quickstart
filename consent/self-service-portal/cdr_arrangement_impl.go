@@ -21,20 +21,14 @@ func (o *CDRArrangementImpl) FetchConsents(c *gin.Context) ([]ClientConsents, er
 		arrangementsResponse *cdr.ListCDRArrangementsOK
 		clientsResponse      *system.ListClientsSystemOK
 		err                  error
-		types                []string
 		cac                  []ClientConsents
-		ok                   bool
 	)
-
-	if types, ok = c.GetQueryArray("types"); !ok {
-		types = nil
-	}
 
 	if arrangementsResponse, err = o.Client.Openbanking.Cdr.ListCDRArrangements(
 		cdr.NewListCDRArrangementsParamsWithContext(c).
 			WithWid(o.Config.CDRWorkspaceID).
 			WithConsentsRequest(&obModels.ConsentsRequest{
-				Types: types,
+				// TODO: account ids
 			}),
 		nil,
 	); err != nil {
