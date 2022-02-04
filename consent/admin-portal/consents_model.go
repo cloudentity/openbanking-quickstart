@@ -30,3 +30,20 @@ type Client struct {
 	ID   string `json:"client_id"`
 	Name string `json:"client_name,omitempty"`
 }
+
+type Clients []Client
+
+func (c Clients) Unique() []Client {
+	var clients []Client
+	m := make(map[string]bool)
+
+	for _, client := range c {
+		if _, exists := m[client.ID]; exists {
+			continue
+		}
+		m[client.ID] = true
+		clients = append(clients, client)
+	}
+
+	return clients
+}
