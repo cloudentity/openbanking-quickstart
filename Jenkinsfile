@@ -30,7 +30,7 @@ pipeline {
                 script {
                     try {
                         sh 'make run'
-                        sh 'yarn --cwd tests run cypress run -s cypress/integration/cdr/*.ts'
+                        sh 'make run-cdr-tests-headless'
                         sh 'make clean'
                     } catch(exc) {
                         failure('Tests failed')
@@ -44,7 +44,7 @@ pipeline {
                 script {
                     try {
                         sh 'make disable-mfa run'
-                        sh 'make run-tests-headless'
+                        sh 'make run-obuk-tests-headless'
                         sh 'make clean'
                     } catch(exc) {
                         failure('Tests failed')
@@ -57,7 +57,7 @@ pipeline {
                 script {
                     try {
                         sh 'make enable-mfa run'
-                        sh 'make run-tests-headless'
+                        sh 'make run-obuk-tests-headless'
                         sh 'make clean'
                     } catch(exc) {
                         failure('Tests failed')

@@ -81,10 +81,22 @@ clean-saas: clean
 run-tests:
 	yarn --cwd tests run cypress open
 
-.PHONY: run-tests-headless
-run-tests-headless:
+
+.PHONY: run-cdr-tests-headless
+run-cdr-tests-headless: run-tests-verify
+	yarn --cwd tests run cypress run -s cypress/integration/cdr/*.ts
+
+.PHONY: run-obuk-tests-headless
+run-obuk-tests-headless: run-tests-verify
+	yarn --cwd tests run cypress run -s cypress/integration/obuk/*.ts
+
+.PHONY: run-obbr-tests-headless
+run-obbr-tests-headless: run-tests-verify
+	yarn --cwd tests run cypress run -s cypress/integration/obbr/*.ts
+
+.PHONY: run-tests-verify 
+run-tests-verify: 
 	yarn --cwd tests run cypress verify
-	yarn --cwd tests run cypress run
 
 .PHONY: enable-mfa
 enable-mfa:
