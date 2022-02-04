@@ -70,7 +70,7 @@ pipeline {
                 script {
                     try {
                         sh 'make enable-spec-obbr run'
-                        sh 'yarn --cwd tests run cypress run -s cypress/integration/obuk/TppTechnicalTests.ts'
+                        sh 'make run-obbr-tests-headless'
                         sh 'make clean'
                     } catch(exc) {
                         failure('Tests failed')
