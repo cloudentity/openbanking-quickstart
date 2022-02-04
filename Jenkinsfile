@@ -31,6 +31,8 @@ pipeline {
                     try {
                         sh 'yarn --cwd tests run cypress run -s cypress/integration/cdr/*.ts'
                         sh 'make clean'
+                    } cat(exc) {
+                        failure('Tests failed')
                     }
                 }
             }
