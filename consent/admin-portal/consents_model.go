@@ -27,8 +27,10 @@ type ClientConsents struct {
 }
 
 type Client struct {
-	ID   string `json:"client_id"`
-	Name string `json:"client_name,omitempty"`
+	ID        string `json:"id"`
+	Name      string `json:"name"`
+	LogoURI   string `json:"logo_uri"`
+	ClientURI string `json:"client_uri"`
 }
 
 type Clients []Client
