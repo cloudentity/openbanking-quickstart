@@ -24,6 +24,18 @@ pipeline {
                 sh 'make build'
             }
         }
+
+        stage('CDR Tests') {
+            steps {
+                script {
+                    try {
+                        sh 'yarn --cwd tests run cypress run -s cypress/integration/cdr/*.ts'
+                        sh 'make clean'
+                    }
+                }
+            }
+        }
+
         stage('OBUK Tests with disabled MFA') {
             steps {
                 script {
