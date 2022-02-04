@@ -15,7 +15,7 @@ func NewOBCDRConsentFetcher(server *Server) *OBCDRConsentFetcher {
 	return &OBCDRConsentFetcher{server}
 }
 
-func (o *OBCDRConsentFetcher) Fetch(c *gin.Context) ([]ClientConsents, error) {
+func (o *OBCDRConsentFetcher) Fetch(c *gin.Context, accountIDs []string) ([]ClientConsents, error) {
 	var (
 		arrangementsResponse *cdr.ListCDRArrangementsOK
 		clientsResponse      *system.ListClientsSystemOK
