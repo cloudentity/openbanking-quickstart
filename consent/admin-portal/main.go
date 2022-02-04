@@ -14,17 +14,25 @@ import (
 	acpclient "github.com/cloudentity/acp-client-go"
 )
 
+type Spec string
+
+const (
+	OBUK Spec = "obuk"
+	CDR  Spec = "cdr"
+)
+
 type Config struct {
 	SystemClientID              string        `env:"SYSTEM_CLIENT_ID,required"`
 	SystemClientSecret          string        `env:"SYSTEM_CLIENT_SECRET,required"`
 	SystemIssuerURL             *url.URL      `env:"SYSTEM_ISSUER_URL,required"`
-	SystemClientsServerID       string        `env:"SYSTEM_CLIENTS_SERVER_ID,required"`
+	OpenbankingUKWorkspaceID    string        `env:"OPENBANKING_UK_WORKSPACE_ID,required"`
+	CDRWorkspaceID              string        `env:"CDR_WORKSPACE_ID,required"`
 	Timeout                     time.Duration `env:"TIMEOUT" envDefault:"5s"`
 	RootCA                      string        `env:"ROOT_CA"`
 	CertFile                    string        `env:"CERT_FILE,required"`
 	KeyFile                     string        `env:"KEY_FILE,required"`
 	BankURL                     *url.URL      `env:"BANK_URL,required"`
-	Port                        int           `env:"PORT" envDefault:"8086"`
+	Port                        int           `env:"PORT" envDefault:"8085"`
 	LoginAuthorizationServerURL string        `env:"LOGIN_AUTHORIZATION_SERVER_URL,required"`
 	LoginClientID               string        `env:"LOGIN_CLIENT_ID,required"`
 	LoginAuthorizationServerID  string        `env:"LOGIN_AUTHORIZATION_SERVER_ID,required"`
