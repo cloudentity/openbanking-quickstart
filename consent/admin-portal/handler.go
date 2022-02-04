@@ -65,6 +65,8 @@ func (s *Server) ListClients() func(*gin.Context) {
 			return
 		}
 
+		// Need to call for each passed in workspace id from env vars
+		// TODO: for now just work with UK, later add others
 		if cs, err = s.Client.System.Clients.ListClientsSystem(
 			system.NewListClientsSystemParamsWithContext(c).
 				WithWid(s.Config.SystemClientsServerID),
