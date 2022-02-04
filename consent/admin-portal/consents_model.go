@@ -16,7 +16,7 @@ type Consent struct {
 	Permissions []string        `json:"Permissions"`
 
 	// Removed Currency
-	Amount   string `json:"Amount"`
+	Amount string `json:"Amount"`
 
 	CompletionDateTime strfmt.DateTime `json:"CompletionDateTime"`
 }

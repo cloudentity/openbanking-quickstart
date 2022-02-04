@@ -121,10 +121,6 @@ func (s *Server) ListClients() func(*gin.Context) {
 	}
 }
 
-func getConsents(spec string) (clientConsents []ClientConsents, err error) {
-
-}
-
 func (s *Server) RevokeConsent() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (

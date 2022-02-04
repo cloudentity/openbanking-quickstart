@@ -1,5 +1,7 @@
-package main 
+package main
 
-type ConsentLister interface {
-	List() []ClientConsents
+import "github.com/gin-gonic/gin"
+
+type ConsentFetcher interface {
+	Fetch(c *gin.Context) ([]ClientConsents, error)
 }
