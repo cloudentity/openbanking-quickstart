@@ -15,8 +15,14 @@ type Consent struct {
 	UpdatedAt   strfmt.DateTime `json:"StatusUpdateDateTime"`
 	Permissions []string        `json:"Permissions"`
 
-	// Removed Currency
-	Amount string `json:"Amount"`
+	DebtorAccountIdentification string `json:"DebtorAccountIdentification"`
+	DebtorAccountName           string `json:"DebtorAccountName"`
+
+	CreditorAccountIdentification string `json:"CreditorAccountIdentification"`
+	CreditorAccountName           string `json:"CreditorAccountName"`
+
+	Currency string `json:"Currency"`
+	Amount   string `json:"Amount"`
 
 	CompletionDateTime strfmt.DateTime `json:"CompletionDateTime"`
 }
