@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 
@@ -41,14 +42,8 @@ func (s *Server) Index() func(*gin.Context) {
 	}
 }
 
-type Client struct {
-	ID       string                            `json:"client_id"`
-	Name     string                            `json:"client_name,omitempty"`
-	Consents []*obModels.OBUKConsentWithClient `json:"consents"`
-}
-
 type ListClientsResponse struct {
-	Clients []Client `json:"clients"`
+	Clients []ClientConsents `json:"clients"`
 }
 
 func (s *Server) ListClients() func(*gin.Context) {
@@ -56,7 +51,7 @@ func (s *Server) ListClients() func(*gin.Context) {
 		var (
 			cs                  *system.ListClientsSystemOK
 			consents            *obuk.ListOBConsentsOK
-			clientsWithConsents []Client
+			clientsWithConsents []ClientConsents
 			err                 error
 		)
 
@@ -76,6 +71,7 @@ func (s *Server) ListClients() func(*gin.Context) {
 			return
 		}
 
+		//s.Client.Openbanking.Cdr.ListCDRArrangements()
 		for _, oc := range cs.Payload.Clients {
 			if consents, err = s.Client.Openbanking.Openbankinguk.ListOBConsents(
 				obuk.NewListOBConsentsParamsWithContext(c).
@@ -90,11 +86,32 @@ func (s *Server) ListClients() func(*gin.Context) {
 			}
 
 			if !oc.System {
-				clientsWithConsents = append(clientsWithConsents, Client{
-					ID:       oc.ClientID,
-					Name:     oc.ClientName,
-					Consents: consents.Payload.Consents,
-				})
+				clientCon := ClientConsents{Client: Client{
+					ID:   oc.ClientID,
+					Name: oc.ClientName,
+				}}
+				for _, ukConsent := range consents.Payload.Consents {
+					log.Println(ukConsent.DomesticPaymentConsent)
+					log.Println(ukConsent.DomesticPaymentConsent.Authorisation)
+					log.Println(ukConsent.DomesticPaymentConsent.Authorisation.CompletionDateTime)
+					con := Consent{
+						AccountIDs:  ukConsent.AccountIds,
+						ConsentID:   ukConsent.ConsentID,
+						ClientID:    ukConsent.ClientID,
+						TenantID:    ukConsent.TenantID,
+						ServerID:    ukConsent.ServerID,
+						Status:      ukConsent.Status,
+						Type:        string(ukConsent.Type),
+						CreatedAt:   ukConsent.CreatedAt,
+						ExpiresAt:   ukConsent.AccountAccessConsent.ExpirationDateTime,
+						UpdatedAt:   ukConsent.DomesticPaymentConsent.StatusUpdateDateTime,
+						Permissions: ukConsent.AccountAccessConsent.Permissions,
+						CompletionDateTime: ukConsent.DomesticPaymentConsent.Authorisation.CompletionDateTime,
+					}
+					clientCon.Consents = append(clientCon.Consents, con)
+				}
+
+				clientsWithConsents = append(clientsWithConsents, clientCon)
 			}
 		}
 
