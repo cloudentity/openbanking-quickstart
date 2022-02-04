@@ -1,76 +1,118 @@
 package main
 
 import (
-	obuk "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
 	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
-	system "github.com/cloudentity/acp-client-go/clients/system/client/clients"
 	"github.com/gin-gonic/gin"
-	"github.com/pkg/errors"
+	"github.com/go-openapi/strfmt"
 )
 
 type OBUKConsentFetcher struct {
-	server *Server
+	*Server
 }
 
 func NewOBUKConsentFetcher(server *Server) OBUKConsentFetcher {
 	return OBUKConsentFetcher{server}
 }
 
-func (o *OBUKConsentFetcher) Fetch(c *gin.Context) ([]ClientConsents, error) {
+func (o *OBUKConsentFetcher) FetchConsents(c *gin.Context, accountIDs []string) ([]ClientConsents, error) {
 	var (
-		cs                  *system.ListClientsSystemOK
-		consents            *obuk.ListOBConsentsOK
-		clientsWithConsents []ClientConsents
-		err                 error
+		response *obukModels.ListOBConsentsOK
+		err      error
+		types    []string
+		cac      []ClientConsents
+		ok       bool
 	)
 
-	if cs, err = o.server.Client.System.Clients.ListClientsSystem(
-		system.NewListClientsSystemParamsWithContext(c).
-			WithWid(o.server.Config.SystemClientsServerID),
+	if types, ok = c.GetQueryArray("types"); !ok {
+		types = nil
+	}
+
+	if response, err = o.Client.Openbanking.Openbankinguk.ListOBConsents(
+		obukModels.NewListOBConsentsParamsWithContext(c).
+			WithWid(o.Config.OpenbankingUKWorkspaceID).
+			WithConsentsRequest(&obModels.ConsentsRequest{
+				Types:    types,
+				Accounts: accountIDs,
+			}),
 		nil,
 	); err != nil {
-		return clientsWithConsents, errors.Wrap(err, "failed to list clients from acp:")
+		return cac, err
 	}
 
-	for _, oc := range cs.Payload.Clients {
-		if consents, err = o.server.Client.Openbanking.Openbankinguk.ListOBConsents(
-			obuk.NewListOBConsentsParamsWithContext(c).
-				WithWid(o.server.Config.SystemClientsServerID).
-				WithConsentsRequest(&obModels.ConsentsRequest{
-					ClientID: oc.ClientID,
-				}),
-			nil,
-		); err != nil {
-			return clientsWithConsents, errors.Wrap(err, "failed to list consents for client")
-		}
+	return MapClientsToConsents(o.getClients(response), o.getConsents(response)), nil
+}
 
-		if !oc.System {
-			clientCon := ClientConsents{Client: Client{
-				ID:   oc.ClientID,
-				Name: oc.ClientName,
-			}}
-			for _, ukConsent := range consents.Payload.Consents {
-				// TODO - need to check which consent type
-				con := Consent{
-					AccountIDs:  ukConsent.AccountIds,
-					ConsentID:   ukConsent.ConsentID,
-					ClientID:    ukConsent.ClientID,
-					TenantID:    ukConsent.TenantID,
-					ServerID:    ukConsent.ServerID,
-					Status:      ukConsent.Status,
-					Type:        string(ukConsent.Type),
-					CreatedAt:   ukConsent.CreatedAt,
-					ExpiresAt:   ukConsent.AccountAccessConsent.ExpirationDateTime,
-					UpdatedAt:   ukConsent.DomesticPaymentConsent.StatusUpdateDateTime,
-					Permissions: ukConsent.AccountAccessConsent.Permissions,
-					// TODO: Add this - CompletionDateTime: ukConsent.DomesticPaymentConsent.Authorisation.CompletionDateTime,
-				}
-				clientCon.Consents = append(clientCon.Consents, con)
-			}
+func (o *OBUKConsentFetcher) getClients(resp *obukModels.ListOBConsentsOK) []Client {
+	var clients Clients
 
-			clientsWithConsents = append(clientsWithConsents, clientCon)
+	for _, consent := range resp.Payload.Consents {
+		if consent.Client != nil {
+			clients = append(clients, Client{
+				ID:        consent.Client.ID,
+				Name:      consent.Client.Name,
+				LogoURI:   consent.Client.LogoURI,
+				ClientURI: consent.Client.ClientURI,
+			})
 		}
 	}
 
-	return clientsWithConsents, nil
+	return clients.Unique()
+}
+
+func (o *OBUKConsentFetcher) getConsents(resp *obukModels.ListOBConsentsOK) []Consent {
+	var consents []Consent
+
+	for _, consent := range resp.Payload.Consents {
+		var (
+			expiresAt   strfmt.DateTime
+			updatedAt   strfmt.DateTime
+			permissions []string
+		)
+
+		c := Consent{
+			AccountIDs:  consent.AccountIds,
+			ConsentID:   consent.ConsentID,
+			TenantID:    consent.TenantID,
+			ServerID:    consent.ServerID,
+			ClientID:    consent.ClientID,
+			Status:      consent.Status,
+			Type:        string(consent.Type),
+			CreatedAt:   consent.CreatedAt,
+			ExpiresAt:   expiresAt,
+			UpdatedAt:   updatedAt,
+			Permissions: permissions,
+		}
+
+		switch consent.Type {
+		case "account_access":
+			c.ExpiresAt = consent.AccountAccessConsent.ExpirationDateTime
+			c.UpdatedAt = strfmt.DateTime(*consent.AccountAccessConsent.StatusUpdateDateTime)
+			c.Permissions = consent.AccountAccessConsent.Permissions
+		case "domestic_payment":
+			c.UpdatedAt = consent.DomesticPaymentConsent.StatusUpdateDateTime
+			c.DebtorAccountIdentification = string(*consent.DomesticPaymentConsent.Initiation.DebtorAccount.Identification)
+			c.DebtorAccountName = consent.DomesticPaymentConsent.Initiation.DebtorAccount.Name
+			c.CreditorAccountIdentification = string(*consent.DomesticPaymentConsent.Initiation.CreditorAccount.Identification)
+			c.CreditorAccountName = consent.DomesticPaymentConsent.Initiation.CreditorAccount.Name
+			c.Currency = string(*consent.DomesticPaymentConsent.Initiation.InstructedAmount.Currency)
+			c.Amount = string(*consent.DomesticPaymentConsent.Initiation.InstructedAmount.Amount)
+			c.CompletionDateTime = consent.DomesticPaymentConsent.Authorisation.CompletionDateTime
+		}
+
+		consents = append(consents, c)
+	}
+
+	return consents
+}
+
+func (o *OBUKConsentFetcher) RevokeConsent(c *gin.Context, consentID string) (err error) {
+	if _, err = o.Client.Openbanking.Openbankinguk.RevokeOpenbankingConsent(
+		obukModels.NewRevokeOpenbankingConsentParamsWithContext(c).
+			WithWid(o.Config.OpenbankingUKWorkspaceID).
+			WithConsentID(consentID),
+		nil,
+	); err != nil {
+		return err
+	}
+	return nil
 }
