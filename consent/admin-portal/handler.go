@@ -106,7 +106,7 @@ func (s *Server) ListClients() func(*gin.Context) {
 						ExpiresAt:   ukConsent.AccountAccessConsent.ExpirationDateTime,
 						UpdatedAt:   ukConsent.DomesticPaymentConsent.StatusUpdateDateTime,
 						Permissions: ukConsent.AccountAccessConsent.Permissions,
-						CompletionDateTime: ukConsent.DomesticPaymentConsent.Authorisation.CompletionDateTime,
+						// TODO: Add this - CompletionDateTime: ukConsent.DomesticPaymentConsent.Authorisation.CompletionDateTime,
 					}
 					clientCon.Consents = append(clientCon.Consents, con)
 				}
@@ -119,6 +119,10 @@ func (s *Server) ListClients() func(*gin.Context) {
 
 		c.JSON(http.StatusOK, &resp)
 	}
+}
+
+func getConsents(spec string) (clientConsents []ClientConsents, err error) {
+
 }
 
 func (s *Server) RevokeConsent() func(*gin.Context) {
