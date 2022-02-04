@@ -1,9 +1,9 @@
-import {AcpLoginPage} from '../pages/acp/AcpLoginPage';
-import {ConsentPage} from '../pages/consent/ConsentPage';
-import {Credentials} from "../pages/Credentials";
-import {ConsentSelfServicePage} from '../pages/consent-self-service/ConsentSelfServicePage';
-import {ConsentSelfServiceApplicationPage} from "../pages/consent-self-service/ConsentSelfServiceApplicationPage";
-import { MockDataRecipientPage } from '../pages/mock-data-recipient/MockDataRecipientPage';
+import {AcpLoginPage} from '../../pages/acp/AcpLoginPage';
+import {ConsentPage} from '../../pages/consent/ConsentPage';
+import {Credentials} from "../../pages/Credentials";
+import {ConsentSelfServicePage} from '../../pages/consent-self-service/ConsentSelfServicePage';
+import {ConsentSelfServiceApplicationPage} from "../../pages/consent-self-service/ConsentSelfServiceApplicationPage";
+import { MockDataRecipientPage } from '../../pages/mock-data-recipient/MockDataRecipientPage';
 
 describe(`Consent self service app CDR`, () => {
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
