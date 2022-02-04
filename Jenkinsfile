@@ -29,6 +29,7 @@ pipeline {
             steps {
                 script {
                     try {
+                        sh 'make run'
                         sh 'yarn --cwd tests run cypress run -s cypress/integration/cdr/*.ts'
                         sh 'make clean'
                     } catch(exc) {
