@@ -15,26 +15,16 @@ func NewOBCDRConsentFetcher(server *Server) *OBCDRConsentFetcher {
 	return &OBCDRConsentFetcher{server}
 }
 
-func (o *OBCDRConsentFetcher) Fetch(c *gin.Context, accountIDs []string) ([]ClientConsents, error) {
+func (o *OBCDRConsentFetcher) Fetch(c *gin.Context) ([]ClientConsents, error) {
 	var (
-		arrangementsResponse *cdr.ListCDRArrangementsOK
-		clientsResponse      *system.ListClientsSystemOK
-		err                  error
-		cac                  []ClientConsents
+		consents       *cdr.ListCDRArrangementsOK
+		clientConsents []ClientConsents
+		cs             *system.ListClientsSystemOK
+		err            error
+		cac            []ClientConsents
 	)
 
-	if arrangementsResponse, err = o.Client.Openbanking.Cdr.ListCDRArrangements(
-		cdr.NewListCDRArrangementsParamsWithContext(c).
-			WithWid(o.Config.CDRWorkspaceID).
-			WithConsentsRequest(&obModels.ConsentsRequest{
-				Accounts: accountIDs,
-			}),
-		nil,
-	); err != nil {
-		return cac, err
-	}
-
-	if clientsResponse, err = o.Client.System.Clients.ListClientsSystem(
+	if cs, err = o.Client.System.Clients.ListClientsSystem(
 		system.NewListClientsSystemParamsWithContext(c).
 			WithWid(o.Config.CDRWorkspaceID),
 		nil,
@@ -42,21 +32,30 @@ func (o *OBCDRConsentFetcher) Fetch(c *gin.Context, accountIDs []string) ([]Clie
 		return cac, err
 	}
 
-	return MapClientsToConsents(o.getClients(clientsResponse), o.getConsents(arrangementsResponse)), nil
-}
+	for _, oc := range cs.Payload.Clients {
+		if consents, err = o.Client.Openbanking.Cdr.ListCDRArrangements(
+			cdr.NewListCDRArrangementsParamsWithContext(c).
+				WithWid(o.Config.CDRWorkspaceID).
+				WithConsentsRequest(&obModels.ConsentsRequest{
+					ClientID: oc.ClientID,
+				}),
+			nil,
+		); err != nil {
+			return cac, err
+		}
 
-func (o *OBCDRConsentFetcher) getClients(response *system.ListClientsSystemOK) []Client {
-	var clients Clients
+		if !oc.System {
+			clientConsent := ClientConsents{Client: Client{
+				ID:   oc.ClientID,
+				Name: oc.ClientName,
+			}}
+			clientConsent.Consents = o.getConsents(consents)
+			clientConsents = append(clientConsents, clientConsent)
 
-	for _, c := range response.Payload.Clients {
-		clients = append(clients, Client{
-			ID:        c.ClientID,
-			Name:      c.ClientName,
-			LogoURI:   c.LogoURI,
-			ClientURI: c.ClientURI,
-		})
+		}
 	}
-	return clients
+
+	return clientConsents, nil
 }
 
 func (o *OBCDRConsentFetcher) getConsents(response *cdr.ListCDRArrangementsOK) []Consent {

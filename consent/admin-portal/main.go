@@ -21,6 +21,8 @@ const (
 	CDR  Spec = "cdr"
 )
 
+var Specs = []Spec{OBUK, CDR}
+
 type Config struct {
 	SystemClientID              string        `env:"SYSTEM_CLIENT_ID,required"`
 	SystemClientSecret          string        `env:"SYSTEM_CLIENT_SECRET,required"`
@@ -81,6 +83,7 @@ type Server struct {
 	Client           acpclient.Client
 	IntrospectClient acpclient.Client
 	BankClient       BankClient
+	ConsentClients   []ConsentFetcher
 }
 
 func NewServer() (Server, error) {
@@ -99,6 +102,10 @@ func NewServer() (Server, error) {
 
 	if server.IntrospectClient, err = acpclient.New(server.Config.IntrospectClientConfig()); err != nil {
 		return server, errors.Wrapf(err, "failed to init introspect acp client")
+	}
+
+	for _, spec := range Specs {
+		server.ConsentClients = append(server.ConsentClients, ConsentFetcherFactory(spec, &server))
 	}
 
 	server.BankClient = NewBankClient(server.Config)

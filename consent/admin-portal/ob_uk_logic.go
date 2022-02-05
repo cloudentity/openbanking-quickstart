@@ -12,11 +12,11 @@ type OBUKConsentFetcher struct {
 	*Server
 }
 
-func NewOBUKConsentFetcher(server *Server) OBUKConsentFetcher {
-	return OBUKConsentFetcher{server}
+func NewOBUKConsentFetcher(server *Server) *OBUKConsentFetcher {
+	return &OBUKConsentFetcher{server}
 }
 
-func (o *OBUKConsentFetcher) FetchConsents(c *gin.Context, accountIDs []string) ([]ClientConsents, error) {
+func (o *OBUKConsentFetcher) FetchConsents(c *gin.Context) ([]ClientConsents, error) {
 	var (
 		consents       *obukModels.ListOBConsentsOK
 		cs             *system.ListClientsSystemOK
