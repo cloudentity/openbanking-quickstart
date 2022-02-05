@@ -75,6 +75,43 @@ func MapClientsToConsents(clients []Client, consents []Consent) []ClientConsents
 	return clientAndConsents
 }
 
+func (s *Server) ListConsents() func(*gin.Context) {
+	return func(c *gin.Context) {
+		var (
+			sub                    string
+			accounts, acc          InternalAccounts
+			clientsAndConsents, cc []ClientConsents
+			err                    error
+		)
+
+		if sub, err = s.GetSubject(c); err != nil {
+			Error(c, ToAPIError(err))
+			return
+		}
+
+		for _, spec := range []Spec{OBUK, CDR} {
+			if acc, err = s.BankClients[spec].GetInternalAccounts(sub); err != nil {
+				Error(c, ToAPIError(err))
+				return
+			}
+
+			accounts.Accounts = append(accounts.Accounts, acc.Accounts...)
+
+			if cc, err = s.ConsentClients[spec].FetchConsents(c, accounts.GetAccountIDs()); err != nil {
+				Error(c, ToAPIError(err))
+				return
+			}
+
+			clientsAndConsents = append(clientsAndConsents, cc...)
+		}
+
+		c.JSON(http.StatusOK, &ConsentsResponse{
+			ClientConsents: clientsAndConsents,
+			Accounts:       accounts,
+		})
+	}
+}
+
 func (s *Server) ListClients() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
@@ -89,6 +126,7 @@ func (s *Server) ListClients() func(*gin.Context) {
 			return
 		}
 
+		
 		// Need to call for each passed in workspace id from env vars
 		// TODO: for now just work with UK, later add others
 		if cs, err = s.Client.System.Clients.ListClientsSystem(

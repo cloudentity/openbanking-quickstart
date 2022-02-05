@@ -1,10 +1,10 @@
 package main
 
-func ConsentFetcherFactory(spec string, server *Server) ConsentFetcher {
+func ConsentFetcherFactory(spec Spec, server *Server) ConsentFetcher {
 	switch spec {
-	case "obcdr":
+	case CDR:
 		return NewOBCDRConsentFetcher(server)
-	case "obuk":
+	case OBUK:
 		return NewOBCDRConsentFetcher(server)
 	default:
 		return nil

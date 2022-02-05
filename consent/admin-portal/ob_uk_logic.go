@@ -3,6 +3,7 @@ package main
 import (
 	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
 	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
+	system "github.com/cloudentity/acp-client-go/clients/system/client/clients"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 )
@@ -17,47 +18,45 @@ func NewOBUKConsentFetcher(server *Server) OBUKConsentFetcher {
 
 func (o *OBUKConsentFetcher) FetchConsents(c *gin.Context, accountIDs []string) ([]ClientConsents, error) {
 	var (
-		response *obukModels.ListOBConsentsOK
-		err      error
-		types    []string
-		cac      []ClientConsents
-		ok       bool
+		consents       *obukModels.ListOBConsentsOK
+		cs             *system.ListClientsSystemOK
+		clientConsents []ClientConsents
+		err            error
+		cac            []ClientConsents
 	)
 
-	if types, ok = c.GetQueryArray("types"); !ok {
-		types = nil
-	}
-
-	if response, err = o.Client.Openbanking.Openbankinguk.ListOBConsents(
-		obukModels.NewListOBConsentsParamsWithContext(c).
-			WithWid(o.Config.OpenbankingUKWorkspaceID).
-			WithConsentsRequest(&obModels.ConsentsRequest{
-				Types:    types,
-				Accounts: accountIDs,
-			}),
+	if cs, err = o.Client.System.Clients.ListClientsSystem(
+		system.NewListClientsSystemParamsWithContext(c).
+			WithWid(o.Config.OpenbankingUKWorkspaceID),
 		nil,
 	); err != nil {
 		return cac, err
 	}
 
-	return MapClientsToConsents(o.getClients(response), o.getConsents(response)), nil
-}
+	for _, oc := range cs.Payload.Clients {
+		if consents, err = o.Client.Openbanking.Openbankinguk.ListOBConsents(
+			obukModels.NewListOBConsentsParamsWithContext(c).
+				WithWid(o.Config.OpenbankingUKWorkspaceID).
+				WithConsentsRequest(&obModels.ConsentsRequest{
+					ClientID: oc.ClientID,
+				}),
+			nil,
+		); err != nil {
+			return cac, err
+		}
 
-func (o *OBUKConsentFetcher) getClients(resp *obukModels.ListOBConsentsOK) []Client {
-	var clients Clients
+		if !oc.System {
+			clientConsent := ClientConsents{Client: Client{
+				ID:   oc.ClientID,
+				Name: oc.ClientName,
+			}}
+			clientConsent.Consents = o.getConsents(consents)
+			clientConsents = append(clientConsents, clientConsent)
 
-	for _, consent := range resp.Payload.Consents {
-		if consent.Client != nil {
-			clients = append(clients, Client{
-				ID:        consent.Client.ID,
-				Name:      consent.Client.Name,
-				LogoURI:   consent.Client.LogoURI,
-				ClientURI: consent.Client.ClientURI,
-			})
 		}
 	}
 
-	return clients.Unique()
+	return clientConsents, nil
 }
 
 func (o *OBUKConsentFetcher) getConsents(resp *obukModels.ListOBConsentsOK) []Consent {
