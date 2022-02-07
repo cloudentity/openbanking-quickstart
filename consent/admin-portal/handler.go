@@ -71,27 +71,27 @@ func (s *Server) ListClients() func(*gin.Context) {
 
 func (s *Server) RevokeConsent() func(*gin.Context) {
 	return func(c *gin.Context) {
-		// var (
-		// 	id  = c.Param("id")
-		// 	err error
-		// )
+		var (
+			id  = c.Param("id")
+			err error
+		)
 
-		// if err = s.IntrospectToken(c); err != nil {
-		// 	c.String(http.StatusBadRequest, err.Error())
-		// 	return
-		// }
+		if err = s.IntrospectToken(c); err != nil {
+			c.String(http.StatusBadRequest, err.Error())
+			return
+		}
 
-		// if _, err = s.Client.Openbanking.Openbankinguk.RevokeOpenbankingConsent(
-		// 	obuk.NewRevokeOpenbankingConsentParamsWithContext(c).
-		// 		WithWid(s.Config.SystemClientsServerID).
-		// 		WithConsentID(id),
-		// 	nil,
-		// ); err != nil {
-		// 	c.String(http.StatusBadRequest, fmt.Sprintf("failed to revoke account access consent: %+v", err))
-		// 	return
-		// }
+		if _, err = s.Client.Openbanking.Openbankinguk.RevokeOpenbankingConsent(
+			obuk.NewRevokeOpenbankingConsentParamsWithContext(c).
+				WithWid(s.Config.SystemClientsServerID).
+				WithConsentID(id),
+			nil,
+		); err != nil {
+			c.String(http.StatusBadRequest, fmt.Sprintf("failed to revoke account access consent: %+v", err))
+			return
+		}
 
-		// c.Status(http.StatusNoContent)
+		c.Status(http.StatusNoContent)
 	}
 }
 
