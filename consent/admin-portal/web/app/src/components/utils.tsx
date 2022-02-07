@@ -200,8 +200,8 @@ export const permissionsDict = {
 };
 
 const availableConstentTypes = [
-  "account_access_consent",
-  "domestic_payment_consent",
+  "account_access",
+  "domestic_payment",
   "domestic_scheduled_payment_consent",
   "domestic_standing_order_consent",
   "file_payment_consent",
@@ -217,9 +217,9 @@ export function getRawConsents(consents) {
     // show not null consent with type from availableConstentTypes
     const consents = Object.entries(consent)
       .map(([key, value]: [key: string, value: any]) =>
-        availableConstentTypes.includes(key) && value?.ConsentId
-          ? { type: key, consent: value, accounts: consent?.account_ids ?? [] }
-          : null
+      availableConstentTypes.includes(key) && value?.consent_id
+      ? { type: key, consent: value, accounts: consent?.account_ids ?? [] }
+      : null
       )
       .filter((v) => v);
     return [...acc, ...consents];
@@ -264,28 +264,28 @@ type ConsentType = {
 export type ClientType = {
   client_id: string;
   client_name: string;
+  client_uri: string;
   consents: {
     Client: {
       client_uri: string;
       id: string;
       name: string;
     };
-    account_access_consent: ConsentType;
     account_ids: string[];
-    client_id: string;
     consent_id: string;
-    created_at: string;
-    domestic_payment_consent: ConsentType;
-    domestic_scheduled_payment_consent: ConsentType;
-    domestic_standing_order_consent: ConsentType;
-    file_payment_consent: ConsentType;
-    international_payment_consent: ConsentType;
-    international_scheduled_payment_consent: ConsentType;
-    international_standing_order_consent: ConsentType;
+    client_id: string;
+    tenant_id: string;
     server_id: string;
     status: string;
-    tenant_id: string;
-    type: string;
+    consent_type: string;
+    created_at: string;
+    expires_at?: string;
+    updated_at?: string;
+    completed_at?: string | null;
+    permissions?: string[];
+
+    currency: string;
+    amount: string;
   }[];
   mainStatus?: ConsentStatus;
 };
@@ -311,8 +311,8 @@ export const currencyDict = {
 export function getStatus(client: ClientType) {
   const found = client?.consents?.find(
     (consent) =>
-      consent.account_access_consent &&
-      consent.account_access_consent.Status === "Authorised"
+      consent &&
+      consent.status === "Authorised"
   );
   return found ? ConsentStatus.Active : ConsentStatus.Inactive;
 }

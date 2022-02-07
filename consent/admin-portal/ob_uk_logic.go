@@ -16,7 +16,7 @@ func NewOBUKConsentFetcher(server *Server) *OBUKConsentFetcher {
 	return &OBUKConsentFetcher{server}
 }
 
-func (o *OBUKConsentFetcher) FetchConsents(c *gin.Context) ([]ClientConsents, error) {
+func (o *OBUKConsentFetcher) Fetch(c *gin.Context) ([]ClientConsents, error) {
 	var (
 		consents       *obukModels.ListOBConsentsOK
 		cs             *system.ListClientsSystemOK

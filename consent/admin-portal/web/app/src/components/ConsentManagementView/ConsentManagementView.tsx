@@ -55,7 +55,7 @@ export default function ConsentManagementView({
         setClients(clients || []);
 
         const accountIdToClients = clients?.reduce((clientsAcc, client) => {
-          const { client_id, consents } = client;
+          const { client_id, consents } = client;          
           return mergeWith(
             clientsAcc,
             consents

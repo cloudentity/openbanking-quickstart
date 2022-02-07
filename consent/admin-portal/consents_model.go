@@ -3,28 +3,28 @@ package main
 import "github.com/go-openapi/strfmt"
 
 type Consent struct {
-	AccountIDs  []string        `json:"AccountIDs"`
-	ConsentID   string          `json:"ConsentID"`
-	ClientID    string          `json:"client_id"`
-	TenantID    string          `json:"tenant_id"`
-	ServerID    string          `json:"server_id"`
-	Status      string          `json:"Status"`
-	Type        string          `json:"type"`
-	CreatedAt   strfmt.DateTime `json:"CreationDateTime"`
-	ExpiresAt   strfmt.DateTime `json:"ExpirationDateTime"`
-	UpdatedAt   strfmt.DateTime `json:"StatusUpdateDateTime"`
-	Permissions []string        `json:"Permissions"`
+	AccountIDs         []string        `json:"account_ids"`
+	ConsentID          string          `json:"consent_id"`
+	ClientID           string          `json:"client_id"`
+	TenantID           string          `json:"tenant_id"`
+	ServerID           string          `json:"server_id"`
+	Status             string          `json:"status"`
+	Type               string          `json:"consent_type"`
+	CreatedAt          strfmt.DateTime `json:"created_at"`
+	ExpiresAt          strfmt.DateTime `json:"expires_at"`
+	UpdatedAt          strfmt.DateTime `json:"updated_at"`
+	CompletionDateTime strfmt.DateTime `json:"completed_at"`
+
+	Permissions []string `json:"permissions"`
+
+	Currency string `json:"currency"`
+	Amount   string `json:"Amount"`
 
 	DebtorAccountIdentification string `json:"DebtorAccountIdentification"`
 	DebtorAccountName           string `json:"DebtorAccountName"`
 
 	CreditorAccountIdentification string `json:"CreditorAccountIdentification"`
 	CreditorAccountName           string `json:"CreditorAccountName"`
-
-	Currency string `json:"Currency"`
-	Amount   string `json:"Amount"`
-
-	CompletionDateTime strfmt.DateTime `json:"CompletionDateTime"`
 }
 
 type ClientConsents struct {
@@ -33,8 +33,8 @@ type ClientConsents struct {
 }
 
 type Client struct {
-	ID        string `json:"id"`
-	Name      string `json:"name"`
+	ID        string `json:"client_id"`
+	Name      string `json:"client_name"`
 	LogoURI   string `json:"logo_uri"`
 	ClientURI string `json:"client_uri"`
 }

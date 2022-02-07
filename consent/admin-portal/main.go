@@ -34,7 +34,7 @@ type Config struct {
 	CertFile                    string        `env:"CERT_FILE,required"`
 	KeyFile                     string        `env:"KEY_FILE,required"`
 	BankURL                     *url.URL      `env:"BANK_URL,required"`
-	Port                        int           `env:"PORT" envDefault:"8085"`
+	Port                        int           `env:"PORT" envDefault:"8086"`
 	LoginAuthorizationServerURL string        `env:"LOGIN_AUTHORIZATION_SERVER_URL,required"`
 	LoginClientID               string        `env:"LOGIN_CLIENT_ID,required"`
 	LoginAuthorizationServerID  string        `env:"LOGIN_AUTHORIZATION_SERVER_ID,required"`
