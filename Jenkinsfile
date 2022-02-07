@@ -24,12 +24,27 @@ pipeline {
                 sh 'make build'
             }
         }
+
+        stage('CDR Tests') {
+            steps {
+                script {
+                    try {
+                        sh 'make run'
+                        sh 'make run-cdr-tests-headless'
+                        sh 'make clean'
+                    } catch(exc) {
+                        failure('Tests failed')
+                    }
+                }
+            }
+        }
+
         stage('OBUK Tests with disabled MFA') {
             steps {
                 script {
                     try {
                         sh 'make disable-mfa run'
-                        sh 'make run-tests-headless'
+                        sh 'make run-obuk-tests-headless'
                         sh 'make clean'
                     } catch(exc) {
                         failure('Tests failed')
@@ -42,7 +57,7 @@ pipeline {
                 script {
                     try {
                         sh 'make enable-mfa run'
-                        sh 'make run-tests-headless'
+                        sh 'make run-obuk-tests-headless'
                         sh 'make clean'
                     } catch(exc) {
                         failure('Tests failed')
@@ -55,7 +70,7 @@ pipeline {
                 script {
                     try {
                         sh 'make enable-spec-obbr run'
-                        sh 'yarn --cwd tests run cypress run -s cypress/integration/TppTechnicalTests.ts'
+                        sh 'make run-obbr-tests-headless'
                         sh 'make clean'
                     } catch(exc) {
                         failure('Tests failed')

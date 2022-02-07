@@ -80,7 +80,7 @@ function getTableBody(type: "account" | "payment", rows, setDrawerData, data) {
             key={row.id}
             className={`consent-row`}
             onClick={() => {
-              setDrawerData(data.find((v) => row.id === v.consent_id));
+              setDrawerData(data.find((v) => row.id === v.ConsentID));
             }}
           >
             <TableCell>{row.authorised}</TableCell>
@@ -122,7 +122,7 @@ function getTableBody(type: "account" | "payment", rows, setDrawerData, data) {
             key={row.id}
             className={`consent-row`}
             onClick={() => {
-              setDrawerData(data.find((v) => row.id === v.consent_id));
+              setDrawerData(data.find((v) => row.id === v.ConsentID));
             }}
           >
             <TableCell>{row.authorised}</TableCell>
@@ -163,7 +163,7 @@ type Props = {
   data: any;
   accounts: any;
   type: "account" | "payment";
-  handleRevoke: (id: string) => void;
+  handleRevoke: (id: string, consent_type: string) => void;
   status: string;
 };
 
@@ -195,30 +195,30 @@ function ApplicationAccessTable({
 
   const rowsAccount =
     type === "account"
-      ? data.map(({ account_ids, account_access_consent }) =>
+      ? data.map(({ AccountIDs, CreationDateTime, ExpirationDateTime, ConsentID, Status }) =>
           createDataAccount(
-            getDate(account_access_consent?.CreationDateTime),
-            getAccountNames(account_ids ?? [], accounts),
-            account_access_consent?.Status,
-            getDate(account_access_consent?.ExpirationDateTime),
-            account_access_consent?.ConsentId
+            getDate(CreationDateTime),
+            getAccountNames(AccountIDs ?? [], accounts),
+            Status,
+            getDate(ExpirationDateTime),
+            ConsentID
           )
         )
       : [];
 
   const rowsPayment =
     type === "payment"
-      ? data.map(({ account_ids, domestic_payment_consent }) =>
+      ? data.map(({ AccountIDs, CreationDateTime, Status, ConsentID, Amount, CreditorAccountName }) =>
           createDataPayment(
-            getDate(domestic_payment_consent?.CreationDateTime),
+            getDate(CreationDateTime),
             getAccountNames(
-              account_ids ?? [],
+              AccountIDs ?? [],
               accounts
             ),
-            domestic_payment_consent?.Initiation?.CreditorAccount?.Name,
-            domestic_payment_consent?.Status,
-            domestic_payment_consent?.Initiation?.InstructedAmount?.Amount,
-            domestic_payment_consent?.ConsentId
+            CreditorAccountName,
+            Status,
+            Amount,
+            ConsentID
           )
         )
       : [];

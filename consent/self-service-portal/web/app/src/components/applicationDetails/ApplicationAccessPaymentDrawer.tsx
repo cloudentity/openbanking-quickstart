@@ -29,28 +29,27 @@ function ApplicationAccessPaymentDrawer({
 }: Props) {
   const classes = useStyles();
 
-  const details = drawerData?.domestic_payment_consent;
 
   const transactionDetails = {
     Amount: `${
-      currencyDict[details?.Initiation?.InstructedAmount?.Currency] ||
+      currencyDict[drawerData?.Currency] ||
       currencyDict.GBP
-    } ${details?.Initiation?.InstructedAmount?.Amount}`,
-    Status: details?.Status,
-    "Consent id": details?.ConsentId,
+    } ${drawerData?.Amount}`,
+    Status: drawerData?.Status,
+    "Consent id": drawerData?.ConsentID,
     "Debtor Account": {
-      id: details?.Initiation?.DebtorAccount?.Identification,
-      name: details?.Initiation?.DebtorAccount?.Name,
+      id: drawerData.DebtorAccountIdentification,
+      name: drawerData.DebtorAccountName,
     },
     "Creditor Account": {
-      id: details?.Initiation?.CreditorAccount?.Identification,
-      name: details?.Initiation?.CreditorAccount?.Name,
+      id: drawerData.CreditorAccountIdentification,
+      name: drawerData.CreditorAccountName,
     },
   };
 
   const permissionDates = {
-    Authorised: getDate(details?.Authorisation?.CompletionDateTime),
-    "Last updated": getDate(details?.StatusUpdateDateTime),
+    Authorised: getDate(drawerData?.CompletionDateTime),
+    "Last updated": getDate(drawerData?.StatusUpdateDateTime),
     // "Active until": "N/A",
   };
 

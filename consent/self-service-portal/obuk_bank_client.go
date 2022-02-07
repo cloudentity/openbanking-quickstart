@@ -9,30 +9,21 @@ import (
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
 )
 
-type BankClient struct {
+type OBUKBankClient struct {
 	baseURL string
 	*http.Client
 }
 
-func NewBankClient(config Config) BankClient {
-	c := BankClient{}
+func NewOBUKBankClient(config Config) BankClient {
+	c := OBUKBankClient{}
 
 	c.Client = &http.Client{}
 	c.baseURL = config.BankURL.String()
 
-	return c
+	return &c
 }
 
-type InternalAccounts struct {
-	Accounts []InternalAccount `json:"accounts"`
-}
-
-type InternalAccount struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
-}
-
-func (c *BankClient) GetInternalAccounts(subject string) (InternalAccounts, error) {
+func (c *OBUKBankClient) GetInternalAccounts(subject string) (InternalAccounts, error) {
 	var (
 		request  *http.Request
 		response *http.Response

@@ -35,7 +35,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 type Props = {
   data: any; // FIXME
   accounts: any; // FIXME
-  handleRevoke: (id: string) => void;
+  handleRevoke: (id: string, consent_type: string) => void;
   status: string;
 };
 
@@ -76,7 +76,7 @@ function ApplicationAccessTabs({
       <div>
         {tab === "account" && (
           <ApplicationAccessTable
-            data={data.consents.filter((v) => v.type === "account_access")}
+            data={data.consents.filter((v) => v.type === "account_access" || v.type == "cdr_arrangement")}
             type="account"
             handleRevoke={handleRevoke}
             accounts={accounts}

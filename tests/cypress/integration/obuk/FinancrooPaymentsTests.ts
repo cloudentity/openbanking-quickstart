@@ -1,15 +1,15 @@
-import {AcpLoginPage} from '../pages/acp/AcpLoginPage';
-import {FinancrooLoginPage} from '../pages/financroo/FinancrooLoginPage';
-import {ConsentPage} from '../pages/consent/ConsentPage';
-import {ErrorPage} from '../pages/ErrorPage';
-import {FinancrooWelcomePage} from '../pages/financroo/FinancrooWelcomePage';
-import {FinancrooAccountsPage} from '../pages/financroo/accounts/FinancrooAccountsPage';
-import {Credentials} from "../pages/Credentials";
-import {Urls} from "../pages/Urls";
-import {MfaPage} from "../pages/mfa/MfaPage";
-import {FinancrooInvestmentsPage} from "../pages/financroo/investments/FinancrooInvestmentsPage";
-import {FinancrooContributePage} from "../pages/financroo/investments/FinancrooContributePage";
-import {EnvironmentVariables} from "../pages/EnvironmentVariables"
+import {AcpLoginPage} from '../../pages/acp/AcpLoginPage';
+import {FinancrooLoginPage} from '../../pages/financroo/FinancrooLoginPage';
+import {ConsentPage} from '../../pages/consent/ConsentPage';
+import {ErrorPage} from '../../pages/ErrorPage';
+import {FinancrooWelcomePage} from '../../pages/financroo/FinancrooWelcomePage';
+import {FinancrooAccountsPage} from '../../pages/financroo/accounts/FinancrooAccountsPage';
+import {Credentials} from "../../pages/Credentials";
+import {Urls} from "../../pages/Urls";
+import {MfaPage} from "../../pages/mfa/MfaPage";
+import {FinancrooInvestmentsPage} from "../../pages/financroo/investments/FinancrooInvestmentsPage";
+import {FinancrooContributePage} from "../../pages/financroo/investments/FinancrooContributePage";
+import {EnvironmentVariables} from "../../pages/EnvironmentVariables"
 
 describe(`Financroo payments app test`, () => {
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();

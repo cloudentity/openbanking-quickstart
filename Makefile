@@ -3,7 +3,7 @@ export COMPOSE_DOCKER_CLI_BUILD=1
 
 .EXPORT_ALL_VARIABLES: ;
 
-OB_APPS=developer-tpp financroo-tpp consent-page-uk consent-page-br consent-self-service-portal consent-admin-portal bank-uk bank-br
+OB_APPS=developer-tpp financroo-tpp consent-page-uk consent-page-br consent-page-cdr consent-self-service-portal consent-admin-portal bank-uk bank-br
 ACP_APPS=acp crdb redis configuration
 ACP_ONLY_APPS=acp crdb redis
 CDR_ACP_CONFIG_APPS=configuration-cdr
@@ -81,10 +81,22 @@ clean-saas: clean
 run-tests:
 	yarn --cwd tests run cypress open
 
-.PHONY: run-tests-headless
-run-tests-headless:
+
+.PHONY: run-cdr-tests-headless
+run-cdr-tests-headless: run-tests-verify
+	yarn --cwd tests run cypress run -s cypress/integration/cdr/*.ts
+
+.PHONY: run-obuk-tests-headless
+run-obuk-tests-headless: run-tests-verify
+	yarn --cwd tests run cypress run -s cypress/integration/obuk/*.ts
+
+.PHONY: run-obbr-tests-headless
+run-obbr-tests-headless: run-tests-verify
+	yarn --cwd tests run cypress run -s cypress/integration/obbr/*.ts
+
+.PHONY: run-tests-verify 
+run-tests-verify: 
 	yarn --cwd tests run cypress verify
-	yarn --cwd tests run cypress run
 
 .PHONY: enable-mfa
 enable-mfa:

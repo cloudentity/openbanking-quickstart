@@ -1,17 +1,19 @@
-import {AcpLoginPage} from '../pages/acp/AcpLoginPage';
-import {ConsentPage} from '../pages/consent/ConsentPage';
-import {ErrorPage} from '../pages/ErrorPage';
-import {Credentials} from "../pages/Credentials";
-import {ConsentSelfServicePage} from '../pages/consent-self-service/ConsentSelfServicePage';
-import {Urls} from "../pages/Urls";
-import {MfaPage} from "../pages/mfa/MfaPage";
-import {FinancrooLoginPage} from "../pages/financroo/FinancrooLoginPage";
-import {FinancrooWelcomePage} from "../pages/financroo/FinancrooWelcomePage";
-import {FinancrooAccountsPage} from "../pages/financroo/accounts/FinancrooAccountsPage";
-import {FinancrooInvestmentsPage} from "../pages/financroo/investments/FinancrooInvestmentsPage";
-import {FinancrooContributePage} from "../pages/financroo/investments/FinancrooContributePage";
-import {ConsentSelfServiceApplicationPage} from "../pages/consent-self-service/ConsentSelfServiceApplicationPage";
-import {EnvironmentVariables} from "../pages/EnvironmentVariables"
+import {AcpLoginPage} from '../../pages/acp/AcpLoginPage';
+import {ConsentPage} from '../../pages/consent/ConsentPage';
+import {ErrorPage} from '../../pages/ErrorPage';
+import {Credentials} from "../../pages/Credentials";
+import {ConsentSelfServicePage} from '../../pages/consent-self-service/ConsentSelfServicePage';
+import {Urls} from "../../pages/Urls";
+import {MfaPage} from "../../pages/mfa/MfaPage";
+import {FinancrooLoginPage} from "../../pages/financroo/FinancrooLoginPage";
+import {FinancrooWelcomePage} from "../../pages/financroo/FinancrooWelcomePage";
+import {FinancrooAccountsPage} from "../../pages/financroo/accounts/FinancrooAccountsPage";
+import {FinancrooInvestmentsPage} from "../../pages/financroo/investments/FinancrooInvestmentsPage";
+import {FinancrooContributePage} from "../../pages/financroo/investments/FinancrooContributePage";
+import {ConsentSelfServiceApplicationPage} from "../../pages/consent-self-service/ConsentSelfServiceApplicationPage";
+import {EnvironmentVariables} from "../../pages/EnvironmentVariables"
+import { MockDataRecipientPage } from '../../pages/mock-data-recipient/MockDataRecipientPage';
+
 
 describe(`Consent self service app`, () => {
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
@@ -62,7 +64,7 @@ describe(`Consent self service app`, () => {
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
     consentSelfServicePage.clickOnApplicationCard()
     consentSelfServiceApplicationPage.expandAccountsTab()
-    consentSelfServiceApplicationPage.checkAccount()
+    consentSelfServiceApplicationPage.checkAccount("22289")
     consentSelfServiceApplicationPage.expandAccountConsentRow()
   })
 
@@ -70,7 +72,7 @@ describe(`Consent self service app`, () => {
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
     consentSelfServicePage.clickOnApplicationCard()
     consentSelfServiceApplicationPage.expandPaymentsTab()
-    consentSelfServiceApplicationPage.checkAccount()
+    consentSelfServiceApplicationPage.checkAccount("22289")
     consentSelfServiceApplicationPage.expandPaymentConsentRow()
     consentSelfServiceApplicationPage.assertAmount(amount)
   })
