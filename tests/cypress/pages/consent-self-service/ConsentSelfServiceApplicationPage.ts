@@ -22,13 +22,17 @@ export class ConsentSelfServiceApplicationPage {
     cy.get(this.paymentsTabLocator).click();
   }
 
-  public checkAccount(): void {
-    cy.get(this.consentRowAccountsLocator).should("contain.text", "22289")
+  public checkAccount(accountID: string): void {
+    cy.get(this.consentRowAccountsLocator).should("contain.text", accountID)
   }
 
   public expandAccountConsentRow(): void {
     cy.get(this.consentRowLocator).first().click();
     cy.get(this.revokeButtonLocator).should(`contain.text`, `Revoke access`)
+  }
+
+  public assertAccountRevokePopupContainsText(text: string): void {
+    cy.contains(text); 
   }
 
   public expandPaymentConsentRow(): void {
@@ -38,5 +42,15 @@ export class ConsentSelfServiceApplicationPage {
 
   public assertAmount(amount: number): void {
     cy.get(this.transactionDetailsLocator).should(`contain.text`, "£ " + amount.toString())
+  }
+
+  public clickRevokeAccessButton(): void {
+    cy.get(this.revokeButtonLocator).click(); 
+    cy.get('[type="checkbox"]').check()
+    cy.get(this.revokeButtonLocator).click(); 
+  }
+
+  public assertNumberOfConsents(num: number): void {
+    cy.get(this.consentRowAccountsLocator).should('have.length', num)
   }
 }

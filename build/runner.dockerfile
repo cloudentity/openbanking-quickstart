@@ -1,4 +1,4 @@
-FROM golang:1.16 as base
+FROM golang:1.17.2 as base
 ENV GO111MODULE=on
 WORKDIR /code
 RUN go get github.com/go-swagger/go-swagger/cmd/swagger@v0.26.1
