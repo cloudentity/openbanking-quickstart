@@ -1,6 +1,8 @@
 package main
 
 import (
+	"errors"
+
 	cdr "github.com/cloudentity/acp-client-go/clients/openbanking/client/c_d_r"
 	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 	system "github.com/cloudentity/acp-client-go/clients/system/client/clients"
@@ -84,14 +86,20 @@ func (o *OBCDRConsentFetcher) getConsents(response *cdr.ListCDRArrangementsOK) [
 	return consents
 }
 
-func (o *OBCDRConsentFetcher) RevokeConsent(c *gin.Context, id string) (err error) {
-	if _, err = o.Client.Openbanking.Cdr.RevokeCDRArrangementByID(
-		cdr.NewRevokeCDRArrangementByIDParamsWithContext(c).
-			WithWid(o.Config.CDRWorkspaceID).
-			WithArrangementID(id),
-		nil,
-	); err != nil {
-		return err
+func (o *OBCDRConsentFetcher) Revoke(c *gin.Context, revocationType RevocationType, id string) (err error) {
+	switch revocationType {
+	case ClientRevocation:
+		return errors.New("not yet implemented for client id")
+	case ConsentRevocation:
+		if _, err = o.Client.Openbanking.Cdr.RevokeCDRArrangementByID(
+			cdr.NewRevokeCDRArrangementByIDParamsWithContext(c).
+				WithWid(o.Config.CDRWorkspaceID).
+				WithArrangementID(id),
+			nil,
+		); err != nil {
+			return err
+		}
 	}
+
 	return nil
 }

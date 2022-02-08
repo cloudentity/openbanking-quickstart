@@ -105,14 +105,28 @@ func (o *OBUKConsentFetcher) getConsents(resp *obukModels.ListOBConsentsOK) []Co
 	return consents
 }
 
-func (o *OBUKConsentFetcher) RevokeConsent(c *gin.Context, consentID string) (err error) {
-	if _, err = o.Client.Openbanking.Openbankinguk.RevokeOpenbankingConsent(
-		obukModels.NewRevokeOpenbankingConsentParamsWithContext(c).
-			WithWid(o.Config.OpenbankingUKWorkspaceID).
-			WithConsentID(consentID),
-		nil,
-	); err != nil {
-		return err
+func (o *OBUKConsentFetcher) Revoke(c *gin.Context, revocationType RevocationType, id string) (err error) {
+	switch revocationType {
+	case ClientRevocation:
+		if _, err = o.Client.Openbanking.Openbankinguk.RevokeOpenbankingConsents(
+			obukModels.NewRevokeOpenbankingConsentsParamsWithContext(c).
+				WithWid(o.Config.OpenbankingUKWorkspaceID).
+				WithConsentTypes(ConsentTypes).
+				WithClientID(&id),
+			nil,
+		); err != nil {
+			return err
+		}
+	case ConsentRevocation:
+		if _, err = o.Client.Openbanking.Openbankinguk.RevokeOpenbankingConsent(
+			obukModels.NewRevokeOpenbankingConsentParamsWithContext(c).
+				WithWid(o.Config.OpenbankingUKWorkspaceID).
+				WithConsentID(id),
+			nil,
+		); err != nil {
+			return err
+		}
 	}
+
 	return nil
 }

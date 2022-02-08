@@ -83,7 +83,7 @@ type Server struct {
 	Client           acpclient.Client
 	IntrospectClient acpclient.Client
 	BankClient       BankClient
-	ConsentClients   []ConsentFetcher
+	ConsentClients   []ConsentFetchRevoker
 }
 
 func NewServer() (Server, error) {

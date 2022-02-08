@@ -57,7 +57,7 @@ func (s *Server) ListClients() func(*gin.Context) {
 		for _, cc := range s.ConsentClients {
 			var consents []ClientConsents
 			if consents, err = cc.Fetch(c); err != nil {
-				c.String(http.StatusBadRequest, fmt.Sprintf("failed to list clients from acp: %+v", err))
+				c.String(http.StatusBadRequest, fmt.Sprintf("failed to fetch clients: %+v", err))
 				return
 			}
 			clientsWithConsents = append(clientsWithConsents, consents...)
@@ -72,8 +72,12 @@ func (s *Server) ListClients() func(*gin.Context) {
 func (s *Server) RevokeConsent() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			id  = c.Param("id")
-			err error
+			id                  = c.Param("id")
+			canBeRevoked        bool
+			consentType         = c.Query("consent_type")
+			clientsAndConsents  []ClientConsents
+			consentFetchRevoker ConsentFetchRevoker = s.GetConsentClientByConsentType(consentType)
+			err                 error
 		)
 
 		if err = s.IntrospectToken(c); err != nil {
@@ -81,13 +85,30 @@ func (s *Server) RevokeConsent() func(*gin.Context) {
 			return
 		}
 
-		if _, err = s.Client.Openbanking.Openbankinguk.RevokeOpenbankingConsent(
-			obuk.NewRevokeOpenbankingConsentParamsWithContext(c).
-				WithWid(s.Config.SystemClientsServerID).
-				WithConsentID(id),
-			nil,
-		); err != nil {
-			c.String(http.StatusBadRequest, fmt.Sprintf("failed to revoke account access consent: %+v", err))
+		if consentFetchRevoker == nil {
+			c.String(http.StatusBadRequest, fmt.Sprintf("unable to retrieve consent client for consent type [%s]", consentType))
+			return
+		}
+
+		if clientsAndConsents, err = consentFetchRevoker.Fetch(c); err != nil {
+			c.String(http.StatusBadRequest, fmt.Sprintf("failed to fetch clients: %+v", err))
+			return
+		}
+
+		for _, c := range clientsAndConsents {
+			if c.HasConsentID(id) {
+				canBeRevoked = true
+				break
+			}
+		}
+
+		if !canBeRevoked {
+			c.String(http.StatusUnauthorized, fmt.Sprintf("failed to fetch clients: %+v", err))
+			return
+		}
+
+		if err = consentFetchRevoker.Revoke(c, ConsentRevocation, id); err != nil {
+			c.String(http.StatusUnauthorized, fmt.Sprintf("failed to revoke consent: %+v", err))
 			return
 		}
 
@@ -97,28 +118,24 @@ func (s *Server) RevokeConsent() func(*gin.Context) {
 
 func (s *Server) RevokeConsentsForClient() func(*gin.Context) {
 	return func(c *gin.Context) {
-		// var (
-		// 	id  = c.Param("id")
-		// 	err error
-		// )
+		var (
+			id  = c.Param("id")
+			err error
+		)
 
-		// if err = s.IntrospectToken(c); err != nil {
-		// 	c.String(http.StatusBadRequest, err.Error())
-		// 	return
-		// }
+		if err = s.IntrospectToken(c); err != nil {
+			c.String(http.StatusBadRequest, err.Error())
+			return
+		}
 
-		// if _, err = s.Client.Openbanking.Openbankinguk.RevokeOpenbankingConsents(
-		// 	obuk.NewRevokeOpenbankingConsentsParamsWithContext(c).
-		// 		WithWid(s.Config.SystemClientsServerID).
-		// 		WithConsentTypes(ConsentTypes).
-		// 		WithClientID(&id),
-		// 	nil,
-		// ); err != nil {
-		// 	c.String(http.StatusBadRequest, fmt.Sprintf("failed to revoke consents for client: %s, err: %+v", id, err))
-		// 	return
-		// }
+		for _, cc := range s.ConsentClients {
+			if err = cc.Revoke(c, ClientRevocation, id); err != nil {
+				c.String(http.StatusBadRequest, fmt.Sprintf("failed to revoke account access consent: %+v", err))
+				return
+			}
+		}
 
-		// c.Status(http.StatusNoContent)
+		c.Status(http.StatusNoContent)
 	}
 }
 
@@ -133,5 +150,23 @@ func (s *Server) IntrospectToken(c *gin.Context) error {
 		return fmt.Errorf("failed to introspect client: %w", err)
 	}
 
+	return nil
+}
+
+func (s *Server) GetConsentClientByConsentType(consentType string) ConsentFetchRevoker {
+	switch consentType {
+	case "account_access", "domestic_payment":
+		for _, fetcherRevoker := range s.ConsentClients {
+			if _, ok := fetcherRevoker.(*OBUKConsentFetcher); ok {
+				return fetcherRevoker
+			}
+		}
+	case "cdr_arrangement":
+		for _, fetcherRevoker := range s.ConsentClients {
+			if _, ok := fetcherRevoker.(*OBCDRConsentFetcher); ok {
+				return fetcherRevoker
+			}
+		}
+	}
 	return nil
 }

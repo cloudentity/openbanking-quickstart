@@ -32,6 +32,15 @@ type ClientConsents struct {
 	Consents []Consent `json:"consents"`
 }
 
+func (c *ClientConsents) HasConsentID(consentID string) bool {
+	for _, consent := range c.Consents {
+		if consent.ConsentID == consentID {
+			return true
+		}
+	}
+	return false
+}
+
 type Client struct {
 	ID        string `json:"client_id"`
 	Name      string `json:"client_name"`

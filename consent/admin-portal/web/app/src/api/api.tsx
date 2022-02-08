@@ -17,6 +17,6 @@ export const api = {
       query: { consent_types: availableConstentTypesJoined },
     }),
   getConsents: () => base.get({ url: `/consents` }),
-  deleteConsent: ({ id }: { id: string }) =>
-    base.delete({ url: `/consents/${id}`, query: {} }),
+  deleteConsent: ({ id, consent_type }: { id: string, consent_type: string }) =>
+    base.delete({ url: `/consents/${id}`, query: {consent_type: consent_type} }),
 };

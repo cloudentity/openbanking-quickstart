@@ -70,7 +70,7 @@ export default function ThirdPartyProvidersView({
   //     .finally(() => setProgress(false));
   // };
 
-  const handleRevokeClient = (id: string) => {
+  const handleRevokeClient = (id: string, consent_type: string) => {
     setProgress(true);
     api
       .deleteClient({ id })
