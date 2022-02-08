@@ -99,14 +99,14 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const consentTypesMapper = {
-  account_access_consent: "Accounts",
-  domestic_payment_consent: "Payments",
-  domestic_scheduled_payment_consent: "Payments",
-  domestic_standing_order_consent: null,
-  file_payment_consent: "Payments",
-  international_payment_consent: "Payments",
-  international_scheduled_payment_consent: "Payments",
-  international_standing_order_consent: null,
+  account_access: "Accounts",
+  domestic_payment: "Payments",
+  domestic_scheduled_payment: "Payments",
+  domestic_standing_order: null,
+  file_payment: "Payments",
+  international_payment: "Payments",
+  international_scheduled_payment: "Payments",
+  international_standing_order: null,
 };
 
 interface PropTypes {
@@ -141,7 +141,7 @@ export default function AccountClientCard({
   };
 
   const types = rawConsents
-    .map(({ type }) => consentTypesMapper[type] || null)
+    .map(({ consent_type }) => consentTypesMapper[consent_type] || null)
     .filter((v) => v);
 
   const isApplicationListView = accountId && accounts;

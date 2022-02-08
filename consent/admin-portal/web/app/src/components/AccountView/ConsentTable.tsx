@@ -177,27 +177,27 @@ function ConsentTable({ data, type }: Props) {
 
   const rowsAccount =
     type === "account"
-      ? data.map(({ account_access_consent, account_ids }) =>
-          createDataAccount(
-            getDate(account_access_consent?.CreationDateTime),
-            account_ids.join(", "),
-            account_access_consent?.Status,
-            getDate(account_access_consent?.ExpirationDateTime),
-            account_access_consent?.ConsentId
-          )
+      ? data.map(({ created_at, account_ids, status, expires_at, consent_id }) =>
+      createDataAccount(
+        getDate(created_at),
+        account_ids.join(", "),
+        status,
+        getDate(expires_at),
+        consent_id
+      )
         )
       : [];
 
   const rowsPayment =
     type === "payment"
-      ? data.map(({ domestic_payment_consent, account_ids }) =>
+      ? data.map(({ domestic_payment, account_ids }) =>
           createDataPayment(
-            getDate(domestic_payment_consent?.CreationDateTime),
+            getDate(domestic_payment?.created_at),
             account_ids.join(", "),
-            domestic_payment_consent?.Initiation?.CreditorAccount?.Name,
-            domestic_payment_consent?.Status,
-            domestic_payment_consent?.Initiation?.InstructedAmount?.Amount,
-            domestic_payment_consent?.ConsentId
+            domestic_payment?.Initiation?.CreditorAccount?.Name,
+            domestic_payment?.status,
+            domestic_payment?.Initiation?.InstructedAmount?.Amount,
+            domestic_payment?.consent_id
           )
         )
       : [];
