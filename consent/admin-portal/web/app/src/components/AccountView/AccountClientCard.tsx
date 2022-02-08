@@ -129,7 +129,9 @@ export default function AccountClientCard({
   const rawConsents = getRawConsents(client?.consents ?? []);
 
   const accountAccessConsent = rawConsents.find(
-    (v) => v?.type === "account_access"
+    (v) => {
+      return v?.consent_type === "account_access"
+    }
   );
 
   const permissionDates = {

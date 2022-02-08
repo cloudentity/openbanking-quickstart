@@ -58,10 +58,10 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 function getAuthorisedDate(client) {
   const accountAccessConsent = client?.consents?.find(
-    (v) => v.type === "account_access"
+    (v) => v.consent_type === "account_access"
   );
   if (accountAccessConsent) {
-    const date = accountAccessConsent?.account_access_consent?.CreationDateTime;
+    const date = accountAccessConsent?.created_at;
     return getDate(date);
   }
   return "N/A";

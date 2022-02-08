@@ -213,17 +213,9 @@ const availableConstentTypes = [
 export const availableConstentTypesJoined = availableConstentTypes.join(",");
 
 export function getRawConsents(consents) {
-  return consents.reduce((acc, consent) => {
-    // show not null consent with type from availableConstentTypes
-    const consents = Object.entries(consent)
-      .map(([key, value]: [key: string, value: any]) =>
-      availableConstentTypes.includes(key) && value?.consent_id
-      ? { type: key, consent: value, accounts: consent?.account_ids ?? [] }
-      : null
-      )
-      .filter((v) => v);
-    return [...acc, ...consents];
-  }, []);
+  return consents.filter(c => availableConstentTypes.includes(c.consent_type)).map(c => {
+    return { consent_type: c.consent_type, consent: c, accounts: c?.account_ids ?? [] }
+  })
 }
 
 export enum ConsentStatus {
