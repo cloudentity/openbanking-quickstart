@@ -119,8 +119,10 @@ func (s *Server) RevokeConsent() func(*gin.Context) {
 func (s *Server) RevokeConsentsForClient() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			id  = c.Param("id")
-			err error
+			id                                      = c.Param("id")
+			providerType                            = c.Query("provider_type")
+			consentFetchRevoker ConsentFetchRevoker = s.GetConsentClientByProviderType(providerType)
+			err                 error
 		)
 
 		if err = s.IntrospectToken(c); err != nil {
@@ -128,11 +130,14 @@ func (s *Server) RevokeConsentsForClient() func(*gin.Context) {
 			return
 		}
 
-		for _, cc := range s.ConsentClients {
-			if err = cc.Revoke(c, ClientRevocation, id); err != nil {
-				c.String(http.StatusBadRequest, fmt.Sprintf("failed to revoke account access consent: %+v", err))
-				return
-			}
+		if consentFetchRevoker == nil {
+			c.String(http.StatusBadRequest, fmt.Sprintf("unable to retrieve consent client for consent type [%s]", providerType))
+			return
+		}
+
+		if err = consentFetchRevoker.Revoke(c, ClientRevocation, id); err != nil {
+			c.String(http.StatusUnauthorized, fmt.Sprintf("failed to revoke consent: %+v", err))
+			return
 		}
 
 		c.Status(http.StatusNoContent)
@@ -162,6 +167,24 @@ func (s *Server) GetConsentClientByConsentType(consentType string) ConsentFetchR
 			}
 		}
 	case "cdr_arrangement":
+		for _, fetcherRevoker := range s.ConsentClients {
+			if _, ok := fetcherRevoker.(*OBCDRConsentFetcher); ok {
+				return fetcherRevoker
+			}
+		}
+	}
+	return nil
+}
+
+func (s *Server) GetConsentClientByProviderType(providerType string) ConsentFetchRevoker {
+	switch providerType {
+	case string(OBUK):
+		for _, fetcherRevoker := range s.ConsentClients {
+			if _, ok := fetcherRevoker.(*OBUKConsentFetcher); ok {
+				return fetcherRevoker
+			}
+		}
+	case string(CDR):
 		for _, fetcherRevoker := range s.ConsentClients {
 			if _, ok := fetcherRevoker.(*OBCDRConsentFetcher); ok {
 				return fetcherRevoker

@@ -99,10 +99,10 @@ export default function AccountViewDetails({
     }
   }, [clients, clientId, id]);
 
-  const handleRevokeClient = (id: string) => {
+  const handleRevokeClient = (id: string, provider_type: string) => {
     setProgress(true);
     api
-      .deleteClient({ id })
+      .deleteClient({ id, provider_type })
       .then(fetchClients)
       .then((res) => setClients(res.clients || []))
       .catch((err) => console.log(err))

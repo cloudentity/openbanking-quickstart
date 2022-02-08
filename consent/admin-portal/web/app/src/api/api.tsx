@@ -11,10 +11,10 @@ export const api = {
       url: `/${tenantId}/${authorizationServerId}/userinfo`,
     }),
   getClients: () => base.get({ url: `/clients` }),
-  deleteClient: ({ id }: { id: string }) =>
+  deleteClient: ({ id, provider_type }: { id: string, provider_type: string }) =>
     base.delete({
       url: `/clients/${id}`,
-      query: { consent_types: availableConstentTypesJoined },
+      query: { consent_types: availableConstentTypesJoined, provider_type: provider_type },
     }),
   getConsents: () => base.get({ url: `/consents` }),
   deleteConsent: ({ id, consent_type }: { id: string, consent_type: string }) =>

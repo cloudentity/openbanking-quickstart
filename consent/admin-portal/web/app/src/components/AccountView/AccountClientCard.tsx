@@ -113,7 +113,7 @@ interface PropTypes {
   client?: ClientType;
   accountId?: string;
   accounts?: string[];
-  onRevokeClient?: (id: string) => void;
+  onRevokeClient?: (id: string, provider_type: string) => void;
 }
 
 export default function AccountClientCard({
@@ -217,7 +217,7 @@ export default function AccountClientCard({
           onConfirm={() =>
             client?.client_id &&
             onRevokeClient &&
-            onRevokeClient(client?.client_id)
+            onRevokeClient(client?.client_id, client?.provider_type)
           }
           client={client}
         />

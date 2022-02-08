@@ -42,10 +42,11 @@ func (c *ClientConsents) HasConsentID(consentID string) bool {
 }
 
 type Client struct {
-	ID        string `json:"client_id"`
-	Name      string `json:"client_name"`
-	LogoURI   string `json:"logo_uri"`
-	ClientURI string `json:"client_uri"`
+	ID           string `json:"client_id"`
+	Name         string `json:"client_name"`
+	LogoURI      string `json:"logo_uri"`
+	ClientURI    string `json:"client_uri"`
+	ProviderType string `json:"provider_type"`
 }
 
 type Clients []Client

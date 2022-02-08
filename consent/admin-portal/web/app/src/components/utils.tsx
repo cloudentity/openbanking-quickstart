@@ -202,12 +202,13 @@ export const permissionsDict = {
 const availableConstentTypes = [
   "account_access",
   "domestic_payment",
-  "domestic_scheduled_payment_consent",
-  "domestic_standing_order_consent",
-  "file_payment_consent",
-  "international_payment_consent",
-  "international_scheduled_payment_consent",
-  "international_standing_order_consent",
+  "cdr_arrangement",
+  "domestic_scheduled_payment",
+  "domestic_standing_order",
+  "file_payment",
+  "international_payment",
+  "international_scheduled_payment",
+  "international_standing_order",
 ];
 
 export const availableConstentTypesJoined = availableConstentTypes.join(",");
@@ -257,6 +258,7 @@ export type ClientType = {
   client_id: string;
   client_name: string;
   client_uri: string;
+  provider_type: string;
   consents: {
     Client: {
       client_uri: string;

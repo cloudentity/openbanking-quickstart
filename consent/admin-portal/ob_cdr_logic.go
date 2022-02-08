@@ -1,8 +1,6 @@
 package main
 
 import (
-	"errors"
-
 	cdr "github.com/cloudentity/acp-client-go/clients/openbanking/client/c_d_r"
 	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 	system "github.com/cloudentity/acp-client-go/clients/system/client/clients"
@@ -48,8 +46,9 @@ func (o *OBCDRConsentFetcher) Fetch(c *gin.Context) ([]ClientConsents, error) {
 
 		if !oc.System {
 			clientConsent := ClientConsents{Client: Client{
-				ID:   oc.ClientID,
-				Name: oc.ClientName,
+				ID:           oc.ClientID,
+				Name:         oc.ClientName,
+				ProviderType: string(CDR),
 			}}
 			clientConsent.Consents = o.getConsents(consents)
 			clientConsents = append(clientConsents, clientConsent)
@@ -58,6 +57,31 @@ func (o *OBCDRConsentFetcher) Fetch(c *gin.Context) ([]ClientConsents, error) {
 	}
 
 	return clientConsents, nil
+}
+
+func (o *OBCDRConsentFetcher) Revoke(c *gin.Context, revocationType RevocationType, id string) (err error) {
+	switch revocationType {
+	case ClientRevocation:
+		if _, err = o.Client.Openbanking.Cdr.RevokeCDRArrangements(
+			cdr.NewRevokeCDRArrangementsParamsWithContext(c).
+				WithClientID(&id),
+			nil,
+		); err != nil {
+			return err
+		}
+
+	case ConsentRevocation:
+		if _, err = o.Client.Openbanking.Cdr.RevokeCDRArrangementByID(
+			cdr.NewRevokeCDRArrangementByIDParamsWithContext(c).
+				WithWid(o.Config.CDRWorkspaceID).
+				WithArrangementID(id),
+			nil,
+		); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (o *OBCDRConsentFetcher) getConsents(response *cdr.ListCDRArrangementsOK) []Consent {
@@ -84,22 +108,4 @@ func (o *OBCDRConsentFetcher) getConsents(response *cdr.ListCDRArrangementsOK) [
 		})
 	}
 	return consents
-}
-
-func (o *OBCDRConsentFetcher) Revoke(c *gin.Context, revocationType RevocationType, id string) (err error) {
-	switch revocationType {
-	case ClientRevocation:
-		return errors.New("not yet implemented for client id")
-	case ConsentRevocation:
-		if _, err = o.Client.Openbanking.Cdr.RevokeCDRArrangementByID(
-			cdr.NewRevokeCDRArrangementByIDParamsWithContext(c).
-				WithWid(o.Config.CDRWorkspaceID).
-				WithArrangementID(id),
-			nil,
-		); err != nil {
-			return err
-		}
-	}
-
-	return nil
 }

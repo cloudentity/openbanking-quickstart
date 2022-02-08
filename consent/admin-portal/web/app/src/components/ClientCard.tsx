@@ -69,7 +69,7 @@ function getAuthorisedDate(client) {
 
 interface PropTypes {
   client: ClientType;
-  onRevokeClient: (id: string) => void;
+  onRevokeClient: (id: string, provider_type: string) => void;
 }
 
 export default function ClientCard({ client, onRevokeClient }: PropTypes) {
@@ -121,7 +121,7 @@ export default function ClientCard({ client, onRevokeClient }: PropTypes) {
           onConfirm={() =>
             client?.client_id &&
             onRevokeClient &&
-            onRevokeClient(client?.client_id)
+            onRevokeClient(client?.client_id, client?.provider_type)
           }
           client={client}
         />

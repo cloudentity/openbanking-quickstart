@@ -47,8 +47,9 @@ func (o *OBUKConsentFetcher) Fetch(c *gin.Context) ([]ClientConsents, error) {
 
 		if !oc.System {
 			clientConsent := ClientConsents{Client: Client{
-				ID:   oc.ClientID,
-				Name: oc.ClientName,
+				ID:           oc.ClientID,
+				Name:         oc.ClientName,
+				ProviderType: string(OBUK),
 			}}
 			clientConsent.Consents = o.getConsents(consents)
 			clientConsents = append(clientConsents, clientConsent)
@@ -57,6 +58,32 @@ func (o *OBUKConsentFetcher) Fetch(c *gin.Context) ([]ClientConsents, error) {
 	}
 
 	return clientConsents, nil
+}
+
+func (o *OBUKConsentFetcher) Revoke(c *gin.Context, revocationType RevocationType, id string) (err error) {
+	switch revocationType {
+	case ClientRevocation:
+		if _, err = o.Client.Openbanking.Openbankinguk.RevokeOpenbankingConsents(
+			obukModels.NewRevokeOpenbankingConsentsParamsWithContext(c).
+				WithWid(o.Config.OpenbankingUKWorkspaceID).
+				WithConsentTypes(ConsentTypes).
+				WithClientID(&id),
+			nil,
+		); err != nil {
+			return err
+		}
+	case ConsentRevocation:
+		if _, err = o.Client.Openbanking.Openbankinguk.RevokeOpenbankingConsent(
+			obukModels.NewRevokeOpenbankingConsentParamsWithContext(c).
+				WithWid(o.Config.OpenbankingUKWorkspaceID).
+				WithConsentID(id),
+			nil,
+		); err != nil {
+			return err
+		}
+	}
+
+	return nil
 }
 
 func (o *OBUKConsentFetcher) getConsents(resp *obukModels.ListOBConsentsOK) []Consent {
@@ -103,30 +130,4 @@ func (o *OBUKConsentFetcher) getConsents(resp *obukModels.ListOBConsentsOK) []Co
 	}
 
 	return consents
-}
-
-func (o *OBUKConsentFetcher) Revoke(c *gin.Context, revocationType RevocationType, id string) (err error) {
-	switch revocationType {
-	case ClientRevocation:
-		if _, err = o.Client.Openbanking.Openbankinguk.RevokeOpenbankingConsents(
-			obukModels.NewRevokeOpenbankingConsentsParamsWithContext(c).
-				WithWid(o.Config.OpenbankingUKWorkspaceID).
-				WithConsentTypes(ConsentTypes).
-				WithClientID(&id),
-			nil,
-		); err != nil {
-			return err
-		}
-	case ConsentRevocation:
-		if _, err = o.Client.Openbanking.Openbankinguk.RevokeOpenbankingConsent(
-			obukModels.NewRevokeOpenbankingConsentParamsWithContext(c).
-				WithWid(o.Config.OpenbankingUKWorkspaceID).
-				WithConsentID(id),
-			nil,
-		); err != nil {
-			return err
-		}
-	}
-
-	return nil
 }
