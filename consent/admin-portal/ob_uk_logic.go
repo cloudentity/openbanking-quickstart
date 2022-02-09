@@ -1,11 +1,12 @@
 package main
 
 import (
+	"github.com/gin-gonic/gin"
+	"github.com/go-openapi/strfmt"
+
 	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
 	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 	system "github.com/cloudentity/acp-client-go/clients/system/client/clients"
-	"github.com/gin-gonic/gin"
-	"github.com/go-openapi/strfmt"
 )
 
 type OBUKConsentFetcher struct {

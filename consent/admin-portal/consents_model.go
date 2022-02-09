@@ -49,7 +49,7 @@ type Client struct {
 	ProviderType string `json:"provider_type"`
 }
 
-type Clients []Client
+type Clients []Client // nolint
 
 func (c Clients) Unique() []Client {
 	var clients []Client
