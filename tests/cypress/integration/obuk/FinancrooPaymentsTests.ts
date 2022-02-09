@@ -10,6 +10,7 @@ import {MfaPage} from "../../pages/mfa/MfaPage";
 import {FinancrooInvestmentsPage} from "../../pages/financroo/investments/FinancrooInvestmentsPage";
 import {FinancrooContributePage} from "../../pages/financroo/investments/FinancrooContributePage";
 import {EnvironmentVariables} from "../../pages/EnvironmentVariables"
+import { FinancrooModalPage } from '../../pages/financroo/accounts/FinancrooModalPage';
 
 describe(`Financroo payments app test`, () => {
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
@@ -17,6 +18,7 @@ describe(`Financroo payments app test`, () => {
   const errorPage: ErrorPage = new ErrorPage();
   const financrooLoginPage: FinancrooLoginPage = new FinancrooLoginPage();
   const financrooWelcomePage: FinancrooWelcomePage = new FinancrooWelcomePage();
+  const financrooModalPage: FinancrooModalPage = new FinancrooModalPage();
   const financrooAccountsPage: FinancrooAccountsPage = new FinancrooAccountsPage();
   const financrooInvestmentsPage: FinancrooInvestmentsPage = new FinancrooInvestmentsPage();
   const financrooContributePage: FinancrooContributePage = new FinancrooContributePage();
@@ -37,6 +39,7 @@ describe(`Financroo payments app test`, () => {
       mfaPage.typePin()
     }
     consentPage.confirm()
+    financrooModalPage.assertThatModalIsDisplayed()
   });
 
   it(`Happy path with confirm consent to add new amount`, () => {
