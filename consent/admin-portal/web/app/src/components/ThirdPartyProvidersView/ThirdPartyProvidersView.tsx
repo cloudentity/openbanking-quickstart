@@ -75,7 +75,10 @@ export default function ThirdPartyProvidersView({
     api
       .deleteClient({ id, provider_type })
       .then(api.getClients)
-      .then((res) => setClients(res.clients || []))
+      .then((res) => {
+        console.log(res)
+        setClients(res.clients || [])
+      })
       .catch((err) => console.log(err))
       .finally(() => setProgress(false));
   };

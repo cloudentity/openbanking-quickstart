@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 
@@ -125,15 +126,18 @@ func (s *Server) RevokeConsentsForClient() func(*gin.Context) {
 			err                 error
 		)
 
+		log.Println("in revoke consents for client")
 		if err = s.IntrospectToken(c); err != nil {
 			c.String(http.StatusBadRequest, err.Error())
 			return
 		}
+		log.Println("past introspect token")
 
 		if consentFetchRevoker == nil {
 			c.String(http.StatusBadRequest, fmt.Sprintf("unable to retrieve consent client for consent type [%s]", providerType))
 			return
 		}
+		log.Println("about to revoke")
 
 		if err = consentFetchRevoker.Revoke(c, ClientRevocation, id); err != nil {
 			c.String(http.StatusUnauthorized, fmt.Sprintf("failed to revoke consent: %+v", err))

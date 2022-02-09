@@ -53,7 +53,6 @@ func (o *OBUKConsentFetcher) Fetch(c *gin.Context) ([]ClientConsents, error) {
 			}}
 			clientConsent.Consents = o.getConsents(consents)
 			clientConsents = append(clientConsents, clientConsent)
-
 		}
 	}
 

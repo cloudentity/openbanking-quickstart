@@ -174,7 +174,6 @@ function ConsentTable({ data, type }: Props) {
   ) {
     return { authorised, account, creditor, status, amount, id };
   }
-
   const rowsAccount =
     type === "account"
       ? data.map(({ created_at, account_ids, status, expires_at, consent_id }) =>

@@ -100,6 +100,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 const consentTypesMapper = {
   account_access: "Accounts",
+  cdr_arrangement: "Accounts", // TODO what should this map to
   domestic_payment: "Payments",
   domestic_scheduled_payment: "Payments",
   domestic_standing_order: null,
@@ -130,7 +131,7 @@ export default function AccountClientCard({
 
   const accountAccessConsent = rawConsents.find(
     (v) => {
-      return v?.consent_type === "account_access"
+      return v?.consent_type === "account_access" || v?.consent_type === "cdr_arrangement"
     }
   );
 
@@ -141,7 +142,9 @@ export default function AccountClientCard({
   };
 
   const types = rawConsents
-    .map(({ consent_type }) => consentTypesMapper[consent_type] || null)
+    .map(({ consent_type }) => {
+      return consentTypesMapper[consent_type] || null
+    })
     .filter((v) => v);
 
   const isApplicationListView = accountId && accounts;

@@ -133,7 +133,9 @@ export default function AccountView({
                 <CustomTabs
                   tabs={searchTabs(
                     (searchText) =>
-                      handleSearch(searchText)(history, state?.accounts),
+                      {
+                        handleSearch(searchText)(history, state?.accounts)
+                      },
                     id
                   )}
                 />

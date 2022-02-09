@@ -53,12 +53,11 @@ export default function ConsentManagementView({
       .getClients()
       .then(({ clients }: { clients: ClientType[] }) => {
         setClients(clients || []);
-
         const accountIdToClients = clients?.reduce((clientsAcc, client) => {
-          const { client_id, consents } = client;          
+          const { client_id, consents } = client;               
           return mergeWith(
             clientsAcc,
-            consents
+            (consents ?? [])
               .flatMap((v) => v.account_ids)
               .reduce(
                 (accountsIdsAcc, accountId) => ({
@@ -69,11 +68,10 @@ export default function ConsentManagementView({
                   ]),
                 }),
                 {}
-              ),
+              ), [],
             mergeCustomizer
           );
         }, {});
-
         setAccounts(accountIdToClients);
       })
       .catch((err) => console.log(err))

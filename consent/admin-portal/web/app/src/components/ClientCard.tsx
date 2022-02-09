@@ -58,7 +58,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 
 function getAuthorisedDate(client) {
   const accountAccessConsent = client?.consents?.find(
-    (v) => v.consent_type === "account_access"
+    (v) => {
+      return v.consent_type === "account_access" || v.consent_type === "cdr_arrangement"
+    }
   );
   if (accountAccessConsent) {
     const date = accountAccessConsent?.created_at;
@@ -77,7 +79,6 @@ export default function ClientCard({ client, onRevokeClient }: PropTypes) {
   const date = getAuthorisedDate(client);
   const [openDrawer, setOpenDrawer] = useState(false);
   const status = client?.mainStatus;
-
   return (
     <div
       className={clsx(
