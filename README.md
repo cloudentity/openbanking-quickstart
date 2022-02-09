@@ -36,7 +36,7 @@ To run tests:
 - To run in Open Banking UK mode: run `make enable-spec-obuk run` if running locally. Run `make enable-spec-obuk run-apps-with-saas` if running with saas
 - To run in Open Banking Brasil mode: run `make enable-spec-obbr run` if running locally. Run `make enable-spec-obbr run-apps-with-saas` if running with saas
 ## Credentials
-- ACP admin portal: `https://localhost:8443/app/default/admin` `admin / admin`
+- ACP admin portal: `https://authorization.cloudentity.com:8443` `admin / admin`
 - Developer TPP: `https://localhost:8090` `user | user2 | user3 / p@ssw0rd!`
 - Financroo TPP: `https://localhost:8091` `test / p@ssw0rd!`
 - Consent self service portal: `https://localhost:8085` `user | user2 | user3 / p@ssw0rd!`

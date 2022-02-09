@@ -360,6 +360,7 @@ services:
       - REDIS_ENABLED=true
       - REDIS_ADDRESS=redis:6379
       - FEATURES_CIBA=true
+      - FEATURES_AUDIT_EVENTS_UI=true
     command:
       - server
       - start
