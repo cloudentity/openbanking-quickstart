@@ -9,6 +9,7 @@ export class FinancrooModalPage {
         cy.get(this.modalContentLabel).should('contain.text', 'Your Go Bank account(s) has been successfully connected to Financroo');
         cy.get(this.cancelButton).should('have.text', 'Cancel');
         cy.get(this.startInvestingButton).should('have.text', 'Start investing');
+        this.interceptAccountsRequest()
     }
 
     public close(): void {
@@ -31,4 +32,17 @@ export class FinancrooModalPage {
         cy.get(this.cancelButton).should('be.visible', false);
         cy.get(this.startInvestingButton).should('be.visible', false);
     }
+
+    private interceptAccountsRequest(): void {
+        cy.intercept('GET', '/api/accounts').as('getAccounts')
+        cy.wait('@getAccounts', { timeout: 5000 })
+        .then((xhr) => {
+            cy.log(JSON.stringify(xhr.response.body))
+        })
+        .then((interception) => {
+            assert.isNotNull(interception.response.body, 'GET accounts api call has data')
+            assert.hasAnyKeys(interception.response.body, ['accounts'], 'GET accounts api call has accounts data')
+        })
+    }
+
 }
