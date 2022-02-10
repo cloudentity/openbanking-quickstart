@@ -5,11 +5,11 @@ export class FinancrooModalPage {
     private readonly startInvestingButton: string = `#start-investing-button`
 
     public assertThatModalIsDisplayed(): void {
+        this.interceptAccountsRequest()
         cy.get(this.closeIcon).should('be.visible');
         cy.get(this.modalContentLabel).should('contain.text', 'Your Go Bank account(s) has been successfully connected to Financroo');
         cy.get(this.cancelButton).should('have.text', 'Cancel');
         cy.get(this.startInvestingButton).should('have.text', 'Start investing');
-        this.interceptAccountsRequest()
     }
 
     public close(): void {
