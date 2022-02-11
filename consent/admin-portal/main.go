@@ -14,11 +14,21 @@ import (
 	acpclient "github.com/cloudentity/acp-client-go"
 )
 
+type Spec string
+
+const (
+	OBUK Spec = "obuk"
+	CDR  Spec = "cdr"
+)
+
+var Specs = []Spec{OBUK, CDR}
+
 type Config struct {
 	SystemClientID              string        `env:"SYSTEM_CLIENT_ID,required"`
 	SystemClientSecret          string        `env:"SYSTEM_CLIENT_SECRET,required"`
 	SystemIssuerURL             *url.URL      `env:"SYSTEM_ISSUER_URL,required"`
-	SystemClientsServerID       string        `env:"SYSTEM_CLIENTS_SERVER_ID,required"`
+	OpenbankingUKWorkspaceID    string        `env:"OPENBANKING_UK_WORKSPACE_ID,required"`
+	CDRWorkspaceID              string        `env:"CDR_WORKSPACE_ID,required"`
 	Timeout                     time.Duration `env:"TIMEOUT" envDefault:"5s"`
 	RootCA                      string        `env:"ROOT_CA"`
 	CertFile                    string        `env:"CERT_FILE,required"`
@@ -73,6 +83,7 @@ type Server struct {
 	Client           acpclient.Client
 	IntrospectClient acpclient.Client
 	BankClient       BankClient
+	ConsentClients   []ConsentFetchRevoker
 }
 
 func NewServer() (Server, error) {
@@ -91,6 +102,10 @@ func NewServer() (Server, error) {
 
 	if server.IntrospectClient, err = acpclient.New(server.Config.IntrospectClientConfig()); err != nil {
 		return server, errors.Wrapf(err, "failed to init introspect acp client")
+	}
+
+	for _, spec := range Specs {
+		server.ConsentClients = append(server.ConsentClients, ConsentFetcherFactory(spec, &server))
 	}
 
 	server.BankClient = NewBankClient(server.Config)

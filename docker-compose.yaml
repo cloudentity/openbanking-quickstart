@@ -275,6 +275,8 @@ services:
       - CERT_FILE=/bank_cert.pem
       - KEY_FILE=/bank_key.pem
       - ROOT_CA=/ca.pem
+      - OPENBANKING_UK_WORKSPACE_ID=openbanking
+      - CDR_WORKSPACE_ID=cdr
       - BANK_URL=http://bank:8070
       - LOGIN_AUTHORIZATION_SERVER_URL=${ACP_URL}
       - LOGIN_AUTHORIZATION_SERVER_ID=bank-admins

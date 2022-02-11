@@ -99,21 +99,22 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const consentTypesMapper = {
-  account_access_consent: "Accounts",
-  domestic_payment_consent: "Payments",
-  domestic_scheduled_payment_consent: "Payments",
-  domestic_standing_order_consent: null,
-  file_payment_consent: "Payments",
-  international_payment_consent: "Payments",
-  international_scheduled_payment_consent: "Payments",
-  international_standing_order_consent: null,
+  account_access: "Accounts",
+  cdr_arrangement: "Accounts", // TODO what should this map to
+  domestic_payment: "Payments",
+  domestic_scheduled_payment: "Payments",
+  domestic_standing_order: null,
+  file_payment: "Payments",
+  international_payment: "Payments",
+  international_scheduled_payment: "Payments",
+  international_standing_order: null,
 };
 
 interface PropTypes {
   client?: ClientType;
   accountId?: string;
   accounts?: string[];
-  onRevokeClient?: (id: string) => void;
+  onRevokeClient?: (id: string, provider_type: string) => void;
 }
 
 export default function AccountClientCard({
@@ -129,17 +130,21 @@ export default function AccountClientCard({
   const rawConsents = getRawConsents(client?.consents ?? []);
 
   const accountAccessConsent = rawConsents.find(
-    (v) => v?.type === "account_access_consent"
+    (v) => {
+      return v?.consent_type === "account_access" || v?.consent_type === "cdr_arrangement"
+    }
   );
 
   const permissionDates = {
-    authorised: getDate(accountAccessConsent?.consent?.CreationDateTime),
-    lastUpdated: getDate(accountAccessConsent?.consent?.StatusUpdateDateTime),
-    activeUntil: getDate(accountAccessConsent?.consent?.ExpirationDateTime),
+    authorised: getDate(accountAccessConsent?.consent?.created_at),
+    lastUpdated: getDate(accountAccessConsent?.consent?.updated_at),
+    activeUntil: getDate(accountAccessConsent?.consent?.expires_at),
   };
 
   const types = rawConsents
-    .map(({ type }) => consentTypesMapper[type] || null)
+    .map(({ consent_type }) => {
+      return consentTypesMapper[consent_type] || null
+    })
     .filter((v) => v);
 
   const isApplicationListView = accountId && accounts;
@@ -215,7 +220,7 @@ export default function AccountClientCard({
           onConfirm={() =>
             client?.client_id &&
             onRevokeClient &&
-            onRevokeClient(client?.client_id)
+            onRevokeClient(client?.client_id, client?.provider_type)
           }
           client={client}
         />

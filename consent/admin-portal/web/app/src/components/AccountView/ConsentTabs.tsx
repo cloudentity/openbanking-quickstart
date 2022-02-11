@@ -76,13 +76,15 @@ function ConsentTabs({ consents, id }: Props) {
       <div>
         {tab === "account" && (
           <ConsentTable
-            data={consents.filter((v) => v.type === "account_access")}
+            data={consents.filter((v) => {
+              return v.consent_type === "account_access" || v.consent_type === "cdr_arrangement"
+            })}
             type="account"
           />
         )}
         {tab === "payment" && (
           <ConsentTable
-            data={consents.filter((v) => v.type === "domestic_payment")}
+            data={consents.filter((v) => v.consent_type === "domestic_payment")}
             type="payment"
           />
         )}

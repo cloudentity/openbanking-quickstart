@@ -8,9 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 
 	o2Params "github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
-	obuk "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
-	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
-	system "github.com/cloudentity/acp-client-go/clients/system/client/clients"
 )
 
 const (
@@ -41,22 +38,14 @@ func (s *Server) Index() func(*gin.Context) {
 	}
 }
 
-type Client struct {
-	ID       string                            `json:"client_id"`
-	Name     string                            `json:"client_name,omitempty"`
-	Consents []*obModels.OBUKConsentWithClient `json:"consents"`
-}
-
 type ListClientsResponse struct {
-	Clients []Client `json:"clients"`
+	Clients []ClientConsents `json:"clients"`
 }
 
 func (s *Server) ListClients() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			cs                  *system.ListClientsSystemOK
-			consents            *obuk.ListOBConsentsOK
-			clientsWithConsents []Client
+			clientsWithConsents []ClientConsents
 			err                 error
 		)
 
@@ -65,35 +54,13 @@ func (s *Server) ListClients() func(*gin.Context) {
 			return
 		}
 
-		if cs, err = s.Client.System.Clients.ListClientsSystem(
-			system.NewListClientsSystemParamsWithContext(c).
-				WithWid(s.Config.SystemClientsServerID),
-			nil,
-		); err != nil {
-			c.String(http.StatusBadRequest, fmt.Sprintf("failed to list clients from acp: %+v", err))
-			return
-		}
-
-		for _, oc := range cs.Payload.Clients {
-			if consents, err = s.Client.Openbanking.Openbankinguk.ListOBConsents(
-				obuk.NewListOBConsentsParamsWithContext(c).
-					WithWid(s.Config.SystemClientsServerID).
-					WithConsentsRequest(&obModels.ConsentsRequest{
-						ClientID: oc.ClientID,
-					}),
-				nil,
-			); err != nil {
-				c.String(http.StatusBadRequest, fmt.Sprintf("failed to list consents for client: %s, err: %+v", oc.ClientID, err))
+		for _, cc := range s.ConsentClients {
+			var consents []ClientConsents
+			if consents, err = cc.Fetch(c); err != nil {
+				c.String(http.StatusBadRequest, fmt.Sprintf("failed to fetch clients: %+v", err))
 				return
 			}
-
-			if !oc.System {
-				clientsWithConsents = append(clientsWithConsents, Client{
-					ID:       oc.ClientID,
-					Name:     oc.ClientName,
-					Consents: consents.Payload.Consents,
-				})
-			}
+			clientsWithConsents = append(clientsWithConsents, consents...)
 		}
 
 		resp := ListClientsResponse{Clients: clientsWithConsents}
@@ -105,8 +72,12 @@ func (s *Server) ListClients() func(*gin.Context) {
 func (s *Server) RevokeConsent() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			id  = c.Param("id")
-			err error
+			id                  = c.Param("id")
+			canBeRevoked        bool
+			consentType         = c.Query("consent_type")
+			clientsAndConsents  []ClientConsents
+			consentFetchRevoker ConsentFetchRevoker = s.GetConsentClientByConsentType(consentType)
+			err                 error
 		)
 
 		if err = s.IntrospectToken(c); err != nil {
@@ -114,13 +85,30 @@ func (s *Server) RevokeConsent() func(*gin.Context) {
 			return
 		}
 
-		if _, err = s.Client.Openbanking.Openbankinguk.RevokeOpenbankingConsent(
-			obuk.NewRevokeOpenbankingConsentParamsWithContext(c).
-				WithWid(s.Config.SystemClientsServerID).
-				WithConsentID(id),
-			nil,
-		); err != nil {
-			c.String(http.StatusBadRequest, fmt.Sprintf("failed to revoke account access consent: %+v", err))
+		if consentFetchRevoker == nil {
+			c.String(http.StatusBadRequest, fmt.Sprintf("unable to retrieve consent client for consent type [%s]", consentType))
+			return
+		}
+
+		if clientsAndConsents, err = consentFetchRevoker.Fetch(c); err != nil {
+			c.String(http.StatusBadRequest, fmt.Sprintf("failed to fetch clients: %+v", err))
+			return
+		}
+
+		for _, c := range clientsAndConsents {
+			if c.HasConsentID(id) {
+				canBeRevoked = true
+				break
+			}
+		}
+
+		if !canBeRevoked {
+			c.String(http.StatusUnauthorized, fmt.Sprintf("failed to fetch clients: %+v", err))
+			return
+		}
+
+		if err = consentFetchRevoker.Revoke(c, ConsentRevocation, id); err != nil {
+			c.String(http.StatusUnauthorized, fmt.Sprintf("failed to revoke consent: %+v", err))
 			return
 		}
 
@@ -131,8 +119,10 @@ func (s *Server) RevokeConsent() func(*gin.Context) {
 func (s *Server) RevokeConsentsForClient() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			id  = c.Param("id")
-			err error
+			id                                      = c.Param("id")
+			providerType                            = c.Query("provider_type")
+			consentFetchRevoker ConsentFetchRevoker = s.GetConsentClientByProviderType(providerType)
+			err                 error
 		)
 
 		if err = s.IntrospectToken(c); err != nil {
@@ -140,14 +130,13 @@ func (s *Server) RevokeConsentsForClient() func(*gin.Context) {
 			return
 		}
 
-		if _, err = s.Client.Openbanking.Openbankinguk.RevokeOpenbankingConsents(
-			obuk.NewRevokeOpenbankingConsentsParamsWithContext(c).
-				WithWid(s.Config.SystemClientsServerID).
-				WithConsentTypes(ConsentTypes).
-				WithClientID(&id),
-			nil,
-		); err != nil {
-			c.String(http.StatusBadRequest, fmt.Sprintf("failed to revoke consents for client: %s, err: %+v", id, err))
+		if consentFetchRevoker == nil {
+			c.String(http.StatusBadRequest, fmt.Sprintf("unable to retrieve consent client for consent type [%s]", providerType))
+			return
+		}
+
+		if err = consentFetchRevoker.Revoke(c, ClientRevocation, id); err != nil {
+			c.String(http.StatusUnauthorized, fmt.Sprintf("failed to revoke consent: %+v", err))
 			return
 		}
 
@@ -166,5 +155,41 @@ func (s *Server) IntrospectToken(c *gin.Context) error {
 		return fmt.Errorf("failed to introspect client: %w", err)
 	}
 
+	return nil
+}
+
+func (s *Server) GetConsentClientByConsentType(consentType string) ConsentFetchRevoker {
+	switch consentType {
+	case "account_access", "domestic_payment":
+		for _, fetcherRevoker := range s.ConsentClients {
+			if _, ok := fetcherRevoker.(*OBUKConsentFetcher); ok {
+				return fetcherRevoker
+			}
+		}
+	case "cdr_arrangement":
+		for _, fetcherRevoker := range s.ConsentClients {
+			if _, ok := fetcherRevoker.(*OBCDRConsentFetcher); ok {
+				return fetcherRevoker
+			}
+		}
+	}
+	return nil
+}
+
+func (s *Server) GetConsentClientByProviderType(providerType string) ConsentFetchRevoker {
+	switch providerType {
+	case string(OBUK):
+		for _, fetcherRevoker := range s.ConsentClients {
+			if _, ok := fetcherRevoker.(*OBUKConsentFetcher); ok {
+				return fetcherRevoker
+			}
+		}
+	case string(CDR):
+		for _, fetcherRevoker := range s.ConsentClients {
+			if _, ok := fetcherRevoker.(*OBCDRConsentFetcher); ok {
+				return fetcherRevoker
+			}
+		}
+	}
 	return nil
 }
