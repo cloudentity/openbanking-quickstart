@@ -115,6 +115,11 @@ export function getDate(date) {
 }
 
 export const permissionsDict = {
+  CommonCustomerBasicRead: {
+    Cluster: "Your Name and occupation", 
+    Language: 
+    "Name Occupation", 
+  },
   ReadAccountsBasic: {
     Cluster: "Your Account Details",
     Language:
