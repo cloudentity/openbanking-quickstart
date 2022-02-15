@@ -72,13 +72,13 @@ export default function AcccountsAddedDialog({ open, setOpen }) {
     <Dialog onClose={() => setOpen(false)} open={open}>
       <div className={classes.dialogHeader}>
         <div className={classes.closeButton}>
-          <IconButton onClick={() => setOpen(false)}>
+          <IconButton id="close-icon" onClick={() => setOpen(false)}>
             <CloseIcon />
           </IconButton>
         </div>
         <img src={financrooLogo} alt="financroo logo" />
       </div>
-      <div className={classes.dialogContent}>
+      <div id="modal-content" className={classes.dialogContent}>
         <img src={icon} alt="icon" />
         <div>
           Your <strong>Go Bank</strong> account(s) has been successfully
@@ -92,6 +92,7 @@ export default function AcccountsAddedDialog({ open, setOpen }) {
       <div className={classes.dialogButtons}>
         <Button
           variant="outlined"
+          id={"cancel-button"}
           style={{ marginRight: 16 }}
           onClick={() => setOpen(false)}
         >

@@ -12,7 +12,7 @@ import {FinancrooInvestmentsPage} from "../../pages/financroo/investments/Financ
 import {FinancrooContributePage} from "../../pages/financroo/investments/FinancrooContributePage";
 import {ConsentSelfServiceApplicationPage} from "../../pages/consent-self-service/ConsentSelfServiceApplicationPage";
 import {EnvironmentVariables} from "../../pages/EnvironmentVariables"
-import { MockDataRecipientPage } from '../../pages/mock-data-recipient/MockDataRecipientPage';
+import { FinancrooModalPage } from '../../pages/financroo/accounts/FinancrooModalPage';
 
 
 describe(`Consent self service app`, () => {
@@ -24,6 +24,7 @@ describe(`Consent self service app`, () => {
   const mfaPage: MfaPage = new MfaPage();
   const financrooLoginPage: FinancrooLoginPage = new FinancrooLoginPage();
   const financrooWelcomePage: FinancrooWelcomePage = new FinancrooWelcomePage();
+  const financrooModalPage: FinancrooModalPage = new FinancrooModalPage();
   const financrooAccountsPage: FinancrooAccountsPage = new FinancrooAccountsPage();
   const financrooInvestmentsPage: FinancrooInvestmentsPage = new FinancrooInvestmentsPage();
   const financrooContributePage: FinancrooContributePage = new FinancrooContributePage();
@@ -43,6 +44,7 @@ describe(`Consent self service app`, () => {
       mfaPage.typePin()
     }
     consentPage.confirm()
+    financrooModalPage.assertThatModalIsDisplayed()
 
     financrooLoginPage.visit()
     financrooAccountsPage.assertThatPageIsDisplayed()
