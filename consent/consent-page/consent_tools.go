@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/sirupsen/logrus"
 	"time"
+
+
+	"github.com/sirupsen/logrus"
 
 	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 )
@@ -230,7 +232,6 @@ func (c *ConsentTools) GetCDRAccountAccessConsentTemplateData(
 		selectedAccountList = arrangement.PreviousCdrArrangement.AccountIds
 		headTitle = c.Trans.T("cdr.account.amend.headTitle")
 		title = c.Trans.T("cdr.account.amend.title")
-
 	} else {
 		for _, a := range accounts.Accounts {
 			selectedAccountList = append(selectedAccountList, a.ID)
