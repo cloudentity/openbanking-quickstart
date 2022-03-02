@@ -10,9 +10,10 @@ type InternalAccounts struct {
 }
 
 type InternalAccount struct {
-	ID      string  `json:"id"`
-	Name    string  `json:"name"`
-	Balance Balance `json:"balance"`
+	ID          string  `json:"id"`
+	Name        string  `json:"name"`
+	Balance     Balance `json:"balance"`
+	Preselected bool    `json:"preselected"`
 }
 
 type Balance struct {

@@ -65,6 +65,8 @@ mfa.postRequest.errorInfo: Invalid code. Try again or re-send the code.
 
 cdr.account.headTitle: Account Access Consent
 cdr.account.title: Account selection
+cdr.account.amend.title: Amend Account Access Consent
+cdr.account.amend.headTitle: Amend account selection
 cdr.account.selectAccounts: Select accounts to share with
 cdr.account.review_data: Review the data you will be sharing
 cdr.account.permissions: Account permissions
