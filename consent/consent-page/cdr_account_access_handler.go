@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
 
 	cdr "github.com/cloudentity/acp-client-go/clients/openbanking/client/c_d_r"
 	"github.com/cloudentity/acp-client-go/clients/openbanking/models"
@@ -39,8 +38,6 @@ func (s *CDRAccountAccessConsentHandler) GetConsent(c *gin.Context, loginRequest
 	}
 
 	data := s.GetCDRAccountAccessConsentTemplateData(loginRequest, response.Payload, accounts)
-
-	logrus.WithField("data", data).Info("rendering cdr consent page with data")
 
 	Render(c, s.GetTemplateNameForSpec("account-consent.tmpl"), data)
 }

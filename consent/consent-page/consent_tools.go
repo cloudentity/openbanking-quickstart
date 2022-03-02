@@ -4,9 +4,6 @@ import (
 	"fmt"
 	"time"
 
-
-	"github.com/sirupsen/logrus"
-
 	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 )
 
@@ -244,7 +241,6 @@ func (c *ConsentTools) GetCDRAccountAccessConsentTemplateData(
 
 	for i, a := range accounts.Accounts {
 		if preselected, ok := selectedAccounts[a.ID]; ok {
-			logrus.WithField(a.ID, preselected).Info("should be preselected")
 			a.Preselected = preselected
 		}
 
