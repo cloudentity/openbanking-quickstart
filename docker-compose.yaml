@@ -427,9 +427,7 @@ services:
       - /app/imports
       - --variables-file
       - /variables.yaml
-      - --verbose
-    depends_on:
-      - acp
+      - --verbose   
 
   runner:
     image: quickstart-runner
