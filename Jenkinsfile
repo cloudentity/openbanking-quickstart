@@ -30,7 +30,9 @@ pipeline {
                 script {
                     try {
                         sh 'make run'
-                        sh 'make run-cdr-tests-headless'
+                        retry(3) {
+                            sh 'make run-cdr-tests-headless'
+                        }
                         sh 'make clean'
                     } catch(exc) {
                         failure('Tests failed')

@@ -48,7 +48,7 @@ func (o *OBBRLoginURLBuilder) BuildLoginURL(consentID string, client acpclient.C
 
 	return client.AuthorizeURL(
 		acpclient.WithOpenbankingIntentID(consentID, []string{"urn:brasil:openbanking:loa2"}),
-		//	acpclient.WithRequestObjectEncryption(o.key),
+		acpclient.WithRequestObjectEncryption(o.key),
 		acpclient.WithPKCE(),
 	)
 }
