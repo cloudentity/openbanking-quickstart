@@ -130,7 +130,11 @@ services:
     volumes:
       - ./data/ca.pem:/certs/ca.pem
       - ./data/variables.yaml:/variables.yaml
-      - ./data/imports-cdr:/app/imports
+      - ./data/imports/bank-admins.tmpl:/app/imports/bank-admins.tmpl
+      - ./data/imports/bank-customers.tmpl:/app/imports/bank-customers.tmpl
+      - ./data/imports/financroo.tmpl:/app/imports/financroo.tmpl
+      - ./data/imports/system.tmpl:/app/imports/system.tmpl
+      - ./data/imports/cdr.tmpl:/app/imports/cdr.tmpl
     command:
       - /app/main
       - --tenant-url
