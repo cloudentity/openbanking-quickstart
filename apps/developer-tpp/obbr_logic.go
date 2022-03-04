@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 	"github.com/pkg/errors"
+	"gopkg.in/square/go-jose.v2"
 
 	acpclient "github.com/cloudentity/acp-client-go"
 	obbrModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_b_r"
@@ -84,10 +85,15 @@ func (h *OBBRLogic) DoRequestObjectEncryption() bool {
 
 func (h *OBBRLogic) BuildLoginURL(c *gin.Context, consentID string, doRequestObjectEncryption bool) (string, acpclient.CSRF, error) {
 	var (
+		key    jose.JSONWebKey
 		client acpclient.Client
 		config = h.Config.ExtendConsentScope(consentID).ClientConfig()
 		err    error
 	)
+
+	if key, err = h.GetEncryptionKey(c); err != nil {
+		return "", acpclient.CSRF{}, errors.Wrapf(err, "failed to retrieve encryption key")
+	}
 
 	if client, err = acpclient.New(config); err != nil {
 		return "", acpclient.CSRF{}, errors.Wrapf(err, "failed to create new acp client")
@@ -96,6 +102,7 @@ func (h *OBBRLogic) BuildLoginURL(c *gin.Context, consentID string, doRequestObj
 	if doRequestObjectEncryption {
 		return client.AuthorizeURL(
 			acpclient.WithOpenbankingIntentID(consentID, []string{"urn:brasil:openbanking:loa2"}),
+			acpclient.WithRequestObjectEncryption(key),
 			acpclient.WithPKCE(),
 		)
 	}

@@ -96,7 +96,7 @@ run-obbr-tests-headless: run-tests-verify
 
 .PHONY: run-tests-verify 
 run-tests-verify: 
-	yarn --cwd tests run cypress verify
+	VERIFY_TEST_RUNNER_TIMEOUT_MS=80000 yarn --cwd tests run cypress verify
 
 .PHONY: enable-mfa
 enable-mfa:
