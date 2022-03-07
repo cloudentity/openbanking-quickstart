@@ -1,10 +1,15 @@
 export class FinancrooConnectAccountPage {
   private readonly goBankLocator: string = `#gobank`;
+  private readonly santanderBankLocator: string = '#santander'; 
   private readonly cancelButtonLocator: string = `#cancel-button`;
   private readonly allowButtonLocator: string = `#allow-button`;
 
-  public connectGoBank(): void {
+  public clickGoBankIcon(): void {
     cy.get(this.goBankLocator).click()
+  }
+
+  public clickSantanderBankIcon(): void {
+    cy.get(this.santanderBankLocator).click()
   }
 
   public allow(): void {
