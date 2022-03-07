@@ -18,7 +18,7 @@ func NewOBUKBankClient(config Config) BankClient {
 	c := OBUKBankClient{}
 
 	c.Client = &http.Client{}
-	c.baseURL = config.BankURL.String()
+	c.baseURL = config.UKBankURL.String()
 
 	return &c
 }
@@ -53,10 +53,10 @@ func (c *OBUKBankClient) GetInternalAccounts(subject string) (InternalAccounts, 
 		return InternalAccounts{}, nil
 	}
 
-	return ToInternalAccounts(resp), nil
+	return c.ToInternalAccounts(resp), nil
 }
 
-func ToInternalAccounts(data models.OBReadAccount6) InternalAccounts {
+func (c *OBUKBankClient) ToInternalAccounts(data models.OBReadAccount6) InternalAccounts {
 	accounts := make([]InternalAccount, len(data.Data.Account))
 	for i, account := range data.Data.Account {
 		accounts[i] = InternalAccount{
