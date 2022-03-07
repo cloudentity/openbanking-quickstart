@@ -60,8 +60,8 @@ func (c *OBBRBankClient) ToInternalAccounts(data models.ResponseAccountList) Int
 	accounts := make([]InternalAccount, len(data.Data))
 	for i, account := range data.Data {
 		accounts[i] = InternalAccount{
-			ID:   string(*account.AccountID),
-			Name: string(*account.Number),
+			ID:   *account.AccountID,
+			Name: *account.Number,
 		}
 	}
 	return InternalAccounts{Accounts: accounts}
