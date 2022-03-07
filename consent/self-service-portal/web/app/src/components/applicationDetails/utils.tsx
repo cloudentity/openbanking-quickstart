@@ -88,6 +88,128 @@ export const permissionsDict = {
     Language:
       "The full legal name(s) of account holder(s). Address(es), telephone number(s) and email address(es)*",
   },
+
+  CREDIT_CARDS_ACCOUNTS_BILLS_TRANSACTIONS_READ: {
+    Cluster: "TODO", 
+    Language: "TODO",
+  },
+                    UNARRANGED_ACCOUNTS_OVERDRAFT_READ: {
+                      Cluster: "TODO", 
+                      Language: "TODO",
+                    },
+                    ACCOUNTS_READ: {
+                      Cluster: "TODO", 
+                      Language: "TODO",
+                    },
+                    LOANS_READ: {
+                      Cluster: "TODO", 
+                      Language: "TODO",
+                    },
+                    LOANS_SCHEDULED_INSTALMENTS_READ: {
+                      Cluster: "TODO", 
+                      Language: "TODO",
+                    },
+                    FINANCINGS_SCHEDULED_INSTALMENTS_READ: {
+                      Cluster: "TODO", 
+                      Language: "TODO",
+                    },
+                    UNARRANGED_ACCOUNTS_OVERDRAFT_WARRANTIES_READ: {
+                      Cluster: "TODO", 
+                      Language: "TODO",
+                    },
+                    UNARRANGED_ACCOUNTS_OVERDRAFT_PAYMENTS_READ: {
+                      Cluster: "TODO", 
+                      Language: "TODO",
+                    },
+                    INVOICE_FINANCINGS_WARRANTIES_READ: {
+                      Cluster: "TODO", 
+                      Language: "TODO",
+                    },
+                    CUSTOMERS_PERSONAL_IDENTIFICATIONS_READ: {
+                      Cluster: "TODO", 
+                      Language: "TODO",
+                    },
+                    CREDIT_CARDS_ACCOUNTS_LIMITS_READ: {
+                      Cluster: "TODO", 
+                      Language: "TODO",
+                    },
+                    FINANCINGS_READ: {
+                      Cluster: "TODO", 
+                      Language: "TODO",
+                    },
+                    INVOICE_FINANCINGS_PAYMENTS_READ: {
+                      Cluster: "TODO", 
+                      Language: "TODO",
+                    },
+                    RESOURCES_READ: {
+                      Cluster: "TODO", 
+                      Language: "TODO",
+                    },
+                    ACCOUNTS_BALANCES_READ: {
+                      Cluster: "TODO", 
+                      Language: "TODO",
+                    },
+                    ACCOUNTS_OVERDRAFT_LIMITS_READ: {
+                      Cluster: "TODO", 
+                      Language: "TODO",
+                    },
+                    LOANS_WARRANTIES_READ: {
+                      Cluster: "TODO", 
+                      Language: "TODO",
+                    },
+                    UNARRANGED_ACCOUNTS_OVERDRAFT_SCHEDULED_INSTALMENTS_READ: {
+                      Cluster: "TODO", 
+                      Language: "TODO",
+                    },
+                    CREDIT_CARDS_ACCOUNTS_BILLS_READ: {
+                      Cluster: "TODO", 
+                      Language: "TODO",
+                    },
+                    INVOICE_FINANCINGS_READ: {
+                      Cluster: "TODO", 
+                      Language: "TODO",
+                    },
+                    CUSTOMERS_PERSONAL_ADITTIONALINFO_READ: {
+                      Cluster: "TODO", 
+                      Language: "TODO",
+                    },
+                    FINANCINGS_WARRANTIES_READ: {
+                      Cluster: "TODO", 
+                      Language: "TODO",
+                    },
+                    INVOICE_FINANCINGS_SCHEDULED_INSTALMENTS_READ: {
+                      Cluster: "TODO", 
+                      Language: "TODO",
+                    },
+                    CUSTOMERS_BUSINESS_IDENTIFICATIONS_READ: {
+                      Cluster: "TODO", 
+                      Language: "TODO",
+                    },
+                    CREDIT_CARDS_ACCOUNTS_READ: {
+                      Cluster: "TODO", 
+                      Language: "TODO",
+                    },
+                    CREDIT_CARDS_ACCOUNTS_TRANSACTIONS_READ: {
+                      Cluster: "TODO", 
+                      Language: "TODO",
+                    },
+                    LOANS_PAYMENTS_READ:{
+                      Cluster: "TODO", 
+                      Language: "TODO",
+                    },
+                    CUSTOMERS_BUSINESS_ADITTIONALINFO_READ: {
+                      Cluster: "TODO", 
+                      Language: "TODO",
+                    },
+                    ACCOUNTS_TRANSACTIONS_READ: {
+                      Cluster: "TODO", 
+                      Language: "TODO",
+                    },
+                    FINANCINGS_PAYMENTS_READ: {
+                      Cluster: "TODO", 
+                      Language: "TODO",
+                    },
+
 };
 
 export const currencyDict = {
