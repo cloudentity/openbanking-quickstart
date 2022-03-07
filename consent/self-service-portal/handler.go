@@ -129,19 +129,18 @@ func (s *Server) ListConsents() func(*gin.Context) {
 			return
 		}
 
-		for _, spec := range []Spec{OBUK, CDR} {
+		for _, spec := range SupportedSpecs {
 			if acc, err = s.BankClients[spec].GetInternalAccounts(sub); err != nil {
 				Error(c, ToAPIError(err))
 				return
 			}
 
-			accounts.Accounts = append(accounts.Accounts, acc.Accounts...)
-
-			if cc, err = s.ConsentClients[spec].FetchConsents(c, accounts.GetAccountIDs()); err != nil {
+			if cc, err = s.ConsentClients[spec].FetchConsents(c, acc.GetAccountIDs()); err != nil {
 				Error(c, ToAPIError(err))
 				return
 			}
 
+			accounts.Accounts = append(accounts.Accounts, acc.Accounts...)
 			clientsAndConsents = append(clientsAndConsents, cc...)
 		}
 
@@ -256,6 +255,8 @@ func (s *Server) GetConsentClientByConsentType(consentType string) ConsentClient
 	switch consentType {
 	case "account_access", "domestic_payment":
 		return s.ConsentClients[OBUK]
+	case "consents":
+		return s.ConsentClients[OBBR]
 	case "cdr_arrangement":
 		return s.ConsentClients[CDR]
 	}
@@ -266,6 +267,8 @@ func (s *Server) GetBankClientByConsentType(consentType string) BankClient {
 	switch consentType {
 	case "account_access", "domestic_payment":
 		return s.BankClients[OBUK]
+	case "consents":
+		return s.BankClients[OBBR]
 	case "cdr_arrangement":
 		return s.BankClients[CDR]
 	}
