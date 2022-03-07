@@ -51,7 +51,7 @@ export default function Dashboard({
   const filteredClientConsents =
     (filter === "account" &&
       clientConsents.filter((v) =>
-        v.consents.every((c) => c.type === "account_access" || c.type == "cdr_arrangement")
+        v.consents.every((c) => c.type === "account_access" || c.type == "cdr_arrangement" || c.type == "consents")
       )) ||
     (filter === "payment" &&
       clientConsents.filter((v) =>
