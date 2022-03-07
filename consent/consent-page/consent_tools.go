@@ -217,19 +217,42 @@ func (c *ConsentTools) GetCDRAccountAccessConsentTemplateData(
 	arrangement *obModels.GetCDRConsentResponse,
 	accounts InternalAccounts,
 ) map[string]interface{} {
-	var expirationDate string
+	var (
+		expirationDate      string
+		selectedAccountList []string
+		selectedAccounts    = map[string]bool{}
+		headTitle           = c.Trans.T("cdr.account.headTitle")
+		title               = c.Trans.T("cdr.account.title")
+	)
 
-	// nolint
-	/*	edt := time.Time(arrangement.CdrArrangement.Expiry)
-		if !edt.IsZero() {
-			expirationDate = edt.Format("02/01/2006")
-		}*/
+	if arrangement.PreviousCdrArrangement != nil {
+		selectedAccountList = arrangement.PreviousCdrArrangement.AccountIds
+		headTitle = c.Trans.T("cdr.account.amend.headTitle")
+		title = c.Trans.T("cdr.account.amend.title")
+	} else {
+		for _, a := range accounts.Accounts {
+			selectedAccountList = append(selectedAccountList, a.ID)
+		}
+	}
+
+	for _, a := range selectedAccountList {
+		selectedAccounts[a] = true
+	}
+
+	for i, a := range accounts.Accounts {
+		if preselected, ok := selectedAccounts[a.ID]; ok {
+			a.Preselected = preselected
+		}
+
+		accounts.Accounts[i] = a
+	}
 
 	clientName := c.GetClientName(nil)
+
 	return map[string]interface{}{
 		"trans": map[string]interface{}{
-			"headTitle":      c.Trans.T("cdr.account.headTitle"),
-			"title":          c.Trans.T("cdr.account.title"),
+			"headTitle":      headTitle,
+			"title":          title,
 			"selectAccounts": c.Trans.T("cdr.account.selectAccounts"),
 			"reviewData":     c.Trans.T("cdr.account.review_data"),
 			"permissions":    c.Trans.T("cdr.account.permissions"),
@@ -242,12 +265,15 @@ func (c *ConsentTools) GetCDRAccountAccessConsentTemplateData(
 			"cancel": c.Trans.T("cdr.account.cancel"),
 			"agree":  c.Trans.T("cdr.account.agree"),
 		},
-		"login_request": loginRequest,
-		"accounts":      accounts.Accounts,
+		"login_request":    loginRequest,
+		"accounts":         accounts.Accounts,
+		"selectedAccounts": selectedAccounts,
 		// "permissions":     c.GetPermissionsWithDescription(consent.AccountAccessConsent.Permissions), // nolint
-		"client_name":     clientName,
-		"expiration_date": expirationDate,
-		"ctx":             arrangement.AuthenticationContext,
+		"client_name":      clientName,
+		"expiration_date":  expirationDate,
+		"ctx":              arrangement.AuthenticationContext,
+		"prev_arrangement": arrangement.PreviousCdrArrangement,
+		"amend":            arrangement.PreviousCdrArrangement != nil,
 	}
 }
 

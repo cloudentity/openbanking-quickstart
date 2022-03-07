@@ -86,9 +86,34 @@ clients:
 policies:
 - id: block_cdr_dcr
   language: cloudentity
-  policy_name: Block DCR
+  policy_name: Unlock DCR
   server_id: cdr
   tenant_id: {{ .tenant_id }}
   type: dcr
   validators:
-    - name: "true"
+    - name: 'true'
+      conf: {}
+claims:
+- authorization_server_id: cdr
+  id: cdr_arrangement_id
+  mapping: cdr_arrangement_id
+  name: cdr_arrangement_id
+  source_path: openbanking_intent_id
+  source_type: authnCtx
+  tenant_id: {{ .tenant_id }}
+  type: access_token
+- authorization_server_id: cdr
+  id: cdr_software_product
+  mapping: software_id
+  name: software_id
+  source_path: software_id
+  source_type: client
+  tenant_id: {{ .tenant_id }}
+  type: access_token
+
+services:
+- id: cdr-cdr-australia
+  tenant_id: {{ .tenant_id }}
+  authorization_server_id: cdr
+  name: CDR Australia
+  custom_audience: cds-au

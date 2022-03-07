@@ -49,8 +49,10 @@
                             value="{{ .ID }}"
                             class="mdc-switch__native-control"
                             role="switch"
-                            aria-checked="true"
+                            {{ if .Preselected }}
                             checked
+                            aria-checked="true"
+                            {{end}}
                     >
                   </div>
                 </div>

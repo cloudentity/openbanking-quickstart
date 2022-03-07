@@ -37,7 +37,9 @@ func (s *CDRAccountAccessConsentHandler) GetConsent(c *gin.Context, loginRequest
 		return
 	}
 
-	Render(c, s.GetTemplateNameForSpec("account-consent.tmpl"), s.GetCDRAccountAccessConsentTemplateData(loginRequest, response.Payload, accounts))
+	data := s.GetCDRAccountAccessConsentTemplateData(loginRequest, response.Payload, accounts)
+
+	Render(c, s.GetTemplateNameForSpec("account-consent.tmpl"), data)
 }
 
 func (s *CDRAccountAccessConsentHandler) ConfirmConsent(c *gin.Context, loginRequest LoginRequest) (string, error) {
