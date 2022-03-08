@@ -73,6 +73,10 @@ stop:
 clean:
 	docker-compose down -v --remove-orphans
 
+.PHONY: purge
+purge:
+	docker images -a | grep openbanking-quickstart | awk '{print $3}' | xargs docker rmi -f || true
+
 .PHONY: clean-saas
 clean-saas: clean
 	./scripts/clean_saas.sh
