@@ -30,15 +30,13 @@ describe(`Consent self service app`, () => {
   const financrooContributePage: FinancrooContributePage = new FinancrooContributePage();
   const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
 
-  const amount: number = Math.floor(Math.random() * 50) + 1;
-
   before(() => {
     financrooLoginPage.visit()
     Urls.clearLocalStorage()
     financrooLoginPage.visit()
     financrooLoginPage.login()
     acpLoginPage.login(Credentials.financrooUsername, Credentials.defaultPassword)
-    financrooWelcomePage.connectGoBank()
+    financrooWelcomePage.connectSantanderBank()
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin()
@@ -48,14 +46,6 @@ describe(`Consent self service app`, () => {
 
     financrooLoginPage.visit()
     financrooAccountsPage.assertThatPageIsDisplayed()
-    financrooAccountsPage.goToInvestmentsTab()
-    financrooInvestmentsPage.invest()
-    financrooContributePage.contribute(amount)
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
-    if (environmentVariables.isMfaEnabled()) {
-      mfaPage.typePin()
-    }
-    consentPage.confirm()
   })
 
   beforeEach(() => {
@@ -66,17 +56,18 @@ describe(`Consent self service app`, () => {
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
     consentSelfServicePage.clickOnApplicationCard()
     consentSelfServiceApplicationPage.expandAccountsTab()
-    consentSelfServiceApplicationPage.checkAccount("22289")
+    consentSelfServiceApplicationPage.checkAccount("94088392") // TODO: 
     consentSelfServiceApplicationPage.expandAccountConsentRow()
   })
 
-  it(`Happy path with payment consent`, () => {
+  it(`Revoke consent`, () => {
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
     consentSelfServicePage.clickOnApplicationCard()
-    consentSelfServiceApplicationPage.expandPaymentsTab()
-    consentSelfServiceApplicationPage.checkAccount("22289")
-    consentSelfServiceApplicationPage.expandPaymentConsentRow()
-    consentSelfServiceApplicationPage.assertAmount(amount)
+    consentSelfServiceApplicationPage.expandAccountsTab()
+    consentSelfServiceApplicationPage.assertNumberOfConsents(1)
+    consentSelfServiceApplicationPage.expandAccountConsentRow()
+    consentSelfServiceApplicationPage.clickRevokeAccessButton() 
+    consentSelfServiceApplicationPage.assertNumberOfConsents(0)
   })
 
   it(`Cancel ACP login`, () => {

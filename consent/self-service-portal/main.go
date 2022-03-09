@@ -19,7 +19,12 @@ type Spec string
 const (
 	OBUK Spec = "obuk"
 	CDR  Spec = "cdr"
+	OBBR Spec = "obbr"
 )
+
+var SupportedSpecs = []Spec{
+	OBUK, CDR, OBBR,
+}
 
 type Config struct {
 	SystemClientID              string        `env:"SYSTEM_CLIENT_ID,required"`
@@ -27,11 +32,13 @@ type Config struct {
 	SystemIssuerURL             *url.URL      `env:"SYSTEM_ISSUER_URL,required"`
 	OpenbankingUKWorkspaceID    string        `env:"OPENBANKING_UK_WORKSPACE_ID,required"`
 	CDRWorkspaceID              string        `env:"CDR_WORKSPACE_ID,required"`
+	OpenbankingBRWorkspaceID    string        `env:"OPENBANKING_BR_WORKSPACE_ID,required"`
 	Timeout                     time.Duration `env:"TIMEOUT" envDefault:"5s"`
 	RootCA                      string        `env:"ROOT_CA"`
 	CertFile                    string        `env:"CERT_FILE,required"`
 	KeyFile                     string        `env:"KEY_FILE,required"`
-	BankURL                     *url.URL      `env:"BANK_URL,required"`
+	UKBankURL                   *url.URL      `env:"UK_BANK_URL,required"`
+	BrasilBankURL               *url.URL      `env:"BRASIL_BANK_URL,required"`
 	Port                        int           `env:"PORT" envDefault:"8085"`
 	LoginAuthorizationServerURL string        `env:"LOGIN_AUTHORIZATION_SERVER_URL,required"`
 	LoginClientID               string        `env:"LOGIN_CLIENT_ID,required"`
@@ -105,11 +112,13 @@ func NewServer() (Server, error) {
 	server.BankClients = map[Spec]BankClient{
 		OBUK: NewOBUKBankClient(server.Config),
 		CDR:  &CDRBankClient{},
+		OBBR: NewOBBRBankClient(server.Config),
 	}
 
 	server.ConsentClients = map[Spec]ConsentClient{
 		OBUK: NewOBUKConsentImpl(&server),
 		CDR:  NewCDRArrangementImpl(&server),
+		OBBR: NewOBBRConsentImpl(&server),
 	}
 
 	return server, nil

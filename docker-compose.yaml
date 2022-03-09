@@ -208,11 +208,13 @@ services:
       - SYSTEM_CLIENT_SECRET=PBV7q0akoP603rZbU0EFdxbhZ-djxF7FIVwyKaLnBYU
       - SYSTEM_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
       - OPENBANKING_UK_WORKSPACE_ID=openbanking
+      - OPENBANKING_BR_WORKSPACE_ID=openbanking_brasil
       - CDR_WORKSPACE_ID=cdr
       - CERT_FILE=/bank_cert.pem
       - KEY_FILE=/bank_key.pem
       - ROOT_CA=/ca.pem
-      - BANK_URL=${BANK_URL}
+      - UK_BANK_URL=http://bank-uk:8070
+      - BRASIL_BANK_URL=http://bank-br:8070
       - LOGIN_AUTHORIZATION_SERVER_URL=${ACP_URL}
       - LOGIN_AUTHORIZATION_SERVER_ID=bank-customers
       - LOGIN_TENANT_ID=${TENANT}

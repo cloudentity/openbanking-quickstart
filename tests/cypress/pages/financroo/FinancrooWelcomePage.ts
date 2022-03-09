@@ -3,15 +3,29 @@ import {FinancrooConnectAccountPage} from './accounts/FinancrooConnectAccountPag
 export class FinancrooWelcomePage {
   private readonly financrooConnectAccountPage: FinancrooConnectAccountPage = new FinancrooConnectAccountPage();
 
-  public connect(): void {
+  public connectGoBank(): void {
     cy.get(`[class*="connect-button"]`).then(ele => {
       cy.wrap(ele).click()
       if (ele.text().includes(`disconnect`)) {
-        this.connect()
+        this.connectGoBank()
       } else if (!ele.text().includes(`reconnect`)) {
-        this.financrooConnectAccountPage.connectGoBank()
+        this.financrooConnectAccountPage.clickGoBankIcon()
         this.financrooConnectAccountPage.allow()
       }
     })
   }
+
+  public connectSantanderBank(): void {
+    cy.get(`[class*="connect-button"]`).then(ele => {
+      cy.wrap(ele).click()
+      if (ele.text().includes(`disconnect`)) {
+        this.connectSantanderBank()
+      } else if (!ele.text().includes(`reconnect`)) {
+        this.financrooConnectAccountPage.clickSantanderBankIcon()
+        this.financrooConnectAccountPage.allow()
+      }
+    })
+ }
 }
+
+

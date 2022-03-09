@@ -6,29 +6,29 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
+	"github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/models"
 )
 
-type OBUKBankClient struct {
+type OBBRBankClient struct {
 	baseURL string
 	*http.Client
 }
 
-func NewOBUKBankClient(config Config) BankClient {
-	c := OBUKBankClient{}
+func NewOBBRBankClient(config Config) BankClient {
+	c := OBBRBankClient{}
 
 	c.Client = &http.Client{}
-	c.baseURL = config.UKBankURL.String()
+	c.baseURL = config.BrasilBankURL.String()
 
 	return &c
 }
 
-func (c *OBUKBankClient) GetInternalAccounts(subject string) (InternalAccounts, error) {
+func (c *OBBRBankClient) GetInternalAccounts(subject string) (InternalAccounts, error) {
 	var (
 		request  *http.Request
 		response *http.Response
 		bytes    []byte
-		resp     = models.OBReadAccount6{}
+		resp     = models.ResponseAccountList{}
 		err      error
 	)
 
@@ -56,12 +56,12 @@ func (c *OBUKBankClient) GetInternalAccounts(subject string) (InternalAccounts, 
 	return c.ToInternalAccounts(resp), nil
 }
 
-func (c *OBUKBankClient) ToInternalAccounts(data models.OBReadAccount6) InternalAccounts {
-	accounts := make([]InternalAccount, len(data.Data.Account))
-	for i, account := range data.Data.Account {
+func (c *OBBRBankClient) ToInternalAccounts(data models.ResponseAccountList) InternalAccounts {
+	accounts := make([]InternalAccount, len(data.Data))
+	for i, account := range data.Data {
 		accounts[i] = InternalAccount{
-			ID:   string(*account.AccountID),
-			Name: string(account.Nickname),
+			ID:   *account.AccountID,
+			Name: *account.Number,
 		}
 	}
 	return InternalAccounts{Accounts: accounts}

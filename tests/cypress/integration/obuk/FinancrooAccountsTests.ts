@@ -37,7 +37,7 @@ describe(`Financroo app`, () => {
   ].forEach(accounts => {
     it(`Happy path with accounts: ${accounts}`, () => {
       acpLoginPage.login(Credentials.financrooUsername, Credentials.defaultPassword)
-      financrooWelcomePage.connect()
+      financrooWelcomePage.connectGoBank()
       acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
       if (environmentVariables.isMfaEnabled()) {
         mfaPage.typePin()
@@ -57,14 +57,14 @@ describe(`Financroo app`, () => {
 
   it(`Cancel on second ACP login`, () => {
     acpLoginPage.login(Credentials.financrooUsername, Credentials.defaultPassword)
-    financrooWelcomePage.connect()
+    financrooWelcomePage.connectGoBank()
     acpLoginPage.cancel()
     errorPage.assertError(`The user rejected the authentication`)
   })
 
   it(`Cancel on consent`, () => {
     acpLoginPage.login(Credentials.financrooUsername, Credentials.defaultPassword)
-    financrooWelcomePage.connect()
+    financrooWelcomePage.connectGoBank()
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin()
