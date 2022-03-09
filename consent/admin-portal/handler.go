@@ -11,6 +11,7 @@ import (
 )
 
 const (
+	ConsentsConsentType                      = "consents"
 	AccountAccessConsentType                 = "account_access"
 	DomesticPaymentConsentType               = "domestic_payment"
 	DomesticScheduledPaymentConsentType      = "domestic_scheduled_payment"
@@ -172,6 +173,13 @@ func (s *Server) GetConsentClientByConsentType(consentType string) ConsentFetchR
 				return fetcherRevoker
 			}
 		}
+
+	case "consents":
+		for _, fetcherRevoker := range s.ConsentClients {
+			if _, ok := fetcherRevoker.(*OBBRConsentFetcher); ok {
+				return fetcherRevoker
+			}
+		}
 	}
 	return nil
 }
@@ -187,6 +195,12 @@ func (s *Server) GetConsentClientByProviderType(providerType string) ConsentFetc
 	case string(CDR):
 		for _, fetcherRevoker := range s.ConsentClients {
 			if _, ok := fetcherRevoker.(*OBCDRConsentFetcher); ok {
+				return fetcherRevoker
+			}
+		}
+	case string(OBBR):
+		for _, fetcherRevoker := range s.ConsentClients {
+			if _, ok := fetcherRevoker.(*OBBRConsentFetcher); ok {
 				return fetcherRevoker
 			}
 		}
