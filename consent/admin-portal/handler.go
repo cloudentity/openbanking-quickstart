@@ -11,7 +11,6 @@ import (
 )
 
 const (
-	ConsentsConsentType                      = "consents"
 	AccountAccessConsentType                 = "account_access"
 	DomesticPaymentConsentType               = "domestic_payment"
 	DomesticScheduledPaymentConsentType      = "domestic_scheduled_payment"
