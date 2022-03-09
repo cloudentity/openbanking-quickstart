@@ -82,7 +82,6 @@ type Server struct {
 	Config           Config
 	Client           acpclient.Client
 	IntrospectClient acpclient.Client
-	BankClient       BankClient
 	ConsentClients   []ConsentFetchRevoker
 }
 
@@ -107,8 +106,6 @@ func NewServer() (Server, error) {
 	for _, spec := range Specs {
 		server.ConsentClients = append(server.ConsentClients, ConsentFetcherFactory(spec, &server))
 	}
-
-	server.BankClient = NewBankClient(server.Config)
 
 	return server, nil
 }
