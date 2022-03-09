@@ -48,7 +48,7 @@ services:
     container_name: consent-page-uk
     restart: always
     ports:
-      - "8080:8080"
+      - "7080:8080"
     volumes:
       - ./mount/consent-page-uk:/data
       - ./data/ca.pem:/ca.pem
