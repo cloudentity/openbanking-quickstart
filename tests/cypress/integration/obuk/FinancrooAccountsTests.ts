@@ -23,6 +23,7 @@ describe(`Financroo app`, () => {
   const householdAccount: string = `Household`;
 
   beforeEach(() => {
+    cy.disableSameSiteCookieRestrictions();
     financrooLoginPage.visit()
     Urls.clearLocalStorage()
     financrooLoginPage.visit()
