@@ -33,7 +33,6 @@ describe(`Consent self service app`, () => {
   const amount: number = Math.floor(Math.random() * 50) + 1;
 
   before(() => {
-    cy.disableSameSiteCookieRestrictions();
     financrooLoginPage.visit()
     Urls.clearLocalStorage()
     financrooLoginPage.visit()
@@ -60,7 +59,6 @@ describe(`Consent self service app`, () => {
   })
 
   beforeEach(() => {
-    cy.disableSameSiteCookieRestrictions();
     consentSelfServicePage.visit(true)
   })
 

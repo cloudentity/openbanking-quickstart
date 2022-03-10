@@ -13,7 +13,6 @@ describe(`Consent self service app CDR`, () => {
   const mockDataRecipientPage: MockDataRecipientPage = new MockDataRecipientPage(); 
 
   before(() => {
-    cy.disableSameSiteCookieRestrictions()
     mockDataRecipientPage.visit()
     mockDataRecipientPage.visitDiscoverDataHoldersTab()
     mockDataRecipientPage.clickDataHoldersRefresh()
@@ -28,7 +27,6 @@ describe(`Consent self service app CDR`, () => {
   })
 
   beforeEach(() => {
-    cy.disableSameSiteCookieRestrictions()
     consentSelfServicePage.visit(true)
   })
 

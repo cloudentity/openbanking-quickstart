@@ -14,7 +14,6 @@ describe(`Consent admin portal CDR`, () => {
 
 
   before(() => {
-    cy.disableSameSiteCookieRestrictions()
     mockDataRecipientPage.visit()
     mockDataRecipientPage.visitDiscoverDataHoldersTab()
     mockDataRecipientPage.clickDataHoldersRefresh()

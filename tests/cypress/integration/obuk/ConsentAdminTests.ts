@@ -20,7 +20,6 @@ describe(`Consent admin app`, () => {
   const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
 
   beforeEach(() => {
-    cy.disableSameSiteCookieRestrictions();
     consentAdminPage.visit();
     Urls.clearLocalStorage();
     tppLoginPage.visit(true);
