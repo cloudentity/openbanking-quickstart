@@ -28,6 +28,7 @@ describe(`Financroo payments app test`, () => {
   const amount: number = Math.floor(Math.random() * 50) + 1;
 
   beforeEach(() => {
+    cy.disableSameSiteCookieRestrictions();
     financrooLoginPage.visit()
     Urls.clearLocalStorage()
     financrooLoginPage.visit()
