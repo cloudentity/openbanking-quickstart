@@ -1,6 +1,3 @@
-import './commands'
-
-
 Cypress.Commands.add("disableSameSiteCookieRestrictions", () => {
   cy.intercept("*", (req) => {
     req.on("response", (res) => {
@@ -16,9 +13,7 @@ Cypress.Commands.add("disableSameSiteCookieRestrictions", () => {
       };
 
       if (Array.isArray(res.headers["set-cookie"])) {
-        res.headers["set-cookie"] = (res.headers["set-cookie"] as any).map(
-          disableSameSite
-        ) as any;
+        res.headers["set-cookie"] = res.headers["set-cookie"].map(disableSameSite) as any;
       } else {
         res.headers["set-cookie"] = disableSameSite(res.headers["set-cookie"]);
       }
