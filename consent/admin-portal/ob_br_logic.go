@@ -3,7 +3,6 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
-	"github.com/sirupsen/logrus"
 
 	obbrModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_b_r"
 	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
@@ -120,8 +119,6 @@ func (o *OBBRConsentFetcher) getConsents(resp *obbrModels.ListOBBRConsentsOK) []
 
 		consents = append(consents, c)
 	}
-
-	logrus.Infof("consents %+v", consents)
 
 	return consents
 }
