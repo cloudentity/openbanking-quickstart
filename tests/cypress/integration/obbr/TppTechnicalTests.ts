@@ -30,7 +30,6 @@ describe(`Tpp technical app`, () => {
   const resourcesReadPermission: string = `RESOURCES_READ`;
 
   beforeEach(() => {
-    cy.disableSameSiteCookieRestrictions();
     tppLoginPage.visit()
     Urls.clearLocalStorage()
     tppLoginPage.visit();
