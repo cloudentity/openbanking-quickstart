@@ -88,6 +88,8 @@ pipeline {
                         sh 'make run-apps-with-saas'
                         sh 'make run-saas-tests-headless'
                         sh 'make clean'
+                    } catch(exc) {
+                        failure('Tests failed')
                     }
                 }
             }
