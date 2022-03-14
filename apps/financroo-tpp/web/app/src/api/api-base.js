@@ -1,5 +1,4 @@
 import superagent from 'superagent';
-// import {unauthorizedRedirect} from './unauthorized-redirect.interceptor';
 const getTokenFromStore = () => localStorage.getItem('access_token');
 
 export const toJson = response => response.text ? JSON.parse(response.text) : {};

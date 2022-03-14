@@ -11,7 +11,6 @@ import { ReactQueryDevtools } from "react-query-devtools";
 import { QueryCache, ReactQueryCacheProvider } from "react-query";
 import PrivateRoute from "./components/PrivateRoute";
 import AuthPage from "./components/AuthPage";
-import Callback from "./components/Callback";
 import AuthenticatedAppBase from "./components/AuthenticatedAppBase";
 import {
   putExpiresInInStore,
@@ -73,55 +72,15 @@ function App() {
                 <Suspense fallback={<Progress />}>
                   <Switch>
                     <Route
-                      path="/callback"
-                      render={() => (
-                        <Callback
-                          authorizationServerURL={
-                            config?.authorizationServerURL
-                          }
-                          authorizationServerId={config?.authorizationServerId}
-                          tenantId={config?.tenantId}
-                          clientId={config?.clientId}
-                          login={login}
-                        />
-                      )}
-                    />
-                    <Route
-                      path="/silent"
-                      render={() => (
-                        <Callback
-                          silent
-                          authorizationServerURL={
-                            config?.authorizationServerURL
-                          }
-                          authorizationServerId={config?.authorizationServerId}
-                          tenantId={config?.tenantId}
-                          clientId={config?.clientId}
-                          login={login}
-                        />
-                      )}
-                    />
-                    <Route
                       path={"/auth"}
                       render={() => (
                         <AuthPage
-                          login={login}
-                          authorizationServerURL={
-                            config?.authorizationServerURL
-                          }
-                          authorizationServerId={config?.authorizationServerId}
-                          tenantId={config?.tenantId}
-                          clientId={config?.clientId}
-                          scopes={scopes}
+                          loginFn={login}
                         />
                       )}
                     />
                     <PrivateRoute
                       path="/"
-                      authorizationServerURL={config?.authorizationServerURL}
-                      authorizationServerId={config?.authorizationServerId}
-                      tenantId={config?.tenantId}
-                      login={login}
                       component={() => (
                         <AuthenticatedAppBase
                           authorizationServerURL={
