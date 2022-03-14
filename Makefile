@@ -98,6 +98,10 @@ run-obuk-tests-headless: run-tests-verify
 run-obbr-tests-headless: run-tests-verify
 	yarn --cwd tests run cypress run -s cypress/integration/obbr/*.ts
 
+.PHONY: run-saas-tests-headless
+run-obbr-tests-headless: run-tests-verify
+	yarn --cwd tests run cypress run -s cypress/integration/saas/*.ts
+
 .PHONY: run-tests-verify 
 run-tests-verify: 
 	VERIFY_TEST_RUNNER_TIMEOUT_MS=80000 yarn --cwd tests run cypress verify

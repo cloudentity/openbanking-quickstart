@@ -80,6 +80,18 @@ pipeline {
                 }
             }
         }
+        stage('[WIP] SaaS Tests') {
+            steps {
+                script {
+                    try {
+                        sh 'make disable-mfa run'
+                        sh 'make run-apps-with-saas'
+                        sh 'make run-saas-tests-headless'
+                        sh 'make clean'
+                    }
+                }
+            }
+        }
     }
 
     post {
