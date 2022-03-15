@@ -99,7 +99,7 @@ run-obbr-tests-headless: run-tests-verify
 	yarn --cwd tests run cypress run -s cypress/integration/obbr/*.ts
 
 .PHONY: run-saas-tests-headless
-run-obbr-tests-headless: run-tests-verify
+run-saas-tests-headless: run-tests-verify
 	yarn --cwd tests run cypress run -s cypress/integration/saas/*.ts
 
 .PHONY: run-tests-verify 
