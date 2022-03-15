@@ -45,7 +45,7 @@ func (s *Server) CreateDomesticPaymentConsent() func(*gin.Context) {
 		case "obuk":
 			loginURLBuilder, err = NewOBUKLoginURLBuilder()
 		case "obbr":
-			loginURLBuilder, err = NewOBBRLoginURLBuilder(c, clients.AcpAccountsClient)
+			loginURLBuilder, err = NewOBBRLoginURLBuilder(c, clients.AcpPaymentsClient)
 		}
 		if err != nil {
 			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to create login url builder: %+v", err))
