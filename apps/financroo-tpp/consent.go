@@ -16,6 +16,7 @@ import (
 	obbrClientModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_b_r"
 	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
 	ob "github.com/cloudentity/acp-client-go/clients/openbanking/models"
+	"github.com/cloudentity/acp-client-go/clients/openbankingBR/payments/client/pagamentos"
 )
 
 func (o *OBUKConsentClient) CreateAccountConsent(c *gin.Context) (string, error) {
@@ -270,6 +271,12 @@ func (o *OBBRConsentClient) CreateAccountConsent(c *gin.Context) (string, error)
 						},
 					},
 					Permissions: permissions,
+					BusinessEntity: &ob.OpenbankingBrasilConsentBusinessEntity{
+						Document: &ob.OpenbankingBrasilConsentDocument1{
+							Identification: "11111111111111",
+							Rel:            "CNPJ",
+						},
+					},
 				},
 			}),
 		nil,
@@ -281,11 +288,105 @@ func (o *OBBRConsentClient) CreateAccountConsent(c *gin.Context) (string, error)
 }
 
 func (o *OBBRConsentClient) CreatePaymentConsent(c *gin.Context, req CreatePaymentRequest) (string, error) {
-	return "", nil
+	var (
+		response *pagamentos.PaymentsPostConsentsCreated
+		bytes    []byte
+		jwt      string
+		err      error
+	)
+
+	personType := ob.OpenbankingBrasilPaymentEnumPaymentPersonType("PESSOA_NATURAL")
+	creditor := ob.OpenbankingBrasilPaymentIdentification{
+		PersonType: &personType,
+		CpfCnpj:    "11111111111111",
+		Name:       "Marco Antonio de Brito",
+	}
+
+	localInstrument := ob.OpenbankingBrasilPaymentEnumLocalInstrument("DICT")
+	accountType := ob.OpenbankingBrasilPaymentEnumAccountPaymentsType("CACC")
+
+	payment := ob.OpenbankingBrasilPaymentPaymentConsent{
+		Type:         "PIX",
+		Date:         strfmt.Date(time.Now().Add(time.Hour * 24)),
+		Currency:     "BRL",
+		Amount:       req.Amount,
+		IbgeTownCode: "1234567",
+		Details: &ob.OpenbankingBrasilPaymentDetails{
+			CreditorAccount: &ob.OpenbankingBrasilPaymentCreditorAccount{
+				AccountType: &accountType,
+				Ispb:        "12345678",
+				Number:      req.AccountID,
+			},
+			LocalInstrument: &localInstrument,
+		},
+	}
+
+	businessEntity := ob.OpenbankingBrasilPaymentBusinessEntity{
+		Document: &ob.OpenbankingBrasilPaymentDocument{
+			Identification: "11111111111111",
+			Rel:            "CNPJ",
+		},
+	}
+	loggedUser := ob.OpenbankingBrasilPaymentLoggedUser{
+		Document: &ob.OpenbankingBrasilPaymentDocument1{
+			Identification: "11111111111",
+			Rel:            "CPF",
+		},
+	}
+
+	debtorAccount := ob.OpenbankingBrasilPaymentDebtorAccount{
+		Number:      req.AccountID,
+		Ispb:        "11111111",
+		AccountType: &accountType,
+	}
+
+	obbrPaymentConsentRequest := ob.BrazilCustomerPaymentConsentRequest{
+		Aud: fmt.Sprintf("%s/open-banking/payments/v1/consents", o.Payments.Config.IssuerURL.String()),
+		Iat: time.Now().Unix(),
+		Jti: uuid.New().String(),
+		Iss: "3333-3333-3333-3333",
+		Data: &ob.OpenbankingBrasilPaymentData{
+			BusinessEntity: &businessEntity,
+			LoggedUser:     &loggedUser,
+			Creditor:       &creditor,
+			Payment:        &payment,
+			DebtorAccount:  &debtorAccount,
+		},
+	}
+
+	if bytes, err = json.Marshal(obbrPaymentConsentRequest); err != nil {
+		return "", errors.Wrapf(err, "failed to marshal payment consent request")
+	}
+
+	if jwt, err = o.Signer.Sign(bytes); err != nil {
+		return "", errors.Wrapf(err, "failed to sign payment consent request")
+	}
+
+	if response, err = o.Payments.OpenbankingBrasil.Payments.Pagamentos.PaymentsPostConsents(
+		pagamentos.NewPaymentsPostConsentsParamsWithContext(c).
+			WithBody(jwt),
+		nil,
+	); err != nil {
+		return "", err
+	}
+
+	if bytes, err = json.Marshal(response.Payload); err != nil {
+		return "", err
+	}
+	var consent ob.BrazilCustomerPaymentConsentResponse
+	if err = json.Unmarshal(bytes, &consent); err != nil {
+		return "", err
+	}
+
+	return consent.Data.ConsentID, nil
 }
 
-func (o *OBBRConsentClient) GetPaymentConsent(c *gin.Context, consentID string) (interface{}, error) {
-	return nil, nil
+func (o *OBBRConsentClient) GetPaymentConsent(c *gin.Context, consentID string) (response interface{}, err error) {
+	return o.Payments.Openbanking.Openbankingbr.GetPaymentConsent(
+		obbrClientModels.NewGetPaymentConsentParamsWithContext(c).
+			WithConsentID(consentID),
+		nil,
+	)
 }
 
 func getInitiation(consentResponse *obukModels.GetDomesticPaymentConsentRequestOK) (pi obModels.OBWriteDomestic2DataInitiation, err error) {
