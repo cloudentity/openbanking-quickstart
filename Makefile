@@ -135,6 +135,12 @@ enable-spec-obbr:
 set-version:
 	./scripts/override_env.sh VERSION $(shell ./scripts/version.sh)
 
+.PHONY: set-saas-configuration
+set-saas-configuration:
+	./scripts/override_env.sh TENANT ${SAAS_TENANT_ID}
+	./scripts/override_env.sh CONFIGURATION_CLIENT_ID ${SAAS_CLIENT_ID}
+	./scripts/override_env.sh CONFIGURATION_CLIENT_SECRET ${SAAS_CLIENT_SECRET}
+
 .PHONY: start-runner
 start-runner:
 	docker build -t quickstart-runner -f build/runner.dockerfile .

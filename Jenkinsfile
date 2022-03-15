@@ -82,14 +82,14 @@ pipeline {
         }
         stage('[WIP] SaaS Tests') {
             environment {
-                TENANT = 'amfudxn6-qa-us-east-1-ob-quickstart'
-                CONFIGURATION_CLIENT_ID = credentials('OPENBANKING_CONFIGURATION_CLIENT_ID')
-                CONFIGURATION_CLIENT_SECRET = credentials('OPENBANKING_CONFIGURATION_CLIENT_SECRET')
+                SAAS_TENANT_ID = 'amfudxn6-qa-us-east-1-ob-quickstart'
+                SAAS_CLIENT_ID = credentials('OPENBANKING_CONFIGURATION_CLIENT_ID')
+                SAAS_CLIENT_SECRET = credentials('OPENBANKING_CONFIGURATION_CLIENT_SECRET')
             }
             steps {
                 script {
                     try {
-                        sh 'make disable-mfa run-apps-with-saas'
+                        sh 'make disable-mfa set-saas-configuration run-apps-with-saas'
                         sh 'make run-saas-tests-headless'
                         sh 'make clean'
                     } catch(exc) {
