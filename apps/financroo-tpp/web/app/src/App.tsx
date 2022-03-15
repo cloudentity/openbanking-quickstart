@@ -28,13 +28,6 @@ declare global {
 
 window.featureFlags = window.featureFlags || {};
 
-export type Config = {
-  authorizationServerURL: string;
-  authorizationServerId: string;
-  clientId: string;
-  tenantId: string;
-};
-
 const queryCache = new QueryCache();
 
 const scopes = [];
@@ -49,59 +42,35 @@ const login = (data) => {
 };
 
 function App() {
-  const [progress, setProgress] = useState(true);
-  const [config, setConfig] = useState<Config>();
-
-  useEffect(() => {
-    superagent
-      .get("/config.json")
-      .then(toJson)
-      .then((res) => setConfig(res))
-      .finally(() => setProgress(false));
-  }, []);
-
   return (
-    <>
-      <ThemeProvider theme={theme}>
-        <StylesProvider injectFirst>
-          <ReactQueryCacheProvider queryCache={queryCache}>
-            <ReactQueryDevtools />
-            {progress && <Progress />}
-            {!progress && (
-              <Router>
-                <Suspense fallback={<Progress />}>
-                  <Switch>
-                    <Route
-                      path={"/auth"}
-                      render={() => (
-                        <AuthPage
-                          loginFn={login}
-                        />
-                      )}
-                    />
-                    <PrivateRoute
-                      path="/"
-                      component={() => (
-                        <AuthenticatedAppBase
-                          authorizationServerURL={
-                            config?.authorizationServerURL
-                          }
-                          authorizationServerId={config?.authorizationServerId}
-                          tenantId={config?.tenantId}
-                          clientId={config?.clientId}
-                          scopes={scopes}
-                        />
-                      )}
-                    />
-                    <Route component={() => <Redirect to={"/auth"} />} />
-                  </Switch>
-                </Suspense>
-              </Router>
-            )}
-          </ReactQueryCacheProvider>
-        </StylesProvider>
-      </ThemeProvider>
-    </>
+    <ThemeProvider theme={theme}>
+      <StylesProvider injectFirst>
+        <ReactQueryCacheProvider queryCache={queryCache}>
+          <ReactQueryDevtools />
+            <Router>
+              <Suspense fallback={<Progress />}>
+                <Switch>
+                  <Route
+                    path={"/auth"}
+                    render={() => (
+                      <AuthPage
+                        loginFn={login}
+                      />
+                    )}
+                  />
+                  <PrivateRoute
+                    path="/"
+                    component={() => (
+                      <AuthenticatedAppBase />
+                    )}
+                  />
+                  <Route component={() => <Redirect to={"/auth"} />} />
+                </Switch>
+              </Suspense>
+            </Router>
+        </ReactQueryCacheProvider>
+      </StylesProvider>
+    </ThemeProvider>
   );
 }
 

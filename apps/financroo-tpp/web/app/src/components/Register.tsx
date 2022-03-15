@@ -46,8 +46,8 @@ export default function Register({onLogin}) {
   const classes = useStyles();
 
   const [state, setState] = React.useState({
-    login: '',
-    password: '',
+    login: 'test',
+    password: 'p@ssw0rd!',
     error: false,
     processing: false,
   })
@@ -108,7 +108,7 @@ export default function Register({onLogin}) {
                 style={{width: '100%'}}
               />
 
-              <Button disabled={state.processing} id="login-button" type="submit" className={'login-button'}color={'secondary'} style={{width: '100%', minHeight: 50, marginTop: 24,}} variant={'contained'}>Login</Button>
+              <Button data-testid="login-button" disabled={state.processing} id="login-button" type="submit" className={'login-button'}color={'secondary'} style={{width: '100%', minHeight: 50, marginTop: 24,}} variant={'contained'}>Login</Button>
               <Alert severity="error" variant="outlined" style={{width: '100%', marginTop: 24, visibility: state.error? 'visible': 'hidden',}}>Invalid login or password</Alert>
             </form>
           </div>

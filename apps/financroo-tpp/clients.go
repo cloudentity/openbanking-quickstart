@@ -150,31 +150,6 @@ func NewAcpClient(c Config, cfg BankConfig, redirect string) (acpclient.Client, 
 	return client, nil
 }
 
-func NewLoginClient(c Config) (acpclient.Client, error) {
-	var (
-		issuerURL *url.URL
-		client    acpclient.Client
-		err       error
-	)
-
-	if issuerURL, err = url.Parse(fmt.Sprintf("%s/%s/%s", c.ACPInternalURL, c.Tenant, c.Login.ServerID)); err != nil {
-		return client, err
-	}
-
-	config := acpclient.Config{
-		ClientID:  c.Login.ClientID,
-		IssuerURL: issuerURL,
-		Timeout:   c.Login.Timeout,
-		RootCA:    c.Login.RootCA,
-	}
-
-	if client, err = acpclient.New(config); err != nil {
-		return client, err
-	}
-
-	return client, nil
-}
-
 type OBUKClient struct {
 	*obc.OpenbankingAccountsClient
 	*payments_client.OpenbankingPaymentsClient

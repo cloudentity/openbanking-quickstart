@@ -12,9 +12,7 @@ import (
 )
 
 func fakeUserinfo(token string) (body map[string]interface{}, err error) {
-	var (
-		raw []byte
-	)
+	var raw []byte
 
 	parts := strings.Split(token, ".")
 	if len(parts) != 3 {
@@ -30,7 +28,6 @@ func fakeUserinfo(token string) (body map[string]interface{}, err error) {
 	}
 
 	return body, nil
-
 }
 
 func (s *Server) WithUser(c *gin.Context) (User, BankTokens, error) {

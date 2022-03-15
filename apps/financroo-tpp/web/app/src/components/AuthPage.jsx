@@ -5,9 +5,9 @@ import { useHistory } from "react-router-dom";
 import {getTokenFromStore, isTokenInStore, removeAllAuthDataFromStore} from './auth.utils';
 import Register from './Register';
 
-export const logout = (authorizationServerURL, tenantId, authorizationServerId) => {
+export const logout = () => {
   removeAllAuthDataFromStore();
-  window.location.href = `${authorizationServerURL}/${tenantId}/${authorizationServerId}/logout?redirect_to=${window.location.origin}`
+  window.location.href = `/auth`
 };
 
 
