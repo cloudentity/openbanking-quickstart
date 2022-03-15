@@ -1,149 +1,132 @@
 import React from "react";
 import { Redirect } from "react-router";
+import {Theme} from "@material-ui/core";
+import {makeStyles} from "@material-ui/core/styles";
+import backgroundLogin from "../assets/background-login.png";
+import financrooLogo from "../assets/financroo-logo.svg";
+import Grid from "@material-ui/core/Grid";
+import Button from "@material-ui/core/Button";
+import { ThemeProvider, createMuiTheme } from "@material-ui/core/styles";
+import { Alert } from '@material-ui/lab';
+import TextField from "@material-ui/core/TextField";
 
 import {
   getTokenFromStore,
   isTokenInStore,
   removeAllAuthDataFromStore,
 } from "./auth.utils";
-import { generateRandomString, pkceChallengeFromVerifier } from "./pkce.utils";
 
-const calcAuthorizationUrl = async (
-  authorizationServerURL,
-  tenantId,
-  authorizationServerId,
-  clientId,
-  scopes = [],
-  silent = false,
-  idTokenHint = ""
-) => {
-  const authorizationUri = `${authorizationServerURL}/${tenantId}/${authorizationServerId}/oauth2/authorize`;
 
-  // Create and store a random "state" value
-  const state = generateRandomString();
-  localStorage.setItem(`pkce_state`, state);
+const useStyles = makeStyles(() => ({
+  container: {
+    background: "#FFFFFF",
+    boxShadow:
+      "0px 1px 1px rgba(0, 0, 0, 0.08), 0px 0px 1px rgba(0, 0, 0, 0.31)",
+    borderRadius: 4,
+    maxWidth: 650,
+    margin: "0 auto 24px auto",
+    boxSizing: "border-box",
+    padding: 48,
+    marginTop: 24,
+  },
+  header: {
+    borderBottom: "1px solid #ECECEC",
+    padding: "0 32px",
+  },
+}));
 
-  // Create and store a new PKCE code_verifier (the plaintext random secret)
-  const code_verifier = generateRandomString();
-  localStorage.setItem(`pkce_code_verifier`, code_verifier);
-
-  // Hash and base64-urlencode the secret to use as the challenge
-  const code_challenge = await pkceChallengeFromVerifier(code_verifier);
-
-  return (
-    authorizationUri +
-    "?response_type=code" +
-    "&client_id=" +
-    encodeURIComponent(clientId) +
-    "&state=" +
-    encodeURIComponent(state) +
-    "&scope=" +
-    encodeURIComponent(scopes.join(" ")) +
-    "&redirect_uri=" +
-    encodeURIComponent(
-      window.location.origin + `/${silent ? "silent" : "callback"}`
-    ) +
-    "&code_challenge=" +
-    encodeURIComponent(code_challenge) +
-    "&code_challenge_method=S256" +
-    `${silent ? `&prompt=none&id_token_hint=${idTokenHint}` : ""}`
-  );
-};
-
-export const authorize = async (
-  authorizationServerURL,
-  tenantId,
-  authorizationServerId,
-  clientId,
-  scopes = []
-) => {
-  // Authorization URL
-  window.location.href = await calcAuthorizationUrl(
-    authorizationServerURL,
-    tenantId,
-    authorizationServerId,
-    clientId,
-    scopes
-  );
-};
-
-const IFRAME_ID = "silent-auth-iframe";
-export const SILENT_AUTH_SUCCESS_MESSAGE = "silentAuthSuccess";
-export const SILENT_AUTH_ERROR_MESSAGE = "silentAuthFailure";
-
-export const silentAuthentication = async (
-  authorizationServerURL,
-  tenantId,
-  authorizationServerId,
-  clientId,
-  scopes,
-  idTokenHint
-) => {
-  const iframe = document.createElement("iframe");
-  const src = await calcAuthorizationUrl(
-    authorizationServerURL,
-    tenantId,
-    authorizationServerId,
-    clientId,
-    scopes,
-    true,
-    idTokenHint
-  );
-  iframe.setAttribute("src", src);
-  iframe.setAttribute("id", IFRAME_ID);
-  iframe.style.display = "none";
-
-  const listener = (e) => {
-    if (
-      e.data === SILENT_AUTH_SUCCESS_MESSAGE ||
-      e.data === SILENT_AUTH_ERROR_MESSAGE
-    ) {
-      const iframeToRemove = document.querySelector(`#${IFRAME_ID}`);
-      iframeToRemove && document.body.removeChild(iframeToRemove);
-      window.removeEventListener("message", listener);
-    }
-  };
-
-  window.addEventListener("message", listener);
-
-  document.body.appendChild(iframe);
-};
-
-export const logout = (
-  authorizationServerURL,
-  tenantId,
-  authorizationServerId
-) => {
+export const logout = () => {
   removeAllAuthDataFromStore();
-  window.location.href = `${authorizationServerURL}/${tenantId}/${authorizationServerId}/logout?redirect_to=${window.location.origin}`;
+  window.location.href = `/`;
 };
+
 
 const AuthPage = ({
-  login,
-  authorizationServerURL,
-  tenantId,
-  authorizationServerId,
-  clientId,
-  scopes,
+  login
 }) => {
-  const handleLogin = () => {
-    authorize(
-      authorizationServerURL,
-      tenantId,
-      authorizationServerId,
-      clientId,
-      scopes
-    );
-  };
+
+  const [state, setState] = React.useState({
+    login: 'admin',
+    password: 'p@ssw0rd!',
+    error: false,
+    processing: false,
+  })
+
+  const classes = useStyles();
 
   if (isTokenInStore()) {
     login({ token: getTokenFromStore() });
     return <Redirect to={"/"} />;
   }
 
-  handleLogin();
+  const onSubmit = (e) => {
+    e.preventDefault();
+    setState({...state, processing: true})
 
-  return null;
+    if (state.login === "admin" && state.password === "p@ssw0rd!") {
+      login({token: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.XbPfbIHMI6arZ3Y922BhjWgQzWXcXNrz0ogtVhfEd2o'})
+      return
+    }
+
+    setState({...state, processing:false, password: '', error: true})
+  }
+
+  const handleLoginChange = (e) => {
+    setState({...state, login: e.target.value});
+  }
+
+  const handlePasswordChange = (e) =>{
+    setState({...state, password: e.target.value});
+  }
+
+
+  return (
+    <div style={{
+      position:"fixed",
+      bottom: "0px",
+      top: "0px",
+      left: "0px",
+      right: "0px",
+      backgroundColor: "#002D4C",
+
+      backgroundImage: "url(\"/static/media/background.f7f97194.svg\")",
+      backgroundPosition: "left center",
+      backgroundRepeat: "no-repeat",
+      backgroundSize: "contain"
+    }}>
+      <div className={classes.container}>
+        <center>
+          <img src="/static/media/gobank-logo.042fc889.svg" alt="logo" />
+        </center>
+
+        <form onSubmit={onSubmit}>
+          <TextField margin="normal"
+            id="standard-login-input"
+            label="Login"
+            type="text"
+            autoComplete="current-login"
+            color="primary"
+            value={state.login}
+            onChange={handleLoginChange}
+            style={{width: '100%'}}
+          />
+          <TextField margin="normal"
+            id="standard-password-input"
+            label="Password"
+            type="password"
+            autoComplete="current-password"
+            color="primary"
+            value={state.password}
+            onChange={handlePasswordChange}
+            style={{width: '100%', color: 'white',}}
+          />
+
+          <Button data-testid="login-button" disabled={state.processing} id="login-button" type="submit" className={'login-button'}  style={{width: '100%', minHeight: 50, marginTop: 24,}} variant={'contained'}>Login</Button>
+          <Alert severity="error" variant="outlined" style={{marginTop: 24, display: state.error? '': 'none',}}>Invalid login or password</Alert>
+        </form>
+      </div>
+    </div>
+  )
 };
 
 export default AuthPage;
