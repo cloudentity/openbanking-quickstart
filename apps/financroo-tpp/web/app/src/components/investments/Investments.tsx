@@ -19,11 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-export default function Investments({
-  authorizationServerURL,
-  authorizationServerId,
-  tenantId,
-}) {
+export default function Investments() {
   const history = useHistory();
   const classes = useStyles();
 
@@ -31,9 +27,6 @@ export default function Investments({
     <div style={{ position: "relative" }}>
       <PageToolbar
         mode="main"
-        authorizationServerURL={authorizationServerURL}
-        authorizationServerId={authorizationServerId}
-        tenantId={tenantId}
         tab="investments"
         subHeaderTitle="Investments"
         subHeaderButton={{

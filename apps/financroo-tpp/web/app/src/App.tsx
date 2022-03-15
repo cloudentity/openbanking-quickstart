@@ -11,7 +11,6 @@ import { ReactQueryDevtools } from "react-query-devtools";
 import { QueryCache, ReactQueryCacheProvider } from "react-query";
 import PrivateRoute from "./components/PrivateRoute";
 import AuthPage from "./components/AuthPage";
-import Callback from "./components/Callback";
 import AuthenticatedAppBase from "./components/AuthenticatedAppBase";
 import {
   putExpiresInInStore,
@@ -29,13 +28,6 @@ declare global {
 
 window.featureFlags = window.featureFlags || {};
 
-export type Config = {
-  authorizationServerURL: string;
-  authorizationServerId: string;
-  clientId: string;
-  tenantId: string;
-};
-
 const queryCache = new QueryCache();
 
 const scopes = [];
@@ -50,99 +42,35 @@ const login = (data) => {
 };
 
 function App() {
-  const [progress, setProgress] = useState(true);
-  const [config, setConfig] = useState<Config>();
-
-  useEffect(() => {
-    superagent
-      .get("/config.json")
-      .then(toJson)
-      .then((res) => setConfig(res))
-      .finally(() => setProgress(false));
-  }, []);
-
   return (
-    <>
-      <ThemeProvider theme={theme}>
-        <StylesProvider injectFirst>
-          <ReactQueryCacheProvider queryCache={queryCache}>
-            <ReactQueryDevtools />
-            {progress && <Progress />}
-            {!progress && (
-              <Router>
-                <Suspense fallback={<Progress />}>
-                  <Switch>
-                    <Route
-                      path="/callback"
-                      render={() => (
-                        <Callback
-                          authorizationServerURL={
-                            config?.authorizationServerURL
-                          }
-                          authorizationServerId={config?.authorizationServerId}
-                          tenantId={config?.tenantId}
-                          clientId={config?.clientId}
-                          login={login}
-                        />
-                      )}
-                    />
-                    <Route
-                      path="/silent"
-                      render={() => (
-                        <Callback
-                          silent
-                          authorizationServerURL={
-                            config?.authorizationServerURL
-                          }
-                          authorizationServerId={config?.authorizationServerId}
-                          tenantId={config?.tenantId}
-                          clientId={config?.clientId}
-                          login={login}
-                        />
-                      )}
-                    />
-                    <Route
-                      path={"/auth"}
-                      render={() => (
-                        <AuthPage
-                          login={login}
-                          authorizationServerURL={
-                            config?.authorizationServerURL
-                          }
-                          authorizationServerId={config?.authorizationServerId}
-                          tenantId={config?.tenantId}
-                          clientId={config?.clientId}
-                          scopes={scopes}
-                        />
-                      )}
-                    />
-                    <PrivateRoute
-                      path="/"
-                      authorizationServerURL={config?.authorizationServerURL}
-                      authorizationServerId={config?.authorizationServerId}
-                      tenantId={config?.tenantId}
-                      login={login}
-                      component={() => (
-                        <AuthenticatedAppBase
-                          authorizationServerURL={
-                            config?.authorizationServerURL
-                          }
-                          authorizationServerId={config?.authorizationServerId}
-                          tenantId={config?.tenantId}
-                          clientId={config?.clientId}
-                          scopes={scopes}
-                        />
-                      )}
-                    />
-                    <Route component={() => <Redirect to={"/auth"} />} />
-                  </Switch>
-                </Suspense>
-              </Router>
-            )}
-          </ReactQueryCacheProvider>
-        </StylesProvider>
-      </ThemeProvider>
-    </>
+    <ThemeProvider theme={theme}>
+      <StylesProvider injectFirst>
+        <ReactQueryCacheProvider queryCache={queryCache}>
+          <ReactQueryDevtools />
+            <Router>
+              <Suspense fallback={<Progress />}>
+                <Switch>
+                  <Route
+                    path={"/auth"}
+                    render={() => (
+                      <AuthPage
+                        loginFn={login}
+                      />
+                    )}
+                  />
+                  <PrivateRoute
+                    path="/"
+                    component={() => (
+                      <AuthenticatedAppBase />
+                    )}
+                  />
+                  <Route component={() => <Redirect to={"/auth"} />} />
+                </Switch>
+              </Suspense>
+            </Router>
+        </ReactQueryCacheProvider>
+      </StylesProvider>
+    </ThemeProvider>
   );
 }
 

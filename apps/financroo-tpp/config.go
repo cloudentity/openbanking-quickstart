@@ -27,12 +27,6 @@ type ClientConfig struct {
 	Scopes   []string `mapstructure:"scopes"`
 }
 
-type LoginConfig struct {
-	ClientConfig `mapstructure:",squash"`
-	RootCA       string `mapstructure:"root_ca"`
-	Timeout      time.Duration
-}
-
 type HTTPClientConfig struct {
 	RootCA   string `mapstructure:"root_ca"`
 	CertFile string `mapstructure:"cert_file"`
@@ -70,7 +64,6 @@ type Config struct {
 	KeyFile        string `mapstructure:"key_file" validate:"required"`
 	CookieHashKey  []byte `mapstructure:"cookie_hash_key"`
 	CookieBlockKey []byte `mapstructure:"cookie_block_key"`
-	Login          LoginConfig
 	Banks          []BankConfig
 	FeatureFlags   FeatureFlags `mapstructure:"feature_flags"`
 }

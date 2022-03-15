@@ -1,9 +1,3 @@
-login:
-  tenant_id: default
-  server_id: financroo
-  client_id: bv3p4uo557ouq8rha2bg
-  root_ca: "/certs/ca.pem"
-  timeout: 5s
 banks:
 - id: gobank
   bank_type: obuk

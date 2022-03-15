@@ -48,7 +48,7 @@ services:
     container_name: consent-page-uk
     restart: always
     ports:
-      - "8080:8080"
+      - "7080:8080"
     volumes:
       - ./mount/consent-page-uk:/data
       - ./data/ca.pem:/ca.pem
@@ -132,7 +132,6 @@ services:
       - ./data/variables.yaml:/variables.yaml
       - ./data/imports/bank-admins.tmpl:/app/imports-cdr/bank-admins.tmpl
       - ./data/imports/bank-customers.tmpl:/app/imports-cdr/bank-customers.tmpl
-      - ./data/imports/financroo.tmpl:/app/imports-cdr/financroo.tmpl
       - ./data/imports/system.tmpl:/app/imports-cdr/system.tmpl
       - ./data/imports/cdr.tmpl:/app/imports-cdr/cdr.tmpl
     command:
