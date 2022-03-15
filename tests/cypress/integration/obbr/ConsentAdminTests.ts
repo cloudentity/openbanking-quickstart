@@ -70,11 +70,6 @@ describe(`Consent admin app`, () => {
   });
 
   it(`Cancel second ACP login`, () => {
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    if (environmentVariables.isMfaEnabled()) {
-      mfaPage.typePin();
-    }
-    consentPage.confirm();
     consentAdminPage.visit();
     acpLoginPage.cancel();
     errorPage.assertError(`The user rejected the authentication`);
