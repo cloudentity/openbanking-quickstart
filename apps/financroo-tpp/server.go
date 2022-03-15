@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 
@@ -39,9 +40,6 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to init clients")
 	}
 
-	if server.LoginClient, err = NewLoginClient(server.Config); err != nil {
-		return server, errors.Wrapf(err, "failed to init login client")
-	}
 	server.SecureCookie = securecookie.New(server.Config.CookieHashKey, server.Config.CookieBlockKey)
 
 	if server.DB, err = InitDB(server.Config); err != nil {
@@ -59,11 +57,13 @@ func NewServer() (Server, error) {
 
 func (s *Server) Start() error {
 	r := gin.Default()
+	gin.DebugPrintRouteFunc = func(httpMethod, absolutePath, handlerName string, nuHandlers int) {
+		log.Printf("endpoint %v %v %v %v\n", httpMethod, absolutePath, handlerName, nuHandlers)
+	}
 	r.LoadHTMLGlob("web/app/build/index.html")
 	r.Static("/static", "./web/app/build/static")
 
 	r.GET("/", s.Index())
-	r.GET("/config.json", s.WebConfig())
 
 	r.POST("/api/connect/:bankId", s.ConnectBank())
 	r.GET("/api/callback", s.ConnectBankCallback())

@@ -26,17 +26,6 @@ func (s *Server) Index() func(*gin.Context) {
 	}
 }
 
-func (s *Server) WebConfig() func(*gin.Context) {
-	return func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"authorizationServerURL": s.Config.ACPURL,
-			"clientId":               s.Config.Login.ClientID,
-			"authorizationServerId":  s.Config.Login.ServerID,
-			"tenantId":               s.Config.Tenant,
-		})
-	}
-}
-
 type ConnectBankRequest struct {
 	Permissions []string `json:"permissions" binding:"required"`
 }

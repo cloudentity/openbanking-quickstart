@@ -1,6 +1,8 @@
 package main
 
 import (
+	"encoding/base64"
+	"encoding/json"
 	"fmt"
 	"net/http"
 	"strings"
@@ -8,6 +10,25 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 )
+
+func fakeUserinfo(token string) (body map[string]interface{}, err error) {
+	var raw []byte
+
+	parts := strings.Split(token, ".")
+	if len(parts) != 3 {
+		return body, errors.New("invalid jwt token")
+	}
+
+	if raw, err = base64.RawURLEncoding.DecodeString(parts[1]); err != nil {
+		return body, err
+	}
+
+	if err = json.Unmarshal(raw, &body); err != nil {
+		return body, err
+	}
+
+	return body, nil
+}
 
 func (s *Server) WithUser(c *gin.Context) (User, BankTokens, error) {
 	var (
@@ -26,7 +47,7 @@ func (s *Server) WithUser(c *gin.Context) (User, BankTokens, error) {
 		return user, tokens, errors.New("no access token provided")
 	}
 
-	if claims, err = s.LoginClient.Userinfo(token); err != nil {
+	if claims, err = fakeUserinfo(token); err != nil {
 		return user, tokens, errors.Wrapf(err, "invalid token")
 	}
 

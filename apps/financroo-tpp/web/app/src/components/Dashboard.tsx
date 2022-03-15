@@ -32,11 +32,7 @@ function useQueryParams() {
   return new URLSearchParams(useLocation().search);
 }
 
-export default function Dashboard({
-  authorizationServerURL,
-  authorizationServerId,
-  tenantId,
-}) {
+export default function Dashboard() {
   const [connectAccountOpen, setConnectAccountOpen] = useState(false);
   const [isProgress, setProgress] = useState(false);
   const [snackbar, setSnackbar] = useState("");
@@ -120,12 +116,7 @@ export default function Dashboard({
 
   return (
     <div style={{ position: "relative" }}>
-      <PageToolbar
-        mode="main"
-        authorizationServerURL={authorizationServerURL}
-        authorizationServerId={authorizationServerId}
-        tenantId={tenantId}
-      />
+      <PageToolbar mode="main" />
 
       {showProgress && <Progress />}
 

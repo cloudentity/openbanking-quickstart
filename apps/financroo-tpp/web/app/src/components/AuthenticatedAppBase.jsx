@@ -7,14 +7,7 @@ import Investments from "./investments/Investments";
 import InvestmentsContribute from "./investments/InvestmentsContribute";
 import InvestmentsContributeSuccess from "./investments/InvestmentsContributeSuccess";
 
-export default function AuthenticatedAppBase({
-  authorizationServerURL,
-  authorizationServerId,
-  tenantId,
-  clientId,
-  scopes,
-  userinfo = {},
-}) {
+export default function AuthenticatedAppBase() {
   return (
     <Suspense>
       <Switch>
@@ -22,23 +15,14 @@ export default function AuthenticatedAppBase({
           exact
           path={"/"}
           render={() => (
-            <Dashboard
-              authorizationServerURL={authorizationServerURL}
-              authorizationServerId={authorizationServerId}
-              tenantId={tenantId}
-              userinfo={userinfo}
-            />
+            <Dashboard />
           )}
         />
         <Route
           path={"/investments"}
           exact
           render={() => (
-            <Investments
-              authorizationServerURL={authorizationServerURL}
-              authorizationServerId={authorizationServerId}
-              tenantId={tenantId}
-            />
+            <Investments />
           )}
         />
         <Route
