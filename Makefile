@@ -98,6 +98,10 @@ run-obuk-tests-headless: run-tests-verify
 run-obbr-tests-headless: run-tests-verify
 	yarn --cwd tests run cypress run -s cypress/integration/obbr/*.ts
 
+.PHONY: run-saas-tests-headless
+run-saas-tests-headless: run-tests-verify
+	yarn --cwd tests run cypress run -s cypress/integration/saas/*.ts
+
 .PHONY: run-tests-verify 
 run-tests-verify: 
 	VERIFY_TEST_RUNNER_TIMEOUT_MS=80000 yarn --cwd tests run cypress verify
@@ -130,6 +134,12 @@ enable-spec-obbr:
 .PHONY: set-version
 set-version:
 	./scripts/override_env.sh VERSION $(shell ./scripts/version.sh)
+
+.PHONY: set-saas-configuration
+set-saas-configuration:
+	./scripts/override_env.sh TENANT ${SAAS_TENANT_ID}
+	./scripts/override_env.sh CONFIGURATION_CLIENT_ID ${SAAS_CLIENT_ID}
+	./scripts/override_env.sh CONFIGURATION_CLIENT_SECRET ${SAAS_CLIENT_SECRET}
 
 .PHONY: start-runner
 start-runner:
