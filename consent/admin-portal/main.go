@@ -19,29 +19,26 @@ type Spec string
 const (
 	OBUK Spec = "obuk"
 	CDR  Spec = "cdr"
+	OBBR Spec = "obbr"
 )
 
-var Specs = []Spec{OBUK, CDR}
+var Specs = []Spec{OBUK, CDR, OBBR}
 
 type Config struct {
-	SystemClientID              string        `env:"SYSTEM_CLIENT_ID,required"`
-	SystemClientSecret          string        `env:"SYSTEM_CLIENT_SECRET,required"`
-	SystemIssuerURL             *url.URL      `env:"SYSTEM_ISSUER_URL,required"`
-	OpenbankingUKWorkspaceID    string        `env:"OPENBANKING_UK_WORKSPACE_ID,required"`
-	CDRWorkspaceID              string        `env:"CDR_WORKSPACE_ID,required"`
-	Timeout                     time.Duration `env:"TIMEOUT" envDefault:"5s"`
-	RootCA                      string        `env:"ROOT_CA"`
-	CertFile                    string        `env:"CERT_FILE,required"`
-	KeyFile                     string        `env:"KEY_FILE,required"`
-	BankURL                     *url.URL      `env:"BANK_URL,required"`
-	Port                        int           `env:"PORT" envDefault:"8086"`
-	LoginAuthorizationServerURL string        `env:"LOGIN_AUTHORIZATION_SERVER_URL,required"`
-	LoginClientID               string        `env:"LOGIN_CLIENT_ID,required"`
-	LoginAuthorizationServerID  string        `env:"LOGIN_AUTHORIZATION_SERVER_ID,required"`
-	LoginTenantID               string        `env:"LOGIN_TENANT_ID,required"`
-	IntrospectClientID          string        `env:"INTROSPECT_CLIENT_ID,required"`
-	IntrospectClientSecret      string        `env:"INTROSPECT_CLIENT_SECRET,required"`
-	IntrospectIssuerURL         *url.URL      `env:"INTROSPECT_ISSUER_URL,required"`
+	SystemClientID               string        `env:"SYSTEM_CLIENT_ID,required"`
+	SystemClientSecret           string        `env:"SYSTEM_CLIENT_SECRET,required"`
+	SystemIssuerURL              *url.URL      `env:"SYSTEM_ISSUER_URL,required"`
+	OpenbankingUKWorkspaceID     string        `env:"OPENBANKING_UK_WORKSPACE_ID,required"`
+	OpenbankingBrasilWorkspaceID string        `env:"OPENBANKING_BRASIL_WORKSPACE_ID,required"`
+	CDRWorkspaceID               string        `env:"CDR_WORKSPACE_ID,required"`
+	Timeout                      time.Duration `env:"TIMEOUT" envDefault:"5s"`
+	RootCA                       string        `env:"ROOT_CA"`
+	CertFile                     string        `env:"CERT_FILE,required"`
+	KeyFile                      string        `env:"KEY_FILE,required"`
+	Port                         int           `env:"PORT" envDefault:"8086"`
+	IntrospectClientID           string        `env:"INTROSPECT_CLIENT_ID,required"`
+	IntrospectClientSecret       string        `env:"INTROSPECT_CLIENT_SECRET,required"`
+	IntrospectIssuerURL          *url.URL      `env:"INTROSPECT_ISSUER_URL,required"`
 }
 
 func (c *Config) SystemClientConfig() acpclient.Config {
@@ -79,11 +76,9 @@ func LoadConfig() (config Config, err error) {
 }
 
 type Server struct {
-	Config           Config
-	Client           acpclient.Client
-	IntrospectClient acpclient.Client
-	BankClient       BankClient
-	ConsentClients   []ConsentFetchRevoker
+	Config         Config
+	Client         acpclient.Client
+	ConsentClients []ConsentFetchRevoker
 }
 
 func NewServer() (Server, error) {
@@ -100,15 +95,9 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to init acp client")
 	}
 
-	if server.IntrospectClient, err = acpclient.New(server.Config.IntrospectClientConfig()); err != nil {
-		return server, errors.Wrapf(err, "failed to init introspect acp client")
-	}
-
 	for _, spec := range Specs {
 		server.ConsentClients = append(server.ConsentClients, ConsentFetcherFactory(spec, &server))
 	}
-
-	server.BankClient = NewBankClient(server.Config)
 
 	return server, nil
 }
@@ -124,15 +113,6 @@ func (s *Server) Start() error {
 	r.GET("/clients", s.ListClients())
 	r.DELETE("/consents/:id", s.RevokeConsent())
 	r.DELETE("/clients/:id", s.RevokeConsentsForClient())
-
-	r.GET("/config.json", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"authorizationServerURL": s.Config.LoginAuthorizationServerURL,
-			"clientId":               s.Config.LoginClientID,
-			"authorizationServerId":  s.Config.LoginAuthorizationServerID,
-			"tenantId":               s.Config.LoginTenantID,
-		})
-	})
 
 	r.NoRoute(func(c *gin.Context) {
 		c.File("web/app/build/index.html")

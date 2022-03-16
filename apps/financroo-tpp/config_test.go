@@ -34,11 +34,6 @@ func TestConfig(t *testing.T) {
 	require.Equal(t, "cert.pem", config.CertFile)
 	require.Equal(t, "key.pem", config.KeyFile)
 
-	require.NotEmpty(t, config.Login.ClientID)
-	require.NotEmpty(t, config.Login.ServerID)
-	require.NotEmpty(t, config.Login.RootCA)
-	require.NotEmpty(t, config.Login.Timeout)
-
 	require.NotEmpty(t, config.Banks[0].ID)
 	require.NotEmpty(t, config.Banks[0].URL)
 	require.NotEmpty(t, config.Banks[0].AcpClient.ServerID)

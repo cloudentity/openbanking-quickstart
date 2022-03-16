@@ -94,11 +94,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function InvestmentsContributeSuccess({
-  authorizationServerURL,
-  authorizationServerId,
-  tenantId,
-}) {
+export default function InvestmentsContributeSuccess() {
   const history = useHistory();
   const classes = useStyles();
   const {id} = useParams<{id: string}>();
@@ -109,9 +105,6 @@ export default function InvestmentsContributeSuccess({
     <div style={{ position: "relative" }}>
       <PageToolbar
         mode="main"
-        authorizationServerURL={authorizationServerURL}
-        authorizationServerId={authorizationServerId}
-        tenantId={tenantId}
         tab="investments"
       />
       <PageContainer

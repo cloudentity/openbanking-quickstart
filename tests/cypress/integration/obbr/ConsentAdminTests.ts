@@ -36,7 +36,7 @@ describe(`Consent admin app`, () => {
     consentPage.confirm();
     consentAdminPage.visit(true);
     consentAdminPage.login();
-  
+
     consentAdminPage.assertThatConsentManagementTabIsDisplayed()
     consentAdminPage.revokeClientConsent();
   });
@@ -51,8 +51,8 @@ describe(`Consent admin app`, () => {
     consentAdminPage.login();
 
     consentAdminPage.assertThatConsentManagementTabIsDisplayed()
-    consentAdminPage.searchAccount("22289");
-    consentAdminPage.assertAccountResult("22289");
+    consentAdminPage.searchAccount("94088392");
+    consentAdminPage.assertAccountResult("94088392");
     consentAdminPage.assertClientAccountWithStatus("Financroo", "Active");
     consentAdminPage.manageAccount("Financroo");
     consentAdminPage.assertConsentsDetails();

@@ -122,9 +122,7 @@ export default function PageToolbar({
         </div>
         <Button
           className={classes.signOutButton}
-          onClick={() =>
-            logout(authorizationServerURL, tenantId, authorizationServerId)
-          }
+          onClick={logout}
         >
           <ExitToAppIcon style={{ marginRight: 10 }} />
           Sign out

@@ -70,31 +70,19 @@ type Props =
   | ({
       mode: "dialog";
       children: React.ReactNode;
-      authorizationServerURL?: string;
-      authorizationServerId?: string;
-      tenantId?: string;
     } & CommonProps)
   | ({
       mode: "main";
       children?: React.ReactNode;
-      authorizationServerURL: string;
-      authorizationServerId: string;
-      tenantId: string;
     } & CommonProps)
   | ({
       mode: "onlySubheader";
       children?: React.ReactNode;
-      authorizationServerURL?: string;
-      authorizationServerId?: string;
-      tenantId?: string;
     } & CommonProps);
 
 export default function PageToolbar({
   mode,
   children,
-  authorizationServerURL,
-  authorizationServerId,
-  tenantId,
   tab,
   subHeaderTitle,
   subHeaderButton,
@@ -148,9 +136,7 @@ export default function PageToolbar({
             </Hidden>
             <Button
               variant="outlined"
-              onClick={() =>
-                logout(authorizationServerURL, tenantId, authorizationServerId)
-              }
+              onClick={logout}
             >
               Logout
             </Button>

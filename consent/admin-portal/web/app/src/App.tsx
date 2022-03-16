@@ -30,8 +30,6 @@ export type Config = {
 
 const queryCache = new QueryCache();
 
-const scopes = [];
-
 const login = (data) => {
   if (data.token) {
     putTokenInStore(data.token);
@@ -42,95 +40,32 @@ const login = (data) => {
 };
 
 function App() {
-  const [progress, setProgress] = useState(true);
-  const [config, setConfig] = useState<Config>();
-
-  useEffect(() => {
-    superagent
-      .get("/config.json")
-      .then(toJson)
-      .then((res) => setConfig(res))
-      .finally(() => setProgress(false));
-  }, []);
-
   return (
     <>
       <ThemeProvider theme={theme}>
         <StylesProvider injectFirst>
           <ReactQueryCacheProvider queryCache={queryCache}>
             <ReactQueryDevtools />
-            {progress && <Progress />}
-            {!progress && (
               <Router>
                 <Suspense fallback={<Progress />}>
                   <Switch>
                     <Route
-                      path="/callback"
-                      render={() => (
-                        <Callback
-                          authorizationServerURL={
-                            config?.authorizationServerURL
-                          }
-                          authorizationServerId={config?.authorizationServerId}
-                          tenantId={config?.tenantId}
-                          clientId={config?.clientId}
-                          login={login}
-                        />
-                      )}
-                    />
-                    <Route
-                      path="/silent"
-                      render={() => (
-                        <Callback
-                          silent
-                          authorizationServerURL={
-                            config?.authorizationServerURL
-                          }
-                          authorizationServerId={config?.authorizationServerId}
-                          tenantId={config?.tenantId}
-                          clientId={config?.clientId}
-                          login={login}
-                        />
-                      )}
-                    />
-                    <Route
                       path={"/auth"}
                       render={() => (
-                        <AuthPage
-                          login={login}
-                          authorizationServerURL={
-                            config?.authorizationServerURL
-                          }
-                          authorizationServerId={config?.authorizationServerId}
-                          tenantId={config?.tenantId}
-                          clientId={config?.clientId}
-                          scopes={scopes}
-                        />
+                        <AuthPage login={login} />
                       )}
                     />
                     <PrivateRoute
                       path="/"
-                      authorizationServerURL={config?.authorizationServerURL}
-                      authorizationServerId={config?.authorizationServerId}
-                      tenantId={config?.tenantId}
                       login={login}
                       component={() => (
-                        <AuthenticatedAppBase
-                          authorizationServerURL={
-                            config?.authorizationServerURL
-                          }
-                          authorizationServerId={config?.authorizationServerId}
-                          tenantId={config?.tenantId}
-                          clientId={config?.clientId}
-                          scopes={scopes}
-                        />
+                        <AuthenticatedAppBase />
                       )}
                     />
                     <Route component={() => <Redirect to={"/auth"} />} />
                   </Switch>
                 </Suspense>
               </Router>
-            )}
           </ReactQueryCacheProvider>
         </StylesProvider>
       </ThemeProvider>

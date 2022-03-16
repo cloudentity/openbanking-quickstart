@@ -1,6 +1,8 @@
 import { Urls } from "../Urls";
 
 export class ConsentAdminPage {
+  private readonly loginButtonSelector: string =
+    "#login-button";
   private readonly thirdPartyProvidersTabSelector: string =
     "#third-party-providers-tab";
   private readonly consentManagementTabSelector: string =
@@ -29,6 +31,10 @@ export class ConsentAdminPage {
 
   public visit(force: boolean = false): void {
     Urls.visit(Cypress.env('consent_admin_url'), force);
+  }
+
+  public login(): void {
+    cy.get(this.loginButtonSelector).click();
   }
 
   public revokeClientConsent(): void {
