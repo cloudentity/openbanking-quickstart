@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"time"
 
 	obbrModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/consents/models"
@@ -309,7 +310,7 @@ func (o *OBBRConsentClient) CreatePaymentConsent(c *gin.Context, req CreatePayme
 		Type:         "PIX",
 		Date:         strfmt.Date(time.Now().Add(time.Hour * 24)),
 		Currency:     "BRL",
-		Amount:       req.Amount,
+		Amount:       formatAmountAsCurrency(req.Amount),
 		IbgeTownCode: "1234567",
 		Details: &ob.OpenbankingBrasilPaymentDetails{
 			CreditorAccount: &ob.OpenbankingBrasilPaymentCreditorAccount{
@@ -387,6 +388,19 @@ func (o *OBBRConsentClient) GetPaymentConsent(c *gin.Context, consentID string) 
 			WithConsentID(consentID),
 		nil,
 	)
+}
+
+func formatAmountAsCurrency(amount string) string {
+	var (
+		f   float64
+		err error
+	)
+
+	if f, err = strconv.ParseFloat(amount, 32); err != nil {
+		return amount
+	}
+
+	return fmt.Sprintf("%.2f", f)
 }
 
 func getInitiation(consentResponse *obukModels.GetDomesticPaymentConsentRequestOK) (pi obModels.OBWriteDomestic2DataInitiation, err error) {
