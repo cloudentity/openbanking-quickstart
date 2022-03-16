@@ -80,7 +80,7 @@ pipeline {
                 }
             }
         }
-        stage('[WIP] SaaS Tests') {
+        stage('SaaS Tests') {
             environment {
                 SAAS_TENANT_ID = 'amfudxn6-qa-us-east-1-ob-quickstart'
                 SAAS_CLIENT_ID = credentials('OPENBANKING_CONFIGURATION_CLIENT_ID')
