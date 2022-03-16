@@ -58,6 +58,8 @@ describe(`Smoke Consent self service app`, () => {
 
   beforeEach(() => {
     consentSelfServicePage.visit(true)
+    Urls.clearLocalStorage()
+    consentSelfServicePage.visit(true)
   })
 
   it(`Happy path with account consent`, () => {
