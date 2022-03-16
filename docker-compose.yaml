@@ -132,7 +132,6 @@ services:
       - ./data/variables.yaml:/variables.yaml
       - ./data/imports/bank-admins.tmpl:/app/imports-cdr/bank-admins.tmpl
       - ./data/imports/bank-customers.tmpl:/app/imports-cdr/bank-customers.tmpl
-      - ./data/imports/financroo.tmpl:/app/imports-cdr/financroo.tmpl
       - ./data/imports/system.tmpl:/app/imports-cdr/system.tmpl
       - ./data/imports/cdr.tmpl:/app/imports-cdr/cdr.tmpl
     command:
@@ -242,8 +241,8 @@ services:
       - KEY_FILE=/bank_key.pem
       - ROOT_CA=/ca.pem
       - OPENBANKING_UK_WORKSPACE_ID=openbanking
+      - OPENBANKING_BRASIL_WORKSPACE_ID=openbanking_brasil
       - CDR_WORKSPACE_ID=cdr
-      - BANK_URL=http://bank:8070
       - INTROSPECT_CLIENT_ID=bv2fddlpfc67lmeti32g
       - INTROSPECT_CLIENT_SECRET=RkAIOVRlP6ZLhDvYixT1wBb8DG3bVkXAouoIrX7cwzA
       - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/bank-admins

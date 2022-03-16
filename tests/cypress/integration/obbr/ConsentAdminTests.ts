@@ -35,10 +35,12 @@ describe(`Consent admin app`, () => {
     }
     consentPage.confirm();
     consentAdminPage.visit(true);
-    consentAdminPage.login();
-  
-    consentAdminPage.assertThatConsentManagementTabIsDisplayed()
-    consentAdminPage.revokeClientConsent();
+    acpLoginPage.login(
+      Credentials.consentAdminUsername,
+      Credentials.defaultPassword
+    );
+     consentAdminPage.assertThatConsentManagementTabIsDisplayed()
+     consentAdminPage.revokeClientConsent();
   });
 
   it(`Happy path with revoking consent from Consent management page`, () => {
@@ -48,19 +50,27 @@ describe(`Consent admin app`, () => {
     }
     consentPage.confirm();
     consentAdminPage.visit();
-    consentAdminPage.login();
-
-    consentAdminPage.assertThatConsentManagementTabIsDisplayed()
-    consentAdminPage.searchAccount("22289");
-    consentAdminPage.assertAccountResult("22289");
-    consentAdminPage.assertClientAccountWithStatus("Financroo", "Active");
-    consentAdminPage.manageAccount("Financroo");
-    consentAdminPage.assertConsentsDetails();
-    consentAdminPage.revokeClientConsentByAccountName("Financroo");
-    consentAdminPage.assertClientAccountWithStatus("Financroo", "Inactive");
+    acpLoginPage.login(
+      Credentials.consentAdminUsername,
+      Credentials.defaultPassword
+    );
+     consentAdminPage.assertThatConsentManagementTabIsDisplayed()
+     consentAdminPage.searchAccount("94088392");
+     consentAdminPage.assertAccountResult("94088392");
+     consentAdminPage.assertClientAccountWithStatus("Financroo", "Active");
+     consentAdminPage.manageAccount("Financroo");
+     consentAdminPage.assertConsentsDetails();
+     consentAdminPage.revokeClientConsentByAccountName("Financroo");
+     consentAdminPage.assertClientAccountWithStatus("Financroo", "Inactive");
   })
 
   it(`Cancel first ACP login`, () => {
+    acpLoginPage.cancel();
+    errorPage.assertError(`The user rejected the authentication`);
+  });
+
+  it(`Cancel second ACP login`, () => {
+    consentAdminPage.visit();
     acpLoginPage.cancel();
     errorPage.assertError(`The user rejected the authentication`);
   });

@@ -1,4 +1,4 @@
-import {base, baseWithCustomBaseUrl} from './api-base';
+import {base} from './api-base';
 
 export const api = {
   fetchBanks: () => base.get({url: `/banks`}),
@@ -8,5 +8,4 @@ export const api = {
   disconnectBank: (bankId) => base.delete({url: `/disconnect/${bankId}`, query: {}}),
   fetchTransactions: () => base.get({url: `/transactions`}),
   fetchBalances: () => base.get({url: `/balances`}),
-  userinfo: (authorizationServerURL, tenantId, authorizationServerId) => baseWithCustomBaseUrl('/', authorizationServerURL).get({url: `/${tenantId}/${authorizationServerId}/userinfo`}),
 };

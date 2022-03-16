@@ -35,7 +35,7 @@ describe(`Consent self service app`, () => {
     Urls.clearLocalStorage()
     financrooLoginPage.visit()
     financrooLoginPage.login()
-    acpLoginPage.login(Credentials.financrooUsername, Credentials.defaultPassword)
+
     financrooWelcomePage.connectSantanderBank()
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
     if (environmentVariables.isMfaEnabled()) {
