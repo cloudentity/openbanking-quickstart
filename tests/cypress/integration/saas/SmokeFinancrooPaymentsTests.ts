@@ -30,7 +30,7 @@ describe(`Smoke Financroo payments app test`, () => {
     Urls.clearLocalStorage()
     financrooLoginPage.visit()
     financrooLoginPage.login()
-    acpLoginPage.login(Credentials.financrooUsername, Credentials.defaultPassword)
+    
     financrooWelcomePage.connectGoBank()
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
     if (environmentVariables.isMfaEnabled()) {
