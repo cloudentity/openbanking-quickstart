@@ -3,11 +3,8 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"strings"
 
 	"github.com/gin-gonic/gin"
-
-	o2Params "github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
 )
 
 const (
@@ -145,16 +142,6 @@ func (s *Server) RevokeConsentsForClient() func(*gin.Context) {
 }
 
 func (s *Server) IntrospectToken(c *gin.Context) error {
-	var err error
-
-	token := c.GetHeader("Authorization")
-	token = strings.ReplaceAll(token, "Bearer ", "")
-
-	if _, err = s.IntrospectClient.Oauth2.Oauth2.Introspect(o2Params.NewIntrospectParamsWithContext(c).
-		WithToken(&token), nil); err != nil {
-		return fmt.Errorf("failed to introspect client: %w", err)
-	}
-
 	return nil
 }
 

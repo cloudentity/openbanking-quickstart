@@ -75,11 +75,9 @@ func LoadConfig() (config Config, err error) {
 }
 
 type Server struct {
-	Config           Config
-	Client           acpclient.Client
-	IntrospectClient acpclient.Client
-	BankClient       BankClient
-	ConsentClients   []ConsentFetchRevoker
+	Config         Config
+	Client         acpclient.Client
+	ConsentClients []ConsentFetchRevoker
 }
 
 func NewServer() (Server, error) {
@@ -96,15 +94,9 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to init acp client")
 	}
 
-	if server.IntrospectClient, err = acpclient.New(server.Config.IntrospectClientConfig()); err != nil {
-		return server, errors.Wrapf(err, "failed to init introspect acp client")
-	}
-
 	for _, spec := range Specs {
 		server.ConsentClients = append(server.ConsentClients, ConsentFetcherFactory(spec, &server))
 	}
-
-	server.BankClient = NewBankClient(server.Config)
 
 	return server, nil
 }
