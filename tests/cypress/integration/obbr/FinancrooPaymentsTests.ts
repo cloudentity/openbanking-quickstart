@@ -58,7 +58,7 @@ describe(`Financroo payments app test`, () => {
     financrooContributePage.assertItIsFinished()
   })
 
- /* it(`Reject path with decline consent to add new amount`, () => {
+  it(`Reject path with decline consent to add new amount`, () => {
     financrooLoginPage.visit()
     financrooAccountsPage.assertThatPageIsDisplayed()
     financrooAccountsPage.goToInvestmentsTab()
@@ -69,7 +69,7 @@ describe(`Financroo payments app test`, () => {
       mfaPage.typePin()
     }
     consentPage.cancel()
-    errorPage.assertError(`acp returned an error: rejected:`)
+    errorPage.assertError(`acp returned an error: access_denied: rejected`)
   })
 
   it(`Cancel on ACP login`, () => {
@@ -80,6 +80,6 @@ describe(`Financroo payments app test`, () => {
     financrooContributePage.contribute(amount + 2)
     acpLoginPage.cancel()
     errorPage.assertError(`The user rejected the authentication`)
-  })*/
+  })
 
 })
