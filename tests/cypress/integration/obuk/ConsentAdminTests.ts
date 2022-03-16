@@ -35,12 +35,10 @@ describe(`Consent admin app`, () => {
     }
     consentPage.confirm();
     consentAdminPage.visit(true);
-    acpLoginPage.login(
-      Credentials.consentAdminUsername,
-      Credentials.defaultPassword
-    );
-     consentAdminPage.assertThatConsentManagementTabIsDisplayed()
-     consentAdminPage.revokeClientConsent();
+    consentAdminPage.login();
+  
+    consentAdminPage.assertThatConsentManagementTabIsDisplayed()
+    consentAdminPage.revokeClientConsent();
   });
 
   it(`Happy path with revoking consent from Consent management page`, () => {
@@ -50,32 +48,19 @@ describe(`Consent admin app`, () => {
     }
     consentPage.confirm();
     consentAdminPage.visit();
-    acpLoginPage.login(
-      Credentials.consentAdminUsername,
-      Credentials.defaultPassword
-    );
-     consentAdminPage.assertThatConsentManagementTabIsDisplayed()
-     consentAdminPage.searchAccount("22289");
-     consentAdminPage.assertAccountResult("22289");
-     consentAdminPage.assertClientAccountWithStatus("Financroo", "Active");
-     consentAdminPage.manageAccount("Financroo");
-     consentAdminPage.assertConsentsDetails();
-     consentAdminPage.revokeClientConsentByAccountName("Financroo");
-     consentAdminPage.assertClientAccountWithStatus("Financroo", "Inactive");
+    consentAdminPage.login();
+
+    consentAdminPage.assertThatConsentManagementTabIsDisplayed()
+    consentAdminPage.searchAccount("22289");
+    consentAdminPage.assertAccountResult("22289");
+    consentAdminPage.assertClientAccountWithStatus("Financroo", "Active");
+    consentAdminPage.manageAccount("Financroo");
+    consentAdminPage.assertConsentsDetails();
+    consentAdminPage.revokeClientConsentByAccountName("Financroo");
+    consentAdminPage.assertClientAccountWithStatus("Financroo", "Inactive");
   })
 
   it(`Cancel first ACP login`, () => {
-    acpLoginPage.cancel();
-    errorPage.assertError(`The user rejected the authentication`);
-  });
-
-  it(`Cancel second ACP login`, () => {
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    if (environmentVariables.isMfaEnabled()) {
-      mfaPage.typePin();
-    }
-    consentPage.confirm();
-    consentAdminPage.visit();
     acpLoginPage.cancel();
     errorPage.assertError(`The user rejected the authentication`);
   });

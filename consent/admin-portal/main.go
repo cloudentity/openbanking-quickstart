@@ -36,10 +36,6 @@ type Config struct {
 	CertFile                     string        `env:"CERT_FILE,required"`
 	KeyFile                      string        `env:"KEY_FILE,required"`
 	Port                         int           `env:"PORT" envDefault:"8086"`
-	LoginAuthorizationServerURL  string        `env:"LOGIN_AUTHORIZATION_SERVER_URL,required"`
-	LoginClientID                string        `env:"LOGIN_CLIENT_ID,required"`
-	LoginAuthorizationServerID   string        `env:"LOGIN_AUTHORIZATION_SERVER_ID,required"`
-	LoginTenantID                string        `env:"LOGIN_TENANT_ID,required"`
 	IntrospectClientID           string        `env:"INTROSPECT_CLIENT_ID,required"`
 	IntrospectClientSecret       string        `env:"INTROSPECT_CLIENT_SECRET,required"`
 	IntrospectIssuerURL          *url.URL      `env:"INTROSPECT_ISSUER_URL,required"`
@@ -80,10 +76,9 @@ func LoadConfig() (config Config, err error) {
 }
 
 type Server struct {
-	Config           Config
-	Client           acpclient.Client
-	IntrospectClient acpclient.Client
-	ConsentClients   []ConsentFetchRevoker
+	Config         Config
+	Client         acpclient.Client
+	ConsentClients []ConsentFetchRevoker
 }
 
 func NewServer() (Server, error) {
@@ -98,10 +93,6 @@ func NewServer() (Server, error) {
 
 	if server.Client, err = acpclient.New(server.Config.SystemClientConfig()); err != nil {
 		return server, errors.Wrapf(err, "failed to init acp client")
-	}
-
-	if server.IntrospectClient, err = acpclient.New(server.Config.IntrospectClientConfig()); err != nil {
-		return server, errors.Wrapf(err, "failed to init introspect acp client")
 	}
 
 	for _, spec := range Specs {
@@ -122,15 +113,6 @@ func (s *Server) Start() error {
 	r.GET("/clients", s.ListClients())
 	r.DELETE("/consents/:id", s.RevokeConsent())
 	r.DELETE("/clients/:id", s.RevokeConsentsForClient())
-
-	r.GET("/config.json", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"authorizationServerURL": s.Config.LoginAuthorizationServerURL,
-			"clientId":               s.Config.LoginClientID,
-			"authorizationServerId":  s.Config.LoginAuthorizationServerID,
-			"tenantId":               s.Config.LoginTenantID,
-		})
-	})
 
 	r.NoRoute(func(c *gin.Context) {
 		c.File("web/app/build/index.html")
