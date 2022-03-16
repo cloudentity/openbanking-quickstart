@@ -99,5 +99,4 @@ func (o *OBBRClient) CreatePayment(c *gin.Context, data interface{}, accessToken
 		Amount:    paymentCreatedResponse.Payload.Data.Payment.Amount,
 		Currency:  paymentCreatedResponse.Payload.Data.Payment.Currency,
 	}, nil
-
 }
