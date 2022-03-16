@@ -35,10 +35,8 @@ describe(`Consent admin app`, () => {
     }
     consentPage.confirm();
     consentAdminPage.visit(true);
-    acpLoginPage.login(
-      Credentials.consentAdminUsername,
-      Credentials.defaultPassword
-    );
+    consentAdminPage.login();
+  
     // FIXME restore when this fix has been made
     // https://github.com/cloudentity/openbanking-quickstart/pull/108
     // consentAdminPage.assertThatConsentManagementTabIsDisplayed()
@@ -52,10 +50,8 @@ describe(`Consent admin app`, () => {
     }
     consentPage.confirm();
     consentAdminPage.visit();
-    acpLoginPage.login(
-      Credentials.consentAdminUsername,
-      Credentials.defaultPassword
-    );
+    consentAdminPage.login();
+
     // FIXME restore when this fix has been made
     // https://github.com/cloudentity/openbanking-quickstart/pull/108
     // consentAdminPage.assertThatConsentManagementTabIsDisplayed()
@@ -69,17 +65,6 @@ describe(`Consent admin app`, () => {
   })
 
   it(`Cancel first ACP login`, () => {
-    acpLoginPage.cancel();
-    errorPage.assertError(`The user rejected the authentication`);
-  });
-
-  it(`Cancel second ACP login`, () => {
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    if (environmentVariables.isMfaEnabled()) {
-      mfaPage.typePin();
-    }
-    consentPage.confirm();
-    consentAdminPage.visit();
     acpLoginPage.cancel();
     errorPage.assertError(`The user rejected the authentication`);
   });
