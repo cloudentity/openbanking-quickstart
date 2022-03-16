@@ -59,7 +59,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 function getAuthorisedDate(client) {
   const accountAccessConsent = client?.consents?.find(
     (v) => {
-      return v.consent_type === "account_access" || v.consent_type === "cdr_arrangement"
+      return v.consent_type === "account_access" || v.consent_type === "cdr_arrangement" || v.consent_type === "consents"
     }
   );
   if (accountAccessConsent) {

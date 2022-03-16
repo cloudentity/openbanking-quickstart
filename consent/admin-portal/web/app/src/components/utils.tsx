@@ -205,6 +205,7 @@ export const permissionsDict = {
 };
 
 const availableConstentTypes = [
+  "consents",
   "account_access",
   "domestic_payment",
   "cdr_arrangement",

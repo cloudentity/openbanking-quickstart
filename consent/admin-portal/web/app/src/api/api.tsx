@@ -14,7 +14,7 @@ export const api = {
   deleteClient: ({ id, provider_type }: { id: string, provider_type: string }) =>
     base.delete({
       url: `/clients/${id}`,
-      query: { consent_types: availableConstentTypesJoined, provider_type: provider_type },
+      query: { provider_type: provider_type },
     }),
   getConsents: () => base.get({ url: `/consents` }),
   deleteConsent: ({ id, consent_type }: { id: string, consent_type: string }) =>

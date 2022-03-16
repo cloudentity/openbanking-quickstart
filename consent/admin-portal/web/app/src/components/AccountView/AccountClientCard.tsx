@@ -99,6 +99,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const consentTypesMapper = {
+  consents: "Accounts", 
   account_access: "Accounts",
   cdr_arrangement: "Accounts", // TODO what should this map to
   domestic_payment: "Payments",
@@ -131,7 +132,7 @@ export default function AccountClientCard({
 
   const accountAccessConsent = rawConsents.find(
     (v) => {
-      return v?.consent_type === "account_access" || v?.consent_type === "cdr_arrangement"
+      return v?.consent_type === "account_access" || v?.consent_type === "cdr_arrangement" || v?.consent_type === "consents"
     }
   );
 

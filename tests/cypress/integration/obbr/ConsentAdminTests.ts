@@ -55,8 +55,8 @@ describe(`Consent admin app`, () => {
       Credentials.defaultPassword
     );
      consentAdminPage.assertThatConsentManagementTabIsDisplayed()
-     consentAdminPage.searchAccount("22289");
-     consentAdminPage.assertAccountResult("22289");
+     consentAdminPage.searchAccount("94088392");
+     consentAdminPage.assertAccountResult("94088392");
      consentAdminPage.assertClientAccountWithStatus("Financroo", "Active");
      consentAdminPage.manageAccount("Financroo");
      consentAdminPage.assertConsentsDetails();
@@ -70,11 +70,6 @@ describe(`Consent admin app`, () => {
   });
 
   it(`Cancel second ACP login`, () => {
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    if (environmentVariables.isMfaEnabled()) {
-      mfaPage.typePin();
-    }
-    consentPage.confirm();
     consentAdminPage.visit();
     acpLoginPage.cancel();
     errorPage.assertError(`The user rejected the authentication`);
