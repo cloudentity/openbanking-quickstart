@@ -29,10 +29,7 @@ describe(`Consent admin portal CDR`, () => {
 
   it(`Happy path with revoking consent from Consent management page`, () => {
     consentAdminPage.visit(true)
-    acpLoginPage.login(
-      Credentials.consentAdminUsername,
-      Credentials.defaultPassword
-    );
+    consentAdminPage.login()
   
     consentAdminPage.assertThatConsentManagementTabIsDisplayed()
     consentAdminPage.searchAccount("1000001");
@@ -58,25 +55,9 @@ describe(`Consent admin portal CDR`, () => {
     consentPage.confirm()
 
     consentAdminPage.visit(true)
+    consentAdminPage.login()
 
-    acpLoginPage.login(
-      Credentials.consentAdminUsername,
-      Credentials.defaultPassword
-    );
     consentAdminPage.assertThatConsentManagementTabIsDisplayed()
     consentAdminPage.revokeClientConsent();
-  });
-
-
-  it(`Cancel first ACP login`, () => {
-    consentAdminPage.visit(true)
-    acpLoginPage.cancel();
-    errorPage.assertError(`The user rejected the authentication`);
-  });
-
-  it(`Cancel second ACP login`, () => {
-    consentAdminPage.visit(true)
-    acpLoginPage.cancel();
-    errorPage.assertError(`The user rejected the authentication`);
   });
 })
