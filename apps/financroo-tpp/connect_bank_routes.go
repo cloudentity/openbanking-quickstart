@@ -34,8 +34,6 @@ func (s *Server) ConnectBank() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
 			bankID          = BankID(c.Param("bankId"))
-			clients         Clients
-			ok              bool
 			consentID       string
 			user            User
 			loginURLBuilder LoginURLBuilder
@@ -47,27 +45,23 @@ func (s *Server) ConnectBank() func(*gin.Context) {
 			return
 		}
 
-		if clients, ok = s.Clients[bankID]; !ok {
-			c.String(http.StatusBadRequest, fmt.Sprintf("client not configured for bank: %s", bankID))
-		}
-
-		if consentID, err = clients.ConsentClient.CreateAccountConsent(c); err != nil {
+		if consentID, err = s.Clients.ConsentClient.CreateAccountConsent(c); err != nil {
 			c.String(http.StatusBadRequest, fmt.Sprintf("failed to register account access consent: %+v", err))
 			return
 		}
 
-		switch s.GetBankConfigByBankID(bankID).BankType {
+		switch s.Config.Spec {
 		case "obuk":
 			loginURLBuilder, err = NewOBUKLoginURLBuilder()
 		case "obbr":
-			loginURLBuilder, err = NewOBBRLoginURLBuilder(c, clients.AcpAccountsClient)
+			loginURLBuilder, err = NewOBBRLoginURLBuilder(c, s.Clients.AcpAccountsClient)
 		}
 		if err != nil {
 			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to create login url builder: %+v", err))
 			return
 		}
 
-		s.CreateConsentResponse(c, bankID, consentID, user, clients.AcpAccountsClient, loginURLBuilder)
+		s.CreateConsentResponse(c, bankID, consentID, user, s.Clients.AcpAccountsClient, loginURLBuilder)
 	}
 }
 
@@ -77,8 +71,6 @@ func (s *Server) ConnectBankCallback() func(*gin.Context) {
 			app        string
 			appStorage = AppStorage{}
 			code       = c.Query("code")
-			ok         bool
-			clients    Clients
 			token      acpclient.Token
 			err        error
 		)
@@ -98,11 +90,7 @@ func (s *Server) ConnectBankCallback() func(*gin.Context) {
 			return
 		}
 
-		if clients, ok = s.Clients[appStorage.BankID]; !ok {
-			c.String(http.StatusBadRequest, fmt.Sprintf("client not configured for bank: %s", appStorage.BankID))
-		}
-
-		if token, err = clients.AcpAccountsClient.Exchange(code, c.Query("state"), appStorage.CSRF); err != nil {
+		if token, err = s.Clients.AcpAccountsClient.Exchange(code, c.Query("state"), appStorage.CSRF); err != nil {
 			c.String(http.StatusUnauthorized, fmt.Sprintf("failed to exchange code: %+v", err))
 			return
 		}
@@ -123,9 +111,7 @@ func (s *Server) ConnectedBanks() func(c *gin.Context) {
 		var (
 			user           User
 			err            error
-			clients        Clients
 			tokenResponse  *oauth2.TokenResponse
-			ok             bool
 			connectedBanks = []string{}
 			expiredBanks   = []string{}
 			tokens         = []BankToken{}
@@ -136,11 +122,7 @@ func (s *Server) ConnectedBanks() func(c *gin.Context) {
 			return
 		}
 		for i, b := range user.Banks {
-			if clients, ok = s.Clients[BankID(b.BankID)]; !ok {
-				c.String(http.StatusInternalServerError, fmt.Sprintf("client not configured for bank: %s", b.BankID))
-				return
-			}
-			if tokenResponse, err = clients.RenewAccountsToken(c, b); err != nil {
+			if tokenResponse, err = s.Clients.RenewAccountsToken(c, b); err != nil {
 				logrus.WithError(err).Warnf("failed to renew token for bank: %s, err: %+v", b.BankID, err)
 				expiredBanks = append(expiredBanks, b.BankID)
 				continue
