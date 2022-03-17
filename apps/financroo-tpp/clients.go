@@ -33,6 +33,8 @@ type BankClient interface {
 	CreatePayment(c *gin.Context, data interface{}, accessToken string) (PaymentCreated, error)
 }
 
+type BankClientCreationFn func(Config) (BankClient, error)
+
 type ConsentClient interface {
 	CreatePaymentConsent(c *gin.Context, req CreatePaymentRequest) (string, error)
 	GetPaymentConsent(c *gin.Context, consentID string) (interface{}, error)
@@ -57,90 +59,79 @@ func (c *Clients) RenewAccountsToken(ctx context.Context, bank ConnectedBank) (*
 	return resp.Payload, nil
 }
 
-func InitClients(config Config) (map[BankID]Clients, error) {
+func InitClients(config Config,
+	signerCreateFn SignerCreationFn,
+	bankClientCreateFn BankClientCreationFn,
+	consentClientCreateFn ConsentClientCreationFn,
+) (Clients, error) {
 	var (
-		clients              = map[BankID]Clients{}
+		clients              = Clients{}
 		acpAccountsWebClient acpclient.Client
 		acpPaymentsWebClient acpclient.Client
 		bankClient           BankClient
-		consentClient        ConsentClient
 		signer               Signer
+		consentClient        ConsentClient
 		err                  error
 	)
 
-	for _, bank := range config.Banks {
-		if acpAccountsWebClient, err = NewAcpClient(config, bank, "/api/callback"); err != nil {
-			return clients, errors.Wrapf(err, "failed to init acp web client for bank: %s", bank.ID)
-		}
-
-		if acpPaymentsWebClient, err = NewAcpClient(config, bank, "/api/domestic/callback"); err != nil {
-			return clients, errors.Wrapf(err, "failed to init acp web client for bank: %s", bank.ID)
-		}
-
-		switch bank.BankType {
-		case "obuk":
-			if signer, err = NewOBUKSigner(config.KeyFile); err != nil {
-				return clients, errors.Wrapf(err, "failed to init consent message signer for oguk bank: %s", bank.ID)
-			}
-			consentClient = &OBUKConsentClient{acpAccountsWebClient, acpPaymentsWebClient, signer}
-			if bankClient, err = NewOBUKClient(bank); err != nil {
-				return clients,
-					errors.Wrapf(err, "failed to init client for obuk bank: %s", bank.ID)
-			}
-		case "obbr":
-			if signer, err = NewOBBRSigner(config.KeyFile); err != nil {
-				return clients, errors.Wrapf(err, "failed to init consent message signer for obbr bank: %s", bank.ID)
-			}
-			consentClient = &OBBRConsentClient{acpAccountsWebClient, acpPaymentsWebClient, signer}
-			if bankClient, err = NewOBBRClient(bank); err != nil {
-				return clients,
-					errors.Wrapf(err, "failed to init client for obbr bank: %s", bank.ID)
-			}
-		}
-
-		clients[bank.ID] = Clients{
-			AcpAccountsClient: acpAccountsWebClient,
-			AcpPaymentsClient: acpPaymentsWebClient,
-			BankClient:        bankClient,
-			ConsentClient:     consentClient,
-		}
+	if acpAccountsWebClient, err = NewAcpClient(config, "/api/callback"); err != nil {
+		return clients, errors.Wrapf(err, "failed to create acp accounts client")
 	}
 
-	return clients, nil
+	if acpPaymentsWebClient, err = NewAcpClient(config, "/api/domestic/callback"); err != nil {
+		return clients, errors.Wrapf(err, "failed to create acp payments client")
+	}
+
+	if signer, err = signerCreateFn(config.KeyFile); err != nil {
+		return clients, errors.Wrapf(err, "failed to create consent message signer for %s", config.Spec)
+	}
+
+	if bankClient, err = bankClientCreateFn(config); err != nil {
+		return clients, errors.Wrapf(err, "failed to create bank client for %s", config.Spec)
+	}
+
+	consentClient = consentClientCreateFn(acpAccountsWebClient, acpPaymentsWebClient, signer)
+
+	return Clients{
+		AcpAccountsClient: acpAccountsWebClient,
+		AcpPaymentsClient: acpPaymentsWebClient,
+		BankClient:        bankClient,
+		ConsentClient:     consentClient,
+	}, nil
 }
 
-func NewAcpClient(c Config, cfg BankConfig, redirect string) (acpclient.Client, error) {
+func NewAcpClient(cfg Config, redirect string) (acpclient.Client, error) {
 	var (
 		issuerURL, authorizeURL, redirectURL *url.URL
 		client                               acpclient.Client
 		err                                  error
 	)
 
-	if issuerURL, err = url.Parse(fmt.Sprintf("%s/%s/%s", c.ACPInternalURL, c.Tenant, cfg.AcpClient.ServerID)); err != nil {
+	if issuerURL, err = url.Parse(fmt.Sprintf("%s/%s/%s", cfg.ACPInternalURL, cfg.Tenant, cfg.ServerID)); err != nil {
 		return client, err
 	}
 
-	if authorizeURL, err = url.Parse(fmt.Sprintf("%s/%s/%s/oauth2/authorize", c.ACPURL, c.Tenant, cfg.AcpClient.ServerID)); err != nil {
+	if authorizeURL, err = url.Parse(fmt.Sprintf("%s/%s/%s/oauth2/authorize", cfg.ACPURL, cfg.Tenant, cfg.ServerID)); err != nil {
 		return client, err
 	}
 
-	if redirectURL, err = url.Parse(fmt.Sprintf("%s%s", c.UIURL, redirect)); err != nil {
+	if redirectURL, err = url.Parse(fmt.Sprintf("%s%s", cfg.UIURL, redirect)); err != nil {
 		return client, err
 	}
 
 	requestObjectExpiration := time.Minute * 10
 	config := acpclient.Config{
-		ClientID:                    cfg.AcpClient.ClientID,
+		ClientID:                    cfg.ClientID,
 		IssuerURL:                   issuerURL,
 		AuthorizeURL:                authorizeURL,
 		RedirectURL:                 redirectURL,
-		RequestObjectSigningKeyFile: cfg.AcpClient.KeyFile,
+		RequestObjectSigningKeyFile: cfg.KeyFile,
 		RequestObjectExpiration:     &requestObjectExpiration,
-		Scopes:                      cfg.AcpClient.Scopes,
-		Timeout:                     cfg.AcpClient.Timeout,
-		CertFile:                    cfg.AcpClient.CertFile,
-		KeyFile:                     cfg.AcpClient.KeyFile,
-		RootCA:                      cfg.AcpClient.RootCA,
+		Scopes:                      cfg.ClientScopes,
+		Timeout:                     time.Second * 5,
+		CertFile:                    cfg.CertFile,
+		KeyFile:                     cfg.KeyFile,
+		RootCA:                      cfg.RootCA,
 	}
 
 	if client, err = acpclient.New(config); err != nil {
@@ -155,7 +146,7 @@ type OBUKClient struct {
 	*payments_client.OpenbankingPaymentsClient
 }
 
-func NewOBUKClient(config BankConfig) (BankClient, error) {
+func NewOBUKClient(config Config) (BankClient, error) {
 	var (
 		c   = &OBUKClient{}
 		hc  = &http.Client{}
@@ -163,7 +154,7 @@ func NewOBUKClient(config BankConfig) (BankClient, error) {
 		err error
 	)
 
-	if u, err = url.Parse(config.URL); err != nil {
+	if u, err = url.Parse(config.BankURL); err != nil {
 		return c, errors.Wrapf(err, "failed to parse bank url")
 	}
 
@@ -185,7 +176,7 @@ type OBBRClient struct {
 	*obbrPayments.PaymentConsentsBrasil
 }
 
-func NewOBBRClient(config BankConfig) (BankClient, error) {
+func NewOBBRClient(config Config) (BankClient, error) {
 	var (
 		c   = &OBBRClient{}
 		hc  = &http.Client{}
@@ -193,7 +184,7 @@ func NewOBBRClient(config BankConfig) (BankClient, error) {
 		err error
 	)
 
-	if u, err = url.Parse(config.URL); err != nil {
+	if u, err = url.Parse(config.BankURL); err != nil {
 		return c, errors.Wrapf(err, "failed to parse bank url")
 	}
 
@@ -210,14 +201,24 @@ func NewOBBRClient(config BankConfig) (BankClient, error) {
 	return c, nil
 }
 
+type ConsentClientCreationFn func(acpclient.Client, acpclient.Client, Signer) ConsentClient
+
 type OBUKConsentClient struct {
 	Accounts acpclient.Client
 	Payments acpclient.Client
 	Signer
 }
 
+func NewOBUKConsentClient(accountsClient, paymentsClient acpclient.Client, signer Signer) ConsentClient {
+	return &OBUKConsentClient{accountsClient, paymentsClient, signer}
+}
+
 type OBBRConsentClient struct {
 	Accounts acpclient.Client
 	Payments acpclient.Client
 	Signer
+}
+
+func NewOBBRConsentClient(accountsClient, paymentsClient acpclient.Client, signer Signer) ConsentClient {
+	return &OBBRConsentClient{accountsClient, paymentsClient, signer}
 }
