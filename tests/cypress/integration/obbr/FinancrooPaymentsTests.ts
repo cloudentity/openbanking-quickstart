@@ -25,7 +25,7 @@ describe(`Financroo payments app test`, () => {
   const mfaPage: MfaPage = new MfaPage();
   const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
 
-  const amount: number = (Math.floor(Math.random() * 50) + 1).toFixed(2);
+  const amount: number = (Math.floor(Math.random() * 50) + 1);
 
 
   beforeEach(() => {
@@ -33,7 +33,6 @@ describe(`Financroo payments app test`, () => {
     Urls.clearLocalStorage()
     financrooLoginPage.visit()
     financrooLoginPage.login()
-    acpLoginPage.login(Credentials.financrooUsername, Credentials.defaultPassword)
     financrooWelcomePage.connectSantanderBank()
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
     if (environmentVariables.isMfaEnabled()) {

@@ -21,6 +21,6 @@ export class FinancrooContributePage {
   }
 
   public assertAmount(amount: number, currency: string): void {
-    cy.get(this.amountDisplayed).should(`contain.text`, amount.toString() + " " + currency)
+    cy.get(this.amountDisplayed).should(`contain.text`, amount.toFixed(2) + " " + currency)
   }
 }
