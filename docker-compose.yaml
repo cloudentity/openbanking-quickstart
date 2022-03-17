@@ -42,6 +42,11 @@ services:
       - DB_FILE=/app/data/my.db
       - TENANT=${TENANT}
       - GIN_MODE=debug # change to release to disable gin debug
+      - SPEC=${SPEC}
+      - BANK_URL=${BANK_URL}
+      - CLIENT_ID=${DEVELOPER_CLIENT_ID}
+      - ROOT_CA=/certs/ca.pem
+      - SERVER_ID=${OPENBANKING_SERVER_ID}
 
   consent-page-uk:
     image: cloudentity/openbanking-quickstart-consent-page:${VERSION}
