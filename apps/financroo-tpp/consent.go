@@ -83,7 +83,7 @@ func (o *OBUKConsentClient) CreatePaymentConsent(c *gin.Context, req CreatePayme
 	}
 	id := uuid.New().String()[:10]
 	currency := ob.ActiveOrHistoricCurrencyCode("GBP")
-	amount := ob.OBActiveCurrencyAndAmountSimpleType(req.Amount)
+	amount := ob.OBActiveCurrencyAndAmountSimpleType(formatAmountAsCurrency(req.Amount))
 
 	consentRequest := ob.DomesticPaymentConsentRequest{
 		Data: &ob.OBWriteDomesticConsent4Data{
