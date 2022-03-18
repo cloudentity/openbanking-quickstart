@@ -75,7 +75,7 @@ idps:
     labels:
   - name: cnpj
     description: cnpj
-    type: string
+    type: string_array
     labels:
   mappings:
   - source: name
@@ -112,7 +112,7 @@ idps:
     allow_weak_decoding: false
   - source: cnpj
     target: cnpj
-    type: string
+    type: string_array
     allow_weak_decoding: false
   credentials:
     static:
@@ -124,6 +124,7 @@ idps:
           mobile_verified: "+48123456789"
         additional_attributes:
           cpf: "11111111111"
+          cnpj: ["11111111111111"]
       - username: user2
         password: p@ssw0rd!
         authentication_context:
@@ -174,6 +175,7 @@ clients:
 - tenant_id: {{ .tenant_id }}
   authorization_server_id: openbanking_brasil
   client_id: bukj5p6k7qdmm5other1
+  organisation_id: 3333-3333-3333-3333 
   client_name: Financroo
   client_uri: https://localhost:8090
   client_secret: -TlfoycUiE0qNi-XUBFDfTxMlhHTCjVxOF6pLrWZbQA

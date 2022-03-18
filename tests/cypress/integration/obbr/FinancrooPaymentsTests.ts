@@ -25,15 +25,15 @@ describe(`Financroo payments app test`, () => {
   const mfaPage: MfaPage = new MfaPage();
   const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
 
-  const amount: number = Math.floor(Math.random() * 50) + 1;
+  const amount: number = (Math.floor(Math.random() * 50) + 1);
+
 
   beforeEach(() => {
     financrooLoginPage.visit()
     Urls.clearLocalStorage()
     financrooLoginPage.visit()
     financrooLoginPage.login()
-
-    financrooWelcomePage.connectGoBank()
+    financrooWelcomePage.connectSantanderBank()
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin()
@@ -53,7 +53,7 @@ describe(`Financroo payments app test`, () => {
       mfaPage.typePin()
     }
     consentPage.confirm()
-    financrooContributePage.assertAmount(amount, "GBP")
+    financrooContributePage.assertAmount(amount, "BRL")
     financrooContributePage.assertItIsFinished()
   })
 
@@ -68,7 +68,7 @@ describe(`Financroo payments app test`, () => {
       mfaPage.typePin()
     }
     consentPage.cancel()
-    errorPage.assertError(`acp returned an error: rejected:`)
+    errorPage.assertError(`acp returned an error: access_denied: rejected`)
   })
 
   it(`Cancel on ACP login`, () => {

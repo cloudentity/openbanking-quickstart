@@ -24,19 +24,19 @@
 		"obbr_balances": [{
 			"accountId": "94088392",
 			"availableAmount": 100000.04,
-			"availableAmountCurrency": "GBP",
+			"availableAmountCurrency": "BRL",
 			"blockedAmount": 99.9999,
-			"blockedAmountCurrency": "GBP",
+			"blockedAmountCurrency": "BRL",
 			"automaticallyInvestedAmount": 100000.04,
-			"automaticallyInvestedAmountCurrency": "GBP"
+			"automaticallyInvestedAmountCurrency": "BRL"
 		},{
 			"accountId": "94088400",
 			"availableAmount": 3200.04,
-			"availableAmountCurrency": "GBP",
+			"availableAmountCurrency": "BRL",
 			"blockedAmount": 0,
-			"blockedAmountCurrency": "GBP",
+			"blockedAmountCurrency": "BRL",
 			"automaticallyInvestedAmount": 3200.04,
-			"automaticallyInvestedAmountCurrency": "GBP"
+			"automaticallyInvestedAmountCurrency": "BRL"
 		}]
 	},
 	"user2": {

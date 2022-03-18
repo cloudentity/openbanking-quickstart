@@ -20,7 +20,7 @@ export class FinancrooContributePage {
     cy.get(this.backToPortfolioButtonLocator).should(`contain.text`, `Back to portfolio`)
   }
 
-  public assertAmount(amount: number): void {
-    cy.get(this.amountDisplayed).should(`contain.text`, amount.toString() + " GBP")
+  public assertAmount(amount: number, currency: string): void {
+    cy.get(this.amountDisplayed).should(`contain.text`, amount.toFixed(2) + " " + currency)
   }
 }

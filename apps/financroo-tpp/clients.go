@@ -197,15 +197,18 @@ func NewOBBRClient(config BankConfig) (BankClient, error) {
 		return c, errors.Wrapf(err, "failed to parse bank url")
 	}
 
-	tr := NewHTTPRuntimeWithClient(
+	c.Accounts = obbrAccounts.New(NewHTTPRuntimeWithClient(
 		u.Host,
 		"/accounts/v1",
 		[]string{u.Scheme},
 		hc,
-	)
-
-	c.Accounts = obbrAccounts.New(tr, nil)
-	c.PaymentConsentsBrasil = obbrPayments.New(tr, nil)
+	), nil)
+	c.PaymentConsentsBrasil = obbrPayments.New(NewHTTPRuntimeWithClient(
+		u.Host,
+		"/payments/v1",
+		[]string{u.Scheme},
+		hc,
+	), nil)
 
 	return c, nil
 }

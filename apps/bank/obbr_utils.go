@@ -93,7 +93,7 @@ func NewOBBRBalanceResponse(data OBBRBalance, self strfmt.URI) interface{} {
 type OBBRBalances struct {
 	// data
 	// Required: true
-	Data []obbrAccountModels.AccountBalancesData `json:"data"`
+	Data []OBBRBalance `json:"data"`
 
 	// links
 	// Required: true
@@ -106,19 +106,14 @@ type OBBRBalances struct {
 
 func NewOBBRBalancesResponse(data []OBBRBalance, self strfmt.URI) interface{} {
 	var (
-		balances []obbrAccountModels.AccountBalancesData
 		selfLink       = self.String()
 		now            = strfmt.DateTime(time.Now())
 		pages    int32 = 1
 		records        = int32(len(data))
 	)
 
-	for _, b := range data {
-		balances = append(balances, b.AccountBalancesData)
-	}
-
 	return OBBRBalances{
-		Data: balances,
+		Data: data,
 		Links: &obbrAccountModels.Links{
 			Self: &selfLink,
 		},
