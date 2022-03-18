@@ -102,16 +102,12 @@ func InitClients(config Config,
 
 func NewAcpClient(cfg Config, redirect string) (acpclient.Client, error) {
 	var (
-		issuerURL, authorizeURL, redirectURL *url.URL
-		client                               acpclient.Client
-		err                                  error
+		authorizeURL, redirectURL *url.URL
+		client                    acpclient.Client
+		err                       error
 	)
 
-	if issuerURL, err = url.Parse(fmt.Sprintf("%s/%s/%s", cfg.ACPInternalURL, cfg.Tenant, cfg.ServerID)); err != nil {
-		return client, err
-	}
-
-	if authorizeURL, err = url.Parse(fmt.Sprintf("%s/%s/%s/oauth2/authorize", cfg.ACPURL, cfg.Tenant, cfg.ServerID)); err != nil {
+	if authorizeURL, err = url.Parse(fmt.Sprintf("%s/oauth2/authorize", cfg.IssuerURL)); err != nil {
 		return client, err
 	}
 
@@ -122,7 +118,7 @@ func NewAcpClient(cfg Config, redirect string) (acpclient.Client, error) {
 	requestObjectExpiration := time.Minute * 10
 	config := acpclient.Config{
 		ClientID:                    cfg.ClientID,
-		IssuerURL:                   issuerURL,
+		IssuerURL:                   cfg.IssuerURL,
 		AuthorizeURL:                authorizeURL,
 		RedirectURL:                 redirectURL,
 		RequestObjectSigningKeyFile: cfg.KeyFile,

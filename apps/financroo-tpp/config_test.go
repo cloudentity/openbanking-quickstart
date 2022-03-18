@@ -3,7 +3,6 @@ package main
 import (
 	"os"
 	"testing"
-	"time"
 
 	"github.com/stretchr/testify/require"
 )
@@ -18,6 +17,8 @@ func TestConfig(t *testing.T) {
 		"CERT_FILE":    "cert.pem",
 		"KEY_FILE":     "key.pem",
 		"TENANT":       "default",
+		"SPEC":         "obbr",
+		"BANK_URL":     "http://bank-br:8070",
 	} {
 		os.Setenv(k, v)
 	}
@@ -33,13 +34,6 @@ func TestConfig(t *testing.T) {
 	require.Equal(t, "https://localhost:8091", config.UIURL)
 	require.Equal(t, "cert.pem", config.CertFile)
 	require.Equal(t, "key.pem", config.KeyFile)
-
-	require.NotEmpty(t, config.Banks[0].ID)
-	require.NotEmpty(t, config.Banks[0].URL)
-	require.NotEmpty(t, config.Banks[0].AcpClient.ServerID)
-	require.NotEmpty(t, config.Banks[0].AcpClient.ClientID)
-	require.NotEmpty(t, config.Banks[0].AcpClient.CertFile)
-	require.NotEmpty(t, config.Banks[0].AcpClient.KeyFile)
-	require.NotEmpty(t, config.Banks[0].AcpClient.RootCA)
-	require.Equal(t, 5*time.Second, config.Banks[0].AcpClient.Timeout)
+	require.Equal(t, "obbr", config.Spec)
+	require.Equal(t, "http://bank-br:8070", config.BankURL)
 }
