@@ -1,7 +1,6 @@
 package main
 
 import (
-	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -23,13 +22,13 @@ type OBBRLoginURLBuilder struct {
 	key jose.JSONWebKey
 }
 
-func NewOBBRLoginURLBuilder(c context.Context, client acpclient.Client) (LoginURLBuilder, error) {
+func NewOBBRLoginURLBuilder(client acpclient.Client) (LoginURLBuilder, error) {
 	var (
 		key jose.JSONWebKey
 		err error
 	)
 
-	if key, err = getEncryptionKey(c, client); err != nil {
+	if key, err = getEncryptionKey(client); err != nil {
 		return nil, err
 	}
 
@@ -106,7 +105,7 @@ func (s *Server) CreateConsentResponse(
 	c.JSON(http.StatusOK, data)
 }
 
-func getEncryptionKey(c context.Context, client acpclient.Client) (jose.JSONWebKey, error) {
+func getEncryptionKey(client acpclient.Client) (jose.JSONWebKey, error) {
 	var (
 		jwksResponse *oauth2.JwksOK
 		encKey       jose.JSONWebKey
@@ -114,8 +113,10 @@ func getEncryptionKey(c context.Context, client acpclient.Client) (jose.JSONWebK
 		err          error
 	)
 
+	ctx := gin.Context{}
+
 	if jwksResponse, err = client.Oauth2.Oauth2.Jwks(
-		oauth2.NewJwksParamsWithContext(c),
+		oauth2.NewJwksParamsWithContext(&ctx),
 	); err != nil {
 		return encKey, errors.Wrapf(err, "failed to get jwks from acp server")
 	}

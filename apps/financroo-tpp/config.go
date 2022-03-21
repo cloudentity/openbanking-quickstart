@@ -4,7 +4,6 @@ import (
 	"net/url"
 
 	"github.com/caarlos0/env/v6"
-	"gopkg.in/go-playground/validator.v9"
 )
 
 type FeatureFlags struct {
@@ -33,8 +32,6 @@ type Config struct {
 	IssuerURL      *url.URL     `env:"ISSUER_URL" validate:"required,url"`
 	ClientScopes   []string
 }
-
-var Validator = validator.New()
 
 func LoadConfig() (Config, error) {
 	var (
