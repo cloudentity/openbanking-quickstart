@@ -130,7 +130,6 @@ services:
     volumes:
       - ./data/ca.pem:/certs/ca.pem
       - ./data/variables.yaml:/variables.yaml
-      - ./data/imports/bank-admins.tmpl:/app/imports-cdr/bank-admins.tmpl
       - ./data/imports/bank-customers.tmpl:/app/imports-cdr/bank-customers.tmpl
       - ./data/imports/system.tmpl:/app/imports-cdr/system.tmpl
       - ./data/imports/cdr.tmpl:/app/imports-cdr/cdr.tmpl
