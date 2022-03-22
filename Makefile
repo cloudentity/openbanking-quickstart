@@ -81,26 +81,14 @@ purge:
 clean-saas: clean
 	./scripts/clean_saas.sh
 
+run-%-tests-headless:
+	yarn --cwd tests run cypress run -s cypress/integration/$*/*.ts
+
+
 .PHONY: run-tests
 run-tests:
 	yarn --cwd tests run cypress open
 
-
-.PHONY: run-cdr-tests-headless
-run-cdr-tests-headless: run-tests-verify
-	yarn --cwd tests run cypress run -s cypress/integration/cdr/*.ts
-
-.PHONY: run-obuk-tests-headless
-run-obuk-tests-headless: run-tests-verify
-	yarn --cwd tests run cypress run -s cypress/integration/obuk/*.ts
-
-.PHONY: run-obbr-tests-headless
-run-obbr-tests-headless: run-tests-verify
-	yarn --cwd tests run cypress run -s cypress/integration/obbr/*.ts
-
-.PHONY: run-saas-tests-headless
-run-saas-tests-headless: run-tests-verify
-	yarn --cwd tests run cypress run -s cypress/integration/saas/*.ts
 
 .PHONY: run-tests-verify 
 run-tests-verify: 
