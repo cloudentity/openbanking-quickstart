@@ -50,6 +50,12 @@ func (h *OBBRLogic) CreateConsent(c *gin.Context) (interface{}, error) {
 			WithRequest(&obModels.BrazilCustomerDataAccessConsentRequest{
 				Data: &obModels.OpenbankingBrasilConsentData{
 					ExpirationDateTime: strfmt.DateTime(time.Now().Add(time.Hour * 24)),
+					BusinessEntity: &obModels.OpenbankingBrasilConsentBusinessEntity{
+						Document: &obModels.OpenbankingBrasilConsentDocument1{
+							Identification: "11111111111111",
+							Rel:            "CNPJ",
+						},
+					},
 					LoggedUser: &obModels.OpenbankingBrasilConsentLoggedUser{
 						Document: &obModels.OpenbankingBrasilConsentDocument{
 							Identification: "11111111111",

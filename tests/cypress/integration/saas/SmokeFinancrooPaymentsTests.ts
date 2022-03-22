@@ -1,7 +1,6 @@
 import {AcpLoginPage} from '../../pages/acp/AcpLoginPage';
 import {FinancrooLoginPage} from '../../pages/financroo/FinancrooLoginPage';
 import {ConsentPage} from '../../pages/consent/ConsentPage';
-import {ErrorPage} from '../../pages/ErrorPage';
 import {FinancrooWelcomePage} from '../../pages/financroo/FinancrooWelcomePage';
 import {FinancrooAccountsPage} from '../../pages/financroo/accounts/FinancrooAccountsPage';
 import {Credentials} from "../../pages/Credentials";
@@ -12,10 +11,9 @@ import {FinancrooContributePage} from "../../pages/financroo/investments/Financr
 import {EnvironmentVariables} from "../../pages/EnvironmentVariables"
 import { FinancrooModalPage } from '../../pages/financroo/accounts/FinancrooModalPage';
 
-describe(`Financroo payments app test`, () => {
+describe(`Smoke Financroo payments app test`, () => {
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
   const consentPage: ConsentPage = new ConsentPage();
-  const errorPage: ErrorPage = new ErrorPage();
   const financrooLoginPage: FinancrooLoginPage = new FinancrooLoginPage();
   const financrooWelcomePage: FinancrooWelcomePage = new FinancrooWelcomePage();
   const financrooModalPage: FinancrooModalPage = new FinancrooModalPage();
@@ -27,12 +25,12 @@ describe(`Financroo payments app test`, () => {
 
   const amount: number = Math.floor(Math.random() * 50) + 1;
 
-  beforeEach(() => {
+  before(() => {
     financrooLoginPage.visit()
     Urls.clearLocalStorage()
     financrooLoginPage.visit()
     financrooLoginPage.login()
-
+    
     financrooWelcomePage.connectGoBank()
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
     if (environmentVariables.isMfaEnabled()) {
@@ -56,29 +54,4 @@ describe(`Financroo payments app test`, () => {
     financrooContributePage.assertAmount(amount, "GBP")
     financrooContributePage.assertItIsFinished()
   })
-
-  it(`Reject path with decline consent to add new amount`, () => {
-    financrooLoginPage.visit()
-    financrooAccountsPage.assertThatPageIsDisplayed()
-    financrooAccountsPage.goToInvestmentsTab()
-    financrooInvestmentsPage.invest()
-    financrooContributePage.contribute(amount + 1)
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
-    if (environmentVariables.isMfaEnabled()) {
-      mfaPage.typePin()
-    }
-    consentPage.cancel()
-    errorPage.assertError(`acp returned an error: rejected:`)
-  })
-
-  it(`Cancel on ACP login`, () => {
-    financrooLoginPage.visit()
-    financrooAccountsPage.assertThatPageIsDisplayed()
-    financrooAccountsPage.goToInvestmentsTab()
-    financrooInvestmentsPage.invest()
-    financrooContributePage.contribute(amount + 2)
-    acpLoginPage.cancel()
-    errorPage.assertError(`The user rejected the authentication`)
-  })
-
 })
