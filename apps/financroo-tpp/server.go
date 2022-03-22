@@ -95,6 +95,8 @@ func (s *Server) Start() error {
 	r.GET("/api/balances", s.GetBalances())
 	r.GET("/api/banks", s.ConnectedBanks())
 
+	r.GET("/api/configuration", s.GetConfiguration())
+
 	r.NoRoute(func(c *gin.Context) {
 		c.HTML(http.StatusOK, "index.html", gin.H{"featureFlags": s.Config.FeatureFlags})
 	})
