@@ -1,0 +1,95 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+
+<html>
+<head>
+  <link rel="stylesheet" href="/assets/material-components-web.min.css">
+  <script src="/assets/material-components-web.min.js"></script>
+  <link href="/assets/fonts.css" rel="stylesheet">
+  <link href="/assets/material-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <title>TPP sample app</title>
+</head>
+
+<body>
+<div class="aut-banner">
+  <div class="aut-banner-logo">
+    <img src="/assets/images/cloudentity-logo-short.png" alt="Cloudentity ACP">
+    <span>TPP sample app</span>
+  </div>
+</div>
+
+<div class="aut-container" style="padding: 5px;">
+  <div class="aut-demo-info">
+    <div class="material-icons aut-demo-info-icon">error_outline</div>
+    <div class="aut-demo-info-text">
+      <p style="color: rgba(0, 0, 0, 0.6);">In the FDX, the flow starts with the TPP sending authorization_details to the PAR endpoint.</p>
+    </div>
+  </div>
+</div>
+
+<div class="mdc-card aut-container" style="padding: 16px 22px">
+
+  <pre>
+{
+   "authorization_details":[
+      {
+         "type":"fdx_v1.0",
+         "consentRequest":{
+            "durationType":"ONE_TIME",
+            "lookbackPeriod":60,
+            "resources":[
+               {
+                  "resourceType":"ACCOUNT",
+                  "dataClusters":[
+                     "ACCOUNT_DETAILED",
+                     "TRANSACTIONS",
+                     "STATEMENTS"
+                  ]
+               }
+            ]
+         }
+      }
+   ]
+}
+  </pre>
+
+  <form action="/login" method="post">
+    <!-- <div class="body1" style="margin-bottom: 24px">Select permissions that your TPP would like to request:</div> -->
+    <!-- <div class="aut-content-scopes-group"> -->
+
+      <!-- <div class="mdc-form-field"> -->
+      <!--   <div class="mdc-checkbox"> -->
+      <!--     <input type="checkbox" -->
+      <!--            class="mdc-checkbox__native-control" -->
+      <!--            name="permissions" -->
+      <!--            value="ACCOUNTS_READ" -->
+      <!--            checked -->
+      <!--     /> -->
+      <!--     <div class="mdc-checkbox__background"> -->
+      <!--       <svg class="mdc-checkbox__checkmark" -->
+      <!--            viewBox="0 0 24 24"> -->
+      <!--         <path class="mdc-checkbox__checkmark-path" -->
+      <!--               fill="none" -->
+      <!--               d="M1.73,12.91 8.1,19.28 22.79,4.59"></path> -->
+      <!--       </svg> -->
+      <!--       <div class="mdc-checkbox__mixedmark"></div> -->
+      <!--     </div> -->
+      <!--     <div class="mdc-checkbox__ripple"></div> -->
+      <!--   </div> -->
+      <!--   <div class="aut-scope"> -->
+      <!--     <div class="aut-scope-header"> -->
+      <!--       <label for="ACCOUNTS_READ" class="aut-scope-label">TOD</label> -->
+      <!--     </div> -->
+      <!--   </div> -->
+      <!-- </div> -->
+    <!-- </div> -->
+    <div class="aut-form-actions" style="padding: 0">
+      <button class="mdc-button mdc-button--raised" type="submit" name="action" value="Next" style="margin-right: 0">
+        <div class="mdc-button__ripple"></div>
+        <span class="mdc-button__label">Next</span>
+      </button>
+    </div>
+  </form>
+</div>
+</body>
+</html>

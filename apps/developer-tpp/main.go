@@ -25,11 +25,13 @@ type Spec string
 const (
 	OBUK Spec = "obuk"
 	OBBR Spec = "obbr"
+	FDX  Spec = "fdx"
 )
 
 type Config struct {
 	Port         int           `env:"PORT" envDefault:"8090"`
 	ClientID     string        `env:"CLIENT_ID,required"`
+	ClientSecret string        `env:"CLIENT_SECRET,required"`
 	AuthorizeURL *url.URL      `env:"AUTHORIZE_URL,required"`
 	TokenURL     *url.URL      `env:"TOKEN_URL,required"`
 	IssuerURL    *url.URL      `env:"ISSUER_URL,required"`
@@ -104,6 +106,8 @@ func NewServer() (Server, error) {
 		server.Config.ClientScopes = []string{"openid", "accounts"}
 	case OBBR:
 		server.Config.ClientScopes = []string{"openid", "consents", "consent:*"}
+	case FDX:
+		server.Config.ClientScopes = []string{"openid"}
 	}
 
 	if server.Client, err = acpclient.New(server.Config.ClientConfig()); err != nil {
@@ -119,6 +123,8 @@ func NewServer() (Server, error) {
 		server.SpecLogicHandler = &OBUKLogic{Server: &server}
 	case OBBR:
 		server.SpecLogicHandler = &OBBRLogic{Server: &server}
+	case FDX:
+		server.SpecLogicHandler = &FDXLogic{Server: &server}
 	}
 
 	return server, nil
@@ -152,14 +158,7 @@ func main() {
 }
 
 func (s *Server) GetTemplate(name string) string {
-	switch s.Config.Spec {
-	case OBUK:
-		return string(OBUK) + "-" + name
-	case OBBR:
-		return string(OBBR) + "-" + name
-	default:
-		return ""
-	}
+	return string(s.Config.Spec) + "-" + name
 }
 
 func (s *Server) GetEncryptionKey(ctx context.Context) (jose.JSONWebKey, error) {

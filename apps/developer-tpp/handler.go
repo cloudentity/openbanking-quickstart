@@ -57,7 +57,7 @@ func (s *Server) Login() func(*gin.Context) {
 		if registerResponse, err = s.CreateConsent(c); err != nil {
 			// todo fix retry mechnism in acp-go-client
 			if registerResponse, err = s.CreateConsent(c); err != nil {
-				c.String(http.StatusBadRequest, fmt.Sprintf("failed to register account access consent: %+v", err))
+				c.String(http.StatusBadRequest, fmt.Sprintf("failed to register consent: %+v", err))
 				return
 			}
 		}
