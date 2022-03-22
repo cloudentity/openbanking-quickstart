@@ -4,7 +4,6 @@ import (
 	"net/url"
 
 	"github.com/caarlos0/env/v6"
-	"github.com/gin-gonic/gin"
 )
 
 type FeatureFlags struct {
@@ -45,12 +44,4 @@ func LoadConfig() (Config, error) {
 	}
 
 	return config, nil
-}
-
-func (s *Server) GetConfiguration() func(c *gin.Context) {
-	return func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"spec": s.Config.Spec,
-		})
-	}
 }

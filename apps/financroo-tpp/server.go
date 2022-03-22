@@ -95,10 +95,11 @@ func (s *Server) Start() error {
 	r.GET("/api/balances", s.GetBalances())
 	r.GET("/api/banks", s.ConnectedBanks())
 
-	r.GET("/api/configuration", s.GetConfiguration())
-
 	r.NoRoute(func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", gin.H{"featureFlags": s.Config.FeatureFlags})
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"featureFlags": s.Config.FeatureFlags,
+			"spec":         s.Config.Spec,
+		})
 	})
 
 	return r.RunTLS(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)), s.Config.CertFile, s.Config.KeyFile)

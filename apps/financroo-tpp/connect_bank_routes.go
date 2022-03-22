@@ -22,7 +22,10 @@ type AppStorage struct {
 
 func (s *Server) Index() func(*gin.Context) {
 	return func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", gin.H{"featureFlags": s.Config.FeatureFlags})
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"featureFlags": s.Config.FeatureFlags,
+			"spec":         s.Config.Spec,
+		})
 	}
 }
 

@@ -23,10 +23,12 @@ import { theme } from "./theme";
 declare global {
   interface Window {
     featureFlags: any;
+    spec: any;
   }
 }
 
 window.featureFlags = window.featureFlags || {};
+window.spec = window.spec || {}; 
 
 const queryCache = new QueryCache();
 
