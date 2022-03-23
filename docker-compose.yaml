@@ -46,7 +46,6 @@ services:
       - BANK_URL=${BANK_URL}
       - CLIENT_ID=${DEVELOPER_CLIENT_ID}
       - ROOT_CA=/certs/ca.pem
-      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/${OPENBANKING_SERVER_ID}
 
 
   consent-page-uk:

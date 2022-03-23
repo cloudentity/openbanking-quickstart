@@ -1,8 +1,6 @@
 package main
 
 import (
-	"net/url"
-
 	"github.com/caarlos0/env/v6"
 )
 
@@ -29,7 +27,7 @@ type Config struct {
 	BankURL        string       `env:"BANK_URL" validate:"required"`
 	RootCA         string       `env:"ROOT_CA" validate:"required"`
 	ClientID       string       `env:"CLIENT_ID" validate:"required"`
-	IssuerURL      *url.URL     `env:"ISSUER_URL" validate:"required,url"`
+	ServerID       string       `env:"OPENBANKING_SERVER_ID" validate:"required"`
 	ClientScopes   []string
 }
 
