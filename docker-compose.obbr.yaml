@@ -13,16 +13,16 @@ services:
       - ./data/tpp_key.pem:/tpp_key.pem
     environment:
       - CLIENT_ID=${DEVELOPER_CLIENT_ID}
-      - AUTHORIZE_URL=${ACP_URL}/${TENANT}/openbanking/oauth2/authorize
-      - TOKEN_URL=${ACP_MTLS_URL}/${TENANT}/openbanking/oauth2/token
-      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/openbanking
-      - USERINFO_URL=${ACP_MTLS_URL}/${TENANT}/openbanking/userinfo
+      - AUTHORIZE_URL=${ACP_URL}/${TENANT}/openbanking_brasil/oauth2/authorize
+      - TOKEN_URL=${ACP_MTLS_URL}/${TENANT}/openbanking_brasil/oauth2/token
+      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/openbanking_brasil
+      - USERINFO_URL=${ACP_MTLS_URL}/${TENANT}/openbanking_brasil/userinfo
       - REDIRECT_URL=https://${APP_HOST}:8090/callback
       - CERT_FILE=/tpp_cert.pem
       - KEY_FILE=/tpp_key.pem
       - ROOT_CA=/ca.pem
       - BANK_URL=http://bank:8070
-      - SPEC=obuk
+      - SPEC=obbr
 
   financroo-tpp:
     image: cloudentity/openbanking-quickstart-financroo-tpp:${VERSION}
@@ -42,11 +42,11 @@ services:
       - DB_FILE=/app/data/my.db
       - TENANT=${TENANT}
       - GIN_MODE=debug # change to release to disable gin debug
-      - SPEC=obuk
+      - SPEC=obbr
       - BANK_URL=http://bank:8070
       - CLIENT_ID=bugkgm23g9kregtu051g
       - ROOT_CA=/certs/ca.pem
-      - OPENBANKING_SERVER_ID=openbanking
+      - OPENBANKING_SERVER_ID=openbanking_brasil
 
 
   consent-page:
@@ -72,7 +72,7 @@ services:
       - BANK_URL=http://bank:8070
       - DB_FILE=/data/my.db
       - LOG_LEVEL=debug
-      - SPEC=obuk
+      - SPEC=obbr
       - GIN_MODE=debug # change to release to disable gin debug
       - OTP_MODE=mock # change to custom to enable custom OTP handling
       - MFA_CLAIM=sub # for mobile use mobile_verified
@@ -99,6 +99,7 @@ services:
       - CERT_FILE=/bank_cert.pem
       - KEY_FILE=/bank_key.pem
       - ROOT_CA=/ca.pem
+      - SPEC=obbr
       - LOGIN_AUTHORIZATION_SERVER_URL=${ACP_URL}
       - LOGIN_AUTHORIZATION_SERVER_ID=bank-customers
       - LOGIN_TENANT_ID=${TENANT}
@@ -106,7 +107,7 @@ services:
       - INTROSPECT_CLIENT_ID=bv2dkff8mll9cf6pvd6g
       - INTROSPECT_CLIENT_SECRET=KThGH68f-gMC4cscGLFeOpIU4EYriYhKspOV9IwHbnw
       - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/bank-customers
-      - OPENBANKING_SERVER_ID=openbanking
+      - OPENBANKING_SERVER_ID=openbanking_brasil
 
   consent-admin-portal:
     image: cloudentity/openbanking-quickstart-consent-admin-portal:${VERSION}
@@ -122,7 +123,7 @@ services:
       - SYSTEM_CLIENT_ID=bv2fe0tpfc67lmeti340
       - SYSTEM_CLIENT_SECRET=v6yYaApda9juR_DrlI5mpdsdm9u2-D0rQIG9ynakyDE
       - SYSTEM_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
-      - SYSTEM_CLIENTS_SERVER_ID=openbanking
+      - SYSTEM_CLIENTS_SERVER_ID=openbanking_brasil
       - CERT_FILE=/bank_cert.pem
       - KEY_FILE=/bank_key.pem
       - ROOT_CA=/ca.pem
@@ -143,14 +144,14 @@ services:
       - ./data/ca.pem:/ca.pem
       - ./data/bank_cert.pem:/bank_cert.pem
       - ./data/bank_key.pem:/bank_key.pem
-      - ./mount/bank-uk:/app/data
+      - ./mount/bank-br:/app/data
     environment:
       - CLIENT_ID=bukj5p6k7qdmm5ppbi4g
-      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/openbanking
+      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/openbanking_brasil
       - CERT_FILE=/bank_cert.pem
       - KEY_FILE=/bank_key.pem
       - ROOT_CA=/ca.pem
-      - SPEC=obuk
+      - SPEC=obbr
       - GIN_MODE=debug
 
   configuration:
@@ -161,9 +162,10 @@ services:
       - ./data/tpp_cert.pem:/certs/tpp_cert.pem
       - ./data/ca.pem:/certs/ca.pem
       - ./data/variables.yaml:/variables.yaml
-      - ./data/imports/system.tmpl:/app/imports-obuk/system.tmpl
-      - ./data/imports/bank-customers.tmpl:/app/imports-obuk/bank-customers.tmpl
-      - ./data/imports/openbanking-uk.tmpl:/app/imports-obuk/openbanking-uk.tmpl
+      - ./data/imports/system.tmpl:/app/imports-obbr/system.tmpl
+      - ./data/imports/bank-customers.tmpl:/app/imports-obbr/bank-customers.tmpl
+      - ./data/imports/openbanking-br.tmpl:/app/imports-obbr/openbanking-br.tmpl
+      - ./data/imports/tenant.tmpl:/app/imports-obbr/tenant.tmpl
     command:
       - /app/main
       - --tenant-url
@@ -175,7 +177,7 @@ services:
       - --client-secret
       - ${CONFIGURATION_CLIENT_SECRET}
       - --templates-dirs
-      - /app/imports-obuk
+      - /app/imports-obbr
       - --variables-file
       - /variables.yaml
       - --verbose   
