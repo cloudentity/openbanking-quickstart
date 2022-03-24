@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -118,10 +117,10 @@ func MapClientsToConsents(clients []Client, consents []Consent) []ClientConsents
 func (s *Server) ListConsents() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			sub                    string
-			accounts, acc          InternalAccounts
-			clientsAndConsents, cc []ClientConsents
-			err                    error
+			sub                string
+			accounts           InternalAccounts
+			clientsAndConsents []ClientConsents
+			err                error
 		)
 
 		if sub, err = s.GetSubject(c); err != nil {
@@ -129,19 +128,14 @@ func (s *Server) ListConsents() func(*gin.Context) {
 			return
 		}
 
-		for _, spec := range SupportedSpecs {
-			if acc, err = s.BankClients[spec].GetInternalAccounts(sub); err != nil {
-				Error(c, ToAPIError(err))
-				return
-			}
+		if accounts, err = s.BankClient.GetInternalAccounts(sub); err != nil {
+			Error(c, ToAPIError(err))
+			return
+		}
 
-			if cc, err = s.ConsentClients[spec].FetchConsents(c, acc.GetAccountIDs()); err != nil {
-				Error(c, ToAPIError(err))
-				return
-			}
-
-			accounts.Accounts = append(accounts.Accounts, acc.Accounts...)
-			clientsAndConsents = append(clientsAndConsents, cc...)
+		if clientsAndConsents, err = s.ConsentClient.FetchConsents(c, accounts.GetAccountIDs()); err != nil {
+			Error(c, ToAPIError(err))
+			return
 		}
 
 		c.JSON(http.StatusOK, &ConsentsResponse{
@@ -155,22 +149,12 @@ func (s *Server) RevokeConsent() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
 			id                 = c.Param("id")
-			consentType        = c.Query("consent_type")
 			clientsAndConsents []ClientConsents
 			canBeRevoked       bool
-			consentClient      ConsentClient = s.GetConsentClientByConsentType(consentType)
 			err                error
 		)
 
-		if consentClient == nil {
-			Error(c, APIError{
-				Code:    http.StatusBadRequest,
-				Message: fmt.Sprintf("unable to retrieve consent client for consent type [%s]", consentType),
-			})
-			return
-		}
-
-		if clientsAndConsents, err = consentClient.FetchConsents(c, []string{}); err != nil {
+		if clientsAndConsents, err = s.ConsentClient.FetchConsents(c, []string{}); err != nil {
 			Error(c, ToAPIError(err))
 			return
 		}
@@ -190,7 +174,7 @@ func (s *Server) RevokeConsent() func(*gin.Context) {
 			return
 		}
 
-		if err = consentClient.RevokeConsent(c, id); err != nil {
+		if err = s.ConsentClient.RevokeConsent(c, id); err != nil {
 			Error(c, ToAPIError(err))
 			return
 		}
@@ -249,28 +233,4 @@ func ToAPIError(err error) APIError {
 		http.StatusText(http.StatusInternalServerError),
 		err,
 	}
-}
-
-func (s *Server) GetConsentClientByConsentType(consentType string) ConsentClient {
-	switch consentType {
-	case "account_access", "domestic_payment":
-		return s.ConsentClients[OBUK]
-	case "consents":
-		return s.ConsentClients[OBBR]
-	case "cdr_arrangement":
-		return s.ConsentClients[CDR]
-	}
-	return nil
-}
-
-func (s *Server) GetBankClientByConsentType(consentType string) BankClient {
-	switch consentType {
-	case "account_access", "domestic_payment":
-		return s.BankClients[OBUK]
-	case "consents":
-		return s.BankClients[OBBR]
-	case "cdr_arrangement":
-		return s.BankClients[CDR]
-	}
-	return nil
 }
