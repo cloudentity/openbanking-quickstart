@@ -89,7 +89,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh 'make disable-mfa set-saas-configuration run-apps-with-saas'
+                        sh 'make enable-spec-obuk disable-mfa set-saas-configuration run-apps-with-saas'
                         sh 'make run-saas-tests-headless'
                         sh 'make clean'
                     } catch(exc) {
