@@ -68,22 +68,16 @@ func (s *Server) WithUser(c *gin.Context) (User, BankTokens, error) {
 
 func (s *Server) GetClientWithToken(bank ConnectedBank, tokens BankTokens) (BankClient, string, error) {
 	var (
-		clients Clients
-		client  BankClient
-		ok      bool
-		token   string
-		err     error
+		client BankClient
+		token  string
+		err    error
 	)
-
-	if clients, ok = s.Clients[BankID(bank.BankID)]; !ok {
-		return client, token, fmt.Errorf("can't get client for a bank: %s", bank.BankID)
-	}
 
 	if token, err = tokens.GetAccessToken(bank.BankID); err != nil {
 		return client, token, err
 	}
 
-	return clients.BankClient, token, nil
+	return s.Clients.BankClient, token, nil
 }
 
 func (s *Server) GetAccounts() func(ctx *gin.Context) {

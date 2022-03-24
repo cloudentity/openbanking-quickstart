@@ -33,7 +33,7 @@ describe(`Financroo payments app test`, () => {
     Urls.clearLocalStorage()
     financrooLoginPage.visit()
     financrooLoginPage.login()
-    financrooWelcomePage.connectSantanderBank()
+    financrooWelcomePage.connectGoBank()
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin()

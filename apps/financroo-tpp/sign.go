@@ -22,6 +22,8 @@ type Signer interface {
 	Sign([]byte) (string, error)
 }
 
+type SignerCreationFn func(string) (Signer, error)
+
 type OBUKSigner struct {
 	privateKey *rsa.PrivateKey
 }

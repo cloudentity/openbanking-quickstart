@@ -8,4 +8,5 @@ export const api = {
   disconnectBank: (bankId) => base.delete({url: `/disconnect/${bankId}`, query: {}}),
   fetchTransactions: () => base.get({url: `/transactions`}),
   fetchBalances: () => base.get({url: `/balances`}),
+  fetchConfiguration: () => base.get({url: `/configuration`}),
 };
