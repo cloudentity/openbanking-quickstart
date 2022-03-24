@@ -23,7 +23,7 @@ run-%-saas:
 
 .PHONY: build
 build:
-	docker-compose -f docker-compose.build.yaml build
+	docker-compose -f docker-compose.obuk.yaml -f docker-compose.obbr.yaml -f docker-compose.build.yaml build
 
 # obuk, obbr, cdr, saas
 run-%-tests-headless: run-tests-verify
