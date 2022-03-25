@@ -89,7 +89,7 @@ pipeline {
                     try {
                         sh 'make disable-mfa enable-spec-obuk set-saas-configuration run-apps-with-saas'
                         retry(3) {
-                            sh 'run-saas-obuk-tests-headless'
+                            sh 'make run-saas-obuk-tests-headless'
                         }
                         sh 'make clean'
                     } catch(exc) {
@@ -104,7 +104,7 @@ pipeline {
                     try {
                         sh 'make enable-spec-obbr set-saas-configuration run-apps-with-saas'
                         retry(3) {
-                            sh 'run-saas-obbr-tests-headless'
+                            sh 'make run-saas-obbr-tests-headless'
                         }
                         sh 'make clean'
                     } catch(exc) {
