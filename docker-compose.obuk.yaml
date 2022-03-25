@@ -12,7 +12,7 @@ services:
       - ./data/tpp_cert.pem:/tpp_cert.pem
       - ./data/tpp_key.pem:/tpp_key.pem
     environment:
-      - CLIENT_ID=${DEVELOPER_CLIENT_ID}
+      - CLIENT_ID=bugkgm23g9kregtu051g
       - AUTHORIZE_URL=${ACP_URL}/${TENANT}/openbanking/oauth2/authorize
       - TOKEN_URL=${ACP_MTLS_URL}/${TENANT}/openbanking/oauth2/token
       - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/openbanking
@@ -23,6 +23,9 @@ services:
       - ROOT_CA=/ca.pem
       - BANK_URL=http://bank:8070
       - SPEC=obuk
+    depends_on:
+      configuration:
+        condition: service_completed_successfully
 
   financroo-tpp:
     image: cloudentity/openbanking-quickstart-financroo-tpp:${VERSION}
@@ -47,6 +50,9 @@ services:
       - CLIENT_ID=bugkgm23g9kregtu051g
       - ROOT_CA=/certs/ca.pem
       - OPENBANKING_SERVER_ID=openbanking
+    depends_on:
+      configuration:
+        condition: service_completed_successfully
 
 
   consent-page:
@@ -77,6 +83,9 @@ services:
       - OTP_MODE=mock # change to custom to enable custom OTP handling
       - MFA_CLAIM=sub # for mobile use mobile_verified
       - DEFAULT_LANGUAGE=en-us
+    depends_on:
+      configuration:
+        condition: service_completed_successfully
 
 
   consent-self-service-portal:
@@ -107,6 +116,10 @@ services:
       - INTROSPECT_CLIENT_SECRET=KThGH68f-gMC4cscGLFeOpIU4EYriYhKspOV9IwHbnw
       - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/bank-customers
       - OPENBANKING_SERVER_ID=openbanking
+      - SPEC=obuk
+    depends_on:
+      configuration:
+        condition: service_completed_successfully
 
   consent-admin-portal:
     image: cloudentity/openbanking-quickstart-consent-admin-portal:${VERSION}
@@ -132,6 +145,9 @@ services:
       - INTROSPECT_CLIENT_ID=bv2fddlpfc67lmeti32g
       - INTROSPECT_CLIENT_SECRET=RkAIOVRlP6ZLhDvYixT1wBb8DG3bVkXAouoIrX7cwzA
       - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/bank-admins
+    depends_on:
+      configuration:
+        condition: service_completed_successfully
 
   bank:
     image: cloudentity/openbanking-quickstart-bank:${VERSION}
@@ -152,6 +168,9 @@ services:
       - ROOT_CA=/ca.pem
       - SPEC=obuk
       - GIN_MODE=debug
+    depends_on:
+      configuration:
+        condition: service_completed_successfully
 
   configuration:
     container_name: configuration
