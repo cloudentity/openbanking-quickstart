@@ -42,6 +42,11 @@ services:
       - DB_FILE=/app/data/my.db
       - TENANT=${TENANT}
       - GIN_MODE=debug # change to release to disable gin debug
+      - SPEC=${SPEC}
+      - BANK_URL=${BANK_URL}
+      - CLIENT_ID=${DEVELOPER_CLIENT_ID}
+      - ROOT_CA=/certs/ca.pem
+
 
   consent-page-uk:
     image: cloudentity/openbanking-quickstart-consent-page:${VERSION}
@@ -130,7 +135,6 @@ services:
     volumes:
       - ./data/ca.pem:/certs/ca.pem
       - ./data/variables.yaml:/variables.yaml
-      - ./data/imports/bank-admins.tmpl:/app/imports-cdr/bank-admins.tmpl
       - ./data/imports/bank-customers.tmpl:/app/imports-cdr/bank-customers.tmpl
       - ./data/imports/system.tmpl:/app/imports-cdr/system.tmpl
       - ./data/imports/cdr.tmpl:/app/imports-cdr/cdr.tmpl

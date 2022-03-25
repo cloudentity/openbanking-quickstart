@@ -17,13 +17,14 @@ import (
 
 type Server struct {
 	Config            Config
-	Clients           map[BankID]Clients
+	Clients           Clients
 	SecureCookie      *securecookie.SecureCookie
 	DB                *bolt.DB
 	UserRepo          UserRepo
 	LoginClient       acpclient.Client
 	Validator         *validator.Validate
 	UserSecureStorage UserSecureStorage
+	LoginURLBuilder   LoginURLBuilder
 }
 
 func NewServer() (Server, error) {
@@ -36,11 +37,28 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to load config")
 	}
 
-	if server.Clients, err = InitClients(server.Config); err != nil {
-		return server, errors.Wrapf(err, "failed to init clients")
+	switch server.Config.Spec {
+	case "obuk":
+		server.Config.ClientScopes = []string{"accounts", "payments", "openid", "offline_access"}
+		if server.Clients, err = InitClients(server.Config, NewOBUKSigner, NewOBUKClient, NewOBUKConsentClient); err != nil {
+			return server, errors.Wrapf(err, "failed to create clients")
+		}
+		if server.LoginURLBuilder, err = NewOBUKLoginURLBuilder(); err != nil {
+			return server, errors.Wrapf(err, "failed to create login url builder")
+		}
+	case "obbr":
+		server.Config.ClientScopes = []string{"accounts", "payments", "openid", "offline_access", "consents"}
+		if server.Clients, err = InitClients(server.Config, NewOBBRSigner, NewOBBRClient, NewOBBRConsentClient); err != nil {
+			return server, errors.Wrapf(err, "failed to create clients")
+		}
+		if server.LoginURLBuilder, err = NewOBBRLoginURLBuilder(server.Clients.AcpAccountsClient); err != nil {
+			return server, errors.Wrapf(err, "failed to create login url builder")
+		}
+	default:
+		return server, fmt.Errorf("unsupported spec [%s] in configuration", server.Config.Spec)
 	}
 
-	server.SecureCookie = securecookie.New(server.Config.CookieHashKey, server.Config.CookieBlockKey)
+	server.SecureCookie = securecookie.New([]byte(server.Config.CookieHashKey), []byte(server.Config.CookieBlockKey))
 
 	if server.DB, err = InitDB(server.Config); err != nil {
 		return server, errors.Wrapf(err, "failed to init db")
@@ -78,7 +96,10 @@ func (s *Server) Start() error {
 	r.GET("/api/banks", s.ConnectedBanks())
 
 	r.NoRoute(func(c *gin.Context) {
-		c.HTML(http.StatusOK, "index.html", gin.H{"featureFlags": s.Config.FeatureFlags})
+		c.HTML(http.StatusOK, "index.html", gin.H{
+			"featureFlags": s.Config.FeatureFlags,
+			"spec":         s.Config.Spec,
+		})
 	})
 
 	return r.RunTLS(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)), s.Config.CertFile, s.Config.KeyFile)
