@@ -104,16 +104,19 @@ export default function Dashboard({
                       <div className={classes.filterChips}>
                         <Chip
                           label="All types"
+                          id="all-types"
                           onClick={() => setFilter("all")}
                           style={filter === "all" ? activeChipStyle : {}}
                         />
                         <Chip
                           label="Account only"
+                          id="account-only"
                           onClick={() => setFilter("account")}
                           style={filter === "account" ? activeChipStyle : {}}
                         />
                         <Chip
                           label="Payment only"
+                          id="payment-only"
                           onClick={() => setFilter("payment")}
                           style={filter === "payment" ? activeChipStyle : {}}
                         />
