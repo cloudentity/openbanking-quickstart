@@ -4,6 +4,9 @@ pipeline {
     }
     environment {
         VERIFY_TEST_RUNNER_TIMEOUT_MS = 80000
+        SAAS_TENANT_ID = 'amfudxn6-qa-us-east-1-ob-quickstart'
+        SAAS_CLIENT_ID = credentials('OPENBANKING_CONFIGURATION_CLIENT_ID')
+        SAAS_CLIENT_SECRET = credentials('OPENBANKING_CONFIGURATION_CLIENT_SECRET')
     }
     options {
         timeout(time: 1, unit: 'HOURS')
@@ -80,17 +83,25 @@ pipeline {
                 }
             }
         }
-        stage('SaaS Tests') {
-            environment {
-                SAAS_TENANT_ID = 'amfudxn6-qa-us-east-1-ob-quickstart'
-                SAAS_CLIENT_ID = credentials('OPENBANKING_CONFIGURATION_CLIENT_ID')
-                SAAS_CLIENT_SECRET = credentials('OPENBANKING_CONFIGURATION_CLIENT_SECRET')
-            }
+        stage('SaaS OBUK Tests') {
             steps {
                 script {
                     try {
-                        sh 'make disable-mfa set-saas-configuration run-apps-with-saas'
-                        sh 'make run-saas-tests-headless'
+                        sh 'make disable-mfa enable-spec-obuk set-saas-configuration run-apps-with-saas'
+                        sh 'run-saas-obuk-tests-headless'
+                        sh 'make clean'
+                    } catch(exc) {
+                        failure('Tests failed')
+                    }
+                }
+            }
+        }
+        stage('SaaS OBBR Tests') {
+            steps {
+                script {
+                    try {
+                        sh 'make enable-spec-obbr set-saas-configuration run-apps-with-saas'
+                        sh 'run-saas-ob*br-tests-headless'
                         sh 'make clean'
                     } catch(exc) {
                         failure('Tests failed')
