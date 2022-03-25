@@ -101,7 +101,7 @@ pipeline {
                 script {
                     try {
                         sh 'make enable-spec-obbr set-saas-configuration run-apps-with-saas'
-                        sh 'run-saas-ob*br-tests-headless'
+                        sh 'run-saas-obbr-tests-headless'
                         sh 'make clean'
                     } catch(exc) {
                         failure('Tests failed')
