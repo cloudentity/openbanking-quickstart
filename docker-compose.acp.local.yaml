@@ -4,7 +4,7 @@ services:
   acp:
     container_name: quickstart-acp
     restart: always
-    image: ${ACP_DOCKER_IMAGE}:${ACP_VERSION}
+    image: docker.cloudentity.io/acp:${ACP_VERSION}
     networks:
       default:
         aliases:
