@@ -1,11 +1,18 @@
 package main
 
 import (
+	"crypto/tls"
+	"encoding/json"
+	"io/ioutil"
+	"net/http"
+	"net/url"
+	"strings"
+
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 
 	acpclient "github.com/cloudentity/acp-client-go"
-	oauth2 "github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
+	"github.com/cloudentity/acp-client-go/clients/oauth2/models"
 )
 
 type FDXLogic struct {
@@ -18,20 +25,11 @@ func (h *FDXLogic) GetAccounts(c *gin.Context, token string) (interface{}, error
 
 func (h *FDXLogic) CreateConsent(c *gin.Context) (interface{}, error) {
 	var (
-		client acpclient.Client
-		resp   *oauth2.PushedAuthorizationRequestCreated
-		err    error
+		resp *http.Response
+		bs   []byte
+		err  error
 	)
 
-	config := h.Client.Config
-	config.ClientSecret = h.Config.ClientSecret
-	config.AuthMethod = acpclient.ClientSecretPostAuthnMethod
-
-	if client, err = acpclient.New(config); err != nil {
-		return nil, errors.Wrapf(err, "failed to create acp client")
-	}
-
-	// TODO change authn method
 	if h.Config.ClientSecret == "" {
 		return nil, errors.New("client secret must be set")
 	}
@@ -57,17 +55,45 @@ func (h *FDXLogic) CreateConsent(c *gin.Context) (interface{}, error) {
       }
    ]`
 
-	if resp, err = client.Oauth2.Oauth2.PushedAuthorizationRequest(oauth2.NewPushedAuthorizationRequestParams().
-		WithContext(c).
-		WithClientID(h.Config.ClientID).
-		WithClientSecret(&h.Config.ClientSecret).
-		WithResponseType(responseType).
-		WithAuthorizationDetails(&authorizationDetails)); err != nil {
+	u := h.Client.Config.IssuerURL.String() + "/par"
+	contentType := "application/x-www-form-urlencoded"
+
+	params := url.Values{
+		"client_id":             {h.Config.ClientID},
+		"client_secret":         {h.Config.ClientSecret},
+		"response_type":         {responseType},
+		"authorization_details": {authorizationDetails},
+	}
+
+	hc := http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{
+				InsecureSkipVerify: true,
+			},
+		},
+	}
+
+	if resp, err = hc.Post(u, contentType, strings.NewReader(params.Encode())); err != nil {
 		return nil, errors.Wrapf(err, "failed to register par request")
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode < 200 || resp.StatusCode >= 300 {
+		return nil, errors.Wrapf(err, "par endpoint returned unexpected status code")
+	}
+
+	if bs, err = ioutil.ReadAll(resp.Body); err != nil {
+		return nil, errors.Wrapf(err, "par endpoint did not return the response body")
+	}
+
+	var parResponse models.PARResponse
+
+	if err = json.Unmarshal(bs, &parResponse); err != nil {
+		return nil, errors.Wrapf(err, "failed to unmarshal par response")
 	}
 
 	return &map[string]interface{}{
-		"request_uri": resp.Payload.RequestURI,
+		"request_uri": parResponse.RequestURI,
 	}, nil
 }
 
@@ -100,5 +126,5 @@ func (h *FDXLogic) BuildLoginURL(c *gin.Context, consentID string, _ bool) (stri
 		return "", acpclient.CSRF{}, errors.Wrapf(err, "failed to create authorize url with par")
 	}
 
-	return u, acpclient.CSRF{}, nil // TODO handle csrf
+	return u, acpclient.CSRF{}, nil
 }

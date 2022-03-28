@@ -13,6 +13,7 @@ services:
       - ./data/tpp_key.pem:/tpp_key.pem
     environment:
       - CLIENT_ID=${DEVELOPER_CLIENT_ID}
+      - CLIENT_SECRET=${DEVELOPER_CLIENT_SECRET}
       - AUTHORIZE_URL=${ACP_URL}/${TENANT}/${OPENBANKING_SERVER_ID}/oauth2/authorize
       - TOKEN_URL=${ACP_MTLS_URL}/${TENANT}/${OPENBANKING_SERVER_ID}/oauth2/token
       - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/${OPENBANKING_SERVER_ID}
@@ -110,6 +111,47 @@ services:
       - DB_FILE=/data/my.db
       - LOG_LEVEL=debug
       - SPEC=obbr
+      - GIN_MODE=debug # change to release to disable gin debug
+      # - ENABLE_MFA=true
+      # - DEV_MODE=true
+      - OTP_MODE=mock # change to custom to enable custom OTP handling
+      # - OTP_TYPE=totp
+      # - OTP_REQUEST_URL= # this does not matter for totp
+      # - OTP_VERIFY_URL=https://localhost:8080/demo/totp/verify
+      # - OTP_AUTH_HEADER=Bearer this-is-some-test-token
+      - MFA_CLAIM=sub # for mobile use mobile_verified
+      # - TWILIO_ACCOUNT_SID=
+      # - TWILIO_AUTH_TOKEN=
+      - DEFAULT_LANGUAGE=en-us
+
+
+  consent-page-fdx:
+    image: cloudentity/openbanking-quickstart-consent-page:${VERSION}
+    container_name: consent-page-fdx
+    restart: always
+    ports:
+      - "8077:8080"
+    volumes:
+      - ./mount/consent-page-fdx:/data
+      - ./data/ca.pem:/ca.pem
+      - ./data/bank_cert.pem:/bank_cert.pem
+      - ./data/bank_key.pem:/bank_key.pem
+      # sample extensions:
+      # - ./consent/consent-page/examples/custom-styles.css:/app/assets/extend-styles.css
+      # - ./consent/consent-page/examples/custom-mfa-verify.tmpl:/app/templates/custom/mfa-verify.tmpl
+    env_file:
+      - .env
+    environment:
+      - CLIENT_ID=ab0ocudfotn6edhsiu7g
+      - CLIENT_SECRET=pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0
+      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
+      - CERT_FILE=/bank_cert.pem
+      - KEY_FILE=/bank_key.pem
+      - ROOT_CA=/ca.pem
+      - BANK_URL=http://bank-br:8070
+      - DB_FILE=/data/my.db
+      - LOG_LEVEL=debug
+      - SPEC=fdx
       - GIN_MODE=debug # change to release to disable gin debug
       # - ENABLE_MFA=true
       # - DEV_MODE=true
@@ -313,6 +355,7 @@ services:
       - FEATURES_CDR_AUSTRALIA=true
       - FEATURES_PAR=true
       - FEATURES_SCRIPTS=true
+      - FEATURES_FDX=true
       - SERVER_MTLS_URL=https://test-docker:8443
       - SERVER_URL=${ACP_URL}
       - LOGGING_LEVEL=debug

@@ -29,6 +29,7 @@ const (
 	OBUK Spec = "obuk"
 	OBBR Spec = "obbr"
 	CDR  Spec = "cdr"
+	FDX  Spec = "fdx"
 )
 
 type Config struct {
@@ -149,6 +150,8 @@ func NewServer() (Server, error) {
 		server.BankClient = NewOBBRBankClient(server.Config)
 	case CDR:
 		server.BankClient = NewCDREnergyClient(server.Config)
+	case FDX:
+		server.BankClient = NewFDXClient(server.Config)
 	default:
 		return Server{}, errors.New("invalid SPEC configuration")
 	}
@@ -179,6 +182,8 @@ func NewServer() (Server, error) {
 		server.PaymentMFAConsentProvider = &OBBRPaymentMFAConsentProvider{&server, tools}
 	case CDR:
 		server.AccountAccessConsentHandler = &CDRAccountAccessConsentHandler{&server, tools}
+	case FDX:
+		server.AccountAccessConsentHandler = &FDXAccountAccessConsentHandler{&server, tools}
 	default:
 		return server, errors.Wrapf(err, "unsupported spec %s", server.Config.Spec)
 	}

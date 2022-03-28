@@ -74,8 +74,8 @@ github.com/chzyer/logex v1.1.10/go.mod h1:+Ywpsq7O8HXn0nuIou7OrIPyXbp3wmkHB+jjWR
 github.com/chzyer/readline v0.0.0-20180603132655-2972be24d48e/go.mod h1:nSuG5e5PlCu98SY8svDHJxuZscDgtXS6KTTbou5AhLI=
 github.com/chzyer/test v0.0.0-20180213035817-a1ea475d72b1/go.mod h1:Q3SI9o4m/ZMnBNeIyt5eFwwo7qiLfzFZmjNmxjkiQlU=
 github.com/client9/misspell v0.3.4/go.mod h1:qj6jICC3Q7zFZvVWo7KLAzC3yx5G7kyvSDkc90ppPyw=
-github.com/cloudentity/acp-client-go v0.0.0-20220322222240-0fe507f5cccf h1:2DAd9RbxGsYlBQBvqToBN3cenpNtuVl/sY18bxyTIEw=
-github.com/cloudentity/acp-client-go v0.0.0-20220322222240-0fe507f5cccf/go.mod h1:IPijSVpOEvnPpeR/jtgDm+C43XzOIN+0lkS7qVVT6/I=
+github.com/cloudentity/acp-client-go v0.0.0-20220328225822-ae9143909401 h1:cYqQf5nRWQRksYxcHWjaStRUpjIu425wGuOrL+tdR5U=
+github.com/cloudentity/acp-client-go v0.0.0-20220328225822-ae9143909401/go.mod h1:IPijSVpOEvnPpeR/jtgDm+C43XzOIN+0lkS7qVVT6/I=
 github.com/cncf/udpa/go v0.0.0-20191209042840-269d4d468f6f/go.mod h1:M8M6+tZqaGXZJjfX53e64911xZQV5JYwmTeXPW+k8Sc=
 github.com/coreos/bbolt v1.3.2/go.mod h1:iRUV2dpdMOn7Bo10OQBFzIJO9kkE559Wcmn+qkEiiKk=
 github.com/coreos/etcd v3.3.13+incompatible/go.mod h1:uF7uidLiAD3TWHmW31ZFd/JWoc32PjwdhPthX9715RE=
