@@ -23,23 +23,23 @@ const (
 )
 
 type Config struct {
-	SystemClientID              string        `env:"SYSTEM_CLIENT_ID,required"`
-	SystemClientSecret          string        `env:"SYSTEM_CLIENT_SECRET,required"`
+	SystemClientID              string        `env:"SYSTEM_CLIENT_ID" envDefault:"buc3b1hhuc714r78env0"`
+	SystemClientSecret          string        `env:"SYSTEM_CLIENT_SECRET" envDefault:"PBV7q0akoP603rZbU0EFdxbhZ-djxF7FIVwyKaLnBYU"`
 	SystemIssuerURL             *url.URL      `env:"SYSTEM_ISSUER_URL,required"`
 	Timeout                     time.Duration `env:"TIMEOUT" envDefault:"5s"`
 	OpenbankingWorkspaceID      string        `env:"OPENBANKING_SERVER_ID,required"`
 	Spec                        Spec          `env:"SPEC,required"`
 	BankURL                     *url.URL      `env:"BANK_URL,required"`
-	RootCA                      string        `env:"ROOT_CA"`
-	CertFile                    string        `env:"CERT_FILE,required"`
-	KeyFile                     string        `env:"KEY_FILE,required"`
+	RootCA                      string        `env:"ROOT_CA" envDefault:"/ca.pem"`
+	CertFile                    string        `env:"CERT_FILE" envDefault:"/bank_cert.pem"`
+	KeyFile                     string        `env:"KEY_FILE" envDefault:"/bank_key.pem"`
 	Port                        int           `env:"PORT" envDefault:"8085"`
 	LoginAuthorizationServerURL string        `env:"LOGIN_AUTHORIZATION_SERVER_URL,required"`
-	LoginClientID               string        `env:"LOGIN_CLIENT_ID,required"`
+	LoginClientID               string        `env:"LOGIN_CLIENT_ID" envDefault:"bv0nab0mekk67nekvq7g"`
 	LoginAuthorizationServerID  string        `env:"LOGIN_AUTHORIZATION_SERVER_ID,required"`
 	LoginTenantID               string        `env:"LOGIN_TENANT_ID,required"`
-	IntrospectClientID          string        `env:"INTROSPECT_CLIENT_ID,required"`
-	IntrospectClientSecret      string        `env:"INTROSPECT_CLIENT_SECRET,required"`
+	IntrospectClientID          string        `env:"INTROSPECT_CLIENT_ID" envDefault:"bv2dkff8mll9cf6pvd6g"`
+	IntrospectClientSecret      string        `env:"INTROSPECT_CLIENT_SECRET" envDefault:"KThGH68f-gMC4cscGLFeOpIU4EYriYhKspOV9IwHbnw"`
 	IntrospectIssuerURL         *url.URL      `env:"INTROSPECT_ISSUER_URL,required"`
 }
 

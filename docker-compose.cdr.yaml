@@ -69,20 +69,13 @@ services:
     env_file:
       - .env
     environment:
-      - CLIENT_ID=bv0ocudfotn6edhsiu7g
-      - CLIENT_SECRET=pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0
       - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
-      - CERT_FILE=/bank_cert.pem
-      - KEY_FILE=/bank_key.pem
-      - ROOT_CA=/ca.pem
       - BANK_URL=http://bank:8070
-      - DB_FILE=/data/my.db
       - LOG_LEVEL=debug
       - SPEC=cdr
       - GIN_MODE=debug # change to release to disable gin debug
       - OTP_MODE=mock # change to custom to enable custom OTP handling
       - MFA_CLAIM=sub # for mobile use mobile_verified
-      - DEFAULT_LANGUAGE=en-us
     depends_on:
       configuration:
         condition: service_completed_successfully
@@ -100,19 +93,12 @@ services:
       - ./data/bank_cert.pem:/bank_cert.pem
       - ./data/bank_key.pem:/bank_key.pem
     environment:
-      - SYSTEM_CLIENT_ID=buc3b1hhuc714r78env0
-      - SYSTEM_CLIENT_SECRET=PBV7q0akoP603rZbU0EFdxbhZ-djxF7FIVwyKaLnBYU
       - SYSTEM_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
       - BANK_URL=http://bank:8070
-      - CERT_FILE=/bank_cert.pem
-      - KEY_FILE=/bank_key.pem
-      - ROOT_CA=/ca.pem
       - LOGIN_AUTHORIZATION_SERVER_URL=${ACP_URL}
       - LOGIN_AUTHORIZATION_SERVER_ID=bank-customers
       - LOGIN_TENANT_ID=${TENANT}
       - LOGIN_CLIENT_ID=bv0nab0mekk67nekvq7g
-      - INTROSPECT_CLIENT_ID=bv2dkff8mll9cf6pvd6g
-      - INTROSPECT_CLIENT_SECRET=KThGH68f-gMC4cscGLFeOpIU4EYriYhKspOV9IwHbnw
       - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/bank-customers
       - OPENBANKING_SERVER_ID=cdr
       - SPEC=cdr
