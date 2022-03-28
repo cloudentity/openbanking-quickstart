@@ -118,9 +118,8 @@ services:
       - ./data/bank_key.pem:/bank_key.pem
     environment:
       - SYSTEM_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
-      - OPENBANKING_UK_WORKSPACE_ID=openbanking
-      - OPENBANKING_BRASIL_WORKSPACE_ID=openbanking_brasil
-      - CDR_WORKSPACE_ID=cdr
+      - OPENBANKING_WORKSPACE_ID=cdr
+      - SPEC=cdr
       - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/bank-admins
     depends_on:
       configuration:
