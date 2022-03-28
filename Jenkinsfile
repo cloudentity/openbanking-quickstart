@@ -15,7 +15,7 @@ pipeline {
                         echo "127.0.0.1       authorization.cloudentity.com test-docker" | sudo tee -a /etc/hosts
                         cd tests && yarn install
                  '''
-                 sh 'echo docker-compose version'
+                 sh 'docker-compose version'
             }
         }
         stage('Build') {
