@@ -72,11 +72,7 @@ purge:
 
 # enable, disable
 %-mfa:
-	 if [ $* == "enable" ]; then \
-        ./scripts/override_env.sh ENABLE_MFA true; \
-    else \
-        ./scripts/override_env.sh ENABLE_MFA false; \
-    fi
+	 if [ $* == "enable" ]; then ./scripts/override_env.sh ENABLE_MFA true; else ./scripts/override_env.sh ENABLE_MFA false; fi
 
 .PHONY: set-version
 set-version:
