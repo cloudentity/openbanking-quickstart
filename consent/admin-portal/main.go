@@ -25,19 +25,19 @@ const (
 var Specs = []Spec{OBUK, CDR, OBBR}
 
 type Config struct {
-	SystemClientID               string        `env:"SYSTEM_CLIENT_ID,required"`
-	SystemClientSecret           string        `env:"SYSTEM_CLIENT_SECRET,required"`
+	SystemClientID               string        `env:"SYSTEM_CLIENT_ID" envDefault:"bv2fe0tpfc67lmeti340"`
+	SystemClientSecret           string        `env:"SYSTEM_CLIENT_SECRET" envDefault:"v6yYaApda9juR_DrlI5mpdsdm9u2-D0rQIG9ynakyDE"`
 	SystemIssuerURL              *url.URL      `env:"SYSTEM_ISSUER_URL,required"`
 	OpenbankingUKWorkspaceID     string        `env:"OPENBANKING_UK_WORKSPACE_ID,required"`
 	OpenbankingBrasilWorkspaceID string        `env:"OPENBANKING_BRASIL_WORKSPACE_ID,required"`
 	CDRWorkspaceID               string        `env:"CDR_WORKSPACE_ID,required"`
 	Timeout                      time.Duration `env:"TIMEOUT" envDefault:"5s"`
-	RootCA                       string        `env:"ROOT_CA"`
-	CertFile                     string        `env:"CERT_FILE,required"`
-	KeyFile                      string        `env:"KEY_FILE,required"`
+	RootCA                       string        `env:"ROOT_CA" envDefault:"/ca.pem"`
+	CertFile                     string        `env:"CERT_FILE" envDefault:"/bank_cert.pem"`
+	KeyFile                      string        `env:"KEY_FILE" envDefault:"/bank_key.pem"`
 	Port                         int           `env:"PORT" envDefault:"8086"`
-	IntrospectClientID           string        `env:"INTROSPECT_CLIENT_ID,required"`
-	IntrospectClientSecret       string        `env:"INTROSPECT_CLIENT_SECRET,required"`
+	IntrospectClientID           string        `env:"INTROSPECT_CLIENT_ID" envDefault:"bv2fddlpfc67lmeti32g"`
+	IntrospectClientSecret       string        `env:"INTROSPECT_CLIENT_SECRET" envDefault:"RkAIOVRlP6ZLhDvYixT1wBb8DG3bVkXAouoIrX7cwzA"`
 	IntrospectIssuerURL          *url.URL      `env:"INTROSPECT_ISSUER_URL,required"`
 }
 

@@ -108,18 +108,10 @@ services:
       - ./data/bank_cert.pem:/bank_cert.pem
       - ./data/bank_key.pem:/bank_key.pem
     environment:
-      - SYSTEM_CLIENT_ID=bv2fe0tpfc67lmeti340
-      - SYSTEM_CLIENT_SECRET=v6yYaApda9juR_DrlI5mpdsdm9u2-D0rQIG9ynakyDE
       - SYSTEM_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
-      - SYSTEM_CLIENTS_SERVER_ID=openbanking_brasil
-      - CERT_FILE=/bank_cert.pem
-      - KEY_FILE=/bank_key.pem
-      - ROOT_CA=/ca.pem
       - OPENBANKING_UK_WORKSPACE_ID=openbanking
       - OPENBANKING_BRASIL_WORKSPACE_ID=openbanking_brasil
       - CDR_WORKSPACE_ID=cdr
-      - INTROSPECT_CLIENT_ID=bv2fddlpfc67lmeti32g
-      - INTROSPECT_CLIENT_SECRET=RkAIOVRlP6ZLhDvYixT1wBb8DG3bVkXAouoIrX7cwzA
       - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/bank-admins
     depends_on:
       configuration:
