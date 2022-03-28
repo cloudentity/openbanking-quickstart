@@ -22,8 +22,6 @@ const (
 	OBBR Spec = "obbr"
 )
 
-var Specs = []Spec{OBUK, CDR, OBBR}
-
 type Config struct {
 	SystemClientID         string        `env:"SYSTEM_CLIENT_ID" envDefault:"bv2fe0tpfc67lmeti340"`
 	SystemClientSecret     string        `env:"SYSTEM_CLIENT_SECRET" envDefault:"v6yYaApda9juR_DrlI5mpdsdm9u2-D0rQIG9ynakyDE"`

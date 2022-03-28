@@ -40,7 +40,7 @@ restart-acp:
 
 .PHONY: lint
 lint: start-runner
-	docker-compose exec runner sh -c "golangci-lint run --fix --deadline=5m ./..."
+	docker-compose -f docker-compose.acp.local.yaml exec runner sh -c "golangci-lint run --fix --deadline=5m ./..."
 
 .PHONY: clean
 clean: 
@@ -67,7 +67,7 @@ set-saas-configuration:
 .PHONY: start-runner
 start-runner:
 	docker build -t quickstart-runner -f build/runner.dockerfile .
-	docker-compose up -d runner
+	docker-compose -f docker-compose.acp.local.yaml up -d runner
 
 .PHONY: generate-obuk-integration-spec
 generate-obuk-integration-spec: start-runner
@@ -101,5 +101,5 @@ generate-cdr-clients: start-runner
 
 .PHONY: obbr
 obbr:
-	docker-compose -f docker-compose.yaml -f conformance/docker-compose.obb.yaml -f conformance/docker-compose.fapi.yaml ${cmd}
+	docker-compose -f docker-compose.acp.local.yaml -f conformance/docker-compose.obb.yaml -f conformance/docker-compose.fapi.yaml ${cmd}
 
