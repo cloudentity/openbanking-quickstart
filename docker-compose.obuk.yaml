@@ -12,15 +12,11 @@ services:
       - ./data/tpp_cert.pem:/tpp_cert.pem
       - ./data/tpp_key.pem:/tpp_key.pem
     environment:
-      - CLIENT_ID=bugkgm23g9kregtu051g
       - AUTHORIZE_URL=${ACP_URL}/${TENANT}/openbanking/oauth2/authorize
       - TOKEN_URL=${ACP_MTLS_URL}/${TENANT}/openbanking/oauth2/token
       - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/openbanking
       - USERINFO_URL=${ACP_MTLS_URL}/${TENANT}/openbanking/userinfo
       - REDIRECT_URL=https://${APP_HOST}:8090/callback
-      - CERT_FILE=/tpp_cert.pem
-      - KEY_FILE=/tpp_key.pem
-      - ROOT_CA=/ca.pem
       - BANK_URL=http://bank:8070
       - SPEC=obuk
     depends_on:
