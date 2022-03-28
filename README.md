@@ -1,40 +1,42 @@
 # openbanking-quickstart
 Openbanking Quickstart
 
-## How to run environment locally
-### Set up MFA
-By default, MFA is turned off.
-1. Run `make enable-mfa` to turn MFA on.
-2. Run `make disable-mfa` to turn MFA off.
 
-### Set up ACP locally
-Run `make run-dev` to set up ACP.
-> #### Note
+## How to Run Quickstart
+### Prequisite configuration
+| ACP type      | Associated Environment File | Additional Configuration needed? 
+| ----------- | ----------- | --------|
+| Local      | .env-local   | No, everything is good to go out of the box. You shouldn't need to touch this file|
+| SAAS   | .env-saas        | [Yes, running with saas takes a few extra steps] (#saas-configuration-instructions) |
+
+> #### Additionally, quickstart can be used to showcase flows with MFA
 > By default, MFA is turned off.
-> To run environment with MFA run `make enable-mfa`.
+> 1. Run `make enable-mfa` to turn MFA on.
+> 2. Run `make disable-mfa` to turn MFA off.
 
-## How to run Cypress test locally
-Run `make run-tests` to open Cypress GUI with tests scenarios.
-To run tests:
-- single test suite - click on intended test suite name `{TEST_NAME}.ts`
-- full set - click on `Run integration spec`
+### Makefile targets 
+The current types of runtimes are currently supported: 
+1. Open Banking UK with local ACP instance: `make run-obuk-local`
+2. Open Banking UK with SAAS ACP: `make run-obuk-saas`
+3. Open Banking Brasil with local ACP instance: `make run-obbr-local`
+4. Open Banking Brasil with SAAS ACP: `make run-obbr-saas`
+5. CDR with local ACP instance: `make run-cdr-local`
 
-> #### Note
-> Tests will be executed accordingly to the set load for `MFA`- see **Set up MFA**. 
 
-## How to use Quickstart with SAAS
-### How to start up quickstart with SAAS
-- Enable Admin workspace and System workspace on SAAS Tenant
+## How to run Cypress Tests
+| Mode      | Instructions |
+| ----------- | ----------- |
+| With Cypress UI      | Run `make run-tests` to open Cypress GUI with tests scenarios. Then click on the intended test suite name `{TEST_NAME}.ts`    |
+| Headless (commandline)   | Run one of the following: `run-obuk-tests-headless`, `run-obbr-tests-headless`, `run-cdr-tests-headless`        |
+
+
+## Configuring your ACP SAAS Tenant for Quickstart {#saas-configuration-instructions}
+- Enable System workspace on SAAS Tenant (you will most likely need to contact someone at Cloudentity to do this for you)
 - Go to "System" workspace and create a new application with `manage_configuration` scope and `client_credentials` grant type
-- Configure the `.env-saas` file.
-- Run `make run-apps-with-saas`
-### How to clean up SAAS tenant
-- Run `make-clean-saas`. This will turn off all services and delete all extra workspaces from tenant.
+- Configure the `.env-saas` file with your saas tenant id.
+- Run one of the saas related makefile targets
 
-## How to Run Quickstart with Different Open Banking Specifications
-- If you have any of the quickstart applications running, turn them all off first with `make clean`
-- To run in Open Banking UK mode: run `make enable-spec-obuk run` if running locally. Run `make enable-spec-obuk run-apps-with-saas` if running with saas
-- To run in Open Banking Brasil mode: run `make enable-spec-obbr run` if running locally. Run `make enable-spec-obbr run-apps-with-saas` if running with saas
+
 ## Credentials
 - ACP admin portal: `https://authorization.cloudentity.com:8443` `admin / admin`
 - Developer TPP: `https://localhost:8090` `user | user2 | user3 / p@ssw0rd!`
