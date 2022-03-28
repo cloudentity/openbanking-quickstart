@@ -29,7 +29,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh 'make run'
+                        sh 'make run-cdr-local'
                         retry(3) {
                             sh 'make run-cdr-tests-headless'
                         }
@@ -45,7 +45,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh 'make disable-mfa run'
+                        sh 'make disable-mfa run-obuk-local'
                         sh 'make run-obuk-tests-headless'
                         sh 'make clean'
                     } catch(exc) {
@@ -58,7 +58,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh 'make enable-mfa run'
+                        sh 'make enable-mfa run-obuk-local'
                         sh 'make run-obuk-tests-headless'
                         sh 'make clean'
                     } catch(exc) {
@@ -71,7 +71,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh 'make enable-spec-obbr run'
+                        sh 'make run-obbr-local'
                         sh 'make run-obbr-tests-headless'
                         sh 'make clean'
                     } catch(exc) {
@@ -89,7 +89,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh 'make enable-spec-obuk disable-mfa set-saas-configuration run-apps-with-saas'
+                        sh 'make disable-mfa set-saas-configuration run-apps-with-saas'
                         sh 'make run-saas-tests-headless'
                         sh 'make clean'
                     } catch(exc) {
