@@ -11,6 +11,7 @@ run-%-local:
 	docker-compose -f docker-compose.$*.yaml up --no-build -d 
 	./scripts/wait.sh
 
+# obuk, obbr
 run-%-saas:
 	cp -f .env-saas .env
 	docker-compose -f docker-compose.$*.yaml up --no-build -d
@@ -18,12 +19,7 @@ run-%-saas:
 
 .PHONY: build
 build:
-	docker-compose \
-	-f docker-compose.obuk.yaml \
-	-f docker-compose.obbr.yaml \
-	-f docker-compose.cdr.yaml \
-	-f docker-compose.build.yaml \
-	build
+	docker-compose -f docker-compose.obuk.yaml -f docker-compose.obbr.yaml -f docker-compose.cdr.yaml -f docker-compose.build.yaml build
 
 # obuk, obbr, cdr, saas
 run-%-tests-headless: run-tests-verify
@@ -37,26 +33,10 @@ run-tests:
 run-tests-verify: 
 	VERIFY_TEST_RUNNER_TIMEOUT_MS=80000 yarn --cwd tests run cypress verify
 
-.PHONY: run-apps
-run-apps:
-	docker-compose up -d --no-build ${OB_APPS}
-	docker-compose -f docker-compose.cdr.yaml up -d ${CDR_APPS}
-	./scripts/wait.sh
-
-.PHONY: run-apps-with-saas
-run-apps-with-saas: setup_saas_env
-	cp -f .env-saas .env
-	docker-compose up -d --no-build configuration
-	docker-compose up -d --no-build ${OB_APPS}
-
-.PHONY: run
-run:
-	make run-acp-apps run-apps
-
 .PHONY: restart-acp
 restart-acp:
-	docker-compose rm -s -f acp
-	docker-compose up -d --no-build acp
+	docker-compose -f docker-compose.acp.local.yaml rm -s -f acp
+	docker-compose -f docker-compose.acp.local.yaml up -d --no-build acp
 
 .PHONY: lint
 lint: start-runner
