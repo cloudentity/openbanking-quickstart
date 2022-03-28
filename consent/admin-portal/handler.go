@@ -51,13 +51,9 @@ func (s *Server) ListClients() func(*gin.Context) {
 			return
 		}
 
-		for _, cc := range s.ConsentClients {
-			var consents []ClientConsents
-			if consents, err = cc.Fetch(c); err != nil {
-				c.String(http.StatusBadRequest, fmt.Sprintf("failed to fetch clients: %+v", err))
-				return
-			}
-			clientsWithConsents = append(clientsWithConsents, consents...)
+		if clientsWithConsents, err = s.ConsentClient.Fetch(c); err != nil {
+			c.String(http.StatusBadRequest, fmt.Sprintf("failed to fetch clients: %+v", err))
+			return
 		}
 
 		resp := ListClientsResponse{Clients: clientsWithConsents}
@@ -69,12 +65,10 @@ func (s *Server) ListClients() func(*gin.Context) {
 func (s *Server) RevokeConsent() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			id                  = c.Param("id")
-			canBeRevoked        bool
-			consentType         = c.Query("consent_type")
-			clientsAndConsents  []ClientConsents
-			consentFetchRevoker ConsentFetchRevoker = s.GetConsentClientByConsentType(consentType)
-			err                 error
+			id                 = c.Param("id")
+			canBeRevoked       bool
+			clientsAndConsents []ClientConsents
+			err                error
 		)
 
 		if err = s.IntrospectToken(c); err != nil {
@@ -82,12 +76,7 @@ func (s *Server) RevokeConsent() func(*gin.Context) {
 			return
 		}
 
-		if consentFetchRevoker == nil {
-			c.String(http.StatusBadRequest, fmt.Sprintf("unable to retrieve consent client for consent type [%s]", consentType))
-			return
-		}
-
-		if clientsAndConsents, err = consentFetchRevoker.Fetch(c); err != nil {
+		if clientsAndConsents, err = s.ConsentClient.Fetch(c); err != nil {
 			c.String(http.StatusBadRequest, fmt.Sprintf("failed to fetch clients: %+v", err))
 			return
 		}
@@ -104,7 +93,7 @@ func (s *Server) RevokeConsent() func(*gin.Context) {
 			return
 		}
 
-		if err = consentFetchRevoker.Revoke(c, ConsentRevocation, id); err != nil {
+		if err = s.ConsentClient.Revoke(c, ConsentRevocation, id); err != nil {
 			c.String(http.StatusUnauthorized, fmt.Sprintf("failed to revoke consent: %+v", err))
 			return
 		}
@@ -116,10 +105,8 @@ func (s *Server) RevokeConsent() func(*gin.Context) {
 func (s *Server) RevokeConsentsForClient() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			id                                      = c.Param("id")
-			providerType                            = c.Query("provider_type")
-			consentFetchRevoker ConsentFetchRevoker = s.GetConsentClientByProviderType(providerType)
-			err                 error
+			id  = c.Param("id")
+			err error
 		)
 
 		if err = s.IntrospectToken(c); err != nil {
@@ -127,12 +114,7 @@ func (s *Server) RevokeConsentsForClient() func(*gin.Context) {
 			return
 		}
 
-		if consentFetchRevoker == nil {
-			c.String(http.StatusBadRequest, fmt.Sprintf("unable to retrieve consent client for consent type [%s]", providerType))
-			return
-		}
-
-		if err = consentFetchRevoker.Revoke(c, ClientRevocation, id); err != nil {
+		if err = s.ConsentClient.Revoke(c, ClientRevocation, id); err != nil {
 			c.String(http.StatusUnauthorized, fmt.Sprintf("failed to revoke consent: %+v", err))
 			return
 		}
@@ -142,54 +124,5 @@ func (s *Server) RevokeConsentsForClient() func(*gin.Context) {
 }
 
 func (s *Server) IntrospectToken(c *gin.Context) error {
-	return nil
-}
-
-func (s *Server) GetConsentClientByConsentType(consentType string) ConsentFetchRevoker {
-	switch consentType {
-	case "account_access", "domestic_payment":
-		for _, fetcherRevoker := range s.ConsentClients {
-			if _, ok := fetcherRevoker.(*OBUKConsentFetcher); ok {
-				return fetcherRevoker
-			}
-		}
-	case "cdr_arrangement":
-		for _, fetcherRevoker := range s.ConsentClients {
-			if _, ok := fetcherRevoker.(*OBCDRConsentFetcher); ok {
-				return fetcherRevoker
-			}
-		}
-
-	case "consents":
-		for _, fetcherRevoker := range s.ConsentClients {
-			if _, ok := fetcherRevoker.(*OBBRConsentFetcher); ok {
-				return fetcherRevoker
-			}
-		}
-	}
-	return nil
-}
-
-func (s *Server) GetConsentClientByProviderType(providerType string) ConsentFetchRevoker {
-	switch providerType {
-	case string(OBUK):
-		for _, fetcherRevoker := range s.ConsentClients {
-			if _, ok := fetcherRevoker.(*OBUKConsentFetcher); ok {
-				return fetcherRevoker
-			}
-		}
-	case string(CDR):
-		for _, fetcherRevoker := range s.ConsentClients {
-			if _, ok := fetcherRevoker.(*OBCDRConsentFetcher); ok {
-				return fetcherRevoker
-			}
-		}
-	case string(OBBR):
-		for _, fetcherRevoker := range s.ConsentClients {
-			if _, ok := fetcherRevoker.(*OBBRConsentFetcher); ok {
-				return fetcherRevoker
-			}
-		}
-	}
 	return nil
 }
