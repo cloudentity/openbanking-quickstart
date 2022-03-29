@@ -50,6 +50,12 @@ func (h *FDXLogic) CreateConsent(c *gin.Context) (interface{}, error) {
                      "TRANSACTIONS",
                      "STATEMENTS"
                   ]
+               },
+               {
+                  "resourceType":"CUSTOMER",
+                  "dataClusters":[
+                     "CUSTOMER_CONTACT"
+                  ]
                }
             ]
          }

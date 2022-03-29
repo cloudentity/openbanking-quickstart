@@ -78,17 +78,13 @@
               </button>
             </div>
             <div class="account-description account-description-hidden" data-desc-id="account_permissions">
-              <div class="permission-name">{{.trans.purpose}}</div>
-              <div class="caption" style="margin-top: 8px;">
-                {{.trans.purposeDetail}}
-              </div>
-              {{ range $key, $value := .permissions }}
-                <div class="permission-name" style="margin-top: 16px;">{{ $key }}</div>
+              {{ range .resources }}
+                <div class="permission-name" style="margin-top: 16px;">{{.ResourceType}}</div>
                 <div class="caption" style="margin-top: 8px;">
                   <ul>
-                    {{range $value }}
+                    {{range .DataClusters}}
                       <li>
-                        {{ .Language }}
+                        {{ . }}
                       </li>
                     {{end}}
                   </ul>

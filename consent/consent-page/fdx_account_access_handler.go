@@ -1,6 +1,9 @@
 package main
 
 import (
+	"fmt"
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -79,15 +82,15 @@ func (s *FDXAccountAccessConsentHandler) ConfirmConsent(c *gin.Context, loginReq
 	}
 
 	// todo accept other resources types
-	// for i, r := range consent.Payload.FdxConsent.Resources {
-	// 	if r.ResourceType != "ACCOUNT" {
-	// 		grantedResources = append(grantedResources, &models.FDXResource{
-	// 			DataClusters: r.DataClusters,
-	// 			ID:           fmt.Sprintf("%s-%s", r.ResourceType, i),
-	// 			ResouceType:  r.ResourceType,
-	// 		})
-	// 	}
-	// }
+	for i, r := range consent.Payload.FdxConsent.Resources {
+		if r.ResourceType != "ACCOUNT" {
+			grantedResources = append(grantedResources, &models.FDXResource{
+				DataClusters: r.DataClusters,
+				ID:           fmt.Sprintf("id-%s", strconv.Itoa(i)),
+				ResouceType:  r.ResourceType,
+			})
+		}
+	}
 
 	if accept, err = s.Client.Openbanking.Fdx.AcceptFDXConsentSystem(
 		fdx.NewAcceptFDXConsentSystemParamsWithContext(c).
