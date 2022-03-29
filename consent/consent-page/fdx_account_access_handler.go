@@ -6,7 +6,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
 
 	fdx "github.com/cloudentity/acp-client-go/clients/openbanking/client/f_d_x"
 	"github.com/cloudentity/acp-client-go/clients/openbanking/models"
@@ -73,7 +72,6 @@ func (s *FDXAccountAccessConsentHandler) ConfirmConsent(c *gin.Context, loginReq
 
 	// accept ACCOUNT resources based on user account selection
 	for _, a := range c.PostFormArray("account_ids") {
-		logrus.Infof("XXX add resource for account %s", a)
 		grantedResources = append(grantedResources, &models.FDXResource{
 			DataClusters: dataClusters,
 			ID:           a,

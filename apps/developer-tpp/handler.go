@@ -155,14 +155,24 @@ func (s *Server) Callback() func(*gin.Context) {
 		if token.GrantID != "" {
 			data["grant_id"] = token.GrantID
 		}
+
 		tokenResponse, _ := json.MarshalIndent(token, "", "  ")
 		data["token_response"] = string(tokenResponse)
+
 		data["access_token"] = token.AccessToken
+
+		parser := jwt.Parser{}
+
+		atClaims := jwt.MapClaims{}
+		if _, _, err := parser.ParseUnverified(token.AccessToken, &atClaims); err == nil {
+			payload, _ := json.MarshalIndent(atClaims, "", "  ")
+			data["access_token_payload"] = string(payload)
+		}
+
 		userinfoResp, _ := json.MarshalIndent(userinfoResponse, "", "  ")
 		data["userinfo"] = string(userinfoResp)
 
 		if token.IDToken != "" {
-			parser := jwt.Parser{}
 			claims := jwt.MapClaims{}
 			IDToken, _, _ := parser.ParseUnverified(token.IDToken, &claims)
 			header, _ := json.MarshalIndent(IDToken.Header, "", "  ")
