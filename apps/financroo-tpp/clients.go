@@ -220,8 +220,9 @@ type OBBRConsentClient struct {
 	Accounts acpclient.Client
 	Payments acpclient.Client
 	Signer
+	Config
 }
 
-func NewOBBRConsentClient(accountsClient, paymentsClient acpclient.Client, signer Signer) ConsentClient {
-	return &OBBRConsentClient{accountsClient, paymentsClient, signer}
+func NewOBBRConsentClient(accountsClient, paymentsClient acpclient.Client, signer Signer, config Config) ConsentClient {
+	return &OBBRConsentClient{accountsClient, paymentsClient, signer, config}
 }

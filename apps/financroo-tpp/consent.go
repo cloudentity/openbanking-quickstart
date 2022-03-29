@@ -342,7 +342,7 @@ func (o *OBBRConsentClient) CreatePaymentConsent(c *gin.Context, req CreatePayme
 	}
 
 	obbrPaymentConsentRequest := ob.BrazilCustomerPaymentConsentRequest{
-		Aud: fmt.Sprintf("%s/open-banking/payments/v1/consents", o.Payments.Config.IssuerURL.String()),
+		Aud: fmt.Sprintf("%s/%s/%s/open-banking/payments/v1/consents", o.Config.ACPURL, o.Config.Tenant, o.Config.ServerID),
 		Iat: time.Now().Unix(),
 		Jti: uuid.New().String(),
 		Iss: "3333-3333-3333-3333",

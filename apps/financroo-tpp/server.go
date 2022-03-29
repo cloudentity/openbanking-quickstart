@@ -48,7 +48,9 @@ func NewServer() (Server, error) {
 		}
 	case "obbr":
 		server.Config.ClientScopes = []string{"accounts", "payments", "openid", "offline_access", "consents"}
-		if server.Clients, err = InitClients(server.Config, NewOBBRSigner, NewOBBRClient, NewOBBRConsentClient); err != nil {
+		if server.Clients, err = InitClients(server.Config, NewOBBRSigner, NewOBBRClient, func(c1 acpclient.Client, c2 acpclient.Client, signer Signer) ConsentClient {
+			return NewOBBRConsentClient(c1, c2, signer, server.Config)
+		}); err != nil {
 			return server, errors.Wrapf(err, "failed to create clients")
 		}
 		if server.LoginURLBuilder, err = NewOBBRLoginURLBuilder(server.Clients.AcpAccountsClient); err != nil {
