@@ -283,10 +283,9 @@ func (c *ConsentTools) GetFDXAccountAccessConsentTemplateData(
 	accounts InternalAccounts,
 ) map[string]interface{} {
 	var (
-		expirationDate   string
-		selectedAccounts = map[string]bool{}
-		headTitle        = c.Trans.T("fdx.account.headTitle")
-		title            = c.Trans.T("fdx.account.title")
+		expirationDate string
+		headTitle      = c.Trans.T("fdx.account.headTitle")
+		title          = c.Trans.T("fdx.account.title")
 	)
 
 	for i, a := range accounts.Accounts {
@@ -311,10 +310,10 @@ func (c *ConsentTools) GetFDXAccountAccessConsentTemplateData(
 			"cancel": c.Trans.T("fdx.account.cancel"),
 			"agree":  c.Trans.T("fdx.account.agree"),
 		},
-		"login_request":    loginRequest,
-		"accounts":         accounts.Accounts,
-		"selectedAccounts": selectedAccounts,
+		"login_request": loginRequest,
+		"accounts":      accounts.Accounts,
 		// "permissions":     c.GetPermissionsWithDescription(consent.AccountAccessConsent.Permissions), // nolint
+		"resources":       consent.FdxConsent.Resources,
 		"client_name":     clientName,
 		"expiration_date": expirationDate,
 		"ctx":             consent.AuthenticationContext,

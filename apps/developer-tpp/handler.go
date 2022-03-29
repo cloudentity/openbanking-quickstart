@@ -27,6 +27,7 @@ type SpecLogicHandler interface {
 	LoginURLBuilder
 	ConsentCreator
 	DoRequestObjectEncryption() bool
+	PostAuthenticationAction(*gin.Context, map[string]interface{}) (map[string]interface{}, error)
 }
 
 type AccountsGetter interface {
@@ -119,6 +120,7 @@ func (s *Server) Callback() func(*gin.Context) {
 			app              string
 			appStorage       = AppStorage{}
 			userinfoResponse map[string]interface{}
+			additionalData   map[string]interface{}
 			code             = c.Query("code")
 			token            acpclient.Token
 			data             = gin.H{}
@@ -150,6 +152,11 @@ func (s *Server) Callback() func(*gin.Context) {
 			return
 		}
 
+		if token.GrantID != "" {
+			data["grant_id"] = token.GrantID
+		}
+		tokenResponse, _ := json.MarshalIndent(token, "", "  ")
+		data["token_response"] = string(tokenResponse)
 		data["access_token"] = token.AccessToken
 		userinfoResp, _ := json.MarshalIndent(userinfoResponse, "", "  ")
 		data["userinfo"] = string(userinfoResp)
@@ -175,6 +182,15 @@ func (s *Server) Callback() func(*gin.Context) {
 
 		accountsRaw, _ := json.MarshalIndent(accountsResp, "", "  ")
 		data["accounts_raw"] = string(accountsRaw)
+
+		if additionalData, err = s.PostAuthenticationAction(c, data); err != nil {
+			c.String(http.StatusInternalServerError, fmt.Sprintf("fail to execute post authentication action", err))
+			return
+		}
+
+		for k, v := range additionalData {
+			data[k] = v
+		}
 
 		c.HTML(http.StatusOK, s.GetTemplate("authenticated.tmpl"), data)
 	}

@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 
 	fdx "github.com/cloudentity/acp-client-go/clients/openbanking/client/f_d_x"
 	"github.com/cloudentity/acp-client-go/clients/openbanking/models"
@@ -57,13 +58,44 @@ func (s *FDXAccountAccessConsentHandler) ConfirmConsent(c *gin.Context, loginReq
 		return "", err
 	}
 
+	grantedResources := []*models.FDXResource{}
+
+	dataClusters := []string{}
+	for _, r := range consent.Payload.FdxConsent.Resources {
+		if r.ResourceType == "ACCOUNT" {
+			dataClusters = r.DataClusters
+			break
+		}
+	}
+
+	// accept ACCOUNT resources based on user account selection
+	for _, a := range c.PostFormArray("account_ids") {
+		logrus.Infof("XXX add resource for account %s", a)
+		grantedResources = append(grantedResources, &models.FDXResource{
+			DataClusters: dataClusters,
+			ID:           a,
+			ResouceType:  "ACCOUNT",
+		})
+	}
+
+	// todo accept other resources types
+	// for i, r := range consent.Payload.FdxConsent.Resources {
+	// 	if r.ResourceType != "ACCOUNT" {
+	// 		grantedResources = append(grantedResources, &models.FDXResource{
+	// 			DataClusters: r.DataClusters,
+	// 			ID:           fmt.Sprintf("%s-%s", r.ResourceType, i),
+	// 			ResouceType:  r.ResourceType,
+	// 		})
+	// 	}
+	// }
+
 	if accept, err = s.Client.Openbanking.Fdx.AcceptFDXConsentSystem(
 		fdx.NewAcceptFDXConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID).
 			WithAcceptConsent(&models.AcceptFDXConsentRequest{
 				GrantedScopes: s.GrantScopes(consent.Payload.RequestedScopes),
-				// AccountIds:    c.PostFormArray("account_ids"),// TODO resources
-				LoginState: loginRequest.State,
+				LoginState:    loginRequest.State,
+				Resources:     grantedResources,
 			}),
 		nil,
 	); err != nil {

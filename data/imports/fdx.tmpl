@@ -11,6 +11,14 @@ servers:
     - refresh_token
     - client_credentials
   initialize: true
+  legal_entity:
+    party:
+    name: "Midwest Primary Bank, NA"
+    home_uri: "https://www.midwest.com"
+    logo_uri: "https://www.midwest.com/81d88112572c.jpg"
+    registry_name: "GLEIF"
+    registered_entity_name: "Midwest Primary Bank, NA"
+    registered_entity_identifier: "549300ATG070THRDJ595"
   {{ if .read_client_certificate_from_header }}
   read_client_certificate_from_header: {{ .read_client_certificate_from_header }}
   client_certificate_header: {{ .client_certificate_header }}
@@ -70,6 +78,7 @@ clients:
   - code
   scopes:
   - openid
+  - READ_CONSENTS
   grant_types:
   - client_credentials
   - authorization_code

@@ -101,6 +101,8 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to load config")
 	}
 
+	clientConfig := server.Config.ClientConfig()
+
 	switch server.Config.Spec {
 	case OBUK:
 		server.Config.ClientScopes = []string{"openid", "accounts"}
@@ -108,9 +110,16 @@ func NewServer() (Server, error) {
 		server.Config.ClientScopes = []string{"openid", "consents", "consent:*"}
 	case FDX:
 		server.Config.ClientScopes = []string{"openid"}
+
+		if server.Config.ClientSecret == "" {
+			return server, errors.New("client secret must be set")
+		}
+
+		clientConfig.ClientSecret = server.Config.ClientSecret
+		clientConfig.AuthMethod = acpclient.ClientSecretPostAuthnMethod
 	}
 
-	if server.Client, err = acpclient.New(server.Config.ClientConfig()); err != nil {
+	if server.Client, err = acpclient.New(clientConfig); err != nil {
 		return server, errors.Wrapf(err, "failed to init acp client")
 	}
 

@@ -10,7 +10,6 @@ func NewFDXClient(config Config) *FDXClient {
 	return &c
 }
 
-// TODO: expose endpoint on mock data holder instead of redundant hardcoded mocking in every application
 func (c *FDXClient) GetInternalAccounts(id string) (InternalAccounts, error) {
 	if id == "user" {
 		return InternalAccounts{

@@ -124,7 +124,6 @@ services:
       # - TWILIO_AUTH_TOKEN=
       - DEFAULT_LANGUAGE=en-us
 
-
   consent-page-fdx:
     image: cloudentity/openbanking-quickstart-consent-page:${VERSION}
     container_name: consent-page-fdx
