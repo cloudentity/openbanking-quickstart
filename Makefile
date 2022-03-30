@@ -21,9 +21,17 @@ run-%-saas:
 build:
 	docker-compose -f docker-compose.obuk.yaml -f docker-compose.obbr.yaml -f docker-compose.cdr.yaml -f docker-compose.build.yaml build
 
-# obuk, obbr, cdr, saas
+# obuk, obbr, cdr
 run-%-tests-headless: run-tests-verify
 	yarn --cwd tests run cypress run -s cypress/integration/$*/*.ts
+
+.PHONY: run-saas-obuk-tests-headless
+run-saas-obuk-tests-headless: run-tests-verify
+	yarn --cwd tests run cypress run -s cypress/integration/saas/obuk/*.ts
+
+.PHONY: run-saas-obbr-tests-headless
+run-saas-obbr-tests-headless: run-tests-verify
+	yarn --cwd tests run cypress run -s cypress/integration/saas/obbr/*.ts
 
 .PHONY: run-tests
 run-tests:

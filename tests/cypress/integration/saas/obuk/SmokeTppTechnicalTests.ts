@@ -1,13 +1,13 @@
-import {TppAuthenticatedPage} from '../../pages/tpp/TppAuthenticatedPage';
-import {TppIntentPage} from '../../pages/tpp/TppIntentPage';
-import {TppLoginPage} from '../../pages/tpp/TppLoginPage';
-import {AcpLoginPage} from '../../pages/acp/AcpLoginPage';
-import {ConsentPage} from '../../pages/consent/ConsentPage';
-import {ErrorPage} from '../../pages/ErrorPage';
-import {Credentials} from "../../pages/Credentials";
-import {Urls} from "../../pages/Urls";
-import {MfaPage} from "../../pages/mfa/MfaPage";
-import {EnvironmentVariables} from "../../pages/EnvironmentVariables"
+import {TppAuthenticatedPage} from '../../../pages/tpp/TppAuthenticatedPage';
+import {TppIntentPage} from '../../../pages/tpp/TppIntentPage';
+import {TppLoginPage} from '../../../pages/tpp/TppLoginPage';
+import {AcpLoginPage} from '../../../pages/acp/AcpLoginPage';
+import {ConsentPage} from '../../../pages/consent/ConsentPage';
+import {ErrorPage} from '../../../pages/ErrorPage';
+import {Credentials} from "../../../pages/Credentials";
+import {Urls} from "../../../pages/Urls";
+import {MfaPage} from "../../../pages/mfa/MfaPage";
+import {EnvironmentVariables} from "../../../pages/EnvironmentVariables"
 
 describe(`Smoke Tpp technical app`, () => {
   const tppAuthenticatedPage: TppAuthenticatedPage = new TppAuthenticatedPage();
