@@ -144,6 +144,8 @@ set-saas-configuration:
 	./scripts/override_env.sh TENANT ${SAAS_TENANT_ID}
 	./scripts/override_env.sh CONFIGURATION_CLIENT_ID ${SAAS_CLIENT_ID}
 	./scripts/override_env.sh CONFIGURATION_CLIENT_SECRET ${SAAS_CLIENT_SECRET}
+	./scripts/override_env.sh CLEANUP_CLIENT_ID ${SAAS_CLEANUP_CLIENT_ID}
+	./scripts/override_env.sh CLEANUP_CLIENT_SECRET ${SAAS_CLEANUP_CLIENT_SECRET}
 
 .PHONY: start-runner
 start-runner:

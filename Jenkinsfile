@@ -7,6 +7,8 @@ pipeline {
         SAAS_TENANT_ID = 'amfudxn6-qa-us-east-1-ob-quickstart'
         SAAS_CLIENT_ID = credentials('OPENBANKING_CONFIGURATION_CLIENT_ID')
         SAAS_CLIENT_SECRET = credentials('OPENBANKING_CONFIGURATION_CLIENT_SECRET')
+        SAAS_CLEANUP_CLIENT_ID = credentials('OPENBANKING_CLEANUP_CLIENT_ID')
+        SAAS_CLEANUP_CLIENT_SECRET = credentials('OPENBANKING_CLEANUP_CLIENT_SECRET')
     }
     options {
         timeout(time: 1, unit: 'HOURS')
@@ -91,7 +93,7 @@ pipeline {
                         retry(3) {
                             sh 'make run-saas-obuk-tests-headless'
                         }
-                        sh 'make clean'
+                        sh 'make clean-saas'
                     } catch(exc) {
                         failure('Tests failed')
                     }
@@ -106,7 +108,7 @@ pipeline {
                         retry(3) {
                             sh 'make run-saas-obbr-tests-headless'
                         }
-                        sh 'make clean'
+                        sh 'make clean-saas'
                     } catch(exc) {
                         failure('Tests failed')
                     }
