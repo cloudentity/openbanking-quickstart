@@ -26,7 +26,7 @@ func (o *CDRArrangementImpl) FetchConsents(c *gin.Context, accountIDs []string) 
 
 	if arrangementsResponse, err = o.Client.Openbanking.Cdr.ListCDRArrangements(
 		cdr.NewListCDRArrangementsParamsWithContext(c).
-			WithWid(o.Config.CDRWorkspaceID).
+			WithWid(o.Config.OpenbankingWorkspaceID).
 			WithConsentsRequest(&obModels.ConsentsRequest{
 				Accounts: accountIDs,
 			}),
@@ -37,7 +37,7 @@ func (o *CDRArrangementImpl) FetchConsents(c *gin.Context, accountIDs []string) 
 
 	if clientsResponse, err = o.Client.System.Clients.ListClientsSystem(
 		system.NewListClientsSystemParamsWithContext(c).
-			WithWid(o.Config.CDRWorkspaceID),
+			WithWid(o.Config.OpenbankingWorkspaceID),
 		nil,
 	); err != nil {
 		return cac, err
@@ -89,7 +89,7 @@ func (o *CDRArrangementImpl) getConsents(response *cdr.ListCDRArrangementsOK) []
 func (o *CDRArrangementImpl) RevokeConsent(c *gin.Context, id string) (err error) {
 	if _, err = o.Client.Openbanking.Cdr.RevokeCDRArrangementByID(
 		cdr.NewRevokeCDRArrangementByIDParamsWithContext(c).
-			WithWid(o.Config.CDRWorkspaceID).
+			WithWid(o.Config.OpenbankingWorkspaceID).
 			WithArrangementID(id),
 		nil,
 	); err != nil {

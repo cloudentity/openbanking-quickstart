@@ -220,7 +220,7 @@ Let's first construct a consent URL, navigate manually to Consent screen in data
 ![Cloudentity-cdr-reference-apps-saas](./consent-request-url.png)
 
 Now copy the URL from above screen and paste into a browser. This call will initiate an authorization consent request
-to `Cloudentity authorization` platform.  The consent app is served based on the Cloudentity authorization server setting, for example based on default setting, it will redirect user to `http://localhost:8083`
+to `Cloudentity authorization` platform.  The consent app is served based on the Cloudentity authorization server setting, for example based on default setting, it will redirect user to `http://localhost:7080`
 
 ![Cloudentity-cdr-reference-apps-saas](./consent-setup-acp.png)
 

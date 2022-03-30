@@ -18,6 +18,7 @@ pipeline {
                         echo "127.0.0.1       authorization.cloudentity.com test-docker" | sudo tee -a /etc/hosts
                         cd tests && yarn install
                  '''
+                 sh 'docker-compose version'
             }
         }
         stage('Build') {
@@ -32,7 +33,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh 'make run'
+                        sh 'make run-cdr-local'
                         retry(3) {
                             sh 'make run-cdr-tests-headless'
                         }
@@ -48,7 +49,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh 'make disable-mfa run'
+                        sh 'make disable-mfa run-obuk-local'
                         sh 'make run-obuk-tests-headless'
                         sh 'make clean'
                     } catch(exc) {
@@ -61,7 +62,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh 'make enable-mfa run'
+                        sh 'make enable-mfa run-obuk-local'
                         sh 'make run-obuk-tests-headless'
                         sh 'make clean'
                     } catch(exc) {
@@ -74,7 +75,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh 'make enable-spec-obbr run'
+                        sh 'make run-obbr-local'
                         sh 'make run-obbr-tests-headless'
                         sh 'make clean'
                     } catch(exc) {
@@ -87,7 +88,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh 'make disable-mfa enable-spec-obuk set-saas-configuration run-apps-with-saas'
+                        sh 'make disable-mfa set-saas-configuration run-obuk-saas'
                         retry(3) {
                             sh 'make run-saas-obuk-tests-headless'
                         }
@@ -98,11 +99,12 @@ pipeline {
                 }
             }
         }
-        stage('SaaS OBBR Tests') {
+        // FIXME: restore this when saas test tenant cleanup between stages has been implemented 
+       /* stage('SaaS OBBR Tests') {
             steps {
                 script {
                     try {
-                        sh 'make enable-spec-obbr set-saas-configuration run-apps-with-saas'
+                        sh 'make set-saas-configuration run-obbr-saas'
                         retry(3) {
                             sh 'make run-saas-obbr-tests-headless'
                         }
@@ -112,12 +114,12 @@ pipeline {
                     }
                 }
             }
-        }
+        }*/
     }
 
     post {
         failure {
-            sh 'docker-compose logs > docker-compose.log; true'
+            sh 'docker-compose -f docker-compose.acp.local.yaml -f docker-compose.obuk.yaml -f docker-compose.obbr.yaml -f docker-compose.cdr.yaml logs > docker-compose.log; true'
             archiveArtifacts(artifacts: 'docker-compose.log', allowEmptyArchive: true)
             sh 'make clean'
             archiveArtifacts(artifacts: 'tests/cypress/screenshots/**/*', allowEmptyArchive: true)
