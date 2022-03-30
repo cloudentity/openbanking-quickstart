@@ -99,7 +99,8 @@ pipeline {
                 }
             }
         }
-        stage('SaaS OBBR Tests') {
+        // FIXME: restore this when saas test tenant cleanup between stages has been implemented 
+       /* stage('SaaS OBBR Tests') {
             steps {
                 script {
                     try {
@@ -113,7 +114,7 @@ pipeline {
                     }
                 }
             }
-        }
+        }*/
     }
 
     post {
