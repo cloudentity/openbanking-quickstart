@@ -28,8 +28,6 @@ To run tests:
 - Go to "System" workspace and create a new application with `manage_configuration` scope and `client_credentials` grant type
 - Configure the `.env-saas` file.
 - Run `make run-apps-with-saas`
-### How to clean up SAAS tenant
-- Run `make-clean-saas`. This will turn off all services and delete all extra workspaces from tenant.
 
 ## How to Run Quickstart with Different Open Banking Specifications
 - If you have any of the quickstart applications running, turn them all off first with `make clean`
