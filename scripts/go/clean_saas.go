@@ -16,8 +16,8 @@ import (
 
 type Config struct {
 	TenantID          string `env:"TENANT"`
-	AdminClientID     string `env:"ADMIN_CLIENT_ID"`
-	AdminClientSecret string `env:"ADMIN_CLIENT_SECRET"`
+	AdminClientID     string `env:"CLEANUP_CLIENT_ID"`
+	AdminClientSecret string `env:"CLEANUP_CLIENT_SECRET"`
 }
 
 func main() {
@@ -34,7 +34,7 @@ func main() {
 		log.Fatalf("failed to load env %+v", err)
 	}
 
-	tenantURLRaw = fmt.Sprintf("https://%s.authz.cloudentity.io", config.TenantID)
+	tenantURLRaw = fmt.Sprintf("https://%s.us.authz.cloudentity.io", config.TenantID)
 
 	if tURL, err = url.Parse(tenantURLRaw); err != nil {
 		log.Fatal(err)
@@ -50,8 +50,8 @@ func main() {
 	}
 
 	cc := clientcredentials.Config{
-		ClientID:     "c79lsrgh5kre3dfd8kf0",
-		ClientSecret: "S4DYjFEowDmEKfwbXOtR-mqaHWuIae2Mt4i-6KimZYQ",
+		ClientID:     config.AdminClientID,
+		ClientSecret: config.AdminClientSecret,
 		TokenURL:     fmt.Sprintf("%s/%s/%s/oauth2/token", tURL.String(), config.TenantID, "admin"),
 	}
 
@@ -60,35 +60,16 @@ func main() {
 	workspaceIDs := []string{
 		"openbanking_brasil",
 		"openbanking",
-		"bank-admins",
 		"bank-customers",
-		"financroo",
+		"cdr",
 	}
 
 	for _, wid := range workspaceIDs {
 		if request, err = http.NewRequest("DELETE", fmt.Sprintf("%s/api/admin/%s/servers/%s", tURL.String(), config.TenantID, wid), nil); err != nil {
-			log.Fatalf("failed to create server delete request: %v", err)
+			log.Fatalf("failed to setup delete server '%s' request: %v", wid, err)
 		}
 		if response, err = doRequest(client, request); err != nil {
-			log.Fatalf("failed to delete server: %v", err)
-		}
-		response.Body.Close()
-	}
-
-	clientIDs := []string{
-		"bv0ocudfotn6edhsiu7g",
-		"buc3b1hhuc714r78env0",
-		"bv2fe0tpfc67lmeti340",
-		"bukj5p6k7qdMIIDfjCCAmagAwImm5ppxxxx",
-		"c79lsrgh5kre3dfd8kf0",
-	}
-
-	for _, cid := range clientIDs {
-		if request, err = http.NewRequest("DELETE", fmt.Sprintf("%s/api/admin/%s/clients/%s", tURL.String(), config.TenantID, cid), nil); err != nil {
-			log.Fatalf("failed to create client delete request")
-		}
-		if response, err = doRequest(client, request); err != nil {
-			log.Fatalf("failed to delete client: %v", err)
+			log.Fatalf("failed to delete server '%s': %v", wid, err)
 		}
 		response.Body.Close()
 	}
