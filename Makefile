@@ -2,11 +2,12 @@ export DOCKER_BUILDKIT=1
 export COMPOSE_DOCKER_CLI_BUILD=1
 
 .EXPORT_ALL_VARIABLES: ;
+ACP_LOCAL_APPS=acp crdb redis
 
 # obuk, obbr, cdr
 run-%-local: 
 	cp -f .env-local .env
-	docker-compose -f docker-compose.acp.local.yaml up -d --no-build
+	docker-compose -f docker-compose.acp.local.yaml up -d --no-build ${ACP_LOCAL_APPS}
 	./scripts/wait.sh 
 	docker-compose -f docker-compose.$*.yaml up --no-build -d 
 	./scripts/wait.sh
