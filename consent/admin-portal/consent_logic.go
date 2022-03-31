@@ -1,14 +1,16 @@
 package main
 
-func ConsentFetcherFactory(spec Spec, server *Server) ConsentFetchRevoker {
+import "fmt"
+
+func ConsentFetcherFactory(spec Spec, server *Server) (ConsentFetchRevoker, error) {
 	switch spec {
 	case CDR:
-		return NewOBCDRConsentFetcher(server)
+		return NewOBCDRConsentFetcher(server), nil
 	case OBUK:
-		return NewOBUKConsentFetcher(server)
+		return NewOBUKConsentFetcher(server), nil
 	case OBBR:
-		return NewOBBRConsentFetcher(server)
+		return NewOBBRConsentFetcher(server), nil
 	default:
-		return nil
+		return nil, fmt.Errorf("unsupported spec %s", spec)
 	}
 }
