@@ -90,7 +90,7 @@ const useStyles = makeStyles((theme) => ({
   },
   header: {
     textAlign: "center",
-    ...theme.custom.label,
+  // TODO: investigate  ...theme.custom.label,
   },
 }));
 

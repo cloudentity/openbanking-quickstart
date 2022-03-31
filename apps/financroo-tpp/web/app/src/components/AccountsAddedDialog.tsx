@@ -51,7 +51,6 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "center",
     "& button": {
-      textTransform: "none",
       ...theme.custom.button,
       borderColor: theme.palette.primary.main,
       "&:first-of-type": {

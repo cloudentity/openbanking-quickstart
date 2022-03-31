@@ -40,7 +40,7 @@ export const mapTransactionsToBarChartData = pipe(
 );
 
 export const mapTransactionsToPieChartData = pipe(
-  reduce((acc, t: any) => over(lensProp(t.BankTransactionCode.Code), v => (v || 0) + parseFloat(t.Amount.Amount), acc), {}),
+  reduce((acc: any, t: any) => over(lensProp(t.BankTransactionCode.Code), v => (v || 0) + parseFloat(t.Amount.Amount), acc), {}),
   toPairs,
   map(([name, value]) => ({name, value}))
 );
