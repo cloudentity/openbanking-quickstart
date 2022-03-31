@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"crypto/tls"
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -28,6 +29,7 @@ func main() {
 		tURL         *url.URL
 		tenantURLRaw string
 		config       Config
+		workspaceIDs []string
 	)
 
 	if config, err = LoadConfig(); err != nil {
@@ -57,11 +59,27 @@ func main() {
 
 	client := cc.Client(context.WithValue(context.Background(), oauth2.HTTPClient, httpClient))
 
-	workspaceIDs := []string{
-		"openbanking_brasil",
-		"openbanking",
-		"bank-customers",
-		"cdr",
+	obSpec := flag.String("spec", "none", "Openbanking quickstart specification type")
+	flag.Parse()
+
+	switch *obSpec {
+	case "obuk":
+		workspaceIDs = []string{
+			"openbanking",
+			"bank-customers",
+		}
+	case "obbr":
+		workspaceIDs = []string{
+			"openbanking_brasil",
+			"bank-customers",
+		}
+	case "cdr":
+		workspaceIDs = []string{
+			"cdr",
+			"bank-customers",
+		}
+	default:
+		log.Fatalf("The openbanking specification flag '-spec=%s' is not supported", *obSpec)
 	}
 
 	for _, wid := range workspaceIDs {
