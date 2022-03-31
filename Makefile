@@ -55,6 +55,10 @@ lint: start-runner
 clean: 
 	docker-compose -f docker-compose.build.yaml down --remove-orphans
 
+# obuk, obbr, cdr
+clean-%-saas: clean
+	./scripts/clean_saas.sh $*
+
 .PHONY: purge
 purge:
 	docker images -a | grep openbanking-quickstart | awk '{print $3}' | xargs docker rmi -f || true

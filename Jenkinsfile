@@ -94,29 +94,28 @@ pipeline {
                         retry(3) {
                             sh 'make run-saas-obuk-tests-headless'
                         }
-                        sh 'make clean-saas'
+                        sh 'make clean-obuk-saas'
                     } catch(exc) {
                         failure('Tests failed')
                     }
                 }
             }
         }
-        // FIXME: restore this when saas test tenant cleanup between stages has been implemented 
-       /* stage('SaaS OBBR Tests') {
+        stage('SaaS OBBR Tests') {
             steps {
                 script {
                     try {
-                        sh 'make set-saas-configuration run-obbr-saas'
+                        sh 'make disable-mfa set-saas-configuration run-obbr-saas'
                         retry(3) {
                             sh 'make run-saas-obbr-tests-headless'
                         }
-                        sh 'make clean-saas'
+                        sh 'make clean-obbr-saas'
                     } catch(exc) {
                         failure('Tests failed')
                     }
                 }
             }
-        }*/
+        }
     }
 
     post {
