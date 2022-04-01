@@ -56,8 +56,9 @@ clean:
 	docker-compose -f docker-compose.build.yaml down --remove-orphans
 
 # obuk, obbr, cdr
-clean-%-saas: clean
-	./scripts/clean_saas.sh $*
+clean-%-saas: start-runner
+	./scripts/clean_saas.sh $* ${SAAS_TENANT_ID} ${SAAS_CLEANUP_CLIENT_ID} ${SAAS_CLEANUP_CLIENT_SECRET}
+	make clean
 
 .PHONY: purge
 purge:
@@ -76,8 +77,6 @@ set-saas-configuration:
 	./scripts/override_env.sh TENANT ${SAAS_TENANT_ID}
 	./scripts/override_env.sh CONFIGURATION_CLIENT_ID ${SAAS_CLIENT_ID}
 	./scripts/override_env.sh CONFIGURATION_CLIENT_SECRET ${SAAS_CLIENT_SECRET}
-	./scripts/override_env.sh CLEANUP_CLIENT_ID ${SAAS_CLEANUP_CLIENT_ID}
-	./scripts/override_env.sh CLEANUP_CLIENT_SECRET ${SAAS_CLEANUP_CLIENT_SECRET}
 
 .PHONY: start-runner
 start-runner:
@@ -98,7 +97,7 @@ generate-integration-specs: generate-obuk-integration-spec generate-obbr-integra
 .PHONY: generate-obbr-clients
 generate-obbr-clients: start-runner
 	rm -rf ./openbanking/obbr/accounts/*
-	docker-compose exec runner sh -c \
+	docker-compose -f docker-compose.acp.local.yaml exec runner sh -c \
 	"swagger generate client \
 	    --include-tag=obuk
 		-f api/obbr/accounts.yaml \
@@ -108,7 +107,7 @@ generate-obbr-clients: start-runner
 .PHONY: generate-cdr-clients
 generate-cdr-clients: start-runner
 	rm -rf ./openbanking/cdr/banking/*
-	docker-compose exec runner sh -c \
+	docker-compose -f docker-compose.acp.local.yaml exec runner sh -c \
 	"swagger generate client \
 		-f api/cdr/cds_banking.yaml \
 		-A banking \

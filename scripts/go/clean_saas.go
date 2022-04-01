@@ -10,33 +10,31 @@ import (
 	"net/url"
 	"time"
 
-	"github.com/caarlos0/env/v6"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/clientcredentials"
 )
 
-type Config struct {
-	TenantID          string `env:"TENANT"`
-	AdminClientID     string `env:"CLEANUP_CLIENT_ID"`
-	AdminClientSecret string `env:"CLEANUP_CLIENT_SECRET"`
-}
+var (
+	obSpec				= flag.String("spec", "none", "Openbanking quickstart specification type")
+	tenantId			= flag.String("tenant", "none", "Openbanking SaaS tenant ID")
+	adminClientID		= flag.String("cid", "none", "SaaS admin client ID")
+	adminClientSecret	= flag.String("csec", "none", "SaaS admin client secret")
+)
 
 func main() {
+
+	flag.Parse()
+
 	var (
 		request      *http.Request
 		response     *http.Response
 		err          error
 		tURL         *url.URL
 		tenantURLRaw string
-		config       Config
 		workspaceIDs []string
 	)
 
-	if config, err = LoadConfig(); err != nil {
-		log.Fatalf("failed to load env %+v", err)
-	}
-
-	tenantURLRaw = fmt.Sprintf("https://%s.us.authz.cloudentity.io", config.TenantID)
+	tenantURLRaw = fmt.Sprintf("https://%s.us.authz.cloudentity.io", *tenantId)
 
 	if tURL, err = url.Parse(tenantURLRaw); err != nil {
 		log.Fatal(err)
@@ -52,15 +50,12 @@ func main() {
 	}
 
 	cc := clientcredentials.Config{
-		ClientID:     config.AdminClientID,
-		ClientSecret: config.AdminClientSecret,
-		TokenURL:     fmt.Sprintf("%s/%s/%s/oauth2/token", tURL.String(), config.TenantID, "admin"),
+		ClientID:     *adminClientID,
+		ClientSecret: *adminClientSecret,
+		TokenURL:     fmt.Sprintf("%s/%s/%s/oauth2/token", tURL.String(), *tenantId, "admin"),
 	}
 
 	client := cc.Client(context.WithValue(context.Background(), oauth2.HTTPClient, httpClient))
-
-	obSpec := flag.String("spec", "none", "Openbanking quickstart specification type")
-	flag.Parse()
 
 	switch *obSpec {
 	case "obuk":
@@ -83,7 +78,7 @@ func main() {
 	}
 
 	for _, wid := range workspaceIDs {
-		if request, err = http.NewRequest("DELETE", fmt.Sprintf("%s/api/admin/%s/servers/%s", tURL.String(), config.TenantID, wid), nil); err != nil {
+		if request, err = http.NewRequest("DELETE", fmt.Sprintf("%s/api/admin/%s/servers/%s", tURL.String(), *tenantId, wid), nil); err != nil {
 			log.Fatalf("failed to setup delete server '%s' request: %v", wid, err)
 		}
 		if response, err = doRequest(client, request); err != nil {
@@ -103,9 +98,4 @@ func doRequest(client *http.Client, request *http.Request) (response *http.Respo
 	}
 
 	return response, nil
-}
-
-func LoadConfig() (config Config, err error) {
-	err = env.Parse(&config)
-	return config, err
 }
