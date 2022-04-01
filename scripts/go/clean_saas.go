@@ -15,10 +15,10 @@ import (
 )
 
 var (
-	obSpec				= flag.String("spec", "none", "Openbanking quickstart specification type")
-	tenantId			= flag.String("tenant", "none", "Openbanking SaaS tenant ID")
-	adminClientID		= flag.String("cid", "none", "SaaS admin client ID")
-	adminClientSecret	= flag.String("csec", "none", "SaaS admin client secret")
+	obSpec            = flag.String("spec", "none", "Openbanking quickstart specification type")
+	tenantId          = flag.String("tenant", "none", "Openbanking SaaS tenant ID")
+	adminClientID     = flag.String("cid", "none", "SaaS admin client ID")
+	adminClientSecret = flag.String("csec", "none", "SaaS admin client secret")
 )
 
 func main() {
