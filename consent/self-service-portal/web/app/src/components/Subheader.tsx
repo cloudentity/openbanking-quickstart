@@ -14,7 +14,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: "white",
   },
   title: {
-    ...theme.custom.heading2,
+  //  ...theme.custom.heading2,
   },
   info: {
     marginTop: 12,

@@ -12,7 +12,7 @@ import ApplicationSimpleCard from "./ApplicationSimpleCard";
 
 const useStyles = makeStyles((theme: Theme) => ({
   filterTitle: {
-    ...theme.custom.label,
+  //  ...theme.custom.label,
     marginBottom: 12,
   },
   filterChips: {

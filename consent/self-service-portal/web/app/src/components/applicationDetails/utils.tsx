@@ -218,6 +218,8 @@ export const currencyDict = {
   EUR: "€",
 };
 
+
+// TODO: 
 export const drawerStyles = {
   name: {
     fontWeight: "normal" as "normal",
@@ -242,11 +244,11 @@ export const drawerStyles = {
     fontWeight: "bold" as "bold",
   },
   purpose: {
-    ...theme.custom.body2,
+   // ...theme.custom.body2,
     marginBottom: 24,
   },
   subHeader: {
-    ...theme.custom.caption,
+  //  ...theme.custom.caption,
     textTransform: "uppercase" as "uppercase",
     fontWeight: "bold" as "bold",
     color: "#002D4C",
@@ -259,7 +261,7 @@ export const drawerStyles = {
     fontSize: 12,
   },
   cardContent: {
-    ...theme.custom.caption,
+   // ...theme.custom.caption,
   },
   card: {
     backgroundColor: "#FCFCFF",
@@ -274,7 +276,7 @@ export const drawerStyles = {
     marginTop: 0,
     paddingLeft: 16,
     "& > li": {
-      ...theme.custom.body2,
+   //   ...theme.custom.body2,
     },
   },
   detailsTitle: {
