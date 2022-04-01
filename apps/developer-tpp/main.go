@@ -60,7 +60,6 @@ func (c *Config) ClientConfig() acpclient.Config {
 	requestObjectExpiration := time.Minute * 10
 	return acpclient.Config{
 		ClientID:                    c.ClientID,
-		ClientSecret:                c.ClientSecret,
 		IssuerURL:                   c.IssuerURL,
 		TokenURL:                    c.TokenURL,
 		AuthorizeURL:                c.AuthorizeURL,
@@ -110,7 +109,7 @@ func NewServer() (Server, error) {
 	case OBBR:
 		clientConfig.Scopes = []string{"openid", "consents", "consent:*"}
 	case FDX:
-		if clientConfig.ClientSecret == "" {
+		if server.Config.ClientSecret == "" {
 			return server, errors.New("client secret must be set")
 		}
 	}
