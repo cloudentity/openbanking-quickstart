@@ -105,18 +105,13 @@ func NewServer() (Server, error) {
 
 	switch server.Config.Spec {
 	case OBUK:
-		server.Config.ClientScopes = []string{"openid", "accounts"}
+		clientConfig.Scopes = []string{"openid", "accounts"}
 	case OBBR:
-		server.Config.ClientScopes = []string{"openid", "consents", "consent:*"}
+		clientConfig.Scopes = []string{"openid", "consents", "consent:*"}
 	case FDX:
-		server.Config.ClientScopes = []string{"openid"}
-
-		if server.Config.ClientSecret == "" {
+		if clientConfig.ClientSecret == "" {
 			return server, errors.New("client secret must be set")
 		}
-
-		clientConfig.ClientSecret = server.Config.ClientSecret
-		clientConfig.AuthMethod = acpclient.ClientSecretPostAuthnMethod
 	}
 
 	if server.Client, err = acpclient.New(clientConfig); err != nil {

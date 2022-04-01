@@ -5,7 +5,7 @@ go 1.15
 require (
 	github.com/Masterminds/sprig/v3 v3.2.2
 	github.com/caarlos0/env/v6 v6.4.0
-	github.com/cloudentity/acp-client-go v0.0.0-20220331141355-30eeb051962c
+	github.com/cloudentity/acp-client-go v0.0.0-20220401115433-411c7f3eabbb
 	github.com/dgrijalva/jwt-go v3.2.1-0.20200107013213-dc14462fd587+incompatible
 	github.com/ggicci/httpin v0.7.1
 	github.com/ghodss/yaml v1.0.0
@@ -21,10 +21,11 @@ require (
 	github.com/imdario/mergo v0.3.12
 	github.com/jinzhu/copier v0.3.2
 	github.com/json-iterator/go v1.1.10 // indirect
+	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
+	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/nicksnyder/go-i18n/v2 v2.1.2
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.7.0
-	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.7.0
 	github.com/tidwall/pretty v1.0.2 // indirect
 	go.etcd.io/bbolt v1.3.5

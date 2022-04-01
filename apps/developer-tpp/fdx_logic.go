@@ -28,8 +28,7 @@ func NewFDXLogic(serverConfig Config) (*FDXLogic, error) {
 	)
 
 	publicConfig := serverConfig.ClientConfig()
-	publicConfig.ClientSecret = ""
-	publicConfig.AuthMethod = acpclient.NoneAuthnMethod
+	publicConfig.SkipClientCredentialsAuthn = true
 
 	if logic.PublicClient, err = acpclient.New(publicConfig); err != nil {
 		return logic, errors.Wrapf(err, "failed to create public acp client")
@@ -156,3 +155,5 @@ func (h *FDXLogic) PostAuthenticationAction(c *gin.Context, data map[string]inte
 		"consent_response": string(consentResponse),
 	}, nil
 }
+
+var _ SpecLogicHandler = &FDXLogic{}
