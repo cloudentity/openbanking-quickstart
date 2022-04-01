@@ -60,6 +60,7 @@ func (c *Config) ClientConfig() acpclient.Config {
 	requestObjectExpiration := time.Minute * 10
 	return acpclient.Config{
 		ClientID:                    c.ClientID,
+		ClientSecret:                c.ClientSecret,
 		IssuerURL:                   c.IssuerURL,
 		TokenURL:                    c.TokenURL,
 		AuthorizeURL:                c.AuthorizeURL,
