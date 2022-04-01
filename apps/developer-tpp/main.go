@@ -31,7 +31,7 @@ const (
 type Config struct {
 	Port         int           `env:"PORT" envDefault:"8090"`
 	ClientID     string        `env:"CLIENT_ID" envDefault:"bugkgm23g9kregtu051g"`
-	ClientSecret string        `env:"CLIENT_SECRET"` // only required for fdx
+	ClientSecret string        `env:"CLIENT_SECRET" envDefault:"-TlfoycUiE0qNi-XUBFDfTxMlhHTCjVxOF6pLrWZbQA"` // only required for fdx
 	AuthorizeURL *url.URL      `env:"AUTHORIZE_URL,required"`
 	TokenURL     *url.URL      `env:"TOKEN_URL,required"`
 	IssuerURL    *url.URL      `env:"ISSUER_URL,required"`
