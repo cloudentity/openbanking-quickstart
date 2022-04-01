@@ -16,13 +16,12 @@ import (
 
 var (
 	obSpec            = flag.String("spec", "none", "Openbanking quickstart specification type")
-	tenantId          = flag.String("tenant", "none", "Openbanking SaaS tenant ID")
-	adminClientID     = flag.String("cid", "none", "SaaS admin client ID")
-	adminClientSecret = flag.String("csec", "none", "SaaS admin client secret")
+	tenantID          = flag.String("tenant", "none", "Openbanking SaaS tenant ID")
+	adminClientID     = flag.String("cid", "none", "Openbanking SaaS admin client ID")
+	adminClientSecret = flag.String("csec", "none", "Openbanking SaaS admin client secret")
 )
 
 func main() {
-
 	flag.Parse()
 
 	var (
@@ -34,7 +33,7 @@ func main() {
 		workspaceIDs []string
 	)
 
-	tenantURLRaw = fmt.Sprintf("https://%s.us.authz.cloudentity.io", *tenantId)
+	tenantURLRaw = fmt.Sprintf("https://%s.us.authz.cloudentity.io", *tenantID)
 
 	if tURL, err = url.Parse(tenantURLRaw); err != nil {
 		log.Fatal(err)
@@ -52,7 +51,7 @@ func main() {
 	cc := clientcredentials.Config{
 		ClientID:     *adminClientID,
 		ClientSecret: *adminClientSecret,
-		TokenURL:     fmt.Sprintf("%s/%s/%s/oauth2/token", tURL.String(), *tenantId, "admin"),
+		TokenURL:     fmt.Sprintf("%s/%s/%s/oauth2/token", tURL.String(), *tenantID, "admin"),
 	}
 
 	client := cc.Client(context.WithValue(context.Background(), oauth2.HTTPClient, httpClient))
@@ -78,7 +77,7 @@ func main() {
 	}
 
 	for _, wid := range workspaceIDs {
-		if request, err = http.NewRequest("DELETE", fmt.Sprintf("%s/api/admin/%s/servers/%s", tURL.String(), *tenantId, wid), nil); err != nil {
+		if request, err = http.NewRequest("DELETE", fmt.Sprintf("%s/api/admin/%s/servers/%s", tURL.String(), *tenantID, wid), nil); err != nil {
 			log.Fatalf("failed to setup delete server '%s' request: %v", wid, err)
 		}
 		if response, err = doRequest(client, request); err != nil {
