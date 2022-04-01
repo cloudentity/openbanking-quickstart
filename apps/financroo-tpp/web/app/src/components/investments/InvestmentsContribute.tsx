@@ -1,6 +1,6 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { CSSProperties, useEffect, useMemo, useState } from "react";
 import IconButton from "@material-ui/core/IconButton";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { createStyles, Theme, makeStyles } from "@material-ui/core/styles";
 import { ArrowLeft, Lock } from "react-feather";
 import { useHistory } from "react-router";
 import { useQuery } from "react-query";
@@ -44,7 +44,7 @@ export type AccountType = {
   StatusUpdateDateTime: string;
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles((theme) => createStyles({
   toolbarButton: {
     color: theme.palette.primary.main,
   },
@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 34,
     display: "flex",
     alignItems: "center",
-    caption: theme.custom.caption,
+    ...theme.custom.caption as any,
   },
   spacer: {
     flex: 1,
