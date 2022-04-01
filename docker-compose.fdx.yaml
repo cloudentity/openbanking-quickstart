@@ -57,7 +57,6 @@ services:
       - ./data/ca.pem:/certs/ca.pem
       - ./data/variables.yaml:/variables.yaml
       - ./data/imports/system.tmpl:/app/imports-fdx/system.tmpl
-      - ./data/imports/bank-customers.tmpl:/app/imports-fdx/bank-customers.tmpl
       - ./data/imports/fdx.tmpl:/app/imports-fdx/fdx.tmpl
       - ./data/imports/tenant.tmpl:/app/imports-fdx/tenant.tmpl
     command:
