@@ -13,13 +13,10 @@ import (
 func (s *Server) CreateDomesticPaymentConsent() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			clients         Clients
-			ok              bool
-			request         CreatePaymentRequest
-			consentID       string
-			user            User
-			loginURLBuilder LoginURLBuilder
-			err             error
+			request   CreatePaymentRequest
+			consentID string
+			user      User
+			err       error
 		)
 
 		if user, _, err = s.WithUser(c); err != nil {
@@ -32,27 +29,12 @@ func (s *Server) CreateDomesticPaymentConsent() func(*gin.Context) {
 			return
 		}
 
-		if clients, ok = s.Clients[request.BankID]; !ok {
-			c.String(http.StatusBadRequest, fmt.Sprintf("client not configured for bank: %s", request.BankID))
-		}
-
-		if consentID, err = clients.ConsentClient.CreatePaymentConsent(c, request); err != nil {
+		if consentID, err = s.Clients.ConsentClient.CreatePaymentConsent(c, request); err != nil {
 			c.String(http.StatusBadRequest, fmt.Sprintf("failed to register payment consent: %+v", err))
 			return
 		}
 
-		switch s.GetBankConfigByBankID(request.BankID).BankType {
-		case "obuk":
-			loginURLBuilder, err = NewOBUKLoginURLBuilder()
-		case "obbr":
-			loginURLBuilder, err = NewOBBRLoginURLBuilder(c, clients.AcpPaymentsClient)
-		}
-		if err != nil {
-			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to create login url builder: %+v", err))
-			return
-		}
-
-		s.CreateConsentResponse(c, request.BankID, consentID, user, clients.AcpPaymentsClient, loginURLBuilder)
+		s.CreateConsentResponse(c, request.BankID, consentID, user, s.Clients.AcpPaymentsClient, s.LoginURLBuilder)
 	}
 }
 
@@ -84,21 +66,17 @@ func (s *Server) DomesticPaymentCallback() func(*gin.Context) {
 			return
 		}
 
-		clients := s.Clients[appStorage.BankID]
-		acpClient := clients.AcpPaymentsClient
-		bankClient := clients.BankClient
-
-		if token, err = acpClient.Exchange(code, state, appStorage.CSRF); err != nil {
+		if token, err = s.Clients.AcpPaymentsClient.Exchange(code, state, appStorage.CSRF); err != nil {
 			c.String(http.StatusUnauthorized, fmt.Sprintf("failed to exchange code: %+v", err))
 			return
 		}
 
-		if consentResponse, err = clients.ConsentClient.GetPaymentConsent(c, appStorage.IntentID); err != nil {
+		if consentResponse, err = s.Clients.ConsentClient.GetPaymentConsent(c, appStorage.IntentID); err != nil {
 			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to get consent: %+v", err))
 			return
 		}
 
-		if paymentCreated, err = bankClient.CreatePayment(c, consentResponse, token.AccessToken); err != nil {
+		if paymentCreated, err = s.Clients.BankClient.CreatePayment(c, consentResponse, token.AccessToken); err != nil {
 			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to create payment: %+v", err))
 			return
 		}

@@ -31,7 +31,7 @@ func (o *OBBRConsentImpl) FetchConsents(c *gin.Context, accountIDs []string) ([]
 
 	if response, err = o.Client.Openbanking.Openbankingbr.ListOBBRConsents(
 		obbrModels.NewListOBBRConsentsParamsWithContext(c).
-			WithWid(o.Config.OpenbankingBRWorkspaceID).
+			WithWid(o.Config.OpenbankingWorkspaceID).
 			WithConsentsRequest(&obModels.OBBRConsentsRequest{
 				Types:    types,
 				Accounts: accountIDs,
@@ -111,7 +111,7 @@ func obbrPermissionsToStringSlice(permissions []obModels.OpenbankingBrasilConsen
 func (o *OBBRConsentImpl) RevokeConsent(c *gin.Context, consentID string) (err error) {
 	if _, err = o.Client.Openbanking.Openbankingbr.RevokeOBBRConsent(
 		obbrModels.NewRevokeOBBRConsentParamsWithContext(c).
-			WithWid(o.Config.OpenbankingBRWorkspaceID).
+			WithWid(o.Config.OpenbankingWorkspaceID).
 			WithConsentID(consentID),
 		nil,
 	); err != nil {

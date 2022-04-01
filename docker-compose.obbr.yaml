@@ -1,59 +1,50 @@
-################################################################################
-# Add the following to your hosts file, eg C:\Windows\System32\drivers\etc\hosts
-#
-# 127.0.0.1 mock-data-holder
-# 127.0.0.1 mock-data-recipient
-# 127.0.0.1 mock-register
-#
-# Then flush the DNS cache, on Windows use: ipconfig /flushdns
-################################################################################
-
-version: '3.0'
+version: "3.0"
 
 services:
-  mock-register:
-    container_name: mock-register
-    image: consumerdataright/mock-register
-    volumes:
-      - ./mount/cdr/registry-seed.json:/app/admin/Data/seed-data.json
+  developer-tpp:
+    image: cloudentity/openbanking-quickstart-developer-tpp:${VERSION}
+    container_name: developer-tpp
+    restart: always
     ports:
-      - "7000:7000"
-      - "7001:7001"
-      - "7005:7005"
-      - "7006:7006"
+      - "8090:8090"
+    volumes:
+      - ./data/ca.pem:/ca.pem
+      - ./data/tpp_cert.pem:/tpp_cert.pem
+      - ./data/tpp_key.pem:/tpp_key.pem
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
+      - AUTHORIZE_URL=${ACP_URL}/${TENANT}/openbanking_brasil/oauth2/authorize
+      - TOKEN_URL=${ACP_MTLS_URL}/${TENANT}/openbanking_brasil/oauth2/token
+      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/openbanking_brasil
+      - USERINFO_URL=${ACP_MTLS_URL}/${TENANT}/openbanking_brasil/userinfo
+      - REDIRECT_URL=https://${APP_HOST}:8090/callback
+      - BANK_URL=http://bank:8070
+      - SPEC=obbr
+    depends_on:
+      configuration:
+        condition: service_completed_successfully
 
-  mock-data-holder:
-    container_name: mock-data-holder
-    image: docker.cloudentity.io/cdr-mock-data-holder:0.0.3
-    volumes:
-      - ./mount/cdr/holder.json:/app/idsvr/appsettings.Production.json
-      - ./mount/cdr/holder-seed.json:/app/manage/Data/seed-data.json
-      - ./mount/cdr/mock-data-holder/resource-api-appsettings.json:/app/resource/appsettings.Production.json
+  financroo-tpp:
+    image: cloudentity/openbanking-quickstart-financroo-tpp:${VERSION}
+    container_name: financroo-tpp
+    restart: always
     ports:
-      - "8000:8000"
-      - "8001:8001"
-      - "8002:8002"
-      - "8003:8003"
-      - "8004:8004"
-      - "8005:8005"
+      - "8091:8091"
+    volumes:
+      - ./data:/certs
+      - ./mount/financroo-tpp:/app/data
+    env_file:
+      - .env
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
+      - UI_URL=https://${APP_HOST}:8091
+      - TENANT=${TENANT}
+      - GIN_MODE=debug # change to release to disable gin debug
+      - SPEC=obbr
+      - BANK_URL=http://bank:8070
+      - OPENBANKING_SERVER_ID=openbanking_brasil
+    depends_on:
+      configuration:
+        condition: service_completed_successfully
 
-  mock-data-recipient:
-    container_name: mock-data-recipient
-    image: docker.cloudentity.io/cdr-mock-data-recipient:0.0.5
-    networks:
-      default:
-        aliases:
-          - datarecipient.mock
-    volumes:
-      - ./mount/cdr/recipient.json:/app/web/appsettings.Production.json
-    ports:
-      - "9001:9001"
-    environment:
-      - ASPNETCORE_ENVIRONMENT=Production
 
   consent-page:
     image: cloudentity/openbanking-quickstart-consent-page:${VERSION}
@@ -72,13 +63,14 @@ services:
       - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
       - BANK_URL=http://bank:8070
       - LOG_LEVEL=debug
-      - SPEC=cdr
+      - SPEC=obbr
       - GIN_MODE=debug # change to release to disable gin debug
       - OTP_MODE=mock # change to custom to enable custom OTP handling
       - MFA_CLAIM=sub # for mobile use mobile_verified
     depends_on:
       configuration:
         condition: service_completed_successfully
+
 
   consent-self-service-portal:
     image: cloudentity/openbanking-quickstart-consent-self-service-portal:${VERSION}
@@ -95,16 +87,15 @@ services:
     environment:
       - SYSTEM_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
       - BANK_URL=http://bank:8070
+      - SPEC=obbr
       - LOGIN_AUTHORIZATION_SERVER_URL=${ACP_URL}
       - LOGIN_AUTHORIZATION_SERVER_ID=bank-customers
       - LOGIN_TENANT_ID=${TENANT}
       - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/bank-customers
-      - OPENBANKING_SERVER_ID=cdr
-      - SPEC=cdr
+      - OPENBANKING_SERVER_ID=openbanking_brasil
     depends_on:
       configuration:
         condition: service_completed_successfully
-
 
   consent-admin-portal:
     image: cloudentity/openbanking-quickstart-consent-admin-portal:${VERSION}
@@ -118,9 +109,28 @@ services:
       - ./data/bank_key.pem:/bank_key.pem
     environment:
       - SYSTEM_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
-      - OPENBANKING_WORKSPACE_ID=cdr
-      - SPEC=cdr
+      - OPENBANKING_WORKSPACE_ID=openbanking_brasil
+      - SPEC=obbr
       - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/bank-admins
+    depends_on:
+      configuration:
+        condition: service_completed_successfully
+
+  bank:
+    image: cloudentity/openbanking-quickstart-bank:${VERSION}
+    container_name: bank
+    restart: always
+    ports:
+      - "8070:8070"
+    volumes:
+      - ./data/ca.pem:/ca.pem
+      - ./data/bank_cert.pem:/bank_cert.pem
+      - ./data/bank_key.pem:/bank_key.pem
+      - ./mount/bank-br:/app/data
+    environment:
+      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/openbanking_brasil
+      - SPEC=obbr
+      - GIN_MODE=debug
     depends_on:
       configuration:
         condition: service_completed_successfully
@@ -133,9 +143,10 @@ services:
       - ./data/tpp_cert.pem:/certs/tpp_cert.pem
       - ./data/ca.pem:/certs/ca.pem
       - ./data/variables.yaml:/variables.yaml
-      - ./data/imports/system.tmpl:/app/imports-cdr/system.tmpl
-      - ./data/imports/bank-customers.tmpl:/app/imports-cdr/bank-customers.tmpl
-      - ./data/imports/cdr.tmpl:/app/imports-cdr/cdr.tmpl
+      - ./data/imports/system.tmpl:/app/imports-obbr/system.tmpl
+      - ./data/imports/bank-customers.tmpl:/app/imports-obbr/bank-customers.tmpl
+      - ./data/imports/openbanking-br.tmpl:/app/imports-obbr/openbanking-br.tmpl
+      - ./data/imports/tenant.tmpl:/app/imports-obbr/tenant.tmpl
     command:
       - /app/main
       - --tenant-url
@@ -147,7 +158,8 @@ services:
       - --client-secret
       - ${CONFIGURATION_CLIENT_SECRET}
       - --templates-dirs
-      - /app/imports-cdr
+      - /app/imports-obbr
       - --variables-file
       - /variables.yaml
-      - --verbose  
+      - --verbose   
+

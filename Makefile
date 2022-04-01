@@ -2,134 +2,66 @@ export DOCKER_BUILDKIT=1
 export COMPOSE_DOCKER_CLI_BUILD=1
 
 .EXPORT_ALL_VARIABLES: ;
+ACP_LOCAL_APPS=acp crdb redis
 
-OB_APPS=developer-tpp financroo-tpp consent-page-uk consent-page-br consent-page-cdr consent-page-fdx consent-self-service-portal consent-admin-portal bank-uk bank-br
-ACP_APPS=acp crdb redis configuration
-ACP_ONLY_APPS=acp crdb redis
-CDR_ACP_CONFIG_APPS=configuration-cdr
-CDR_CONSENT_APPS=consent-page-cdr consent-self-service-portal consent-admin-portal
-CDR_APPS=mock-data-recipient mock-register mock-data-holder
+# obuk, obbr, cdr
+run-%-local: 
+	cp -f .env-local .env
+	docker-compose -f docker-compose.acp.local.yaml up -d --no-build ${ACP_LOCAL_APPS}
+	./scripts/wait.sh 
+	docker-compose -f docker-compose.$*.yaml up --no-build -d 
+	./scripts/wait.sh
+
+# obuk, obbr
+run-%-saas:
+	cp -f .env-saas .env
+	docker-compose -f docker-compose.$*.yaml up --no-build -d
+	./scripts/wait.sh
 
 .PHONY: build
 build:
-	docker-compose -f docker-compose.yaml -f docker-compose.build.yaml build
+	docker-compose -f docker-compose.obuk.yaml -f docker-compose.obbr.yaml -f docker-compose.cdr.yaml -f docker-compose.build.yaml build
 
-.PHONY: run-dev
-run-dev:
-	docker-compose -f docker-compose.yaml -f docker-compose.build.yaml up -d
-	./scripts/wait.sh
+# obuk, obbr, cdr
+run-%-tests-headless: run-tests-verify
+	yarn --cwd tests run cypress run -s cypress/integration/$*/*.ts
 
-.PHONY: run-acp-apps
-run-acp-apps: setup_local_env
-	docker-compose up -d --no-build ${ACP_APPS}
-	./scripts/wait.sh
+.PHONY: run-saas-obuk-tests-headless
+run-saas-obuk-tests-headless: run-tests-verify
+	yarn --cwd tests run cypress run -s cypress/integration/saas/obuk/*.ts
 
-.PHONY: stop-acp-apps
-stop-acp-apps:
-	docker-compose rm -s -f ${ACP_APPS}
-
-.PHONY: run-apps
-run-apps:
-	docker-compose up -d --no-build ${OB_APPS}
-	docker-compose -f docker-compose.cdr.yaml up -d ${CDR_APPS}
-	./scripts/wait.sh
-
-.PHONY: run-cdr-apps-with-acp-local
-run-cdr-apps-with-acp-local:
-	docker-compose up -d --no-build ${ACP_ONLY_APPS}
-	docker-compose up -d --no-build ${CDR_ACP_CONFIG_APPS}
-	docker-compose up -d --no-build ${CDR_CONSENT_APPS}
-	docker-compose -f docker-compose.cdr.yaml up -d ${CDR_APPS}
-
-.PHONY: run-cdr-apps-with-saas
-run-cdr-apps-with-saas:
-	docker-compose up -d --no-build --no-deps ${CDR_ACP_CONFIG_APPS}
-	docker-compose up -d --no-build --no-deps ${CDR_CONSENT_APPS}
-	docker-compose -f docker-compose.cdr.yaml up -d ${CDR_APPS}
-
-.PHONY: run-apps-with-saas
-run-apps-with-saas: setup_saas_env
-	docker-compose up -d --no-build configuration
-	docker-compose up -d --no-build ${OB_APPS}
-
-.PHONY: run
-run:
-	make run-acp-apps run-apps
-
-.PHONY: restart-acp
-restart-acp:
-	docker-compose rm -s -f acp
-	docker-compose up -d --no-build acp
-
-.PHONY: lint
-lint: start-runner
-	docker-compose exec runner sh -c "golangci-lint run --fix --deadline=5m ./..."
-
-.PHONY: stop
-stop:
-	docker-compose stop
-
-.PHONY: clean
-clean:
-	docker-compose down -v --remove-orphans
-
-.PHONY: purge
-purge:
-	docker images -a | grep openbanking-quickstart | awk '{print $3}' | xargs docker rmi -f || true
-
-.PHONY: clean-saas
-clean-saas: clean
-	./scripts/clean_saas.sh
+.PHONY: run-saas-obbr-tests-headless
+run-saas-obbr-tests-headless: run-tests-verify
+	yarn --cwd tests run cypress run -s cypress/integration/saas/obbr/*.ts
 
 .PHONY: run-tests
 run-tests:
 	yarn --cwd tests run cypress open
 
-
-.PHONY: run-cdr-tests-headless
-run-cdr-tests-headless: run-tests-verify
-	yarn --cwd tests run cypress run -s cypress/integration/cdr/*.ts
-
-.PHONY: run-obuk-tests-headless
-run-obuk-tests-headless: run-tests-verify
-	yarn --cwd tests run cypress run -s cypress/integration/obuk/*.ts
-
-.PHONY: run-obbr-tests-headless
-run-obbr-tests-headless: run-tests-verify
-	yarn --cwd tests run cypress run -s cypress/integration/obbr/*.ts
-
-.PHONY: run-saas-tests-headless
-run-saas-tests-headless: run-tests-verify
-	yarn --cwd tests run cypress run -s cypress/integration/saas/*.ts
-
 .PHONY: run-tests-verify 
 run-tests-verify: 
 	VERIFY_TEST_RUNNER_TIMEOUT_MS=80000 yarn --cwd tests run cypress verify
 
-.PHONY: enable-mfa
-enable-mfa:
-	./scripts/override_env.sh ENABLE_MFA true
+.PHONY: restart-acp
+restart-acp:
+	docker-compose -f docker-compose.acp.local.yaml rm -s -f acp
+	docker-compose -f docker-compose.acp.local.yaml up -d --no-build acp
 
-.PHONY: disable-mfa
-disable-mfa:
-	./scripts/override_env.sh ENABLE_MFA false
+.PHONY: lint
+lint: start-runner
+	docker-compose -f docker-compose.acp.local.yaml exec runner sh -c "golangci-lint run --fix --deadline=5m ./..."
 
-enable-spec-obuk:
-	./scripts/override_env.sh SPEC obuk
-	./scripts/override_env.sh OPENBANKING_SERVER_ID openbanking
-	./scripts/override_env.sh DEVELOPER_CLIENT_ID bugkgm23g9kregtu051g
-	./scripts/override_env.sh CONSENT_PAGE_CLIENT_ID bv0ocudfotn6edhsiu7g
-	./scripts/override_env.sh BANK_CLIENT_ID bukj5p6k7qdmm5ppbi4g
-	./scripts/override_env.sh BANK_URL http://bank-uk:8070
+.PHONY: clean
+clean: 
+	docker-compose -f docker-compose.build.yaml down --remove-orphans
 
-enable-spec-obbr:
-	./scripts/override_env.sh SPEC obbr 
-	./scripts/override_env.sh OPENBANKING_SERVER_ID openbanking_brasil
-	./scripts/override_env.sh DEVELOPER_CLIENT_ID bukj5p6k7qdmm5other1
-	./scripts/override_env.sh BANK_CLIENT_ID bukj5p6k7qdmm5pother2
-	./scripts/override_env.sh CONSENT_PAGE_CLIENT_ID bukj5p6k7qdMIIDfjCCAmagAwImm5ppxxxx
-	./scripts/override_env.sh BANK_URL http://bank-br:8070
+.PHONY: purge
+purge:
+	docker images -a | grep openbanking-quickstart | awk '{print $3}' | xargs docker rmi -f || true
 
+# enable, disable
+%-mfa:
+	 if [ $* == "enable" ]; then ./scripts/override_env.sh ENABLE_MFA true; else ./scripts/override_env.sh ENABLE_MFA false; fi
 
 .PHONY: set-version
 set-version:
@@ -144,10 +76,7 @@ set-saas-configuration:
 .PHONY: start-runner
 start-runner:
 	docker build -t quickstart-runner -f build/runner.dockerfile .
-	docker-compose up -d runner
-
-.PHONY: generate-openbanking-integration-specs 
-generate-openbanking-integration-specs: generate-obuk-integration-spec 
+	docker-compose -f docker-compose.acp.local.yaml up -d runner
 
 .PHONY: generate-obuk-integration-spec
 generate-obuk-integration-spec: start-runner
@@ -181,12 +110,5 @@ generate-cdr-clients: start-runner
 
 .PHONY: obbr
 obbr:
-	docker-compose -f docker-compose.yaml -f conformance/docker-compose.obb.yaml -f conformance/docker-compose.fapi.yaml ${cmd}
+	docker-compose -f docker-compose.acp.local.yaml -f conformance/docker-compose.obb.yaml -f conformance/docker-compose.fapi.yaml ${cmd}
 
-.PHONY: setup_saas_env
-setup_saas_env:
-	cp -f .env-saas .env
-
-.PHONY: setup_local_env
-setup_local_env:
-	cp -f .env-local .env

@@ -30,17 +30,17 @@ const (
 
 type Config struct {
 	Port         int           `env:"PORT" envDefault:"8090"`
-	ClientID     string        `env:"CLIENT_ID,required"`
-	ClientSecret string        `env:"CLIENT_SECRET,required"`
+	ClientID     string        `env:"CLIENT_ID" envDefault:"bugkgm23g9kregtu051g"`
+	ClientSecret string        `env:"CLIENT_SECRET"` // only required for fdx
 	AuthorizeURL *url.URL      `env:"AUTHORIZE_URL,required"`
 	TokenURL     *url.URL      `env:"TOKEN_URL,required"`
 	IssuerURL    *url.URL      `env:"ISSUER_URL,required"`
 	UserinfoURL  *url.URL      `env:"USERINFO_URL,required"`
 	RedirectURL  *url.URL      `env:"REDIRECT_URL,required"`
 	Timeout      time.Duration `env:"TIMEOUT" envDefault:"5s"`
-	RootCA       string        `env:"ROOT_CA,required"`
-	CertFile     string        `env:"CERT_FILE,required"`
-	KeyFile      string        `env:"KEY_FILE,required"`
+	RootCA       string        `env:"ROOT_CA" envDefault:"/ca.pem"`
+	CertFile     string        `env:"CERT_FILE" envDefault:"/tpp_cert.pem"`
+	KeyFile      string        `env:"KEY_FILE" envDefault:"/tpp_key.pem"`
 	BankURL      *url.URL      `env:"BANK_URL,required"`
 	Spec         Spec          `env:"SPEC,required"`
 	ClientScopes []string

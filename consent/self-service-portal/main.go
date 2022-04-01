@@ -22,30 +22,24 @@ const (
 	OBBR Spec = "obbr"
 )
 
-var SupportedSpecs = []Spec{
-	OBUK, CDR, OBBR,
-}
-
 type Config struct {
-	SystemClientID              string        `env:"SYSTEM_CLIENT_ID,required"`
-	SystemClientSecret          string        `env:"SYSTEM_CLIENT_SECRET,required"`
+	SystemClientID              string        `env:"SYSTEM_CLIENT_ID" envDefault:"buc3b1hhuc714r78env0"`
+	SystemClientSecret          string        `env:"SYSTEM_CLIENT_SECRET" envDefault:"PBV7q0akoP603rZbU0EFdxbhZ-djxF7FIVwyKaLnBYU"`
 	SystemIssuerURL             *url.URL      `env:"SYSTEM_ISSUER_URL,required"`
-	OpenbankingUKWorkspaceID    string        `env:"OPENBANKING_UK_WORKSPACE_ID,required"`
-	CDRWorkspaceID              string        `env:"CDR_WORKSPACE_ID,required"`
-	OpenbankingBRWorkspaceID    string        `env:"OPENBANKING_BR_WORKSPACE_ID,required"`
 	Timeout                     time.Duration `env:"TIMEOUT" envDefault:"5s"`
-	RootCA                      string        `env:"ROOT_CA"`
-	CertFile                    string        `env:"CERT_FILE,required"`
-	KeyFile                     string        `env:"KEY_FILE,required"`
-	UKBankURL                   *url.URL      `env:"UK_BANK_URL,required"`
-	BrasilBankURL               *url.URL      `env:"BRASIL_BANK_URL,required"`
+	OpenbankingWorkspaceID      string        `env:"OPENBANKING_SERVER_ID,required"`
+	Spec                        Spec          `env:"SPEC,required"`
+	BankURL                     *url.URL      `env:"BANK_URL,required"`
+	RootCA                      string        `env:"ROOT_CA" envDefault:"/ca.pem"`
+	CertFile                    string        `env:"CERT_FILE" envDefault:"/bank_cert.pem"`
+	KeyFile                     string        `env:"KEY_FILE" envDefault:"/bank_key.pem"`
 	Port                        int           `env:"PORT" envDefault:"8085"`
 	LoginAuthorizationServerURL string        `env:"LOGIN_AUTHORIZATION_SERVER_URL,required"`
-	LoginClientID               string        `env:"LOGIN_CLIENT_ID,required"`
+	LoginClientID               string        `env:"LOGIN_CLIENT_ID" envDefault:"bv0nab0mekk67nekvq7g"`
 	LoginAuthorizationServerID  string        `env:"LOGIN_AUTHORIZATION_SERVER_ID,required"`
 	LoginTenantID               string        `env:"LOGIN_TENANT_ID,required"`
-	IntrospectClientID          string        `env:"INTROSPECT_CLIENT_ID,required"`
-	IntrospectClientSecret      string        `env:"INTROSPECT_CLIENT_SECRET,required"`
+	IntrospectClientID          string        `env:"INTROSPECT_CLIENT_ID" envDefault:"bv2dkff8mll9cf6pvd6g"`
+	IntrospectClientSecret      string        `env:"INTROSPECT_CLIENT_SECRET" envDefault:"KThGH68f-gMC4cscGLFeOpIU4EYriYhKspOV9IwHbnw"`
 	IntrospectIssuerURL         *url.URL      `env:"INTROSPECT_ISSUER_URL,required"`
 }
 
@@ -87,8 +81,8 @@ type Server struct {
 	Config           Config
 	Client           acpclient.Client
 	IntrospectClient acpclient.Client
-	BankClients      map[Spec]BankClient
-	ConsentClients   map[Spec]ConsentClient
+	BankClient       BankClient
+	ConsentClient    ConsentClient
 }
 
 func NewServer() (Server, error) {
@@ -109,16 +103,18 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to init introspect acp client")
 	}
 
-	server.BankClients = map[Spec]BankClient{
-		OBUK: NewOBUKBankClient(server.Config),
-		CDR:  &CDRBankClient{},
-		OBBR: NewOBBRBankClient(server.Config),
-	}
-
-	server.ConsentClients = map[Spec]ConsentClient{
-		OBUK: NewOBUKConsentImpl(&server),
-		CDR:  NewCDRArrangementImpl(&server),
-		OBBR: NewOBBRConsentImpl(&server),
+	switch server.Config.Spec {
+	case OBUK:
+		server.BankClient = NewOBUKBankClient(server.Config)
+		server.ConsentClient = NewOBUKConsentImpl(&server)
+	case OBBR:
+		server.BankClient = NewOBBRBankClient(server.Config)
+		server.ConsentClient = NewOBBRConsentImpl(&server)
+	case CDR:
+		server.BankClient = &CDRBankClient{}
+		server.ConsentClient = NewCDRArrangementImpl(&server)
+	default:
+		return server, fmt.Errorf("unsupported spec %s", server.Config.Spec)
 	}
 
 	return server, nil

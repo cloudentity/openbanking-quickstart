@@ -11,7 +11,6 @@ import chaseIcon from "../assets/banks/chase-icon.svg";
 import requestAccessPermissionsUK from './request-uk-access-permissions.json';
 import requestAccessPermissionsBR from './request-br-access-permissions.json';
 
-
 export type Permission = {
   title: string
   value: string
@@ -27,6 +26,7 @@ export type Bank = {
   permissions?: Permission[]
 };
 
+
 export const banks: Bank[] = [
   {
     value: "gobank",
@@ -34,22 +34,14 @@ export const banks: Bank[] = [
     name: "GO Bank",
     logo: gobank,
     icon: gobankIcon,
-    permissions: requestAccessPermissionsUK.permissions
+    permissions: window.spec == "obuk" ? requestAccessPermissionsUK.permissions : requestAccessPermissionsBR.permissions,
   },
   {
     value: "santander",
     name: "Santander",
-    disabled: false,
+    disabled: true,
     logo: santander,
     icon: santanderIcon,
-    permissions: requestAccessPermissionsBR.permissions
-  },
-  {
-    value: "gobank2",
-    disabled: false,
-    name: "GO Bank 2",
-    logo: gobank,
-    icon: gobankIcon,
   },
   {
     value: "apexfinancial",
