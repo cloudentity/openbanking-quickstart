@@ -20,6 +20,7 @@ run-%-saas:
 
 .PHONY: build
 build:
+	touch .env
 	docker-compose -f docker-compose.obuk.yaml -f docker-compose.obbr.yaml -f docker-compose.cdr.yaml -f docker-compose.build.yaml build
 
 # obuk, obbr, cdr
