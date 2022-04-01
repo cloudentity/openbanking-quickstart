@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: "#006580",
   },
   signOutButton: {
-    ...theme.custom.button,
+ //   ...theme.custom.button,
     color: "#DC1B37",
   },
   appBar: {
