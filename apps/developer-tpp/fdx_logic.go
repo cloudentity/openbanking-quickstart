@@ -5,7 +5,6 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
 
 	acpclient "github.com/cloudentity/acp-client-go"
 	a2 "github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
@@ -128,8 +127,6 @@ func (h *FDXLogic) BuildLoginURL(c *gin.Context, consentID string, _ bool) (stri
 }
 
 func (h *FDXLogic) PostAuthenticationAction(c *gin.Context, data map[string]interface{}) (map[string]interface{}, error) {
-	logrus.Infof("XXX %+v", "post authn script")
-
 	var (
 		grantID         string
 		ok              bool
@@ -141,8 +138,6 @@ func (h *FDXLogic) PostAuthenticationAction(c *gin.Context, data map[string]inte
 	if grantID, ok = data["grant_id"].(string); !ok {
 		return nil, errors.New("grant_id is missing")
 	}
-
-	logrus.Infof("XXXccc %+v", h.ClientCredentialsClient.Config)
 
 	if resp, err = h.ClientCredentialsClient.GetFDXConsent(
 		f_d_x.NewGetFDXConsentParams().
