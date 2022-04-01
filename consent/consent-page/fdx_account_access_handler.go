@@ -79,7 +79,7 @@ func (s *FDXAccountAccessConsentHandler) ConfirmConsent(c *gin.Context, loginReq
 		})
 	}
 
-	// todo accept other resources types
+	// accept other resources types
 	for i, r := range consent.Payload.FdxConsent.Resources {
 		if r.ResourceType != "ACCOUNT" {
 			grantedResources = append(grantedResources, &models.FDXResource{

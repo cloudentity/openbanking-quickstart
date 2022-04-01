@@ -310,9 +310,8 @@ func (c *ConsentTools) GetFDXAccountAccessConsentTemplateData(
 			"cancel": c.Trans.T("fdx.account.cancel"),
 			"agree":  c.Trans.T("fdx.account.agree"),
 		},
-		"login_request": loginRequest,
-		"accounts":      accounts.Accounts,
-		// "permissions":     c.GetPermissionsWithDescription(consent.AccountAccessConsent.Permissions), // nolint
+		"login_request":   loginRequest,
+		"accounts":        accounts.Accounts,
 		"resources":       consent.FdxConsent.Resources,
 		"client_name":     clientName,
 		"expiration_date": expirationDate,
