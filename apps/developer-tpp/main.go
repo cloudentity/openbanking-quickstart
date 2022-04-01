@@ -133,7 +133,9 @@ func NewServer() (Server, error) {
 	case OBBR:
 		server.SpecLogicHandler = &OBBRLogic{Server: &server}
 	case FDX:
-		server.SpecLogicHandler = &FDXLogic{Server: &server}
+		if server.SpecLogicHandler, err = NewFDXLogic(server.Config); err != nil {
+			return server, errors.Wrapf(err, "failed to init fdx logic handler")
+		}
 	}
 
 	return server, nil

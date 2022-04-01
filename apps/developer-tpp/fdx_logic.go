@@ -5,6 +5,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 
 	acpclient "github.com/cloudentity/acp-client-go"
 	a2 "github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
@@ -12,7 +13,39 @@ import (
 )
 
 type FDXLogic struct {
-	*Server
+	ClientID                string
+	ClientSecret            string
+	PublicClient            acpclient.Client
+	ClientCredentialsClient acpclient.Client
+}
+
+func NewFDXLogic(serverConfig Config) (*FDXLogic, error) {
+	var (
+		logic = &FDXLogic{
+			ClientID:     serverConfig.ClientID,
+			ClientSecret: serverConfig.ClientSecret,
+		}
+		err error
+	)
+
+	publicConfig := serverConfig.ClientConfig()
+	publicConfig.ClientSecret = ""
+	publicConfig.AuthMethod = acpclient.NoneAuthnMethod
+
+	if logic.PublicClient, err = acpclient.New(publicConfig); err != nil {
+		return logic, errors.Wrapf(err, "failed to create public acp client")
+	}
+
+	ccConfig := serverConfig.ClientConfig()
+	ccConfig.ClientSecret = serverConfig.ClientSecret
+	ccConfig.Scopes = []string{"READ_CONSENTS"}
+	ccConfig.AuthMethod = acpclient.ClientSecretPostAuthnMethod
+
+	if logic.ClientCredentialsClient, err = acpclient.New(ccConfig); err != nil {
+		return logic, errors.Wrapf(err, "failed to create client credentials acp client")
+	}
+
+	return logic, nil
 }
 
 func (h *FDXLogic) GetAccounts(c *gin.Context, token string) (interface{}, error) {
@@ -21,9 +54,8 @@ func (h *FDXLogic) GetAccounts(c *gin.Context, token string) (interface{}, error
 
 func (h *FDXLogic) CreateConsent(c *gin.Context) (interface{}, error) {
 	var (
-		resp   *a2.PushedAuthorizationRequestCreated
-		client acpclient.Client
-		err    error
+		resp *a2.PushedAuthorizationRequestCreated
+		err  error
 	)
 
 	responseType := "code"
@@ -53,19 +85,11 @@ func (h *FDXLogic) CreateConsent(c *gin.Context) (interface{}, error) {
       }
    ]`
 
-	clientConfig := h.Config.ClientConfig()
-	clientConfig.ClientSecret = ""
-	clientConfig.AuthMethod = acpclient.NoneAuthnMethod
-
-	if client, err = acpclient.New(clientConfig); err != nil {
-		return nil, errors.Wrapf(err, "failed to create acp client")
-	}
-
-	if resp, err = client.Oauth2.Oauth2.PushedAuthorizationRequest(
+	if resp, err = h.PublicClient.Oauth2.Oauth2.PushedAuthorizationRequest(
 		a2.NewPushedAuthorizationRequestParams().
 			WithContext(c.Request.Context()).
-			WithClientID(h.Config.ClientID).
-			WithClientSecret(&h.Config.ClientSecret).
+			WithClientID(h.ClientID).
+			WithClientSecret(&h.ClientSecret).
 			WithResponseType(responseType).
 			WithAuthorizationDetails(&authorizationDetails),
 	); err != nil {
@@ -92,17 +116,11 @@ func (h *FDXLogic) DoRequestObjectEncryption() bool {
 
 func (h *FDXLogic) BuildLoginURL(c *gin.Context, consentID string, _ bool) (string, acpclient.CSRF, error) {
 	var (
-		client acpclient.Client
-		config = h.Config.ExtendConsentScope(consentID).ClientConfig()
-		u      string
-		err    error
+		u   string
+		err error
 	)
 
-	if client, err = acpclient.New(config); err != nil {
-		return "", acpclient.CSRF{}, errors.Wrapf(err, "failed to create new acp client")
-	}
-
-	if u, err = client.AuthorizeURLWithPAR(consentID); err != nil {
+	if u, err = h.PublicClient.AuthorizeURLWithPAR(consentID); err != nil {
 		return "", acpclient.CSRF{}, errors.Wrapf(err, "failed to create authorize url with par")
 	}
 
@@ -110,10 +128,11 @@ func (h *FDXLogic) BuildLoginURL(c *gin.Context, consentID string, _ bool) (stri
 }
 
 func (h *FDXLogic) PostAuthenticationAction(c *gin.Context, data map[string]interface{}) (map[string]interface{}, error) {
+	logrus.Infof("XXX %+v", "post authn script")
+
 	var (
 		grantID         string
 		ok              bool
-		client          acpclient.Client
 		resp            *f_d_x.GetFDXConsentOK
 		consentResponse []byte
 		err             error
@@ -123,16 +142,9 @@ func (h *FDXLogic) PostAuthenticationAction(c *gin.Context, data map[string]inte
 		return nil, errors.New("grant_id is missing")
 	}
 
-	clientConfig := h.Config.ClientConfig()
-	clientConfig.ClientSecret = h.Config.ClientSecret
-	clientConfig.Scopes = []string{"READ_CONSENTS"}
-	clientConfig.AuthMethod = acpclient.ClientSecretPostAuthnMethod
+	logrus.Infof("XXXccc %+v", h.ClientCredentialsClient.Config)
 
-	if client, err = acpclient.New(clientConfig); err != nil {
-		return nil, errors.Wrapf(err, "failed to create acp client")
-	}
-
-	if resp, err = client.GetFDXConsent(
+	if resp, err = h.ClientCredentialsClient.GetFDXConsent(
 		f_d_x.NewGetFDXConsentParams().
 			WithContext(c.Request.Context()).
 			WithConsentID(grantID),
