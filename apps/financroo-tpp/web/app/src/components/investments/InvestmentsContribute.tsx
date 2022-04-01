@@ -56,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 34,
     display: "flex",
     alignItems: "center",
-  //TODO: investigate  ...theme.custom.caption,
+    caption: theme.custom.caption,
   },
   spacer: {
     flex: 1,
