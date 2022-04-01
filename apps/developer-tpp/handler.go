@@ -164,7 +164,7 @@ func (s *Server) Callback() func(*gin.Context) {
 		parser := jwt.Parser{}
 
 		atClaims := jwt.MapClaims{}
-		if _, _, err := parser.ParseUnverified(token.AccessToken, &atClaims); err == nil {
+		if _, _, err = parser.ParseUnverified(token.AccessToken, &atClaims); err == nil {
 			payload, _ := json.MarshalIndent(atClaims, "", "  ")
 			data["access_token_payload"] = string(payload)
 		}
@@ -194,7 +194,7 @@ func (s *Server) Callback() func(*gin.Context) {
 		data["accounts_raw"] = string(accountsRaw)
 
 		if additionalData, err = s.PostAuthenticationAction(c, data); err != nil {
-			c.String(http.StatusInternalServerError, fmt.Sprintf("fail to execute post authentication action", err))
+			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to execute post authentication action: %+v", err))
 			return
 		}
 
