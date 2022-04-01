@@ -80,6 +80,7 @@ services:
 
 
   runner:
+    container_name: quickstart-runner
     image: quickstart-runner
     command: /bin/sh
     tty: true

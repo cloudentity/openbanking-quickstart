@@ -1,4 +1,4 @@
-docker-compose -f docker-compose.acp.local.yaml exec -T runner sh -c \
+docker exec quickstart-runner sh -c \
     "go run ./scripts/go/clean_saas.go \
         -spec=$1 \
         -tenant=$2 \
