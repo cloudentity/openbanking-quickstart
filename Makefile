@@ -54,7 +54,7 @@ lint: start-runner
 
 .PHONY: clean
 clean: 
-	docker-compose -f docker-compose.build.yaml down --remove-orphans
+	docker-compose -f docker-compose.acp.local.yaml -f docker-compose.build.yaml down --remove-orphans
 
 # obuk, obbr, cdr
 clean-%-saas: start-runner
