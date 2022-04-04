@@ -64,7 +64,6 @@ clean-%-saas: start-runner
         -tenant=${SAAS_TENANT_ID} \
         -cid=${SAAS_CLEANUP_CLIENT_ID} \
         -csec=${SAAS_CLEANUP_CLIENT_SECRET}"
-	make clean
 
 .PHONY: purge
 purge:
