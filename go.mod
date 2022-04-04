@@ -4,7 +4,6 @@ go 1.15
 
 require (
 	github.com/Masterminds/sprig/v3 v3.2.2
-	github.com/aws/aws-sdk-go v1.34.28 // indirect
 	github.com/caarlos0/env/v6 v6.4.0
 	github.com/cloudentity/acp-client-go v0.0.0-20220316181053-60876b344514
 	github.com/dgrijalva/jwt-go v3.2.1-0.20200107013213-dc14462fd587+incompatible
@@ -14,7 +13,6 @@ require (
 	github.com/go-jose/go-jose/v3 v3.0.0
 	github.com/go-openapi/errors v0.20.1
 	github.com/go-openapi/runtime v0.19.29-0.20210426171411-539cabc131b0
-	github.com/go-openapi/spec v0.20.3 // indirect
 	github.com/go-openapi/strfmt v0.20.1
 	github.com/go-openapi/swag v0.19.15
 	github.com/go-openapi/validate v0.20.2
@@ -26,7 +24,7 @@ require (
 	github.com/nicksnyder/go-i18n/v2 v2.1.2
 	github.com/pkg/errors v0.9.1
 	github.com/sirupsen/logrus v1.7.0
-	github.com/spf13/viper v1.7.1 // indirect
+	github.com/spf13/viper v1.7.1
 	github.com/stretchr/testify v1.7.0
 	github.com/tidwall/pretty v1.0.2 // indirect
 	go.etcd.io/bbolt v1.3.5
