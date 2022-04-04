@@ -62,9 +62,7 @@ describe(`Consent self service app`, () => {
     consentSelfServiceApplicationPage.assertNumberOfConsents(1)
     consentSelfServiceApplicationPage.expandAccountConsentRow()
     consentSelfServiceApplicationPage.clickRevokeAccessButton()
-    consentSelfServicePage.assertThatFilterPermissionsButtonsAreDisplayed()
-    consentSelfServicePage.clickOnAccountOnlyButton()
-    consentSelfServicePage.assertThatApplicationCardIsNotDisplayed()
+    consentSelfServicePage.assertThatNoAccountsPageIsDisplayed()
   })
 
 })

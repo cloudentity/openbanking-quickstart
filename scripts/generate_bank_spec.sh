@@ -1,4 +1,4 @@
-docker-compose exec runner sh -c  \
+docker-compose -f docker-compose.acp.local.yaml exec runner sh -c  \
     "export SWAGGER_GENERATE_EXTENSION=false && swagger generate spec \
         --include-tag=$1 \
         -m \
