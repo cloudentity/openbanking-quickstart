@@ -95,7 +95,6 @@ pipeline {
                         retry(3) {
                             sh 'make run-saas-obuk-tests-headless'
                         }
-                        sh 'make clean'
                         sh 'make clean-obuk-saas'
                     } catch(exc) {
                         failure('Tests failed')
@@ -111,7 +110,6 @@ pipeline {
                         retry(3) {
                             sh 'make run-saas-obbr-tests-headless'
                         }
-                        sh 'make clean'
                         sh 'make clean-obbr-saas'
                     } catch(exc) {
                         failure('Tests failed')
