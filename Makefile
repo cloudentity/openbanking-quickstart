@@ -57,7 +57,12 @@ clean:
 
 # obuk, obbr, cdr
 clean-%-saas: start-runner
-	./scripts/clean_saas.sh $* ${SAAS_TENANT_ID} ${SAAS_CLEANUP_CLIENT_ID} ${SAAS_CLEANUP_CLIENT_SECRET}
+	docker exec quickstart-runner sh -c \
+    "go run ./scripts/go/clean_saas.go \
+        -spec=$* \
+        -tenant=${SAAS_TENANT_ID} \
+        -cid=${SAAS_CLEANUP_CLIENT_ID} \
+        -csec=${SAAS_CLEANUP_CLIENT_SECRET}"
 	make clean
 
 .PHONY: purge
