@@ -35,38 +35,7 @@ describe(`Tpp technical app`, () => {
     tppLoginPage.visit();
   });
 
-  if (environmentVariables.isOBBRSpecification()) {
-    [
-      // FIXME restore when this fix has been made
-      // https://github.com/cloudentity/openbanking-quickstart/pull/108
-      // [accountsReadPermission, accountsOverdraftLimitsReadPermission, resourcesReadPermission],
-      [accountsReadPermission]
-      // [] // todo add better error handling in the app
-    ].forEach(permissions => {
-      it(`Happy path with permissions: ${permissions}`, () => {
-        tppLoginPage.checkAccountsReadPermission(permissions.includes(accountsReadPermission))
-        tppLoginPage.checkAccountsOverdraftLimitsReadPermission(permissions.includes(accountsOverdraftLimitsReadPermission))
-        tppLoginPage.checkResourcesReadPermission(permissions.includes(resourcesReadPermission))
-        tppLoginPage.next();
-        if (!permissions.includes(accountsReadPermission) || !permissions.includes(accountsOverdraftLimitsReadPermission) || !permissions.includes(resourcesReadPermission)) {
-          errorPage.assertError(`failed to register account access consent`)
-          return 
-        } 
-        tppIntentPage.login();
-        acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-        if (environmentVariables.isMfaEnabled()) {
-          mfaPage.typePin()
-        }
-        // TODO: consent page needs work with obbr permissions 
-        //consentPage.expandPermissions()
-        //consentPage.assertPermissions(permissions.length)
-        consentPage.confirm();
-        tppAuthenticatedPage.assertSuccess()
-      })
-    });
-  };
 
-  if (environmentVariables.isOBUKSpecification()) {
     [
       [basicPermission, detailPermission],
       [basicPermission],
@@ -96,7 +65,6 @@ describe(`Tpp technical app`, () => {
         }
       })
     });
-  };
 
  
 
