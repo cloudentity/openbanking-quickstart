@@ -118,3 +118,9 @@ func (h *OBBRLogic) BuildLoginURL(c *gin.Context, consentID string, doRequestObj
 		acpclient.WithPKCE(),
 	)
 }
+
+func (h *OBBRLogic) PostAuthenticationAction(c *gin.Context, d map[string]interface{}) (map[string]interface{}, error) {
+	return map[string]interface{}{}, nil
+}
+
+var _ SpecLogicHandler = &OBBRLogic{}

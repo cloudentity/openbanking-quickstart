@@ -7,6 +7,8 @@ pipeline {
         SAAS_TENANT_ID = 'amfudxn6-qa-us-east-1-ob-quickstart'
         SAAS_CLIENT_ID = credentials('OPENBANKING_CONFIGURATION_CLIENT_ID')
         SAAS_CLIENT_SECRET = credentials('OPENBANKING_CONFIGURATION_CLIENT_SECRET')
+        SAAS_CLEANUP_CLIENT_ID = credentials('OPENBANKING_CLEANUP_CLIENT_ID')
+        SAAS_CLEANUP_CLIENT_SECRET = credentials('OPENBANKING_CLEANUP_CLIENT_SECRET')
     }
     options {
         timeout(time: 1, unit: 'HOURS')
@@ -25,6 +27,7 @@ pipeline {
             steps {
                 sh 'rm -f docker-compose.log'
                 sh 'make clean'
+                sh 'make lint'
                 sh 'make build'
             }
         }
@@ -92,29 +95,28 @@ pipeline {
                         retry(3) {
                             sh 'make run-saas-obuk-tests-headless'
                         }
-                        sh 'make clean'
+                        sh 'make clean-obuk-saas'
                     } catch(exc) {
                         failure('Tests failed')
                     }
                 }
             }
         }
-        // FIXME: restore this when saas test tenant cleanup between stages has been implemented 
-       /* stage('SaaS OBBR Tests') {
+        stage('SaaS OBBR Tests') {
             steps {
                 script {
                     try {
-                        sh 'make set-saas-configuration run-obbr-saas'
+                        sh 'make disable-mfa set-saas-configuration run-obbr-saas'
                         retry(3) {
                             sh 'make run-saas-obbr-tests-headless'
                         }
-                        sh 'make clean'
+                        sh 'make clean-obbr-saas'
                     } catch(exc) {
                         failure('Tests failed')
                     }
                 }
             }
-        }*/
+        }
     }
 
     post {

@@ -53,7 +53,7 @@ services:
     ports:
       - "7080:8080"
     volumes:
-      - ./mount/consent-page-uk:/data
+      - ./mount/consent-page:/data
       - ./data/ca.pem:/ca.pem
       - ./data/bank_cert.pem:/bank_cert.pem
       - ./data/bank_key.pem:/bank_key.pem

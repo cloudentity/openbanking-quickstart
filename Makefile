@@ -20,6 +20,7 @@ run-%-saas:
 
 .PHONY: build
 build:
+	cp -f .env-local .env
 	docker-compose -f docker-compose.obuk.yaml -f docker-compose.obbr.yaml -f docker-compose.cdr.yaml -f docker-compose.build.yaml build
 
 # obuk, obbr, cdr
@@ -49,11 +50,21 @@ restart-acp:
 
 .PHONY: lint
 lint: start-runner
-	docker-compose -f docker-compose.acp.local.yaml exec runner sh -c "golangci-lint run --fix --deadline=5m ./..."
+	docker exec quickstart-runner sh -c "golangci-lint run --fix --deadline=5m ./..."
 
 .PHONY: clean
 clean: 
 	docker-compose -f docker-compose.build.yaml down --remove-orphans
+
+# obuk, obbr, cdr
+clean-%-saas: start-runner
+	docker exec quickstart-runner sh -c \
+    "go run ./scripts/go/clean_saas.go \
+        -spec=$* \
+        -tenant=${SAAS_TENANT_ID} \
+        -cid=${SAAS_CLEANUP_CLIENT_ID} \
+        -csec=${SAAS_CLEANUP_CLIENT_SECRET}"
+	make clean
 
 .PHONY: purge
 purge:
@@ -92,7 +103,7 @@ generate-integration-specs: generate-obuk-integration-spec generate-obbr-integra
 .PHONY: generate-obbr-clients
 generate-obbr-clients: start-runner
 	rm -rf ./openbanking/obbr/accounts/*
-	docker-compose exec runner sh -c \
+	docker-compose -f docker-compose.acp.local.yaml exec runner sh -c \
 	"swagger generate client \
 	    --include-tag=obuk
 		-f api/obbr/accounts.yaml \
@@ -102,7 +113,7 @@ generate-obbr-clients: start-runner
 .PHONY: generate-cdr-clients
 generate-cdr-clients: start-runner
 	rm -rf ./openbanking/cdr/banking/*
-	docker-compose exec runner sh -c \
+	docker-compose -f docker-compose.acp.local.yaml exec runner sh -c \
 	"swagger generate client \
 		-f api/cdr/cds_banking.yaml \
 		-A banking \

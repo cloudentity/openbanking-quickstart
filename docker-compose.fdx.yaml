@@ -1,0 +1,76 @@
+version: "3.0"
+
+services:
+  developer-tpp:
+    image: cloudentity/openbanking-quickstart-developer-tpp:${VERSION}
+    container_name: developer-tpp
+    restart: always
+    ports:
+      - "8090:8090"
+    volumes:
+      - ./data/ca.pem:/ca.pem
+      - ./data/tpp_cert.pem:/tpp_cert.pem
+      - ./data/tpp_key.pem:/tpp_key.pem
+    environment:
+      - AUTHORIZE_URL=${ACP_URL}/${TENANT}/fdx/oauth2/authorize
+      - TOKEN_URL=${ACP_MTLS_URL}/${TENANT}/fdx/oauth2/token
+      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/fdx
+      - USERINFO_URL=${ACP_MTLS_URL}/${TENANT}/fdx/userinfo
+      - REDIRECT_URL=https://${APP_HOST}:8090/callback
+      - BANK_URL=http://bank:8070
+      - SPEC=fdx
+    depends_on:
+      configuration:
+        condition: service_completed_successfully
+
+  consent-page:
+    image: cloudentity/openbanking-quickstart-consent-page:${VERSION}
+    container_name: consent-page
+    restart: always
+    ports:
+      - "7080:8080"
+    volumes:
+      - ./mount/consent-page-fdx:/data
+      - ./data/ca.pem:/ca.pem
+      - ./data/bank_cert.pem:/bank_cert.pem
+      - ./data/bank_key.pem:/bank_key.pem
+    env_file:
+      - .env
+    environment:
+      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
+      - BANK_URL=http://bank:8070
+      - LOG_LEVEL=debug
+      - SPEC=fdx
+      - GIN_MODE=debug # change to release to disable gin debug
+      - OTP_MODE=mock # change to custom to enable custom OTP handling
+      - MFA_CLAIM=sub # for mobile use mobile_verified
+    depends_on:
+      configuration:
+        condition: service_completed_successfully
+
+  configuration:
+    container_name: configuration
+    image: cloudentity/openbanking-quickstart-configuration:latest
+    restart: on-failure
+    volumes:
+      - ./data/tpp_cert.pem:/certs/tpp_cert.pem
+      - ./data/ca.pem:/certs/ca.pem
+      - ./data/variables.yaml:/variables.yaml
+      - ./data/imports/system.tmpl:/app/imports-fdx/system.tmpl
+      - ./data/imports/fdx.tmpl:/app/imports-fdx/fdx.tmpl
+      - ./data/imports/tenant.tmpl:/app/imports-fdx/tenant.tmpl
+    command:
+      - /app/main
+      - --tenant-url
+      - ${CONFIGURATION_TENANT_URL}
+      - --tenant
+      - ${CONFIGURATION_TENANT}
+      - --client-id
+      - ${CONFIGURATION_CLIENT_ID}
+      - --client-secret
+      - ${CONFIGURATION_CLIENT_SECRET}
+      - --templates-dirs
+      - /app/imports-fdx
+      - --variables-file
+      - /variables.yaml
+      - --verbose   

@@ -25,9 +25,9 @@ services:
       - FEATURES_OPENBANKING_BRASIL_CONSENTS=true
       - FEATURES_OPENBANKING_BRASIL_PAYMENTS=true
       - FEATURES_DEV_MODE=true
-      - FEATURES_CDR_AUSTRALIA=true
-      - FEATURES_PAR=true
       - FEATURES_SCRIPTS=true
+      - FEATURES_CIBA=true
+      - FEATURES_FDX=true
       - SERVER_MTLS_URL=https://test-docker:8443
       - SERVER_URL=${ACP_URL}
       - LOGGING_LEVEL=debug
@@ -36,8 +36,6 @@ services:
       - CLIENT_ROOT_CA=/acp_ca.pem
       - REDIS_ENABLED=true
       - REDIS_ADDRESS=redis:6379
-      - FEATURES_CIBA=true
-      - FEATURES_AUDIT_EVENTS_UI=true
     command:
       - server
       - start
@@ -80,6 +78,7 @@ services:
 
 
   runner:
+    container_name: quickstart-runner
     image: quickstart-runner
     command: /bin/sh
     tty: true

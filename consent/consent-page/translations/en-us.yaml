@@ -75,3 +75,15 @@ cdr.account.purposeDetail: To uncover insights that can improve your financial w
 cdr.account.expiration: <strong>{{ .client_name }}</strong> will have access to your account information until <strong>{{ .expiration_date }}</strong>
 cdr.account.cancel: Cancel
 cdr.account.agree: I Agree
+
+
+fdx.account.headTitle: Account Access Consent
+fdx.account.title: Account selection
+fdx.account.selectAccounts: Select accounts to share with
+fdx.account.review_data: Review the data you will be sharing
+fdx.account.permissions: Permissions
+fdx.account.purpose: Purpose for sharing data
+fdx.account.purposeDetail: To uncover insights that can improve your financial well being.
+fdx.account.expiration: <strong>{{ .client_name }}</strong> will have access to your account information until <strong>{{ .expiration_date }}</strong>
+fdx.account.cancel: Cancel
+fdx.account.agree: I Agree
