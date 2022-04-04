@@ -19,15 +19,9 @@ describe(`Tpp technical app`, () => {
   const mfaPage: MfaPage = new MfaPage();
   const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
 
-  // obuk 
   const basicPermission: string = `ReadAccountsBasic`;
   const detailPermission: string = `ReadAccountsDetail`;
 
-
-  // obbr 
-  const accountsReadPermission: string = `ACCOUNTS_READ`;
-  const accountsOverdraftLimitsReadPermission: string = `ACCOUNTS_OVERDRAFT_LIMITS_READ`;
-  const resourcesReadPermission: string = `RESOURCES_READ`;
 
   beforeEach(() => {
     tppLoginPage.visit()

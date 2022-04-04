@@ -19,12 +19,6 @@ describe(`Tpp technical app`, () => {
   const mfaPage: MfaPage = new MfaPage();
   const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
 
-  // obuk 
-  const basicPermission: string = `ReadAccountsBasic`;
-  const detailPermission: string = `ReadAccountsDetail`;
-
-
-  // obbr 
   const accountsReadPermission: string = `ACCOUNTS_READ`;
   const accountsOverdraftLimitsReadPermission: string = `ACCOUNTS_OVERDRAFT_LIMITS_READ`;
   const resourcesReadPermission: string = `RESOURCES_READ`;
@@ -36,9 +30,7 @@ describe(`Tpp technical app`, () => {
   });
 
     [
-       [accountsReadPermission, accountsOverdraftLimitsReadPermission, resourcesReadPermission],
-      [accountsReadPermission]
-      // [] // todo add better error handling in the app
+       [accountsReadPermission, accountsOverdraftLimitsReadPermission, resourcesReadPermission]      // [] // todo add better error handling in the app
     ].forEach(permissions => {
       it(`Happy path with permissions: ${permissions}`, () => {
         tppLoginPage.checkAccountsReadPermission(permissions.includes(accountsReadPermission))
