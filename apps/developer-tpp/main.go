@@ -93,28 +93,29 @@ type Server struct {
 
 func NewServer() (Server, error) {
 	var (
-		server = Server{}
-		err    error
+		server    = Server{}
+		acpConfig acpclient.Config
+		err       error
 	)
 
 	if server.Config, err = LoadConfig(); err != nil {
 		return server, errors.Wrapf(err, "failed to load config")
 	}
 
-	clientConfig := server.Config.ClientConfig()
-
 	switch server.Config.Spec {
 	case OBUK:
-		clientConfig.Scopes = []string{"openid", "accounts"}
+		server.Config.ClientScopes = []string{"openid", "accounts"}
+		acpConfig = server.Config.ClientConfig()
 	case OBBR:
-		clientConfig.Scopes = []string{"openid", "consents", "consent:*"}
+		server.Config.ClientScopes = []string{"openid", "consents", "consent:*"}
+		acpConfig = server.Config.ClientConfig()
 	case FDX:
-		if server.Config.ClientSecret == "" {
-			return server, errors.New("client secret must be set")
-		}
+		acpConfig = server.Config.ClientConfig()
+		acpConfig.ClientSecret = server.Config.ClientSecret
+		acpConfig.AuthMethod = acpclient.ClientSecretPostAuthnMethod
 	}
 
-	if server.Client, err = acpclient.New(clientConfig); err != nil {
+	if server.Client, err = acpclient.New(acpConfig); err != nil {
 		return server, errors.Wrapf(err, "failed to init acp client")
 	}
 
