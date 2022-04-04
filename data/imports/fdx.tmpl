@@ -1,0 +1,77 @@
+servers:
+- tenant_id: {{ .tenant_id }}
+  id: fdx
+  name: FDX
+  profile: fdx
+  access_token_strategy: "jwt"
+  enforce_pkce: false
+  grant_types:
+    - authorization_code
+    - refresh_token
+    - client_credentials
+  initialize: true
+  legal_entity:
+    party:
+      name: "Midwest Primary Bank, NA"
+      home_uri: "https://www.midwest.com"
+      logo_uri: "https://www.midwest.com/81d88112572c.jpg"
+      registry_name: "GLEIF"
+      registered_entity_name: "Midwest Primary Bank, NA"
+      registered_entity_identifier: "549300ATG070THRDJ595"
+
+idps:
+- tenant_id: {{ .tenant_id }}
+  authorization_server_id: fdx
+  id: bugkgai3g9kregtu04u0
+  name: Sandbox IDP
+  method: static
+  credentials:
+    static:
+      users:
+      - username: user
+        password: p@ssw0rd!
+        authentication_context:
+          name: user
+          mobile_verified: "+48123456789"
+
+server_consents:
+- tenant_id: {{ .tenant_id }}
+  client_id: {{ default "bv0ocudfotn6edhsiu7g" .fdx_consent_page_client }}
+  custom:
+    server_consent_url: {{ .consent_page_url }}
+  server_id: fdx
+  type: custom
+
+clients:
+# consent page
+- tenant_id: {{ .tenant_id }}
+  authorization_server_id: system
+  client_id: {{ default "bv0ocudfotn6edhsiu7g" .fdx_consent_page_client }}
+  client_secret: {{ default "pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0" .fdx_consent_page_client_secret }}
+  client_name: custom server consent
+  grant_types:
+  - client_credentials
+  scopes:
+  - manage_openbanking_consents
+  token_endpoint_auth_method: client_secret_basic
+# developer tpp
+- tenant_id: {{ .tenant_id }}
+  authorization_server_id: fdx
+  client_id: bugkgm23g9kregtu051g
+  client_name: Developer TPP
+  client_uri: https://localhost:8090
+  client_secret: {{ default "-TlfoycUiE0qNi-XUBFDfTxMlhHTCjVxOF6pLrWZbQA" .fdx_developer_tpp_client_secret }}
+  token_endpoint_auth_method: client_secret_post
+  redirect_uris:
+  - {{ .developer_tpp_url }}/callback
+  subject_type: pairwise
+  response_types:
+  - token
+  - code
+  scopes:
+  - openid
+  - READ_CONSENTS
+  grant_types:
+  - client_credentials
+  - authorization_code
+  - refresh_token

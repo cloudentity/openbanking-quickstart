@@ -25,11 +25,13 @@ type Spec string
 const (
 	OBUK Spec = "obuk"
 	OBBR Spec = "obbr"
+	FDX  Spec = "fdx"
 )
 
 type Config struct {
 	Port         int           `env:"PORT" envDefault:"8090"`
 	ClientID     string        `env:"CLIENT_ID" envDefault:"bugkgm23g9kregtu051g"`
+	ClientSecret string        `env:"CLIENT_SECRET" envDefault:"-TlfoycUiE0qNi-XUBFDfTxMlhHTCjVxOF6pLrWZbQA"` // only required for fdx
 	AuthorizeURL *url.URL      `env:"AUTHORIZE_URL,required"`
 	TokenURL     *url.URL      `env:"TOKEN_URL,required"`
 	IssuerURL    *url.URL      `env:"ISSUER_URL,required"`
@@ -91,8 +93,9 @@ type Server struct {
 
 func NewServer() (Server, error) {
 	var (
-		server = Server{}
-		err    error
+		server    = Server{}
+		acpConfig acpclient.Config
+		err       error
 	)
 
 	if server.Config, err = LoadConfig(); err != nil {
@@ -102,11 +105,17 @@ func NewServer() (Server, error) {
 	switch server.Config.Spec {
 	case OBUK:
 		server.Config.ClientScopes = []string{"openid", "accounts"}
+		acpConfig = server.Config.ClientConfig()
 	case OBBR:
 		server.Config.ClientScopes = []string{"openid", "consents", "consent:*"}
+		acpConfig = server.Config.ClientConfig()
+	case FDX:
+		acpConfig = server.Config.ClientConfig()
+		acpConfig.ClientSecret = server.Config.ClientSecret
+		acpConfig.AuthMethod = acpclient.ClientSecretPostAuthnMethod
 	}
 
-	if server.Client, err = acpclient.New(server.Config.ClientConfig()); err != nil {
+	if server.Client, err = acpclient.New(acpConfig); err != nil {
 		return server, errors.Wrapf(err, "failed to init acp client")
 	}
 
@@ -119,6 +128,10 @@ func NewServer() (Server, error) {
 		server.SpecLogicHandler = &OBUKLogic{Server: &server}
 	case OBBR:
 		server.SpecLogicHandler = &OBBRLogic{Server: &server}
+	case FDX:
+		if server.SpecLogicHandler, err = NewFDXLogic(server.Config); err != nil {
+			return server, errors.Wrapf(err, "failed to init fdx logic handler")
+		}
 	}
 
 	return server, nil
@@ -152,14 +165,7 @@ func main() {
 }
 
 func (s *Server) GetTemplate(name string) string {
-	switch s.Config.Spec {
-	case OBUK:
-		return string(OBUK) + "-" + name
-	case OBBR:
-		return string(OBBR) + "-" + name
-	default:
-		return ""
-	}
+	return string(s.Config.Spec) + "-" + name
 }
 
 func (s *Server) GetEncryptionKey(ctx context.Context) (jose.JSONWebKey, error) {
