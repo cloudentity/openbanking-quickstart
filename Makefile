@@ -49,7 +49,7 @@ restart-acp:
 
 .PHONY: lint
 lint: start-runner
-	docker-compose -f docker-compose.acp.local.yaml exec runner sh -c "golangci-lint run --fix --deadline=5m ./..."
+	docker exec quickstart-runner sh -c "golangci-lint run --fix --deadline=5m ./..."
 
 .PHONY: clean
 clean: 
