@@ -11,12 +11,14 @@ run-%-local:
 	./scripts/wait.sh 
 	docker-compose -f docker-compose.$*.yaml up --no-build -d 
 	./scripts/wait.sh
+	docker ps -a
 
 # obuk, obbr
 run-%-saas:
 	cp -f .env-saas .env
 	docker-compose -f docker-compose.$*.yaml up --no-build -d
 	./scripts/wait.sh
+	docker ps -a
 
 .PHONY: build
 build:
@@ -51,10 +53,12 @@ restart-acp:
 .PHONY: lint
 lint: start-runner
 	docker exec quickstart-runner sh -c "golangci-lint run --fix --deadline=5m ./..."
+	docker ps -a
 
 .PHONY: clean
 clean: 
 	docker-compose -f docker-compose.build.yaml down --remove-orphans
+	docker ps -a
 
 # obuk, obbr, cdr
 clean-%-saas: start-runner
