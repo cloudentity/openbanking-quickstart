@@ -57,8 +57,6 @@ lint: start-runner
 
 .PHONY: clean
 clean: 
-	docker ps -a
-	cat docker-compose.build.yaml
 	docker-compose -f docker-compose.build.yaml down --remove-orphans
 	docker ps -a
 
@@ -100,7 +98,6 @@ start-runner:
 .PHONY: stop-runner
 stop-runner:
 	docker rm -f quickstart-runner
-	docker ps -a
 
 .PHONY: generate-obuk-integration-spec
 generate-obuk-integration-spec: start-runner
