@@ -70,6 +70,7 @@ clean-%-saas: start-runner
         -tenant=${SAAS_TENANT_ID} \
         -cid=${SAAS_CLEANUP_CLIENT_ID} \
         -csec=${SAAS_CLEANUP_CLIENT_SECRET}"
+	make stop-runner
 	make clean
 
 .PHONY: purge
@@ -94,14 +95,21 @@ set-saas-configuration:
 start-runner:
 	docker build -t quickstart-runner -f build/runner.dockerfile .
 	docker-compose -f docker-compose.acp.local.yaml up -d runner
+	make stop-runner
+
+.PHONY: stop-runner
+	docker rm quickstart-runner
+	docker ps -a
 
 .PHONY: generate-obuk-integration-spec
 generate-obuk-integration-spec: start-runner
 	./scripts/generate_bank_spec.sh uk
+	make stop-runner
 
 .PHONY: generate-obbr-integration-spec
 generate-obbr-integration-spec: start-runner
 	./scripts/generate_bank_spec.sh br
+	make stop-runner
 
 .PHONY: generate-integration-specs
 generate-integration-specs: generate-obuk-integration-spec generate-obbr-integration-spec
@@ -115,6 +123,7 @@ generate-obbr-clients: start-runner
 		-f api/obbr/accounts.yaml \
 		-A accounts  \
 		-t ./openbanking/obbr/accounts"
+	make stop-runner
 
 .PHONY: generate-cdr-clients
 generate-cdr-clients: start-runner
@@ -124,6 +133,7 @@ generate-cdr-clients: start-runner
 		-f api/cdr/cds_banking.yaml \
 		-A banking \
 		-t ./openbanking/cdr/banking"
+	make stop-runner
 
 .PHONY: obbr
 obbr:
