@@ -53,7 +53,7 @@ restart-acp:
 .PHONY: lint
 lint: start-runner
 	docker exec quickstart-runner sh -c "golangci-lint run --fix --deadline=5m ./..."
-	docker ps -a
+	make stop-runner
 
 .PHONY: clean
 clean: 
@@ -95,10 +95,11 @@ set-saas-configuration:
 start-runner:
 	docker build -t quickstart-runner -f build/runner.dockerfile .
 	docker-compose -f docker-compose.acp.local.yaml up -d runner
-	make stop-runner
+	docker ps -a
 
 .PHONY: stop-runner
-	docker rm quickstart-runner
+stop-runner:
+	docker rm -f quickstart-runner
 	docker ps -a
 
 .PHONY: generate-obuk-integration-spec
