@@ -13,6 +13,7 @@ import { theme } from "../../theme";
 import bankIcon from "../../assets/banks/gobank-icon.svg";
 import checkIcon from "../../assets/icon-check.svg";
 import qs from 'query-string';
+import { CreateCSSProperties } from "@material-ui/core/styles/withStyles";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -90,7 +91,7 @@ const useStyles = makeStyles((theme) => ({
   },
   header: {
     textAlign: "center",
-    ...theme.custom.label,
+    ...theme.custom.label as CreateCSSProperties,
   },
 }));
 

@@ -15,7 +15,7 @@ import ConsentTabs from "./ConsentTabs";
 
 const useStyles = makeStyles((theme: Theme) => ({
   subtitle: {
-    ...theme.custom.body1,
+   // ...theme.custom.body1,
   },
   subHeaderToolbar: {
     backgroundColor: "#002D4C",
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: "flex",
   },
   header: {
-    ...theme.custom.heading3,
+  //  ...theme.custom.heading3,
     borderBottom: "solid 1px #ECECEC",
     paddingBottom: 24,
   },
@@ -41,7 +41,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 24,
   },
   back: {
-    ...theme.custom.label,
+  //  ...theme.custom.label,
     color: "white",
     marginLeft: 13,
   },
