@@ -29,7 +29,6 @@ describe(`Smoke Tpp technical app`, () => {
     tppLoginPage.visit();
   });
 
-  if (environmentVariables.isOBUKSpecification()) {
     [
       [basicPermission, detailPermission],
       [basicPermission],
@@ -58,6 +57,5 @@ describe(`Smoke Tpp technical app`, () => {
         }
       })
     });
-  };
 
 })

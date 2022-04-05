@@ -305,7 +305,7 @@ export default function AnalyticsTable({data, style = {}}: AnalyticsTableProps) 
           count={data.length}
           rowsPerPage={rowsPerPage}
           page={page}
-          onChangePage={handleChangePage}
+          onPageChange={handleChangePage}
           onChangeRowsPerPage={handleChangeRowsPerPage}
         />
       </Paper>

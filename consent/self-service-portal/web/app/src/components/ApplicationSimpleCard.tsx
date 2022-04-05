@@ -52,7 +52,7 @@ const useStyles = (clickable: boolean) =>
       lineHeight: "22px",
     },
     caption: {
-      ...theme.custom.caption,
+   //   ...theme.custom.caption,
     },
   }));
 

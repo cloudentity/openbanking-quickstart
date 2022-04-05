@@ -44,7 +44,7 @@ export default function AnalyticsPieChart({data, filtering, onChangeFiltering}) 
                 <Cell
                   cursor="pointer"
                   key={`cell-${index}`}
-                  fill={filtering?.categories.includes(entry.name) ? '#36C6AF' : stringToHex(entry.name)}
+                  fill={filtering?.categories.includes(entry.name) ? '#36C6AF' : stringToHex(entry.name) as string}
                 />
               )
             }

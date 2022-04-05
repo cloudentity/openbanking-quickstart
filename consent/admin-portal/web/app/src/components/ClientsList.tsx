@@ -16,7 +16,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     margin: "32px auto",
   },
   header: {
-    ...theme.custom.heading3,
+ //   ...theme.custom.heading3,
   },
   subheader: {
     ...theme.custom.body2,
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     marginBottom: 24,
   },
   filterTitle: {
-    ...theme.custom.label,
+  //  ...theme.custom.label,
     marginBottom: 12,
   },
   filterChips: {

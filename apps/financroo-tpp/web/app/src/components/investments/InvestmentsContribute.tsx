@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import IconButton from "@material-ui/core/IconButton";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles, Theme } from "@material-ui/core/styles";
 import { ArrowLeft, Lock } from "react-feather";
 import { useHistory } from "react-router";
 import { useQuery } from "react-query";
@@ -14,6 +14,7 @@ import { api } from "../../api/api";
 import Progress from "../Progress";
 import { banks as banksArray } from "../banks";
 import InvestmentsContributeRedirecting from "./InvestmentsContributeRedirecting";
+import { CreateCSSProperties } from "@material-ui/core/styles/withStyles";
 
 export type BalanceType = {
   AccountId: string;
@@ -56,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 34,
     display: "flex",
     alignItems: "center",
-    ...theme.custom.caption,
+    ...theme.custom.caption as CreateCSSProperties,
   },
   spacer: {
     flex: 1,
