@@ -57,6 +57,8 @@ lint: start-runner
 
 .PHONY: clean
 clean: 
+	docker ps -a
+	cat docker-compose.build.yaml
 	docker-compose -f docker-compose.build.yaml down --remove-orphans
 	docker ps -a
 
