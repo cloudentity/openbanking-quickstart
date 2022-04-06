@@ -63,6 +63,9 @@ The current types of runtimes are currently supported:
 > 1. Run `make enable-mfa` to turn MFA on.
 > 2. Run `make disable-mfa` to turn MFA off.
 
+To cleanup the environment execute: `make clean`.
+This step is also necessary if you want to switch between different specs.
+
 ## What to do next
 
 Once you can run the quickstart, you can visit our sample apps:
