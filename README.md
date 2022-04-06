@@ -11,6 +11,8 @@ The following specifications are currently supported:
 * CDR
 * FDX (partial support)
 
+For more details, please visit our [Openbanking Guides](https://docs.authorization.cloudentity.com/guides/ob_guides/).
+
 ### Prequisite configuration
 
 #### Required software
