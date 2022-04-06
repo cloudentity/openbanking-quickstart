@@ -9,6 +9,7 @@ pipeline {
         SAAS_CLIENT_SECRET = credentials('OPENBANKING_CONFIGURATION_CLIENT_SECRET')
         SAAS_CLEANUP_CLIENT_ID = credentials('OPENBANKING_CLEANUP_CLIENT_ID')
         SAAS_CLEANUP_CLIENT_SECRET = credentials('OPENBANKING_CLEANUP_CLIENT_SECRET')
+        DEBUG = 'true'
     }
     options {
         timeout(time: 1, unit: 'HOURS')
@@ -28,6 +29,7 @@ pipeline {
                 sh 'rm -f docker-compose.log'
                 sh 'make clean'
                 sh 'make lint'
+                sh 'make stop-runner'
                 sh 'make build'
             }
         }

@@ -76,7 +76,6 @@ services:
     ports:
       - 6380:6379
 
-
   runner:
     container_name: quickstart-runner
     image: quickstart-runner

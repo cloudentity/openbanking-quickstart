@@ -54,16 +54,20 @@ lint: start-runner
 
 .PHONY: clean
 clean: 
-	docker-compose -f docker-compose.acp.local.yaml -f docker-compose.build.yaml down --remove-orphans
+	docker-compose -f docker-compose.build.yaml down --remove-orphans
+ifeq (${DEBUG},true)
+	docker ps -a
+endif
 
 # obuk, obbr, cdr
-clean-%-saas:
+clean-%-saas: start-runner
 	docker exec quickstart-runner sh -c \
     "go run ./scripts/go/clean_saas.go \
         -spec=$* \
         -tenant=${SAAS_TENANT_ID} \
         -cid=${SAAS_CLEANUP_CLIENT_ID} \
         -csec=${SAAS_CLEANUP_CLIENT_SECRET}"
+	make stop-runner
 	make clean
 
 .PHONY: purge
@@ -88,6 +92,11 @@ set-saas-configuration:
 start-runner:
 	docker build -t quickstart-runner -f build/runner.dockerfile .
 	docker-compose -f docker-compose.acp.local.yaml up -d runner
+	docker ps -a
+
+.PHONY: stop-runner
+stop-runner:
+	docker rm -f quickstart-runner
 
 .PHONY: generate-obuk-integration-spec
 generate-obuk-integration-spec: start-runner

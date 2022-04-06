@@ -17,3 +17,8 @@ while [ $pendingServices -gt 0 ]; do
 done
 
 echo "All services are healthy"
+
+if [ "$DEBUG" == "true" ]
+then
+    docker ps -a
+fi
