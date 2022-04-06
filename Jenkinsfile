@@ -9,7 +9,7 @@ pipeline {
         SAAS_CLIENT_SECRET = credentials('OPENBANKING_CONFIGURATION_CLIENT_SECRET')
         SAAS_CLEANUP_CLIENT_ID = credentials('OPENBANKING_CLEANUP_CLIENT_ID')
         SAAS_CLEANUP_CLIENT_SECRET = credentials('OPENBANKING_CLEANUP_CLIENT_SECRET')
-        DEBUG = "true"
+        DEBUG = 'true'
     }
     options {
         timeout(time: 1, unit: 'HOURS')
