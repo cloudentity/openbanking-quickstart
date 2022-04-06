@@ -11,14 +11,12 @@ run-%-local:
 	./scripts/wait.sh 
 	docker-compose -f docker-compose.$*.yaml up --no-build -d 
 	./scripts/wait.sh
-	docker ps -a
 
 # obuk, obbr
 run-%-saas:
 	cp -f .env-saas .env
 	docker-compose -f docker-compose.$*.yaml up --no-build -d
 	./scripts/wait.sh
-	docker ps -a
 
 .PHONY: build
 build:
@@ -58,7 +56,9 @@ lint: start-runner
 .PHONY: clean
 clean: 
 	docker-compose -f docker-compose.build.yaml down --remove-orphans
+ifeq (${DEBUG},true)
 	docker ps -a
+endif
 
 # obuk, obbr, cdr
 clean-%-saas: start-runner
