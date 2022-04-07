@@ -34,7 +34,7 @@ func (s *Server) GetMFAConsentProvider(loginRequest LoginRequest) (MFAConsentPro
 	switch loginRequest.ConsentType {
 	case "domestic_payment", "payments":
 		return s.PaymentMFAConsentProvider, true
-	case "account_access", "consents", "fdx":
+	case "account_access", "consents", "cdr_arrangement", "fdx":
 		return s.AccountAccessMFAConsentProvider, true
 	default:
 		return nil, false
