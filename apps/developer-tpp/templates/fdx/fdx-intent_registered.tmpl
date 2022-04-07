@@ -18,7 +18,7 @@
     <span>TPP sample app</span>
   </div>
   <div class="aut-banner-contact">
-    <button class="mdc-button mdc-button--raised" onclick="onLogin()">
+    <button class="mdc-button mdc-button--raised" onclick="onLogin()" id="fdx-int-reg-login-button">
       <div class="mdc-button__ripple"></div>
       <span class="mdc-button__label">Login</span>
     </button>
@@ -28,7 +28,7 @@
 <div class="aut-container" style="padding: 5px; width: 1024px;">
   <div class="aut-demo-info">
     <div class="material-icons aut-demo-info-icon">error_outline</div>
-    <div class="aut-demo-info-text">
+    <div class="aut-demo-info-text" id="fdx-int-reg-info-text">
       <p style="color: rgba(0, 0, 0, 0.87); font-weight: 500">PAR initialized</p>
       <p style="color: rgba(0, 0, 0, 0.6);">PAR request has been sent. Below you can find the response from POST /par endpoint.</p>
     </div>
@@ -36,12 +36,12 @@
 </div>
 
 <div class="aut-container" style="width: 1024px;">
-  <pre>{{ .account_access_consent_raw }}</pre>
+  <pre id="fdx-int-reg-request-uri">{{ .account_access_consent_raw }}</pre>
 
   <p style="margin-top:32px">TPP should now use authorization code grant flow with to authenticate user.</p>
 
   <p style="margin-top:32px">Here's the full authorize request:</p>
-  <pre>{{ .login_url }}</pre>
+  <pre id="fdx-int-reg-full-authorize-request">{{ .login_url }}</pre>
 
   <p style="margin-top:32px">After clicking Login, TPP will redirect user to ACP to start authentication process.
   <p/>
