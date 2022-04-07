@@ -23,7 +23,7 @@ build:
 	cp -f .env-local .env
 	docker-compose -f docker-compose.obuk.yaml -f docker-compose.obbr.yaml -f docker-compose.cdr.yaml -f docker-compose.build.yaml build
 
-# obuk, obbr, cdr
+# obuk, obbr, cdr, fdx
 run-%-tests-headless: run-tests-verify
 	yarn --cwd tests run cypress run -s cypress/integration/$*/*.ts
 
