@@ -74,9 +74,13 @@ clean-%-saas: start-runner
 purge:
 	docker images -a | grep openbanking-quickstart | awk '{print $3}' | xargs docker rmi -f || true
 
-# enable, disable
-%-mfa:
-	 if [ $* == "enable" ]; then ./scripts/override_env.sh ENABLE_MFA true; else ./scripts/override_env.sh ENABLE_MFA false; fi
+.PHONY: enable-mfa
+enable-mfa:
+	./scripts/override_env.sh ENABLE_MFA true
+
+.PHONY: disable-mfa
+disable-mfa:
+	./scripts/override_env.sh ENABLE_MFA false
 
 .PHONY: set-version
 set-version:
