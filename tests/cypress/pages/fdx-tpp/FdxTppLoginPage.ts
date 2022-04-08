@@ -18,8 +18,8 @@ export class FdxTppLoginPage {
 
   public assertThatPageIsDisplayed(): void {
     cy.get(this.loginPageInfoLabelLocator).should(
-      "have.text",
-      "In the FDX, the flow starts with the TPP sending authorization_details to the PAR endpoint."
+      'have.text',
+      'In the FDX, the flow starts with the TPP sending authorization_details to the PAR endpoint.'
     );
     cy.get(this.nextButtonLocator, { timeout: 3000 }).should("be.visible");
   }
