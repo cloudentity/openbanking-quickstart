@@ -21,7 +21,7 @@
 <div class="aut-container" style="padding: 5px;">
   <div class="aut-demo-info">
     <div class="material-icons aut-demo-info-icon">error_outline</div>
-    <div class="aut-demo-info-text">
+    <div class="aut-demo-info-text" id="fdx-login-info-text">
       <p style="color: rgba(0, 0, 0, 0.6);">In the FDX, the flow starts with the TPP sending authorization_details to the PAR endpoint.</p>
     </div>
   </div>
@@ -29,7 +29,7 @@
 
 <div class="mdc-card aut-container" style="padding: 16px 22px">
 
-  <pre>
+  <pre id="fdx-login-authorization-details">
 {
    "authorization_details":[
       {
@@ -61,7 +61,7 @@
 
   <form action="/login" method="post">
     <div class="aut-form-actions" style="padding: 0">
-      <button class="mdc-button mdc-button--raised" type="submit" name="action" value="Next" style="margin-right: 0">
+      <button class="mdc-button mdc-button--raised" type="submit" name="action" value="Next" style="margin-right: 0" id="fdx-login-next-button">
         <div class="mdc-button__ripple"></div>
         <span class="mdc-button__label">Next</span>
       </button>
