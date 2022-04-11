@@ -184,6 +184,7 @@ func NewServer() (Server, error) {
 		server.AccountAccessConsentHandler = &CDRAccountAccessConsentHandler{&server, tools}
 	case FDX:
 		server.AccountAccessConsentHandler = &FDXAccountAccessConsentHandler{&server, tools}
+		server.AccountAccessMFAConsentProvider = &FDXAccountAccessMFAConsentProvider{&server, tools}
 	default:
 		return server, errors.Wrapf(err, "unsupported spec %s", server.Config.Spec)
 	}
