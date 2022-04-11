@@ -17,7 +17,7 @@
     <span>TPP sample app</span>
   </div>
   <div class="aut-banner-contact">
-    <button class="mdc-button mdc-button--raised" onclick="onRetry()">
+    <button class="mdc-button mdc-button--raised" onclick="onRetry()" id="fdx-auth-try-again-button">
       <div class="mdc-button__ripple"></div>
       <span class="mdc-button__label">Try again</span>
     </button>
@@ -27,7 +27,7 @@
 <div class="aut-container" style="padding: 5px; width: 1024px;">
   <div class="aut-demo-info">
     <div class="material-icons aut-demo-info-icon">error_outline</div>
-    <div class="aut-demo-info-text">
+    <div class="aut-demo-info-text" id="fdx-auth-info-text">
       <p style="color: rgba(0, 0, 0, 0.87); font-weight: 500">Authenticated</p>
       <p style="color: rgba(0, 0, 0, 0.6);">User has been authenticated. Authorization code has been exchanged. Implicit FDX consent has been created, see `grant_id` parameter</p>
     </div>
@@ -35,13 +35,13 @@
 </div>
 <div class="aut-container" style="padding: 5px; width: 1024px;">
   <p>Token response:<p>
-  <pre>{{ .token_response }}</pre>
+  <pre id="fdx-auth-token-response">{{ .token_response }}</pre>
 
   <p>Access token:</p>
-  <pre>{{ .access_token_payload }}</pre>
+  <pre id="fdx-auth-access-token">{{ .access_token_payload }}</pre>
 
   <p>Get consent response:<p>
-  <pre>{{ .consent_response }}</pre>
+  <pre id="fdx-auth-consent-response">{{ .consent_response }}</pre>
 
 </div>
 

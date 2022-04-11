@@ -49,7 +49,19 @@ pipeline {
                 }
             }
         }
-
+        stage('FDX Tests with disabled MFA') {
+            steps {
+                script {
+                    try {
+                        sh 'make disable-mfa run-fdx-local'
+                        sh 'make run-fdx-tests-headless'
+                        sh 'make clean'
+                    } catch(exc) {
+                        failure('Tests failed')
+                    }
+                }
+            }
+        }
         stage('OBUK Tests with disabled MFA') {
             steps {
                 script {
