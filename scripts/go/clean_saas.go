@@ -67,10 +67,9 @@ func main() {
 			"openbanking_brasil",
 			"bank-customers",
 		}
-	case "cdr":
+	case "fdx":
 		workspaceIDs = []string{
-			"cdr",
-			"bank-customers",
+			"fdx",
 		}
 	default:
 		log.Fatalf("The openbanking specification flag '-spec=%s' is not supported", *obSpec)

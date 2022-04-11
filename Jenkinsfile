@@ -101,6 +101,21 @@ pipeline {
                 }
             }
         }
+        stage('SaaS FDX Tests') {
+            steps {
+                script {
+                    try {
+                        sh 'make disable-mfa set-saas-configuration run-fdx-saas'
+                        retry(3) {
+                            sh 'make run-saas-fdx-tests-headless'
+                        }
+                        sh 'make clean-fdx-saas'
+                    } catch(exc) {
+                        failure('Tests failed')
+                    }
+                }
+            }
+        }
         stage('SaaS OBUK Tests') {
             steps {
                 script {

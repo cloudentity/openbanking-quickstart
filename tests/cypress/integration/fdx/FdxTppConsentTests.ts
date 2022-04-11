@@ -36,9 +36,9 @@ describe(`FDX Tpp consent app`, () => {
     [savingsAccountId],
     [savings2AccountId],
   ].forEach((accountsIds) => {
-    it(`Happy path with selcted accounts: ${accountsIds}`, () => {
+    it(`Happy path with selected accounts: ${accountsIds}`, () => {
       fdxTppLoginPage.assertThatPageIsDisplayed();
-      fdxTppLoginPage.assertThatAuthorizationDetailsAreDispalyed();
+      fdxTppLoginPage.assertThatAuthorizationDetailsAreDisplayed();
       fdxTppLoginPage.clickNext();
 
       fdxTppIntentRegisteredPage.assertThatPageIsDisplayed();
@@ -69,7 +69,7 @@ describe(`FDX Tpp consent app`, () => {
 
   it(`Happy path with not selected account`, () => {
     fdxTppLoginPage.assertThatPageIsDisplayed();
-    fdxTppLoginPage.assertThatAuthorizationDetailsAreDispalyed();
+    fdxTppLoginPage.assertThatAuthorizationDetailsAreDisplayed();
     fdxTppLoginPage.clickNext();
 
     fdxTppIntentRegisteredPage.assertThatPageIsDisplayed();
@@ -91,7 +91,7 @@ describe(`FDX Tpp consent app`, () => {
 
   it('Cancel on consent page', () => {
     fdxTppLoginPage.assertThatPageIsDisplayed();
-    fdxTppLoginPage.assertThatAuthorizationDetailsAreDispalyed();
+    fdxTppLoginPage.assertThatAuthorizationDetailsAreDisplayed();
     fdxTppLoginPage.clickNext();
 
     fdxTppIntentRegisteredPage.assertThatPageIsDisplayed();
@@ -111,7 +111,7 @@ describe(`FDX Tpp consent app`, () => {
 
   it('Cancel on ACP login', () => {
     fdxTppLoginPage.assertThatPageIsDisplayed();
-    fdxTppLoginPage.assertThatAuthorizationDetailsAreDispalyed();
+    fdxTppLoginPage.assertThatAuthorizationDetailsAreDisplayed();
     fdxTppLoginPage.clickNext();
 
     fdxTppIntentRegisteredPage.assertThatPageIsDisplayed();

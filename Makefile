@@ -27,13 +27,9 @@ build:
 run-%-tests-headless: run-tests-verify
 	yarn --cwd tests run cypress run -s cypress/integration/$*/*.ts
 
-.PHONY: run-saas-obuk-tests-headless
-run-saas-obuk-tests-headless: run-tests-verify
-	yarn --cwd tests run cypress run -s cypress/integration/saas/obuk/*.ts
-
-.PHONY: run-saas-obbr-tests-headless
-run-saas-obbr-tests-headless: run-tests-verify
-	yarn --cwd tests run cypress run -s cypress/integration/saas/obbr/*.ts
+# obuk, obbr, fdx
+run-saas-%-tests-headless: run-tests-verify
+	yarn --cwd tests run cypress run -s cypress/integration/saas/$*/*.ts
 
 .PHONY: run-tests
 run-tests:
@@ -59,7 +55,7 @@ ifeq (${DEBUG},true)
 	docker ps -a
 endif
 
-# obuk, obbr, cdr
+# obuk, obbr, fdx
 clean-%-saas: start-runner
 	docker exec quickstart-runner sh -c \
     "go run ./scripts/go/clean_saas.go \

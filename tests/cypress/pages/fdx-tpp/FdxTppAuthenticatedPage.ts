@@ -41,11 +41,11 @@ export class FdxTppAuthenticatedPage {
       cy.log(text);
       expect(text).to.contain('"acr": "1"');
       expect(text).to.contain('"aid": "fdx"');
-      expect(text).to.match(/\"spiffe\:\/\/[a-z\/.]+\/fdx\/fdx-profile\"/);
+      expect(text).to.match(/\"spiffe\:\/\/[a-z0-9\/.-]+\/fdx\/fdx-profile\"/);
       expect(text).to.match(/\"exp\"\: [0-9]+\,/);
       expect(text).to.match(/\"iat\"\: [0-9]+\,/);
       expect(text).to.match(/\"idp\"\: \"[a-zA-Z0-9]+\"/);
-      expect(text).to.match(/\"iss\"\: \"https\:\/\/[a-z0-9\/.:]+\/fdx\"/);
+      expect(text).to.match(/\"iss\"\: \"https\:\/\/[a-z0-9\/:.-]+\/fdx\"/);
       expect(text).to.match(/\"jti\"\: \"[a-zA-Z0-9-]+\"/);
       expect(text).to.match(/\"nbf\"\: [0-9]+\,/);
       expect(text).to.contain('"st": "pairwise"');
