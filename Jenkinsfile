@@ -66,7 +66,7 @@ pipeline {
             steps {
                 script {
                     try {
-                        sh 'make enabled-mfa run-fdx-local'
+                        sh 'make enable-mfa run-fdx-local'
                         sh 'make run-fdx-tests-headless'
                         sh 'make clean'
                     } catch(exc) {
