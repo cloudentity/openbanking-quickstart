@@ -179,6 +179,7 @@ pipeline {
             script {
                 if (getContext(hudson.FilePath)) {
                     deleteDir()
+                }
             }
         }
         failure {
