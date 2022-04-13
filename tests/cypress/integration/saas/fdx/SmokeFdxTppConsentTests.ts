@@ -5,6 +5,8 @@ import { Urls } from "../../../pages/Urls";
 import { FdxTppLoginPage } from "../../../pages/fdx-tpp/FdxTppLoginPage";
 import { FdxTppIntentRegisteredPage } from "../../../pages/fdx-tpp/FdxTppIntentRegisteredPage";
 import { FdxTppAuthenticatedPage } from "../../../pages/fdx-tpp/FdxTppAuthenticatedPage";
+import { MfaPage } from "../../../pages/mfa/MfaPage";
+import { EnvironmentVariables } from "../../../pages/EnvironmentVariables";
 
 describe(`FDX Tpp consent app`, () => {
   const fdxTppLoginPage: FdxTppLoginPage = new FdxTppLoginPage();
@@ -14,6 +16,8 @@ describe(`FDX Tpp consent app`, () => {
     new FdxTppAuthenticatedPage();
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
   const consentPage: ConsentPage = new ConsentPage();
+  const mfaPage: MfaPage = new MfaPage();
+  const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
 
   const creditsAccountId: string = `96565987`;
   const savingsAccountId: string = `1122334455`;
@@ -39,6 +43,9 @@ describe(`FDX Tpp consent app`, () => {
       fdxTppIntentRegisteredPage.clickLogin();
 
       acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+      if (environmentVariables.isMfaEnabled()) {
+        mfaPage.typePin();
+      }
 
       consentPage.checkAccounts(accountsIds);
       consentPage.expandPermissions();
@@ -67,6 +74,9 @@ describe(`FDX Tpp consent app`, () => {
     fdxTppIntentRegisteredPage.clickLogin();
 
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    if (environmentVariables.isMfaEnabled()) {
+      mfaPage.typePin();
+    }
 
     consentPage.confirm();
 
