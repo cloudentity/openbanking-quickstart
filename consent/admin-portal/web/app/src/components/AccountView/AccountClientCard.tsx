@@ -62,7 +62,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 4,
   },
   name: {
-    //  ...theme.custom.heading3,
+    ...theme.custom.heading3,
   },
   details: {
     display: "flex",
@@ -70,10 +70,10 @@ const useStyles = makeStyles((theme: Theme) => ({
     justifyContent: "space-between",
   },
   label: {
-    // ...theme.custom.label,
+    ...theme.custom.label,
   },
   caption: {
-    //  ...theme.custom.caption,
+    ...theme.custom.caption,
   },
   manageButton: {
     textTransform: "capitalize",
@@ -88,7 +88,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   revokeButton: {
-    // ...theme.custom.button,
+    ...theme.custom.button,
     backgroundColor: "#DC1B37",
     padding: "8px 24px",
     "&:hover": {
