@@ -1,9 +1,6 @@
-import {
-  unstable_createMuiStrictModeTheme as createMuiTheme,
-  Theme,
-} from "@material-ui/core";
+import { createMuiTheme, Theme } from "@material-ui/core/styles";
 
-declare module "@material-ui/core/styles/createTheme" {
+declare module "@material-ui/core/styles/createMuiTheme" {
   interface Theme {
     custom: {
       heading2: {
