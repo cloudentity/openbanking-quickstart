@@ -2,6 +2,7 @@ import React from "react";
 
 import Chip from "./Chip";
 import SearchInput from "./SearchInput";
+import { theme } from "../theme";
 
 export const drawerStyles = {
   name: {
@@ -39,11 +40,11 @@ export const drawerStyles = {
     fontWeight: "bold" as "bold",
   },
   purpose: {
-    //...theme.custom.body2,
+    ...theme.custom.body2,
     marginBottom: 24,
   },
   subHeader: {
-    // ...theme.custom.caption,
+    ...theme.custom.caption,
     textTransform: "uppercase" as "uppercase",
     fontWeight: "bold" as "bold",
     color: "#002D4C",
@@ -59,7 +60,7 @@ export const drawerStyles = {
     fontSize: 12,
   },
   cardContent: {
-    // ...theme.custom.caption,
+    ...theme.custom.caption,
   },
   card: {
     backgroundColor: "#FCFCFF",
@@ -74,7 +75,7 @@ export const drawerStyles = {
     marginTop: 0,
     paddingLeft: 16,
     "& > li": {
-      //   ...theme.custom.body2,
+      ...theme.custom.body2,
     },
   },
   detailsTitle: {
