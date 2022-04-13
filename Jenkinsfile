@@ -175,6 +175,12 @@ pipeline {
     }
 
     post {
+        always{
+            script {
+                if (getContext(hudson.FilePath)) {
+                    deleteDir()
+            }
+        }
         failure {
             sh 'docker-compose -f docker-compose.acp.local.yaml -f docker-compose.obuk.yaml -f docker-compose.obbr.yaml -f docker-compose.cdr.yaml logs > docker-compose.log; true'
             archiveArtifacts(artifacts: 'docker-compose.log', allowEmptyArchive: true)
