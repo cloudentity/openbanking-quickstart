@@ -60,28 +60,22 @@ describe(`Tpp technical app`, () => {
       })
     });
 
- 
-
   it(`Cancel on ACP login`, () => {
-    // FIXME restore when this fix has been made
-    // https://github.com/cloudentity/openbanking-quickstart/pull/108
-    // tppLoginPage.next();
-    // tppIntentPage.login();
-    // acpLoginPage.cancel();
-    // errorPage.assertError(`The user rejected the authentication`)
+    tppLoginPage.next();
+    tppIntentPage.login();
+    acpLoginPage.cancel();
+    errorPage.assertError(`The user rejected the authentication`)
   })
 
   it(`Cancel on consent`, () => {
-    // FIXME restore when this fix has been made
-    // https://github.com/cloudentity/openbanking-quickstart/pull/108
-    // tppLoginPage.next();
-    // tppIntentPage.login();
-    // acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    // if (environmentVariables.isMfaEnabled()) {
-    //   mfaPage.typePin()
-    // }
-    // consentPage.cancel()
-    // errorPage.assertError(`rejected`)
+    tppLoginPage.next();
+    tppIntentPage.login();
+    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    if (environmentVariables.isMfaEnabled()) {
+      mfaPage.typePin()
+    }
+    consentPage.cancel()
+    errorPage.assertError(`rejected`)
   })
 
 })

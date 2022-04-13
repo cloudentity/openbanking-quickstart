@@ -3,14 +3,12 @@ import {ConsentPage} from '../../pages/consent/ConsentPage';
 import {Credentials} from "../../pages/Credentials";
 import {ConsentAdminPage} from '../../pages/consent-admin/ConsentAdminPage';
 import { MockDataRecipientPage } from '../../pages/mock-data-recipient/MockDataRecipientPage';
-import { ErrorPage } from "../../pages/ErrorPage";
 
 describe(`Consent admin portal CDR`, () => {
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
   const consentPage: ConsentPage = new ConsentPage();
   const consentAdminPage: ConsentAdminPage = new ConsentAdminPage();
   const mockDataRecipientPage: MockDataRecipientPage = new MockDataRecipientPage(); 
-  const errorPage: ErrorPage = new ErrorPage();
 
 
   before(() => {
