@@ -1,5 +1,5 @@
 import React from "react";
-import {useHistory, useParams} from "react-router";
+import { useHistory, useParams } from "react-router";
 import Button from "@material-ui/core/Button";
 import Chip from "@material-ui/core/Chip";
 import { makeStyles } from "@material-ui/core/styles";
@@ -9,11 +9,9 @@ import PageToolbar from "../common/PageToolbar";
 import ContributionCard from "./ContributionCard";
 import Field from "./Field";
 import Confetti from "./Confetti";
-import { theme } from "../../theme";
 import bankIcon from "../../assets/banks/gobank-icon.svg";
 import checkIcon from "../../assets/icon-check.svg";
-import qs from 'query-string';
-import { CreateCSSProperties } from "@material-ui/core/styles/withStyles";
+import qs from "query-string";
 
 const useStyles = makeStyles((theme) => ({
   title: {
@@ -91,23 +89,29 @@ const useStyles = makeStyles((theme) => ({
   },
   header: {
     textAlign: "center",
-    ...theme.custom.label as CreateCSSProperties,
+    ...theme.custom.label,
+  },
+  caption: {
+    ...theme.custom.caption,
+  },
+  label: {
+    ...theme.custom.label,
+  },
+  button: {
+    ...theme.custom.button,
   },
 }));
 
 export default function InvestmentsContributeSuccess() {
   const history = useHistory();
   const classes = useStyles();
-  const {id} = useParams<{id: string}>();
-  const search = history.location.search
-  const searchParsed = qs.parse(search)
+  const { id } = useParams<{ id: string }>();
+  const search = history.location.search;
+  const searchParsed = qs.parse(search);
 
   return (
     <div style={{ position: "relative" }}>
-      <PageToolbar
-        mode="main"
-        tab="investments"
-      />
+      <PageToolbar mode="main" tab="investments" />
       <PageContainer
         style={{ paddingTop: 48, paddingBottom: 48 }}
         containerStyle={{
@@ -132,13 +136,16 @@ export default function InvestmentsContributeSuccess() {
               className={classes.information}
               style={{ alignItems: "center", paddingBottom: 20 }}
             >
-              <div style={{ ...theme.custom.caption }}>Transaction ID</div>
+              <div className={classes.caption}>Transaction ID</div>
               <div>{id}</div>
-              <div style={{ ...theme.custom.label, paddingBottom: 0 }}>
+              <div className={classes.label} style={{ paddingBottom: 0 }}>
                 Total contribution paid
               </div>
               <div style={{ paddingBottom: 0 }}>
-                <Chip label={`${searchParsed.amount} ${searchParsed.currency}`} className={classes.chip} />
+                <Chip
+                  label={`${searchParsed.amount} ${searchParsed.currency}`}
+                  className={classes.chip}
+                />
               </div>
             </div>
           </Field>
@@ -151,9 +158,9 @@ export default function InvestmentsContributeSuccess() {
               className={classes.information}
               style={{ alignItems: "center", paddingBottom: 20 }}
             >
-              <div style={{ ...theme.custom.caption }}>Order reference</div>
+              <div className={classes.caption}>Order reference</div>
               <div>Financoo investments Ltd</div>
-              <div style={{ ...theme.custom.label, paddingBottom: 0 }}>
+              <div className={classes.label} style={{ paddingBottom: 0 }}>
                 Bank name
               </div>
               <div>
@@ -172,7 +179,8 @@ export default function InvestmentsContributeSuccess() {
           id="back-to-portfolio"
           variant="contained"
           color="primary"
-          style={{ ...theme.custom.button, marginTop: 44 }}
+          className={classes.button}
+          style={{ marginTop: 44 }}
           disableElevation
         >
           Back to portfolio

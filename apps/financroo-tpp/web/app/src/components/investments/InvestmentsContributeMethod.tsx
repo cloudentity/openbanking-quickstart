@@ -13,7 +13,6 @@ import bankIcon from "../../assets/icon-bank.svg";
 import cardIcon from "../../assets/icon-credit-card.svg";
 import paypalIcon from "../../assets/icon-paypal.svg";
 import walletIcon from "../../assets/icon-wallet.svg";
-import { theme } from "../../theme";
 import { Bank } from "../banks";
 import { BalanceType, AccountType } from "./InvestmentsContribute";
 
@@ -139,6 +138,9 @@ const useStyles = makeStyles((theme) => ({
       top: 2,
     },
   },
+  heading: {
+    ...theme.custom.heading6,
+  },
 }));
 
 type Props = {
@@ -188,7 +190,7 @@ export default function InvestmentsContributeMethod({
     <ContributionCard
       title={
         <div className={classes.titleContainer}>
-          <div style={theme.custom.heading6}>PAYMENT TOTAL</div>
+          <div className={classes.heading}>PAYMENT TOTAL</div>
           <Chip label={`£ ${amount}`} className={classes.chip} />
         </div>
       }
@@ -252,7 +254,7 @@ export default function InvestmentsContributeMethod({
         <div id="accounts-list" className={classes.accountSelect}>
           {balances
             .filter((b) => b.BankId === bank)
-            .map(({ AccountId, Amount}) => (
+            .map(({ AccountId, Amount }) => (
               <div
                 key={AccountId}
                 className={clsx([

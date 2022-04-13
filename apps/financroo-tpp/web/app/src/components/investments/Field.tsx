@@ -26,6 +26,7 @@ type Props = {
   helperText?: string;
   children: React.ReactNode;
   style?: React.CSSProperties;
+  className?: React.CSSProperties;
 };
 
 export default function Field({
@@ -33,6 +34,7 @@ export default function Field({
   helperText,
   children,
   style = {},
+  className,
 }: Props) {
   const classes = useStyles();
 

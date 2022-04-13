@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from "react";
 import IconButton from "@material-ui/core/IconButton";
-import { makeStyles, Theme } from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import { ArrowLeft, Lock } from "react-feather";
 import { useHistory } from "react-router";
 import { useQuery } from "react-query";
@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 34,
     display: "flex",
     alignItems: "center",
-    ...theme.custom.caption as CreateCSSProperties,
+    ...(theme.custom.caption as CreateCSSProperties),
   },
   spacer: {
     flex: 1,
@@ -83,7 +83,7 @@ export default function InvestmentsContribute() {
 
   const {
     isLoading: fetchBanksProgress,
-    error: fetchBanksError,
+    // error: fetchBanksError,
     data: banksRes,
   } = useQuery("fetchBanks", api.fetchBanks, {
     refetchOnWindowFocus: false,
@@ -92,7 +92,7 @@ export default function InvestmentsContribute() {
 
   const {
     isLoading: fetchBalancesProgress,
-    error: fetchBalancesError,
+    // error: fetchBalancesError,
     data: balancesRes,
   } = useQuery("fetchBalances", api.fetchBalances, {
     refetchOnWindowFocus: false,
@@ -101,7 +101,7 @@ export default function InvestmentsContribute() {
 
   const {
     isLoading: fetchAccountsProgress,
-    error: fetchAccountsError,
+    // error: fetchAccountsError,
     data: accountsRes,
   } = useQuery("fetchAccounts", api.fetchAccounts, {
     refetchOnWindowFocus: false,
