@@ -24,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     display: "flex",
   },
   header: {
-    //...theme.custom.heading3,
+    ...theme.custom.heading3,
     borderBottom: "solid 1px #ECECEC",
     paddingBottom: 24,
   },
@@ -38,14 +38,14 @@ const useStyles = makeStyles((theme: Theme) => ({
     },
   },
   subheader: {
-  //  ...theme.custom.heading6,
+    ...theme.custom.heading6,
   },
   empty: {
     textAlign: "center",
     color: "gray",
   },
   back: {
- //   ...theme.custom.label,
+    ...theme.custom.label,
     color: "white",
     marginLeft: 13,
   },
@@ -131,13 +131,9 @@ export default function AccountView({
                 }}
               >
                 <CustomTabs
-                  tabs={searchTabs(
-                    (searchText) =>
-                      {
-                        handleSearch(searchText)(history, state?.accounts)
-                      },
-                    id
-                  )}
+                  tabs={searchTabs((searchText) => {
+                    handleSearch(searchText)(history, state?.accounts);
+                  }, id)}
                 />
               </div>
             </Subheader>

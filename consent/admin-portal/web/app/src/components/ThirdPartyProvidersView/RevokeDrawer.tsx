@@ -13,8 +13,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     "&:first-of-type": {
       marginRight: 16,
     },
-    textTransform: "none",
-  //  ...theme.custom.button,
+    ...theme.custom.button,
     color: "#626576",
     "&:disabled": {
       backgroundColor: "#626576 !important",
@@ -23,7 +22,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   alertRoot: {
     backgroundColor: "#FFE3E6",
     border: "1px solid rgba(189, 39, 30, 0.3)",
-   // ...theme.custom.body2,
+    ...theme.custom.body2,
   },
   alertIcon: {
     position: "relative",

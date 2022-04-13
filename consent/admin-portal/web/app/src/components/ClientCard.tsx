@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: "#ECECEC",
   },
   date: {
-  //  ...theme.custom.caption,
+    ...theme.custom.caption,
   },
   cardName: {
     display: "flex",
@@ -39,7 +39,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     borderRadius: 4,
   },
   name: {
-   // ...theme.custom.heading3,
+    ...theme.custom.heading3,
   },
   buttonRoot: {
     ...theme.custom.body2,
@@ -57,11 +57,13 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 function getAuthorisedDate(client) {
-  const accountAccessConsent = client?.consents?.find(
-    (v) => {
-      return v.consent_type === "account_access" || v.consent_type === "cdr_arrangement" || v.consent_type === "consents"
-    }
-  );
+  const accountAccessConsent = client?.consents?.find((v) => {
+    return (
+      v.consent_type === "account_access" ||
+      v.consent_type === "cdr_arrangement" ||
+      v.consent_type === "consents"
+    );
+  });
   if (accountAccessConsent) {
     const date = accountAccessConsent?.created_at;
     return getDate(date);
