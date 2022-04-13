@@ -101,11 +101,24 @@ pipeline {
                 }
             }
         }
-        stage('OBBR Tests') {
+        stage('OBBR Tests with disabled MFA') {
             steps {
                 script {
                     try {
-                        sh 'make run-obbr-local'
+                        sh 'make disable-mfa run-obbr-local'
+                        sh 'make run-obbr-tests-headless'
+                        sh 'make clean'
+                    } catch(exc) {
+                        failure('Tests failed')
+                    }
+                }
+            }
+        }
+        stage('OBBR Tests with enabled MFA') {
+            steps {
+                script {
+                    try {
+                        sh 'make enable-mfa run-obbr-local'
                         sh 'make run-obbr-tests-headless'
                         sh 'make clean'
                     } catch(exc) {
