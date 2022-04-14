@@ -11,7 +11,7 @@ import { banks } from "../banks";
 
 const useStyles = makeStyles((theme) => ({
   title: {
-    //TODO:    ...theme.custom.heading6,
+    ...theme.custom.heading6,
   },
   chip: {
     backgroundColor: theme.palette.primary.main,
