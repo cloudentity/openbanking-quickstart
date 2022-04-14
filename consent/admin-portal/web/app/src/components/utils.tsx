@@ -309,7 +309,8 @@ export function getStatus(client: ClientType) {
   const found = client?.consents?.find(
     (consent) =>
       consent &&
-      consent.consent_type === "account_access" &&
+      (consent.consent_type === "account_access" ||
+        consent.consent_type === "cdr_arrangement") &&
       consent.status === "Authorised"
   );
   return found ? ConsentStatus.Active : ConsentStatus.Inactive;
