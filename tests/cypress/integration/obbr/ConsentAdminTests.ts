@@ -62,6 +62,7 @@ describe(`Consent admin app`, () => {
 
   it(`Cancel first ACP login`, () => {
     acpLoginPage.cancel();
+    // UI error page improvements AUT-5845
     errorPage.assertError(`The user rejected the authentication`);
   });
 });

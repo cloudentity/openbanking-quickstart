@@ -3,6 +3,7 @@ import {ConsentPage} from '../../pages/consent/ConsentPage';
 import {Credentials} from "../../pages/Credentials";
 import {ConsentAdminPage} from '../../pages/consent-admin/ConsentAdminPage';
 import { MockDataRecipientPage } from '../../pages/mock-data-recipient/MockDataRecipientPage';
+import {Urls} from "../../pages/Urls";
 
 describe(`Consent admin portal CDR`, () => {
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
@@ -23,9 +24,13 @@ describe(`Consent admin portal CDR`, () => {
     mockDataRecipientPage.clickConstructAuthorisationURI()
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
     consentPage.confirm()
+    consentPage.assertThatPageIsNotVisible()
+    // verify data recipient mock consent callback page - UI error page improvemnts AUT-5845
   })
 
   it(`Happy path with revoking consent from Consent management page`, () => {
+    consentAdminPage.visit(true)
+    Urls.clearLocalStorage()
     consentAdminPage.visit(true)
     consentAdminPage.login()
   
@@ -51,7 +56,11 @@ describe(`Consent admin portal CDR`, () => {
     mockDataRecipientPage.clickConstructAuthorisationURI()
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
     consentPage.confirm()
+    consentPage.assertThatPageIsNotVisible()
+    // verify data recipient mock consent callback page - UI error page improvements AUT-5845
 
+    consentAdminPage.visit(true)
+    Urls.clearLocalStorage()
     consentAdminPage.visit(true)
     consentAdminPage.login()
 

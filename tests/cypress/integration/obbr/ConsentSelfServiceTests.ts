@@ -52,7 +52,7 @@ describe(`Consent self service app`, () => {
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
     consentSelfServicePage.clickOnApplicationCard()
     consentSelfServiceApplicationPage.expandAccountsTab()
-    consentSelfServiceApplicationPage.checkAccount("94088392") // TODO: 
+    consentSelfServiceApplicationPage.checkAccount("94088392")
     consentSelfServiceApplicationPage.expandAccountConsentRow()
   })
 
@@ -68,6 +68,7 @@ describe(`Consent self service app`, () => {
 
   it(`Cancel ACP login`, () => {
     acpLoginPage.cancel();
+    // UI error page improvements AUT-5845
     errorPage.assertError("The user rejected the authentication")
   })
 

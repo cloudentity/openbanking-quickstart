@@ -68,6 +68,7 @@ describe(`Financroo payments app test`, () => {
       mfaPage.typePin()
     }
     consentPage.cancel()
+    // UI error page improvements AUT-5845
     errorPage.assertError(`acp returned an error: rejected:`)
   })
 
@@ -78,6 +79,7 @@ describe(`Financroo payments app test`, () => {
     financrooInvestmentsPage.invest()
     financrooContributePage.contribute(amount + 2)
     acpLoginPage.cancel()
+    // UI error page improvements AUT-5845
     errorPage.assertError(`The user rejected the authentication`)
   })
 

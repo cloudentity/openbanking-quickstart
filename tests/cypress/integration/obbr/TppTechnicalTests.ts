@@ -30,7 +30,9 @@ describe(`Tpp technical app`, () => {
   });
 
     [
-       [accountsReadPermission, accountsOverdraftLimitsReadPermission, resourcesReadPermission]      // [] // todo add better error handling in the app
+        [accountsReadPermission, accountsOverdraftLimitsReadPermission, resourcesReadPermission],
+        // [accountsReadPermission, resourcesReadPermission], (example) 1 or 2 permissions selected - UI error page improvements AUT-5845
+        []  // none permissions selected - UI error page improvements AUT-5845
     ].forEach(permissions => {
       it(`Happy path with permissions: ${permissions}`, () => {
         tppLoginPage.checkAccountsReadPermission(permissions.includes(accountsReadPermission))
@@ -38,7 +40,7 @@ describe(`Tpp technical app`, () => {
         tppLoginPage.checkResourcesReadPermission(permissions.includes(resourcesReadPermission))
         tppLoginPage.next();
         if (!permissions.includes(accountsReadPermission) || !permissions.includes(accountsOverdraftLimitsReadPermission) || !permissions.includes(resourcesReadPermission)) {
-          errorPage.assertError(`failed to register account access consent`)
+          errorPage.assertError(`failed to register consent`)
           return 
         } 
         tppIntentPage.login();
@@ -46,21 +48,20 @@ describe(`Tpp technical app`, () => {
         if (environmentVariables.isMfaEnabled()) {
           mfaPage.typePin()
         }
-        // TODO: consent page needs work with obbr permissions 
-        //consentPage.expandPermissions()
-        //consentPage.assertPermissions(permissions.length)
+        consentPage.expandPermissions()
+        consentPage.assertPermissionsDetails(
+          "Purpose for sharing data",
+          "To uncover insights that can improve your financial well being.")
         consentPage.confirm();
         tppAuthenticatedPage.assertSuccess()
       })
     });
 
-
- 
-
   it(`Cancel on ACP login`, () => {
      tppLoginPage.next();
      tppIntentPage.login();
      acpLoginPage.cancel();
+     // UI error page improvements AUT-5845
      errorPage.assertError(`The user rejected the authentication`)
   })
 
@@ -72,6 +73,7 @@ describe(`Tpp technical app`, () => {
        mfaPage.typePin()
      }
      consentPage.cancel()
+     // UI error page improvements AUT-5845
      errorPage.assertError(`rejected`)
   })
 
