@@ -306,11 +306,11 @@ export const currencyDict = {
 };
 
 export function getStatus(client: ClientType) {
+  const accountConsents = ["account_access", "consents", "cdr_arrangement"];
   const found = client?.consents?.find(
     (consent) =>
       consent &&
-      (consent.consent_type === "account_access" ||
-        consent.consent_type === "cdr_arrangement") &&
+      accountConsents.includes(consent.consent_type) &&
       consent.status === "Authorised"
   );
   return found ? ConsentStatus.Active : ConsentStatus.Inactive;
