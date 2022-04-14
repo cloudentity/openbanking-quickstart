@@ -23,7 +23,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: "#006580",
   },
   signOutButton: {
- //   ...theme.custom.button,
     color: "#DC1B37",
   },
   appBar: {
@@ -120,10 +119,7 @@ export default function PageToolbar({
             />
           </Tabs>
         </div>
-        <Button
-          className={classes.signOutButton}
-          onClick={logout}
-        >
+        <Button className={classes.signOutButton} onClick={logout}>
           <ExitToAppIcon style={{ marginRight: 10 }} />
           Sign out
         </Button>
