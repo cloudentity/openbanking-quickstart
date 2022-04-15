@@ -21,11 +21,11 @@ describe(`Consent admin portal CDR`, () => {
     mockDataRecipientPage.visitConsentAndAuthorisationTab() 
     mockDataRecipientPage.selectClientRegistration(1)
     mockDataRecipientPage.inputSharingDuration(1000000)
-    mockDataRecipientPage.clickConstructAuthorisationURI()
+    // mockDataRecipientPage.clickConstructAuthorisationURI()
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
     consentPage.confirm()
     consentPage.assertThatPageIsNotVisible()
-    // verify data recipient mock consent callback page - UI error page improvemnts AUT-5845
+    // verify data recipient mock consent callback page - UI error page improvements AUT-5845
   })
 
   it(`Happy path with revoking consent from Consent management page`, () => {
