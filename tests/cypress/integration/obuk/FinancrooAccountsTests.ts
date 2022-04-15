@@ -53,6 +53,7 @@ describe(`Financroo app`, () => {
   it(`Cancel on ACP login`, () => {
     financrooWelcomePage.connectGoBank()
     acpLoginPage.cancel()
+    // UI error page improvements AUT-5845
     errorPage.assertError(`The user rejected the authentication`)
   })
 
@@ -63,6 +64,7 @@ describe(`Financroo app`, () => {
       mfaPage.typePin()
     }
     consentPage.cancel()
+    // UI error page improvements AUT-5845
     errorPage.assertError(`rejected`)
   })
 

@@ -1,20 +1,18 @@
-import { TppIntentPage } from "../../pages/tpp/TppIntentPage";
-import { TppLoginPage } from "../../pages/tpp/TppLoginPage";
-import { AcpLoginPage } from "../../pages/acp/AcpLoginPage";
-import { ConsentPage } from "../../pages/consent/ConsentPage";
-import { ErrorPage } from "../../pages/ErrorPage";
-import { Credentials } from "../../pages/Credentials";
-import { ConsentAdminPage } from "../../pages/consent-admin/ConsentAdminPage";
-import { Urls } from "../../pages/Urls";
-import { MfaPage } from "../../pages/mfa/MfaPage";
-import { EnvironmentVariables } from "../../pages/EnvironmentVariables";
+import { TppIntentPage } from "../../../pages/tpp/TppIntentPage";
+import { TppLoginPage } from "../../../pages/tpp/TppLoginPage";
+import { AcpLoginPage } from "../../../pages/acp/AcpLoginPage";
+import { ConsentPage } from "../../../pages/consent/ConsentPage";
+import { Credentials } from "../../../pages/Credentials";
+import { ConsentAdminPage } from "../../../pages/consent-admin/ConsentAdminPage";
+import { Urls } from "../../../pages/Urls";
+import { MfaPage } from "../../../pages/mfa/MfaPage";
+import { EnvironmentVariables } from "../../../pages/EnvironmentVariables";
 
 describe(`Consent admin app`, () => {
   const tppIntentPage: TppIntentPage = new TppIntentPage();
   const tppLoginPage: TppLoginPage = new TppLoginPage();
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
   const consentPage: ConsentPage = new ConsentPage();
-  const errorPage: ErrorPage = new ErrorPage();
   const consentAdminPage: ConsentAdminPage = new ConsentAdminPage();
   const mfaPage: MfaPage = new MfaPage();
   const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
@@ -60,9 +58,4 @@ describe(`Consent admin app`, () => {
     consentAdminPage.assertClientAccountWithStatus("Financroo", "Inactive");
   })
 
-  it(`Cancel first ACP login`, () => {
-    acpLoginPage.cancel();
-    // UI error page improvements AUT-5845
-    errorPage.assertError(`The user rejected the authentication`);
-  });
 });

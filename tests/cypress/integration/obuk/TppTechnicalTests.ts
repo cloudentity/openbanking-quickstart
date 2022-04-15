@@ -29,12 +29,11 @@ describe(`Tpp technical app`, () => {
     tppLoginPage.visit();
   });
 
-
     [
       [basicPermission, detailPermission],
       [basicPermission],
-      [detailPermission]
-      // [] // todo add better error handling in the app
+      [detailPermission],
+      []  // none permissions selected - UI error page improvements AUT-5845
     ].forEach(permissions => {
       it(`Happy path with permissions: ${permissions}`, () => {
         tppLoginPage.checkBasicPermission(permissions.includes(basicPermission))
@@ -52,6 +51,7 @@ describe(`Tpp technical app`, () => {
           consentPage.assertPermissions(permissions.length)
           consentPage.confirm();
           if (!permissions.includes(basicPermission) && permissions.includes(detailPermission)) {
+            // ReadAccountsDetail permission selected - UI error page improvements AUT-5845
             errorPage.assertError(`failed to call bank get accounts`)
           } else {
             tppAuthenticatedPage.assertSuccess()
@@ -60,28 +60,24 @@ describe(`Tpp technical app`, () => {
       })
     });
 
- 
-
   it(`Cancel on ACP login`, () => {
-    // FIXME restore when this fix has been made
-    // https://github.com/cloudentity/openbanking-quickstart/pull/108
-    // tppLoginPage.next();
-    // tppIntentPage.login();
-    // acpLoginPage.cancel();
-    // errorPage.assertError(`The user rejected the authentication`)
+    tppLoginPage.next();
+    tppIntentPage.login();
+    acpLoginPage.cancel();
+    // UI error page improvements AUT-5845
+    errorPage.assertError(`The user rejected the authentication`)
   })
 
   it(`Cancel on consent`, () => {
-    // FIXME restore when this fix has been made
-    // https://github.com/cloudentity/openbanking-quickstart/pull/108
-    // tppLoginPage.next();
-    // tppIntentPage.login();
-    // acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    // if (environmentVariables.isMfaEnabled()) {
-    //   mfaPage.typePin()
-    // }
-    // consentPage.cancel()
-    // errorPage.assertError(`rejected`)
+    tppLoginPage.next();
+    tppIntentPage.login();
+    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    if (environmentVariables.isMfaEnabled()) {
+      mfaPage.typePin()
+    }
+    consentPage.cancel()
+    // UI error page improvements AUT-5845
+    errorPage.assertError(`rejected`)
   })
 
 })

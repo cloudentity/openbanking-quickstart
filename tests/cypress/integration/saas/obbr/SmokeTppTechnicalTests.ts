@@ -1,13 +1,13 @@
-import {TppAuthenticatedPage} from '../../pages/tpp/TppAuthenticatedPage';
-import {TppIntentPage} from '../../pages/tpp/TppIntentPage';
-import {TppLoginPage} from '../../pages/tpp/TppLoginPage';
-import {AcpLoginPage} from '../../pages/acp/AcpLoginPage';
-import {ConsentPage} from '../../pages/consent/ConsentPage';
-import {ErrorPage} from '../../pages/ErrorPage';
-import {Credentials} from "../../pages/Credentials";
-import {Urls} from "../../pages/Urls";
-import {MfaPage} from "../../pages/mfa/MfaPage";
-import {EnvironmentVariables} from "../../pages/EnvironmentVariables"
+import {TppAuthenticatedPage} from '../../../pages/tpp/TppAuthenticatedPage';
+import {TppIntentPage} from '../../../pages/tpp/TppIntentPage';
+import {TppLoginPage} from '../../../pages/tpp/TppLoginPage';
+import {AcpLoginPage} from '../../../pages/acp/AcpLoginPage';
+import {ConsentPage} from '../../../pages/consent/ConsentPage';
+import {ErrorPage} from '../../../pages/ErrorPage';
+import {Credentials} from "../../../pages/Credentials";
+import {Urls} from "../../../pages/Urls";
+import {MfaPage} from "../../../pages/mfa/MfaPage";
+import {EnvironmentVariables} from "../../../pages/EnvironmentVariables"
 
 describe(`Tpp technical app`, () => {
   const tppAuthenticatedPage: TppAuthenticatedPage = new TppAuthenticatedPage();
@@ -56,25 +56,5 @@ describe(`Tpp technical app`, () => {
         tppAuthenticatedPage.assertSuccess()
       })
     });
-
-  it(`Cancel on ACP login`, () => {
-     tppLoginPage.next();
-     tppIntentPage.login();
-     acpLoginPage.cancel();
-     // UI error page improvements AUT-5845
-     errorPage.assertError(`The user rejected the authentication`)
-  })
-
-  it(`Cancel on consent`, () => {
-     tppLoginPage.next();
-     tppIntentPage.login();
-     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-     if (environmentVariables.isMfaEnabled()) {
-       mfaPage.typePin()
-     }
-     consentPage.cancel()
-     // UI error page improvements AUT-5845
-     errorPage.assertError(`rejected`)
-  })
 
 })

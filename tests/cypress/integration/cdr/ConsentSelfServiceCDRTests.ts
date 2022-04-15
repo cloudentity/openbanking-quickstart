@@ -24,6 +24,8 @@ describe(`Consent self service app CDR`, () => {
     mockDataRecipientPage.clickConstructAuthorisationURI()
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
     consentPage.confirm()
+    consentPage.assertThatPageIsNotVisible()
+    // verify data recipient mock consent callback page - UI error page improvements AUT-5845
   })
 
   beforeEach(() => {

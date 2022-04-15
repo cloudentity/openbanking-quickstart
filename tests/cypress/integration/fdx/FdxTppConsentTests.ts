@@ -106,6 +106,7 @@ describe(`FDX Tpp consent app`, () => {
     consentPage.checkAccounts([digitalBankingAccountId]);
     consentPage.cancel();
 
+    // UI error page improvements AUT-5845
     errorPage.assertError(`acp returned an error: rejected: `);
   })
 
@@ -119,6 +120,7 @@ describe(`FDX Tpp consent app`, () => {
     fdxTppIntentRegisteredPage.clickLogin();
 
     acpLoginPage.cancel();
+    // UI error page improvements AUT-5845
     errorPage.assertError(`The user rejected the authentication`);
   })
 });

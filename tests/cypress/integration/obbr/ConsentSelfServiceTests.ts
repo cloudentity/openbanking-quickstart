@@ -8,8 +8,6 @@ import {MfaPage} from "../../pages/mfa/MfaPage";
 import {FinancrooLoginPage} from "../../pages/financroo/FinancrooLoginPage";
 import {FinancrooWelcomePage} from "../../pages/financroo/FinancrooWelcomePage";
 import {FinancrooAccountsPage} from "../../pages/financroo/accounts/FinancrooAccountsPage";
-import {FinancrooInvestmentsPage} from "../../pages/financroo/investments/FinancrooInvestmentsPage";
-import {FinancrooContributePage} from "../../pages/financroo/investments/FinancrooContributePage";
 import {ConsentSelfServiceApplicationPage} from "../../pages/consent-self-service/ConsentSelfServiceApplicationPage";
 import {EnvironmentVariables} from "../../pages/EnvironmentVariables"
 import { FinancrooModalPage } from '../../pages/financroo/accounts/FinancrooModalPage';
@@ -26,8 +24,6 @@ describe(`Consent self service app`, () => {
   const financrooWelcomePage: FinancrooWelcomePage = new FinancrooWelcomePage();
   const financrooModalPage: FinancrooModalPage = new FinancrooModalPage();
   const financrooAccountsPage: FinancrooAccountsPage = new FinancrooAccountsPage();
-  const financrooInvestmentsPage: FinancrooInvestmentsPage = new FinancrooInvestmentsPage();
-  const financrooContributePage: FinancrooContributePage = new FinancrooContributePage();
   const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
 
   before(() => {
@@ -56,7 +52,7 @@ describe(`Consent self service app`, () => {
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
     consentSelfServicePage.clickOnApplicationCard()
     consentSelfServiceApplicationPage.expandAccountsTab()
-    consentSelfServiceApplicationPage.checkAccount("94088392") // TODO: 
+    consentSelfServiceApplicationPage.checkAccount("94088392")
     consentSelfServiceApplicationPage.expandAccountConsentRow()
   })
 
@@ -72,6 +68,7 @@ describe(`Consent self service app`, () => {
 
   it(`Cancel ACP login`, () => {
     acpLoginPage.cancel();
+    // UI error page improvements AUT-5845
     errorPage.assertError("The user rejected the authentication")
   })
 
