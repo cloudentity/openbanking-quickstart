@@ -21,7 +21,7 @@ describe(`Consent admin portal CDR`, () => {
     mockDataRecipientPage.visitConsentAndAuthorisationTab() 
     mockDataRecipientPage.selectClientRegistration(1)
     mockDataRecipientPage.inputSharingDuration(1000000)
-    // mockDataRecipientPage.clickConstructAuthorisationURI()
+    mockDataRecipientPage.clickConstructAuthorisationURI()
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
     consentPage.confirm()
     consentPage.assertThatPageIsNotVisible()
