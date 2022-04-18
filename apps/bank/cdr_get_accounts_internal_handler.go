@@ -39,8 +39,9 @@ func (h *CDRGetAccountsInternalHandler) Filter(c *gin.Context, data BankUserData
 	return data
 }
 
-func CDRMapError(c *gin.Context, err *Error) (int, interface{}) {
-	return 0, nil
+func CDRMapError(c *gin.Context, err *Error) (code int, resp interface{}) {
+	code, resp = 400, nil
+	return
 }
 
 func NewCDRAccountsResponse(accounts []cdrAccountModels.BankingAccount) interface{} {
