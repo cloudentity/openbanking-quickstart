@@ -52,6 +52,72 @@ idps:
   id: bugkgai3g9kregtu04u0
   name: Sandbox IDP
   method: static
+  attributes:
+  - name: name
+    description: Name
+    type: string
+    labels:
+  - name: given_name
+    description: Given name
+    type: string
+    labels:
+  - name: family_name
+    description: Family name
+    type: string
+    labels:
+  - name: email
+    description: Email
+    type: string
+    labels:
+  - name: email_verified
+    description: Email verified
+    type: bool
+    labels:
+  - name: phone_number
+    description: Phone number
+    type: string
+    labels:
+  - name: phone_number_verified
+    description: Phone number verified
+    type: bool
+    labels:
+  - name: customer_id
+    description: customer_id
+    type: string
+    labels:
+  mappings:
+  - source: name
+    target: name
+    type: string
+    allow_weak_decoding: false
+  - source: given_name
+    target: given_name
+    type: string
+    allow_weak_decoding: false
+  - source: family_name
+    target: family_name
+    type: string
+    allow_weak_decoding: false
+  - source: email
+    target: email
+    type: string
+    allow_weak_decoding: false
+  - source: email_verified
+    target: email_verified
+    type: bool
+    allow_weak_decoding: false
+  - source: phone_number
+    target: phone_number
+    type: string
+    allow_weak_decoding: false
+  - source: phone_number_verified
+    target: phone_number_verified
+    type: bool
+    allow_weak_decoding: false
+  - source: customer_id
+    target: customer_id
+    type: string
+    allow_weak_decoding: false
   credentials:
     static:
       users:
@@ -60,6 +126,7 @@ idps:
         authentication_context:
           name: user
           mobile_verified: "+48123456789"
+          customer_id: "bfb689fb-7745-45b9-bbaa-b21e00072447"
       - username: user2
         password: p@ssw0rd!
         authentication_context:

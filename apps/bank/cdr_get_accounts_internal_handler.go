@@ -50,7 +50,8 @@ func NewCDRAccountsResponse(accounts []cdrAccountModels.BankingAccount) interfac
 		},
 	}
 	for _, account := range accounts {
-		resp.Data.Accounts = append(resp.Data.Accounts, &account)
+		acc := account
+		resp.Data.Accounts = append(resp.Data.Accounts, &acc)
 	}
 	return resp
 }
