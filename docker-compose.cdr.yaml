@@ -77,7 +77,7 @@ services:
       - GIN_MODE=debug # change to release to disable gin debug
       - OTP_MODE=mock # change to custom to enable custom OTP handling
       - MFA_CLAIM=sub # for mobile use mobile_verified
-      
+      - BANK_ID_CLAIM=customer_id
       - BANK_URL=http://bank:8070
       - BANK_CLIENT_TOKEN_URL=${ACP_URL}/${TENANT}/cdr/oauth2/token
       - BANK_CLIENT_ID=cw1ocudfotn6edhsiv8h 
