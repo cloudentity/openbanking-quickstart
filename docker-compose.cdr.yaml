@@ -135,6 +135,25 @@ services:
       configuration:
         condition: service_completed_successfully
 
+  bank:
+    image: cloudentity/openbanking-quickstart-bank:${VERSION}
+    container_name: bank
+    restart: always
+    ports:
+      - "8070:8070"
+    volumes:
+      - ./data/ca.pem:/ca.pem
+      - ./data/bank_cert.pem:/bank_cert.pem
+      - ./data/bank_key.pem:/bank_key.pem
+      - ./mount/bank-cdr:/app/data
+    environment:
+      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/cdr
+      - SPEC=cdr
+      - GIN_MODE=debug
+    depends_on:
+      configuration:
+        condition: service_completed_successfully
+
   configuration:
     container_name: configuration
     image: cloudentity/openbanking-quickstart-configuration:latest
@@ -161,3 +180,4 @@ services:
       - --variables-file
       - /variables.yaml
       - --verbose  
+

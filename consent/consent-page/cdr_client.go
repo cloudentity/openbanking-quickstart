@@ -12,6 +12,7 @@ import (
 	"os"
 	"strings"
 
+	"github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/models"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 	"golang.org/x/oauth2"
@@ -106,20 +107,10 @@ func (c *CDRBankClient) GetInternalAccounts(id string) (InternalAccounts, error)
 	return c.accountsResponseToInternalAccounts(response)
 }
 
-type CDRInternalAccountsResponse struct {
-	Accounts []CDRInternalAccount
-}
-
-type CDRInternalAccount struct {
-	AccountID    string `json:"account_id"`
-	Displayname  string `json:"display_name"`
-	AccountAlias string `json:"account_alias"`
-}
-
 func (c *CDRBankClient) accountsResponseToInternalAccounts(response *http.Response) (accounts InternalAccounts, err error) {
 	var (
-		responseBytes               []byte
-		cdrInternalAccountsResponse CDRInternalAccountsResponse
+		responseBytes       []byte
+		accountListResponse models.ResponseBankingAccountList
 	)
 	defer response.Body.Close()
 
@@ -127,21 +118,20 @@ func (c *CDRBankClient) accountsResponseToInternalAccounts(response *http.Respon
 		return accounts, err
 	}
 
-	if err = json.Unmarshal(responseBytes, &cdrInternalAccountsResponse); err != nil {
+	if err = json.Unmarshal(responseBytes, &accountListResponse); err != nil {
 		return accounts, err
 	}
 
-	for _, acc := range cdrInternalAccountsResponse.Accounts {
+	for _, acc := range accountListResponse.Data.Accounts {
 		accounts.Accounts = append(accounts.Accounts, InternalAccount{
-			ID:   acc.AccountID,
-			Name: acc.AccountAlias,
+			ID:   *acc.AccountID,
+			Name: acc.Nickname,
 		})
 	}
 
 	return accounts, nil
 }
 
-// TODO: mock data holder cdr app doesn't even have this data yet
 func (c *CDRBankClient) GetInternalBalances(id string) (BalanceResponse, error) {
 	return BalanceResponse{}, nil
 }
