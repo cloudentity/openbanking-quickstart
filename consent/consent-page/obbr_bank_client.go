@@ -20,7 +20,7 @@ func NewOBBRBankClient(config Config) *OBBRBankClient {
 	c := OBBRBankClient{}
 
 	c.Client = &http.Client{}
-	c.baseURL = config.BankURL.String()
+	c.baseURL = config.BankClientConfig.URL.String()
 
 	return &c
 }

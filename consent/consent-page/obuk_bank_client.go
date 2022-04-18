@@ -20,7 +20,7 @@ func NewOBUKBankClient(config Config) *OBUKBankClient {
 	c := OBUKBankClient{}
 
 	c.Client = &http.Client{}
-	c.baseURL = config.BankURL.String()
+	c.baseURL = config.BankClientConfig.URL.String()
 
 	return &c
 }
