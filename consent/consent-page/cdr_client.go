@@ -1,17 +1,76 @@
 package main
 
-type CDREnergyClient struct {
+import (
+	"context"
+	"crypto/tls"
+	"crypto/x509"
+	"net/http"
+	"os"
+
+	"github.com/sirupsen/logrus"
+	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/clientcredentials"
+)
+
+type CDRBankClient struct {
+	httpClient *http.Client
+	cc         clientcredentials.Config
 }
 
-var _ BankClient = &CDREnergyClient{}
+func NewCDRBankClient(config Config) *CDRBankClient {
+	var (
+		pool  *x509.CertPool
+		cert  tls.Certificate
+		certs = []tls.Certificate{}
+		data  []byte
+		err   error
+	)
 
-func NewCDREnergyClient(config Config) *CDREnergyClient {
-	c := CDREnergyClient{}
-	return &c
+	if cert, err = tls.LoadX509KeyPair(config.BankClientConfig.CertFile, config.BankClientConfig.KeyFile); err != nil {
+		logrus.Fatalf("failed to read certificate and private key %v", err)
+	}
+	certs = append(certs, cert)
+
+	if pool, err = x509.SystemCertPool(); err != nil {
+		logrus.Fatalf("failed to read system root CAs %v", err)
+	}
+
+	if data, err = os.ReadFile(config.RootCA); err != nil {
+		logrus.Fatalf("failed to read http client root ca: %v", err)
+	}
+	pool.AppendCertsFromPEM(data)
+
+	return &CDRBankClient{
+		httpClient: &http.Client{
+			Transport: &http.Transport{
+				Proxy: http.ProxyFromEnvironment,
+				TLSClientConfig: &tls.Config{
+					RootCAs:      pool,
+					MinVersion:   tls.VersionTLS12,
+					Certificates: certs,
+				},
+			},
+		},
+		cc: clientcredentials.Config{
+			ClientID:     config.BankClientConfig.ClientID,
+			ClientSecret: config.BankClientConfig.ClientSecret,
+			TokenURL:     config.BankClientConfig.TokenURL,
+			Scopes:       config.BankClientConfig.Scopes,
+		},
+	}
 }
 
 // TODO: expose endpoint on mock data holder instead of redundant hardcoded mocking in every application
-func (c *CDREnergyClient) GetInternalAccounts(id string) (InternalAccounts, error) {
+// TODO: this id will be customer id and will be passed in request body
+func (c *CDRBankClient) GetInternalAccounts(id string) (InternalAccounts, error) {
+	// test token retrieval
+	token, err := c.cc.Token(context.WithValue(context.Background(), oauth2.HTTPClient, c.httpClient))
+	if err != nil {
+		logrus.Infof("error retrieving cc token %v", err)
+	} else {
+		logrus.Infof("retrieved cc token with no errors %+v", token)
+	}
+
 	if id == "user" {
 		return InternalAccounts{
 			Accounts: []InternalAccount{
@@ -81,6 +140,6 @@ func (c *CDREnergyClient) GetInternalAccounts(id string) (InternalAccounts, erro
 }
 
 // TODO: mock data holder cdr app doesn't even have this data yet
-func (c *CDREnergyClient) GetInternalBalances(id string) (BalanceResponse, error) {
+func (c *CDRBankClient) GetInternalBalances(id string) (BalanceResponse, error) {
 	return BalanceResponse{}, nil
 }
