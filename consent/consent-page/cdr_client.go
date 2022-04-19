@@ -34,6 +34,19 @@ func NewCDRBankClient(config Config) *CDRBankClient {
 		err   error
 	)
 
+	if config.BankClientConfig.CertFile == "" && config.BankClientConfig.KeyFile == "" {
+		return &CDRBankClient{
+			httpClient: http.DefaultClient,
+			cc: clientcredentials.Config{
+				ClientID:     config.BankClientConfig.ClientID,
+				ClientSecret: config.BankClientConfig.ClientSecret,
+				TokenURL:     config.BankClientConfig.TokenURL,
+				Scopes:       config.BankClientConfig.Scopes,
+			},
+			bankURL: config.BankClientConfig.URL.String(),
+		}
+	}
+
 	if cert, err = tls.LoadX509KeyPair(config.BankClientConfig.CertFile, config.BankClientConfig.KeyFile); err != nil {
 		logrus.Fatalf("failed to read certificate and private key %v", err)
 	}
@@ -53,7 +66,6 @@ func NewCDRBankClient(config Config) *CDRBankClient {
 			Transport: &http.Transport{
 				Proxy: http.ProxyFromEnvironment,
 				TLSClientConfig: &tls.Config{
-					RootCAs:      pool,
 					MinVersion:   tls.VersionTLS12,
 					Certificates: certs,
 				},
