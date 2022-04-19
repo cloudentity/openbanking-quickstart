@@ -66,6 +66,7 @@ func NewCDRBankClient(config Config) *CDRBankClient {
 			Transport: &http.Transport{
 				Proxy: http.ProxyFromEnvironment,
 				TLSClientConfig: &tls.Config{
+					RootCAs:      pool,
 					MinVersion:   tls.VersionTLS12,
 					Certificates: certs,
 				},
