@@ -2,19 +2,19 @@ pipeline {
     agent {
         label 'openbanking'
     }
-    environment {
-        VERIFY_TEST_RUNNER_TIMEOUT_MS = 80000
-        SAAS_TENANT_ID = 'amfudxn6-qa-us-east-1-ob-quickstart'
-        SAAS_CLIENT_ID = credentials('OPENBANKING_CONFIGURATION_CLIENT_ID')
-        SAAS_CLIENT_SECRET = credentials('OPENBANKING_CONFIGURATION_CLIENT_SECRET')
-        SAAS_CLEANUP_CLIENT_ID = credentials('OPENBANKING_CLEANUP_CLIENT_ID')
-        SAAS_CLEANUP_CLIENT_SECRET = credentials('OPENBANKING_CLEANUP_CLIENT_SECRET')
-        DEBUG = 'true'
-    }
     options {
         timeout(time: 1, unit: 'HOURS')
     }
     stages {
+        environment {
+            VERIFY_TEST_RUNNER_TIMEOUT_MS = 80000
+            SAAS_TENANT_ID = 'amfudxn6-qa-us-east-1-ob-quickstart'
+            SAAS_CLIENT_ID = credentials('OPENBANKING_CONFIGURATION_CLIENT_ID')
+            SAAS_CLIENT_SECRET = credentials('OPENBANKING_CONFIGURATION_CLIENT_SECRET')
+            SAAS_CLEANUP_CLIENT_ID = credentials('OPENBANKING_CLEANUP_CLIENT_ID')
+            SAAS_CLEANUP_CLIENT_SECRET = credentials('OPENBANKING_CLEANUP_CLIENT_SECRET')
+            DEBUG = 'true'
+        }
         stage('Prepare') {
             steps {
                  sh '''#!/bin/bash
@@ -42,9 +42,10 @@ pipeline {
                         retry(3) {
                             sh 'make run-cdr-tests-headless'
                         }
-                        sh 'make clean'
                     } catch(exc) {
                         failure('Tests failed')
+                    } finally {
+                        sh 'make clean'
                     }
                 }
             }
@@ -55,9 +56,10 @@ pipeline {
                     try {
                         sh 'make disable-mfa run-fdx-local'
                         sh 'make run-fdx-tests-headless'
-                        sh 'make clean'
                     } catch(exc) {
                         failure('Tests failed')
+                    } finally {
+                        sh 'make clean'
                     }
                 }
             }
@@ -68,9 +70,10 @@ pipeline {
                     try {
                         sh 'make enable-mfa run-fdx-local'
                         sh 'make run-fdx-tests-headless'
-                        sh 'make clean'
                     } catch(exc) {
                         failure('Tests failed')
+                    } finally {
+                        sh 'make clean'
                     }
                 }
             }
@@ -81,9 +84,10 @@ pipeline {
                     try {
                         sh 'make disable-mfa run-obuk-local'
                         sh 'make run-obuk-tests-headless'
-                        sh 'make clean'
                     } catch(exc) {
                         failure('Tests failed')
+                    } finally {
+                        sh 'make clean'
                     }
                 }
             }
@@ -94,9 +98,10 @@ pipeline {
                     try {
                         sh 'make enable-mfa run-obuk-local'
                         sh 'make run-obuk-tests-headless'
-                        sh 'make clean'
                     } catch(exc) {
                         failure('Tests failed')
+                    } finally {
+                        sh 'make clean'
                     }
                 }
             }
@@ -120,9 +125,10 @@ pipeline {
                     try {
                         sh 'make enable-mfa run-obbr-local'
                         sh 'make run-obbr-tests-headless'
-                        sh 'make clean'
                     } catch(exc) {
                         failure('Tests failed')
+                    } finally {
+                        sh 'make clean'
                     }
                 }
             }
@@ -135,9 +141,10 @@ pipeline {
                         retry(3) {
                             sh 'make run-saas-fdx-tests-headless'
                         }
-                        sh 'make clean-fdx-saas'
                     } catch(exc) {
                         failure('Tests failed')
+                    } finally {
+                        sh 'make clean-fdx-saas'
                     }
                 }
             }
@@ -150,9 +157,10 @@ pipeline {
                         retry(3) {
                             sh 'make run-saas-obuk-tests-headless'
                         }
-                        sh 'make clean-obuk-saas'
                     } catch(exc) {
                         failure('Tests failed')
+                    } finally {
+                        sh 'make clean-obuk-saas'
                     }
                 }
             }
@@ -165,9 +173,10 @@ pipeline {
                         retry(3) {
                             sh 'make run-saas-obbr-tests-headless'
                         }
-                        sh 'make clean-obbr-saas'
                     } catch(exc) {
                         failure('Tests failed')
+                    } finally {
+                        sh 'make clean-obbr-saas'
                     }
                 }
             }
