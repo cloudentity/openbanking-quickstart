@@ -39,9 +39,7 @@ pipeline {
                 script {
                     try {
                         sh 'make run-cdr-local'
-                        retry(3) {
-                            sh 'make run-cdr-tests-headless'
-                        }
+                        sh 'make run-cdr-tests-headless'
                     } catch(exc) {
                         failure('Tests failed')
                     } finally {
@@ -138,9 +136,7 @@ pipeline {
                 script {
                     try {
                         sh 'make disable-mfa set-saas-configuration run-fdx-saas'
-                        retry(3) {
-                            sh 'make run-saas-fdx-tests-headless'
-                        }
+                        sh 'make run-saas-fdx-tests-headless'
                     } catch(exc) {
                         failure('Tests failed')
                     } finally {
@@ -154,9 +150,7 @@ pipeline {
                 script {
                     try {
                         sh 'make disable-mfa set-saas-configuration run-obuk-saas'
-                        retry(3) {
-                            sh 'make run-saas-obuk-tests-headless'
-                        }
+                        sh 'make run-saas-obuk-tests-headless'
                     } catch(exc) {
                         failure('Tests failed')
                     } finally {
@@ -170,9 +164,7 @@ pipeline {
                 script {
                     try {
                         sh 'make disable-mfa set-saas-configuration run-obbr-saas'
-                        retry(3) {
-                            sh 'make run-saas-obbr-tests-headless'
-                        }
+                        sh 'make run-saas-obbr-tests-headless'
                     } catch(exc) {
                         failure('Tests failed')
                     } finally {
