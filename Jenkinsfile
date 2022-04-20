@@ -5,16 +5,16 @@ pipeline {
     options {
         timeout(time: 1, unit: 'HOURS')
     }
+    environment {
+        VERIFY_TEST_RUNNER_TIMEOUT_MS = 80000
+        SAAS_TENANT_ID = 'amfudxn6-qa-us-east-1-ob-quickstart'
+        SAAS_CLIENT_ID = credentials('OPENBANKING_CONFIGURATION_CLIENT_ID')
+        SAAS_CLIENT_SECRET = credentials('OPENBANKING_CONFIGURATION_CLIENT_SECRET')
+        SAAS_CLEANUP_CLIENT_ID = credentials('OPENBANKING_CLEANUP_CLIENT_ID')
+        SAAS_CLEANUP_CLIENT_SECRET = credentials('OPENBANKING_CLEANUP_CLIENT_SECRET')
+        DEBUG = 'true'
+    }
     stages {
-        environment {
-            VERIFY_TEST_RUNNER_TIMEOUT_MS = 80000
-            SAAS_TENANT_ID = 'amfudxn6-qa-us-east-1-ob-quickstart'
-            SAAS_CLIENT_ID = credentials('OPENBANKING_CONFIGURATION_CLIENT_ID')
-            SAAS_CLIENT_SECRET = credentials('OPENBANKING_CONFIGURATION_CLIENT_SECRET')
-            SAAS_CLEANUP_CLIENT_ID = credentials('OPENBANKING_CLEANUP_CLIENT_ID')
-            SAAS_CLEANUP_CLIENT_SECRET = credentials('OPENBANKING_CLEANUP_CLIENT_SECRET')
-            DEBUG = 'true'
-        }
         stage('Prepare') {
             steps {
                  sh '''#!/bin/bash
