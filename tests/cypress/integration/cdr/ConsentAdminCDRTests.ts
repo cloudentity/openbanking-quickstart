@@ -37,7 +37,7 @@ describe(`Consent admin portal CDR`, () => {
     consentAdminPage.assertThatConsentManagementTabIsDisplayed()
     consentAdminPage.searchAccount("1000001");
     consentAdminPage.assertAccountResult("1000001");
-    consentAdminPage.assertClientAccountWithStatus("MyBudgetHelper", "Fake");
+    consentAdminPage.assertClientAccountWithStatus("MyBudgetHelper", "Active");
     consentAdminPage.manageAccount("MyBudgetHelper");
     consentAdminPage.assertConsentsDetails();
     consentAdminPage.revokeClientConsentByAccountName("MyBudgetHelper");
