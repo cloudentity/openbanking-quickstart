@@ -177,8 +177,26 @@ pipeline {
 
     post {
         failure {
-            sh 'docker-compose -f docker-compose.acp.local.yaml -f docker-compose.obuk.yaml -f docker-compose.obbr.yaml -f docker-compose.cdr.yaml logs > docker-compose.log; true'
-            archiveArtifacts(artifacts: 'docker-compose.log', allowEmptyArchive: true)
+            sh 'rm -rf logs'
+            sh 'mkdir logs'
+            sh '''#!/bin/bash
+                SERVICE_LIST=($(docker ps --format {{.Names}}))
+                echo "Service list is ${SERVICE_LIST[*]}"
+                for service in "${SERVICE_LIST[@]}"; do
+                # Skip null items
+                if [ -z "$service" ]; then
+                    continue
+                fi
+                echo "Service is $service"
+                if [[ $(docker ps | grep "$service" | wc -c) -ne 0 ]]; then
+                    docker logs "$service" >"logs"/"$service".log 2>&1
+                else
+                    echo "Service $service was not present"
+                fi
+                done
+            '''
+            sh 'tar -zcvf docker_logs.tar.gz logs'
+            archiveArtifacts(artifacts: 'docker_logs.tar.gz', allowEmptyArchive: true)
             sh 'make clean'
             archiveArtifacts(artifacts: 'tests/cypress/screenshots/**/*', allowEmptyArchive: true)
             archiveArtifacts(artifacts: 'tests/cypress/videos/**/*', allowEmptyArchive: true)
