@@ -43,6 +43,7 @@ pipeline {
                     } catch(exc) {
                         failure('Tests failed')
                     } finally {
+                        captureDockerLogs()
                         sh 'make clean'
                     }
                 }
@@ -177,27 +178,6 @@ pipeline {
 
     post {
         failure {
-            sh 'rm -rf logs'
-            sh 'mkdir logs'
-            sh '''#!/bin/bash
-                SERVICE_LIST=($(docker ps --format {{.Names}}))
-                echo "Service list is ${SERVICE_LIST[*]}"
-                for service in "${SERVICE_LIST[@]}"; do
-                # Skip null items
-                if [ -z "$service" ]; then
-                    continue
-                fi
-                echo "Service is $service"
-                if [[ $(docker ps | grep "$service" | wc -c) -ne 0 ]]; then
-                    docker logs "$service" >"logs"/"$service".log 2>&1
-                else
-                    echo "Service $service was not present"
-                fi
-                done
-            '''
-            sh 'tar -zcvf docker_logs.tar.gz logs'
-            archiveArtifacts(artifacts: 'docker_logs.tar.gz', allowEmptyArchive: true)
-            sh 'make clean'
             archiveArtifacts(artifacts: 'tests/cypress/screenshots/**/*', allowEmptyArchive: true)
             archiveArtifacts(artifacts: 'tests/cypress/videos/**/*', allowEmptyArchive: true)
         }
@@ -209,4 +189,28 @@ pipeline {
             }
         }
     }
+}
+
+void captureDockerLogs() {
+    sh 'rm -rf logs'
+    sh 'mkdir logs'
+    sh(script: """
+        #!/bin/bash
+        SERVICE_LIST=($(docker ps --format {{.Names}}))
+        echo "Service list is ${SERVICE_LIST[*]}"
+        for service in "${SERVICE_LIST[@]}"; do
+        # Skip null items
+        if [ -z "$service" ]; then
+            continue
+        fi
+        echo "Service is $service"
+        if [[ $(docker ps | grep "$service" | wc -c) -ne 0 ]]; then
+            docker logs "$service" >"logs"/"$service".log 2>&1
+        else
+            echo "Service $service was not present"
+        fi
+        done
+    """)
+    sh 'tar -zcvf docker_logs.tar.gz logs'
+    archiveArtifacts(artifacts: 'docker_logs.tar.gz', allowEmptyArchive: true)
 }
