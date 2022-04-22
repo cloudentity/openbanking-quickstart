@@ -45,7 +45,7 @@ describe(`FDX Tpp consent app`, () => {
       fdxTppIntentRegisteredPage.assertThatRequestUriFieldsAreNotEmpty();
       fdxTppIntentRegisteredPage.clickLogin();
 
-      acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+//       acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
       if (environmentVariables.isMfaEnabled()) {
         mfaPage.typePin();
       }
