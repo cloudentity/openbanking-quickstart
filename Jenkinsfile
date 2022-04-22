@@ -186,10 +186,12 @@ pipeline {
 
     post {
         failure {
-            archiveArtifacts(artifacts: 'tests/cypress/screenshots/**/*', allowEmptyArchive: true)
-            archiveArtifacts(artifacts: 'tests/cypress/videos/**/*', allowEmptyArchive: true)
+            script {
+                archiveArtifacts(artifacts: 'tests/cypress/screenshots/**/*', allowEmptyArchive: true)
+                archiveArtifacts(artifacts: 'tests/cypress/videos/**/*', allowEmptyArchive: true)
+            }
         }
-        cleanup{
+        cleanup {
             script {
                 if (getContext(hudson.FilePath)) {
                     deleteDir()
