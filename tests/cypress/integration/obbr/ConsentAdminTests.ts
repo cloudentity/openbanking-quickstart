@@ -23,7 +23,7 @@ describe(`Consent admin app`, () => {
     consentAdminPage.visit();
     Urls.clearLocalStorage();
     tppLoginPage.visit(true);
-//     tppLoginPage.next();
+    tppLoginPage.next();
     tppIntentPage.saveIntentId();
     tppIntentPage.login();
   });
