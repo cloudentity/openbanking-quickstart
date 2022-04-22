@@ -58,6 +58,7 @@ pipeline {
                     } catch(exc) {
                         failure('Tests failed')
                     } finally {
+                        captureDockerLogs()
                         sh 'make clean'
                     }
                 }
@@ -72,6 +73,7 @@ pipeline {
                     } catch(exc) {
                         failure('Tests failed')
                     } finally {
+                        captureDockerLogs()
                         sh 'make clean'
                     }
                 }
@@ -86,6 +88,7 @@ pipeline {
                     } catch(exc) {
                         failure('Tests failed')
                     } finally {
+                        captureDockerLogs()
                         sh 'make clean'
                     }
                 }
@@ -100,6 +103,7 @@ pipeline {
                     } catch(exc) {
                         failure('Tests failed')
                     } finally {
+                        captureDockerLogs()
                         sh 'make clean'
                     }
                 }
@@ -113,6 +117,7 @@ pipeline {
                         sh 'make run-obbr-tests-headless'
                         sh 'make clean'
                     } catch(exc) {
+                        captureDockerLogs()
                         failure('Tests failed')
                     }
                 }
@@ -127,6 +132,7 @@ pipeline {
                     } catch(exc) {
                         failure('Tests failed')
                     } finally {
+                        captureDockerLogs()
                         sh 'make clean'
                     }
                 }
@@ -155,6 +161,7 @@ pipeline {
                     } catch(exc) {
                         failure('Tests failed')
                     } finally {
+                        captureDockerLogs()
                         sh 'make clean-obuk-saas'
                     }
                 }
@@ -169,6 +176,7 @@ pipeline {
                     } catch(exc) {
                         failure('Tests failed')
                     } finally {
+                        captureDockerLogs()
                         sh 'make clean-obbr-saas'
                     }
                 }
