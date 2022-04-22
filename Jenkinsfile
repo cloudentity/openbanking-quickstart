@@ -194,8 +194,7 @@ pipeline {
 void captureDockerLogs() {
     sh 'rm -rf logs'
     sh 'mkdir logs'
-    sh(script: """
-        #!/bin/bash
+    sh '''#!/bin/bash
         SERVICE_LIST=($(docker ps --format {{.Names}}))
         echo "Service list is ${SERVICE_LIST[*]}"
         for service in "${SERVICE_LIST[@]}"; do
@@ -210,7 +209,7 @@ void captureDockerLogs() {
             echo "Service $service was not present"
         fi
         done
-    """)
+    '''
     sh 'tar -zcvf docker_logs.tar.gz logs'
     archiveArtifacts(artifacts: 'docker_logs.tar.gz', allowEmptyArchive: true)
 }
