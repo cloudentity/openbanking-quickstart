@@ -84,6 +84,41 @@ clients:
   scopes:
   - manage_openbanking_consents
   token_endpoint_auth_method: client_secret_basic
+
+# financroo / developer tpp
+- tenant_id: {{ .tenant_id }}
+  authorization_server_id: cdr
+  client_id: bugkgm23g9kregtu051g
+  client_name: Financroo
+  client_uri: https://localhost:8090
+  client_secret: -TlfoycUiE0qNi-XUBFDfTxMlhHTCjVxOF6pLrWZbQA
+  tls_client_auth_subject_dn: {{ .financroo_tls_client_auth_subject_dn }}
+  tls_client_certificate_bound_access_tokens: true
+  token_endpoint_auth_method: tls_client_auth
+  redirect_uris:
+  - {{ .developer_tpp_url }}/callback
+  - {{ .financroo_tpp_url }}/api/callback
+  - {{ .financroo_tpp_url }}/api/domestic/callback
+  subject_type: pairwise
+  request_object_signing_alg: RS256
+  response_types:
+  - token
+  - code
+  scopes:
+  - bank:accounts.basic:read
+  - bank:accounts.detail:read
+  - introspect_tokens
+  - offline_access
+  - openid
+  - revoke_tokens
+  grant_types:
+  - client_credentials
+  - authorization_code
+  - refresh_token
+  jwks:
+{{ readFile .financroo_pem_file | pemToPublicJwks | indent 4 }}
+
+
 policies:
 - id: block_cdr_dcr
   language: cloudentity
