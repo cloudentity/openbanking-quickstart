@@ -119,7 +119,7 @@ pipeline {
                     } catch(exc) {
                         failure('Tests failed')
                         captureDockerLogs()
-                     finally {
+                    } finally {
                         sh 'make clean'
                     }
                 }
