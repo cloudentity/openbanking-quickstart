@@ -105,7 +105,6 @@ services:
       configuration:
         condition: service_completed_successfully
 
-
   consent-admin-portal:
     image: cloudentity/openbanking-quickstart-consent-admin-portal:${VERSION}
     container_name: consent-admin-portal
@@ -121,6 +120,28 @@ services:
       - OPENBANKING_WORKSPACE_ID=cdr
       - SPEC=cdr
       - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/bank-admins
+    depends_on:
+      configuration:
+        condition: service_completed_successfully
+
+  financroo-tpp:
+    image: cloudentity/openbanking-quickstart-financroo-tpp:${VERSION}
+    container_name: financroo-tpp
+    restart: always
+    ports:
+      - "8091:8091"
+    volumes:
+      - ./data:/certs
+      - ./mount/financroo-tpp:/app/data
+    env_file:
+      - .env
+    environment:
+      - UI_URL=https://${APP_HOST}:8091
+      - TENANT=${TENANT}
+      - GIN_MODE=debug # change to release to disable gin debug
+      - SPEC=cdr
+      - BANK_URL=https://mock-data-holder:8002/cds-au/v1
+      - OPENBANKING_SERVER_ID=cdr
     depends_on:
       configuration:
         condition: service_completed_successfully
@@ -151,3 +172,5 @@ services:
       - --variables-file
       - /variables.yaml
       - --verbose  
+
+  
