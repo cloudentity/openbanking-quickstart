@@ -16,6 +16,7 @@ require (
 	github.com/go-openapi/strfmt v0.20.1
 	github.com/go-openapi/swag v0.19.15
 	github.com/go-openapi/validate v0.20.2
+	github.com/golang-jwt/jwt/v4 v4.4.1 // indirect
 	github.com/google/uuid v1.1.2
 	github.com/gorilla/securecookie v1.1.1
 	github.com/imdario/mergo v0.3.12
