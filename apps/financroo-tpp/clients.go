@@ -14,6 +14,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 
+	cdrBank "github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/client"
+
 	acpclient "github.com/cloudentity/acp-client-go"
 	"github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
 	oauth2Models "github.com/cloudentity/acp-client-go/clients/oauth2/models"
@@ -82,15 +84,19 @@ func InitClients(config Config,
 		return clients, errors.Wrapf(err, "failed to create acp payments client")
 	}
 
-	if signer, err = signerCreateFn(config.KeyFile); err != nil {
-		return clients, errors.Wrapf(err, "failed to create consent message signer for %s", config.Spec)
+	if signerCreateFn != nil {
+		if signer, err = signerCreateFn(config.KeyFile); err != nil {
+			return clients, errors.Wrapf(err, "failed to create consent message signer for %s", config.Spec)
+		}
 	}
 
 	if bankClient, err = bankClientCreateFn(config); err != nil {
 		return clients, errors.Wrapf(err, "failed to create bank client for %s", config.Spec)
 	}
 
-	consentClient = consentClientCreateFn(acpAccountsWebClient, acpPaymentsWebClient, signer)
+	if consentClientCreateFn != nil {
+		consentClient = consentClientCreateFn(acpAccountsWebClient, acpPaymentsWebClient, signer)
+	}
 
 	return Clients{
 		AcpAccountsClient: acpAccountsWebClient,
@@ -169,6 +175,31 @@ func NewOBUKClient(config Config) (BankClient, error) {
 	c.OpenbankingPaymentsClient = payments_client.New(tr, nil)
 
 	return c, nil
+}
+
+type CDRClient struct {
+	*cdrBank.Banking
+}
+
+func NewCDRClient(config Config) (BankClient, error) {
+	var (
+		u   *url.URL
+		err error
+	)
+
+	if u, err = url.Parse(config.BankURL); err != nil {
+		return nil, err
+	}
+
+	tr := NewHTTPRuntimeWithClient(
+		u.Host,
+		"/",
+		[]string{u.Scheme},
+		http.DefaultClient,
+	)
+	return &CDRClient{
+		cdrBank.New(tr, nil),
+	}, nil
 }
 
 type OBBRClient struct {
