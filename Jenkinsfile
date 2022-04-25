@@ -56,8 +56,8 @@ pipeline {
                         sh 'make disable-mfa run-fdx-local'
                         sh 'make run-fdx-tests-headless'
                     } catch(exc) {
-                        failure('Tests failed')
                         captureDockerLogs()
+                        failure('Tests failed')
                     } finally {
                         sh 'make clean'
                     }
