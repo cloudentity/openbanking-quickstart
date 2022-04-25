@@ -81,7 +81,7 @@ func NewCDRBankClient(config Config) *CDRBankClient {
 	}
 }
 
-func (c *CDRBankClient) GetInternalAccounts(id string) (InternalAccounts, error) {
+func (c *CDRBankClient) GetInternalAccounts(ctx context.Context, id string) (InternalAccounts, error) {
 	var (
 		token    *oauth2.Token
 		request  *http.Request
@@ -90,11 +90,11 @@ func (c *CDRBankClient) GetInternalAccounts(id string) (InternalAccounts, error)
 		err      error
 	)
 
-	if token, err = c.cc.Token(context.WithValue(context.Background(), oauth2.HTTPClient, c.httpClient)); err != nil {
+	if token, err = c.cc.Token(context.WithValue(ctx, oauth2.HTTPClient, c.httpClient)); err != nil {
 		return InternalAccounts{}, errors.Wrapf(err, "failed to get client credentials token for internal bank api call")
 	}
 
-	if request, err = http.NewRequest(http.MethodPost, c.bankURL+"/internal/accounts", strings.NewReader(
+	if request, err = http.NewRequestWithContext(ctx, http.MethodPost, c.bankURL+"/internal/accounts", strings.NewReader(
 		url.Values{
 			"customer_id": []string{id},
 		}.Encode(),
@@ -140,6 +140,6 @@ func (c *CDRBankClient) accountsResponseToInternalAccounts(body []byte) (account
 	return accounts, nil
 }
 
-func (c *CDRBankClient) GetInternalBalances(id string) (BalanceResponse, error) {
+func (c *CDRBankClient) GetInternalBalances(ctx context.Context, id string) (BalanceResponse, error) {
 	return BalanceResponse{}, nil
 }
