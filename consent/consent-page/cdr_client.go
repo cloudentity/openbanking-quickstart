@@ -5,7 +5,6 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/json"
-	"io"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -87,6 +86,7 @@ func (c *CDRBankClient) GetInternalAccounts(id string) (InternalAccounts, error)
 		token    *oauth2.Token
 		request  *http.Request
 		response *http.Response
+		body     []byte
 		err      error
 	)
 
@@ -108,30 +108,25 @@ func (c *CDRBankClient) GetInternalAccounts(id string) (InternalAccounts, error)
 	if response, err = c.httpClient.Do(request); err != nil {
 		return InternalAccounts{}, errors.Wrapf(err, "internal bank accounts api call failed")
 	}
-
-	if response.StatusCode >= http.StatusBadRequest {
-		var raw []byte
-		if raw, err = io.ReadAll(response.Body); err != nil {
-			return InternalAccounts{}, errors.Wrap(err, "internal bank accounts api call failed")
-		}
-		return InternalAccounts{}, errors.Wrap(errors.New(string(raw)), "internal bank accounts api call failed")
-	}
-
-	return c.accountsResponseToInternalAccounts(response)
-}
-
-func (c *CDRBankClient) accountsResponseToInternalAccounts(response *http.Response) (accounts InternalAccounts, err error) {
-	var (
-		responseBytes       []byte
-		accountListResponse models.ResponseBankingAccountList
-	)
 	defer response.Body.Close()
 
-	if responseBytes, err = ioutil.ReadAll(response.Body); err != nil {
-		return accounts, err
+	if body, err = ioutil.ReadAll(response.Body); err != nil {
+		return InternalAccounts{}, errors.Wrap(err, "internal bank accounts api call failed")
 	}
 
-	if err = json.Unmarshal(responseBytes, &accountListResponse); err != nil {
+	if response.StatusCode >= http.StatusBadRequest {
+		return InternalAccounts{}, errors.Wrap(errors.New(string(body)), "internal bank accounts api call failed")
+	}
+
+	return c.accountsResponseToInternalAccounts(body)
+}
+
+func (c *CDRBankClient) accountsResponseToInternalAccounts(body []byte) (accounts InternalAccounts, err error) {
+	var (
+		accountListResponse models.ResponseBankingAccountList
+	)
+
+	if err = json.Unmarshal(body, &accountListResponse); err != nil {
 		return accounts, err
 	}
 
