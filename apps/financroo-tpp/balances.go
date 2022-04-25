@@ -39,6 +39,10 @@ func (o *OBUKClient) GetBalances(c *gin.Context, accessToken string, bank Connec
 	return balancesData, nil
 }
 
+func (o *CDRClient) GetBalances(c *gin.Context, accessToken string, bank ConnectedBank) ([]Balance, error) {
+	return []Balance{}, nil
+}
+
 func (o *OBBRClient) GetBalances(c *gin.Context, accessToken string, bank ConnectedBank) ([]Balance, error) {
 	var (
 		resp         *obbrAccounts.AccountsGetAccountsAccountIDBalancesOK

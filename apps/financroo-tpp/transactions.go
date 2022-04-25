@@ -36,3 +36,7 @@ func (o *OBUKClient) GetTransactions(c *gin.Context, accessToken string, bank Co
 func (o *OBBRClient) GetTransactions(c *gin.Context, accessToken string, bank ConnectedBank) ([]Transaction, error) {
 	return []Transaction{}, nil
 }
+
+func (o *CDRClient) GetTransactions(c *gin.Context, accessToken string, bank ConnectedBank) ([]Transaction, error) {
+	return []Transaction{}, nil
+}

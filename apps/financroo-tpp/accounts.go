@@ -1,6 +1,7 @@
 package main
 
 import (
+	cdrModels "github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/client/banking"
 	obbrAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/client/accounts"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client/accounts"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
@@ -32,6 +33,37 @@ func (o *OBUKClient) GetAccounts(c *gin.Context, accessToken string, bank Connec
 	}
 
 	return accountsData, nil
+}
+
+// TODO: AUT-5813
+func (o *CDRClient) GetAccounts(c *gin.Context, accessToken string, bank ConnectedBank) (accountsData []Account, err error) {
+	var (
+		resp *cdrModels.ListAccountsOK
+	)
+
+	if resp, err = o.Banking.Banking.ListAccounts(
+		cdrModels.NewListAccountsParamsWithContext(c),
+		nil,
+	); err != nil {
+		return accountsData, err
+	}
+
+	for _, a := range resp.Payload.Data.Accounts {
+		accountsData = append(accountsData, Account{
+			OBAccount6: models.OBAccount6{
+				AccountID: (*models.AccountID)(a.AccountID),
+				Nickname:  models.Nickname(a.Nickname),
+				Account: []*models.OBAccount6AccountItems0{
+					{
+						Name:           models.Name0(*a.AccountID),
+						Identification: (*models.Identification0)(a.MaskedNumber),
+					},
+				},
+			},
+		})
+	}
+
+	return accountsData, err
 }
 
 func (o *OBBRClient) GetAccounts(c *gin.Context, accessToken string, bank ConnectedBank) ([]Account, error) {

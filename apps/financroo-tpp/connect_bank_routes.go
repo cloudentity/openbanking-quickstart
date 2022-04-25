@@ -47,9 +47,11 @@ func (s *Server) ConnectBank() func(*gin.Context) {
 			return
 		}
 
-		if consentID, err = s.Clients.ConsentClient.CreateAccountConsent(c); err != nil {
-			c.String(http.StatusBadRequest, fmt.Sprintf("failed to register account access consent: %+v", err))
-			return
+		if s.Clients.ConsentClient != nil {
+			if consentID, err = s.Clients.ConsentClient.CreateAccountConsent(c); err != nil {
+				c.String(http.StatusBadRequest, fmt.Sprintf("failed to register account access consent: %+v", err))
+				return
+			}
 		}
 
 		s.CreateConsentResponse(c, bankID, consentID, user, s.Clients.AcpAccountsClient, s.LoginURLBuilder)
@@ -80,6 +82,28 @@ func (s *Server) ConnectBankCallback() func(*gin.Context) {
 			c.String(http.StatusBadRequest, fmt.Sprintf("failed to decode app storage: %+v", err))
 			return
 		}
+
+		// need to support private key jwt here at some point
+
+		/*
+			POST /token HTTP/1.1
+			Host: as.example.com
+			Content-Type: application/x-www-form-urlencoded
+
+			grant_type=authorization_code&
+			code=Gw30fMKJBHkcOBSde5awLrMm4ahvgCNM2cFSTUOUflY&
+			redirect_uri=https://example.com/redirection&
+			client_assertion_type=
+			 urn%3Aietf%3Aparams%3Aoauth%3Aclient-assertion-type%3Ajwt-bearer&
+			client_assertion=
+			 eyJhbGciOiJFUzI1NiJ9.
+			 ewogICJqdGkiOiJteUpXVElkMDAxIiwKICAic3ViIjoiMzgxNzQ2MjM3NjIiL
+			 AogICJpc3MiOiIzODE3NDYyMzc2MiIsCiAgImF1ZCI6Imh0dHA6Ly9sb2NhbG
+			 hvc3Q6NDAwMC9hcGkvYXV0aC90b2tlbi9kaXJlY3QvMjQ1MjMxMzgyMDUiLAo
+			 gICJleHAiOjE1MzYxNjU1NDAsCiAgImlhdCI6MTUzNjEzMjcwOAp9Cg.
+			 YB4gdhWUGRjWEsEbKDs7-G2WFH2oYz7bAEP5AtegHXInkY9ncA2V3IoA6O_HV
+			 QuFxyCRIklrxsMk32MfNF_ABA
+		*/
 
 		if token, err = s.Clients.AcpAccountsClient.Exchange(code, c.Query("state"), appStorage.CSRF); err != nil {
 			c.String(http.StatusUnauthorized, fmt.Sprintf("failed to exchange code: %+v", err))

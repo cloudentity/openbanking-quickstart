@@ -54,6 +54,15 @@ func NewServer() (Server, error) {
 		if server.LoginURLBuilder, err = NewOBBRLoginURLBuilder(server.Clients.AcpAccountsClient); err != nil {
 			return server, errors.Wrapf(err, "failed to create login url builder")
 		}
+	// TODO: AUT-5813
+	case "cdr":
+		server.Config.ClientScopes = []string{"offline_access", "openid"} // TODO
+		if server.Clients, err = InitClients(server.Config, nil, NewCDRClient, nil); err != nil {
+			return server, errors.Wrapf(err, "failed to create clients")
+		}
+		if server.LoginURLBuilder, err = NewCDRLoginURLBuilder(server.Config); err != nil {
+			return server, errors.Wrapf(err, "failed to create login url builder")
+		}
 	default:
 		return server, fmt.Errorf("unsupported spec [%s] in configuration", server.Config.Spec)
 	}

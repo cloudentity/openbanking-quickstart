@@ -100,3 +100,7 @@ func (o *OBBRClient) CreatePayment(c *gin.Context, data interface{}, accessToken
 		Currency:  paymentCreatedResponse.Payload.Data.Payment.Currency,
 	}, nil
 }
+
+func (o *CDRClient) CreatePayment(c *gin.Context, data interface{}, accessToken string) (PaymentCreated, error) {
+	return PaymentCreated{}, nil
+}
