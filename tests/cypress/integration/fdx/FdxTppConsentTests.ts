@@ -39,7 +39,7 @@ describe(`FDX Tpp consent app`, () => {
     it(`Happy path with selected accounts: ${accountsIds}`, () => {
       fdxTppLoginPage.assertThatPageIsDisplayed();
       fdxTppLoginPage.assertThatAuthorizationDetailsAreDisplayed();
-//       fdxTppLoginPage.clickNext();
+      fdxTppLoginPage.clickNext();
 
       fdxTppIntentRegisteredPage.assertThatPageIsDisplayed();
       fdxTppIntentRegisteredPage.assertThatRequestUriFieldsAreNotEmpty();
