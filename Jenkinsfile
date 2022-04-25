@@ -41,8 +41,8 @@ pipeline {
                         sh 'make run-cdr-local'
                         sh 'make run-cdr-tests-headless'
                     } catch(exc) {
-                        failure('Tests failed')
                         captureDockerLogs()
+                        failure('Tests failed')
                     } finally {
                         sh 'make clean'
                     }
@@ -71,8 +71,8 @@ pipeline {
                         sh 'make enable-mfa run-fdx-local'
                         sh 'make run-fdx-tests-headless'
                     } catch(exc) {
-                        failure('Tests failed')
                         captureDockerLogs()
+                        failure('Tests failed')
                     } finally {
                         sh 'make clean'
                     }
@@ -86,8 +86,8 @@ pipeline {
                         sh 'make disable-mfa run-obuk-local'
                         sh 'make run-obuk-tests-headless'
                     } catch(exc) {
-                        failure('Tests failed')
                         captureDockerLogs()
+                        failure('Tests failed')
                     } finally {
                         sh 'make clean'
                     }
@@ -101,8 +101,8 @@ pipeline {
                         sh 'make enable-mfa run-obuk-local'
                         sh 'make run-obuk-tests-headless'
                     } catch(exc) {
-                        failure('Tests failed')
                         captureDockerLogs()
+                        failure('Tests failed')
                     } finally {
                         sh 'make clean'
                     }
@@ -117,8 +117,8 @@ pipeline {
                         sh 'make run-obbr-tests-headless'
                         sh 'make clean'
                     } catch(exc) {
-                        failure('Tests failed')
                         captureDockerLogs()
+                        failure('Tests failed')
                     } finally {
                         sh 'make clean'
                     }
@@ -132,8 +132,8 @@ pipeline {
                         sh 'make enable-mfa run-obbr-local'
                         sh 'make run-obbr-tests-headless'
                     } catch(exc) {
-                        failure('Tests failed')
                         captureDockerLogs()
+                        failure('Tests failed')
                     } finally {
                         sh 'make clean'
                     }
@@ -147,8 +147,8 @@ pipeline {
                         sh 'make disable-mfa set-saas-configuration run-fdx-saas'
                         sh 'make run-saas-fdx-tests-headless'
                     } catch(exc) {
-                        failure('Tests failed')
                         captureDockerLogs()
+                        failure('Tests failed')
                     } finally {
                         sh 'make clean-fdx-saas'
                     }
@@ -162,8 +162,8 @@ pipeline {
                         sh 'make disable-mfa set-saas-configuration run-obuk-saas'
                         sh 'make run-saas-obuk-tests-headless'
                     } catch(exc) {
-                        failure('Tests failed')
                         captureDockerLogs()
+                        failure('Tests failed')
                     } finally {
                         sh 'make clean-obuk-saas'
                     }
@@ -177,8 +177,8 @@ pipeline {
                         sh 'make disable-mfa set-saas-configuration run-obbr-saas'
                         sh 'make run-saas-obbr-tests-headless'
                     } catch(exc) {
-                        failure('Tests failed')
                         captureDockerLogs()
+                        failure('Tests failed')
                     } finally {
                         sh 'make clean-obbr-saas'
                     }
