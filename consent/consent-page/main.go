@@ -23,6 +23,8 @@ import (
 	acpclient "github.com/cloudentity/acp-client-go"
 )
 
+// TODO: configure customer_id in acp cdr workspace as a user attribute
+
 type Spec string
 
 const (
@@ -41,7 +43,6 @@ type Config struct {
 	RootCA           string        `env:"ROOT_CA" envDefault:"/ca.pem"`
 	CertFile         string        `env:"CERT_FILE" envDefault:"/bank_cert.pem"`
 	KeyFile          string        `env:"KEY_FILE" envDefault:"/bank_key.pem"`
-	BankURL          *url.URL      `env:"BANK_URL"`
 	BankIDClaim      string        `env:"BANK_ID_CLAIM" envDefault:"sub"`
 	EnableMFA        bool          `env:"ENABLE_MFA"`
 	OTPMode          string        `env:"OTP_MODE" envDefault:"demo"`
@@ -57,6 +58,8 @@ type Config struct {
 	Spec             Spec          `env:"SPEC,required"`
 
 	Otp OtpConfig
+
+	BankClientConfig BankClientConfig
 }
 
 type OtpConfig struct {
@@ -65,6 +68,16 @@ type OtpConfig struct {
 	VerifyURL  string        `env:"OTP_VERIFY_URL"`
 	Timeout    time.Duration `env:"OTP_TIMEOUT" envDefault:"10s"`
 	AuthHeader string        `env:"OTP_AUTH_HEADER"`
+}
+
+type BankClientConfig struct {
+	URL          *url.URL `env:"BANK_URL"`
+	CertFile     string   `env:"BANK_CLIENT_CERT_FILE" envDefault:"/tpp_cert.pem"`
+	KeyFile      string   `env:"BANK_CLIENT_KEY_FILE" envDefault:"/tpp_key.pem"`
+	TokenURL     string   `env:"BANK_CLIENT_TOKEN_URL"`
+	ClientID     string   `env:"BANK_CLIENT_ID"`
+	ClientSecret string   `env:"BANK_CLIENT_SECRET"`
+	Scopes       []string `env:"BANK_CLIENT_SCOPES"`
 }
 
 func (c *Config) ClientConfig() acpclient.Config {
@@ -149,7 +162,7 @@ func NewServer() (Server, error) {
 	case OBBR:
 		server.BankClient = NewOBBRBankClient(server.Config)
 	case CDR:
-		server.BankClient = NewCDREnergyClient(server.Config)
+		server.BankClient = NewCDRBankClient(server.Config)
 	case FDX:
 		server.BankClient = NewFDXClient(server.Config)
 	default:

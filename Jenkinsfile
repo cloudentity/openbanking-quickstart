@@ -2,6 +2,9 @@ pipeline {
     agent {
         label 'openbanking'
     }
+    options {
+        timeout(time: 1, unit: 'HOURS')
+    }
     environment {
         VERIFY_TEST_RUNNER_TIMEOUT_MS = 80000
         SAAS_TENANT_ID = 'amfudxn6-qa-us-east-1-ob-quickstart'
@@ -10,9 +13,6 @@ pipeline {
         SAAS_CLEANUP_CLIENT_ID = credentials('OPENBANKING_CLEANUP_CLIENT_ID')
         SAAS_CLEANUP_CLIENT_SECRET = credentials('OPENBANKING_CLEANUP_CLIENT_SECRET')
         DEBUG = 'true'
-    }
-    options {
-        timeout(time: 1, unit: 'HOURS')
     }
     stages {
         stage('Prepare') {
@@ -39,12 +39,12 @@ pipeline {
                 script {
                     try {
                         sh 'make run-cdr-local'
-                        retry(3) {
-                            sh 'make run-cdr-tests-headless'
-                        }
-                        sh 'make clean'
+                        sh 'make run-cdr-tests-headless'
                     } catch(exc) {
+                        captureDockerLogs()
                         failure('Tests failed')
+                    } finally {
+                        sh 'make clean'
                     }
                 }
             }
@@ -55,9 +55,11 @@ pipeline {
                     try {
                         sh 'make disable-mfa run-fdx-local'
                         sh 'make run-fdx-tests-headless'
-                        sh 'make clean'
                     } catch(exc) {
+                        captureDockerLogs()
                         failure('Tests failed')
+                    } finally {
+                        sh 'make clean'
                     }
                 }
             }
@@ -68,9 +70,11 @@ pipeline {
                     try {
                         sh 'make enable-mfa run-fdx-local'
                         sh 'make run-fdx-tests-headless'
-                        sh 'make clean'
                     } catch(exc) {
+                        captureDockerLogs()
                         failure('Tests failed')
+                    } finally {
+                        sh 'make clean'
                     }
                 }
             }
@@ -81,9 +85,11 @@ pipeline {
                     try {
                         sh 'make disable-mfa run-obuk-local'
                         sh 'make run-obuk-tests-headless'
-                        sh 'make clean'
                     } catch(exc) {
+                        captureDockerLogs()
                         failure('Tests failed')
+                    } finally {
+                        sh 'make clean'
                     }
                 }
             }
@@ -94,9 +100,11 @@ pipeline {
                     try {
                         sh 'make enable-mfa run-obuk-local'
                         sh 'make run-obuk-tests-headless'
-                        sh 'make clean'
                     } catch(exc) {
+                        captureDockerLogs()
                         failure('Tests failed')
+                    } finally {
+                        sh 'make clean'
                     }
                 }
             }
@@ -109,7 +117,10 @@ pipeline {
                         sh 'make run-obbr-tests-headless'
                         sh 'make clean'
                     } catch(exc) {
+                        captureDockerLogs()
                         failure('Tests failed')
+                    } finally {
+                        sh 'make clean'
                     }
                 }
             }
@@ -120,9 +131,11 @@ pipeline {
                     try {
                         sh 'make enable-mfa run-obbr-local'
                         sh 'make run-obbr-tests-headless'
-                        sh 'make clean'
                     } catch(exc) {
+                        captureDockerLogs()
                         failure('Tests failed')
+                    } finally {
+                        sh 'make clean'
                     }
                 }
             }
@@ -132,12 +145,12 @@ pipeline {
                 script {
                     try {
                         sh 'make disable-mfa set-saas-configuration run-fdx-saas'
-                        retry(3) {
-                            sh 'make run-saas-fdx-tests-headless'
-                        }
-                        sh 'make clean-fdx-saas'
+                        sh 'make run-saas-fdx-tests-headless'
                     } catch(exc) {
+                        captureDockerLogs()
                         failure('Tests failed')
+                    } finally {
+                        sh 'make clean-fdx-saas'
                     }
                 }
             }
@@ -147,12 +160,12 @@ pipeline {
                 script {
                     try {
                         sh 'make disable-mfa set-saas-configuration run-obuk-saas'
-                        retry(3) {
-                            sh 'make run-saas-obuk-tests-headless'
-                        }
-                        sh 'make clean-obuk-saas'
+                        sh 'make run-saas-obuk-tests-headless'
                     } catch(exc) {
+                        captureDockerLogs()
                         failure('Tests failed')
+                    } finally {
+                        sh 'make clean-obuk-saas'
                     }
                 }
             }
@@ -162,12 +175,12 @@ pipeline {
                 script {
                     try {
                         sh 'make disable-mfa set-saas-configuration run-obbr-saas'
-                        retry(3) {
-                            sh 'make run-saas-obbr-tests-headless'
-                        }
-                        sh 'make clean-obbr-saas'
+                        sh 'make run-saas-obbr-tests-headless'
                     } catch(exc) {
+                        captureDockerLogs()
                         failure('Tests failed')
+                    } finally {
+                        sh 'make clean-obbr-saas'
                     }
                 }
             }
@@ -176,13 +189,12 @@ pipeline {
 
     post {
         failure {
-            sh 'docker-compose -f docker-compose.acp.local.yaml -f docker-compose.obuk.yaml -f docker-compose.obbr.yaml -f docker-compose.cdr.yaml logs > docker-compose.log; true'
-            archiveArtifacts(artifacts: 'docker-compose.log', allowEmptyArchive: true)
-            sh 'make clean'
-            archiveArtifacts(artifacts: 'tests/cypress/screenshots/**/*', allowEmptyArchive: true)
-            archiveArtifacts(artifacts: 'tests/cypress/videos/**/*', allowEmptyArchive: true)
+            script {
+                archiveArtifacts(artifacts: 'tests/cypress/screenshots/**/*', allowEmptyArchive: true)
+                archiveArtifacts(artifacts: 'tests/cypress/videos/**/*', allowEmptyArchive: true)
+            }
         }
-        cleanup{
+        cleanup {
             script {
                 if (getContext(hudson.FilePath)) {
                     deleteDir()
@@ -190,4 +202,27 @@ pipeline {
             }
         }
     }
+}
+
+void captureDockerLogs() {
+    sh 'rm -rf logs'
+    sh 'mkdir logs'
+    sh '''#!/bin/bash
+        SERVICE_LIST=($(docker ps --format {{.Names}}))
+        echo "Service list is ${SERVICE_LIST[*]}"
+        for service in "${SERVICE_LIST[@]}"; do
+        # Skip null items
+        if [ -z "$service" ]; then
+            continue
+        fi
+        echo "Service is $service"
+        if [[ $(docker ps | grep "$service" | wc -c) -ne 0 ]]; then
+            docker logs "$service" >"logs"/"$service".log 2>&1
+        else
+            echo "Service $service was not present"
+        fi
+        done
+    '''
+    sh 'tar -zcvf docker_logs.tar.gz logs'
+    archiveArtifacts(artifacts: 'docker_logs.tar.gz', allowEmptyArchive: true)
 }

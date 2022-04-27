@@ -1,0 +1,35 @@
+{
+	"bfb689fb-7745-45b9-bbaa-b21e00072447": {
+		"cdr_accounts": [{
+				"accountId": "1000001",
+				"creationDate": "2015-01-01",
+				"displayName": "string",
+				"nickname": "Savings Account",
+				"openStatus": "OPEN",
+				"maskedNumber": "************001",
+				"productCategory": "string",
+				"productName": "string"
+			},
+			{
+				"accountId": "1000002",
+				"creationDate": "2015-01-01",
+				"displayName": "string",
+				"nickname": "Old Savings Account",
+				"openStatus": "OPEN",
+				"maskedNumber": "************002",
+				"productCategory": "string",
+				"productName": "string"
+			},
+			{
+				"accountId": "96534987",
+				"creationDate": "2015-01-01",
+				"displayName": "string",
+				"nickname": "Basic Mortgage",
+				"openStatus": "OPEN",
+				"maskedNumber": "************987",
+				"productCategory": "string",
+				"productName": "string"
+			}
+		]
+	}
+}
