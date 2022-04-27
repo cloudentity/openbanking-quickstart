@@ -1,5 +1,7 @@
 package main
 
+import "context"
+
 type FDXClient struct {
 }
 
@@ -10,7 +12,7 @@ func NewFDXClient(config Config) *FDXClient {
 	return &c
 }
 
-func (c *FDXClient) GetInternalAccounts(id string) (InternalAccounts, error) {
+func (c *FDXClient) GetInternalAccounts(ctx context.Context, id string) (InternalAccounts, error) {
 	if id == "user" {
 		return InternalAccounts{
 			Accounts: []InternalAccount{
@@ -79,7 +81,6 @@ func (c *FDXClient) GetInternalAccounts(id string) (InternalAccounts, error) {
 	}, nil
 }
 
-// TODO: mock data holder cdr app doesn't even have this data yet
-func (c *FDXClient) GetInternalBalances(id string) (BalanceResponse, error) {
+func (c *FDXClient) GetInternalBalances(ctx context.Context, id string) (BalanceResponse, error) {
 	return BalanceResponse{}, nil
 }

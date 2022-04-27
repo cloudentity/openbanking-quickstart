@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -20,12 +21,12 @@ func NewOBBRBankClient(config Config) *OBBRBankClient {
 	c := OBBRBankClient{}
 
 	c.Client = &http.Client{}
-	c.baseURL = config.BankURL.String()
+	c.baseURL = config.BankClientConfig.URL.String()
 
 	return &c
 }
 
-func (c *OBBRBankClient) GetInternalAccounts(id string) (InternalAccounts, error) {
+func (c *OBBRBankClient) GetInternalAccounts(ctx context.Context, id string) (InternalAccounts, error) {
 	var (
 		request  *http.Request
 		response *http.Response
@@ -34,7 +35,7 @@ func (c *OBBRBankClient) GetInternalAccounts(id string) (InternalAccounts, error
 		err      error
 	)
 
-	if request, err = http.NewRequest("GET", fmt.Sprintf("%s/internal/accounts?id=%s", c.baseURL, id), nil); err != nil {
+	if request, err = http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s/internal/accounts?id=%s", c.baseURL, id), nil); err != nil {
 		return InternalAccounts{}, err
 	}
 
@@ -77,7 +78,7 @@ type OBBRBalances struct {
 }
 
 // TODO: map response to InternalBalances
-func (c *OBBRBankClient) GetInternalBalances(id string) (BalanceResponse, error) {
+func (c *OBBRBankClient) GetInternalBalances(ctx context.Context, id string) (BalanceResponse, error) {
 	var (
 		request  *http.Request
 		response *http.Response
@@ -86,7 +87,7 @@ func (c *OBBRBankClient) GetInternalBalances(id string) (BalanceResponse, error)
 		err      error
 	)
 
-	if request, err = http.NewRequest("GET", fmt.Sprintf("%s/internal/balances?id=%s", c.baseURL, id), nil); err != nil {
+	if request, err = http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s/internal/balances?id=%s", c.baseURL, id), nil); err != nil {
 		return BalanceResponse{}, err
 	}
 

@@ -66,16 +66,26 @@ services:
       - ./data/ca.pem:/ca.pem
       - ./data/bank_cert.pem:/bank_cert.pem
       - ./data/bank_key.pem:/bank_key.pem
+      - ./data/tpp_cert.pem:/tpp_cert.pem 
+      - ./data/tpp_key.pem:/tpp_key.pem
     env_file:
       - .env
     environment:
       - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
-      - BANK_URL=http://bank:8070
       - LOG_LEVEL=debug
       - SPEC=cdr
       - GIN_MODE=debug # change to release to disable gin debug
       - OTP_MODE=mock # change to custom to enable custom OTP handling
       - MFA_CLAIM=sub # for mobile use mobile_verified
+      - BANK_ID_CLAIM=customer_id
+      - BANK_URL=http://bank:8070
+      - BANK_CLIENT_TOKEN_URL=${ACP_URL}/${TENANT}/cdr/oauth2/token
+      - BANK_CLIENT_ID=cw1ocudfotn6edhsiv8h 
+      - BANK_CLIENT_SECRET=pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0 
+      - BANK_CLIENT_SCOPES=bank:accounts.basic:read,bank:accounts.detail:read
+      - BANK_CLIENT_CERT_FILE=/tpp_cert.pem
+      - BANK_CLIENT_KEY_FILE=/tpp_key.pem
+
     depends_on:
       configuration:
         condition: service_completed_successfully
@@ -125,6 +135,25 @@ services:
       configuration:
         condition: service_completed_successfully
 
+  bank:
+    image: cloudentity/openbanking-quickstart-bank:${VERSION}
+    container_name: bank
+    restart: always
+    ports:
+      - "8070:8070"
+    volumes:
+      - ./data/ca.pem:/ca.pem
+      - ./data/bank_cert.pem:/bank_cert.pem
+      - ./data/bank_key.pem:/bank_key.pem
+      - ./mount/bank-cdr:/app/data
+    environment:
+      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/cdr
+      - SPEC=cdr
+      - GIN_MODE=debug
+    depends_on:
+      configuration:
+        condition: service_completed_successfully
+
   configuration:
     container_name: configuration
     image: cloudentity/openbanking-quickstart-configuration:latest
@@ -136,6 +165,7 @@ services:
       - ./data/imports/system.tmpl:/app/imports-cdr/system.tmpl
       - ./data/imports/bank-customers.tmpl:/app/imports-cdr/bank-customers.tmpl
       - ./data/imports/cdr.tmpl:/app/imports-cdr/cdr.tmpl
+      - ./data/imports/tenant.tmpl:/app/imports-cdr/tenant.tmpl
     command:
       - /app/main
       - --tenant-url
@@ -151,3 +181,4 @@ services:
       - --variables-file
       - /variables.yaml
       - --verbose  
+

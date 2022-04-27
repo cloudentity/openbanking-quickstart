@@ -19,6 +19,7 @@ type Spec string
 const (
 	OBUK Spec = "obuk"
 	OBBR Spec = "obbr"
+	CDR  Spec = "cdr"
 )
 
 type Config struct {
@@ -56,6 +57,8 @@ func LoadConfig() (config Config, err error) {
 		config.SeedFilePath = fmt.Sprintf("data/%s-data.json", OBUK)
 	case OBBR:
 		config.SeedFilePath = fmt.Sprintf("data/%s-data.json", OBBR)
+	case CDR:
+		config.SeedFilePath = fmt.Sprintf("data/%s-data.json", CDR)
 	}
 
 	if config.GINMODE == "debug" {
@@ -112,6 +115,9 @@ func (s *Server) Start() error {
 		r.GET("/accounts/v1/accounts/:accountID/balances", s.Get(NewOBBRGetBalanceHandler))
 		r.GET("/internal/balances", s.Get(NewOBBRGetBalancesInternalHandler))
 		r.POST("/payments/v1/pix/payments", s.Post(NewOBBRCreatePaymentHandler))
+
+	case CDR:
+		r.POST("/internal/accounts", s.Get(NewCDRGetAccountsInternalHandler))
 
 	default:
 		return fmt.Errorf("unsupported spec %s", s.Config.Spec)
