@@ -42,7 +42,7 @@ type ClientService interface {
 
 	GetTransactions(params *GetTransactionsParams, opts ...ClientOption) (*GetTransactionsOK, error)
 
-	ListAccounts(params *ListAccountsParams, opts ...ClientOption) (*ListAccountsOK, error)
+	ListAccounts(params *ListAccountsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ListAccountsOK, error)
 
 	ListBalancesBulk(params *ListBalancesBulkParams, opts ...ClientOption) (*ListBalancesBulkOK, error)
 
@@ -330,7 +330,7 @@ func (a *Client) GetTransactions(params *GetTransactionsParams, opts ...ClientOp
 
   Obtain a list of accounts
 */
-func (a *Client) ListAccounts(params *ListAccountsParams, opts ...ClientOption) (*ListAccountsOK, error) {
+func (a *Client) ListAccounts(params *ListAccountsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ListAccountsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewListAccountsParams()
@@ -344,6 +344,7 @@ func (a *Client) ListAccounts(params *ListAccountsParams, opts ...ClientOption) 
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &ListAccountsReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
