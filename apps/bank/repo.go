@@ -27,6 +27,7 @@ type BankUserData struct {
 
 	CDRAccounts     []cdrAccountModels.BankingAccount     `json:"cdr_accounts"`
 	CDRTransactions []cdrAccountModels.BankingTransaction `json:"cdr_transactions"`
+	CDRBalances     []cdrAccountModels.BankingBalance     `json:"cdr_balances"`
 }
 
 type AccountData struct {
