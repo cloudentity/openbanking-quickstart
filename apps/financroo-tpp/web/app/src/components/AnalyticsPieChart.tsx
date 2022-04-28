@@ -5,7 +5,7 @@ import classes from "./chartsStyles.module.css";
 import {mapTransactionsToPieChartData, stringToHex} from "./analytics.utils";
 import {includes} from "ramda";
 
-export default function AnalyticsPieChart({data, filtering, onChangeFiltering}) {
+export default function AnalyticsPieChart({currencyType, data, filtering, onChangeFiltering}) {
 
   const mappedAsNameValue = mapTransactionsToPieChartData(data);
 
@@ -20,7 +20,7 @@ export default function AnalyticsPieChart({data, filtering, onChangeFiltering}) 
     <div style={{position: 'relative'}}>
       <div className={classes.pieChartContent}>
         <Typography style={{fontSize: 14, fontWeight: 600, color: '#626576', minHeight: 22}}>{filtering?.months.join(' ')}</Typography>
-        <Typography style={{fontSize: 16, fontWeight: 600, marginTop: 6}}>GBP {filteredSumAsString}</Typography>
+        <Typography style={{fontSize: 16, fontWeight: 600, marginTop: 6}}>{currencyType} {filteredSumAsString}</Typography>
         <Typography style={{fontSize: 12, marginTop: 2, color: '#626576'}}>{filtering?.categories.join(' ')}</Typography>
       </div>
       <ResponsiveContainer width={'100%'} height={300}>
