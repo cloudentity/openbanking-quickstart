@@ -31,7 +31,7 @@ func (h *CDRGetTransactionsHandler) Validate(c *gin.Context) *Error {
 }
 
 func (h *CDRGetTransactionsHandler) GetUserIdentifier(c *gin.Context) string {
-	return c.PostForm("bfb689fb-7745-45b9-bbaa-b21e00072447")
+	return "bfb689fb-7745-45b9-bbaa-b21e00072447"
 }
 
 func (h *CDRGetTransactionsHandler) Filter(c *gin.Context, data BankUserData) BankUserData {

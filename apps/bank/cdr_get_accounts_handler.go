@@ -1,11 +1,13 @@
 package main
 
 import (
+	cdr "github.com/cloudentity/acp-client-go/clients/openbanking/client/c_d_r"
 	"github.com/gin-gonic/gin"
 )
 
 type CDRGetAccountsHandler struct {
 	*Server
+	introspectionResponse *cdr.CdrConsentIntrospectOKBody
 }
 
 func NewCDRGetAccountsHandler(server *Server) GetEndpointLogic {
@@ -13,7 +15,12 @@ func NewCDRGetAccountsHandler(server *Server) GetEndpointLogic {
 }
 
 func (h *CDRGetAccountsHandler) SetIntrospectionResponse(c *gin.Context) *Error {
-	// should try introspecting for this at some point
+	/*var err error
+	if h.introspectionResponse, err = h.CDRIntrospectAccountsToken(c); err != nil {
+		logrus.Errorf("introspect cdr token for accounts failed with %+v", err)
+		return ErrBadRequest.WithMessage("failed to introspect token")
+	}
+	logrus.Infof("introspect succeeded")*/
 	return nil
 }
 
@@ -31,7 +38,7 @@ func (h *CDRGetAccountsHandler) Validate(c *gin.Context) *Error {
 }
 
 func (h *CDRGetAccountsHandler) GetUserIdentifier(c *gin.Context) string {
-	return c.PostForm("bfb689fb-7745-45b9-bbaa-b21e00072447")
+	return "bfb689fb-7745-45b9-bbaa-b21e00072447"
 }
 
 func (h *CDRGetAccountsHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
