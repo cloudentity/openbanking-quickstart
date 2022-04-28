@@ -42,8 +42,8 @@ func (o *CDRClient) GetAccounts(c *gin.Context, accessToken string, bank Connect
 	)
 
 	if resp, err = o.Banking.Banking.ListAccounts(
-		cdrModels.NewListAccountsParamsWithContext(c),
-		nil,
+		cdrModels.NewListAccountsParamsWithContext(c).
+			WithDefaults(),
 	); err != nil {
 		return accountsData, err
 	}
@@ -60,6 +60,7 @@ func (o *CDRClient) GetAccounts(c *gin.Context, accessToken string, bank Connect
 					},
 				},
 			},
+			BankID: bank.BankID,
 		})
 	}
 
