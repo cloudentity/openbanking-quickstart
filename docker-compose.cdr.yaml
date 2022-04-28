@@ -150,8 +150,10 @@ services:
       - TENANT=${TENANT}
       - GIN_MODE=debug # change to release to disable gin debug
       - SPEC=cdr
-      - BANK_URL=https://mock-data-holder:8002/cds-au/v1
+      - BANK_URL=http
       - OPENBANKING_SERVER_ID=cdr
+      - BANK_URL=http://bank:8070
+
   bank:
     image: cloudentity/openbanking-quickstart-bank:${VERSION}
     container_name: bank
