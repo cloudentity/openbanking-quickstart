@@ -153,6 +153,9 @@ services:
       - BANK_URL=http
       - OPENBANKING_SERVER_ID=cdr
       - BANK_URL=http://bank:8070
+    depends_on: 
+      configuration: 
+        condition: service_completed_successfully
 
   bank:
     image: cloudentity/openbanking-quickstart-bank:${VERSION}
