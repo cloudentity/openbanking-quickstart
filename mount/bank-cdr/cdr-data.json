@@ -30,6 +30,24 @@
 				"productCategory": "string",
 				"productName": "string"
 			}
-		]
+		],
+		"cdr_transactions": [{
+			"TransactionId": "TRN11113",
+			"TransactionType": "PAYMENT",
+			"Status": "POSTED",
+			"Description": "EFTPOS",
+			"PostingDateTime": "2021-05-05T17:22:00Z",
+			"ValueDateTime": "2021-05-05T17:22:00Z",
+			"ExecutionDateTime": "2021-05-05T17:22:00Z",
+			"Amount": 111.2,
+			"Currency": "AUD",
+			"Reference": "EFTPOS",
+			"MerchantName": "Supermarket A",
+			"MerchantCategoryCode": "5411",
+			"BillerCode": "",
+			"BillerName": "",
+			"CRN": "",
+			"ApcaNumber": ""
+		}]
 	}
 }
