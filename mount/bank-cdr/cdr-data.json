@@ -24,30 +24,150 @@
 				"accountId": "96534987",
 				"creationDate": "2015-01-01",
 				"displayName": "string",
-				"nickname": "Basic Mortgage",
+				"nickname": "Checkings Account",
 				"openStatus": "OPEN",
 				"maskedNumber": "************987",
 				"productCategory": "string",
 				"productName": "string"
 			}
 		],
-		"cdr_transactions": [{
-			"TransactionId": "TRN11113",
-			"TransactionType": "PAYMENT",
-			"Status": "POSTED",
-			"Description": "EFTPOS",
-			"PostingDateTime": "2021-05-05T17:22:00Z",
-			"ValueDateTime": "2021-05-05T17:22:00Z",
-			"ExecutionDateTime": "2021-05-05T17:22:00Z",
-			"Amount": "111.2",
-			"Currency": "AUD",
-			"Reference": "EFTPOS",
-			"MerchantName": "Supermarket A",
-			"MerchantCategoryCode": "5411",
-			"BillerCode": "",
-			"BillerName": "",
-			"CRN": "",
-			"ApcaNumber": ""
-		}]
+		"cdr_transactions": [
+			{
+				"accountID": "1000001",
+				"TransactionId": "TRN11113",
+				"TransactionType": "PAYMENT",
+				"Status": "POSTED",
+				"Description": "emergency car repair",
+				"PostingDateTime": "2022-04-01T17:22:00Z",
+				"ValueDateTime": "2022-04-01T17:22:00Z",
+				"ExecutionDateTime": "2022-04-01T17:22:00Z",
+				"Amount": "512.97",
+				"Currency": "AUD",
+				"Reference": "EFTPOS",
+				"MerchantName": "Supermarket A",
+				"MerchantCategoryCode": "5411",
+				"BillerCode": "",
+				"BillerName": "",
+				"CRN": "",
+				"ApcaNumber": ""
+			},
+
+			{
+				"accountID": "96534987",
+				"TransactionId": "TRN11114",
+				"TransactionType": "PAYMENT",
+				"Status": "POSTED",
+				"Description": "rent payment",
+				"PostingDateTime": "2022-03-01T17:22:00Z",
+				"ValueDateTime": "2022-03-01T17:22:00Z",
+				"ExecutionDateTime": "2022-03-01T17:22:00Z",
+				"Amount": "800.00",
+				"Currency": "AUD",
+				"Reference": "EFTPOS",
+				"MerchantName": "Supermarket A",
+				"MerchantCategoryCode": "5411",
+				"BillerCode": "",
+				"BillerName": "",
+				"CRN": "",
+				"ApcaNumber": ""
+			},
+
+			{
+				"accountID": "96534987",
+				"TransactionId": "TRN11115",
+				"TransactionType": "PAYMENT",
+				"Status": "POSTED",
+				"Description": "dinner",
+				"PostingDateTime": "2022-04-18T17:22:00Z",
+				"ValueDateTime": "2022-04-18T17:22:00Z",
+				"ExecutionDateTime": "2022-04-18T17:22:00Z",
+				"Amount": "20.28",
+				"Currency": "AUD",
+				"Reference": "EFTPOS",
+				"MerchantName": "Supermarket A",
+				"MerchantCategoryCode": "5411",
+				"BillerCode": "",
+				"BillerName": "",
+				"CRN": "",
+				"ApcaNumber": ""
+			},
+
+			{
+				"accountID": "96534987",
+				"TransactionId": "TRN11116",
+				"TransactionType": "PAYMENT",
+				"Status": "POSTED",
+				"Description": "groceries",
+				"PostingDateTime": "2022-04-21T17:22:00Z",
+				"ValueDateTime": "2022-04-21T17:22:00Z",
+				"ExecutionDateTime": "2022-04-21T17:22:00Z",
+				"Amount": "111.2",
+				"Currency": "AUD",
+				"Reference": "EFTPOS",
+				"MerchantName": "Supermarket A",
+				"MerchantCategoryCode": "5411",
+				"BillerCode": "",
+				"BillerName": "",
+				"CRN": "",
+				"ApcaNumber": ""
+			},
+
+			{
+				"accountID": "96534987",
+				"TransactionId": "TRN11117",
+				"TransactionType": "PAYMENT",
+				"Status": "POSTED",
+				"Description": "car payment",
+				"PostingDateTime": "2022-04-20T17:22:00Z",
+				"ValueDateTime": "2022-04-20T17:22:00Z",
+				"ExecutionDateTime": "2022-04-20T17:22:00Z",
+				"Amount": "300.00",
+				"Currency": "AUD",
+				"Reference": "EFTPOS",
+				"MerchantName": "Supermarket A",
+				"MerchantCategoryCode": "5411",
+				"BillerCode": "",
+				"BillerName": "",
+				"CRN": "",
+				"ApcaNumber": ""
+			}
+		],
+		"cdr_balances": [{
+				"accountId": "1000001",
+				"currentBalance": "1000.00",
+				"availableBalance": "1000.00",
+				"creditLimit": "string",
+				"amortisedLimit": "string",
+				"currency": "AUD",
+				"purses": [{
+					"amount": "string",
+					"currency": "string"
+				}]
+			},
+			{
+				"accountId": "1000002",
+				"currentBalance": "2330.45",
+				"availableBalance": "2330.45",
+				"creditLimit": "string",
+				"amortisedLimit": "string",
+				"currency": "AUD",
+				"purses": [{
+					"amount": "string",
+					"currency": "string"
+				}]
+			},
+			{
+				"accountId": "96534987",
+				"currentBalance": "1174.23",
+				"availableBalance": "1174.23",
+				"creditLimit": "string",
+				"amortisedLimit": "string",
+				"currency": "AUD",
+				"purses": [{
+					"amount": "string",
+					"currency": "string"
+				}]
+			}
+		]
 	}
 }
