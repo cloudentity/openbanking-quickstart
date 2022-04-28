@@ -1,11 +1,15 @@
 package main
 
 import (
+	"fmt"
+
 	cdrModels "github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/client/banking"
 	obbrAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/client/accounts"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client/accounts"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
 	"github.com/gin-gonic/gin"
+	"github.com/go-openapi/runtime"
+	"github.com/go-openapi/strfmt"
 )
 
 type Account struct {
@@ -35,7 +39,6 @@ func (o *OBUKClient) GetAccounts(c *gin.Context, accessToken string, bank Connec
 	return accountsData, nil
 }
 
-// TODO: AUT-5813
 func (o *CDRClient) GetAccounts(c *gin.Context, accessToken string, bank ConnectedBank) (accountsData []Account, err error) {
 	var (
 		resp *cdrModels.ListAccountsOK
@@ -44,6 +47,9 @@ func (o *CDRClient) GetAccounts(c *gin.Context, accessToken string, bank Connect
 	if resp, err = o.Banking.Banking.ListAccounts(
 		cdrModels.NewListAccountsParamsWithContext(c).
 			WithDefaults(),
+		runtime.ClientAuthInfoWriterFunc(func(request runtime.ClientRequest, registry strfmt.Registry) error {
+			return request.SetHeaderParam("Authorization", fmt.Sprintf("Bearer %s", accessToken))
+		}),
 	); err != nil {
 		return accountsData, err
 	}
