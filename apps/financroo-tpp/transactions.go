@@ -1,6 +1,8 @@
 package main
 
 import (
+	"time"
+
 	"github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/client/banking"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client/transactions"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
@@ -41,7 +43,8 @@ func (o *OBBRClient) GetTransactions(c *gin.Context, accessToken string, bank Co
 
 func (o *CDRClient) GetTransactions(c *gin.Context, accessToken string, bank ConnectedBank) (transactionsData []Transaction, err error) {
 	var (
-		resp *banking.GetTransactionsOK
+		resp       *banking.GetTransactionsOK
+		parsedTime time.Time
 	)
 
 	// will need to loop
@@ -53,23 +56,30 @@ func (o *CDRClient) GetTransactions(c *gin.Context, accessToken string, bank Con
 		return transactionsData, err
 	}
 
-	for _, a := range resp.Payload.Data.Transactions {
+	for _, transaction := range resp.Payload.Data.Transactions {
+		if parsedTime, err = time.Parse(time.RFC3339, transaction.ExecutionDateTime); err != nil {
+			logrus.Infof("failed to parse time %v", err)
+			continue
+		}
+
+		bookingDateTime := models.BookingDateTime(parsedTime)
+
 		transactionsData = append(transactionsData, Transaction{
 			OBTransaction6: models.OBTransaction6{
-				AccountID:       (*models.AccountID)(a.AccountID),
-				TransactionID:   models.TransactionID(a.TransactionID),
-				BookingDateTime: &models.BookingDateTime{},
+				AccountID:       (*models.AccountID)(transaction.AccountID),
+				TransactionID:   models.TransactionID(transaction.TransactionID),
+				BookingDateTime: &bookingDateTime,
 				Amount: &models.OBActiveOrHistoricCurrencyAndAmount9{
-					Amount: (*models.OBActiveCurrencyAndAmountSimpleType)(a.Amount),
+					Amount: (*models.OBActiveCurrencyAndAmountSimpleType)(transaction.Amount),
 				},
-				BankTransactionCode:    &models.OBBankTransactionCodeStructure1{},
-				TransactionInformation: models.TransactionInformation(""),
+				BankTransactionCode: &models.OBBankTransactionCodeStructure1{
+					Code: &transaction.MerchantCategoryCode,
+				},
+				TransactionInformation: models.TransactionInformation(*transaction.Description),
 			},
 			BankID: bank.BankID,
 		})
 	}
-
-	logrus.Infof("transactions data %v", transactionsData)
 
 	return transactionsData, nil
 }
