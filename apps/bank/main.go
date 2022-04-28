@@ -118,6 +118,8 @@ func (s *Server) Start() error {
 
 	case CDR:
 		r.POST("/internal/accounts", s.Get(NewCDRGetAccountsInternalHandler))
+		r.GET("/banking/accounts", s.Get(NewCDRGetAccountsInternalHandler))
+		r.GET("/banking/accounts/{accountId}/transactions", s.Get(NewCDRGetAccountsInternalHandler)) // TODO
 
 	default:
 		return fmt.Errorf("unsupported spec %s", s.Config.Spec)
