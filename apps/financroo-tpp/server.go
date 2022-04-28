@@ -54,9 +54,8 @@ func NewServer() (Server, error) {
 		if server.LoginURLBuilder, err = NewOBBRLoginURLBuilder(server.Clients.AcpAccountsClient); err != nil {
 			return server, errors.Wrapf(err, "failed to create login url builder")
 		}
-	// TODO: AUT-5813
 	case "cdr":
-		server.Config.ClientScopes = []string{"offline_access", "openid"} // TODO
+		server.Config.ClientScopes = []string{"offline_access", "openid", "bank:accounts.basic:read", "bank:accounts.detail:read", "bank:transactions:read", "common:customer.basic:read"} // TODO
 		if server.Clients, err = InitClients(server.Config, nil, NewCDRClient, nil); err != nil {
 			return server, errors.Wrapf(err, "failed to create clients")
 		}
