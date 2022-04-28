@@ -39,7 +39,7 @@
 			"PostingDateTime": "2021-05-05T17:22:00Z",
 			"ValueDateTime": "2021-05-05T17:22:00Z",
 			"ExecutionDateTime": "2021-05-05T17:22:00Z",
-			"Amount": 111.2,
+			"Amount": "111.2",
 			"Currency": "AUD",
 			"Reference": "EFTPOS",
 			"MerchantName": "Supermarket A",
