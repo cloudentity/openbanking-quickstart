@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 
+	"github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/client/banking"
 	obbrAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/client/accounts"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client/balances"
 	"github.com/gin-gonic/gin"
@@ -39,8 +40,28 @@ func (o *OBUKClient) GetBalances(c *gin.Context, accessToken string, bank Connec
 	return balancesData, nil
 }
 
-func (o *CDRClient) GetBalances(c *gin.Context, accessToken string, bank ConnectedBank) ([]Balance, error) {
-	return []Balance{}, nil
+func (o *CDRClient) GetBalances(c *gin.Context, accessToken string, bank ConnectedBank) (balances []Balance, err error) {
+	var (
+		resp *banking.ListBalancesBulkOK
+	)
+
+	if resp, err = o.Banking.Banking.ListBalancesBulk(
+		banking.NewListBalancesBulkParams().
+			WithDefaults(),
+	); err != nil {
+		return []Balance{}, err
+	}
+
+	for _, balance := range resp.Payload.Data.Balances {
+		balances = append(balances, Balance{
+			AccountID: *balance.AccountID,
+			Amount:    *balance.AvailableBalance,
+			Currency:  balance.Currency,
+			BankID:    bank.BankID,
+		})
+	}
+
+	return balances, nil
 }
 
 func (o *OBBRClient) GetBalances(c *gin.Context, accessToken string, bank ConnectedBank) ([]Balance, error) {
