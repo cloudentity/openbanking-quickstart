@@ -56,3 +56,16 @@ func NewCDRAccountsResponse(accounts []cdrAccountModels.BankingAccount) interfac
 	}
 	return resp
 }
+
+func NewCDRTransactionsResponse(transactions []cdrAccountModels.BankingTransaction) interface{} {
+	resp := cdrAccountModels.ResponseBankingTransactionList{
+		Data: &cdrAccountModels.Data3{
+			Transactions: []*cdrAccountModels.BankingTransaction{},
+		},
+	}
+	for _, transaction := range transactions {
+		trans := transaction
+		resp.Data.Transactions = append(resp.Data.Transactions, &trans)
+	}
+	return resp
+}
