@@ -7,6 +7,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 
+	cdr "github.com/cloudentity/acp-client-go/clients/openbanking/client/c_d_r"
 	obbr "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_b_r"
 	obuk "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
 	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
@@ -103,4 +104,28 @@ func (s *Server) OBBRIntrospectPaymentsToken(c *gin.Context) (*obModels.Introspe
 	}
 
 	return introspectionResponse.Payload, nil
+}
+
+func (s *Server) CDRIntrospectAccountsToken(c *gin.Context) (*cdr.CdrConsentIntrospectOKBody, error) {
+	var (
+		introspectResponse *cdr.CdrConsentIntrospectOK
+		err                error
+	)
+
+	token := c.GetHeader("Authorization")
+	token = strings.ReplaceAll(token, "Bearer ", "")
+
+	if introspectResponse, err = s.Client.Openbanking.Cdr.CdrConsentIntrospect(
+		cdr.NewCdrConsentIntrospectParamsWithContext(c).
+			WithToken(&token),
+		nil,
+	); err != nil {
+		return nil, err
+	}
+
+	if !introspectResponse.Payload.Active {
+		return nil, errors.New("access token is not active")
+	}
+
+	return introspectResponse.Payload, nil
 }
