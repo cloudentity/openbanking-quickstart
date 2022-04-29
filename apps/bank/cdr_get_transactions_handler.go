@@ -38,7 +38,7 @@ func (h *CDRGetTransactionsHandler) BuildResponse(c *gin.Context, data BankUserD
 func (h *CDRGetTransactionsHandler) Validate(c *gin.Context) *Error {
 	scopes := strings.Split(h.introspectionResponse.Scope, " ")
 	if !has(scopes, "bank:transactions:read") {
-		return ErrForbidden.WithMessage("token has no bank:accounts.basic:read scope granted")
+		return ErrForbidden.WithMessage("token has no bank:transactions:read scope granted")
 	}
 	return nil
 }
@@ -48,9 +48,13 @@ func (h *CDRGetTransactionsHandler) GetUserIdentifier(c *gin.Context) string {
 }
 
 func (h *CDRGetTransactionsHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
-	var ret BankUserData
+	var (
+		ret       BankUserData
+		accountID = c.Param("accountId")
+	)
+
 	for _, transaction := range data.CDRTransactions {
-		if has(h.introspectionResponse.AccountIDs, *transaction.AccountID) {
+		if has(h.introspectionResponse.AccountIDs, *transaction.AccountID) && *transaction.AccountID == accountID {
 			ret.CDRTransactions = append(ret.CDRTransactions, transaction)
 		}
 	}
