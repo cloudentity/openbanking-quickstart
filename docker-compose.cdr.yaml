@@ -85,6 +85,7 @@ services:
       - BANK_CLIENT_SCOPES=bank:accounts.basic:read,bank:accounts.detail:read
       - BANK_CLIENT_CERT_FILE=/tpp_cert.pem
       - BANK_CLIENT_KEY_FILE=/tpp_key.pem
+      - BANK_ACCOUNTS_ENDPOINT=http://bank:8070/internal/accounts
 
     depends_on:
       configuration:
