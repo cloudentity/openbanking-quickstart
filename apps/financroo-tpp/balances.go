@@ -42,7 +42,7 @@ func (o *OBUKClient) GetBalances(c *gin.Context, accessToken string, bank Connec
 	return balancesData, nil
 }
 
-func (o *CDRClient) GetBalances(c *gin.Context, accessToken string, bank ConnectedBank) (balances []Balance, err error) {
+func (o *CDRClient) GetBalances(c *gin.Context, accessToken string, bank ConnectedBank) (balancesData []Balance, err error) {
 	var (
 		resp *banking.ListBalancesBulkOK
 	)
@@ -58,7 +58,7 @@ func (o *CDRClient) GetBalances(c *gin.Context, accessToken string, bank Connect
 	}
 
 	for _, balance := range resp.Payload.Data.Balances {
-		balances = append(balances, Balance{
+		balancesData = append(balancesData, Balance{
 			AccountID: *balance.AccountID,
 			Amount:    *balance.AvailableBalance,
 			Currency:  balance.Currency,
@@ -66,7 +66,7 @@ func (o *CDRClient) GetBalances(c *gin.Context, accessToken string, bank Connect
 		})
 	}
 
-	return balances, nil
+	return balancesData, nil
 }
 
 func (o *OBBRClient) GetBalances(c *gin.Context, accessToken string, bank ConnectedBank) ([]Balance, error) {
