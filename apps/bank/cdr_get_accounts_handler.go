@@ -44,7 +44,7 @@ func (h *CDRGetAccountsHandler) Validate(c *gin.Context) *Error {
 }
 
 func (h *CDRGetAccountsHandler) GetUserIdentifier(c *gin.Context) string {
-	return "bfb689fb-7745-45b9-bbaa-b21e00072447"
+	return h.introspectionResponse.Sub
 }
 
 func (h *CDRGetAccountsHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
