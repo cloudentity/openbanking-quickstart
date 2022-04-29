@@ -1,11 +1,16 @@
 package main
 
 import (
+	"strings"
+
+	cdr "github.com/cloudentity/acp-client-go/clients/openbanking/client/c_d_r"
 	"github.com/gin-gonic/gin"
+	"github.com/sirupsen/logrus"
 )
 
 type CDRGetTransactionsHandler struct {
 	*Server
+	introspectionResponse *cdr.CdrConsentIntrospectOKBody
 }
 
 func NewCDRGetTransactionsHandler(server *Server) GetEndpointLogic {
@@ -13,7 +18,11 @@ func NewCDRGetTransactionsHandler(server *Server) GetEndpointLogic {
 }
 
 func (h *CDRGetTransactionsHandler) SetIntrospectionResponse(c *gin.Context) *Error {
-	// should try introspecting for this at some point
+	var err error
+	if h.introspectionResponse, err = h.CDRIntrospectAccountsToken(c); err != nil {
+		logrus.Errorf("introspect cdr token for accounts failed with %+v", err)
+		return ErrBadRequest.WithMessage("failed to introspect token")
+	}
 	return nil
 }
 
@@ -27,6 +36,10 @@ func (h *CDRGetTransactionsHandler) BuildResponse(c *gin.Context, data BankUserD
 }
 
 func (h *CDRGetTransactionsHandler) Validate(c *gin.Context) *Error {
+	scopes := strings.Split(h.introspectionResponse.Scope, " ")
+	if !has(scopes, "bank:transactions:read") {
+		return ErrForbidden.WithMessage("token has no bank:accounts.basic:read scope granted")
+	}
 	return nil
 }
 
@@ -35,5 +48,11 @@ func (h *CDRGetTransactionsHandler) GetUserIdentifier(c *gin.Context) string {
 }
 
 func (h *CDRGetTransactionsHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
-	return data
+	var ret BankUserData
+	for _, transaction := range data.CDRTransactions {
+		if has(h.introspectionResponse.AccountIDs, *transaction.AccountID) {
+			ret.CDRTransactions = append(ret.CDRTransactions, transaction)
+		}
+	}
+	return ret
 }
