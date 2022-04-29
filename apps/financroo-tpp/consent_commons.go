@@ -94,8 +94,6 @@ func NewCDRLoginURLBuilder(config Config) (LoginURLBuilder, error) {
 	}, nil
 }
 
-// TODO: AUT-5813
-
 type ClaimRequests struct {
 	Userinfo map[string]*ClaimRequest `json:"userinfo"`
 	IDToken  map[string]*ClaimRequest `json:"id_token"`
@@ -142,11 +140,9 @@ func (o *CDRLoginURLBuilder) BuildLoginURL(arrangementID string, client acpclien
 	if signedToken, err = token.SignedString(o.signingKey); err != nil {
 		return authorizeURL, csrf, err
 	}
-
 	params := parsed.Query()
 	params.Set("request", signedToken)
 	parsed.RawQuery = params.Encode()
-
 	return parsed.String(), csrf, nil
 }
 
