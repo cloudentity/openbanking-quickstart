@@ -7,6 +7,8 @@ import (
 	obbrAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/client/accounts"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client/balances"
 	"github.com/gin-gonic/gin"
+	"github.com/go-openapi/runtime"
+	"github.com/go-openapi/strfmt"
 )
 
 type Balance struct {
@@ -48,6 +50,9 @@ func (o *CDRClient) GetBalances(c *gin.Context, accessToken string, bank Connect
 	if resp, err = o.Banking.Banking.ListBalancesBulk(
 		banking.NewListBalancesBulkParams().
 			WithDefaults(),
+		runtime.ClientAuthInfoWriterFunc(func(request runtime.ClientRequest, registry strfmt.Registry) error {
+			return request.SetHeaderParam("Authorization", fmt.Sprintf("Bearer %s", accessToken))
+		}),
 	); err != nil {
 		return []Balance{}, err
 	}

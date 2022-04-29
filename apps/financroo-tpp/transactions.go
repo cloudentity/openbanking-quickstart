@@ -1,12 +1,18 @@
 package main
 
 import (
+	"fmt"
 	"time"
 
 	"github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/client/banking"
+	cdrBankingModels "github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/models"
+
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client/transactions"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
 	"github.com/gin-gonic/gin"
+	"github.com/go-openapi/runtime"
+	"github.com/go-openapi/strfmt"
+	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 )
 
@@ -43,43 +49,63 @@ func (o *OBBRClient) GetTransactions(c *gin.Context, accessToken string, bank Co
 
 func (o *CDRClient) GetTransactions(c *gin.Context, accessToken string, bank ConnectedBank) (transactionsData []Transaction, err error) {
 	var (
-		resp       *banking.GetTransactionsOK
-		parsedTime time.Time
+		resp     *banking.GetTransactionsOK
+		accounts []Account
 	)
 
-	// will need to loop
-	if resp, err = o.Banking.Banking.GetTransactions(
-		banking.NewGetTransactionsParams().
-			WithDefaults().
-			WithAccountID("1000001"),
-	); err != nil {
-		return transactionsData, err
+	if accounts, err = o.GetAccounts(c, accessToken, bank); err != nil {
+		return transactionsData, errors.Wrap(err, "failed to get account ids for transactions")
 	}
 
-	for _, transaction := range resp.Payload.Data.Transactions {
-		if parsedTime, err = time.Parse(time.RFC3339, transaction.ExecutionDateTime); err != nil {
-			logrus.Infof("failed to parse time %v", err)
-			continue
+	for _, account := range accounts {
+		if resp, err = o.Banking.Banking.GetTransactions(
+			banking.NewGetTransactionsParams().
+				WithDefaults().
+				WithAccountID(string(*account.AccountID)),
+			runtime.ClientAuthInfoWriterFunc(func(request runtime.ClientRequest, registry strfmt.Registry) error {
+				return request.SetHeaderParam("Authorization", fmt.Sprintf("Bearer %s", accessToken))
+			}),
+		); err != nil {
+			return transactionsData, err
 		}
 
-		bookingDateTime := models.BookingDateTime(parsedTime)
+		for _, cdrTransaction := range resp.Payload.Data.Transactions {
+			if transaction, err := cdrTransactionToInternalTransaction(cdrTransaction, bank); err != nil {
+				logrus.Infof("failed to map cdr transaction to internal transaction: %+v", err)
+			} else {
+				transactionsData = append(transactionsData, transaction)
+			}
+		}
+	}
+	return transactionsData, nil
+}
 
-		transactionsData = append(transactionsData, Transaction{
-			OBTransaction6: models.OBTransaction6{
-				AccountID:       (*models.AccountID)(transaction.AccountID),
-				TransactionID:   models.TransactionID(transaction.TransactionID),
-				BookingDateTime: &bookingDateTime,
-				Amount: &models.OBActiveOrHistoricCurrencyAndAmount9{
-					Amount: (*models.OBActiveCurrencyAndAmountSimpleType)(transaction.Amount),
-				},
-				BankTransactionCode: &models.OBBankTransactionCodeStructure1{
-					Code: &transaction.MerchantCategoryCode,
-				},
-				TransactionInformation: models.TransactionInformation(*transaction.Description),
-			},
-			BankID: bank.BankID,
-		})
+func cdrTransactionToInternalTransaction(transaction *cdrBankingModels.BankingTransaction, bank ConnectedBank) (Transaction, error) {
+	var (
+		parsedTime time.Time
+		err        error
+	)
+
+	if parsedTime, err = time.Parse(time.RFC3339, transaction.ExecutionDateTime); err != nil {
+		logrus.Infof("failed to parse time %v", err)
+		return Transaction{}, err
 	}
 
-	return transactionsData, nil
+	bookingDateTime := models.BookingDateTime(parsedTime)
+
+	return Transaction{
+		OBTransaction6: models.OBTransaction6{
+			AccountID:       (*models.AccountID)(transaction.AccountID),
+			TransactionID:   models.TransactionID(transaction.TransactionID),
+			BookingDateTime: &bookingDateTime,
+			Amount: &models.OBActiveOrHistoricCurrencyAndAmount9{
+				Amount: (*models.OBActiveCurrencyAndAmountSimpleType)(transaction.Amount),
+			},
+			BankTransactionCode: &models.OBBankTransactionCodeStructure1{
+				Code: &transaction.MerchantCategoryCode,
+			},
+			TransactionInformation: models.TransactionInformation(*transaction.Description),
+		},
+		BankID: bank.BankID,
+	}, nil
 }
