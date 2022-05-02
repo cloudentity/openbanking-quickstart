@@ -154,14 +154,14 @@
   var switchControls = [].map.call(document.querySelectorAll('.mdc-switch'), function (el) {
     return new window.mdc.switchControl.MDCSwitch(el)
   });
-  var btn = document.querySelector('.confirm-button');
-  btn.addEventListener('click', function (ev) {
+  var continueBtn = document.querySelector('.confirm-button');
+  continueBtn.addEventListener('click', function (ev) {
     if (!approvedClusters) {
         ev.preventDefault();
         document.querySelector('.permissions-block').style.display = 'none';
         document.querySelector('.accounts-block').style.display = 'block';
         approvedClusters = true;
-        btn.querySelector('.mdc-button__label').innerHTML = '{{.trans.agree}}'
+        continueBtn.querySelector('.mdc-button__label').innerHTML = '{{.trans.agree}}'
     }
   });
 </script>

@@ -37,7 +37,7 @@
 </form>
 
 <script>
-    var btn = document.querySelector('#verify-button');
+    var pinBtn = document.querySelector('#verify-button');
 
     var pinlogin = new Pinlogin(document.querySelector('#pinlogin'), {
         fields: 6,
@@ -45,13 +45,13 @@
         hideinput: false,
         pattern: "^[0-9a-zA-Z]*$",
         complete: function (pin) {
-            btn.disabled = false;
-            btn.focus();
-            btn.setAttribute("data-pin", pin);
+            pinBtn.disabled = false;
+            pinBtn.focus();
+            pinBtn.setAttribute("data-pin", pin);
             document.getElementById("otp").value = pin;
         },
         invalid: function (field, nr) {
-            btn.disabled = true;
+            pinBtn.disabled = true;
         }
     });
 
