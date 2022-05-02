@@ -134,7 +134,7 @@
 </body>
 
 <script>
-  var approvedAccounts = false;
+  var approvedClusters = false;
 
   function toggle(value) {
     var el = document.querySelector("[data-desc-id='" + value + "']");
@@ -156,11 +156,11 @@
   });
   var btn = document.querySelector('.confirm-button');
   btn.addEventListener('click', function (ev) {
-    if (!approvedAccounts) {
+    if (!approvedClusters) {
         ev.preventDefault();
         document.querySelector('.permissions-block').style.display = 'none';
         document.querySelector('.accounts-block').style.display = 'block';
-        approvedAccounts = true;
+        approvedClusters = true;
         btn.querySelector('.mdc-button__label').innerHTML = '{{.trans.agree}}'
     }
   });
