@@ -122,9 +122,7 @@ func (c *CDRBankClient) GetInternalAccounts(ctx context.Context, id string) (Int
 }
 
 func (c *CDRBankClient) accountsResponseToInternalAccounts(body []byte) (accounts InternalAccounts, err error) {
-	var (
-		accountListResponse models.ResponseBankingAccountList
-	)
+	var accountListResponse models.ResponseBankingAccountList
 
 	if err = json.Unmarshal(body, &accountListResponse); err != nil {
 		return accounts, err
