@@ -6,6 +6,7 @@ export class ConsentPage {
   private readonly permissionRowLocator: string = `[data-desc-id="account_permissions"] li`;
   private readonly expandPermissionsButtonLocator: string = `[data-icon-id="account_permissions"]`
   private readonly accountIdsLocator: string = `[name="account_ids"]`;
+  private readonly continueButtonLocator: string = `[value="confirm"]`;
 
   public checkAccounts(accounts: string[]): void {
     cy.get(this.accountIdsLocator).uncheck()
@@ -36,5 +37,15 @@ export class ConsentPage {
   public assertThatPageIsNotVisible(): void {
     cy.get(this.cancelButtonLocator, { timeout: 5000 } ).should('not.exist');
     cy.get(this.confirmButtonLocator, { timeout: 5000 } ).should('not.exist');
+  }
+
+  public assertThatAccountsAreNotVisible(accounts: string[]): void {
+    accounts.forEach(account => cy.get(`[id*="${account}"]`).should('not.be.visible'))
+  }
+
+  public clickContinue(): void {
+    let btn = cy.get(this.continueButtonLocator);
+    btn.contains('Continue').should('be.visible');
+    btn.click({force: true});
   }
 }
