@@ -4,6 +4,12 @@
 <head>
   {{ template "imports.tmpl" }}
   <title>{{.trans.headTitle}}</title>
+
+  <style>
+    .accounts-block {
+        display: none;
+    }
+  </style>
 </head>
 
 <body>
@@ -29,8 +35,9 @@
     <form action="?login_id={{ .login_request.ID }}&login_state={{ .login_request.State }}&consent_type={{ .login_request.ConsentType }}"
           method="post">
       <div class="form-block">
-        <div class="form-block-title">{{.trans.selectAccounts}} {{ .client_name }}</div>
         <div class="accounts-block">
+          <div class="form-block-title">{{.trans.selectAccounts}} {{ .client_name }}</div>
+
           {{ range .accounts }}
             <div class="account-row">
               <div class="account-header">
@@ -61,8 +68,8 @@
           {{ end }}
         </div>
 
-        <div class="form-block-title">{{.trans.reviewData}}</div>
         <div class="permissions-block">
+          <div class="form-block-title">{{.trans.reviewData}}</div>
 
           <div class="account-row">
             <div class="account-header">
@@ -70,14 +77,14 @@
               <button id="show-description"
                       class="mdc-icon-button"
                       aria-label="Show description"
-                      aria-hidden="true"
+                      aria-hidden="false"
                       aria-pressed="false"
                       onclick="return toggle('account_permissions');">
                 <i class="material-icons mdc-icon-button__icon" data-icon-id="account_permissions">
                   keyboard_arrow_down</i>
               </button>
             </div>
-            <div class="account-description account-description-hidden" data-desc-id="account_permissions">
+            <div class="account-description account-description-visible" data-desc-id="account_permissions">
               {{ range .resources }}
                 <div class="permission-name" style="margin-top: 16px;">{{.ResourceType}}</div>
                 <div class="caption" style="margin-top: 8px;">
@@ -109,7 +116,7 @@
                   {{ if or .mfaRequest .mfaConfirmation }} disabled {{end}}
           >
             <div class="mdc-button__ripple"></div>
-            <span class="mdc-button__label">{{.trans.agree}}</span>
+            <span class="mdc-button__label">{{.trans.continue}}</span>
           </button>
         </div>
       </div>
@@ -127,6 +134,8 @@
 </body>
 
 <script>
+  var approvedAccounts = false;
+
   function toggle(value) {
     var el = document.querySelector("[data-desc-id='" + value + "']");
     if (el.classList.contains('account-description-visible')) {
@@ -144,6 +153,16 @@
 
   var switchControls = [].map.call(document.querySelectorAll('.mdc-switch'), function (el) {
     return new window.mdc.switchControl.MDCSwitch(el)
+  });
+  var btn = document.querySelector('.confirm-button');
+  btn.addEventListener('click', function (ev) {
+    if (!approvedAccounts) {
+        ev.preventDefault();
+        document.querySelector('.permissions-block').style.display = 'none';
+        document.querySelector('.accounts-block').style.display = 'block';
+        approvedAccounts = true;
+        btn.querySelector('.mdc-button__label').innerHTML = '{{.trans.agree}}'
+    }
   });
 </script>
 </html>

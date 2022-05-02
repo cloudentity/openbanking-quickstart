@@ -87,3 +87,4 @@ fdx.account.purposeDetail: To uncover insights that can improve your financial w
 fdx.account.expiration: <strong>{{ .client_name }}</strong> will have access to your account information until <strong>{{ .expiration_date }}</strong>
 fdx.account.cancel: Cancel
 fdx.account.agree: I Agree
+fdx.account.continue: Continue
