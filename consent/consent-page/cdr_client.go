@@ -19,9 +19,9 @@ import (
 )
 
 type CDRBankClient struct {
-	httpClient *http.Client
-	bankURL    string
-	cc         clientcredentials.Config
+	httpClient       *http.Client
+	bankClientConfig BankClientConfig
+	cc               clientcredentials.Config
 }
 
 func NewCDRBankClient(config Config) *CDRBankClient {
@@ -42,7 +42,7 @@ func NewCDRBankClient(config Config) *CDRBankClient {
 				TokenURL:     config.BankClientConfig.TokenURL,
 				Scopes:       config.BankClientConfig.Scopes,
 			},
-			bankURL: config.BankClientConfig.URL.String(),
+			bankClientConfig: config.BankClientConfig,
 		}
 	}
 
@@ -77,24 +77,31 @@ func NewCDRBankClient(config Config) *CDRBankClient {
 			TokenURL:     config.BankClientConfig.TokenURL,
 			Scopes:       config.BankClientConfig.Scopes,
 		},
-		bankURL: config.BankClientConfig.URL.String(),
+		bankClientConfig: config.BankClientConfig,
 	}
 }
 
 func (c *CDRBankClient) GetInternalAccounts(ctx context.Context, id string) (InternalAccounts, error) {
 	var (
-		token    *oauth2.Token
-		request  *http.Request
-		response *http.Response
-		body     []byte
-		err      error
+		token                *oauth2.Token
+		request              *http.Request
+		response             *http.Response
+		accountsEndpointPath string
+		body                 []byte
+		err                  error
 	)
+
+	if c.bankClientConfig.AccountsURL != nil {
+		accountsEndpointPath = c.bankClientConfig.AccountsURL.String()
+	} else {
+		accountsEndpointPath = c.bankClientConfig.URL.String() + "/internal/accounts"
+	}
 
 	if token, err = c.cc.Token(context.WithValue(ctx, oauth2.HTTPClient, c.httpClient)); err != nil {
 		return InternalAccounts{}, errors.Wrapf(err, "failed to get client credentials token for internal bank api call")
 	}
 
-	if request, err = http.NewRequestWithContext(ctx, http.MethodPost, c.bankURL+"/internal/accounts", strings.NewReader(
+	if request, err = http.NewRequestWithContext(ctx, http.MethodPost, accountsEndpointPath, strings.NewReader(
 		url.Values{
 			"customer_id": []string{id},
 		}.Encode(),

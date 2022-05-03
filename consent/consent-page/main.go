@@ -71,7 +71,8 @@ type OtpConfig struct {
 }
 
 type BankClientConfig struct {
-	URL          *url.URL `env:"BANK_URL"`
+	URL          *url.URL `env:"BANK_URL,required"`
+	AccountsURL  *url.URL `env:"BANK_ACCOUNTS_ENDPOINT"`
 	CertFile     string   `env:"BANK_CLIENT_CERT_FILE" envDefault:"/tpp_cert.pem"`
 	KeyFile      string   `env:"BANK_CLIENT_KEY_FILE" envDefault:"/tpp_key.pem"`
 	TokenURL     string   `env:"BANK_CLIENT_TOKEN_URL"`
