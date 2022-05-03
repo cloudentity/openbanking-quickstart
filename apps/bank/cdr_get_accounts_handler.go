@@ -44,6 +44,7 @@ func (h *CDRGetAccountsHandler) Validate(c *gin.Context) *Error {
 }
 
 func (h *CDRGetAccountsHandler) GetUserIdentifier(c *gin.Context) string {
+	logrus.Infof("introspection response sub is %s", h.introspectionResponse.Sub)
 	return h.introspectionResponse.Sub
 }
 

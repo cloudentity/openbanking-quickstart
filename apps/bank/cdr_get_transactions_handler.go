@@ -20,7 +20,7 @@ func NewCDRGetTransactionsHandler(server *Server) GetEndpointLogic {
 func (h *CDRGetTransactionsHandler) SetIntrospectionResponse(c *gin.Context) *Error {
 	var err error
 	if h.introspectionResponse, err = h.CDRIntrospectAccountsToken(c); err != nil {
-		logrus.Errorf("introspect cdr token for accounts failed with %+v", err)
+		logrus.Errorf("introspect cdr token for transactions failed with %+v", err)
 		return ErrBadRequest.WithMessage("failed to introspect token")
 	}
 	return nil
@@ -44,7 +44,8 @@ func (h *CDRGetTransactionsHandler) Validate(c *gin.Context) *Error {
 }
 
 func (h *CDRGetTransactionsHandler) GetUserIdentifier(c *gin.Context) string {
-	return "bfb689fb-7745-45b9-bbaa-b21e00072447"
+	logrus.Infof("introspection response sub is %s", h.introspectionResponse.Sub)
+	return h.introspectionResponse.Sub
 }
 
 func (h *CDRGetTransactionsHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
