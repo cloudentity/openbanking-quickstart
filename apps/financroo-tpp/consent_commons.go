@@ -1,18 +1,12 @@
 package main
 
 import (
-	"crypto/x509"
 	"encoding/json"
-	"encoding/pem"
 	"fmt"
 	"net/http"
 	"net/url"
-	"os"
-	"strings"
-	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/golang-jwt/jwt/v4"
 	"github.com/pkg/errors"
 	"gopkg.in/square/go-jose.v2"
 
@@ -71,79 +65,17 @@ func (o *OBUKLoginURLBuilder) BuildLoginURL(consentID string, client acpclient.C
 }
 
 type CDRLoginURLBuilder struct {
-	signingKey interface{}
 }
 
 func NewCDRLoginURLBuilder(config Config) (LoginURLBuilder, error) {
-	var bs []byte
-	var err error
-	var signingKey interface{}
-
-	if bs, err = os.ReadFile(config.KeyFile); err != nil {
-		return nil, errors.Wrapf(err, "failed to read request object signing key")
-	}
-
-	block, _ := pem.Decode(bs)
-
-	if signingKey, err = x509.ParsePKCS1PrivateKey(block.Bytes); err != nil {
-		return nil, errors.Wrapf(err, "failed to parse request object signing key")
-	}
-
-	return &CDRLoginURLBuilder{
-		signingKey,
-	}, nil
-}
-
-type ClaimRequests struct {
-	Userinfo map[string]*ClaimRequest `json:"userinfo"`
-	IDToken  map[string]*ClaimRequest `json:"id_token"`
-}
-
-type ClaimRequest struct {
-	Essential bool     `json:"essential"`
-	Value     string   `json:"value"`
-	Values    []string `json:"values"`
+	return &CDRLoginURLBuilder{}, nil
 }
 
 func (o *CDRLoginURLBuilder) BuildLoginURL(arrangementID string, client acpclient.Client) (authorizeURL string, csrf acpclient.CSRF, err error) {
-	var (
-		parsed      *url.URL
-		signedToken string
+	return client.AuthorizeURL(
+		acpclient.WithPKCE(),
+		acpclient.WithOpenbankingACR([]string{"urn:cds.au:cdr:2"}),
 	)
-
-	if authorizeURL, csrf, err = client.AuthorizeURL(acpclient.WithPKCE()); err != nil {
-		return authorizeURL, csrf, err
-	}
-
-	if parsed, err = url.Parse(authorizeURL); err != nil {
-		return authorizeURL, csrf, err
-	}
-
-	claims := jwt.MapClaims{
-		"exp":          time.Now().Add(time.Minute).Unix(),
-		"nonce":        csrf.Nonce,
-		"state":        csrf.State,
-		"nbf":          time.Now().Unix(),
-		"redirect_uri": client.Config.RedirectURL.String(),
-		"scope":        strings.Join(client.Config.Scopes, " "),
-		"claims": ClaimRequests{
-			IDToken: map[string]*ClaimRequest{
-				"acr": {
-					Essential: true,
-					Value:     "urn:cds.au:cdr:2",
-				},
-			},
-		},
-	}
-
-	token := jwt.NewWithClaims(jwt.SigningMethodRS256, claims)
-	if signedToken, err = token.SignedString(o.signingKey); err != nil {
-		return authorizeURL, csrf, err
-	}
-	params := parsed.Query()
-	params.Set("request", signedToken)
-	parsed.RawQuery = params.Encode()
-	return parsed.String(), csrf, nil
 }
 
 func (s *Server) CreateConsentResponse(
