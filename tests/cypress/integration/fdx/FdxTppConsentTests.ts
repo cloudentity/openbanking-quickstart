@@ -50,9 +50,10 @@ describe(`FDX Tpp consent app`, () => {
         mfaPage.typePin();
       }
 
-      consentPage.checkAccounts(accountsIds);
-      consentPage.expandPermissions();
       consentPage.assertPermissions(4);
+      consentPage.assertThatAccountsAreNotVisible(accountsIds);
+      consentPage.clickContinue();
+      consentPage.checkAccounts(accountsIds);
       consentPage.confirm();
 
       fdxTppAuthenticatedPage.assertThatPageIsDisplayed();
@@ -81,6 +82,7 @@ describe(`FDX Tpp consent app`, () => {
       mfaPage.typePin();
     }
 
+    consentPage.clickContinue();
     consentPage.confirm();
 
     fdxTppAuthenticatedPage.assertThatPageIsDisplayed();
@@ -103,7 +105,7 @@ describe(`FDX Tpp consent app`, () => {
       mfaPage.typePin();
     }
 
-    consentPage.checkAccounts([digitalBankingAccountId]);
+    consentPage.assertPermissions(4);
     consentPage.cancel();
 
     // UI error page improvements AUT-5845
