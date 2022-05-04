@@ -2,6 +2,9 @@ pipeline {
     agent {
         label 'openbanking'
     }
+    triggers {
+        parameterizedCron(env.BRANCH_NAME == 'master' ? '0 0 * * *')
+    }
     options {
         timeout(time: 1, unit: 'HOURS')
     }
