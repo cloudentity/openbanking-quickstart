@@ -3,7 +3,7 @@ pipeline {
         label 'openbanking'
     }
     triggers {
-        cron(env.BRANCH_NAME == 'PR-167' ? 'H 15 * * * *' : '')
+        parameterizedCron(env.BRANCH_NAME == 'PR-167' ? 'H 15 * * * *' : '')
     }
     options {
         timeout(time: 1, unit: 'HOURS')
