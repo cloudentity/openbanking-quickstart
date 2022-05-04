@@ -3,7 +3,7 @@ pipeline {
         label 'openbanking'
     }
     triggers {
-        cron(env.BRANCH_NAME.startsWith('PR') ? 'H /15 * * * *' : '')
+        cron(env.BRANCH_NAME.startsWith('PR') ? 'H 15 * * * *' : '')
     }
     options {
         timeout(time: 1, unit: 'HOURS')
