@@ -26,6 +26,7 @@ export type Bank = {
   permissions?: Permission[];
 };
 
+// TODO: AUT-5813
 export const banks: Bank[] = [
   {
     value: "gobank",

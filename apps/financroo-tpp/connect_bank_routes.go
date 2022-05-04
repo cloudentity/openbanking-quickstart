@@ -47,9 +47,11 @@ func (s *Server) ConnectBank() func(*gin.Context) {
 			return
 		}
 
-		if consentID, err = s.Clients.ConsentClient.CreateAccountConsent(c); err != nil {
-			c.String(http.StatusBadRequest, fmt.Sprintf("failed to register account access consent: %+v", err))
-			return
+		if s.Clients.ConsentClient != nil {
+			if consentID, err = s.Clients.ConsentClient.CreateAccountConsent(c); err != nil {
+				c.String(http.StatusBadRequest, fmt.Sprintf("failed to register account access consent: %+v", err))
+				return
+			}
 		}
 
 		s.CreateConsentResponse(c, bankID, consentID, user, s.Clients.AcpAccountsClient, s.LoginURLBuilder)

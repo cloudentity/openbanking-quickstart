@@ -64,6 +64,20 @@ func (o *OBUKLoginURLBuilder) BuildLoginURL(consentID string, client acpclient.C
 		acpclient.WithPKCE())
 }
 
+type CDRLoginURLBuilder struct {
+}
+
+func NewCDRLoginURLBuilder(config Config) (LoginURLBuilder, error) {
+	return &CDRLoginURLBuilder{}, nil
+}
+
+func (o *CDRLoginURLBuilder) BuildLoginURL(arrangementID string, client acpclient.Client) (authorizeURL string, csrf acpclient.CSRF, err error) {
+	return client.AuthorizeURL(
+		acpclient.WithPKCE(),
+		acpclient.WithOpenbankingACR([]string{"urn:cds.au:cdr:2"}),
+	)
+}
+
 func (s *Server) CreateConsentResponse(
 	c *gin.Context, bankID BankID,
 	consentID string,

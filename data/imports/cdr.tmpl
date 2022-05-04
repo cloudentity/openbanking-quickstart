@@ -16,6 +16,7 @@ servers:
   token_endpoint_auth_methods: 
     - private_key_jwt
     - client_secret_post
+    - tls_client_auth
   trust_anchor_configuration:
     jwks:
       keys:
@@ -129,7 +130,7 @@ idps:
         authentication_context:
           name: user
           mobile_verified: "+48123456789"
-          customer_id: "bfb689fb-7745-45b9-bbaa-b21e00072447"
+          customer_id: "user"
       - username: user2
         password: p@ssw0rd!
         authentication_context:
@@ -157,6 +158,61 @@ clients:
   scopes:
   - manage_openbanking_consents
   token_endpoint_auth_method: client_secret_basic
+
+- tenant_id: {{ .tenant_id }}
+  authorization_server_id: cdr
+  client_id: bukj5p6k7qdmm5ppbi4g
+  client_name: bank
+  description: bank resource server app used to introspect tokens
+  client_secret: 8DPOMd3ZOvsjuUnU9goRMHTIUUXtSkgwQeo8v_S74aE
+  grant_types:
+  - client_credentials
+  scopes:
+  - introspect_openbanking_tokens
+  - introspect_tokens
+  - revoke_tokens
+  subject_type: pairwise
+  system: true
+  tls_client_auth_subject_dn: {{ .bank_tls_client_auth_subject_dn }}
+  tls_client_certificate_bound_access_tokens: true
+  token_endpoint_auth_method: tls_client_auth
+
+# financroo / developer tpp
+- tenant_id: {{ .tenant_id }}
+  authorization_server_id: cdr
+  client_id: bugkgm23g9kregtu051g
+  client_name: Financroo
+  client_uri: https://localhost:8090
+  client_secret: -TlfoycUiE0qNi-XUBFDfTxMlhHTCjVxOF6pLrWZbQA
+  tls_client_auth_subject_dn: {{ .financroo_tls_client_auth_subject_dn }}
+  tls_client_certificate_bound_access_tokens: true
+  token_endpoint_auth_method: tls_client_auth
+  redirect_uris:
+  - {{ .developer_tpp_url }}/callback
+  - {{ .financroo_tpp_url }}/api/callback
+  - {{ .financroo_tpp_url }}/api/domestic/callback
+  subject_type: pairwise
+  request_object_signing_alg: RS256
+  response_types:
+  - token
+  - code
+  scopes:
+  - bank:accounts.basic:read
+  - bank:accounts.detail:read
+  - introspect_tokens
+  - offline_access
+  - openid
+  - revoke_tokens
+  - bank:transactions:read
+  - common:customer.basic:read
+  grant_types:
+  - client_credentials
+  - authorization_code
+  - refresh_token
+  jwks:
+{{ readFile .financroo_pem_file | pemToPublicJwks | indent 4 }}
+
+
 - tenant_id: {{ .tenant_id }}
   authorization_server_id: cdr
   client_id: cw1ocudfotn6edhsiv8h

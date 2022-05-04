@@ -116,7 +116,6 @@ services:
       configuration:
         condition: service_completed_successfully
 
-
   consent-admin-portal:
     image: cloudentity/openbanking-quickstart-consent-admin-portal:${VERSION}
     container_name: consent-admin-portal
@@ -134,6 +133,29 @@ services:
       - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/bank-admins
     depends_on:
       configuration:
+        condition: service_completed_successfully
+
+  financroo-tpp:
+    image: cloudentity/openbanking-quickstart-financroo-tpp:${VERSION}
+    container_name: financroo-tpp
+    restart: always
+    ports:
+      - "8091:8091"
+    volumes:
+      - ./data:/certs
+      - ./mount/financroo-tpp:/app/data
+    env_file:
+      - .env
+    environment:
+      - UI_URL=https://${APP_HOST}:8091
+      - TENANT=${TENANT}
+      - GIN_MODE=debug # change to release to disable gin debug
+      - SPEC=cdr
+      - BANK_URL=http
+      - OPENBANKING_SERVER_ID=cdr
+      - BANK_URL=http://bank:8070
+    depends_on: 
+      configuration: 
         condition: service_completed_successfully
 
   bank:
@@ -183,3 +205,4 @@ services:
       - /variables.yaml
       - --verbose  
 
+  

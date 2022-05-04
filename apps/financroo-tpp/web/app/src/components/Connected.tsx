@@ -54,6 +54,8 @@ export default function Connected({banks, onConnectClick, onDisconnect, onReconn
 
   const bankNeedsReconnect = path(['response', 'error', 'status'], fetchAccountsError) === 401;
 
+  const currencyType = balances[0]?.Currency || "N/A"
+
   if (isLoading) {
     return <Progress/>;
   }
@@ -74,7 +76,7 @@ export default function Connected({banks, onConnectClick, onDisconnect, onReconn
         />
       </Grid>
       <Grid item xs={8} style={{background: '#FCFCFF', padding: '32px 32px 16px 32px'}}>
-        <Analytics transactions={transactions} filtering={filtering} onChangeFiltering={f => setFiltering({...filtering, ...f})}/>
+        <Analytics currencyType={currencyType} transactions={transactions} filtering={filtering} onChangeFiltering={f => setFiltering({...filtering, ...f})}/>
       </Grid>
     </Grid>
   )
