@@ -3,7 +3,7 @@ pipeline {
         label 'openbanking'
     }
     triggers {
-        parameterizedCron(env.BRANCH_NAME == 'master' ? '0 0 * * *' : '')
+        parameterizedCron(env.BRANCH_NAME.startsWith('feature/') ? '0 0/30 * 1/1 * ? *' : '')
     }
     options {
         timeout(time: 1, unit: 'HOURS')
