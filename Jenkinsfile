@@ -3,7 +3,7 @@ pipeline {
         label 'openbanking'
     }
     triggers {
-        cron(env.BRANCH_NAME == 'PR-167' ? 'H 10 * * *' : '')
+        cron(env.BRANCH_NAME == 'master' ? 'H 5 * * *' : '')
     }
     options {
         timeout(time: 1, unit: 'HOURS')
@@ -53,142 +53,142 @@ pipeline {
                 }
             }
         }
-        // stage('FDX Tests with disabled MFA') {
-        //     steps {
-        //         script {
-        //             try {
-        //                 sh 'make disable-mfa run-fdx-local'
-        //                 sh 'make run-fdx-tests-headless'
-        //             } catch(exc) {
-        //                 captureDockerLogs()
-        //                 failure('Tests failed')
-        //             } finally {
-        //                 sh 'make clean'
-        //             }
-        //         }
-        //     }
-        // }
-        // stage('FDX Tests with enabled MFA') {
-        //     steps {
-        //         script {
-        //             try {
-        //                 sh 'make enable-mfa run-fdx-local'
-        //                 sh 'make run-fdx-tests-headless'
-        //             } catch(exc) {
-        //                 captureDockerLogs()
-        //                 failure('Tests failed')
-        //             } finally {
-        //                 sh 'make clean'
-        //             }
-        //         }
-        //     }
-        // }
-        // stage('OBUK Tests with disabled MFA') {
-        //     steps {
-        //         script {
-        //             try {
-        //                 sh 'make disable-mfa run-obuk-local'
-        //                 sh 'make run-obuk-tests-headless'
-        //             } catch(exc) {
-        //                 captureDockerLogs()
-        //                 failure('Tests failed')
-        //             } finally {
-        //                 sh 'make clean'
-        //             }
-        //         }
-        //     }
-        // }
-        // stage('OBUK Tests with enabled MFA') {
-        //     steps {
-        //         script {
-        //             try {
-        //                 sh 'make enable-mfa run-obuk-local'
-        //                 sh 'make run-obuk-tests-headless'
-        //             } catch(exc) {
-        //                 captureDockerLogs()
-        //                 failure('Tests failed')
-        //             } finally {
-        //                 sh 'make clean'
-        //             }
-        //         }
-        //     }
-        // }
-        // stage('OBBR Tests with disabled MFA') {
-        //     steps {
-        //         script {
-        //             try {
-        //                 sh 'make disable-mfa run-obbr-local'
-        //                 sh 'make run-obbr-tests-headless'
-        //                 sh 'make clean'
-        //             } catch(exc) {
-        //                 captureDockerLogs()
-        //                 failure('Tests failed')
-        //             } finally {
-        //                 sh 'make clean'
-        //             }
-        //         }
-        //     }
-        // }
-        // stage('OBBR Tests with enabled MFA') {
-        //     steps {
-        //         script {
-        //             try {
-        //                 sh 'make enable-mfa run-obbr-local'
-        //                 sh 'make run-obbr-tests-headless'
-        //             } catch(exc) {
-        //                 captureDockerLogs()
-        //                 failure('Tests failed')
-        //             } finally {
-        //                 sh 'make clean'
-        //             }
-        //         }
-        //     }
-        // }
-        // stage('SaaS FDX Tests') {
-        //     steps {
-        //         script {
-        //             try {
-        //                 sh 'make disable-mfa set-saas-configuration run-fdx-saas'
-        //                 sh 'make run-saas-fdx-tests-headless'
-        //             } catch(exc) {
-        //                 captureDockerLogs()
-        //                 failure('Tests failed')
-        //             } finally {
-        //                 sh 'make clean-fdx-saas'
-        //             }
-        //         }
-        //     }
-        // }
-        // stage('SaaS OBUK Tests') {
-        //     steps {
-        //         script {
-        //             try {
-        //                 sh 'make disable-mfa set-saas-configuration run-obuk-saas'
-        //                 sh 'make run-saas-obuk-tests-headless'
-        //             } catch(exc) {
-        //                 captureDockerLogs()
-        //                 failure('Tests failed')
-        //             } finally {
-        //                 sh 'make clean-obuk-saas'
-        //             }
-        //         }
-        //     }
-        // }
-        // stage('SaaS OBBR Tests') {
-        //     steps {
-        //         script {
-        //             try {
-        //                 sh 'make disable-mfa set-saas-configuration run-obbr-saas'
-        //                 sh 'make run-saas-obbr-tests-headless'
-        //             } catch(exc) {
-        //                 captureDockerLogs()
-        //                 failure('Tests failed')
-        //             } finally {
-        //                 sh 'make clean-obbr-saas'
-        //             }
-        //         }
-        //     }
-        // }
+        stage('FDX Tests with disabled MFA') {
+            steps {
+                script {
+                    try {
+                        sh 'make disable-mfa run-fdx-local'
+                        sh 'make run-fdx-tests-headless'
+                    } catch(exc) {
+                        captureDockerLogs()
+                        failure('Tests failed')
+                    } finally {
+                        sh 'make clean'
+                    }
+                }
+            }
+        }
+        stage('FDX Tests with enabled MFA') {
+            steps {
+                script {
+                    try {
+                        sh 'make enable-mfa run-fdx-local'
+                        sh 'make run-fdx-tests-headless'
+                    } catch(exc) {
+                        captureDockerLogs()
+                        failure('Tests failed')
+                    } finally {
+                        sh 'make clean'
+                    }
+                }
+            }
+        }
+        stage('OBUK Tests with disabled MFA') {
+            steps {
+                script {
+                    try {
+                        sh 'make disable-mfa run-obuk-local'
+                        sh 'make run-obuk-tests-headless'
+                    } catch(exc) {
+                        captureDockerLogs()
+                        failure('Tests failed')
+                    } finally {
+                        sh 'make clean'
+                    }
+                }
+            }
+        }
+        stage('OBUK Tests with enabled MFA') {
+            steps {
+                script {
+                    try {
+                        sh 'make enable-mfa run-obuk-local'
+                        sh 'make run-obuk-tests-headless'
+                    } catch(exc) {
+                        captureDockerLogs()
+                        failure('Tests failed')
+                    } finally {
+                        sh 'make clean'
+                    }
+                }
+            }
+        }
+        stage('OBBR Tests with disabled MFA') {
+            steps {
+                script {
+                    try {
+                        sh 'make disable-mfa run-obbr-local'
+                        sh 'make run-obbr-tests-headless'
+                        sh 'make clean'
+                    } catch(exc) {
+                        captureDockerLogs()
+                        failure('Tests failed')
+                    } finally {
+                        sh 'make clean'
+                    }
+                }
+            }
+        }
+        stage('OBBR Tests with enabled MFA') {
+            steps {
+                script {
+                    try {
+                        sh 'make enable-mfa run-obbr-local'
+                        sh 'make run-obbr-tests-headless'
+                    } catch(exc) {
+                        captureDockerLogs()
+                        failure('Tests failed')
+                    } finally {
+                        sh 'make clean'
+                    }
+                }
+            }
+        }
+        stage('SaaS FDX Tests') {
+            steps {
+                script {
+                    try {
+                        sh 'make disable-mfa set-saas-configuration run-fdx-saas'
+                        sh 'make run-saas-fdx-tests-headless'
+                    } catch(exc) {
+                        captureDockerLogs()
+                        failure('Tests failed')
+                    } finally {
+                        sh 'make clean-fdx-saas'
+                    }
+                }
+            }
+        }
+        stage('SaaS OBUK Tests') {
+            steps {
+                script {
+                    try {
+                        sh 'make disable-mfa set-saas-configuration run-obuk-saas'
+                        sh 'make run-saas-obuk-tests-headless'
+                    } catch(exc) {
+                        captureDockerLogs()
+                        failure('Tests failed')
+                    } finally {
+                        sh 'make clean-obuk-saas'
+                    }
+                }
+            }
+        }
+        stage('SaaS OBBR Tests') {
+            steps {
+                script {
+                    try {
+                        sh 'make disable-mfa set-saas-configuration run-obbr-saas'
+                        sh 'make run-saas-obbr-tests-headless'
+                    } catch(exc) {
+                        captureDockerLogs()
+                        failure('Tests failed')
+                    } finally {
+                        sh 'make clean-obbr-saas'
+                    }
+                }
+            }
+        }
     }
 
     post {
