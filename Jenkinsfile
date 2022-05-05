@@ -2,6 +2,9 @@ pipeline {
     agent {
         label 'openbanking'
     }
+    triggers {
+        cron(env.BRANCH_NAME == 'master' ? 'H 5 * * *' : '')
+    }
     options {
         timeout(time: 1, unit: 'HOURS')
     }
@@ -17,6 +20,7 @@ pipeline {
     stages {
         stage('Prepare') {
             steps {
+                 echo 'BRANCH_NAME: ' + env.BRANCH_NAME
                  sh '''#!/bin/bash
                         echo "127.0.0.1       authorization.cloudentity.com test-docker" | sudo tee -a /etc/hosts
                         cd tests && yarn install
