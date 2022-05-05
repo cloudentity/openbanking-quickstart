@@ -25,7 +25,9 @@ type BankUserData struct {
 	OBBRBalances []OBBRBalance                                           `json:"obbr_balances"`
 	OBBRPayments []obbrPaymentModels.OpenbankingBrasilResponsePixPayment `json:"obbr_payments"`
 
-	CDRAccounts []cdrAccountModels.BankingAccount `json:"cdr_accounts"`
+	CDRAccounts     []cdrAccountModels.BankingAccount     `json:"cdr_accounts"`
+	CDRTransactions []cdrAccountModels.BankingTransaction `json:"cdr_transactions"`
+	CDRBalances     []cdrAccountModels.BankingBalance     `json:"cdr_balances"`
 }
 
 type AccountData struct {

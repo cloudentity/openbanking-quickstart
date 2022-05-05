@@ -1,7 +1,6 @@
 package main
 
 import (
-	cdrAccountModels "github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/models"
 	"github.com/gin-gonic/gin"
 )
 
@@ -37,22 +36,4 @@ func (h *CDRGetAccountsInternalHandler) GetUserIdentifier(c *gin.Context) string
 
 func (h *CDRGetAccountsInternalHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
 	return data
-}
-
-func CDRMapError(c *gin.Context, err *Error) (code int, resp interface{}) {
-	code, resp = 400, nil
-	return
-}
-
-func NewCDRAccountsResponse(accounts []cdrAccountModels.BankingAccount) interface{} {
-	resp := cdrAccountModels.ResponseBankingAccountList{
-		Data: &cdrAccountModels.Data2{
-			Accounts: []*cdrAccountModels.BankingAccount{},
-		},
-	}
-	for _, account := range accounts {
-		acc := account
-		resp.Data.Accounts = append(resp.Data.Accounts, &acc)
-	}
-	return resp
 }

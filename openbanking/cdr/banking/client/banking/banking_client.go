@@ -40,11 +40,11 @@ type ClientService interface {
 
 	GetTransactionDetail(params *GetTransactionDetailParams, opts ...ClientOption) (*GetTransactionDetailOK, error)
 
-	GetTransactions(params *GetTransactionsParams, opts ...ClientOption) (*GetTransactionsOK, error)
+	GetTransactions(params *GetTransactionsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetTransactionsOK, error)
 
-	ListAccounts(params *ListAccountsParams, opts ...ClientOption) (*ListAccountsOK, error)
+	ListAccounts(params *ListAccountsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ListAccountsOK, error)
 
-	ListBalancesBulk(params *ListBalancesBulkParams, opts ...ClientOption) (*ListBalancesBulkOK, error)
+	ListBalancesBulk(params *ListBalancesBulkParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ListBalancesBulkOK, error)
 
 	ListBalancesSpecificAccounts(params *ListBalancesSpecificAccountsParams, opts ...ClientOption) (*ListBalancesSpecificAccountsOK, error)
 
@@ -290,7 +290,7 @@ Some general notes that apply to all end points that retrieve transactions:
 - For transaction amounts it should be assumed that a negative value indicates a reduction of the available balance on the account while a positive value indicates an increase in the available balance on the account
 - For aggregated transactions (ie. groups of sub transactions reported as a single entry for the account) only the aggregated information, with as much consistent information accross the subsidiary transactions as possible, is required to be shared
 */
-func (a *Client) GetTransactions(params *GetTransactionsParams, opts ...ClientOption) (*GetTransactionsOK, error) {
+func (a *Client) GetTransactions(params *GetTransactionsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetTransactionsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewGetTransactionsParams()
@@ -304,6 +304,7 @@ func (a *Client) GetTransactions(params *GetTransactionsParams, opts ...ClientOp
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &GetTransactionsReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -330,7 +331,7 @@ func (a *Client) GetTransactions(params *GetTransactionsParams, opts ...ClientOp
 
   Obtain a list of accounts
 */
-func (a *Client) ListAccounts(params *ListAccountsParams, opts ...ClientOption) (*ListAccountsOK, error) {
+func (a *Client) ListAccounts(params *ListAccountsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ListAccountsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewListAccountsParams()
@@ -344,6 +345,7 @@ func (a *Client) ListAccounts(params *ListAccountsParams, opts ...ClientOption) 
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &ListAccountsReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -370,7 +372,7 @@ func (a *Client) ListAccounts(params *ListAccountsParams, opts ...ClientOption) 
 
   Obtain balances for multiple, filtered accounts
 */
-func (a *Client) ListBalancesBulk(params *ListBalancesBulkParams, opts ...ClientOption) (*ListBalancesBulkOK, error) {
+func (a *Client) ListBalancesBulk(params *ListBalancesBulkParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ListBalancesBulkOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewListBalancesBulkParams()
@@ -384,6 +386,7 @@ func (a *Client) ListBalancesBulk(params *ListBalancesBulkParams, opts ...Client
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &ListBalancesBulkReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}

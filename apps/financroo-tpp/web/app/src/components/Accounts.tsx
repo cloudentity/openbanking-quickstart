@@ -8,13 +8,14 @@ import Card from "@material-ui/core/Card";
 export default function Accounts ({banks, reconnectBank, accounts, balances, filtering, onChangeFiltering, onConnectClick, onDisconnect, onReconnect}) {
 
   const totalBalance = balances.reduce((total, b) => total + parseFloat(b.Amount), 0).toFixed(2);
+  const currencyType = balances[0]?.Currency || "N/A"
 
   return (
     <div style={{height: '100%', display: 'flex', flexDirection: 'column'}}>
       <Card style={{padding: '32px 20px'}}>
         <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
           <Typography className={mainClasses.sectionTitle}>All accounts</Typography>
-          <Typography><strong>GBP {totalBalance}</strong></Typography>
+          <Typography><strong>{currencyType} {totalBalance}</strong></Typography>
         </div>
         <Typography
           style={{display: 'inline-block', background: 'rgba(54, 198, 175, 0.08)', color: '#36C6AF', fontSize: 14, padding: 2, marginTop: 4}}
