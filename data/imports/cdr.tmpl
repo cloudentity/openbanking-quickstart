@@ -130,7 +130,7 @@ idps:
         authentication_context:
           name: user
           mobile_verified: "+48123456789"
-          customer_id: "user"
+          customer_id: "bfb689fb-7745-45b9-bbaa-b21e00072447"
       - username: user2
         password: p@ssw0rd!
         authentication_context:
@@ -249,6 +249,14 @@ claims:
   name: software_id
   source_path: software_id
   source_type: client
+  tenant_id: {{ .tenant_id }}
+  type: access_token
+- authorization_server_id: cdr
+  id: cdr_customer_id
+  mapping: customer_id
+  name: customer_id
+  source_path: customer_id
+  source_type: authnCtx
   tenant_id: {{ .tenant_id }}
   type: access_token
 
