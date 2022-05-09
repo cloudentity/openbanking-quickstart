@@ -173,6 +173,7 @@ services:
       - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/cdr
       - SPEC=cdr
       - GIN_MODE=debug
+      - USER_IDENTIFIER_CLAIM=customer_id
     depends_on:
       configuration:
         condition: service_completed_successfully
