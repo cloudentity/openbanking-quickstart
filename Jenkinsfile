@@ -6,6 +6,7 @@ pipeline {
         cron(env.BRANCH_NAME == 'master' ? 'H 5 * * *' : '')
     }
     options {
+        skipStagesAfterUnstable()
         timeout(time: 1, unit: 'HOURS')
     }
     environment {
