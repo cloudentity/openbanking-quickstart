@@ -46,7 +46,7 @@ pipeline {
                         sh 'make run-cdr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        failure('Tests failed')
+                        unstable('Tests failed')
                     } finally {
                         sh 'make clean'
                     }
@@ -61,7 +61,7 @@ pipeline {
                         sh 'make run-fdx-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        failure('Tests failed')
+                        unstable('Tests failed')
                     } finally {
                         sh 'make clean'
                     }
@@ -76,7 +76,7 @@ pipeline {
                         sh 'make run-fdx-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        failure('Tests failed')
+                        unstable('Tests failed')
                     } finally {
                         sh 'make clean'
                     }
@@ -91,7 +91,7 @@ pipeline {
                         sh 'make run-obuk-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        failure('Tests failed')
+                        unstable('Tests failed')
                     } finally {
                         sh 'make clean'
                     }
@@ -106,7 +106,7 @@ pipeline {
                         sh 'make run-obuk-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        failure('Tests failed')
+                        unstable('Tests failed')
                     } finally {
                         sh 'make clean'
                     }
@@ -122,7 +122,7 @@ pipeline {
                         sh 'make clean'
                     } catch(exc) {
                         captureDockerLogs()
-                        failure('Tests failed')
+                        unstable('Tests failed')
                     } finally {
                         sh 'make clean'
                     }
@@ -137,7 +137,7 @@ pipeline {
                         sh 'make run-obbr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        failure('Tests failed')
+                        unstable('Tests failed')
                     } finally {
                         sh 'make clean'
                     }
@@ -152,7 +152,7 @@ pipeline {
                         sh 'make run-saas-fdx-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        failure('Tests failed')
+                        unstable('Tests failed')
                     } finally {
                         sh 'make clean-fdx-saas'
                     }
@@ -167,7 +167,7 @@ pipeline {
                         sh 'make run-saas-obuk-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        failure('Tests failed')
+                        unstable('Tests failed')
                     } finally {
                         sh 'make clean-obuk-saas'
                     }
@@ -182,7 +182,7 @@ pipeline {
                         sh 'make run-saas-obbr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        failure('Tests failed')
+                        unstable('Tests failed')
                     } finally {
                         sh 'make clean-obbr-saas'
                     }
@@ -198,6 +198,14 @@ pipeline {
                 archiveArtifacts(artifacts: 'tests/cypress/videos/**/*', allowEmptyArchive: true)
             }
         }
+
+        unstable {
+            script {
+                archiveArtifacts(artifacts: 'tests/cypress/screenshots/**/*', allowEmptyArchive: true)
+                archiveArtifacts(artifacts: 'tests/cypress/videos/**/*', allowEmptyArchive: true)
+            }
+        }
+
         cleanup {
             script {
                 if (getContext(hudson.FilePath)) {
