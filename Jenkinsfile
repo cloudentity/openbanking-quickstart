@@ -197,6 +197,7 @@ pipeline {
             script {
                 captureCypressArtifacts()
                 if (env.BRANCH_NAME=='PR-169') {
+                    echo '>>> Failure on BRANCH_NAME: ' + env.BRANCH_NAME
                     sendSlackNotification(currentBuild.result, '#test-ob-qs', '', true)
                 }
             }
@@ -206,6 +207,7 @@ pipeline {
             script {
                 captureCypressArtifacts()
                 if (env.BRANCH_NAME=='PR-169') {
+                    echo '>>> Unstable on BRANCH_NAME: ' + env.BRANCH_NAME
                     sendSlackNotification(currentBuild.result, '#test-ob-qs', '', true)
                 }
             }
@@ -214,6 +216,7 @@ pipeline {
         fixed {
             script {
                 if (env.BRANCH_NAME=='PR-169') {
+                    echo '>>> Fixed on BRANCH_NAME: ' + env.BRANCH_NAME
                     sendSlackNotification(currentBuild.result, '#test-ob-qs', '', true)
                 }
             }
