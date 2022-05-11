@@ -207,6 +207,7 @@ pipeline {
                 captureCypressArtifacts()
                 if (env.BRANCH_NAME=='PR-169') {
                     sendSlackNotification(currentBuild.result, '#test-ob-qs', '', true)
+                }
             }
         }
 
@@ -214,6 +215,7 @@ pipeline {
             script {
                 if (env.BRANCH_NAME=='PR-169') {
                     sendSlackNotification(currentBuild.result, '#test-ob-qs', '', true)
+                }
             }
         }
 
