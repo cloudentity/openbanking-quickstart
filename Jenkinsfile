@@ -198,7 +198,7 @@ pipeline {
                 captureCypressArtifacts()
                 if (env.BRANCH_NAME=='PR-169') {
                     echo '>>> Failure on BRANCH_NAME: ' + env.BRANCH_NAME
-                    sendSlackNotification(currentBuild.result, '#test-ob-qs', '', true)
+                    sendSlackNotification(currentBuild.result, '#epic-open-banking-improvements', '', true)
                 }
             }
         }
@@ -208,7 +208,7 @@ pipeline {
                 captureCypressArtifacts()
                 if (env.BRANCH_NAME=='PR-169') {
                     echo '>>> Unstable on BRANCH_NAME: ' + env.BRANCH_NAME
-                    sendSlackNotification(currentBuild.result, '#test-ob-qs', '', true)
+                    sendSlackNotification(currentBuild.result, '#epic-open-banking-improvements', '', true)
                 }
             }
         }
@@ -217,7 +217,7 @@ pipeline {
             script {
                 if (env.BRANCH_NAME=='PR-169') {
                     echo '>>> Fixed on BRANCH_NAME: ' + env.BRANCH_NAME
-                    sendSlackNotification(currentBuild.result, '#test-ob-qs', '', true)
+                    sendSlackNotification(currentBuild.result, '#epic-open-banking-improvements', '', true)
                 }
             }
         }
