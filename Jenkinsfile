@@ -47,7 +47,7 @@ pipeline {
                         sh 'make run-cdr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        unstable('Tests failed')
+                        unstable('CDR Tests failed')
                     } finally {
                         sh 'make clean'
                     }
@@ -62,7 +62,7 @@ pipeline {
                         sh 'make run-fdx-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        unstable('Tests failed')
+                        unstable('FDX Tests with disabled MFA failed')
                     } finally {
                         sh 'make clean'
                     }
@@ -77,7 +77,7 @@ pipeline {
                         sh 'make run-fdx-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        unstable('Tests failed')
+                        unstable('FDX Tests with enabled MFA failed')
                     } finally {
                         sh 'make clean'
                     }
@@ -92,7 +92,7 @@ pipeline {
                         sh 'make run-obuk-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        unstable('Tests failed')
+                        unstable('OBUK Tests with disabled MFA failed')
                     } finally {
                         sh 'make clean'
                     }
@@ -107,7 +107,7 @@ pipeline {
                         sh 'make run-obuk-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        unstable('Tests failed')
+                        unstable('OBUK Tests with enabled MFA failed')
                     } finally {
                         sh 'make clean'
                     }
@@ -123,7 +123,7 @@ pipeline {
                         sh 'make clean'
                     } catch(exc) {
                         captureDockerLogs()
-                        unstable('Tests failed')
+                        unstable('OBBR Tests with disabled MFA failed')
                     } finally {
                         sh 'make clean'
                     }
@@ -138,7 +138,7 @@ pipeline {
                         sh 'make run-obbr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        unstable('Tests failed')
+                        unstable('OBBR Tests with enabled MFA failed')
                     } finally {
                         sh 'make clean'
                     }
@@ -153,7 +153,7 @@ pipeline {
                         sh 'make run-saas-fdx-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        unstable('Tests failed')
+                        unstable('SaaS FDX Tests failed')
                     } finally {
                         sh 'make clean-fdx-saas'
                     }
@@ -168,7 +168,7 @@ pipeline {
                         sh 'make run-saas-obuk-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        unstable('Tests failed')
+                        unstable('SaaS OBUK Tests failed')
                     } finally {
                         sh 'make clean-obuk-saas'
                     }
@@ -183,7 +183,7 @@ pipeline {
                         sh 'make run-saas-obbr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        unstable('Tests failed')
+                        unstable('SaaS OBBR Tests failed')
                     } finally {
                         sh 'make clean-obbr-saas'
                     }
@@ -195,15 +195,13 @@ pipeline {
     post {
         failure {
             script {
-                archiveArtifacts(artifacts: 'tests/cypress/screenshots/**/*', allowEmptyArchive: true)
-                archiveArtifacts(artifacts: 'tests/cypress/videos/**/*', allowEmptyArchive: true)
+                captureCypressArtifacts()
             }
         }
 
         unstable {
             script {
-                archiveArtifacts(artifacts: 'tests/cypress/screenshots/**/*', allowEmptyArchive: true)
-                archiveArtifacts(artifacts: 'tests/cypress/videos/**/*', allowEmptyArchive: true)
+                captureCypressArtifacts()
             }
         }
 
@@ -238,4 +236,9 @@ void captureDockerLogs() {
     '''
     sh 'tar -zcvf docker_logs.tar.gz logs'
     archiveArtifacts(artifacts: 'docker_logs.tar.gz', allowEmptyArchive: true)
+}
+
+void captureCypressArtifacts() {
+    archiveArtifacts(artifacts: 'tests/cypress/screenshots/**/*', allowEmptyArchive: true)
+    archiveArtifacts(artifacts: 'tests/cypress/videos/**/*', allowEmptyArchive: true)
 }
