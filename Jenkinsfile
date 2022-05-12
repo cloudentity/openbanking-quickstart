@@ -32,7 +32,6 @@ pipeline {
         stage('Build') {
             steps {
                 sh 'rm -f docker-compose.log'
-                sh 'make fake-action'
                 sh 'make clean'
                 sh 'make lint'
                 sh 'make stop-runner'
