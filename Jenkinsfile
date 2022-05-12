@@ -39,21 +39,21 @@ pipeline {
             }
         }
 
-        // stage('CDR Tests') {
-        //     steps {
-        //         script {
-        //             try {
-        //                 sh 'make run-cdr-local'
-        //                 sh 'make run-cdr-tests-headless'
-        //             } catch(exc) {
-        //                 captureDockerLogs()
-        //                 unstable('CDR Tests failed')
-        //             } finally {
-        //                 sh 'make clean'
-        //             }
-        //         }
-        //     }
-        // }
+        stage('CDR Tests') {
+            steps {
+                script {
+                    try {
+                        sh 'make run-cdr-local'
+                        sh 'make run-cdr-tests-headless'
+                    } catch(exc) {
+                        captureDockerLogs()
+                        unstable('CDR Tests failed')
+                    } finally {
+                        sh 'make clean'
+                    }
+                }
+            }
+        }
         stage('FDX Tests with disabled MFA') {
             steps {
                 script {
@@ -196,8 +196,7 @@ pipeline {
         failure {
             script {
                 captureCypressArtifacts()
-                if (env.BRANCH_NAME=='PR-169') {
-                    echo '>>> Failure on BRANCH_NAME: ' + env.BRANCH_NAME
+                if (env.BRANCH_NAME=='master') {
                     sendSlackNotification(currentBuild.result, '#epic-open-banking-improvements', '', true)
                 }
             }
@@ -206,8 +205,7 @@ pipeline {
         unstable {
             script {
                 captureCypressArtifacts()
-                if (env.BRANCH_NAME=='PR-169') {
-                    echo '>>> Unstable on BRANCH_NAME: ' + env.BRANCH_NAME
+                if (env.BRANCH_NAME=='master') {
                     sendSlackNotification(currentBuild.result, '#epic-open-banking-improvements', '', true)
                 }
             }
@@ -215,8 +213,7 @@ pipeline {
 
         fixed {
             script {
-                if (env.BRANCH_NAME=='PR-169') {
-                    echo '>>> Fixed on BRANCH_NAME: ' + env.BRANCH_NAME
+                if (env.BRANCH_NAME=='master') {
                     sendSlackNotification(currentBuild.result, '#epic-open-banking-improvements', '', true)
                 }
             }
