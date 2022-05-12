@@ -50,6 +50,7 @@ services:
           - datarecipient.mock
     volumes:
       - ./mount/cdr/recipient.json:/app/web/appsettings.Production.json
+      - ./data/cdr/certs/client.pfx:/app/web/Certificates/client.pfx
     ports:
       - "9001:9001"
     environment:
