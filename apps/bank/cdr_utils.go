@@ -1,11 +1,11 @@
 package main
 
 import (
-	cdr "github.com/cloudentity/acp-client-go/clients/openbanking/client/c_d_r"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/models"
+	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 
-	"github.com/gin-gonic/gin"
+	cdr "github.com/cloudentity/acp-client-go/clients/openbanking/client/c_d_r"
 )
 
 func CDRMapError(c *gin.Context, err *Error) (code int, resp interface{}) {

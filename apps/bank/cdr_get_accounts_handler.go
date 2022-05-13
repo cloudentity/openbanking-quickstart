@@ -3,9 +3,10 @@ package main
 import (
 	"strings"
 
-	cdr "github.com/cloudentity/acp-client-go/clients/openbanking/client/c_d_r"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
+
+	cdr "github.com/cloudentity/acp-client-go/clients/openbanking/client/c_d_r"
 )
 
 type CDRGetAccountsHandler struct {

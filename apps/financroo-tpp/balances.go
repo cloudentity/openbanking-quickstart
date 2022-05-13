@@ -43,9 +43,7 @@ func (o *OBUKClient) GetBalances(c *gin.Context, accessToken string, bank Connec
 }
 
 func (o *CDRClient) GetBalances(c *gin.Context, accessToken string, bank ConnectedBank) (balancesData []Balance, err error) {
-	var (
-		resp *banking.ListBalancesBulkOK
-	)
+	var resp *banking.ListBalancesBulkOK
 
 	if resp, err = o.Banking.Banking.ListBalancesBulk(
 		banking.NewListBalancesBulkParams().

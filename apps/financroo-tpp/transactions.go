@@ -6,7 +6,6 @@ import (
 
 	"github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/client/banking"
 	cdrBankingModels "github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/models"
-
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client/transactions"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
 	"github.com/gin-gonic/gin"
