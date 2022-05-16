@@ -28,28 +28,10 @@ func NewCDRBankClient(config Config) *CDRBankClient {
 	var (
 		pool  *x509.CertPool
 		cert  tls.Certificate
-		certs = []tls.Certificate{}
 		data  []byte
+		certs []tls.Certificate
 		err   error
 	)
-
-	if config.BankClientConfig.CertFile == "" && config.BankClientConfig.KeyFile == "" {
-		return &CDRBankClient{
-			httpClient: http.DefaultClient,
-			cc: clientcredentials.Config{
-				ClientID:     config.BankClientConfig.ClientID,
-				ClientSecret: config.BankClientConfig.ClientSecret,
-				TokenURL:     config.BankClientConfig.TokenURL,
-				Scopes:       config.BankClientConfig.Scopes,
-			},
-			bankClientConfig: config.BankClientConfig,
-		}
-	}
-
-	if cert, err = tls.LoadX509KeyPair(config.BankClientConfig.CertFile, config.BankClientConfig.KeyFile); err != nil {
-		logrus.Fatalf("failed to read certificate and private key %v", err)
-	}
-	certs = append(certs, cert)
 
 	if pool, err = x509.SystemCertPool(); err != nil {
 		logrus.Fatalf("failed to read system root CAs %v", err)
@@ -59,6 +41,13 @@ func NewCDRBankClient(config Config) *CDRBankClient {
 		logrus.Fatalf("failed to read http client root ca: %v", err)
 	}
 	pool.AppendCertsFromPEM(data)
+
+	if config.BankClientConfig.CertFile != "" && config.BankClientConfig.KeyFile != "" {
+		if cert, err = tls.LoadX509KeyPair(config.BankClientConfig.CertFile, config.BankClientConfig.KeyFile); err != nil {
+			logrus.Fatalf("failed to read certificate and private key %v", err)
+		}
+		certs = append(certs, cert)
+	}
 
 	return &CDRBankClient{
 		httpClient: &http.Client{

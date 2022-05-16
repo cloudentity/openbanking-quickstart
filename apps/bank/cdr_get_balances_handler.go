@@ -1,9 +1,10 @@
 package main
 
 import (
-	cdr "github.com/cloudentity/acp-client-go/clients/openbanking/client/c_d_r"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
+
+	cdr "github.com/cloudentity/acp-client-go/clients/openbanking/client/c_d_r"
 )
 
 type CDRGetBalancesHandler struct {
@@ -38,8 +39,7 @@ func (h *CDRGetBalancesHandler) Validate(c *gin.Context) *Error {
 }
 
 func (h *CDRGetBalancesHandler) GetUserIdentifier(c *gin.Context) string {
-	logrus.Infof("introspection response sub is %s", h.introspectionResponse.Sub)
-	return h.introspectionResponse.Sub
+	return GetCDRUserIdentifierClaimFromIntrospectionResponse(h.Config, h.introspectionResponse)
 }
 
 func (h *CDRGetBalancesHandler) Filter(c *gin.Context, data BankUserData) BankUserData {

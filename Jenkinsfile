@@ -26,6 +26,10 @@ pipeline {
                         cd tests && yarn install
                  '''
                  sh 'docker-compose version'
+
+                 retry(3) {
+                   sh "make run-tests-verify"
+                 }
             }
         }
         stage('Build') {

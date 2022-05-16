@@ -7,14 +7,13 @@ import (
 	"net/url"
 	"time"
 
+	cdrBank "github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/client"
 	obbrAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/client"
 	obbrPayments "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/client"
 	obc "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client"
 	payments_client "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/client"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
-
-	cdrBank "github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/client"
 
 	acpclient "github.com/cloudentity/acp-client-go"
 	"github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"

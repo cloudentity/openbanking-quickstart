@@ -40,9 +40,7 @@ func (o *OBUKClient) GetAccounts(c *gin.Context, accessToken string, bank Connec
 }
 
 func (o *CDRClient) GetAccounts(c *gin.Context, accessToken string, bank ConnectedBank) (accountsData []Account, err error) {
-	var (
-		resp *cdrModels.ListAccountsOK
-	)
+	var resp *cdrModels.ListAccountsOK
 
 	if resp, err = o.Banking.Banking.ListAccounts(
 		cdrModels.NewListAccountsParamsWithContext(c).
