@@ -43,8 +43,8 @@ pipeline {
                 script {
                     try {
                         sh 'make run-cdr-local'
-                        sh 'make run-cdr-tests-headless'
                         sleep(time: 20, unit: "MINUTES")
+                        sh 'make run-cdr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
                         failure('Tests failed')
