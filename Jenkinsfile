@@ -32,6 +32,7 @@ pipeline {
                  }
             }
         }
+
         stage('Build') {
             steps {
                 sh 'rm -f docker-compose.log'
@@ -210,6 +211,7 @@ pipeline {
             }
         }
     }
+
 }
 
 void captureDockerLogs() {
