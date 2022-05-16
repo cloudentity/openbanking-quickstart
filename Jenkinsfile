@@ -203,7 +203,8 @@ pipeline {
             script {
                 captureCypressArtifacts()
                 if (env.BRANCH_NAME=='PR-169') {
-                    sendSlackNotification(currentBuild.result, ${NOTIFICATION_CHANNEL}, '', true)
+                    echo '>>> FAILURE Sending notification to ${NOTIFICATION_CHANNEL}'
+                    sendSlackNotification(currentBuild.result, '${NOTIFICATION_CHANNEL}', '', true)
                 }
             }
         }
@@ -212,7 +213,8 @@ pipeline {
             script {
                 captureCypressArtifacts()
                 if (env.BRANCH_NAME=='PR-169') {
-                    sendSlackNotification(currentBuild.result, ${NOTIFICATION_CHANNEL}, '', true)
+                    echo '>>> UNSTABLE Sending notification to ${NOTIFICATION_CHANNEL}'
+                    sendSlackNotification(currentBuild.result, '${NOTIFICATION_CHANNEL}', '', true)
                 }
             }
         }
@@ -220,7 +222,8 @@ pipeline {
         fixed {
             script {
                 if (env.BRANCH_NAME=='PR-169') {
-                    sendSlackNotification(currentBuild.result, ${NOTIFICATION_CHANNEL}, '', true)
+                    echo '>>> FIXED Sending notification to ${NOTIFICATION_CHANNEL}'
+                    sendSlackNotification(currentBuild.result, '${NOTIFICATION_CHANNEL}', '', true)
                 }
             }
         }
