@@ -16,12 +16,12 @@ pipeline {
         SAAS_CLIENT_SECRET = credentials('OPENBANKING_CONFIGURATION_CLIENT_SECRET')
         SAAS_CLEANUP_CLIENT_ID = credentials('OPENBANKING_CLEANUP_CLIENT_ID')
         SAAS_CLEANUP_CLIENT_SECRET = credentials('OPENBANKING_CLEANUP_CLIENT_SECRET')
+        NOTIFICATION_CHANNEL = credentials('OPENBANKING_NOTIFICATION_CHANNEL')
         DEBUG = 'true'
     }
     stages {
         stage('Prepare') {
             steps {
-                 echo 'BRANCH_NAME: ' + env.BRANCH_NAME
                  sh '''#!/bin/bash
                         echo "127.0.0.1       authorization.cloudentity.com test-docker" | sudo tee -a /etc/hosts
                         cd tests && yarn install
@@ -36,6 +36,7 @@ pipeline {
 
         stage('Build') {
             steps {
+                sh 'make fake-option'
                 sh 'rm -f docker-compose.log'
                 sh 'make clean'
                 sh 'make lint'
@@ -201,8 +202,8 @@ pipeline {
         failure {
             script {
                 captureCypressArtifacts()
-                if (env.BRANCH_NAME=='master') {
-                    sendSlackNotification(currentBuild.result, '#epic-open-banking-improvements', '', true)
+                if (env.BRANCH_NAME=='PR-169') {
+                    sendSlackNotification(currentBuild.result, ${NOTIFICATION_CHANNEL}, '', true)
                 }
             }
         }
@@ -210,16 +211,16 @@ pipeline {
         unstable {
             script {
                 captureCypressArtifacts()
-                if (env.BRANCH_NAME=='master') {
-                    sendSlackNotification(currentBuild.result, '#epic-open-banking-improvements', '', true)
+                if (env.BRANCH_NAME=='PR-169') {
+                    sendSlackNotification(currentBuild.result, ${NOTIFICATION_CHANNEL}, '', true)
                 }
             }
         }
 
         fixed {
             script {
-                if (env.BRANCH_NAME=='master') {
-                    sendSlackNotification(currentBuild.result, '#epic-open-banking-improvements', '', true)
+                if (env.BRANCH_NAME=='PR-169') {
+                    sendSlackNotification(currentBuild.result, ${NOTIFICATION_CHANNEL}, '', true)
                 }
             }
         }
