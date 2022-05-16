@@ -26,8 +26,13 @@ pipeline {
                         cd tests && yarn install
                  '''
                  sh 'docker-compose version'
+
+                 retry(3) {
+                   sh "make run-tests-verify"
+                 }
             }
         }
+
         stage('Build') {
             steps {
                 sh 'rm -f docker-compose.log'
@@ -43,7 +48,6 @@ pipeline {
                 script {
                     try {
                         sh 'make run-cdr-local'
-                        sleep(time: 20, unit: "MINUTES")
                         sh 'make run-cdr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
