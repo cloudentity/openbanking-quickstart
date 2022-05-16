@@ -6,6 +6,7 @@ pipeline {
         cron(env.BRANCH_NAME == 'master' ? 'H 5 * * *' : '')
     }
     options {
+        skipStagesAfterUnstable()
         timeout(time: 1, unit: 'HOURS')
     }
     environment {
@@ -15,12 +16,12 @@ pipeline {
         SAAS_CLIENT_SECRET = credentials('OPENBANKING_CONFIGURATION_CLIENT_SECRET')
         SAAS_CLEANUP_CLIENT_ID = credentials('OPENBANKING_CLEANUP_CLIENT_ID')
         SAAS_CLEANUP_CLIENT_SECRET = credentials('OPENBANKING_CLEANUP_CLIENT_SECRET')
+        NOTIFICATION_CHANNEL = credentials('OPENBANKING_NOTIFICATION_CHANNEL')
         DEBUG = 'true'
     }
     stages {
         stage('Prepare') {
             steps {
-                 echo 'BRANCH_NAME: ' + env.BRANCH_NAME
                  sh '''#!/bin/bash
                         echo "127.0.0.1       authorization.cloudentity.com test-docker" | sudo tee -a /etc/hosts
                         cd tests && yarn install
@@ -51,7 +52,7 @@ pipeline {
                         sh 'make run-cdr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        failure('Tests failed')
+                        unstable('CDR Tests failed')
                     } finally {
                         sh 'make clean'
                     }
@@ -66,7 +67,7 @@ pipeline {
                         sh 'make run-fdx-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        failure('Tests failed')
+                        unstable('FDX Tests with disabled MFA failed')
                     } finally {
                         sh 'make clean'
                     }
@@ -81,7 +82,7 @@ pipeline {
                         sh 'make run-fdx-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        failure('Tests failed')
+                        unstable('FDX Tests with enabled MFA failed')
                     } finally {
                         sh 'make clean'
                     }
@@ -96,7 +97,7 @@ pipeline {
                         sh 'make run-obuk-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        failure('Tests failed')
+                        unstable('OBUK Tests with disabled MFA failed')
                     } finally {
                         sh 'make clean'
                     }
@@ -111,7 +112,7 @@ pipeline {
                         sh 'make run-obuk-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        failure('Tests failed')
+                        unstable('OBUK Tests with enabled MFA failed')
                     } finally {
                         sh 'make clean'
                     }
@@ -124,10 +125,9 @@ pipeline {
                     try {
                         sh 'make disable-mfa run-obbr-local'
                         sh 'make run-obbr-tests-headless'
-                        sh 'make clean'
                     } catch(exc) {
                         captureDockerLogs()
-                        failure('Tests failed')
+                        unstable('OBBR Tests with disabled MFA failed')
                     } finally {
                         sh 'make clean'
                     }
@@ -142,7 +142,7 @@ pipeline {
                         sh 'make run-obbr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        failure('Tests failed')
+                        unstable('OBBR Tests with enabled MFA failed')
                     } finally {
                         sh 'make clean'
                     }
@@ -157,7 +157,7 @@ pipeline {
                         sh 'make run-saas-fdx-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        failure('Tests failed')
+                        unstable('SaaS FDX Tests failed')
                     } finally {
                         sh 'make clean-fdx-saas'
                     }
@@ -172,7 +172,7 @@ pipeline {
                         sh 'make run-saas-obuk-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        failure('Tests failed')
+                        unstable('SaaS OBUK Tests failed')
                     } finally {
                         sh 'make clean-obuk-saas'
                     }
@@ -187,7 +187,7 @@ pipeline {
                         sh 'make run-saas-obbr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        failure('Tests failed')
+                        unstable('SaaS OBBR Tests failed')
                     } finally {
                         sh 'make clean-obbr-saas'
                     }
@@ -199,10 +199,30 @@ pipeline {
     post {
         failure {
             script {
-                archiveArtifacts(artifacts: 'tests/cypress/screenshots/**/*', allowEmptyArchive: true)
-                archiveArtifacts(artifacts: 'tests/cypress/videos/**/*', allowEmptyArchive: true)
+                captureCypressArtifacts()
+                if (env.BRANCH_NAME=='master') {
+                    sendSlackNotification(currentBuild.result, NOTIFICATION_CHANNEL, '', true)
+                }
             }
         }
+
+        unstable {
+            script {
+                captureCypressArtifacts()
+                if (env.BRANCH_NAME=='master') {
+                    sendSlackNotification(currentBuild.result, NOTIFICATION_CHANNEL, '', true)
+                }
+            }
+        }
+
+        fixed {
+            script {
+                if (env.BRANCH_NAME=='master') {
+                    sendSlackNotification(currentBuild.result, NOTIFICATION_CHANNEL, '', true)
+                }
+            }
+        }
+
         cleanup {
             script {
                 if (getContext(hudson.FilePath)) {
@@ -235,4 +255,9 @@ void captureDockerLogs() {
     '''
     sh 'tar -zcvf docker_logs.tar.gz logs'
     archiveArtifacts(artifacts: 'docker_logs.tar.gz', allowEmptyArchive: true)
+}
+
+void captureCypressArtifacts() {
+    archiveArtifacts(artifacts: 'tests/cypress/screenshots/**/*', allowEmptyArchive: true)
+    archiveArtifacts(artifacts: 'tests/cypress/videos/**/*', allowEmptyArchive: true)
 }
