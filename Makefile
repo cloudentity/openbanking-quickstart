@@ -24,11 +24,11 @@ build:
 	docker-compose -f docker-compose.obuk.yaml -f docker-compose.obbr.yaml -f docker-compose.cdr.yaml -f docker-compose.build.yaml build
 
 # obuk, obbr, cdr, fdx
-run-%-tests-headless: run-tests-verify
+run-%-tests-headless:
 	yarn --cwd tests run cypress run -s cypress/integration/$*/*.ts
 
 # obuk, obbr, fdx
-run-saas-%-tests-headless: run-tests-verify
+run-saas-%-tests-headless:
 	yarn --cwd tests run cypress run -s cypress/integration/saas/$*/*.ts
 
 .PHONY: run-tests
