@@ -23,8 +23,6 @@ import (
 	acpclient "github.com/cloudentity/acp-client-go"
 )
 
-// TODO: configure customer_id in acp cdr workspace as a user attribute
-
 type Spec string
 
 const (
@@ -73,8 +71,8 @@ type OtpConfig struct {
 type BankClientConfig struct {
 	URL          *url.URL `env:"BANK_URL,required"`
 	AccountsURL  *url.URL `env:"BANK_ACCOUNTS_ENDPOINT"`
-	CertFile     string   `env:"BANK_CLIENT_CERT_FILE" envDefault:"/tpp_cert.pem"`
-	KeyFile      string   `env:"BANK_CLIENT_KEY_FILE" envDefault:"/tpp_key.pem"`
+	CertFile     string   `env:"BANK_CLIENT_CERT_FILE"`
+	KeyFile      string   `env:"BANK_CLIENT_KEY_FILE"`
 	TokenURL     string   `env:"BANK_CLIENT_TOKEN_URL"`
 	ClientID     string   `env:"BANK_CLIENT_ID"`
 	ClientSecret string   `env:"BANK_CLIENT_SECRET"`
