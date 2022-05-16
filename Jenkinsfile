@@ -125,7 +125,6 @@ pipeline {
                     try {
                         sh 'make disable-mfa run-obbr-local'
                         sh 'make run-obbr-tests-headless'
-                        sh 'make clean'
                     } catch(exc) {
                         captureDockerLogs()
                         unstable('OBBR Tests with disabled MFA failed')
@@ -201,8 +200,7 @@ pipeline {
         failure {
             script {
                 captureCypressArtifacts()
-                if (env.BRANCH_NAME=='PR-169') {
-                    echo '>>> FAILURE Sending notification to ' + NOTIFICATION_CHANNEL
+                if (env.BRANCH_NAME=='master') {
                     sendSlackNotification(currentBuild.result, NOTIFICATION_CHANNEL, '', true)
                 }
             }
@@ -211,8 +209,7 @@ pipeline {
         unstable {
             script {
                 captureCypressArtifacts()
-                if (env.BRANCH_NAME=='PR-169') {
-                    echo '>>> UNSTABLE Sending notification to ' + NOTIFICATION_CHANNEL
+                if (env.BRANCH_NAME=='master') {
                     sendSlackNotification(currentBuild.result, NOTIFICATION_CHANNEL, '', true)
                 }
             }
@@ -220,8 +217,7 @@ pipeline {
 
         fixed {
             script {
-                if (env.BRANCH_NAME=='PR-169') {
-                    echo '>>> FIXED Sending notification to ' + NOTIFICATION_CHANNEL
+                if (env.BRANCH_NAME=='master') {
                     sendSlackNotification(currentBuild.result, NOTIFICATION_CHANNEL, '', true)
                 }
             }
