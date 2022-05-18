@@ -38,7 +38,7 @@
                   "RecipientBaseUri": "https://datarecipient.mock:9001",
                   "RevocationUri": "https://datarecipient.mock:9001/revocation",
                   "RedirectUris": "https://datarecipient.mock:9001/consent/callback https://datarecipient.mock:9001/consent/callback2",
-                  "JwksUri": "https://datarecipient.mock:9001/jwks",
+                  "JwksUri": "https://tpp1.cdr.cloudentity-se.com:9001/jwks",
                   "Scope": "openid profile bank:accounts.basic:read bank:accounts.detail:read bank:transactions:read bank:payees:read bank:regular_payments:read common:customer.basic:read common:customer.detail:read cdr:registration introspect_tokens revoke_tokens",
                   "StatusId": 1,
                   "Certificates": [
@@ -1266,7 +1266,7 @@
                 "Version": 1,
                 "PublicBaseUri": "https://mock-data-holder:8000",
                 "ResourceBaseUri": "https://mock-data-holder:8002",
-                "InfoSecBaseUri": "https://authorization.cloudentity.com:8443/default/cdr",
+                "InfoSecBaseUri": "https://energyaustralia-internal.au.authz.cloudentity.io/energyaustralia-internal/cdr",
                 "ExtensionBaseUri": "",
                 "WebsiteUri": "https://bank1/"
               },

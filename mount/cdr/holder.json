@@ -3,21 +3,21 @@
     "IdentityServerStoreDatabase": "Data Source=/tmp/idsvr.db",
     "ResourceDatabase": "Data Source=/tmp/mdh.db"
   },
-  "IssuerUri": "https://authorization.cloudentity.com:8443/default/cdr",
-  "JwksUri": "https://authorization.cloudentity.com:8443/default/cdr/.well-known/jwks.json",
-  "AuthorizeUri": "https://authorization.cloudentity.com:8443/default/cdr/oauth2/authorize",
-  "TokenUri": "https://authorization.cloudentity.com:8443/default/cdr/oauth2/token",
-  "IntrospectionUri": "https://authorization.cloudentity.com:8443/default/cdr/oauth2/introspect",
-  "UserinfoUri": "https://authorization.cloudentity.com:8443/default/cdr/userinfo",
-  "RegisterUri": "https://authorization.cloudentity.com:8443/default/cdr/oauth2/register",
-  "ParUri": "https://authorization.cloudentity.com:8443/default/cdr/par",
-  "RevocationUri": "https://authorization.cloudentity.com:8443/default/cdr/oauth2/revoke",
-  "ArrangementRevocationUri": "https://authorization.cloudentity.com:8443/default/cdr/arrangements/revoke",
+  "IssuerUri": "https://energyaustralia-internal.mtls.au.authz.cloudentity.io/energyaustralia-internal/cdr",
+  "JwksUri": "https://energyaustralia-internal.mtls.au.authz.cloudentity.io/energyaustralia-internal/cdr/.well-known/jwks.json",
+  "AuthorizeUri": "https://energyaustralia-internal.mtls.au.authz.cloudentity.io/energyaustralia-internal/cdr/oauth2/authorize",
+  "TokenUri": "https://energyaustralia-internal.mtls.au.authz.cloudentity.io/energyaustralia-internal/cdr/oauth2/token",
+  "IntrospectionUri": "https://energyaustralia-internal.mtls.au.authz.cloudentity.io/energyaustralia-internal/cdr/oauth2/introspect",
+  "UserinfoUri": "https://energyaustralia-internal.mtls.au.authz.cloudentity.io/energyaustralia-internal/cdr/userinfo",
+  "RegisterUri": "https://energyaustralia-internal.mtls.au.authz.cloudentity.io/energyaustralia-internal/cdr/oauth2/register",
+  "ParUri": "https://energyaustralia-internal.mtls.au.authz.cloudentity.io/energyaustralia-internal/cdr/par",
+  "RevocationUri": "https://energyaustralia-internal.mtls.au.authz.cloudentity.io/energyaustralia-internal/cdr/oauth2/revoke",
+  "ArrangementRevocationUri": "https://energyaustralia-internal.mtls.au.authz.cloudentity.io/energyaustralia-internal/cdr/arrangements/revoke",
   "Register": {
     "SsaJwksUri": "https://mock-register:7000/cdr-register/v1/jwks"
   },
   "Registration": {
-    "AudienceUri": "https://authorization.cloudentity.com:8443/default/cdr"
+    "AudienceUri": "https://energyaustralia-internal.au.authz.cloudentity.io/energyaustralia-internal/cdr"
   },
   "Logging": {
     "LogLevel": {

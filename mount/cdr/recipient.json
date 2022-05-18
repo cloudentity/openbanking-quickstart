@@ -34,17 +34,17 @@
     },
     "SoftwareProduct": {
       "scope": "openid profile bank:accounts.basic:read bank:accounts.detail:read bank:transactions:read common:customer.basic:read introspect_tokens revoke_tokens",
-      "jwksUri": "https://datarecipient.mock:9001/jwks",
+      "jwksUri": "https://tpp1.cdr.cloudentity-se.com:9001/jwks",
       "redirectUris": "https://datarecipient.mock:9001/consent/callback,https://datarecipient.mock:9001/consent/callback2",
       "recipientBaseUri": "https://datarecipient.mock:9001"
     },
     "DataHolder": {
-      "infosecBaseUri": "https://authorization.cloudentity.com:8443/default/cdr",
+      "infosecBaseUri": "https://energyaustralia-internal.mtls.au.authz.cloudentity.io/energyaustralia-internal/cdr",
       "resourceBaseUri": "https://mock-data-holder:8002",
       "publicBaseUri": "https://mock-data-holder:8000",
-      "oidcDiscoveryUri": "https://authorization.cloudentity.com:8443/default/cdr/.well-known/openid-configuration",
-      "jwksUri": "https://authorization.cloudentity.com:8443/default/cdr/.well-known/jwks.json",
-      "registrationEndpoint": "https://authorization.cloudentity.com:8443/default/cdr/oauth2/register"
+      "oidcDiscoveryUri": "https://energyaustralia-internal.mtls.au.authz.cloudentity.io/energyaustralia-internal/cdr/.well-known/openid-configuration",
+      "jwksUri": "https://energyaustralia-internal.mtls.au.authz.cloudentity.io/energyaustralia-internal/cdr/.well-known/jwks.json",
+      "registrationEndpoint": "https://energyaustralia-internal.mtls.au.authz.cloudentity.io/energyaustralia-internal/cdr/oauth2/register"
     }
   }
 }
