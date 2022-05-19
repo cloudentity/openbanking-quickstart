@@ -54,6 +54,7 @@ clean:
 	docker-compose -f docker-compose.build.yaml down --remove-orphans
 ifeq (${DEBUG},true)
 	docker ps -a
+	rm -fr mount/cdr/*
 endif
 
 # obuk, obbr, fdx
