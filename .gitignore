@@ -27,3 +27,4 @@ mount/conformance/
 mount/cdr/holder.json
 mount/cdr/recipient.json
 mount/cdr/mock-data-holder/resource-api-appsettings.json
+mount/cdr/registry-seed.json

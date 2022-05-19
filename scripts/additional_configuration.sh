@@ -157,8 +157,12 @@ cat <<EOF > ./mount/cdr/recipient.json
 }
 EOF
 
-
+# registry seed is really long so it's easier to use sed for replacement
+RS_TEMPLATE="./mount/cdr/registry-seed.template"
 RS_FILE="./mount/cdr/registry-seed.json"
+
+rm -f $RS_FILE && cp $RS_TEMPLATE $RS_FILE
+
 DATA_RECIPIENT_URL_ESCAPED=$(echo $DATA_RECIPIENT_URL | sed 's;/;\\/;g')
 sed -i.bak "s/https:\/\/datarecipient.mock:9001/${DATA_RECIPIENT_URL_ESCAPED}/g" $RS_FILE && rm -f "${RS_FILE}.bak"
 
