@@ -1,0 +1,50 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "Data Source=/tmp/mdr.db"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Debug",
+      "Microsoft": "Warning",
+      "Microsoft.Hosting.Lifetime": "Information"
+    }
+  },
+  "Serilog": {
+    "Using": [ "Serilog.Sinks.Console", "Serilog.Sinks.File" ],
+    "MinimumLevel": "Verbose",
+    "WriteTo": [
+      { "Name": "Console" },
+      {
+        "Name": "File",
+        "Args": { "path": "/tmp/cdr-mdr-web.log" }
+      }
+    ],
+    "Enrich": [ "FromLogContext", "WithMachineName", "WithThreadId" ],
+    "Properties": {
+      "Application": "CDR.DataRecipient.Web"
+    }
+  },
+  "ConsumerDataStandardsSwagger": "https://consumerdatastandardsaustralia.github.io/standards/includes/swagger/cds_banking.json",
+  "MockDataRecipient": {
+    "Register": {
+      "tlsBaseUri": "${MOCK_REGISTER_URL}",
+      "mtlsBaseUri": "${MOCK_REGISTER_MTLS_URL}",
+      "oidcDiscoveryUri": "${MOCK_REGISTER_URL}/idp/.well-known/openid-configuration",
+      "tokenEndpoint": "${MOCK_REGISTER_MTLS_URL}/idp/connect/token"
+    },
+    "SoftwareProduct": {
+      "scope": "openid profile bank:accounts.basic:read bank:accounts.detail:read bank:transactions:read common:customer.basic:read introspect_tokens revoke_tokens",
+      "jwksUri": "${DATA_RECIPIENT_URL}/jwks",
+      "redirectUris": "${DATA_RECIPIENT_URL}/consent/callback,${DATA_RECIPIENT_URL}/consent/callback2",
+      "recipientBaseUri": "${DATA_RECIPIENT_URL}"
+    },
+    "DataHolder": {
+      "infosecBaseUri": "${URL}",
+      "resourceBaseUri": "https://mock-data-holder:8002",
+      "publicBaseUri": "https://mock-data-holder:8000",
+      "oidcDiscoveryUri": "${URL}/.well-known/openid-configuration",
+      "jwksUri": "${URL}/.well-known/jwks.json",
+      "registrationEndpoint": "${MTLS_URL}/oauth2/register"
+    }
+  }
+}
