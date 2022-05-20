@@ -18,7 +18,7 @@ configure_cdr() {
     envsubst < ./data/cdr/mock-apps/holder.template > ./mount/cdr/holder.json
     envsubst < ./data/cdr/mock-apps/recipient.template > ./mount/cdr/recipient.json
     envsubst < ./data/cdr/mock-apps/registry-seed.template > ./mount/cdr/registry-seed.json
-    envsubst < ./data/cdr/mock-apps/resource-api-appsettings.template > ./mount/cdr/mock-data-holder/resource-api-appsettings.json
+    envsubst < ./data/cdr/mock-apps/resource-api-appsettings.template > ./mount/cdr/holder-resource-api-appsettings.json
 }
 
 for ACTION in "$@"

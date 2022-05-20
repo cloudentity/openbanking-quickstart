@@ -30,7 +30,7 @@ services:
     volumes:
       - ./mount/cdr/holder.json:/app/idsvr/appsettings.Production.json
       - ./mount/cdr/holder-seed.json:/app/manage/Data/seed-data.json
-      - ./mount/cdr/mock-data-holder/resource-api-appsettings.json:/app/resource/appsettings.Production.json
+      - ./mount/cdr/holder-resource-api-appsettings.json:/app/resource/appsettings.Production.json
     ports:
       - "8000:8000"
       - "8001:8001"
