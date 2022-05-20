@@ -37,7 +37,7 @@
                   "PolicyUri": "https://mocksoftware/mybudgetapp/policy",
                   "RecipientBaseUri": "${DATA_RECIPIENT_URL}",
                   "RevocationUri": "${DATA_RECIPIENT_URL}/revocation",
-                  "RedirectUris": "${DATA_RECIPIENT_URL}/consent/callback https://${DATA_RECIPIENT_URL}/consent/callback2",
+                  "RedirectUris": "${DATA_RECIPIENT_URL}/consent/callback ${DATA_RECIPIENT_URL}/consent/callback2",
                   "JwksUri": "${DATA_RECIPIENT_URL}/jwks",
                   "Scope": "openid profile bank:accounts.basic:read bank:accounts.detail:read bank:transactions:read bank:payees:read bank:regular_payments:read common:customer.basic:read common:customer.detail:read cdr:registration introspect_tokens revoke_tokens",
                   "StatusId": 1,
