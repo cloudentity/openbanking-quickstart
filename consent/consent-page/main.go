@@ -54,6 +54,7 @@ type Config struct {
 	DefaultLanguage  language.Tag  `env:"DEFAULT_LANGUAGE"  envDefault:"en-us"`
 	TransDir         string        `env:"TRANS_DIR" envDefault:"./translations"`
 	Spec             Spec          `env:"SPEC,required"`
+	EnableTLSServer  bool          `env:"ENABLE_TLS_SERVER" envDefault:"true"`
 
 	Otp OtpConfig
 
@@ -168,16 +169,21 @@ func NewServer() (Server, error) {
 		return Server{}, errors.New("invalid SPEC configuration")
 	}
 
-	if db, err = InitDB(server.Config); err != nil {
-		return server, errors.Wrapf(err, "failed to init db")
-	}
+	if server.Config.EnableMFA {
+		logrus.Debugf("mfa is enabled... loading otp db")
+		if db, err = InitDB(server.Config); err != nil {
+			return server, errors.Wrapf(err, "failed to init db")
+		}
 
-	if server.OTPRepo, err = NewOTPRepo(db); err != nil {
-		return server, errors.Wrapf(err, "failed to init otp repo")
-	}
+		if server.OTPRepo, err = NewOTPRepo(db); err != nil {
+			return server, errors.Wrapf(err, "failed to init otp repo")
+		}
 
-	if server.OTPHandler, err = NewOTPHandler(server.Config, server.OTPRepo, server.SMSClient); err != nil {
-		return server, errors.Wrapf(err, "failed to init otp handler")
+		if server.OTPHandler, err = NewOTPHandler(server.Config, server.OTPRepo, server.SMSClient); err != nil {
+			return server, errors.Wrapf(err, "failed to init otp handler")
+		}
+	} else {
+		logrus.Debugf("mfa is disabled... skipping otp db load")
 	}
 
 	tools := ConsentTools{Trans: server.Trans, Config: server.Config}
@@ -263,7 +269,12 @@ func (s *Server) Start() error {
 	base.GET("/", s.Get())
 	base.POST("/", s.Post())
 
-	return r.RunTLS(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)), s.Config.CertFile, s.Config.KeyFile)
+	if s.Config.EnableTLSServer {
+		logrus.Debugf("running consent page server tls")
+		return r.RunTLS(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)), s.Config.CertFile, s.Config.KeyFile)
+	}
+	logrus.Debugf("running consent page server non-tls")
+	return r.Run(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)))
 }
 
 func main() {
