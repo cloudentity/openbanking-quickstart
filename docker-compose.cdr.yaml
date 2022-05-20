@@ -29,7 +29,7 @@ services:
     image: docker.cloudentity.io/cdr-mock-data-holder:0.0.3
     volumes:
       - ./mount/cdr/holder.json:/app/idsvr/appsettings.Production.json
-      - ./mount/cdr/holder-seed.json:/app/manage/Data/seed-data.json
+      #- ./mount/cdr/holder-seed.json:/app/manage/Data/seed-data.json
       - ./mount/cdr/holder-resource-api-appsettings.json:/app/resource/appsettings.Production.json
     ports:
       - "8000:8000"
