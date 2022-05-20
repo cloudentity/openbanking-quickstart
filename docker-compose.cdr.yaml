@@ -189,7 +189,6 @@ services:
       - ./data/imports/system.tmpl:/app/imports-cdr/system.tmpl
       - ./data/imports/bank-customers.tmpl:/app/imports-cdr/bank-customers.tmpl
       - ./data/imports/cdr.tmpl:/app/imports-cdr/cdr.tmpl
-      - ./data/imports/tenant.tmpl:/app/imports-cdr/tenant.tmpl
     command:
       - /app/main
       - --tenant-url
