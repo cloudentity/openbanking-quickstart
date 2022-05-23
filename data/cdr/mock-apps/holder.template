@@ -1,0 +1,49 @@
+{
+  "ConnectionStrings": {
+    "IdentityServerStoreDatabase": "Data Source=/tmp/idsvr.db",
+    "ResourceDatabase": "Data Source=/tmp/mdh.db"
+  },
+  "IssuerUri": "${URL}",
+  "JwksUri": "${URL}/.well-known/jwks.json",
+  "AuthorizeUri": "${URL}/oauth2/authorize",
+  "TokenUri": "${MTLS_URL}/oauth2/token",
+  "IntrospectionUri": "${URL}/oauth2/introspect",
+  "UserinfoUri": "${URL}/userinfo",
+  "RegisterUri": "${MTLS_URL}/oauth2/register",
+  "ParUri": "${URL}/par",
+  "RevocationUri": "${URL}/oauth2/revoke",
+  "ArrangementRevocationUri": "${URL}/arrangements/revoke",
+  "Register": {
+    "SsaJwksUri": "${MOCK_REGISTER_URL}/cdr-register/v1/jwks"
+  },
+  "Registration": {
+    "AudienceUri": "${URL}"
+  },
+  "Logging": {
+    "LogLevel": {
+      "Default": "Debug",
+      "Microsoft": "Debug",
+      "Microsoft.Hosting.Lifetime": "Debug"
+    }
+  },
+  "Serilog": {
+    "Using": [ "Serilog.Sinks.Console", "Serilog.Sinks.File" ],
+    "MinimumLevel": "Debug",
+    "WriteTo": [
+      { "Name": "Console" },
+      {
+        "Name": "File",
+        "Args": {
+          "path": "/tmp/cdr-mdh-identityserver.log",
+          "rollingInterval": "Day",
+          "rollOnFileSizeLimit": true,
+          "fileSizeLimitBytes": "1000000"
+        }
+      }
+    ],
+    "Enrich": [ "FromLogContext", "WithMachineName", "WithThreadId" ],
+    "Properties": {
+      "Application": "CDR.DataHolder.IdentityServer"
+    }
+  }
+}
