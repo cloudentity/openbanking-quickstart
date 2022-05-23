@@ -16,6 +16,7 @@ run-%-local:
 # obuk, obbr
 run-%-saas:
 	cp -f .env-saas .env
+	./scripts/additional_configuration.sh $*
 	docker-compose -f docker-compose.$*.yaml up --no-build -d
 	./scripts/wait.sh
 
