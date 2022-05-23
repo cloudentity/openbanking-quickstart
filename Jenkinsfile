@@ -38,23 +38,22 @@ pipeline {
             steps {
                 sh 'rm -f docker-compose.log'
                 sh 'make clean'
-                sh 'make stop-runner'
                 sh 'make lint'
                 sh 'make stop-runner'
                 sh 'make build'
             }
         }
-        stage('SaaS CDR Tests') {
+        stage('CDR Tests') {
             steps {
                 script {
                     try {
-                        sh 'make disable-mfa set-saas-configuration run-cdr-saas'
-                        sh 'make run-saas-cdr-tests-headless'
+                        sh 'make run-cdr-local'
+                        sh 'make run-cdr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        unstable('SaaS CDR Tests failed')
+                        unstable('CDR Tests failed')
                     } finally {
-                        sh 'make clean-cdr-saas'
+                        sh 'make clean'
                     }
                 }
             }
@@ -194,17 +193,17 @@ pipeline {
                 }
             }
         }
-        stage('CDR Tests') {
+        stage('SaaS CDR Tests') {
             steps {
                 script {
                     try {
-                        sh 'make run-cdr-local'
-                        sh 'make run-cdr-tests-headless'
+                        sh 'make disable-mfa set-saas-configuration run-cdr-saas'
+                        sh 'make run-saas-cdr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        unstable('CDR Tests failed')
+                        unstable('SaaS CDR Tests failed')
                     } finally {
-                        sh 'make clean'
+                        sh 'make clean-cdr-saas'
                     }
                 }
             }
