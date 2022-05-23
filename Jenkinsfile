@@ -43,21 +43,6 @@ pipeline {
                 sh 'make build'
             }
         }
-        stage('SaaS CDR Tests') {
-            steps {
-                script {
-                    try {
-                        sh 'make disable-mfa set-saas-configuration run-cdr-saas'
-                        sh 'make run-saas-cdr-tests-headless'
-                    } catch(exc) {
-                        captureDockerLogs()
-                        unstable('SaaS CDR Tests failed')
-                    } finally {
-                        sh 'make clean-cdr-saas'
-                    }
-                }
-            }
-        }
         stage('CDR Tests') {
             steps {
                 script {
@@ -69,6 +54,21 @@ pipeline {
                         unstable('CDR Tests failed')
                     } finally {
                         sh 'make clean'
+                    }
+                }
+            }
+        }
+        stage('SaaS CDR Tests') {
+            steps {
+                script {
+                    try {
+                        sh 'make disable-mfa set-saas-configuration run-cdr-saas'
+                        sh 'make run-saas-cdr-tests-headless'
+                    } catch(exc) {
+                        captureDockerLogs()
+                        unstable('SaaS CDR Tests failed')
+                    } finally {
+                        sh 'make clean-cdr-saas'
                     }
                 }
             }
