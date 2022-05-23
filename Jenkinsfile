@@ -43,7 +43,6 @@ pipeline {
                 sh 'make build'
             }
         }
-
         stage('CDR Tests') {
             steps {
                 script {
@@ -190,6 +189,21 @@ pipeline {
                         unstable('SaaS OBBR Tests failed')
                     } finally {
                         sh 'make clean-obbr-saas'
+                    }
+                }
+            }
+        }
+        stage('SaaS CDR Tests') {
+            steps {
+                script {
+                    try {
+                        sh 'make disable-mfa set-saas-configuration run-cdr-saas'
+                        sh 'make run-saas-cdr-tests-headless'
+                    } catch(exc) {
+                        captureDockerLogs()
+                        unstable('SaaS CDR Tests failed')
+                    } finally {
+                        sh 'make clean-cdr-saas'
                     }
                 }
             }
