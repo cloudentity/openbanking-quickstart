@@ -26,7 +26,7 @@ const (
 	consentAdminSystemClientID = "bv2fe0tpfc67lmeti340"
 	consentPageSystemClientID  = "bv0ocudfotn6edhsiu7g"
 
-	bankCustomerWorkspaceID = "bank-customer"
+	bankCustomerWorkspaceID = "bank-customers"
 )
 
 func main() {
