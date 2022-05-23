@@ -1,0 +1,34 @@
+#!/bin/bash
+set -e
+
+# configuration
+export ACP_URL=https://authorization.cloudentity.com:8443
+export ACP_MTLS_URL=https://authorization.cloudentity.com:8443
+export TENANT=default
+export SERVER=cdr
+export DATA_RECIPIENT_URL=https://datarecipient.mock:9001
+export MOCK_REGISTER_URL=https://mock-register:7000
+export MOCK_REGISTER_MTLS_URL=https://mock-register:7001
+
+# do not modify below
+export URL=${ACP_URL}/${TENANT}/${SERVER}
+export MTLS_URL=${ACP_MTLS_URL}/${TENANT}/${SERVER}
+
+configure_cdr() {
+    envsubst < ./data/cdr/mock-apps/holder.template > ./mount/cdr/holder.json
+    envsubst < ./data/cdr/mock-apps/recipient.template > ./mount/cdr/recipient.json
+    envsubst < ./data/cdr/mock-apps/registry-seed.template > ./mount/cdr/registry-seed.json
+    envsubst < ./data/cdr/mock-apps/resource-api-appsettings.template > ./mount/cdr/holder-resource-api-appsettings.json
+}
+
+for ACTION in "$@"
+do
+  case "$ACTION" in
+  cdr)
+    configure_cdr
+    ;;
+  *)
+    exit
+    ;;
+  esac
+done
