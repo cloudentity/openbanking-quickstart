@@ -43,21 +43,6 @@ pipeline {
                 sh 'make build'
             }
         }
-        stage('CDR Tests') {
-            steps {
-                script {
-                    try {
-                        sh 'make run-cdr-local'
-                        sh 'make run-cdr-tests-headless'
-                    } catch(exc) {
-                        captureDockerLogs()
-                        unstable('CDR Tests failed')
-                    } finally {
-                        sh 'make clean'
-                    }
-                }
-            }
-        }
         stage('SaaS CDR Tests') {
             steps {
                 script {
@@ -204,6 +189,21 @@ pipeline {
                         unstable('SaaS OBBR Tests failed')
                     } finally {
                         sh 'make clean-obbr-saas'
+                    }
+                }
+            }
+        }
+        stage('CDR Tests') {
+            steps {
+                script {
+                    try {
+                        sh 'make run-cdr-local'
+                        sh 'make run-cdr-tests-headless'
+                    } catch(exc) {
+                        captureDockerLogs()
+                        unstable('CDR Tests failed')
+                    } finally {
+                        sh 'make clean'
                     }
                 }
             }
