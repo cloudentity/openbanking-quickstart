@@ -23,3 +23,8 @@ tests/package-lock.json
 my.db
 mount/conformance/
 .env
+
+mount/cdr/holder.json
+mount/cdr/recipient.json
+mount/cdr/holder-resource-api-appsettings.json
+mount/cdr/registry-seed.json
