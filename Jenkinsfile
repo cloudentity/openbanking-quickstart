@@ -49,10 +49,8 @@ pipeline {
                 script {
                     try {
                         sh 'make run-cdr-local'
-                        sleep(time: 5, unit: 'MINUTES')
                         sh 'make run-cdr-tests-headless'
                     } catch(exc) {
-                        sleep(time: 20, unit: 'MINUTES')
                         captureDockerLogs()
                         unstable('CDR Tests failed')
                     } finally {
