@@ -30,7 +30,7 @@ export class MockDataRecipientPage {
   public assertThatClientRegistered(): void {
     cy.get("p + .row  > div:nth-child(1) .text-muted", {
       timeout: 10000,
-    }).should("have.contain", "BadssssRequest - Failed to register"); // TODO update text
+    }).should("have.contain", "Created - Registered");
   }
 
   public visitConsentAndAuthorisationTab(): void {
