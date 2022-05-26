@@ -13,7 +13,7 @@ version: '3.0'
 services:
   mock-register:
     container_name: mock-register
-    image: consumerdataright/mock-register
+    image: docker.cloudentity.io/mock-register:0.0.1
     volumes:
       - ./mount/cdr/registry-seed.json:/app/admin/Data/seed-data.json
     ports:
