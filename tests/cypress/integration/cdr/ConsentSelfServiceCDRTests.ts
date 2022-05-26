@@ -21,7 +21,7 @@ describe(`Consent self service app CDR`, () => {
   const consentSelfServiceApplicationPage: ConsentSelfServiceApplicationPage = new ConsentSelfServiceApplicationPage();
 
   before(() => {
-    mockDataRecipientNavigationPage.visit();
+    mockDataRecipientNavigationPage.visit(true);
 
     mockDataRecipientNavigationPage.clickDiscoverDataHoldersLink();
     discoverDataHoldersPage.assertThatPageIsDisplayed();

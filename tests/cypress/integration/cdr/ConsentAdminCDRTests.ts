@@ -20,7 +20,7 @@ describe(`Consent admin portal CDR`, () => {
   const consentAdminPage: ConsentAdminPage = new ConsentAdminPage();
 
   before(() => {
-    mockDataRecipientNavigationPage.visit();
+    mockDataRecipientNavigationPage.visit(true);
 
     mockDataRecipientNavigationPage.clickDiscoverDataHoldersLink();
     discoverDataHoldersPage.assertThatPageIsDisplayed();
@@ -64,7 +64,7 @@ describe(`Consent admin portal CDR`, () => {
   })
 
   it(`Happy path with revoking consent from Third party providers page`, () => {
-    mockDataRecipientNavigationPage.visit();
+    mockDataRecipientNavigationPage.visit(true);
 
     mockDataRecipientNavigationPage.clickDiscoverDataHoldersLink();
     discoverDataHoldersPage.assertThatPageIsDisplayed();
