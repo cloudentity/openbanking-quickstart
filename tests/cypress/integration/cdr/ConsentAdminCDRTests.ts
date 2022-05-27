@@ -21,6 +21,8 @@ describe(`Consent admin portal CDR`, () => {
 
   before(() => {
     mockDataRecipientNavigationPage.visit(true);
+    Urls.clearLocalStorage();
+    mockDataRecipientNavigationPage.visit(true);
 
     mockDataRecipientNavigationPage.clickDiscoverDataHoldersLink();
     discoverDataHoldersPage.assertThatPageIsDisplayed();
@@ -64,6 +66,8 @@ describe(`Consent admin portal CDR`, () => {
   })
 
   it(`Happy path with revoking consent from Third party providers page`, () => {
+    mockDataRecipientNavigationPage.visit(true);
+    Urls.clearLocalStorage();
     mockDataRecipientNavigationPage.visit(true);
 
     mockDataRecipientNavigationPage.clickDiscoverDataHoldersLink();

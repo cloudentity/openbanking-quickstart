@@ -8,6 +8,7 @@ import {DiscoverDataHoldersPage} from '../../pages/mock-data-recipient/DiscoverD
 import {DynamicClientRegistrationPage} from '../../pages/mock-data-recipient/DynamicClientRegistrationPage'
 import {ConsentAndAuthorisationPage} from '../../pages/mock-data-recipient/ConsentAndAuthorisationPage'
 import {ConsentAndAuthorisationCallbackPage} from '../../pages/mock-data-recipient/ConsentAndAuthorisationCallbackPage'
+import {Urls} from '../../pages/Urls';
 
 describe(`Consent self service app CDR`, () => {
   const mockDataRecipientNavigationPage: MockDataRecipientNavigationPage = new MockDataRecipientNavigationPage(); 
@@ -21,6 +22,8 @@ describe(`Consent self service app CDR`, () => {
   const consentSelfServiceApplicationPage: ConsentSelfServiceApplicationPage = new ConsentSelfServiceApplicationPage();
 
   before(() => {
+    mockDataRecipientNavigationPage.visit(true);
+    Urls.clearLocalStorage();
     mockDataRecipientNavigationPage.visit(true);
 
     mockDataRecipientNavigationPage.clickDiscoverDataHoldersLink();
