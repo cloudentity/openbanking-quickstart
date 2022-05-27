@@ -24,6 +24,7 @@ pipeline {
             steps {
                  sh '''#!/bin/bash
                         echo "127.0.0.1       authorization.cloudentity.com test-docker" | sudo tee -a /etc/hosts
+                        echo "127.0.0.1       datarecipient.mock" | sudo tee -a /etc/hosts
                         cd tests && yarn install
                  '''
                  sh 'docker-compose version'
