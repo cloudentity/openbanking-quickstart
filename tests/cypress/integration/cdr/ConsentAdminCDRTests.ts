@@ -44,6 +44,7 @@ describe(`Consent admin portal CDR`, () => {
     consentAndAuthorisationPage.clickOnAuthorizationUriLink();
 
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    Urls.clearLocalStorage();
     consentPage.confirm();
     consentPage.assertThatPageIsNotVisible();
     consentAndAuthorisationCallbackPage.assertThatPageIsDisplayed();
