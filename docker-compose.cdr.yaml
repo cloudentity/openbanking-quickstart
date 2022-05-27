@@ -43,7 +43,7 @@ services:
 
   mock-data-recipient:
     container_name: mock-data-recipient
-    image: docker.cloudentity.io/cdr-mock-data-recipient:0.0.8
+    image: docker.cloudentity.io/cdr-mock-data-recipient:0.0.9
     networks:
       default:
         aliases:
