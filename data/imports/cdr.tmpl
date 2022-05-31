@@ -162,6 +162,10 @@ servers:
           keys:
         jwks_uri: ""
   initialize: true
+  cdr:
+    brand_id:
+    register_url: "https://mock-register:7000"
+    industry: banking
   {{ if .read_client_certificate_from_header }}
   read_client_certificate_from_header: {{ .read_client_certificate_from_header }}
   client_certificate_header: {{ .client_certificate_header }}
