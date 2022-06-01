@@ -64,7 +64,7 @@ func (o *CDRArrangementImpl) getConsents(response *cdr.ListCDRArrangementsOK) []
 	var consents []Consent
 
 	for _, arrangement := range response.Payload.Arrangements {
-		if arrangement.Status == "Rejected" {
+		if arrangement.Status == "Rejected" || arrangement.Status == "Revoked" {
 			continue
 		}
 		consents = append(consents, Consent{
