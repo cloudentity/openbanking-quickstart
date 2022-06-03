@@ -54,7 +54,7 @@ func (r *HTTPRuntime) Submit(operation *runtime.ClientOperation) (interface{}, e
 }
 
 func NewHTTPRuntimeWithClient(host, basePath string, schemes []string, c *http.Client) *HTTPRuntime {
-	return &HTTPRuntime{
-		client.NewWithClient(host, basePath, schemes, c),
-	}
+	rt := client.NewWithClient(host, basePath, schemes, c)
+	rt.Debug = true
+	return &HTTPRuntime{rt}
 }
