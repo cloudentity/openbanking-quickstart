@@ -1,8 +1,11 @@
 package main
 
 import (
+	"time"
+
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client/accounts"
 	"github.com/gin-gonic/gin"
+	"github.com/go-openapi/strfmt"
 
 	acpclient "github.com/cloudentity/acp-client-go"
 	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
@@ -40,7 +43,8 @@ func (h *OBUKLogic) CreateConsent(c *gin.Context) (interface{}, error) {
 		obukModels.NewCreateAccountAccessConsentRequestParamsWithContext(c).
 			WithRequest(&obModels.AccountAccessConsentRequest{
 				Data: &obModels.OBReadConsent1Data{
-					Permissions: c.PostFormArray("permissions"),
+					Permissions:        c.PostFormArray("permissions"),
+					ExpirationDateTime: strfmt.DateTime(time.Now().Add(time.Hour * 24 * 30)),
 				},
 				Risk: map[string]interface{}{},
 			}),
