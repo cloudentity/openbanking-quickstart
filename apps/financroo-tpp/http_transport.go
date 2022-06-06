@@ -6,7 +6,6 @@ import (
 
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/runtime/client"
-	"github.com/sirupsen/logrus"
 )
 
 type HTTPRuntime struct {
@@ -14,7 +13,6 @@ type HTTPRuntime struct {
 }
 
 func (r *HTTPRuntime) Submit(operation *runtime.ClientOperation) (interface{}, error) {
-	logrus.WithField("operation", operation).Info("submitted operation")
 	var selectedMediaType string
 	firstMediaType := operation.ConsumesMediaTypes[0]
 	for _, mediaType := range operation.ConsumesMediaTypes {
@@ -54,7 +52,7 @@ func (r *HTTPRuntime) Submit(operation *runtime.ClientOperation) (interface{}, e
 }
 
 func NewHTTPRuntimeWithClient(host, basePath string, schemes []string, c *http.Client) *HTTPRuntime {
-	return &HTTPRuntime{
-		client.NewWithClient(host, basePath, schemes, c),
-	}
+	rt := client.NewWithClient(host, basePath, schemes, c)
+	rt.Debug = true
+	return &HTTPRuntime{rt}
 }
