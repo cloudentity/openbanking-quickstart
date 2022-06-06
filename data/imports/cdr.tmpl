@@ -140,27 +140,6 @@ servers:
     - private_key_jwt
     - client_secret_post
     - tls_client_auth
-  trust_anchor_configuration:
-    jwks:
-      keys:
-      - 'alg': PS256
-        'e': AQAB
-        'key_ops':
-        - sign
-        - verify
-        'kid': 542A9B91600488088CD4D816916A9F4488DD2651
-        'kty': RSA
-        'n': 0qE0TxxopsXaRNZ7qr9w0Sy0-kBGabAjB5BDn0ekvevomMFCvxdxw2d95aLc09k59cFH_dNsP0DCCE9ALp5Ob8gXNHcKEnKzFeLnZGo0xDSw6Xu-JuBw5-Z9bDfSWG_iSoPitG4Bk9j1S2brsKkOOa8iIE0JqkFMu___0ifoaA0C62c5QJIH8qvEr7x-zG9H9Bt1aFOznMy-TvI2s91otg4N_E1RKfRHnwPRjuw7fO1UCxn2LRLR0J_vz_uEHBs9CjH7KcPknPw43nmL-JDWQjUgM2FioTXDwhBEb5o_FQkLJlZmVrxg27iyAePYnoWDenGQsSS_2AhBAfZjqTIXBQ
-  dynamic_client_registration:
-    enabled: true
-    initial_access_token:
-      required: false
-    payload:
-      format: "jws"
-      jws_payload:
-        jwks:
-          keys:
-        jwks_uri: ""
   initialize: true
   cdr:
     brand_id:
