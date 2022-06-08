@@ -165,7 +165,7 @@ func NewOBUKClient(config Config) (BankClient, error) {
 
 	tr := NewHTTPRuntimeWithClient(
 		u.Host,
-		"/",
+		u.Path,
 		[]string{u.Scheme},
 		hc,
 	)
@@ -192,7 +192,7 @@ func NewCDRClient(config Config) (BankClient, error) {
 
 	tr := NewHTTPRuntimeWithClient(
 		u.Host,
-		"/",
+		u.Path,
 		[]string{u.Scheme},
 		http.DefaultClient,
 	)
@@ -220,13 +220,13 @@ func NewOBBRClient(config Config) (BankClient, error) {
 
 	c.Accounts = obbrAccounts.New(NewHTTPRuntimeWithClient(
 		u.Host,
-		"/accounts/v1",
+		u.Path+"/accounts/v1",
 		[]string{u.Scheme},
 		hc,
 	), nil)
 	c.PaymentConsentsBrasil = obbrPayments.New(NewHTTPRuntimeWithClient(
 		u.Host,
-		"/payments/v1",
+		u.Path+"/payments/v1",
 		[]string{u.Scheme},
 		hc,
 	), nil)

@@ -138,3 +138,7 @@ obbr:
 # enable, disable
 %-tls-financroo:
 	./scripts/financroo_tls_configuration.sh $*
+	
+.PHONY: bump_acp
+bump_acp:
+	./scripts/bump_acp.sh
