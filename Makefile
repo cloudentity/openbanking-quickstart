@@ -135,3 +135,6 @@ generate-cdr-clients: start-runner
 obbr:
 	docker-compose -f docker-compose.acp.local.yaml -f conformance/docker-compose.obb.yaml -f conformance/docker-compose.fapi.yaml ${cmd}
 
+.PHONY: bump_acp
+bump_acp:
+	./scripts/bump_acp.sh
