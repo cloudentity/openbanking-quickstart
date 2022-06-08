@@ -151,9 +151,9 @@ services:
       - TENANT=${TENANT}
       - GIN_MODE=debug # change to release to disable gin debug
       - SPEC=cdr
-      - BANK_URL=http
       - OPENBANKING_SERVER_ID=cdr
       - BANK_URL=http://bank:8070
+      - ENABLE_TLS_SERVER=true
     depends_on: 
       configuration: 
         condition: service_completed_successfully
