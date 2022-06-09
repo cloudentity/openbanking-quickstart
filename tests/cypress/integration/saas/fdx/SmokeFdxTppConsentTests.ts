@@ -30,7 +30,7 @@ describe(`FDX Tpp consent app`, () => {
 
   [
     [creditsAccountId, savingsAccountId],
-    // [savingsAccountId],
+    [savingsAccountId],
     [creditsAccountId],
   ].forEach((accountsIds) => {
     it(`Happy path with selected accounts: ${accountsIds}`, () => {
@@ -61,6 +61,7 @@ describe(`FDX Tpp consent app`, () => {
 
       fdxTppAuthenticatedPage.clickTryNext();
       fdxTppLoginPage.assertThatPageIsDisplayed();
+      cy.wait(3000)
     });
   });
 
