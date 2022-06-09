@@ -44,7 +44,7 @@ pipeline {
                 sh 'make build'
             }
         }
-        stage('CDR Tests') {
+        /*stage('CDR Tests') {
             steps {
                 script {
                     try {
@@ -148,7 +148,7 @@ pipeline {
                     }
                 }
             }
-        }
+        }*/
         stage('SaaS FDX Tests') {
             steps {
                 script {
