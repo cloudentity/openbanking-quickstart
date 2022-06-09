@@ -30,7 +30,7 @@ describe(`FDX Tpp consent app`, () => {
 
   [
     [creditsAccountId, savingsAccountId],
-    [savingsAccountId],
+    // [savingsAccountId],
     [creditsAccountId],
   ].forEach((accountsIds) => {
     it(`Happy path with selected accounts: ${accountsIds}`, () => {
