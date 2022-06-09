@@ -135,6 +135,10 @@ generate-cdr-clients: start-runner
 obbr:
 	docker-compose -f docker-compose.acp.local.yaml -f conformance/docker-compose.obb.yaml -f conformance/docker-compose.fapi.yaml ${cmd}
 
+# enable, disable
+%-tls-financroo:
+	./scripts/financroo_tls_configuration.sh $*
+	
 .PHONY: bump_acp
 bump_acp:
 	./scripts/bump_acp.sh

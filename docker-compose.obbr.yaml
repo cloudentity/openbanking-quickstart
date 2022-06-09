@@ -41,6 +41,7 @@ services:
       - SPEC=obbr
       - BANK_URL=http://bank:8070
       - OPENBANKING_SERVER_ID=openbanking_brasil
+      - ENABLE_TLS_SERVER=true
     depends_on:
       configuration:
         condition: service_completed_successfully

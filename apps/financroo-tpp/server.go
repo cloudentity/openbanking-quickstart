@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/securecookie"
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 	bolt "go.etcd.io/bbolt"
 	"gopkg.in/go-playground/validator.v9"
 
@@ -110,5 +111,10 @@ func (s *Server) Start() error {
 		})
 	})
 
-	return r.RunTLS(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)), s.Config.CertFile, s.Config.KeyFile)
+	if s.Config.EnableTLSServer {
+		logrus.Debugf("running financroo server tls")
+		return r.RunTLS(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)), s.Config.CertFile, s.Config.KeyFile)
+	}
+	logrus.Debugf("running financroo server non-tls")
+	return r.Run(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)))
 }
