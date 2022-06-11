@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -31,6 +32,7 @@ type MFAConsentProvider interface {
 }
 
 func (s *Server) GetMFAConsentProvider(loginRequest LoginRequest) (MFAConsentProvider, bool) {
+	log.Println("Grabbing consent provider")
 	switch loginRequest.ConsentType {
 	case "domestic_payment", "payments":
 		return s.PaymentMFAConsentProvider, true
@@ -69,6 +71,7 @@ func (s *OBUKAccountAccessMFAConsentProvider) GetMFAData(c *gin.Context, loginRe
 }
 
 func (s *OBUKAccountAccessMFAConsentProvider) GetSMSBody(data MFAData, otp OTP) string {
+	log.Println("get SMS Body")
 	return fmt.Sprintf(
 		"%s is requesting access to your accounts, please pre-authorize the consent %s using following code: %s to proceed.",
 		data.ClientName,
@@ -206,14 +209,17 @@ func (s *DomesticPaymentMFAConsentProvider) GetConsentMockData(loginRequest Logi
 func (s *Server) MFAHandler() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			r        = NewLoginRequest(c)
-			provider MFAConsentProvider
-			data     MFAData
-			ok       bool
-			valid    bool
-			mobile   string
-			err      error
+			r         = NewLoginRequest(c)
+			provider  MFAConsentProvider
+			requestId string
+			data      MFAData
+			ok        bool
+			valid     bool
+			mobile    string
+			err       error
 		)
+
+		log.Printf("called MFAHandler for action: ?\n")
 
 		if err = r.Validate(); err != nil {
 			RenderInvalidRequestError(c, s.Trans, err)
@@ -257,7 +263,7 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 		}
 
 		logrus.Debugf("action: %s, mobile: %s", action, mobile)
-
+		log.Printf("Action: %s", action)
 		switch action {
 		case "request", "resend":
 			if err = s.OTPHandler.Send(r, provider, mobile, data); err != nil {
@@ -333,6 +339,56 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 
 			c.Redirect(http.StatusMovedPermanently, redirect)
 			return
+		case "verify_hypr":
+			// StartAuthentication starts the authentication process for the user
+			// API - {{baseUrl}}/rp/api/oob/client/authentication/requests
+			log.Println("Got to verify_hypr")
+			if requestId, err = s.HyprHandler.StartAuthentication(); err != nil {
+				log.Println("in error on start authentication")
+				RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to merge template data"))
+				return
+			}
+			log.Printf("Checking auth status %s", requestId)
+			// redirect := fmt.Sprintf("?%s", c.Request.URL.Query().Encode())
+			// c.Redirect(http.StatusMovedPermanently, redirect)
+			// poll hypr with timeout
+			// inter := time.Tick(time.Duration(5) * time.Second)
+			// for {
+
+			// select {
+			// case <-time.After(time.Duration(15) * time.Second):
+			// 	log.Println("Request expired before response")
+			// 	return
+			// case <-inter:
+			// 	checkStatus, err := s.HyprHandler.PollHypr(requestId)
+			// 	if err != nil {
+			// 		return
+			// 	}
+			// 	// log.Printf("Status returned: %v". checkStatus)
+			// 	for i := range checkStatus.State { //.DeviceAuthenticationRequestStatus.State {
+			// 		log.Printf("State returned %s", checkStatus.State[i].Value)
+
+			// 		switch checkStatus.State[i].Value {
+			// 		case "COMPLETED":
+			// 			// verify setStorage for HyprHandler
+			// 			s.HyprHandler.SetStorage(r, true)
+			// 			// grabbing first - need to check that it is valid
+			// 			redirect := fmt.Sprintf("?%s", c.Request.URL.Query().Encode())
+			// 			c.Redirect(http.StatusMovedPermanently, redirect)
+			// 		case "CANCELED":
+			// 			err = errors.New("user rejected consent on hypr")
+			// 			RenderError(c, 401, err.Error(), err)
+			// 		case "FAILED":
+			// 			err = errors.New("failed")
+			// 			RenderError(c, 401, err.Error(), err)
+			// 		default:
+			// 			log.Println("waiting for hypr response...")
+			// 		}
+			// 	}
+			// }
+
+			// }
+
 		default:
 			templateData := map[string]interface{}{
 				"mobile":     MaskMobile(mobile),
@@ -348,11 +404,12 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 			}
 
 			if err = mergo.Merge(&templateData, provider.GetConsentMockData(r)); err != nil {
-				RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to validate otp"))
+				RenderInternalServerError(c, s.Trans, errors.Wrap(err, "failed to validate otp"))
 				return
 			}
 
 			Render(c, provider.GetTemplateName(), templateData)
 		}
 	}
+
 }

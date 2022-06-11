@@ -1,0 +1,5 @@
+make --dry-run --always-make --keep-going --print-directory
+make: Entering directory `/Users/billybray/cloudentity/openbanking-quickstart'
+docker-compose -f docker-compose.obuk.yaml -f docker-compose.obbr.yaml -f docker-compose.cdr.yaml -f docker-compose.build.yaml build
+make: Leaving directory `/Users/billybray/cloudentity/openbanking-quickstart'
+ 

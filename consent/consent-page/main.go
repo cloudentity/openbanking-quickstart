@@ -96,6 +96,7 @@ type Server struct {
 	SMSClient                       *SMSClient
 	OTPRepo                         *OTPRepo
 	OTPHandler                      OTPHandler
+	HyprHandler                     HyprHandler
 	Trans                           *Trans
 	PaymentConsentHandler           ConsentHandler
 	PaymentMFAConsentProvider       MFAConsentProvider
@@ -141,6 +142,7 @@ func NewServer() (Server, error) {
 	server.Trans = NewTranslations(bundle, server.Config.DefaultLanguage.String())
 
 	server.SMSClient = NewSMSClient(server.Config)
+	server.HyprHandler = NewHyprHandler("", "")
 
 	switch server.Config.Spec {
 	case OBUK:
