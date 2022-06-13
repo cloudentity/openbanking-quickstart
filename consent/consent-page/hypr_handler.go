@@ -123,7 +123,7 @@ func (o *DefaultHyprHandler) PollHypr(requestID string) (*AuthStatusResponse, er
 	)
 
 	// {{baseUrl}}/rp/api/oob/client/authentication/requests/{{requestId}}
-	if req, err = http.NewRequest("GET", fmt.Sprintf("%s%s", temptBaseUrl, endpoint), nil); err != nil {
+	if req, err = http.NewRequest("GET", fmt.Sprintf("%s%s", "http://0.0.0.0:3031", endpoint), nil); err != nil {
 		return nil, err
 	}
 
@@ -131,7 +131,9 @@ func (o *DefaultHyprHandler) PollHypr(requestID string) (*AuthStatusResponse, er
 	token := "hypap-125b8ab7-2c86-4855-b77f-ecf5c83c0f05"
 	req.Header.Add("Content-Type", "application/json")
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", token))
-	if resp, err = o.Client.Do(req); err != nil {
+
+	c := http.Client{}
+	if resp, err = c.Do(req); err != nil {
 		return nil, err
 	}
 
