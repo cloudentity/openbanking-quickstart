@@ -54,8 +54,11 @@ type Config struct {
 	DefaultLanguage  language.Tag  `env:"DEFAULT_LANGUAGE"  envDefault:"en-us"`
 	TransDir         string        `env:"TRANS_DIR" envDefault:"./translations"`
 	Spec             Spec          `env:"SPEC,required"`
-
-	Otp OtpConfig
+	HyprUser         string        `env:"HYPR_USER"`
+	HyprToken        string        `env:"HYPR_TOKEN"`
+	HyprBaseURL      string        `env:"HYPR_BASE_URL"`
+	HyprAppId        string        `env:"HYPR_APP_ID"`
+	Otp              OtpConfig
 }
 
 type OtpConfig struct {
@@ -142,7 +145,7 @@ func NewServer() (Server, error) {
 	server.Trans = NewTranslations(bundle, server.Config.DefaultLanguage.String())
 
 	server.SMSClient = NewSMSClient(server.Config)
-	server.HyprHandler = NewHyprHandler("", "")
+	server.HyprHandler = NewHyprHandler(server.Config.HyprBaseURL, server.Config.HyprToken, server.Config.HyprAppId)
 
 	switch server.Config.Spec {
 	case OBUK:
@@ -202,7 +205,7 @@ func RequireMFAMiddleware(s *Server) gin.HandlerFunc {
 			err      error
 		)
 
-		if approved, err = s.OTPHandler.IsApproved(NewLoginRequest(c)); err != nil {
+		if approved, err = s.HyprHandler.IsApproved(NewLoginRequest(c)); err != nil {
 			RenderInvalidRequestError(c, s.Trans, nil)
 			c.Abort()
 			return

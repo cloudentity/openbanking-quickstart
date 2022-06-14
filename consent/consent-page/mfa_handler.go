@@ -2,9 +2,7 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/imdario/mergo"
@@ -33,7 +31,6 @@ type MFAConsentProvider interface {
 }
 
 func (s *Server) GetMFAConsentProvider(loginRequest LoginRequest) (MFAConsentProvider, bool) {
-	log.Println("Grabbing consent provider")
 	switch loginRequest.ConsentType {
 	case "domestic_payment", "payments":
 		return s.PaymentMFAConsentProvider, true
@@ -72,7 +69,6 @@ func (s *OBUKAccountAccessMFAConsentProvider) GetMFAData(c *gin.Context, loginRe
 }
 
 func (s *OBUKAccountAccessMFAConsentProvider) GetSMSBody(data MFAData, otp OTP) string {
-	log.Println("get SMS Body")
 	return fmt.Sprintf(
 		"%s is requesting access to your accounts, please pre-authorize the consent %s using following code: %s to proceed.",
 		data.ClientName,
@@ -220,8 +216,6 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 			err       error
 		)
 
-		log.Printf("called MFAHandler for action: ?\n")
-
 		if err = r.Validate(); err != nil {
 			RenderInvalidRequestError(c, s.Trans, err)
 			return
@@ -236,7 +230,6 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 			RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to get authn context"))
 			return
 		}
-		logrus.Debugf("authentication context: %+v", data.AuthenticationContext)
 
 		claimData, ok := data.AuthenticationContext[s.Config.MFAClaim]
 
@@ -264,11 +257,8 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 		}
 
 		logrus.Debugf("action: %s, mobile: %s", action, mobile)
-		log.Printf("Action: %s", action)
 		switch action {
 		case "request", "resend":
-			log.Println("Calling me now")
-
 			if err = s.OTPHandler.Send(r, provider, mobile, data); err != nil {
 				RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to send sms otp"))
 				return
@@ -343,86 +333,50 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 			c.Redirect(http.StatusMovedPermanently, redirect)
 			return
 		case "verify_hypr":
-			// StartAuthentication starts the authentication process for the user
-			// API - {{baseUrl}}/rp/api/oob/client/authentication/requests
-			log.Println("Got to verify_hypr")
-			if requestId, err = s.HyprHandler.StartAuthentication(); err != nil {
-				log.Println("in error on start authentication")
-				RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to merge template data"))
+			var devices UserDevices
+			if devices, err = s.HyprHandler.GetUserDevices(s.Config.HyprUser); err != nil {
+				RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to get user devices"))
 				return
 			}
-			log.Printf("Checking auth status %s", requestId)
 
-			for {
-				time.Sleep(time.Second * 5)
+			if len(devices) < 1 {
+				RenderError(c, 401, err.Error(), errors.New("User has no registered devices with Hypr"))
+				return
+			}
+
+			if requestId, err = s.HyprHandler.StartAuthentication(s.Config.HyprUser); err != nil {
+				RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to start authenticate with hypr"))
+				return
+			}
+
+			var checkStatus *AuthStatusResponse
+			if checkStatus, err = s.HyprHandler.PollHypr(requestId); err != nil {
+				if errors.Is(err, ErrTimeoutWaitingForUser) {
+					RenderError(c, 401, err.Error(), errors.Wrapf(err, "timeout waiting for user to approve or deny"))
+					return
+				}
+				RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to check auth status"))
+				return
+			}
+
+			switch checkStatus.State[len(checkStatus.State)-1].Value {
+			case "COMPLETED":
 				s.HyprHandler.SetStorage(r, true)
 				redirect := fmt.Sprintf("?%s", c.Request.URL.Query().Encode())
+				logrus.Debugf("hypr is valid, redirect: %s", redirect)
 				c.Redirect(http.StatusMovedPermanently, redirect)
 				return
-				// checkStatus, err := s.HyprHandler.PollHypr(requestId)
-				// if err != nil {
-				// 	log.Printf("Error from poll %s", err.Error())
-				// 	return
-				// }
-				// log.Printf("Status returned: %v", checkStatus)
-				// for i := range checkStatus.State { //.DeviceAuthenticationRequestStatus.State {
-				// 	log.Printf("State returned %s", checkStatus.State[i].Value)
-
-				// 	switch checkStatus.State[i].Value {
-				// 	case "COMPLETED":
-				// 		// verify setStorage for HyprHandler
-				// 		s.HyprHandler.SetStorage(r, true)
-				// 		// grabbing first - need to check that it is valid
-				// 		redirect := fmt.Sprintf("?%s", c.Request.URL.Query().Encode())
-				// 		c.Redirect(http.StatusMovedPermanently, redirect)
-				// 		return
-				// 	case "CANCELED", "FAILED":
-				// 		err = errors.New("user rejected consent on hypr")
-				// 		RenderError(c, 401, err.Error(), err)
-				// 		return
-				// 	default:
-				// 		log.Println("checking hypr response...")
-				// 	}
-				// }
+			default:
+				// TODO: remove this as it is for testing only
+				// s.HyprHandler.SetStorage(r, true)
+				// redirect := fmt.Sprintf("?%s", c.Request.URL.Query().Encode())
+				// logrus.Debugf("hypr is valid, redirect: %s", redirect)
+				// c.Redirect(http.StatusMovedPermanently, redirect)
+				// return
+				err = errors.New("user rejected consent on hypr")
+				RenderError(c, 401, err.Error(), err)
+				return
 			}
-
-			// poll hypr with timeout
-			// inter := time.Tick(time.Duration(5) * time.Second)
-			// for {
-
-			// 	select {
-			// 	case <-time.After(time.Duration(25) * time.Second):
-			// 		log.Println("Request expired before response")
-			// 		return
-			// 	case <-inter:
-			// 		checkStatus, err := s.HyprHandler.PollHypr(requestId)
-			// 		if err != nil {
-			// 			return
-			// 		}
-			// 		// log.Printf("Status returned: %v". checkStatus)
-			// 		for i := range checkStatus.State { //.DeviceAuthenticationRequestStatus.State {
-			// 			log.Printf("State returned %s", checkStatus.State[i].Value)
-
-			// 			switch checkStatus.State[i].Value {
-			// 			case "COMPLETED":
-			// 				// verify setStorage for HyprHandler
-			// 				s.HyprHandler.SetStorage(r, true)
-			// 				// grabbing first - need to check that it is valid
-			// 				redirect := fmt.Sprintf("?%s", c.Request.URL.Query().Encode())
-			// 				c.Redirect(http.StatusMovedPermanently, redirect)
-			// 				return
-			// 			case "CANCELED", "FAILED":
-			// 				err = errors.New("user rejected consent on hypr")
-			// 				RenderError(c, 401, err.Error(), err)
-			// 				return
-			// 			default:
-			// 				log.Println("checking hypr response...")
-			// 			}
-			// 		}
-			// 	}
-
-			// }
-
 		default:
 			templateData := map[string]interface{}{
 				"mobile":     MaskMobile(mobile),
@@ -436,6 +390,8 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 					"email":    s.Trans.T("mfa.init.email"),
 				},
 			}
+
+			templateData["hyprUser"] = s.Config.HyprUser
 
 			if err = mergo.Merge(&templateData, provider.GetConsentMockData(r)); err != nil {
 				RenderInternalServerError(c, s.Trans, errors.Wrap(err, "failed to validate otp"))

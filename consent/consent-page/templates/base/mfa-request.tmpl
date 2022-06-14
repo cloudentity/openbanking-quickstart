@@ -11,30 +11,25 @@
         </div>
       </div>
       <div class="mfa-container__item">
-        <div class="mfa-container__item--right">
-          <div class="mfa-container__card hover" onclick="submit('form')">
-            <div>
-              <div style="font-size: 14px">{{.mfaTrans.sms}}</div>
-              <div class="caption" style="margin-top: 6px;">{{ .mobile }}</div>
-            </div>
-            <div>
-              <i class="material-icons mdc-icon-button__icon"> keyboard_arrow_right</i>
-            </div>
-          </div>
 
-          <div class="mfa-container__card" style="margin-top: 16px;">
-            <div>
-              <div style="font-size: 14px">{{.mfaTrans.email}}</div>
-              <div class="caption" style="margin-top: 6px;">k*****n@mymail.com</div>
+           <form action="mfa?login_id={{ .login_request.ID }}&login_state={{ .login_request.State }}&consent_type={{ .login_request.ConsentType }}" method="post" id="form">
+            <input type="hidden" name="action" value="verify_hypr"/>
+            <div class="mfa-container__card hover" style="margin-top: 16px;" onclick="submit('form'); var elem = document.getElementById('okta_arrow'); elem.classList.add('loader'); elem.innerHTML=''">
+              <div>
+                <div style="font-size: 14px">Verify with Hypr</div>
+                <div class="caption" style="margin-top: 6px;">User: {{ .hyprUser }}</div>
+              </div>
+              <div id="okta_arrow">
+                <i class="material-icons mdc-icon-button__icon"> keyboard_arrow_right</i>
+              </div>
             </div>
-            <div>
-              <i class="material-icons mdc-icon-button__icon"> keyboard_arrow_right</i>
-            </div>
-          </div>
+            </form>
         </div>
       </div>
     </div>
   </form>
+
+
 
 <script>
   function submit(id) {
