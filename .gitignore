@@ -22,4 +22,4 @@ data/seed.yaml.generated
 tests/package-lock.json
 my.db
 mount/conformance/
-
+.vscode/*

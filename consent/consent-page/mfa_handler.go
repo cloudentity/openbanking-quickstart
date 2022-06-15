@@ -367,12 +367,6 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 				c.Redirect(http.StatusMovedPermanently, redirect)
 				return
 			default:
-				// TODO: remove this as it is for testing only
-				// s.HyprHandler.SetStorage(r, true)
-				// redirect := fmt.Sprintf("?%s", c.Request.URL.Query().Encode())
-				// logrus.Debugf("hypr is valid, redirect: %s", redirect)
-				// c.Redirect(http.StatusMovedPermanently, redirect)
-				// return
 				err = errors.New("user rejected consent on hypr")
 				RenderError(c, 401, err.Error(), err)
 				return
