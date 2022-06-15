@@ -68,7 +68,7 @@ curl --request POST \
 }'
 ```
 
-This will return a response with a magic link(`webLink`). Go to the `webLink` on your desktop in a browser and choose the device method to register. If registering a mobile device, this will be a QR code which you can then scan with the Hypr mobile app.
+This will return a response with a magic link(`webLink`). Go to the `webLink` on your desktop in a browser and choose the device method to register. If registering a mobile device, this will be a QR code which you can then scan with the Hypr mobile app. Once scanned your username and device are registered.
 
 ### Environment Variables for Hypr
 In QuickStart set the environment variables in `.env-local`. The required environment variables are:
