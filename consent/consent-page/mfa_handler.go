@@ -359,6 +359,11 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 				return
 			}
 
+			if len(checkStatus.State) == 0 {
+				RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to check auth status - invalid state length"))
+				return
+			}
+
 			switch checkStatus.State[len(checkStatus.State)-1].Value {
 			case "COMPLETED":
 				s.HyprHandler.SetStorage(r, true)

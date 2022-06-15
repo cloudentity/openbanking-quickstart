@@ -6,11 +6,8 @@ make all --print-data-base --no-builtin-variables --no-builtin-rules --question
 # PARTICULAR PURPOSE.
 
 # This program built for i386-apple-darwin11.3.0
- 
-make: *** No rule to make target `all'.  Stop.
 
-
-# Make data base, printed on Sat Jun 11 13:05:13 2022
+# Make data base, printed on Wed Jun 15 15:46:40 2022
 
 # Variables
 
@@ -43,7 +40,7 @@ VSCODE_VERBOSE_LOGGING = true
 # environment
 __CFBundleIdentifier = com.microsoft.VSCode
 # environment
-VSCODE_IPC_HOOK_EXTHOST = /var/folders/mq/yjmzlbt96090018vft90t2600000gn/T/vscode-ipc-6a601680-b143-44c7-94db-31c0a26726dd.sock
+VSCODE_IPC_HOOK_EXTHOST = /var/folders/mq/yjmzlbt96090018vft90t2600000gn/T/vscode-ipc-06455caa-25b9-4c5b-9855-a6ec60703baa.sock
 # environment
 VSCODE_CWD = /
 # environment
@@ -63,7 +60,7 @@ ELECTRON_RUN_AS_NODE = 1
 # makefile (from `Makefile', line 5)
 ACP_LOCAL_APPS = acp crdb redis
 # environment
-SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.qLQSyGGtxi/Listeners
+SSH_AUTH_SOCK = /private/tmp/com.apple.launchd.NyZR7cF3QQ/Listeners
 # automatic
 %F = $(notdir $%)
 # makefile (from `Makefile', line 1)
@@ -81,7 +78,7 @@ HOME = /Users/billybray
 # default
 MAKEFILEPATH := /Applications/Xcode.app/Contents/Developer/Makefiles
 # environment
-VSCODE_CODE_CACHE_PATH = /Users/billybray/Library/Application Support/Code/CachedData/c3511e6c69bb39013c4a4b7b9566ec1ca73fc4d5
+VSCODE_CODE_CACHE_PATH = /Users/billybray/Library/Application Support/Code/CachedData/4af164ea3a06f701fe3e89a2bcbb421d2026b68f
 # environment
 LOGNAME = billybray
 # environment
@@ -121,7 +118,7 @@ TMPDIR = /var/folders/mq/yjmzlbt96090018vft90t2600000gn/T/
 # automatic
 *F = $(notdir $*)
 # environment
-VSCODE_IPC_HOOK = /Users/billybray/Library/Application Support/Code/1.67.2-main.sock
+VSCODE_IPC_HOOK = /Users/billybray/Library/Application Support/Code/1.68.0-main.sock
 # makefile
 MAKEFLAGS = Rrqp
 # environment
@@ -129,7 +126,7 @@ MFLAGS = -Rrqp
 # automatic
 *D = $(patsubst %/,%,$(dir $*))
 # environment
-XPC_SERVICE_NAME = application.com.microsoft.VSCode.36398001.36398007
+XPC_SERVICE_NAME = application.com.microsoft.VSCode.41306272.41306278
 # automatic
 +D = $(patsubst %/,%,$(dir $+))
 # automatic
@@ -161,7 +158,7 @@ MAKELEVEL := 0
 # environment
 LANG = C
 # environment
-VSCODE_PID = 27029
+VSCODE_PID = 2511
 # variable set hash-table stats:
 # Load=74/1024=7%, Rehash=0, Collisions=3/98=3%
 
@@ -253,7 +250,7 @@ all:
 # Not a target:
 Makefile:
 #  Implicit rule search has been done.
-#  Last modified 2022-04-01 15:54:38
+#  Last modified 2022-06-13 09:27:46
 #  File has been updated.
 #  Successfully updated.
 # variable set hash-table stats:
@@ -297,6 +294,9 @@ run-saas-obbr-tests-headless: run-tests-verify
 #  Phony target (prerequisite of .PHONY).
 #  Implicit rule search has not been done.
 #  File does not exist.
+ 
+make: *** No rule to make target `all'.  Stop.
+
 #  File has not been updated.
 #  commands to execute (from `Makefile', line 35):
 	yarn --cwd tests run cypress run -s cypress/integration/saas/obbr/*.ts
@@ -305,7 +305,6 @@ run-saas-obbr-tests-headless: run-tests-verify
 run-tests:
 #  Phony target (prerequisite of .PHONY).
 #  Implicit rule search has not been done.
- 
 #  File does not exist.
 #  File has not been updated.
 #  commands to execute (from `Makefile', line 39):
@@ -437,6 +436,6 @@ generate-obbr-clients: start-runner
 # strcache size: total = 4096 / max = 4096 / min = 4096 / avg = 4096
 # strcache free: total = 4087 / max = 4087 / min = 4087 / avg = 4087
 
-# Finished Make data base on Sat Jun 11 13:05:13 2022
+# Finished Make data base on Wed Jun 15 15:46:40 2022
 
  
