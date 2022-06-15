@@ -4,7 +4,7 @@
 <br/>
 
 ### Prequisite configuration
-| ACP type      | Associated Environment File | Additional Configuration needed? 
+| ACP type      | Associated Environment File | Additional Configuration needed?
 | ----------- | ----------- | --------|
 | Local      | .env-local   | No, everything is good to go out of the box. You shouldn't need to touch this file|
 | SAAS   | .env-saas        | <a href="#saas-configuration-instructions">Yes, running with saas takes a few extra steps</a>|
@@ -17,7 +17,7 @@
 <br/>
 <h3 id="makefile-targets"> Makefile Targets</h3>
 
-The current types of runtimes are currently supported: 
+The current types of runtimes are currently supported:
 1. Open Banking UK with local ACP instance: `make run-obuk-local`
 2. Open Banking UK with SAAS ACP: `make run-obuk-saas`
 3. Open Banking Brasil with local ACP instance: `make run-obbr-local`
@@ -40,12 +40,47 @@ The current types of runtimes are currently supported:
 2. Go to "System" workspace and create a new application with `manage_configuration` scope and `client_credentials` grant type
 3. Configure the `.env-saas` file with the following:
     * Saas tenant id
-    * id of the client you created in step 2 
+    * id of the client you created in step 2
     * secret of the client you created in step 2
 4. Now you are ready to run one of the saas related <a href="#makefile-targets"> makefile targets</a>
 
 <br/>
 
+<h2>Configure QuickStart for Hypr Passwordless</h2>
+
+### Registering a User and Device with Hypr
+
+If using Hypr passwordless you will need to have a username and a registered device. You can get the [iOS Hypr app](https://apps.apple.com/us/app/hypr/id1343368858) or the [Android Hypr app](https://play.google.com/store/apps/details?id=com.hypr.one&hl=en_US&gl=US). To register a device with your username, you can generate a magic link by performing the following and replacing the placeholder values with your own:
+
+```bash
+curl --request POST \
+  --url https://demo.gethypr.com/rp/api/versioned/magiclink \
+  --header 'Authorization: Bearer <your Hypr token>' \
+  --header 'Content-Type: application/json' \
+  --data '{
+  "username": "<your preferred username>",
+  "email": "<your email>",
+  "firstname": "",
+  "lastname": "",
+  "message": "",
+  "secondsValid": "6000",
+  "hyprServerUrl": "https://demo.gethypr.com"
+}'
+```
+
+This will return a response with a magic link(`webLink`). Go to the `webLink` on your desktop in a browser and choose the device method to register. If registering a mobile device this will be a QR code which you can then scan with the Hypr mobile app.
+
+### Environment Variables for Hypr
+In QuickStart set the environment variables in `.env-local`. The required environment variables are:
+- HYPR_USER - your Hyper username
+- HYPR_TOKEN - API token provided by Hypr
+- ENABLE_MFA - must be set to `true`
+
+Additionally, if using a different Hypr tenant and App ID set the following environment variables in `.env-local`:
+- HYPR_BASE_URL - URL for your Hypr tenant
+- HYPR_APP_ID - App ID for Hypr
+
+Quickstart is now enabled to work with Hypr Passwordless. Connect Go Bank as before and you will be prompted to login on your Hypr enabled device.
 ## Credentials
 - ACP admin portal: `https://authorization.cloudentity.com:8443` `admin / admin`
 - Developer TPP: `https://localhost:8090` `user | user2 | user3 / p@ssw0rd!`
