@@ -11,11 +11,11 @@ pipeline {
     }
     environment {
         VERIFY_TEST_RUNNER_TIMEOUT_MS = 80000
-        SAAS_TENANT_ID = 'amfudxn6-qa-us-east-1-ob-quickstart'
-        SAAS_CLIENT_ID = credentials('OPENBANKING_CONFIGURATION_CLIENT_ID')
-        SAAS_CLIENT_SECRET = credentials('OPENBANKING_CONFIGURATION_CLIENT_SECRET')
-        SAAS_CLEANUP_CLIENT_ID = credentials('OPENBANKING_CLEANUP_CLIENT_ID')
-        SAAS_CLEANUP_CLIENT_SECRET = credentials('OPENBANKING_CLEANUP_CLIENT_SECRET')
+        SAAS_TENANT_ID = 'amfudxn6-qa-us-east-1-obqs-test'
+        SAAS_CLIENT_ID = 'c8sphc5fjs58tv4q8mlg'
+        SAAS_CLIENT_SECRET = 'HWaJeEQI2rajy0KvVF-E1S_RIem-43wBYnvDY_LXv_A'
+        SAAS_CLEANUP_CLIENT_ID = 'c91dqlso28ai5c87hsig'
+        SAAS_CLEANUP_CLIENT_SECRET = 'kFJkc9upMu6oQ_I_2GD1kmA_jgp0iPrHWvVi-15vD28'
         NOTIFICATION_CHANNEL = credentials('OPENBANKING_NOTIFICATION_CHANNEL')
         DEBUG = 'true'
     }
