@@ -47,14 +47,13 @@ pipeline {
         stage('CDR Tests') {
             steps {
                 script {
+                    sh 'make clean'
                     try {
                         sh 'make run-cdr-local'
                         sh 'make run-cdr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
                         unstable('CDR Tests failed')
-                    } finally {
-                        sh 'make clean'
                     }
                 }
             }
@@ -62,14 +61,13 @@ pipeline {
         stage('FDX Tests with disabled MFA') {
             steps {
                 script {
+                    sh 'make clean'
                     try {
                         sh 'make disable-mfa run-fdx-local'
                         sh 'make run-fdx-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
                         unstable('FDX Tests with disabled MFA failed')
-                    } finally {
-                        sh 'make clean'
                     }
                 }
             }
@@ -77,14 +75,13 @@ pipeline {
         stage('FDX Tests with enabled MFA') {
             steps {
                 script {
+                    sh 'make clean'
                     try {
                         sh 'make enable-mfa run-fdx-local'
                         sh 'make run-fdx-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
                         unstable('FDX Tests with enabled MFA failed')
-                    } finally {
-                        sh 'make clean'
                     }
                 }
             }
@@ -92,14 +89,13 @@ pipeline {
         stage('OBUK Tests with disabled MFA') {
             steps {
                 script {
+                    sh 'make clean'
                     try {
                         sh 'make disable-mfa run-obuk-local'
                         sh 'make run-obuk-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
                         unstable('OBUK Tests with disabled MFA failed')
-                    } finally {
-                        sh 'make clean'
                     }
                 }
             }
@@ -107,14 +103,13 @@ pipeline {
         stage('OBUK Tests with enabled MFA') {
             steps {
                 script {
+                    sh 'make clean'
                     try {
                         sh 'make enable-mfa run-obuk-local'
                         sh 'make run-obuk-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
                         unstable('OBUK Tests with enabled MFA failed')
-                    } finally {
-                        sh 'make clean'
                     }
                 }
             }
@@ -122,14 +117,13 @@ pipeline {
         stage('OBBR Tests with disabled MFA') {
             steps {
                 script {
+                    sh 'make clean'
                     try {
                         sh 'make disable-mfa run-obbr-local'
                         sh 'make run-obbr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
                         unstable('OBBR Tests with disabled MFA failed')
-                    } finally {
-                        sh 'make clean'
                     }
                 }
             }
@@ -137,14 +131,13 @@ pipeline {
         stage('OBBR Tests with enabled MFA') {
             steps {
                 script {
+                    sh 'make clean'
                     try {
                         sh 'make enable-mfa run-obbr-local'
                         sh 'make run-obbr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
                         unstable('OBBR Tests with enabled MFA failed')
-                    } finally {
-                        sh 'make clean'
                     }
                 }
             }
@@ -152,14 +145,13 @@ pipeline {
         stage('SaaS FDX Tests') {
             steps {
                 script {
+                    sh 'make clean-saas'
                     try {
                         sh 'make disable-mfa set-saas-configuration run-fdx-saas'
                         sh 'make run-saas-fdx-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
                         unstable('SaaS FDX Tests failed')
-                    } finally {
-                        sh 'make clean-fdx-saas'
                     }
                 }
             }
@@ -167,14 +159,13 @@ pipeline {
         stage('SaaS OBUK Tests') {
             steps {
                 script {
+                    sh 'make clean-saas'
                     try {
                         sh 'make disable-mfa set-saas-configuration run-obuk-saas'
                         sh 'make run-saas-obuk-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
                         unstable('SaaS OBUK Tests failed')
-                    } finally {
-                        sh 'make clean-obuk-saas'
                     }
                 }
             }
@@ -182,14 +173,13 @@ pipeline {
         stage('SaaS OBBR Tests') {
             steps {
                 script {
+                    sh 'make clean-saas'
                     try {
                         sh 'make disable-mfa set-saas-configuration run-obbr-saas'
                         sh 'make run-saas-obbr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
                         unstable('SaaS OBBR Tests failed')
-                    } finally {
-                        sh 'make clean-obbr-saas'
                     }
                 }
             }
@@ -197,14 +187,13 @@ pipeline {
         // stage('SaaS CDR Tests') {
         //     steps {
         //         script {
+        //             sh 'make clean-saas'
         //             try {
         //                 sh 'make disable-mfa set-saas-configuration run-cdr-saas'
         //                 sh 'make run-saas-cdr-tests-headless'
         //             } catch(exc) {
         //                 captureDockerLogs()
         //                 unstable('SaaS CDR Tests failed')
-        //             } finally {
-        //                 sh 'make clean-cdr-saas'
         //             }
         //         }
         //     }
