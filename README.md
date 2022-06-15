@@ -50,7 +50,7 @@ The current types of runtimes are currently supported:
 
 ### Registering a User and Device with Hypr
 
-If using Hypr passwordless you will need to have a username and a registered device. You can get the [iOS Hypr app](https://apps.apple.com/us/app/hypr/id1343368858) or the [Android Hypr app](https://play.google.com/store/apps/details?id=com.hypr.one&hl=en_US&gl=US). To register a device with your username, you can generate a magic link by performing the following and replacing the placeholder values with your own:
+If using Hypr passwordless you will need to have a username and a registered device. Download either the [iOS Hypr app](https://apps.apple.com/us/app/hypr/id1343368858) or the [Android Hypr app](https://play.google.com/store/apps/details?id=com.hypr.one&hl=en_US&gl=US). To register a device with your username, you can generate a magic link by performing the following and replacing the placeholder values with your own:
 
 ```bash
 curl --request POST \
