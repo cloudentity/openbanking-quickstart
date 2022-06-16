@@ -15,18 +15,12 @@ import (
 )
 
 var (
-	obSpec            = flag.String("spec", "none", "Openbanking quickstart specification type")
 	tenantID          = flag.String("tenant", "none", "Openbanking SaaS tenant ID")
 	adminClientID     = flag.String("cid", "none", "Openbanking SaaS admin client ID")
 	adminClientSecret = flag.String("csec", "none", "Openbanking SaaS admin client secret")
-)
 
-const (
-	bankSystemClientID         = "buc3b1hhuc714r78env0"
-	consentAdminSystemClientID = "bv2fe0tpfc67lmeti340"
-	consentPageSystemClientID  = "bv0ocudfotn6edhsiu7g"
-
-	bankCustomerWorkspaceID = "bank-customers"
+	openbankingClientsIDs = []string{"buc3b1hhuc714r78env0", "bv2fe0tpfc67lmeti340", "bv0ocudfotn6edhsiu7g"}
+	openbankingServersIDs = []string{"cdr", "fdx", "openbanking", "openbanking_brasil", "bank-customers"}
 )
 
 func main() {
@@ -63,68 +57,44 @@ func main() {
 
 	client := cc.Client(context.WithValue(context.Background(), oauth2.HTTPClient, httpClient))
 
-	for _, wid := range getWorkspaceIDsBySpec(*obSpec) {
-		if request, err = http.NewRequest("DELETE", fmt.Sprintf("%s/api/admin/%s/servers/%s", tURL.String(), *tenantID, wid), nil); err != nil {
-			log.Fatalf("failed to setup delete server '%s' request: %v", wid, err)
+	for _, sid := range openbankingServersIDs {
+		fmt.Printf("INFO: Trying to delete server with ID: '%s'\n", sid)
+		if request, err = http.NewRequest("DELETE", fmt.Sprintf("%s/api/admin/%s/servers/%s", tURL.String(), *tenantID, sid), nil); err != nil {
+			log.Fatalf("ERROR: Failed to setup delete server '%s' request: %v", sid, err)
 		}
-		if response, err = doRequest(client, request); err != nil {
-			log.Fatalf("failed to delete server '%s': %v", wid, err)
+
+		if response, err = doRequest(client, request, http.StatusNoContent); err != nil {
+			log.Fatalf("ERROR: Failed to delete server '%s': %v", sid, err)
 		}
+
 		response.Body.Close()
 	}
 
-	for _, cid := range getSystemClientIDsBySpec(*obSpec) {
+	for _, cid := range openbankingClientsIDs {
+		fmt.Printf("INFO: Trying to delete client with ID: '%s'\n", cid)
 		if request, err = http.NewRequest("DELETE", fmt.Sprintf("%s/api/admin/%s/clients/%s", tURL.String(), *tenantID, cid), nil); err != nil {
-			log.Fatalf("failed to setup delete client '%s' request: %v", cid, err)
+			log.Fatalf("ERROR: Failed to setup delete client '%s' request: %v", cid, err)
 		}
-		if response, err = doRequest(client, request); err != nil {
-			log.Fatalf("failed to delete client '%s': %v", cid, err)
+
+		if response, err = doRequest(client, request, http.StatusNoContent); err != nil {
+			log.Fatalf("ERROR: Failed to delete client '%s': %v", cid, err)
 		}
+
 		response.Body.Close()
 	}
 }
 
-func doRequest(client *http.Client, request *http.Request) (response *http.Response, err error) {
+func doRequest(client *http.Client, request *http.Request, statusCode int) (response *http.Response, err error) {
 	if response, err = client.Do(request); err != nil {
 		return response, err
 	}
 
-	if response.StatusCode != http.StatusNoContent {
-		return response, fmt.Errorf("expected response code %d, got %d", http.StatusNoContent, response.StatusCode)
+	if http.StatusNotFound == response.StatusCode {
+		fmt.Printf("INFO: The response finished with status code '%d'\n", response.StatusCode)
+		return response, nil
+	} else if response.StatusCode != statusCode {
+		fmt.Printf("INFO: The response finished with status code '%d'\n", response.StatusCode)
 	}
-
+	fmt.Printf("INFO: The response finished with status code '%d'\n", response.StatusCode)
 	return response, nil
-}
-
-func getWorkspaceIDsBySpec(spec string) []string {
-	switch spec {
-	case "obuk":
-		return []string{"openbanking", bankCustomerWorkspaceID}
-	case "obbr":
-		return []string{"openbanking_brasil", bankCustomerWorkspaceID}
-	case "fdx":
-		return []string{"fdx"}
-	case "cdr":
-		return []string{"cdr", bankCustomerWorkspaceID}
-	default:
-		log.Fatalf("The openbanking specification flag '-spec=%s' is not supported", *obSpec)
-	}
-
-	return []string{}
-}
-
-func getSystemClientIDsBySpec(spec string) []string {
-	switch spec {
-	case "obuk":
-		return []string{bankSystemClientID, consentAdminSystemClientID, consentPageSystemClientID}
-	case "obbr":
-		return []string{bankSystemClientID, consentAdminSystemClientID, consentPageSystemClientID}
-	case "fdx":
-		return []string{bankSystemClientID, consentAdminSystemClientID, consentPageSystemClientID}
-	case "cdr":
-		return []string{bankSystemClientID, consentAdminSystemClientID, consentPageSystemClientID}
-	default:
-		log.Fatalf("The openbanking specification flag '-spec=%s' is not supported", *obSpec)
-	}
-	return []string{}
 }
