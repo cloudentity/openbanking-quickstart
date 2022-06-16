@@ -3,10 +3,8 @@ package main
 import (
 	"context"
 	"crypto/tls"
-	"encoding/json"
 	"flag"
 	"fmt"
-	"io"
 	"log"
 	"net/http"
 	"net/url"
@@ -21,17 +19,9 @@ var (
 	adminClientID     = flag.String("cid", "none", "Openbanking SaaS admin client ID")
 	adminClientSecret = flag.String("csec", "none", "Openbanking SaaS admin client secret")
 
-	defaultServicesIDs    = []string{"system", "admin", "default", "developer", "demo"}
 	openbankingClientsIDs = []string{"buc3b1hhuc714r78env0", "bv2fe0tpfc67lmeti340", "bv0ocudfotn6edhsiu7g"}
+	openbankingServersIDs = []string{"cdr", "fdx", "openbanking", "openbanking_brasil", "bank-customers"}
 )
-
-type Server struct {
-	ID string `json:"id"`
-}
-
-type ServersResponse struct {
-	Servers []Server `json:"servers"`
-}
 
 func main() {
 	flag.Parse()
@@ -42,7 +32,6 @@ func main() {
 		err          error
 		tURL         *url.URL
 		tenantURLRaw string
-		serversIDs   []string
 	)
 
 	tenantURLRaw = fmt.Sprintf("https://%s.us.authz.cloudentity.io", *tenantID)
@@ -68,44 +57,30 @@ func main() {
 
 	client := cc.Client(context.WithValue(context.Background(), oauth2.HTTPClient, httpClient))
 
-	if request, err = http.NewRequest("GET", fmt.Sprintf("%s/api/admin/%s/servers", tURL.String(), *tenantID), nil); err != nil {
-		log.Fatalf("failed to setup get servers request: %v", err)
-	}
-
-	if response, err = doRequest(client, request, http.StatusOK); err != nil {
-		log.Fatalf("failed to get servers: %v", err)
-	}
-
-	if serversIDs, err = getCurrentServersIDs(response); err != nil {
-		log.Fatalf("failed to get servers IDs: %v", err)
-	}
-
-	serversIDs = getServersIDsToDelete(serversIDs)
-
-	for _, sid := range serversIDs {
+	for _, sid := range openbankingServersIDs {
+		fmt.Printf("INFO: Trying to delete server with ID: '%s'\n", sid)
 		if request, err = http.NewRequest("DELETE", fmt.Sprintf("%s/api/admin/%s/servers/%s", tURL.String(), *tenantID, sid), nil); err != nil {
-			log.Fatalf("failed to setup delete server '%s' request: %v", sid, err)
+			log.Fatalf("ERROR: Failed to setup delete server '%s' request: %v", sid, err)
 		}
 
 		if response, err = doRequest(client, request, http.StatusNoContent); err != nil {
-			log.Fatalf("failed to delete server '%s': %v", sid, err)
+			log.Fatalf("ERROR: Failed to delete server '%s': %v", sid, err)
 		}
 
 		response.Body.Close()
-		fmt.Printf("INFO: server with ID: '%s' was successfully removed\n", sid)
 	}
 
 	for _, cid := range openbankingClientsIDs {
+		fmt.Printf("INFO: Trying to delete client with ID: '%s'\n", cid)
 		if request, err = http.NewRequest("DELETE", fmt.Sprintf("%s/api/admin/%s/clients/%s", tURL.String(), *tenantID, cid), nil); err != nil {
-			log.Fatalf("failed to setup delete client '%s' request: %v", cid, err)
+			log.Fatalf("ERROR: Failed to setup delete client '%s' request: %v", cid, err)
 		}
 
 		if response, err = doRequest(client, request, http.StatusNoContent); err != nil {
-			log.Fatalf("failed to delete client '%s': %v", cid, err)
+			log.Fatalf("ERROR: Failed to delete client '%s': %v", cid, err)
 		}
 
 		response.Body.Close()
-		fmt.Printf("INFO: clientwith ID: '%s' was successfully removed\n", cid)
 	}
 }
 
@@ -114,46 +89,12 @@ func doRequest(client *http.Client, request *http.Request, statusCode int) (resp
 		return response, err
 	}
 
-	if response.StatusCode != statusCode {
-		return response, fmt.Errorf("expected response code %d, got %d", statusCode, response.StatusCode)
+	if response.StatusCode == http.StatusNotFound {
+		fmt.Printf("INFO: The response finished with status code '%d'\n", response.StatusCode)
+		return response, nil
+	} else if response.StatusCode != statusCode {
+		fmt.Printf("INFO: The response finished with status code '%d'\n", response.StatusCode)
 	}
 
 	return response, nil
-}
-
-func getCurrentServersIDs(response *http.Response) (ids []string, err error) {
-	var body []byte
-	if body, err = io.ReadAll(response.Body); err != nil {
-		log.Fatalf("failed to get body: %v", err)
-	}
-
-	response.Body.Close()
-
-	var serversResponse ServersResponse
-	if err = json.Unmarshal(body, &serversResponse); err != nil {
-		log.Fatalf("failed to unmarshal body: %v", response.Body)
-	}
-
-	for _, server := range serversResponse.Servers {
-		ids = append(ids, server.ID)
-	}
-
-	return ids, nil
-}
-
-func getServersIDsToDelete(actualIDs []string) (expectedIDs []string) {
-	tmpServersIDsMap := make(map[string]bool)
-	for _, i := range actualIDs {
-		tmpServersIDsMap[i] = true
-	}
-
-	for _, i := range defaultServicesIDs {
-		delete(tmpServersIDsMap, i)
-	}
-
-	for key := range tmpServersIDsMap {
-		expectedIDs = append(expectedIDs, key)
-	}
-
-	return expectedIDs
 }
