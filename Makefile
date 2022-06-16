@@ -25,6 +25,10 @@ build:
 	cp -f .env-local .env
 	docker-compose -f docker-compose.obuk.yaml -f docker-compose.obbr.yaml -f docker-compose.cdr.yaml -f docker-compose.build.yaml build
 
+.PHONY: build-financroo-tpp 
+build-financroo-tpp:
+	docker-compose -f docker-compose.obuk.yaml -f docker-compose.obbr.yaml -f docker-compose.cdr.yaml -f docker-compose.build.yaml build financroo-tpp
+
 # obuk, obbr, cdr, fdx
 run-%-tests-headless:
 	yarn --cwd tests run cypress run -s cypress/integration/$*/*.ts
