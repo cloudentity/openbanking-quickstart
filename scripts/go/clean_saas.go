@@ -17,10 +17,10 @@ import (
 )
 
 var (
-	tenantID              = flag.String("tenant", "none", "Openbanking SaaS tenant ID")
-	adminClientID         = flag.String("cid", "none", "Openbanking SaaS admin client ID")
-	adminClientSecret     = flag.String("csec", "none", "Openbanking SaaS admin client secret")
-	
+	tenantID          = flag.String("tenant", "none", "Openbanking SaaS tenant ID")
+	adminClientID     = flag.String("cid", "none", "Openbanking SaaS admin client ID")
+	adminClientSecret = flag.String("csec", "none", "Openbanking SaaS admin client secret")
+
 	defaultServicesIDs    = []string{"system", "admin", "default", "developer", "demo"}
 	openbankingClientsIDs = []string{"buc3b1hhuc714r78env0", "bv2fe0tpfc67lmeti340", "bv0ocudfotn6edhsiu7g"}
 )
@@ -28,6 +28,7 @@ var (
 type Server struct {
 	ID string `json:"id"`
 }
+
 type ServersResponse struct {
 	Servers []Server `json:"servers"`
 }
@@ -41,7 +42,7 @@ func main() {
 		err          error
 		tURL         *url.URL
 		tenantURLRaw string
-		serversIDs []string
+		serversIDs   []string
 	)
 
 	tenantURLRaw = fmt.Sprintf("https://%s.us.authz.cloudentity.io", *tenantID)
@@ -106,7 +107,6 @@ func main() {
 		response.Body.Close()
 		fmt.Printf("INFO: clientwith ID: '%s' was successfully removed\n", cid)
 	}
-
 }
 
 func doRequest(client *http.Client, request *http.Request, statusCode int) (response *http.Response, err error) {
@@ -121,7 +121,7 @@ func doRequest(client *http.Client, request *http.Request, statusCode int) (resp
 	return response, nil
 }
 
-func getCurrentServersIDs(response *http.Response) (IDs []string, err error) {
+func getCurrentServersIDs(response *http.Response) (ids []string, err error) {
 	var body []byte
 	if body, err = io.ReadAll(response.Body); err != nil {
 		log.Fatalf("failed to get body: %v", err)
@@ -130,13 +130,15 @@ func getCurrentServersIDs(response *http.Response) (IDs []string, err error) {
 	response.Body.Close()
 
 	var serversResponse ServersResponse
-	json.Unmarshal([]byte(body), &serversResponse)
-
-	for _, server := range serversResponse.Servers {
-		IDs = append(IDs, server.ID)
+	if err = json.Unmarshal(body, &serversResponse); err != nil {
+		log.Fatalf("failed to unmarshal body: %v", response.Body)
 	}
 
-	return IDs, nil
+	for _, server := range serversResponse.Servers {
+		ids = append(ids, server.ID)
+	}
+
+	return ids, nil
 }
 
 func getServersIDsToDelete(actualIDs []string) (expectedIDs []string) {
