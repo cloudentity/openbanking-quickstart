@@ -89,12 +89,12 @@ func doRequest(client *http.Client, request *http.Request, statusCode int) (resp
 		return response, err
 	}
 
-	if response.StatusCode == http.StatusNotFound {
+	if http.StatusNotFound == response.StatusCode {
 		fmt.Printf("INFO: The response finished with status code '%d'\n", response.StatusCode)
 		return response, nil
 	} else if response.StatusCode != statusCode {
 		fmt.Printf("INFO: The response finished with status code '%d'\n", response.StatusCode)
 	}
-
+	fmt.Printf("INFO: The response finished with status code '%d'\n", response.StatusCode)
 	return response, nil
 }
