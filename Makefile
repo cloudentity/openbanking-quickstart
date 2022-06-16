@@ -58,11 +58,9 @@ ifeq (${DEBUG},true)
 	rm -fr mount/cdr/*
 endif
 
-# obuk, obbr, fdx
-clean-%-saas: start-runner
+clean-saas: start-runner
 	docker exec quickstart-runner sh -c \
     "go run ./scripts/go/clean_saas.go \
-        -spec=$* \
         -tenant=${SAAS_TENANT_ID} \
         -cid=${SAAS_CLEANUP_CLIENT_ID} \
         -csec=${SAAS_CLEANUP_CLIENT_SECRET}"
