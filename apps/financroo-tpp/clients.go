@@ -137,6 +137,7 @@ func NewAcpClient(cfg Config, redirect string) (acpclient.Client, error) {
 		CertFile:                    cfg.CertFile,
 		KeyFile:                     cfg.KeyFile,
 		RootCA:                      cfg.RootCA,
+		SkipClientCredentialsAuthn:  true,
 	}
 
 	if client, err = acpclient.New(config); err != nil {
