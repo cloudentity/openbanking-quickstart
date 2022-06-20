@@ -12,10 +12,10 @@ services:
       - ./data/tpp_cert.pem:/tpp_cert.pem
       - ./data/tpp_key.pem:/tpp_key.pem
     environment:
-      - AUTHORIZE_URL=${ACP_URL}/${TENANT}/fdx/oauth2/authorize
-      - TOKEN_URL=${ACP_MTLS_URL}/${TENANT}/fdx/oauth2/token
-      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/fdx
-      - USERINFO_URL=${ACP_MTLS_URL}/${TENANT}/fdx/userinfo
+      - AUTHORIZE_URL=${ACP_URL}/${TENANT}/${SERVER}/oauth2/authorize
+      - TOKEN_URL=${ACP_MTLS_URL}/${TENANT}/${SERVER}/oauth2/token
+      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/${SERVER}
+      - USERINFO_URL=${ACP_MTLS_URL}/${TENANT}/${SERVER}/userinfo
       - REDIRECT_URL=https://${APP_HOST}:8090/callback
       - BANK_URL=http://bank:8070
       - SPEC=fdx
