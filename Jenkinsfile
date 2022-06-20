@@ -184,20 +184,20 @@ pipeline {
                 }
             }
         }
-        // stage('SaaS CDR Tests') {
-        //     steps {
-        //         script {
-        //             sh 'make clean-saas'
-        //             try {
-        //                 sh 'make disable-mfa set-saas-configuration run-cdr-saas'
-        //                 sh 'make run-saas-cdr-tests-headless'
-        //             } catch(exc) {
-        //                 captureDockerLogs()
-        //                 unstable('SaaS CDR Tests failed')
-        //             }
-        //         }
-        //     }
-        // }
+        stage('SaaS CDR Tests') {
+            steps {
+                script {
+                    sh 'make clean-saas'
+                    try {
+                        sh 'make disable-mfa set-saas-configuration run-cdr-saas'
+                        sh 'make run-saas-cdr-tests-headless'
+                    } catch(exc) {
+                        captureDockerLogs()
+                        unstable('SaaS CDR Tests failed')
+                    }
+                }
+            }
+        }
     }
 
     post {
