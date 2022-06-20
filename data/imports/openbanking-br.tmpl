@@ -1,6 +1,6 @@
 servers:
 - tenant_id: {{ .tenant_id }}
-  id: openbanking_brasil
+  id: {{ .server_id }}
   name: Openbanking Brazil
   profile: openbanking_br
   subject_format: legacy
@@ -15,7 +15,7 @@ servers:
     - refresh_token
     - client_credentials
   trust_anchor_configuration:
-    jwks_uri: "https://authorization.cloudentity.com:8443/default/openbanking_brasil/open-banking-brasil/directory/jwks_uri"
+    jwks_uri: "https://authorization.cloudentity.com:8443/{{ .tenant_id }}/{{ .server_id }}/open-banking-brasil/directory/jwks_uri"
   dynamic_client_registration:
     enabled: true
     initial_access_token:
@@ -37,7 +37,7 @@ servers:
 
 idps:
 - tenant_id: {{ .tenant_id }}
-  authorization_server_id: openbanking_brasil
+  authorization_server_id: {{ .server_id }}
   id: bugkgai3g9kregtu04u0
   name: Sandbox IDP
   method: static
@@ -144,7 +144,7 @@ server_consents:
   client_id: {{ default "bv0ocudfotn6edhsiu7g" .obbr_consent_page_client }}
   custom:
     server_consent_url: {{ .consent_page_url }}
-  server_id: openbanking_brasil
+  server_id: {{ .server_id }}
   type: custom
 clients:
 # consent page
@@ -159,7 +159,7 @@ clients:
   - manage_openbanking_consents
   token_endpoint_auth_method: client_secret_basic
 - tenant_id:  {{ .tenant_id }}
-  authorization_server_id: openbanking_brasil
+  authorization_server_id: {{ .server_id }}
   client_id: bukj5p6k7qdmm5ppbi4g
   client_name: bank
   description: bank resource server app used to introspect tokens
@@ -177,7 +177,7 @@ clients:
   token_endpoint_auth_method: tls_client_auth
 # financroo / developer tpp
 - tenant_id: {{ .tenant_id }}
-  authorization_server_id: openbanking_brasil
+  authorization_server_id: {{ .server_id }}
   client_id: bugkgm23g9kregtu051g
   organisation_id: 3333-3333-3333-3333 
   client_name: Financroo
@@ -211,7 +211,7 @@ clients:
   jwks:
 {{ readFile .financroo_pem_file | pemToPublicJwks | indent 4 }}
 - tenant_id: default
-  authorization_server_id: openbanking_brasil
+  authorization_server_id: {{ .server_id }}
   organisation_id: 74e929d9-33b6-4d85-8ba7-c146c867a817
   client_id: cid-1
   client_name: client-with-jwks
@@ -247,7 +247,7 @@ clients:
   jwks:
         {{ readFile .conf_tpp_1_public_jwks | indent 4 }}
 - tenant_id: default
-  authorization_server_id: openbanking_brasil
+  authorization_server_id: {{ .server_id }}
   organisation_id: 74e929d9-33b6-4d85-8ba7-c146c867a817
   client_id: {{ .conf_tpp_1_id }}
   client_name: Conformance-tpp-1
@@ -283,7 +283,7 @@ clients:
   jwks:
     {{ readFile .conf_tpp_1_public_jwks | indent 4 }}
 - tenant_id: default
-  authorization_server_id: openbanking_brasil
+  authorization_server_id: {{ .server_id }}
   organisation_id: 74e929d9-33b6-4d85-8ba7-c146c867a817
   client_id: {{ .conf_tpp_2_id }}
   client_name: Conformance-tpp-2
@@ -326,7 +326,7 @@ policies:
 - id: block_openbanking_brasil_dcr
   language: cloudentity
   policy_name: Unlock DCR
-  server_id: openbanking_brasil
+  server_id: {{ .server_id }}
   tenant_id: {{ .tenant_id }}
   type: dcr
   validators:
@@ -335,9 +335,9 @@ services:
 - id: directory
   tenant_id: default
   name: directory
-  authorization_server_id: openbanking_brasil
+  authorization_server_id: {{ .server_id }}
   scopes:
   - tenant_id: default
-    authorization_server_id: openbanking_brasil
+    authorization_server_id: {{ .server_id }}
     name: directory:software
     id: directory-software
