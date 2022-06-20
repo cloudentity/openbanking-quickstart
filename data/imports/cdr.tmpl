@@ -1,6 +1,6 @@
 servers:
 - tenant_id: {{ .tenant_id }}
-  id: cdr
+  id: {{ .server_id }}
   name: CDR
   profile: cdr_australia_fapi_rw
   subject_format: legacy
@@ -155,7 +155,7 @@ servers:
 
 idps:
 - tenant_id: {{ .tenant_id }}
-  authorization_server_id: cdr
+  authorization_server_id: {{ .server_id }}
   id: bugkgai3g9kregtu04u0
   name: Sandbox IDP
   method: static
@@ -250,7 +250,7 @@ server_consents:
   client_id: bv0ocudfotn6edhsiu7g
   custom:
     server_consent_url: {{ .consent_page_url }}
-  server_id: cdr
+  server_id: {{ .server_id }}
   type: custom
 clients:
 # consent page
@@ -266,7 +266,7 @@ clients:
   token_endpoint_auth_method: client_secret_basic
 
 - tenant_id: {{ .tenant_id }}
-  authorization_server_id: cdr
+  authorization_server_id: {{ .server_id }}
   client_id: bukj5p6k7qdmm5ppbi4g
   client_name: bank
   description: bank resource server app used to introspect tokens
@@ -285,7 +285,7 @@ clients:
 
 # financroo / developer tpp
 - tenant_id: {{ .tenant_id }}
-  authorization_server_id: cdr
+  authorization_server_id: {{ .server_id }}
   client_id: bugkgm23g9kregtu051g
   client_name: Financroo
   client_uri: https://localhost:8090
@@ -320,7 +320,7 @@ clients:
 
 
 - tenant_id: {{ .tenant_id }}
-  authorization_server_id: cdr
+  authorization_server_id: {{ .server_id }}
   client_id: cw1ocudfotn6edhsiv8h
   client_secret: {{ default "pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0" .consent_page_client_secret }}
   client_name: Consent Page Bank Client
@@ -341,7 +341,7 @@ policies:
     - name: 'true'
       conf: {}
 claims:
-- authorization_server_id: cdr
+- authorization_server_id: {{ .server_id }}
   id: cdr_arrangement_id
   mapping: cdr_arrangement_id
   name: cdr_arrangement_id
@@ -349,7 +349,7 @@ claims:
   source_type: authnCtx
   tenant_id: {{ .tenant_id }}
   type: access_token
-- authorization_server_id: cdr
+- authorization_server_id: {{ .server_id }}
   id: cdr_software_product
   mapping: software_id
   name: software_id
@@ -357,7 +357,7 @@ claims:
   source_type: client
   tenant_id: {{ .tenant_id }}
   type: access_token
-- authorization_server_id: cdr
+- authorization_server_id: {{ .server_id }}
   id: cdr_customer_id
   mapping: customer_id
   name: customer_id
@@ -369,6 +369,6 @@ claims:
 services:
 - id: cdr-cdr-australia
   tenant_id: {{ .tenant_id }}
-  authorization_server_id: cdr
+  authorization_server_id: {{ .server_id }}
   name: CDR Australia
   custom_audience: cds-au

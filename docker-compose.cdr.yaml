@@ -81,7 +81,7 @@ services:
       - MFA_CLAIM=sub # for mobile use mobile_verified
       - BANK_ID_CLAIM=customer_id
       - BANK_URL=http://bank:8070
-      - BANK_CLIENT_TOKEN_URL=${ACP_URL}/${TENANT}/cdr/oauth2/token
+      - BANK_CLIENT_TOKEN_URL=${ACP_URL}/${TENANT}/${SERVER}/oauth2/token
       - BANK_CLIENT_ID=cw1ocudfotn6edhsiv8h 
       - BANK_CLIENT_SECRET=pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0 
       - BANK_CLIENT_SCOPES=bank:accounts.basic:read,bank:accounts.detail:read
@@ -110,7 +110,7 @@ services:
       - LOGIN_AUTHORIZATION_SERVER_ID=bank-customers
       - LOGIN_TENANT_ID=${TENANT}
       - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/bank-customers
-      - OPENBANKING_SERVER_ID=cdr
+      - OPENBANKING_SERVER_ID=${SERVER}
       - SPEC=cdr
     depends_on:
       configuration:
@@ -128,7 +128,7 @@ services:
       - ./data/bank_key.pem:/bank_key.pem
     environment:
       - SYSTEM_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
-      - OPENBANKING_WORKSPACE_ID=cdr
+      - OPENBANKING_WORKSPACE_ID=${SERVER}
       - SPEC=cdr
       - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/bank-admins
     depends_on:
@@ -151,7 +151,7 @@ services:
       - TENANT=${TENANT}
       - GIN_MODE=debug # change to release to disable gin debug
       - SPEC=cdr
-      - OPENBANKING_SERVER_ID=cdr
+      - OPENBANKING_SERVER_ID=${SERVER}
       - BANK_URL=http://bank:8070
       - ENABLE_TLS_SERVER=true
     depends_on: 
@@ -170,7 +170,7 @@ services:
       - ./data/bank_key.pem:/bank_key.pem
       - ./mount/bank-cdr:/app/data
     environment:
-      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/cdr
+      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/${SERVER}
       - SPEC=cdr
       - GIN_MODE=debug
       - USER_IDENTIFIER_CLAIM=customer_id
