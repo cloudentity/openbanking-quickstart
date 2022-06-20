@@ -21,11 +21,26 @@ configure_cdr() {
     envsubst < ./data/cdr/mock-apps/resource-api-appsettings.template > ./mount/cdr/holder-resource-api-appsettings.json
 }
 
+override_server() {
+    ./scripts/override_env.sh SERVER $1
+    ./scripts/override_variables.sh server_id $1
+}
+
 for ACTION in "$@"
 do
   case "$ACTION" in
+  obuk)
+    override_server openbanking
+    ;;
+  obbr)
+    override_server openbanking_brasil
+    ;;
   cdr)
+    override_server cdr
     configure_cdr
+    ;;
+  fdx)
+    override_server fdx
     ;;
   *)
     exit

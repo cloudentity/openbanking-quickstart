@@ -6,8 +6,8 @@ ACP_LOCAL_APPS=acp crdb redis
 
 # obuk, obbr, cdr
 run-%-local: 
-	cp -f .env-local .env
 	./scripts/additional_configuration.sh $*
+	cp -f .env-local .env
 	docker-compose -f docker-compose.acp.local.yaml up -d --no-build ${ACP_LOCAL_APPS}
 	./scripts/wait.sh 
 	docker-compose -f docker-compose.$*.yaml up --no-build -d 
@@ -15,8 +15,8 @@ run-%-local:
 
 # obuk, obbr
 run-%-saas:
-	cp -f .env-saas .env
 	./scripts/additional_configuration.sh $*
+	cp -f .env-saas .env
 	docker-compose -f docker-compose.$*.yaml up --no-build -d
 	./scripts/wait.sh
 
@@ -136,7 +136,7 @@ obbr:
 # enable, disable
 %-tls-financroo:
 	./scripts/financroo_tls_configuration.sh $*
-	
+
 .PHONY: bump_acp
 bump_acp:
 	./scripts/bump_acp.sh
