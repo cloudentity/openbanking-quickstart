@@ -334,8 +334,12 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 			c.Redirect(http.StatusMovedPermanently, redirect)
 			return
 		case "verify_hypr":
-			var devices UserDevices
-			if devices, err = s.HyprHandler.GetUserDevices(mobile); err != nil {
+			var (
+				devices UserDevices
+				user    = fmt.Sprintf("%s", data.AuthenticationContext["name"])
+			)
+
+			if devices, err = s.HyprHandler.GetUserDevices(fmt.Sprintf("%s", user)); err != nil {
 				RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to get user devices"))
 				return
 			}
@@ -345,7 +349,7 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 				return
 			}
 
-			if requestId, err = s.HyprHandler.StartAuthentication(mobile); err != nil {
+			if requestId, err = s.HyprHandler.StartAuthentication(user); err != nil {
 				RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to start authenticate with hypr"))
 				return
 			}
@@ -391,7 +395,7 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 				},
 			}
 
-			templateData["hyprUser"] = mobile
+			templateData["hyprUser"] = fmt.Sprintf("%s", data.AuthenticationContext["name"])
 
 			if err = mergo.Merge(&templateData, provider.GetConsentMockData(r)); err != nil {
 				RenderInternalServerError(c, s.Trans, errors.Wrap(err, "failed to validate otp"))
