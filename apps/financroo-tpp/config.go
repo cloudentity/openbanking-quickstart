@@ -10,6 +10,14 @@ type FeatureFlags struct {
 
 type BankID string
 
+type Spec string
+
+const (
+	OBUK Spec = "obuk"
+	OBBR Spec = "obbr"
+	CDR  Spec = "cdr"
+)
+
 type Config struct {
 	Port            int          `env:"PORT" envDefault:"8091"`
 	DBFile          string       `env:"DB_FILE" envDefault:"/app/data/my.db"`
@@ -23,7 +31,7 @@ type Config struct {
 	CookieHashKey   string       `env:"COOKIE_HASH_KEY" envDefault:"secret-key"`
 	CookieBlockKey  string       `env:"COOKIE_BLOCK_KEY" envDefault:"this-is-32-len-block-key"`
 	FeatureFlags    FeatureFlags `env:"FEATURE_FLAGS"`
-	Spec            string       `env:"SPEC" validate:"required"`
+	Spec            Spec         `env:"SPEC" validate:"required"`
 	BankURL         string       `env:"BANK_URL" validate:"required"`
 	RootCA          string       `env:"ROOT_CA" envDefault:"/certs/ca.pem"`
 	ClientID        string       `env:"CLIENT_ID" envDefault:"bugkgm23g9kregtu051g"`

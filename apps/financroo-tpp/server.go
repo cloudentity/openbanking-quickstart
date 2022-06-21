@@ -39,7 +39,7 @@ func NewServer() (Server, error) {
 	}
 
 	switch server.Config.Spec {
-	case "obuk":
+	case OBUK:
 		server.Config.ClientScopes = []string{"accounts", "payments", "openid", "offline_access"}
 		if server.Clients, err = InitClients(server.Config, NewOBUKSigner, NewOBUKClient, NewOBUKConsentClient); err != nil {
 			return server, errors.Wrapf(err, "failed to create clients")
@@ -47,7 +47,7 @@ func NewServer() (Server, error) {
 		if server.LoginURLBuilder, err = NewOBUKLoginURLBuilder(); err != nil {
 			return server, errors.Wrapf(err, "failed to create login url builder")
 		}
-	case "obbr":
+	case OBBR:
 		server.Config.ClientScopes = []string{"accounts", "payments", "openid", "offline_access", "consents"}
 		if server.Clients, err = InitClients(server.Config, NewOBBRSigner, NewOBBRClient, NewOBBRConsentClient); err != nil {
 			return server, errors.Wrapf(err, "failed to create clients")
@@ -55,7 +55,7 @@ func NewServer() (Server, error) {
 		if server.LoginURLBuilder, err = NewOBBRLoginURLBuilder(server.Clients.AcpAccountsClient); err != nil {
 			return server, errors.Wrapf(err, "failed to create login url builder")
 		}
-	case "cdr":
+	case CDR:
 		server.Config.ClientScopes = []string{"offline_access", "openid", "bank:accounts.basic:read", "bank:accounts.detail:read", "bank:transactions:read", "common:customer.basic:read"} // TODO
 		if server.Clients, err = InitClients(server.Config, nil, NewCDRClient, nil); err != nil {
 			return server, errors.Wrapf(err, "failed to create clients")
