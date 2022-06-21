@@ -1,6 +1,6 @@
 servers:
 - tenant_id: {{ .tenant_id }}
-  id: fdx
+  id: {{ .server_id }}
   name: FDX
   profile: fdx
   access_token_strategy: "jwt"
@@ -21,7 +21,7 @@ servers:
 
 idps:
 - tenant_id: {{ .tenant_id }}
-  authorization_server_id: fdx
+  authorization_server_id: {{ .server_id }}
   id: bugkgai3g9kregtu04u0
   name: Sandbox IDP
   method: static
@@ -39,7 +39,7 @@ server_consents:
   client_id: {{ default "bv0ocudfotn6edhsiu7g" .fdx_consent_page_client }}
   custom:
     server_consent_url: {{ .consent_page_url }}
-  server_id: fdx
+  server_id: {{ .server_id }}
   type: custom
 
 clients:
@@ -56,7 +56,7 @@ clients:
   token_endpoint_auth_method: client_secret_basic
 # developer tpp
 - tenant_id: {{ .tenant_id }}
-  authorization_server_id: fdx
+  authorization_server_id: {{ .server_id }}
   client_id: bugkgm23g9kregtu051g
   client_name: Developer TPP
   client_uri: https://localhost:8090

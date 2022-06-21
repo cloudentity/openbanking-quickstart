@@ -12,10 +12,10 @@ services:
       - ./data/tpp_cert.pem:/tpp_cert.pem
       - ./data/tpp_key.pem:/tpp_key.pem
     environment:
-      - AUTHORIZE_URL=${ACP_URL}/${TENANT}/openbanking_brasil/oauth2/authorize
-      - TOKEN_URL=${ACP_MTLS_URL}/${TENANT}/openbanking_brasil/oauth2/token
-      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/openbanking_brasil
-      - USERINFO_URL=${ACP_MTLS_URL}/${TENANT}/openbanking_brasil/userinfo
+      - AUTHORIZE_URL=${ACP_URL}/${TENANT}/${SERVER}/oauth2/authorize
+      - TOKEN_URL=${ACP_MTLS_URL}/${TENANT}/${SERVER}/oauth2/token
+      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/${SERVER}
+      - USERINFO_URL=${ACP_MTLS_URL}/${TENANT}/${SERVER}/userinfo
       - REDIRECT_URL=https://${APP_HOST}:8090/callback
       - BANK_URL=http://bank:8070
       - SPEC=obbr
@@ -40,7 +40,7 @@ services:
       - GIN_MODE=debug # change to release to disable gin debug
       - SPEC=obbr
       - BANK_URL=http://bank:8070
-      - OPENBANKING_SERVER_ID=openbanking_brasil
+      - OPENBANKING_SERVER_ID=${SERVER}
       - ENABLE_TLS_SERVER=true
     depends_on:
       configuration:
@@ -93,7 +93,7 @@ services:
       - LOGIN_AUTHORIZATION_SERVER_ID=bank-customers
       - LOGIN_TENANT_ID=${TENANT}
       - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/bank-customers
-      - OPENBANKING_SERVER_ID=openbanking_brasil
+      - OPENBANKING_SERVER_ID=${SERVER}
     depends_on:
       configuration:
         condition: service_completed_successfully
@@ -110,7 +110,7 @@ services:
       - ./data/bank_key.pem:/bank_key.pem
     environment:
       - SYSTEM_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
-      - OPENBANKING_WORKSPACE_ID=openbanking_brasil
+      - OPENBANKING_WORKSPACE_ID=${SERVER}
       - SPEC=obbr
       - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/bank-admins
     depends_on:
@@ -129,7 +129,7 @@ services:
       - ./data/bank_key.pem:/bank_key.pem
       - ./mount/bank-br:/app/data
     environment:
-      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/openbanking_brasil
+      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/${SERVER}
       - SPEC=obbr
       - GIN_MODE=debug
     depends_on:
