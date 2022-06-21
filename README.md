@@ -58,8 +58,8 @@ curl --request POST \
   --header 'Authorization: Bearer <your Hypr token>' \
   --header 'Content-Type: application/json' \
   --data '{
-  "username": "<your preferred username>",
-  "email": "<your email>",
+  "username": "user",
+  "email": "example@example.com",
   "firstname": "",
   "lastname": "",
   "message": "",
@@ -72,7 +72,6 @@ This will return a response with a magic link(`webLink`). Go to the `webLink` on
 
 ### Environment Variables for Hypr
 In QuickStart set the environment variables in `.env-local`. The required environment variables are:
-- HYPR_USER - your Hyper username
 - HYPR_TOKEN - API token provided by Hypr
 - ENABLE_MFA - must be set to `true`
 
