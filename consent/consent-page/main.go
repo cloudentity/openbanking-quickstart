@@ -54,7 +54,6 @@ type Config struct {
 	DefaultLanguage  language.Tag  `env:"DEFAULT_LANGUAGE"  envDefault:"en-us"`
 	TransDir         string        `env:"TRANS_DIR" envDefault:"./translations"`
 	Spec             Spec          `env:"SPEC,required"`
-	HyprUser         string        `env:"HYPR_USER"`
 	HyprToken        string        `env:"HYPR_TOKEN"`
 	HyprBaseURL      string        `env:"HYPR_BASE_URL"`
 	HyprAppId        string        `env:"HYPR_APP_ID"`

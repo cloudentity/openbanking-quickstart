@@ -257,6 +257,7 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 		}
 
 		logrus.Debugf("action: %s, mobile: %s", action, mobile)
+
 		switch action {
 		case "request", "resend":
 			if err = s.OTPHandler.Send(r, provider, mobile, data); err != nil {
@@ -334,7 +335,7 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 			return
 		case "verify_hypr":
 			var devices UserDevices
-			if devices, err = s.HyprHandler.GetUserDevices(s.Config.HyprUser); err != nil {
+			if devices, err = s.HyprHandler.GetUserDevices(mobile); err != nil {
 				RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to get user devices"))
 				return
 			}
@@ -344,7 +345,7 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 				return
 			}
 
-			if requestId, err = s.HyprHandler.StartAuthentication(s.Config.HyprUser); err != nil {
+			if requestId, err = s.HyprHandler.StartAuthentication(mobile); err != nil {
 				RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to start authenticate with hypr"))
 				return
 			}
@@ -390,7 +391,7 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 				},
 			}
 
-			templateData["hyprUser"] = s.Config.HyprUser
+			templateData["hyprUser"] = mobile
 
 			if err = mergo.Merge(&templateData, provider.GetConsentMockData(r)); err != nil {
 				RenderInternalServerError(c, s.Trans, errors.Wrap(err, "failed to validate otp"))
