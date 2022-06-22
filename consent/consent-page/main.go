@@ -43,6 +43,7 @@ type Config struct {
 	BankURL          *url.URL      `env:"BANK_URL"`
 	BankIDClaim      string        `env:"BANK_ID_CLAIM" envDefault:"sub"`
 	EnableMFA        bool          `env:"ENABLE_MFA"`
+	EnableHypr       bool          `env:"ENABLE_HYPR"`
 	OTPMode          string        `env:"OTP_MODE" envDefault:"demo"`
 	TwilioAccountSid string        `env:"TWILIO_ACCOUNT_SID"`
 	TwilioAuthToken  string        `env:"TWILIO_AUTH_TOKEN"`
@@ -144,7 +145,6 @@ func NewServer() (Server, error) {
 	server.Trans = NewTranslations(bundle, server.Config.DefaultLanguage.String())
 
 	server.SMSClient = NewSMSClient(server.Config)
-	server.HyprHandler = NewHyprHandler(server.Config.HyprBaseURL, server.Config.HyprToken, server.Config.HyprAppId)
 
 	switch server.Config.Spec {
 	case OBUK:
@@ -167,6 +167,10 @@ func NewServer() (Server, error) {
 
 	if server.OTPHandler, err = NewOTPHandler(server.Config, server.OTPRepo, server.SMSClient); err != nil {
 		return server, errors.Wrapf(err, "failed to init otp handler")
+	}
+
+	if server.Config.EnableHypr {
+		server.HyprHandler = NewHyprHandler(server.Config.HyprBaseURL, server.Config.HyprToken, server.Config.HyprAppId)
 	}
 
 	tools := ConsentTools{Trans: server.Trans, Config: server.Config}
@@ -204,10 +208,12 @@ func RequireMFAMiddleware(s *Server) gin.HandlerFunc {
 			err      error
 		)
 
-		if approved, err = s.HyprHandler.IsApproved(NewLoginRequest(c)); err != nil {
-			RenderInvalidRequestError(c, s.Trans, nil)
-			c.Abort()
-			return
+		if s.Config.EnableHypr {
+			if approved, err = s.HyprHandler.IsApproved(NewLoginRequest(c)); err != nil {
+				RenderInvalidRequestError(c, s.Trans, nil)
+				c.Abort()
+				return
+			}
 		}
 
 		if !approved {

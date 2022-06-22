@@ -73,7 +73,7 @@ func (h *DefaultHyprHandler) PollHypr(requestID string) (*AuthStatusResponse, er
 	var (
 		checkStatus  *AuthStatusResponse
 		pollInterval = time.Tick(time.Duration(2) * time.Second)
-		timeout      = time.Tick(time.Duration(60) * time.Second)
+		timeout      = time.Tick(time.Duration(120) * time.Second)
 		err          error
 	)
 

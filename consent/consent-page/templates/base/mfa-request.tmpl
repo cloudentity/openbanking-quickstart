@@ -1,5 +1,43 @@
-
+{{ if not .showHypr }}
   <form action="mfa?login_id={{ .login_request.ID }}&login_state={{ .login_request.State }}&consent_type={{ .login_request.ConsentType }}" method="post" id="form">
+    <input type="hidden" name="action" value="request"/>
+    <div class="mfa-container">
+      <div class="mfa-container__item">
+        <div class="mfa-container__item--left">
+          <div class="heading-2">{{.mfaTrans.title}}</div>
+          <div class="heading-4">{{.mfaTrans.subTitle}}</div>
+          <div class="caption" style="margin-top: 12px">{{.mfaTrans.caption1}}</div>
+          <div class="caption" style="margin-top: 12px">{{.mfaTrans.caption2}}</div>
+        </div>
+      </div>
+      <div class="mfa-container__item">
+        <div class="mfa-container__item--right">
+          <div class="mfa-container__card hover" onclick="submit('form')">
+            <div>
+              <div style="font-size: 14px">{{.mfaTrans.sms}}</div>
+              <div class="caption" style="margin-top: 6px;">{{ .mobile }}</div>
+            </div>
+            <div>
+              <i class="material-icons mdc-icon-button__icon"> keyboard_arrow_right</i>
+            </div>
+          </div>
+
+          <div class="mfa-container__card" style="margin-top: 16px;">
+            <div>
+              <div style="font-size: 14px">{{.mfaTrans.email}}</div>
+              <div class="caption" style="margin-top: 6px;">k*****n@mymail.com</div>
+            </div>
+            <div>
+              <i class="material-icons mdc-icon-button__icon"> keyboard_arrow_right</i>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+{{ else }}
+< <form action="mfa?login_id={{ .login_request.ID }}&login_state={{ .login_request.State }}&consent_type={{ .login_request.ConsentType }}" method="post" id="form">
     <input type="hidden" name="action" value="verify_hypr"/>
     <div class="mfa-container">
       <div class="mfa-container__item">
@@ -28,8 +66,7 @@
       </div>
     </div>
   </form>
-
-
+  {{ end }}
 
 <script>
   function submit(id) {
