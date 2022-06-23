@@ -1,3 +1,3 @@
-HYPR_TOKEN: "<hypr api token>"
-HYPR_BASE_URL: "<hypr tenant base URL>"
-HYPR_APP_ID: "<hypr app id>"
+HYPR_TOKEN: "hypap-125b8ab7-2c86-4855-b77f-ecf5c83c0f05"
+HYPR_BASE_URL: "https://demo.gethypr.com"
+HYPR_APP_ID: "cloudentity"

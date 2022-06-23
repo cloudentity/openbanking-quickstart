@@ -13,7 +13,7 @@ import (
 
 type HyprConfig struct {
 	Token   string `json:"HYPR_TOKEN"`
-	BaseUrl string `json:"HYPR_BASE_URL"`
+	BaseURL string `json:"HYPR_BASE_URL"`
 	AppID   string `json:"HYPR_APP_ID"`
 }
 
@@ -21,14 +21,14 @@ type HyprStrategy struct {
 	HostURL  string
 	Client   *http.Client
 	APIToken string
-	AppId    string
+	AppID    string
 	Storage  map[LoginRequest]bool
 }
 
 func NewHyprStrategy(hyprConfig HyprConfig) *HyprStrategy {
 	return &HyprStrategy{
-		HostURL: hyprConfig.BaseUrl,
-		AppId:   hyprConfig.AppID,
+		HostURL: hyprConfig.BaseURL,
+		AppID:   hyprConfig.AppID,
 		Client: &http.Client{
 			Timeout: time.Second * 10,
 		},
@@ -41,7 +41,7 @@ func (h *HyprStrategy) Approve(args map[string]string) *MFAError {
 	var (
 		devices   UserDevices
 		username  string
-		requestId string
+		requestID string
 		ok        bool
 		err       error
 	)
@@ -70,7 +70,7 @@ func (h *HyprStrategy) Approve(args map[string]string) *MFAError {
 		}
 	}
 
-	if requestId, err = h.startAuthentication(username); err != nil {
+	if requestID, err = h.startAuthentication(username); err != nil {
 		return &MFAError{
 			err:     err,
 			code:    http.StatusInternalServerError,
@@ -79,7 +79,7 @@ func (h *HyprStrategy) Approve(args map[string]string) *MFAError {
 	}
 
 	var checkStatus *AuthStatusResponse
-	if checkStatus, err = h.poll(requestId); err != nil {
+	if checkStatus, err = h.poll(requestID); err != nil {
 		if errors.Is(err, ErrTimeoutWaitingForUser) {
 			return &MFAError{
 				err:     err,
@@ -134,12 +134,12 @@ func (h *HyprStrategy) startAuthentication(username string) (string, error) {
 		err      error
 	)
 
-	var deviceReq = DeviceAuthenticationRequest{
-		SessionNonce:      GenerateSha256(strconv.Itoa(GenerateRandomPin())),
-		DeviceNonce:       GenerateSha256(strconv.Itoa(GenerateRandomPin())),
-		ServiceHmac:       GenerateSha256(strconv.Itoa(GenerateRandomPin())),
-		ServiceNonce:      GenerateSha256(strconv.Itoa(GenerateRandomPin())),
-		AppId:             h.AppId,
+	deviceReq := DeviceAuthenticationRequest{
+		SessionNonce:      GenerateSha256(strconv.Itoa(int(GenerateRandomPin()))),
+		DeviceNonce:       GenerateSha256(strconv.Itoa(int(GenerateRandomPin()))),
+		ServiceHmac:       GenerateSha256(strconv.Itoa(int(GenerateRandomPin()))),
+		ServiceNonce:      GenerateSha256(strconv.Itoa(int(GenerateRandomPin()))),
+		AppID:             h.AppID,
 		NamedUser:         username,
 		Machine:           "WEB",
 		MachineID:         GenerateRandomString(6),
@@ -175,7 +175,7 @@ func (h *HyprStrategy) poll(requestID string) (*AuthStatusResponse, error) {
 			if checkStatus, err = h.performAuthStatusCheck(requestID); err != nil {
 				return nil, err
 			}
-			for i, _ := range checkStatus.State {
+			for i := range checkStatus.State { // no lint
 				switch checkStatus.State[i].Value {
 				case "COMPLETED", "CANCELED", "FAILED":
 					return checkStatus, nil
@@ -195,6 +195,7 @@ func (h *HyprStrategy) performAuthStatusCheck(requestID string) (*AuthStatusResp
 	if resp, err = h.performRequest(http.MethodGet, fmt.Sprintf("%s%s", h.HostURL, endpoint), nil); err != nil {
 		return nil, err
 	}
+	defer resp.Body.Close()
 
 	data := AuthStatusResponse{}
 	if err = json.NewDecoder(resp.Body).Decode(&data); err != nil {
@@ -232,7 +233,7 @@ func (h *HyprStrategy) performRequest(method string, endpoint string, payload in
 	)
 
 	if payload != nil {
-		if err := json.NewEncoder(&buf).Encode(payload); err != nil {
+		if err = json.NewEncoder(&buf).Encode(payload); err != nil {
 			return nil, err
 		}
 	}

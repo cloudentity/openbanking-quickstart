@@ -160,6 +160,9 @@ func NewServer() (Server, error) {
 		}
 
 		server.MFAStrategy = NewHyprStrategy(hyprConfig)
+	case "":
+	default:
+		return server, errors.New("unknown MFA provider")
 	}
 
 	for _, t := range trans {

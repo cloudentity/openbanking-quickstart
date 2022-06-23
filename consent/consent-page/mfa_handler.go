@@ -338,6 +338,9 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 			switch s.Config.MFAProvider {
 			case "hypr":
 				mfaProviderArgs["username"] = fmt.Sprintf("%s", data.AuthenticationContext["name"])
+			default:
+				RenderInternalServerError(c, s.Trans, errors.New("invalid MFA provider"))
+				return
 			}
 
 			if err := s.MFAStrategy.Approve(mfaProviderArgs); err != nil {
@@ -380,5 +383,4 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 			Render(c, provider.GetTemplateName(), templateData)
 		}
 	}
-
 }

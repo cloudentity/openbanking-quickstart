@@ -3,10 +3,8 @@ package main
 import (
 	crand "crypto/rand"
 	"crypto/sha256"
-	"encoding/binary"
 	"encoding/hex"
-	"log"
-	"math/rand"
+	"math/big"
 
 	"github.com/pkg/errors"
 )
@@ -83,7 +81,7 @@ type DeviceAuthenticationRequest struct {
 	ServiceHmac       string            `json:"serviceHmac"`
 	ServiceNonce      string            `json:"serviceNonce"`
 	MachineID         string            `json:"machineId"`
-	AppId             string            `json:"appId"`
+	AppID             string            `json:"appId"`
 	NamedUser         string            `json:"namedUser"`
 	Machine           string            `json:"machine"`
 	AdditionalDetails map[string]string `json:"additionalDetails,omitempty"`
@@ -94,31 +92,15 @@ var letterRunes = []rune("abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ01
 func GenerateRandomString(n int) string {
 	b := make([]rune, n)
 	for i := range b {
-		b[i] = letterRunes[rand.Intn(len(letterRunes))]
+		randInt, _ := crand.Int(crand.Reader, big.NewInt(int64(len(letterRunes))))
+		b[i] = letterRunes[randInt.Int64()]
 	}
 	return string(b)
 }
 
-type CryptoSource struct{}
-
-func GenerateRandomPin() int {
-	var src CryptoSource
-	rnd := rand.New(src)
-	return rnd.Intn(1000000)
-}
-
-func (s CryptoSource) Seed(seed int64) {}
-
-func (s CryptoSource) Int63() int64 {
-	return int64(s.Uint64() & ^uint64(1<<63))
-}
-
-func (s CryptoSource) Uint64() (v uint64) {
-	err := binary.Read(crand.Reader, binary.BigEndian, &v)
-	if err != nil {
-		log.Fatal(err)
-	}
-	return v
+func GenerateRandomPin() int64 {
+	randInt, _ := crand.Int(crand.Reader, big.NewInt(27))
+	return randInt.Int64()
 }
 
 func GenerateSha256(data string) string {
