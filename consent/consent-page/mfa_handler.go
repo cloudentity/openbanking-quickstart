@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/imdario/mergo"
@@ -368,6 +369,7 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 			if s.Config.MFAProvider != "" {
 				templateData["showMFA"] = true
 				templateData["mfaUsername"] = mfaProviderArgs["username"]
+				templateData["mfaProvider"] = strings.ToUpper(s.Config.MFAProvider)
 			}
 
 			if err = mergo.Merge(&templateData, provider.GetConsentMockData(r)); err != nil {

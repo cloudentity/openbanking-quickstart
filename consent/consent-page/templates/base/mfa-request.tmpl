@@ -54,7 +54,7 @@
             <input type="hidden" name="action" value="verify_mfa"/>
             <div class="mfa-container__card hover" style="margin-top: 16px;" onclick="submit('form'); var elem = document.getElementById('okta_arrow'); elem.classList.add('loader'); elem.innerHTML=''">
               <div>
-                <div style="font-size: 14px">Verify with Hypr</div>
+                <div style="font-size: 14px">Verify with {{ .mfaProvider }}</div>
                 <div class="caption" style="margin-top: 6px;">User: {{ .mfaUsername }}</div>
               </div>
               <div id="okta_arrow">
