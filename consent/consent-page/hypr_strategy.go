@@ -17,7 +17,7 @@ type HyprConfig struct {
 	AppID   string `json:"HYPR_APP_ID"`
 }
 
-type DefaultHyprHandler struct {
+type HyprStrategy struct {
 	HostURL  string
 	Client   *http.Client
 	APIToken string
@@ -25,8 +25,8 @@ type DefaultHyprHandler struct {
 	Storage  map[LoginRequest]bool
 }
 
-func NewHyprHandler(hyprConfig HyprConfig) *DefaultHyprHandler {
-	return &DefaultHyprHandler{
+func NewHyprStrategy(hyprConfig HyprConfig) *HyprStrategy {
+	return &HyprStrategy{
 		HostURL: hyprConfig.BaseUrl,
 		AppId:   hyprConfig.AppID,
 		Client: &http.Client{
@@ -37,7 +37,7 @@ func NewHyprHandler(hyprConfig HyprConfig) *DefaultHyprHandler {
 	}
 }
 
-func (h *DefaultHyprHandler) Approve(args map[string]string) *MFAError {
+func (h *HyprStrategy) Approve(args map[string]string) *MFAError {
 	var (
 		devices   UserDevices
 		username  string
@@ -114,11 +114,11 @@ func (h *DefaultHyprHandler) Approve(args map[string]string) *MFAError {
 	}
 }
 
-func (o *DefaultHyprHandler) SetStorage(r LoginRequest, approved bool) {
+func (o *HyprStrategy) SetStorage(r LoginRequest, approved bool) {
 	o.Storage[r] = approved
 }
 
-func (o *DefaultHyprHandler) IsApproved(r LoginRequest) (bool, error) {
+func (o *HyprStrategy) IsApproved(r LoginRequest) (bool, error) {
 	approved, ok := o.Storage[r]
 	if !ok {
 		return false, nil
@@ -127,7 +127,7 @@ func (o *DefaultHyprHandler) IsApproved(r LoginRequest) (bool, error) {
 	return approved, nil
 }
 
-func (h *DefaultHyprHandler) startAuthentication(username string) (string, error) {
+func (h *HyprStrategy) startAuthentication(username string) (string, error) {
 	var (
 		endpoint = "/rp/api/oob/client/authentication/requests"
 		resp     *http.Response
@@ -159,7 +159,7 @@ func (h *DefaultHyprHandler) startAuthentication(username string) (string, error
 	return data.Response.RequestID, nil
 }
 
-func (h *DefaultHyprHandler) poll(requestID string) (*AuthStatusResponse, error) {
+func (h *HyprStrategy) poll(requestID string) (*AuthStatusResponse, error) {
 	var (
 		checkStatus  *AuthStatusResponse
 		pollInterval = time.Tick(time.Duration(2) * time.Second)
@@ -185,7 +185,7 @@ func (h *DefaultHyprHandler) poll(requestID string) (*AuthStatusResponse, error)
 	}
 }
 
-func (h *DefaultHyprHandler) performAuthStatusCheck(requestID string) (*AuthStatusResponse, error) {
+func (h *HyprStrategy) performAuthStatusCheck(requestID string) (*AuthStatusResponse, error) {
 	var (
 		endpoint = fmt.Sprintf("/rp/api/oob/client/authentication/requests/%s", requestID)
 		resp     *http.Response
@@ -204,7 +204,7 @@ func (h *DefaultHyprHandler) performAuthStatusCheck(requestID string) (*AuthStat
 	return &data, nil
 }
 
-func (h *DefaultHyprHandler) getUserDevices(username string) (UserDevices, error) {
+func (h *HyprStrategy) getUserDevices(username string) (UserDevices, error) {
 	var (
 		endpoint = fmt.Sprintf("/rp/api/oob/client/authentication/%s/%s/devices", "cloudentity", username)
 		resp     *http.Response
@@ -224,7 +224,7 @@ func (h *DefaultHyprHandler) getUserDevices(username string) (UserDevices, error
 	return data, nil
 }
 
-func (h *DefaultHyprHandler) performRequest(method string, endpoint string, payload interface{}) (*http.Response, error) {
+func (h *HyprStrategy) performRequest(method string, endpoint string, payload interface{}) (*http.Response, error) {
 	var (
 		buf bytes.Buffer
 		req *http.Request

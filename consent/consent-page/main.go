@@ -162,7 +162,7 @@ func NewServer() (Server, error) {
 			return server, errors.Wrapf(err, "failed to marshal hypr config %s", err)
 		}
 
-		server.MFAStrategy = NewHyprHandler(hyprConfig)
+		server.MFAStrategy = NewHyprStrategy(hyprConfig)
 	}
 
 	for _, t := range trans {
