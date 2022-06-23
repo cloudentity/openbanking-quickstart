@@ -56,9 +56,6 @@ type Config struct {
 	DefaultLanguage  language.Tag  `env:"DEFAULT_LANGUAGE"  envDefault:"en-us"`
 	TransDir         string        `env:"TRANS_DIR" envDefault:"./translations"`
 	Spec             Spec          `env:"SPEC,required"`
-	HyprToken        string        `env:"HYPR_TOKEN"`
-	HyprBaseURL      string        `env:"HYPR_BASE_URL"`
-	HyprAppId        string        `env:"HYPR_APP_ID"`
 	Otp              OtpConfig
 	EnableTLSServer  bool `env:"ENABLE_TLS_SERVER" envDefault:"true"`
 	BankClientConfig BankClientConfig

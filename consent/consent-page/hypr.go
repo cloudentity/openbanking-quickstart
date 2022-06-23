@@ -11,7 +11,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-var ErrTimeoutWaitingForUser = errors.New("Request expired before response")
+var ErrTimeoutWaitingForUser = errors.New("request expired before response")
 
 type StartAuthResponse struct {
 	Status   StatusAuth    `json:"status"`

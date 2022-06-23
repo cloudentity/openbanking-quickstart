@@ -114,12 +114,12 @@ func (h *HyprStrategy) Approve(args map[string]string) *MFAError {
 	}
 }
 
-func (o *HyprStrategy) SetStorage(r LoginRequest, approved bool) {
-	o.Storage[r] = approved
+func (h *HyprStrategy) SetStorage(r LoginRequest, approved bool) {
+	h.Storage[r] = approved
 }
 
-func (o *HyprStrategy) IsApproved(r LoginRequest) (bool, error) {
-	approved, ok := o.Storage[r]
+func (h *HyprStrategy) IsApproved(r LoginRequest) (bool, error) {
+	approved, ok := h.Storage[r]
 	if !ok {
 		return false, nil
 	}
