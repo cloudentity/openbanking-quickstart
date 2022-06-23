@@ -206,13 +206,14 @@ func (s *DomesticPaymentMFAConsentProvider) GetConsentMockData(loginRequest Logi
 func (s *Server) MFAHandler() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			r        = NewLoginRequest(c)
-			provider MFAConsentProvider
-			data     MFAData
-			ok       bool
-			valid    bool
-			mobile   string
-			err      error
+			r               = NewLoginRequest(c)
+			mfaProviderArgs = make(map[string]string)
+			provider        MFAConsentProvider
+			data            MFAData
+			ok              bool
+			valid           bool
+			mobile          string
+			err             error
 		)
 
 		if err = r.Validate(); err != nil {
@@ -333,10 +334,12 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 			c.Redirect(http.StatusMovedPermanently, redirect)
 			return
 		case "verify_mfa":
-			args := make(map[string]string)
-			args["username"] = fmt.Sprintf("%s", data.AuthenticationContext["name"])
+			switch s.Config.MFAProvider {
+			case "hypr":
+				mfaProviderArgs["username"] = fmt.Sprintf("%s", data.AuthenticationContext["name"])
+			}
 
-			if err := s.MFAStrategy.Approve(args); err != nil {
+			if err := s.MFAStrategy.Approve(mfaProviderArgs); err != nil {
 				switch err.code {
 				case http.StatusInternalServerError:
 					RenderInternalServerError(c, s.Trans, errors.Wrapf(err.err, err.message))
@@ -364,11 +367,11 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 
 			if s.Config.MFAProvider != "" {
 				templateData["showMFA"] = true
-				templateData["mfaUsername"] = fmt.Sprintf("%s", data.AuthenticationContext["name"])
+				templateData["mfaUsername"] = mfaProviderArgs["username"]
 			}
 
 			if err = mergo.Merge(&templateData, provider.GetConsentMockData(r)); err != nil {
-				RenderInternalServerError(c, s.Trans, errors.Wrap(err, "failed to validate otp"))
+				RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to validate otp"))
 				return
 			}
 
