@@ -13,7 +13,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     "&:first-of-type": {
       marginRight: 16,
     },
-    textTransform: "none",
     ...theme.custom.button,
     color: "#626576",
     "&:disabled": {

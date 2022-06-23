@@ -27,6 +27,7 @@ type SpecLogicHandler interface {
 	LoginURLBuilder
 	ConsentCreator
 	DoRequestObjectEncryption() bool
+	PostAuthenticationAction(*gin.Context, map[string]interface{}) (map[string]interface{}, error)
 }
 
 type AccountsGetter interface {
@@ -57,7 +58,7 @@ func (s *Server) Login() func(*gin.Context) {
 		if registerResponse, err = s.CreateConsent(c); err != nil {
 			// todo fix retry mechnism in acp-go-client
 			if registerResponse, err = s.CreateConsent(c); err != nil {
-				c.String(http.StatusBadRequest, fmt.Sprintf("failed to register account access consent: %+v", err))
+				c.String(http.StatusBadRequest, fmt.Sprintf("failed to register consent: %+v", err))
 				return
 			}
 		}
@@ -119,6 +120,7 @@ func (s *Server) Callback() func(*gin.Context) {
 			app              string
 			appStorage       = AppStorage{}
 			userinfoResponse map[string]interface{}
+			additionalData   map[string]interface{}
 			code             = c.Query("code")
 			token            acpclient.Token
 			data             = gin.H{}
@@ -150,12 +152,27 @@ func (s *Server) Callback() func(*gin.Context) {
 			return
 		}
 
+		if token.GrantID != "" {
+			data["grant_id"] = token.GrantID
+		}
+
+		tokenResponse, _ := json.MarshalIndent(token, "", "  ")
+		data["token_response"] = string(tokenResponse)
+
 		data["access_token"] = token.AccessToken
+
+		parser := jwt.Parser{}
+
+		atClaims := jwt.MapClaims{}
+		if _, _, err = parser.ParseUnverified(token.AccessToken, &atClaims); err == nil {
+			payload, _ := json.MarshalIndent(atClaims, "", "  ")
+			data["access_token_payload"] = string(payload)
+		}
+
 		userinfoResp, _ := json.MarshalIndent(userinfoResponse, "", "  ")
 		data["userinfo"] = string(userinfoResp)
 
 		if token.IDToken != "" {
-			parser := jwt.Parser{}
 			claims := jwt.MapClaims{}
 			IDToken, _, _ := parser.ParseUnverified(token.IDToken, &claims)
 			header, _ := json.MarshalIndent(IDToken.Header, "", "  ")
@@ -175,6 +192,15 @@ func (s *Server) Callback() func(*gin.Context) {
 
 		accountsRaw, _ := json.MarshalIndent(accountsResp, "", "  ")
 		data["accounts_raw"] = string(accountsRaw)
+
+		if additionalData, err = s.PostAuthenticationAction(c, data); err != nil {
+			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to execute post authentication action: %+v", err))
+			return
+		}
+
+		for k, v := range additionalData {
+			data[k] = v
+		}
 
 		c.HTML(http.StatusOK, s.GetTemplate("authenticated.tmpl"), data)
 	}

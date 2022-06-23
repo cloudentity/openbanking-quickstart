@@ -12,10 +12,10 @@ services:
       - ./data/tpp_cert.pem:/tpp_cert.pem
       - ./data/tpp_key.pem:/tpp_key.pem
     environment:
-      - AUTHORIZE_URL=${ACP_URL}/${TENANT}/openbanking/oauth2/authorize
-      - TOKEN_URL=${ACP_MTLS_URL}/${TENANT}/openbanking/oauth2/token
-      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/openbanking
-      - USERINFO_URL=${ACP_MTLS_URL}/${TENANT}/openbanking/userinfo
+      - AUTHORIZE_URL=${ACP_URL}/${TENANT}/${SERVER}/oauth2/authorize
+      - TOKEN_URL=${ACP_MTLS_URL}/${TENANT}/${SERVER}/oauth2/token
+      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/${SERVER}
+      - USERINFO_URL=${ACP_MTLS_URL}/${TENANT}/${SERVER}/userinfo
       - REDIRECT_URL=https://${APP_HOST}:8090/callback
       - BANK_URL=http://bank:8070
       - SPEC=obuk
@@ -40,7 +40,8 @@ services:
       - GIN_MODE=debug # change to release to disable gin debug
       - SPEC=obuk
       - BANK_URL=http://bank:8070
-      - OPENBANKING_SERVER_ID=openbanking
+      - OPENBANKING_SERVER_ID=${SERVER}
+      - ENABLE_TLS_SERVER=true
     depends_on:
       configuration:
         condition: service_completed_successfully
@@ -53,7 +54,7 @@ services:
     ports:
       - "7080:8080"
     volumes:
-      - ./mount/consent-page-uk:/data
+      - ./mount/consent-page:/data
       - ./data/ca.pem:/ca.pem
       - ./data/config_hypr.yaml:/config_hypr.yaml
       - ./data/bank_cert.pem:/bank_cert.pem
@@ -92,7 +93,7 @@ services:
       - LOGIN_AUTHORIZATION_SERVER_ID=bank-customers
       - LOGIN_TENANT_ID=${TENANT}
       - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/bank-customers
-      - OPENBANKING_SERVER_ID=openbanking
+      - OPENBANKING_SERVER_ID=${SERVER}
       - SPEC=obuk
     depends_on:
       configuration:
@@ -110,7 +111,7 @@ services:
       - ./data/bank_key.pem:/bank_key.pem
     environment:
       - SYSTEM_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
-      - OPENBANKING_WORKSPACE_ID=openbanking
+      - OPENBANKING_WORKSPACE_ID=${SERVER}
       - SPEC=obuk
       - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/bank-admins
     depends_on:
@@ -129,7 +130,7 @@ services:
       - ./data/bank_key.pem:/bank_key.pem
       - ./mount/bank-uk:/app/data
     environment:
-      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/openbanking
+      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/${SERVER}
       - SPEC=obuk
       - GIN_MODE=debug
     depends_on:

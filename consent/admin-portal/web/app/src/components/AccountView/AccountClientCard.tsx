@@ -99,7 +99,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 const consentTypesMapper = {
-  consents: "Accounts", 
+  consents: "Accounts",
   account_access: "Accounts",
   cdr_arrangement: "Accounts", // TODO what should this map to
   domestic_payment: "Payments",
@@ -130,11 +130,13 @@ export default function AccountClientCard({
 
   const rawConsents = getRawConsents(client?.consents ?? []);
 
-  const accountAccessConsent = rawConsents.find(
-    (v) => {
-      return v?.consent_type === "account_access" || v?.consent_type === "cdr_arrangement" || v?.consent_type === "consents"
-    }
-  );
+  const accountAccessConsent = rawConsents.find((v) => {
+    return (
+      v?.consent_type === "account_access" ||
+      v?.consent_type === "cdr_arrangement" ||
+      v?.consent_type === "consents"
+    );
+  });
 
   const permissionDates = {
     authorised: getDate(accountAccessConsent?.consent?.created_at),
@@ -144,7 +146,7 @@ export default function AccountClientCard({
 
   const types = rawConsents
     .map(({ consent_type }) => {
-      return consentTypesMapper[consent_type] || null
+      return consentTypesMapper[consent_type] || null;
     })
     .filter((v) => v);
 
@@ -196,10 +198,7 @@ export default function AccountClientCard({
           <div>
             <div></div>
             <div>
-              <Button
-                id="manage-account"
-                className={classes.manageButton}
-              >
+              <Button id="manage-account" className={classes.manageButton}>
                 Manage
               </Button>
             </div>

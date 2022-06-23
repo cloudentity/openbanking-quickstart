@@ -176,14 +176,15 @@ function ConsentTable({ data, type }: Props) {
   }
   const rowsAccount =
     type === "account"
-      ? data.map(({ created_at, account_ids, status, expires_at, consent_id }) =>
-      createDataAccount(
-        getDate(created_at),
-        account_ids.join(", "),
-        status,
-        getDate(expires_at),
-        consent_id
-      )
+      ? data.map(
+          ({ created_at, account_ids, status, expires_at, consent_id }) =>
+            createDataAccount(
+              getDate(created_at),
+              account_ids.join(", "),
+              status,
+              getDate(expires_at),
+              consent_id
+            )
         )
       : [];
 

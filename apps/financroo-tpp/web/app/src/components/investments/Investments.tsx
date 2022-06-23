@@ -33,7 +33,9 @@ export default function Investments() {
           id: "invest-button",
           title: "Contribute now",
           onClick: () => {
-            history.push("/investments/contribute");
+            if (window.spec !== "cdr") {
+              history.push("/investments/contribute");
+            }
           },
         }}
       />

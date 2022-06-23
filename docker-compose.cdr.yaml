@@ -13,7 +13,7 @@ version: '3.0'
 services:
   mock-register:
     container_name: mock-register
-    image: consumerdataright/mock-register
+    image: docker.cloudentity.io/cdr-mock-register:0.4.2
     volumes:
       - ./mount/cdr/registry-seed.json:/app/admin/Data/seed-data.json
     ports:
@@ -29,8 +29,8 @@ services:
     image: docker.cloudentity.io/cdr-mock-data-holder:0.0.3
     volumes:
       - ./mount/cdr/holder.json:/app/idsvr/appsettings.Production.json
-      - ./mount/cdr/holder-seed.json:/app/manage/Data/seed-data.json
-      - ./mount/cdr/mock-data-holder/resource-api-appsettings.json:/app/resource/appsettings.Production.json
+      #- ./mount/cdr/holder-seed.json:/app/manage/Data/seed-data.json
+      - ./mount/cdr/holder-resource-api-appsettings.json:/app/resource/appsettings.Production.json
     ports:
       - "8000:8000"
       - "8001:8001"
@@ -43,13 +43,15 @@ services:
 
   mock-data-recipient:
     container_name: mock-data-recipient
-    image: docker.cloudentity.io/cdr-mock-data-recipient:0.0.5
+    image: docker.cloudentity.io/cdr-mock-data-recipient:0.0.11
     networks:
       default:
         aliases:
           - datarecipient.mock
     volumes:
       - ./mount/cdr/recipient.json:/app/web/appsettings.Production.json
+      - ./data/cdr/certs/client.pfx:/app/web/Certificates/client.pfx
+      - ./data/cdr/certs/mock-data-recipient.pfx:/app/web/Certificates/mock-data-recipient.pfx
     ports:
       - "9001:9001"
     environment:
@@ -62,20 +64,29 @@ services:
     ports:
       - "7080:8080"
     volumes:
-      - ./mount/consent-page-uk:/data
+      - ./mount/consent-page:/data
       - ./data/ca.pem:/ca.pem
       - ./data/bank_cert.pem:/bank_cert.pem
       - ./data/bank_key.pem:/bank_key.pem
+      - ./data/tpp_cert.pem:/tpp_cert.pem 
+      - ./data/tpp_key.pem:/tpp_key.pem
     env_file:
       - .env
     environment:
       - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
-      - BANK_URL=http://bank:8070
       - LOG_LEVEL=debug
       - SPEC=cdr
       - GIN_MODE=debug # change to release to disable gin debug
       - OTP_MODE=mock # change to custom to enable custom OTP handling
       - MFA_CLAIM=sub # for mobile use mobile_verified
+      - BANK_ID_CLAIM=customer_id
+      - BANK_URL=http://bank:8070
+      - BANK_CLIENT_TOKEN_URL=${ACP_URL}/${TENANT}/${SERVER}/oauth2/token
+      - BANK_CLIENT_ID=cw1ocudfotn6edhsiv8h 
+      - BANK_CLIENT_SECRET=pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0 
+      - BANK_CLIENT_SCOPES=bank:accounts.basic:read,bank:accounts.detail:read
+      - BANK_ACCOUNTS_ENDPOINT=http://bank:8070/internal/accounts
+
     depends_on:
       configuration:
         condition: service_completed_successfully
@@ -99,12 +110,11 @@ services:
       - LOGIN_AUTHORIZATION_SERVER_ID=bank-customers
       - LOGIN_TENANT_ID=${TENANT}
       - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/bank-customers
-      - OPENBANKING_SERVER_ID=cdr
+      - OPENBANKING_SERVER_ID=${SERVER}
       - SPEC=cdr
     depends_on:
       configuration:
         condition: service_completed_successfully
-
 
   consent-admin-portal:
     image: cloudentity/openbanking-quickstart-consent-admin-portal:${VERSION}
@@ -118,9 +128,52 @@ services:
       - ./data/bank_key.pem:/bank_key.pem
     environment:
       - SYSTEM_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
-      - OPENBANKING_WORKSPACE_ID=cdr
+      - OPENBANKING_WORKSPACE_ID=${SERVER}
       - SPEC=cdr
       - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/bank-admins
+    depends_on:
+      configuration:
+        condition: service_completed_successfully
+
+  financroo-tpp:
+    image: cloudentity/openbanking-quickstart-financroo-tpp:${VERSION}
+    container_name: financroo-tpp
+    restart: always
+    ports:
+      - "8091:8091"
+    volumes:
+      - ./data:/certs
+      - ./mount/financroo-tpp:/app/data
+    env_file:
+      - .env
+    environment:
+      - UI_URL=https://${APP_HOST}:8091
+      - TENANT=${TENANT}
+      - GIN_MODE=debug # change to release to disable gin debug
+      - SPEC=cdr
+      - OPENBANKING_SERVER_ID=${SERVER}
+      - BANK_URL=http://bank:8070
+      - ENABLE_TLS_SERVER=true
+    depends_on: 
+      configuration: 
+        condition: service_completed_successfully
+
+  bank:
+    image: cloudentity/openbanking-quickstart-bank:${VERSION}
+    container_name: bank
+    restart: always
+    ports:
+      - "8070:8070"
+    volumes:
+      - ./data/ca.pem:/ca.pem
+      - ./data/bank_cert.pem:/bank_cert.pem
+      - ./data/bank_key.pem:/bank_key.pem
+      - ./mount/bank-cdr:/app/data
+    environment:
+      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/${SERVER}
+      - SPEC=cdr
+      - GIN_MODE=debug
+      - USER_IDENTIFIER_CLAIM=customer_id
     depends_on:
       configuration:
         condition: service_completed_successfully
@@ -151,3 +204,5 @@ services:
       - --variables-file
       - /variables.yaml
       - --verbose  
+
+  

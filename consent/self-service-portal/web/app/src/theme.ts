@@ -1,6 +1,6 @@
-import { createMuiTheme, Theme } from "@material-ui/core";
+import { createTheme, Theme } from "@material-ui/core";
 
-declare module "@material-ui/core/styles/createMuiTheme" {
+declare module "@material-ui/core/styles/createTheme" {
   interface Theme {
     custom: {
       heading2: {
@@ -79,7 +79,7 @@ declare module "@material-ui/core/styles/createMuiTheme" {
   }
 }
 
-export const theme: Theme = createMuiTheme({
+export const theme: Theme = createTheme({
   custom: {
     heading2: {
       fontWeight: "normal",

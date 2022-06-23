@@ -14,6 +14,7 @@ import { api } from "../../api/api";
 import Progress from "../Progress";
 import { banks as banksArray } from "../banks";
 import InvestmentsContributeRedirecting from "./InvestmentsContributeRedirecting";
+import { CreateCSSProperties } from "@material-ui/core/styles/withStyles";
 
 export type BalanceType = {
   AccountId: string;
@@ -56,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 34,
     display: "flex",
     alignItems: "center",
-    ...theme.custom.caption,
+    ...(theme.custom.caption as CreateCSSProperties),
   },
   spacer: {
     flex: 1,
@@ -82,7 +83,7 @@ export default function InvestmentsContribute() {
 
   const {
     isLoading: fetchBanksProgress,
-    error: fetchBanksError,
+    // error: fetchBanksError,
     data: banksRes,
   } = useQuery("fetchBanks", api.fetchBanks, {
     refetchOnWindowFocus: false,
@@ -91,7 +92,7 @@ export default function InvestmentsContribute() {
 
   const {
     isLoading: fetchBalancesProgress,
-    error: fetchBalancesError,
+    // error: fetchBalancesError,
     data: balancesRes,
   } = useQuery("fetchBalances", api.fetchBalances, {
     refetchOnWindowFocus: false,
@@ -100,7 +101,7 @@ export default function InvestmentsContribute() {
 
   const {
     isLoading: fetchAccountsProgress,
-    error: fetchAccountsError,
+    // error: fetchAccountsError,
     data: accountsRes,
   } = useQuery("fetchAccounts", api.fetchAccounts, {
     refetchOnWindowFocus: false,

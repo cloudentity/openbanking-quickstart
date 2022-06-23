@@ -19,15 +19,9 @@ describe(`Tpp technical app`, () => {
   const mfaPage: MfaPage = new MfaPage();
   const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
 
-  // obuk 
   const basicPermission: string = `ReadAccountsBasic`;
   const detailPermission: string = `ReadAccountsDetail`;
 
-
-  // obbr 
-  const accountsReadPermission: string = `ACCOUNTS_READ`;
-  const accountsOverdraftLimitsReadPermission: string = `ACCOUNTS_OVERDRAFT_LIMITS_READ`;
-  const resourcesReadPermission: string = `RESOURCES_READ`;
 
   beforeEach(() => {
     tppLoginPage.visit()
@@ -35,43 +29,11 @@ describe(`Tpp technical app`, () => {
     tppLoginPage.visit();
   });
 
-  if (environmentVariables.isOBBRSpecification()) {
-    [
-      // FIXME restore when this fix has been made
-      // https://github.com/cloudentity/openbanking-quickstart/pull/108
-      // [accountsReadPermission, accountsOverdraftLimitsReadPermission, resourcesReadPermission],
-      [accountsReadPermission]
-      // [] // todo add better error handling in the app
-    ].forEach(permissions => {
-      it(`Happy path with permissions: ${permissions}`, () => {
-        tppLoginPage.checkAccountsReadPermission(permissions.includes(accountsReadPermission))
-        tppLoginPage.checkAccountsOverdraftLimitsReadPermission(permissions.includes(accountsOverdraftLimitsReadPermission))
-        tppLoginPage.checkResourcesReadPermission(permissions.includes(resourcesReadPermission))
-        tppLoginPage.next();
-        if (!permissions.includes(accountsReadPermission) || !permissions.includes(accountsOverdraftLimitsReadPermission) || !permissions.includes(resourcesReadPermission)) {
-          errorPage.assertError(`failed to register account access consent`)
-          return 
-        } 
-        tppIntentPage.login();
-        acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-        if (environmentVariables.isMfaEnabled()) {
-          mfaPage.typePin()
-        }
-        // TODO: consent page needs work with obbr permissions 
-        //consentPage.expandPermissions()
-        //consentPage.assertPermissions(permissions.length)
-        consentPage.confirm();
-        tppAuthenticatedPage.assertSuccess()
-      })
-    });
-  };
-
-  if (environmentVariables.isOBUKSpecification()) {
     [
       [basicPermission, detailPermission],
       [basicPermission],
-      [detailPermission]
-      // [] // todo add better error handling in the app
+      [detailPermission],
+      []  // none permissions selected - UI error page improvements AUT-5845
     ].forEach(permissions => {
       it(`Happy path with permissions: ${permissions}`, () => {
         tppLoginPage.checkBasicPermission(permissions.includes(basicPermission))
@@ -89,6 +51,7 @@ describe(`Tpp technical app`, () => {
           consentPage.assertPermissions(permissions.length)
           consentPage.confirm();
           if (!permissions.includes(basicPermission) && permissions.includes(detailPermission)) {
+            // ReadAccountsDetail permission selected - UI error page improvements AUT-5845
             errorPage.assertError(`failed to call bank get accounts`)
           } else {
             tppAuthenticatedPage.assertSuccess()
@@ -96,30 +59,25 @@ describe(`Tpp technical app`, () => {
         }
       })
     });
-  };
-
- 
 
   it(`Cancel on ACP login`, () => {
-    // FIXME restore when this fix has been made
-    // https://github.com/cloudentity/openbanking-quickstart/pull/108
-    // tppLoginPage.next();
-    // tppIntentPage.login();
-    // acpLoginPage.cancel();
-    // errorPage.assertError(`The user rejected the authentication`)
+    tppLoginPage.next();
+    tppIntentPage.login();
+    acpLoginPage.cancel();
+    // UI error page improvements AUT-5845
+    errorPage.assertError(`The user rejected the authentication`)
   })
 
   it(`Cancel on consent`, () => {
-    // FIXME restore when this fix has been made
-    // https://github.com/cloudentity/openbanking-quickstart/pull/108
-    // tppLoginPage.next();
-    // tppIntentPage.login();
-    // acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    // if (environmentVariables.isMfaEnabled()) {
-    //   mfaPage.typePin()
-    // }
-    // consentPage.cancel()
-    // errorPage.assertError(`rejected`)
+    tppLoginPage.next();
+    tppIntentPage.login();
+    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    if (environmentVariables.isMfaEnabled()) {
+      mfaPage.typePin()
+    }
+    consentPage.cancel()
+    // UI error page improvements AUT-5845
+    errorPage.assertError(`rejected`)
   })
 
 })

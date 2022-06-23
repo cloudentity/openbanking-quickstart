@@ -1,0 +1,72 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+
+<html>
+<head>
+  <link rel="stylesheet" href="/assets/material-components-web.min.css">
+  <script src="/assets/material-components-web.min.js"></script>
+  <link href="/assets/fonts.css" rel="stylesheet">
+  <link href="/assets/material-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <title>TPP sample app</title>
+</head>
+
+<body>
+<div class="aut-banner">
+  <div class="aut-banner-logo">
+    <img src="/assets/images/cloudentity-logo-short.png" alt="Cloudentity ACP">
+    <span>TPP sample app</span>
+  </div>
+</div>
+
+<div class="aut-container" style="padding: 5px;">
+  <div class="aut-demo-info">
+    <div class="material-icons aut-demo-info-icon">error_outline</div>
+    <div class="aut-demo-info-text" id="fdx-login-info-text">
+      <p style="color: rgba(0, 0, 0, 0.6);">In the FDX, the flow starts with the TPP sending authorization_details to the PAR endpoint.</p>
+    </div>
+  </div>
+</div>
+
+<div class="mdc-card aut-container" style="padding: 16px 22px">
+
+  <pre id="fdx-login-authorization-details">
+{
+   "authorization_details":[
+      {
+         "type":"fdx_v1.0",
+         "consentRequest":{
+            "durationType":"ONE_TIME",
+            "lookbackPeriod":60,
+            "resources":[
+               {
+                  "resourceType":"ACCOUNT",
+                  "dataClusters":[
+                     "ACCOUNT_DETAILED",
+                     "TRANSACTIONS",
+                     "STATEMENTS"
+                  ]
+               },
+               {
+                  "resourceType":"CUSTOMER",
+                  "dataClusters":[
+                     "CUSTOMER_CONTACT"
+                  ]
+               }
+            ]
+         }
+      }
+   ]
+}
+  </pre>
+
+  <form action="/login" method="post">
+    <div class="aut-form-actions" style="padding: 0">
+      <button class="mdc-button mdc-button--raised" type="submit" name="action" value="Next" style="margin-right: 0" id="fdx-login-next-button">
+        <div class="mdc-button__ripple"></div>
+        <span class="mdc-button__label">Next</span>
+      </button>
+    </div>
+  </form>
+</div>
+</body>
+</html>

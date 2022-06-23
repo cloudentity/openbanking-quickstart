@@ -1,8 +1,8 @@
 import React from "react";
 
-import { theme } from "../theme";
 import Chip from "./Chip";
 import SearchInput from "./SearchInput";
+import { theme } from "../theme";
 
 export const drawerStyles = {
   name: {
@@ -116,9 +116,8 @@ export function getDate(date) {
 
 export const permissionsDict = {
   CommonCustomerBasicRead: {
-    Cluster: "Your Name and occupation", 
-    Language: 
-    "Name Occupation", 
+    Cluster: "Your Name and occupation",
+    Language: "Name Occupation",
   },
   ReadAccountsBasic: {
     Cluster: "Your Account Details",
@@ -220,9 +219,15 @@ const availableConstentTypes = [
 export const availableConstentTypesJoined = availableConstentTypes.join(",");
 
 export function getRawConsents(consents) {
-  return consents.filter(c => availableConstentTypes.includes(c.consent_type)).map(c => {
-    return { consent_type: c.consent_type, consent: c, accounts: c?.account_ids ?? [] }
-  })
+  return consents
+    .filter((c) => availableConstentTypes.includes(c.consent_type))
+    .map((c) => {
+      return {
+        consent_type: c.consent_type,
+        consent: c,
+        accounts: c?.account_ids ?? [],
+      };
+    });
 }
 
 export enum ConsentStatus {
@@ -233,32 +238,24 @@ export enum ConsentStatus {
 
 export function getChipForStatus(client?: ClientType) {
   return (
-    (client?.mainStatus === ConsentStatus.Active && 
-      <Chip type="active" id={`status-active-${client?.client_id}`}>Active</Chip>
-    ) ||
+    (client?.mainStatus === ConsentStatus.Active && (
+      <Chip type="active" id={`status-active-${client?.client_id}`}>
+        Active
+      </Chip>
+    )) ||
     (client?.mainStatus === ConsentStatus.Authorised && (
-      <Chip type="active" id={`status-authorised-${client?.client_id}`}>Authorised</Chip>
+      <Chip type="active" id={`status-authorised-${client?.client_id}`}>
+        Authorised
+      </Chip>
     )) ||
     (client?.mainStatus === ConsentStatus.Inactive && (
-      <Chip type="inactive" id={`status-inactive-${client?.client_id}`}>Inactive</Chip>
+      <Chip type="inactive" id={`status-inactive-${client?.client_id}`}>
+        Inactive
+      </Chip>
     )) ||
     null
   );
 }
-
-type ConsentType = {
-  Charges: string | null;
-  ConsentId: string | null;
-  CreationDateTime: string | null;
-  CutOffDateTime: string | null;
-  ExpectedExecutionDateTime: string | null;
-  ExpectedSettlementDateTime: string | null;
-  Initiation: string | null;
-  Status: string | null;
-  StatusUpdateDateTime: string | null;
-  Permissions?: string[];
-  ExpirationDateTime?: string | null;
-};
 
 export type ClientType = {
   client_id: string;
@@ -309,9 +306,11 @@ export const currencyDict = {
 };
 
 export function getStatus(client: ClientType) {
+  const accountConsents = ["account_access", "consents", "cdr_arrangement"];
   const found = client?.consents?.find(
     (consent) =>
       consent &&
+      accountConsents.includes(consent.consent_type) &&
       consent.status === "Authorised"
   );
   return found ? ConsentStatus.Active : ConsentStatus.Inactive;

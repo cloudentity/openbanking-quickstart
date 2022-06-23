@@ -30,6 +30,7 @@ const (
 	OBUK Spec = "obuk"
 	OBBR Spec = "obbr"
 	CDR  Spec = "cdr"
+	FDX  Spec = "fdx"
 )
 
 type Config struct {
@@ -41,7 +42,6 @@ type Config struct {
 	RootCA           string        `env:"ROOT_CA" envDefault:"/ca.pem"`
 	CertFile         string        `env:"CERT_FILE" envDefault:"/bank_cert.pem"`
 	KeyFile          string        `env:"KEY_FILE" envDefault:"/bank_key.pem"`
-	BankURL          *url.URL      `env:"BANK_URL"`
 	BankIDClaim      string        `env:"BANK_ID_CLAIM" envDefault:"sub"`
 	EnableMFA        bool          `env:"ENABLE_MFA"`
 	MFAProvider      string        `env:"MFA_PROVIDER"`
@@ -60,6 +60,8 @@ type Config struct {
 	HyprBaseURL      string        `env:"HYPR_BASE_URL"`
 	HyprAppId        string        `env:"HYPR_APP_ID"`
 	Otp              OtpConfig
+	EnableTLSServer  bool `env:"ENABLE_TLS_SERVER" envDefault:"true"`
+	BankClientConfig BankClientConfig
 }
 
 type OtpConfig struct {
@@ -68,6 +70,17 @@ type OtpConfig struct {
 	VerifyURL  string        `env:"OTP_VERIFY_URL"`
 	Timeout    time.Duration `env:"OTP_TIMEOUT" envDefault:"10s"`
 	AuthHeader string        `env:"OTP_AUTH_HEADER"`
+}
+
+type BankClientConfig struct {
+	URL          *url.URL `env:"BANK_URL,required"`
+	AccountsURL  *url.URL `env:"BANK_ACCOUNTS_ENDPOINT"`
+	CertFile     string   `env:"BANK_CLIENT_CERT_FILE"`
+	KeyFile      string   `env:"BANK_CLIENT_KEY_FILE"`
+	TokenURL     string   `env:"BANK_CLIENT_TOKEN_URL"`
+	ClientID     string   `env:"BANK_CLIENT_ID"`
+	ClientSecret string   `env:"BANK_CLIENT_SECRET"`
+	Scopes       []string `env:"BANK_CLIENT_SCOPES"`
 }
 
 func (c *Config) ClientConfig() acpclient.Config {
@@ -168,21 +181,28 @@ func NewServer() (Server, error) {
 	case OBBR:
 		server.BankClient = NewOBBRBankClient(server.Config)
 	case CDR:
-		server.BankClient = NewCDREnergyClient(server.Config)
+		server.BankClient = NewCDRBankClient(server.Config)
+	case FDX:
+		server.BankClient = NewFDXClient(server.Config)
 	default:
 		return Server{}, errors.New("invalid SPEC configuration")
 	}
 
-	if db, err = InitDB(server.Config); err != nil {
-		return server, errors.Wrapf(err, "failed to init db")
-	}
+	if server.Config.EnableMFA {
+		logrus.Debugf("mfa is enabled... loading otp db")
+		if db, err = InitDB(server.Config); err != nil {
+			return server, errors.Wrapf(err, "failed to init db")
+		}
 
-	if server.OTPRepo, err = NewOTPRepo(db); err != nil {
-		return server, errors.Wrapf(err, "failed to init otp repo")
-	}
+		if server.OTPRepo, err = NewOTPRepo(db); err != nil {
+			return server, errors.Wrapf(err, "failed to init otp repo")
+		}
 
-	if server.OTPHandler, err = NewOTPHandler(server.Config, server.OTPRepo, server.SMSClient); err != nil {
-		return server, errors.Wrapf(err, "failed to init otp handler")
+		if server.OTPHandler, err = NewOTPHandler(server.Config, server.OTPRepo, server.SMSClient); err != nil {
+			return server, errors.Wrapf(err, "failed to init otp handler")
+		}
+	} else {
+		logrus.Debugf("mfa is disabled... skipping otp db load")
 	}
 
 	tools := ConsentTools{Trans: server.Trans, Config: server.Config}
@@ -199,6 +219,9 @@ func NewServer() (Server, error) {
 		server.PaymentMFAConsentProvider = &OBBRPaymentMFAConsentProvider{&server, tools}
 	case CDR:
 		server.AccountAccessConsentHandler = &CDRAccountAccessConsentHandler{&server, tools}
+	case FDX:
+		server.AccountAccessConsentHandler = &FDXAccountAccessConsentHandler{&server, tools}
+		server.AccountAccessMFAConsentProvider = &FDXAccountAccessMFAConsentProvider{&server, tools}
 	default:
 		return server, errors.Wrapf(err, "unsupported spec %s", server.Config.Spec)
 	}
@@ -267,7 +290,12 @@ func (s *Server) Start() error {
 	base.GET("/", s.Get())
 	base.POST("/", s.Post())
 
-	return r.RunTLS(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)), s.Config.CertFile, s.Config.KeyFile)
+	if s.Config.EnableTLSServer {
+		logrus.Debugf("running consent page server tls")
+		return r.RunTLS(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)), s.Config.CertFile, s.Config.KeyFile)
+	}
+	logrus.Debugf("running consent page server non-tls")
+	return r.Run(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)))
 }
 
 func main() {

@@ -28,7 +28,6 @@ const useStyles = makeStyles((theme: Theme) => ({
     "&:first-of-type": {
       marginRight: 16,
     },
-    textTransform: "none",
     ...theme.custom.button,
     color: "#626576",
     "&:disabled": {
@@ -68,18 +67,12 @@ function AccountAccessDrawer({ drawerData, setDrawerData }: Props) {
 
   const permissionDates = {
     Authorised: getDate(drawerData?.created_at),
-    "Last updated": getDate(
-      drawerData?.updated_at
-    ),
-    "Active until": getDate(
-      drawerData?.expires_at
-    ),
+    "Last updated": getDate(drawerData?.updated_at),
+    "Active until": getDate(drawerData?.expires_at),
   };
 
   const clusters = uniq(
-    drawerData?.permissions?.map(
-      (v) => permissionsDict[v].Cluster
-    ) ?? []
+    drawerData?.permissions?.map((v) => permissionsDict[v].Cluster) ?? []
   );
 
   const permissionItems = clusters.map((cluster) => ({

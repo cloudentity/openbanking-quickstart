@@ -80,6 +80,12 @@ const useStyles = makeStyles((theme) => ({
     display: "flex",
     justifyContent: "flex-end",
   },
+  heading: {
+    ...theme.custom.heading6,
+  },
+  caption: {
+    ...theme.custom.caption,
+  },
 }));
 
 type Props = {
@@ -118,13 +124,13 @@ export default function InvestmentsContributeSummary({
           className={clsx([classes.information, classes.informationOneRow])}
           style={{ alignItems: "center", paddingBottom: 20 }}
         >
-          <div style={{ ...theme.custom.heading6 }}>PAYMENT TOTAL</div>
+          <div className={classes.heading}>PAYMENT TOTAL</div>
           <div>
             <Chip label={`£ ${amount}`} className={classes.chip} />
           </div>
         </div>
       </Field>
-      <Field style={{ ...theme.custom.caption }}>
+      <Field style={{ ...theme.custom.caption } as any}>
         To consent to this transaction, confirm the details below
       </Field>
       <Field label="Payee Information">
@@ -141,7 +147,7 @@ export default function InvestmentsContributeSummary({
       </Field>
       <Field label="Payment Information">
         <div className={clsx([classes.information, classes.informationOneRow])}>
-          <div style={{ ...theme.custom.heading6 }}>Bank Name</div>
+          <div className={classes.heading}>Bank Name</div>
           <div className={classes.bankRow}>
             {selectedBank?.name}
             <img
@@ -152,7 +158,7 @@ export default function InvestmentsContributeSummary({
           </div>
         </div>
       </Field>
-      <Field style={{ ...theme.custom.caption, marginBottom: 0 }}>
+      <Field style={{ ...theme.custom.caption, marginBottom: 0 } as any}>
         You will be securely transferred to <strong>Go Bank</strong> to
         authorize the payment
       </Field>

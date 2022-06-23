@@ -1,106 +1,104 @@
-import {
-  unstable_createMuiStrictModeTheme as createMuiTheme,
-  Theme,
-} from "@material-ui/core";
+import { createTheme, Theme } from "@material-ui/core/styles";
+import { CreateCSSProperties } from "@material-ui/core/styles/withStyles";
 
-declare module "@material-ui/core/styles/createMuiTheme" {
+declare module "@material-ui/core/styles/createTheme" {
   interface Theme {
     custom: {
       heading2: {
-        fontWeight: React.CSSProperties["fontWeight"];
-        fontSize: React.CSSProperties["fontSize"];
-        lineHeight: React.CSSProperties["lineHeight"];
+        fontWeight: CreateCSSProperties["fontWeight"];
+        fontSize: CreateCSSProperties["fontSize"];
+        lineHeight: CreateCSSProperties["lineHeight"];
       };
       heading3: {
-        fontWeight: React.CSSProperties["fontWeight"];
-        fontSize: React.CSSProperties["fontSize"];
-        lineHeight: React.CSSProperties["lineHeight"];
+        fontWeight: CreateCSSProperties["fontWeight"];
+        fontSize: CreateCSSProperties["fontSize"];
+        lineHeight: CreateCSSProperties["lineHeight"];
       };
       heading6: {
-        fontWeight: React.CSSProperties["fontWeight"];
-        fontSize: React.CSSProperties["fontSize"];
-        lineHeight: React.CSSProperties["lineHeight"];
-        color: React.CSSProperties["color"];
+        fontWeight: CreateCSSProperties["fontWeight"];
+        fontSize: CreateCSSProperties["fontSize"];
+        lineHeight: CreateCSSProperties["lineHeight"];
+        color: CreateCSSProperties["color"];
       };
       label: {
-        fontWeight: React.CSSProperties["fontWeight"];
-        fontSize: React.CSSProperties["fontSize"];
-        lineHeight: React.CSSProperties["lineHeight"];
-        color: React.CSSProperties["color"];
+        fontWeight: CreateCSSProperties["fontWeight"];
+        fontSize: CreateCSSProperties["fontSize"];
+        lineHeight: CreateCSSProperties["lineHeight"];
+        color: CreateCSSProperties["color"];
       };
       caption: {
-        fontWeight: React.CSSProperties["fontWeight"];
-        fontSize: React.CSSProperties["fontSize"];
-        lineHeight: React.CSSProperties["lineHeight"];
-        color: React.CSSProperties["color"];
+        fontWeight: CreateCSSProperties["fontWeight"];
+        fontSize: CreateCSSProperties["fontSize"];
+        lineHeight: CreateCSSProperties["lineHeight"];
+        color: CreateCSSProperties["color"];
       };
       button: {
-        fontWeight: React.CSSProperties["fontWeight"];
-        fontSize: React.CSSProperties["fontSize"];
-        lineHeight: React.CSSProperties["lineHeight"];
-        color: React.CSSProperties["color"];
-        textTransform: React.CSSProperties["textTransform"];
+        fontWeight: CreateCSSProperties["fontWeight"];
+        fontSize: CreateCSSProperties["fontSize"];
+        lineHeight: CreateCSSProperties["lineHeight"];
+        color: CreateCSSProperties["color"];
+        textTransform: CreateCSSProperties["textTransform"];
       };
       body1: {
-        fontSize: React.CSSProperties["fontSize"];
-        lineHeight: React.CSSProperties["lineHeight"];
+        fontSize: CreateCSSProperties["fontSize"];
+        lineHeight: CreateCSSProperties["lineHeight"];
       };
       body2: {
-        fontSize: React.CSSProperties["fontSize"];
-        lineHeight: React.CSSProperties["lineHeight"];
+        fontSize: CreateCSSProperties["fontSize"];
+        lineHeight: CreateCSSProperties["lineHeight"];
       };
     };
   }
   interface ThemeOptions {
     custom?: {
       heading2?: {
-        fontWeight?: React.CSSProperties["fontWeight"];
-        fontSize?: React.CSSProperties["fontSize"];
-        lineHeight?: React.CSSProperties["lineHeight"];
+        fontWeight?: CreateCSSProperties["fontWeight"];
+        fontSize?: CreateCSSProperties["fontSize"];
+        lineHeight?: CreateCSSProperties["lineHeight"];
       };
       heading3?: {
-        fontWeight?: React.CSSProperties["fontWeight"];
-        fontSize?: React.CSSProperties["fontSize"];
-        lineHeight?: React.CSSProperties["lineHeight"];
+        fontWeight?: CreateCSSProperties["fontWeight"];
+        fontSize?: CreateCSSProperties["fontSize"];
+        lineHeight?: CreateCSSProperties["lineHeight"];
       };
       heading6?: {
-        fontWeight?: React.CSSProperties["fontWeight"];
-        fontSize?: React.CSSProperties["fontSize"];
-        lineHeight?: React.CSSProperties["lineHeight"];
-        color?: React.CSSProperties["color"];
+        fontWeight?: CreateCSSProperties["fontWeight"];
+        fontSize?: CreateCSSProperties["fontSize"];
+        lineHeight?: CreateCSSProperties["lineHeight"];
+        color?: CreateCSSProperties["color"];
       };
       label?: {
-        fontWeight?: React.CSSProperties["fontWeight"];
-        fontSize?: React.CSSProperties["fontSize"];
-        lineHeight?: React.CSSProperties["lineHeight"];
-        color?: React.CSSProperties["color"];
+        fontWeight?: CreateCSSProperties["fontWeight"];
+        fontSize?: CreateCSSProperties["fontSize"];
+        lineHeight?: CreateCSSProperties["lineHeight"];
+        color?: CreateCSSProperties["color"];
       };
       caption?: {
-        fontWeight?: React.CSSProperties["fontWeight"];
-        fontSize?: React.CSSProperties["fontSize"];
-        lineHeight?: React.CSSProperties["lineHeight"];
-        color?: React.CSSProperties["color"];
+        fontWeight?: CreateCSSProperties["fontWeight"];
+        fontSize?: CreateCSSProperties["fontSize"];
+        lineHeight?: CreateCSSProperties["lineHeight"];
+        color?: CreateCSSProperties["color"];
       };
       button?: {
-        fontWeight?: React.CSSProperties["fontWeight"];
-        fontSize?: React.CSSProperties["fontSize"];
-        lineHeight?: React.CSSProperties["lineHeight"];
-        color?: React.CSSProperties["color"];
-        textTransform?: React.CSSProperties["textTransform"];
+        fontWeight?: CreateCSSProperties["fontWeight"];
+        fontSize?: CreateCSSProperties["fontSize"];
+        lineHeight?: CreateCSSProperties["lineHeight"];
+        color?: CreateCSSProperties["color"];
+        textTransform?: CreateCSSProperties["textTransform"];
       };
       body1?: {
-        fontSize?: React.CSSProperties["fontSize"];
-        lineHeight?: React.CSSProperties["lineHeight"];
+        fontSize?: CreateCSSProperties["fontSize"];
+        lineHeight?: CreateCSSProperties["lineHeight"];
       };
       body2?: {
-        fontSize?: React.CSSProperties["fontSize"];
-        lineHeight?: React.CSSProperties["lineHeight"];
+        fontSize?: CreateCSSProperties["fontSize"];
+        lineHeight?: CreateCSSProperties["lineHeight"];
       };
     };
   }
 }
 
-export const theme: Theme = createMuiTheme({
+export const theme: Theme = createTheme({
   custom: {
     heading2: {
       fontWeight: "normal",

@@ -19,19 +19,21 @@ type Spec string
 const (
 	OBUK Spec = "obuk"
 	OBBR Spec = "obbr"
+	CDR  Spec = "cdr"
 )
 
 type Config struct {
-	Port         int           `env:"PORT" envDefault:"8070"`
-	ClientID     string        `env:"CLIENT_ID" envDefault:"bukj5p6k7qdmm5ppbi4g"`
-	IssuerURL    *url.URL      `env:"ISSUER_URL,required"`
-	Timeout      time.Duration `env:"TIMEOUT" envDefault:"5s"`
-	RootCA       string        `env:"ROOT_CA" envDefault:"/ca.pem"`
-	CertFile     string        `env:"CERT_FILE" envDefault:"/bank_cert.pem"`
-	KeyFile      string        `env:"KEY_FILE" envDefault:"/bank_key.pem"`
-	Spec         Spec          `env:"SPEC,required"`
-	GINMODE      string        `env:"GIN_MODE"`
-	SeedFilePath string
+	Port                int           `env:"PORT" envDefault:"8070"`
+	ClientID            string        `env:"CLIENT_ID" envDefault:"bukj5p6k7qdmm5ppbi4g"`
+	IssuerURL           *url.URL      `env:"ISSUER_URL,required"`
+	Timeout             time.Duration `env:"TIMEOUT" envDefault:"5s"`
+	RootCA              string        `env:"ROOT_CA" envDefault:"/ca.pem"`
+	CertFile            string        `env:"CERT_FILE" envDefault:"/bank_cert.pem"`
+	KeyFile             string        `env:"KEY_FILE" envDefault:"/bank_key.pem"`
+	Spec                Spec          `env:"SPEC,required"`
+	GINMODE             string        `env:"GIN_MODE"`
+	UserIdentifierClaim string        `env:"USER_IDENTIFIER_CLAIM" envDefault:"sub"`
+	SeedFilePath        string
 }
 
 func (c *Config) ClientConfig() acpclient.Config {
@@ -56,6 +58,8 @@ func LoadConfig() (config Config, err error) {
 		config.SeedFilePath = fmt.Sprintf("data/%s-data.json", OBUK)
 	case OBBR:
 		config.SeedFilePath = fmt.Sprintf("data/%s-data.json", OBBR)
+	case CDR:
+		config.SeedFilePath = fmt.Sprintf("data/%s-data.json", CDR)
 	}
 
 	if config.GINMODE == "debug" {
@@ -112,6 +116,12 @@ func (s *Server) Start() error {
 		r.GET("/accounts/v1/accounts/:accountID/balances", s.Get(NewOBBRGetBalanceHandler))
 		r.GET("/internal/balances", s.Get(NewOBBRGetBalancesInternalHandler))
 		r.POST("/payments/v1/pix/payments", s.Post(NewOBBRCreatePaymentHandler))
+
+	case CDR:
+		r.POST("/internal/accounts", s.Get(NewCDRGetAccountsInternalHandler))
+		r.GET("/banking/accounts", s.Get(NewCDRGetAccountsHandler))
+		r.GET("/banking/accounts/:accountId/transactions", s.Get(NewCDRGetTransactionsHandler))
+		r.GET("/banking/accounts/balances", s.Get(NewCDRGetBalancesHandler))
 
 	default:
 		return fmt.Errorf("unsupported spec %s", s.Config.Spec)

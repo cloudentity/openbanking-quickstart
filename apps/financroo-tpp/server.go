@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/securecookie"
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 	bolt "go.etcd.io/bbolt"
 	"gopkg.in/go-playground/validator.v9"
 
@@ -38,7 +39,7 @@ func NewServer() (Server, error) {
 	}
 
 	switch server.Config.Spec {
-	case "obuk":
+	case OBUK:
 		server.Config.ClientScopes = []string{"accounts", "payments", "openid", "offline_access"}
 		if server.Clients, err = InitClients(server.Config, NewOBUKSigner, NewOBUKClient, NewOBUKConsentClient); err != nil {
 			return server, errors.Wrapf(err, "failed to create clients")
@@ -46,12 +47,20 @@ func NewServer() (Server, error) {
 		if server.LoginURLBuilder, err = NewOBUKLoginURLBuilder(); err != nil {
 			return server, errors.Wrapf(err, "failed to create login url builder")
 		}
-	case "obbr":
+	case OBBR:
 		server.Config.ClientScopes = []string{"accounts", "payments", "openid", "offline_access", "consents"}
 		if server.Clients, err = InitClients(server.Config, NewOBBRSigner, NewOBBRClient, NewOBBRConsentClient); err != nil {
 			return server, errors.Wrapf(err, "failed to create clients")
 		}
 		if server.LoginURLBuilder, err = NewOBBRLoginURLBuilder(server.Clients.AcpAccountsClient); err != nil {
+			return server, errors.Wrapf(err, "failed to create login url builder")
+		}
+	case CDR:
+		server.Config.ClientScopes = []string{"offline_access", "openid", "bank:accounts.basic:read", "bank:accounts.detail:read", "bank:transactions:read", "common:customer.basic:read"} // TODO
+		if server.Clients, err = InitClients(server.Config, nil, NewCDRClient, nil); err != nil {
+			return server, errors.Wrapf(err, "failed to create clients")
+		}
+		if server.LoginURLBuilder, err = NewCDRLoginURLBuilder(server.Config); err != nil {
 			return server, errors.Wrapf(err, "failed to create login url builder")
 		}
 	default:
@@ -102,5 +111,10 @@ func (s *Server) Start() error {
 		})
 	})
 
-	return r.RunTLS(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)), s.Config.CertFile, s.Config.KeyFile)
+	if s.Config.EnableTLSServer {
+		logrus.Debugf("running financroo server tls")
+		return r.RunTLS(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)), s.Config.CertFile, s.Config.KeyFile)
+	}
+	logrus.Debugf("running financroo server non-tls")
+	return r.Run(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)))
 }

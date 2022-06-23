@@ -12,7 +12,7 @@ import ApplicationSimpleCard from "./ApplicationSimpleCard";
 
 const useStyles = makeStyles((theme: Theme) => ({
   filterTitle: {
-    ...theme.custom.label,
+  //  ...theme.custom.label,
     marginBottom: 12,
   },
   filterChips: {
@@ -84,10 +84,10 @@ export default function Dashboard({
                 <Grid item xs={8}>
                   {clientConsents.length === 0 ? (
                     <div style={{ textAlign: "center", marginTop: 64 }}>
-                      <Typography variant={"h3"} style={{ color: "#626576" }}>
+                      <Typography id="no-account-title" variant={"h3"} style={{ color: "#626576" }}>
                         No connected accounts
                       </Typography>
-                      <Typography style={{ marginTop: 12, color: "#A0A3B5" }}>
+                      <Typography id="no-account-subtitle" style={{ marginTop: 12, color: "#A0A3B5" }}>
                         You haven’t connected any accounts yet to manage access
                       </Typography>
                       <img

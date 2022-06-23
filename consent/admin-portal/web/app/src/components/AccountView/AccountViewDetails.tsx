@@ -105,7 +105,7 @@ export default function AccountViewDetails({
       .deleteClient({ id, provider_type })
       .then(fetchClients)
       .then((res) => {
-        setClients(res?.clients || [])
+        setClients(res?.clients || []);
       })
       .catch((err) => console.log(err))
       .finally(() => setProgress(false));

@@ -277,6 +277,49 @@ func (c *ConsentTools) GetCDRAccountAccessConsentTemplateData(
 	}
 }
 
+func (c *ConsentTools) GetFDXAccountAccessConsentTemplateData(
+	loginRequest LoginRequest,
+	consent *obModels.GetFDXConsentResponse,
+	accounts InternalAccounts,
+) map[string]interface{} {
+	var (
+		expirationDate string
+		headTitle      = c.Trans.T("fdx.account.headTitle")
+		title          = c.Trans.T("fdx.account.title")
+	)
+
+	for i, a := range accounts.Accounts {
+		accounts.Accounts[i] = a
+	}
+
+	clientName := c.GetClientName(nil)
+
+	return map[string]interface{}{
+		"trans": map[string]interface{}{
+			"headTitle":      headTitle,
+			"title":          title,
+			"selectAccounts": c.Trans.T("fdx.account.selectAccounts"),
+			"reviewData":     c.Trans.T("fdx.account.review_data"),
+			"permissions":    c.Trans.T("fdx.account.permissions"),
+			"purpose":        c.Trans.T("fdx.account.purpose"),
+			"purposeDetail":  c.Trans.T("fdx.account.purposeDetail"),
+			"expiration": c.Trans.TD("fdx.account.expiration", map[string]interface{}{
+				"client_name":     clientName,
+				"expiration_date": expirationDate,
+			}),
+			"cancel":   c.Trans.T("fdx.account.cancel"),
+			"agree":    c.Trans.T("fdx.account.agree"),
+			"continue": c.Trans.T("fdx.account.continue"),
+		},
+		"login_request":   loginRequest,
+		"accounts":        accounts.Accounts,
+		"resources":       consent.FdxConsent.Resources,
+		"client_name":     clientName,
+		"expiration_date": expirationDate,
+		"ctx":             consent.AuthenticationContext,
+	}
+}
+
 type PaymentConsentTemplateData struct {
 	AccountName    string
 	SortCode       string

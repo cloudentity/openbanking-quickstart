@@ -3,9 +3,12 @@ package main
 import (
 	"fmt"
 
+	"github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/client/banking"
 	obbrAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/client/accounts"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client/balances"
 	"github.com/gin-gonic/gin"
+	"github.com/go-openapi/runtime"
+	"github.com/go-openapi/strfmt"
 )
 
 type Balance struct {
@@ -32,6 +35,31 @@ func (o *OBUKClient) GetBalances(c *gin.Context, accessToken string, bank Connec
 			AccountID: string(*a.AccountID),
 			Amount:    string(*amount.Amount),
 			Currency:  string(*amount.Currency),
+			BankID:    bank.BankID,
+		})
+	}
+
+	return balancesData, nil
+}
+
+func (o *CDRClient) GetBalances(c *gin.Context, accessToken string, bank ConnectedBank) (balancesData []Balance, err error) {
+	var resp *banking.ListBalancesBulkOK
+
+	if resp, err = o.Banking.Banking.ListBalancesBulk(
+		banking.NewListBalancesBulkParams().
+			WithDefaults(),
+		runtime.ClientAuthInfoWriterFunc(func(request runtime.ClientRequest, registry strfmt.Registry) error {
+			return request.SetHeaderParam("Authorization", fmt.Sprintf("Bearer %s", accessToken))
+		}),
+	); err != nil {
+		return []Balance{}, err
+	}
+
+	for _, balance := range resp.Payload.Data.Balances {
+		balancesData = append(balancesData, Balance{
+			AccountID: *balance.AccountID,
+			Amount:    *balance.AvailableBalance,
+			Currency:  balance.Currency,
 			BankID:    bank.BankID,
 		})
 	}

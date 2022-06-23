@@ -29,7 +29,6 @@ describe(`Smoke Tpp technical app`, () => {
     tppLoginPage.visit();
   });
 
-  if (environmentVariables.isOBUKSpecification()) {
     [
       [basicPermission, detailPermission],
       [basicPermission],
@@ -40,6 +39,7 @@ describe(`Smoke Tpp technical app`, () => {
         tppLoginPage.checkDetailPermission(permissions.includes(detailPermission))
         tppLoginPage.next();
         if (!permissions.includes(basicPermission) && !permissions.includes(detailPermission)) {
+          // UI error page improvements AUT-5845
           errorPage.assertError(`Invalid consent request`)
         } else {
           tppIntentPage.login();
@@ -51,6 +51,7 @@ describe(`Smoke Tpp technical app`, () => {
           consentPage.assertPermissions(permissions.length)
           consentPage.confirm();
           if (!permissions.includes(basicPermission) && permissions.includes(detailPermission)) {
+            // UI error page improvements AUT-5845
             errorPage.assertError(`failed to call bank get accounts`)
           } else {
             tppAuthenticatedPage.assertSuccess()
@@ -58,6 +59,5 @@ describe(`Smoke Tpp technical app`, () => {
         }
       })
     });
-  };
 
 })

@@ -35,16 +35,16 @@
                   "ClientUri": "https://mocksoftware/mybudgetapp",
                   "TosUri": "https://mocksoftware/mybudgetapp/terms",
                   "PolicyUri": "https://mocksoftware/mybudgetapp/policy",
-                  "RecipientBaseUri": "https://datarecipient.mock:9001",
-                  "RevocationUri": "https://datarecipient.mock:9001/revocation",
-                  "RedirectUris": "https://datarecipient.mock:9001/consent/callback https://datarecipient.mock:9001/consent/callback2",
-                  "JwksUri": "https://datarecipient.mock:9001/jwks",
+                  "RecipientBaseUri": "${DATA_RECIPIENT_URL}",
+                  "RevocationUri": "${DATA_RECIPIENT_URL}/revocation",
+                  "RedirectUris": "${DATA_RECIPIENT_URL}/consent/callback ${DATA_RECIPIENT_URL}/consent/callback2",
+                  "JwksUri": "${DATA_RECIPIENT_URL}/jwks",
                   "Scope": "openid profile bank:accounts.basic:read bank:accounts.detail:read bank:transactions:read bank:payees:read bank:regular_payments:read common:customer.basic:read common:customer.detail:read cdr:registration introspect_tokens revoke_tokens",
                   "StatusId": 1,
                   "Certificates": [
                     {
                       "CommonName": "MockDataRecipient",
-                      "Thumbprint": "58D76F7A61CD726DA1C54F6898E8E69EA4C88060"
+                      "Thumbprint": "973CA54CAFA7037A51CF8DDC1655257B19D63A33"
                     }
                   ]
                 }
@@ -98,7 +98,7 @@
                   "Certificates": [
                     {
                       "CommonName": "MockDataRecipient",
-                      "Thumbprint": "58D76F7A61CD726DA1C54F6898E8E69EA4C88060"
+                      "Thumbprint": "973CA54CAFA7037A51CF8DDC1655257B19D63A33"
                     }
                   ]
                 }
@@ -152,7 +152,7 @@
                   "Certificates": [
                     {
                       "CommonName": "MockDataRecipient",
-                      "Thumbprint": "58D76F7A61CD726DA1C54F6898E8E69EA4C88060"
+                      "Thumbprint": "973CA54CAFA7037A51CF8DDC1655257B19D63A33"
                     }
                   ]
                 }
@@ -206,7 +206,7 @@
                   "Certificates": [
                     {
                       "CommonName": "MockDataRecipient",
-                      "Thumbprint": "58D76F7A61CD726DA1C54F6898E8E69EA4C88060"
+                      "Thumbprint": "973CA54CAFA7037A51CF8DDC1655257B19D63A33"
                     }
                   ]
                 }
@@ -260,7 +260,7 @@
                   "Certificates": [
                     {
                       "CommonName": "MockDataRecipient",
-                      "Thumbprint": "58D76F7A61CD726DA1C54F6898E8E69EA4C88060"
+                      "Thumbprint": "973CA54CAFA7037A51CF8DDC1655257B19D63A33"
                     }
                   ]
                 }
@@ -314,7 +314,7 @@
                   "Certificates": [
                     {
                       "CommonName": "MockDataRecipient",
-                      "Thumbprint": "58D76F7A61CD726DA1C54F6898E8E69EA4C88060"
+                      "Thumbprint": "973CA54CAFA7037A51CF8DDC1655257B19D63A33"
                     }
                   ]
                 }
@@ -1266,7 +1266,7 @@
                 "Version": 1,
                 "PublicBaseUri": "https://mock-data-holder:8000",
                 "ResourceBaseUri": "https://mock-data-holder:8002",
-                "InfoSecBaseUri": "https://authorization.cloudentity.com:8443/default/cdr",
+                "InfoSecBaseUri": "${URL}",
                 "ExtensionBaseUri": "",
                 "WebsiteUri": "https://bank1/"
               },
@@ -1586,7 +1586,7 @@
                   "Certificates": [
                     {
                       "CommonName": "MockDataRecipient",
-                      "Thumbprint": "58D76F7A61CD726DA1C54F6898E8E69EA4C88060"
+                      "Thumbprint": "973CA54CAFA7037A51CF8DDC1655257B19D63A33"
                     }
                   ]
                 },
@@ -1608,7 +1608,7 @@
                   "Certificates": [
                     {
                       "CommonName": "MockDataRecipient",
-                      "Thumbprint": "58D76F7A61CD726DA1C54F6898E8E69EA4C88060"
+                      "Thumbprint": "973CA54CAFA7037A51CF8DDC1655257B19D63A33"
                     }
                   ]
                 },
@@ -1630,7 +1630,7 @@
                   "Certificates": [
                     {
                       "CommonName": "MockDataRecipient",
-                      "Thumbprint": "58D76F7A61CD726DA1C54F6898E8E69EA4C88060"
+                      "Thumbprint": "973CA54CAFA7037A51CF8DDC1655257B19D63A33"
                     }
                   ]
                 },
@@ -1652,7 +1652,7 @@
                   "Certificates": [
                     {
                       "CommonName": "MockDataRecipient",
-                      "Thumbprint": "58D76F7A61CD726DA1C54F6898E8E69EA4C88060"
+                      "Thumbprint": "973CA54CAFA7037A51CF8DDC1655257B19D63A33"
                     }
                   ]
                 }
@@ -1707,7 +1707,7 @@
                   "Certificates": [
                     {
                       "CommonName": "MockDataRecipient",
-                      "Thumbprint": "58D76F7A61CD726DA1C54F6898E8E69EA4C88060"
+                      "Thumbprint": "973CA54CAFA7037A51CF8DDC1655257B19D63A33"
                     }
                   ]
                 },
@@ -1729,7 +1729,7 @@
                   "Certificates": [
                     {
                       "CommonName": "MockDataRecipient",
-                      "Thumbprint": "58D76F7A61CD726DA1C54F6898E8E69EA4C88060"
+                      "Thumbprint": "973CA54CAFA7037A51CF8DDC1655257B19D63A33"
                     }
                   ]
                 }
@@ -1784,7 +1784,7 @@
                   "Certificates": [
                     {
                       "CommonName": "MockDataRecipient",
-                      "Thumbprint": "58D76F7A61CD726DA1C54F6898E8E69EA4C88060"
+                      "Thumbprint": "973CA54CAFA7037A51CF8DDC1655257B19D63A33"
                     }
                   ]
                 },
@@ -1806,7 +1806,7 @@
                   "Certificates": [
                     {
                       "CommonName": "MockDataRecipient",
-                      "Thumbprint": "58D76F7A61CD726DA1C54F6898E8E69EA4C88060"
+                      "Thumbprint": "973CA54CAFA7037A51CF8DDC1655257B19D63A33"
                     }
                   ]
                 }

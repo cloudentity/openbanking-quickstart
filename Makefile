@@ -6,6 +6,7 @@ ACP_LOCAL_APPS=acp crdb redis
 
 # obuk, obbr, cdr
 run-%-local: 
+	./scripts/additional_configuration.sh $*
 	cp -f .env-local .env
 	docker-compose -f docker-compose.acp.local.yaml up -d --no-build ${ACP_LOCAL_APPS}
 	./scripts/wait.sh 
@@ -14,25 +15,27 @@ run-%-local:
 
 # obuk, obbr
 run-%-saas:
+	./scripts/additional_configuration.sh $*
 	cp -f .env-saas .env
 	docker-compose -f docker-compose.$*.yaml up --no-build -d
 	./scripts/wait.sh
 
 .PHONY: build
 build:
+	cp -f .env-local .env
 	docker-compose -f docker-compose.obuk.yaml -f docker-compose.obbr.yaml -f docker-compose.cdr.yaml -f docker-compose.build.yaml build
 
-# obuk, obbr, cdr
-run-%-tests-headless: run-tests-verify
+.PHONY: build-financroo-tpp 
+build-financroo-tpp:
+	docker-compose -f docker-compose.obuk.yaml -f docker-compose.obbr.yaml -f docker-compose.cdr.yaml -f docker-compose.build.yaml build financroo-tpp
+
+# obuk, obbr, cdr, fdx
+run-%-tests-headless:
 	yarn --cwd tests run cypress run -s cypress/integration/$*/*.ts
 
-.PHONY: run-saas-obuk-tests-headless
-run-saas-obuk-tests-headless: run-tests-verify
-	yarn --cwd tests run cypress run -s cypress/integration/saas/obuk/*.ts
-
-.PHONY: run-saas-obbr-tests-headless
-run-saas-obbr-tests-headless: run-tests-verify
-	yarn --cwd tests run cypress run -s cypress/integration/saas/obbr/*.ts
+# obuk, obbr, fdx
+run-saas-%-tests-headless:
+	yarn --cwd tests run cypress run -s cypress/integration/saas/$*/*.ts
 
 .PHONY: run-tests
 run-tests:
@@ -49,19 +52,36 @@ restart-acp:
 
 .PHONY: lint
 lint: start-runner
-	docker-compose -f docker-compose.acp.local.yaml exec runner sh -c "golangci-lint run --fix --deadline=5m ./..."
+	docker exec quickstart-runner sh -c "golangci-lint run --fix --deadline=5m ./..."
 
 .PHONY: clean
 clean: 
 	docker-compose -f docker-compose.build.yaml down --remove-orphans
+ifeq (${DEBUG},true)
+	docker ps -a
+	rm -fr mount/cdr/*
+endif
+
+clean-saas: start-runner
+	docker exec quickstart-runner sh -c \
+    "go run ./scripts/go/clean_saas.go \
+        -tenant=${SAAS_TENANT_ID} \
+        -cid=${SAAS_CLEANUP_CLIENT_ID} \
+        -csec=${SAAS_CLEANUP_CLIENT_SECRET}"
+	make stop-runner
+	make clean
 
 .PHONY: purge
 purge:
 	docker images -a | grep openbanking-quickstart | awk '{print $3}' | xargs docker rmi -f || true
 
-# enable, disable
-%-mfa:
-	 if [ $* == "enable" ]; then ./scripts/override_env.sh ENABLE_MFA true; else ./scripts/override_env.sh ENABLE_MFA false; fi
+.PHONY: enable-mfa
+enable-mfa:
+	./scripts/override_env.sh ENABLE_MFA true
+
+.PHONY: disable-mfa
+disable-mfa:
+	./scripts/override_env.sh ENABLE_MFA false
 
 .PHONY: set-version
 set-version:
@@ -77,6 +97,11 @@ set-saas-configuration:
 start-runner:
 	docker build -t quickstart-runner -f build/runner.dockerfile .
 	docker-compose -f docker-compose.acp.local.yaml up -d runner
+	docker ps -a
+
+.PHONY: stop-runner
+stop-runner:
+	docker rm -f quickstart-runner
 
 .PHONY: generate-obuk-integration-spec
 generate-obuk-integration-spec: start-runner
@@ -92,7 +117,7 @@ generate-integration-specs: generate-obuk-integration-spec generate-obbr-integra
 .PHONY: generate-obbr-clients
 generate-obbr-clients: start-runner
 	rm -rf ./openbanking/obbr/accounts/*
-	docker-compose exec runner sh -c \
+	docker-compose -f docker-compose.acp.local.yaml exec runner sh -c \
 	"swagger generate client \
 	    --include-tag=obuk
 		-f api/obbr/accounts.yaml \
@@ -102,7 +127,7 @@ generate-obbr-clients: start-runner
 .PHONY: generate-cdr-clients
 generate-cdr-clients: start-runner
 	rm -rf ./openbanking/cdr/banking/*
-	docker-compose exec runner sh -c \
+	docker-compose -f docker-compose.acp.local.yaml exec runner sh -c \
 	"swagger generate client \
 		-f api/cdr/cds_banking.yaml \
 		-A banking \
@@ -112,3 +137,10 @@ generate-cdr-clients: start-runner
 obbr:
 	docker-compose -f docker-compose.acp.local.yaml -f conformance/docker-compose.obb.yaml -f conformance/docker-compose.fapi.yaml ${cmd}
 
+# enable, disable
+%-tls-financroo:
+	./scripts/financroo_tls_configuration.sh $*
+
+.PHONY: bump_acp
+bump_acp:
+	./scripts/bump_acp.sh

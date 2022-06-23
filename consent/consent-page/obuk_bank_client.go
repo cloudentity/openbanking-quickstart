@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -20,12 +21,12 @@ func NewOBUKBankClient(config Config) *OBUKBankClient {
 	c := OBUKBankClient{}
 
 	c.Client = &http.Client{}
-	c.baseURL = config.BankURL.String()
+	c.baseURL = config.BankClientConfig.URL.String()
 
 	return &c
 }
 
-func (c *OBUKBankClient) GetInternalAccounts(id string) (InternalAccounts, error) {
+func (c *OBUKBankClient) GetInternalAccounts(ctx context.Context, id string) (InternalAccounts, error) {
 	var (
 		request  *http.Request
 		response *http.Response
@@ -34,7 +35,7 @@ func (c *OBUKBankClient) GetInternalAccounts(id string) (InternalAccounts, error
 		err      error
 	)
 
-	if request, err = http.NewRequest("GET", fmt.Sprintf("%s/internal/accounts?id=%s", c.baseURL, id), nil); err != nil {
+	if request, err = http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s/internal/accounts?id=%s", c.baseURL, id), nil); err != nil {
 		return InternalAccounts{}, err
 	}
 
@@ -70,7 +71,7 @@ func ToInternalOBUKAccounts(data models.OBReadAccount6) InternalAccounts {
 }
 
 // TODO: map response to InternalBalances
-func (c *OBUKBankClient) GetInternalBalances(id string) (BalanceResponse, error) {
+func (c *OBUKBankClient) GetInternalBalances(ctx context.Context, id string) (BalanceResponse, error) {
 	var (
 		request  *http.Request
 		response *http.Response
@@ -79,7 +80,7 @@ func (c *OBUKBankClient) GetInternalBalances(id string) (BalanceResponse, error)
 		err      error
 	)
 
-	if request, err = http.NewRequest("GET", fmt.Sprintf("%s/internal/balances?id=%s", c.baseURL, id), nil); err != nil {
+	if request, err = http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s/internal/balances?id=%s", c.baseURL, id), nil); err != nil {
 		return resp, err
 	}
 

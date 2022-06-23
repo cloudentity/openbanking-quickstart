@@ -1,86 +1,139 @@
 package main
 
-type CDREnergyClient struct {
+import (
+	"context"
+	"crypto/tls"
+	"crypto/x509"
+	"encoding/json"
+	"io/ioutil"
+	"net/http"
+	"net/url"
+	"os"
+	"strings"
+
+	"github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/models"
+	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
+	"golang.org/x/oauth2"
+	"golang.org/x/oauth2/clientcredentials"
+)
+
+type CDRBankClient struct {
+	httpClient       *http.Client
+	bankClientConfig BankClientConfig
+	cc               clientcredentials.Config
 }
 
-var _ BankClient = &CDREnergyClient{}
+func NewCDRBankClient(config Config) *CDRBankClient {
+	var (
+		pool  *x509.CertPool
+		cert  tls.Certificate
+		data  []byte
+		certs []tls.Certificate
+		err   error
+	)
 
-func NewCDREnergyClient(config Config) *CDREnergyClient {
-	c := CDREnergyClient{}
-	return &c
-}
-
-// TODO: expose endpoint on mock data holder instead of redundant hardcoded mocking in every application
-func (c *CDREnergyClient) GetInternalAccounts(id string) (InternalAccounts, error) {
-	if id == "user" {
-		return InternalAccounts{
-			Accounts: []InternalAccount{
-				{
-					ID:   "96534987",
-					Name: "Digital banking account",
-					Balance: Balance{
-						AccountID: "96534987",
-						Amount: BalanceAmount{
-							Amount:   "100",
-							Currency: "USD",
-						},
-					},
-				},
-				{
-					ID:   "1000001",
-					Name: "Savings",
-					Balance: Balance{
-						AccountID: "1000001",
-						Amount: BalanceAmount{
-							Amount:   "150",
-							Currency: "USD",
-						},
-					},
-				},
-				{
-					ID:   "1000002",
-					Name: "Savings 2",
-					Balance: Balance{
-						AccountID: "1000002",
-						Amount: BalanceAmount{
-							Amount:   "175",
-							Currency: "USD",
-						},
-					},
-				},
-			},
-		}, nil
+	if pool, err = x509.SystemCertPool(); err != nil {
+		logrus.Fatalf("failed to read system root CAs %v", err)
 	}
 
-	return InternalAccounts{
-		Accounts: []InternalAccount{
-			{
-				ID:   "96565987",
-				Name: "Credit",
-				Balance: Balance{
-					AccountID: "96565987",
-					Amount: BalanceAmount{
-						Amount:   "100",
-						Currency: "USD",
-					},
-				},
-			},
-			{
-				ID:   "1122334455",
-				Name: "Savings",
-				Balance: Balance{
-					AccountID: "1122334455",
-					Amount: BalanceAmount{
-						Amount:   "150",
-						Currency: "USD",
-					},
+	if data, err = os.ReadFile(config.RootCA); err != nil {
+		logrus.Fatalf("failed to read http client root ca: %v", err)
+	}
+	pool.AppendCertsFromPEM(data)
+
+	if config.BankClientConfig.CertFile != "" && config.BankClientConfig.KeyFile != "" {
+		if cert, err = tls.LoadX509KeyPair(config.BankClientConfig.CertFile, config.BankClientConfig.KeyFile); err != nil {
+			logrus.Fatalf("failed to read certificate and private key %v", err)
+		}
+		certs = append(certs, cert)
+	}
+
+	return &CDRBankClient{
+		httpClient: &http.Client{
+			Transport: &http.Transport{
+				Proxy: http.ProxyFromEnvironment,
+				TLSClientConfig: &tls.Config{
+					RootCAs:      pool,
+					MinVersion:   tls.VersionTLS12,
+					Certificates: certs,
 				},
 			},
 		},
-	}, nil
+		cc: clientcredentials.Config{
+			ClientID:     config.BankClientConfig.ClientID,
+			ClientSecret: config.BankClientConfig.ClientSecret,
+			TokenURL:     config.BankClientConfig.TokenURL,
+			Scopes:       config.BankClientConfig.Scopes,
+		},
+		bankClientConfig: config.BankClientConfig,
+	}
 }
 
-// TODO: mock data holder cdr app doesn't even have this data yet
-func (c *CDREnergyClient) GetInternalBalances(id string) (BalanceResponse, error) {
+func (c *CDRBankClient) GetInternalAccounts(ctx context.Context, id string) (InternalAccounts, error) {
+	var (
+		token                *oauth2.Token
+		request              *http.Request
+		response             *http.Response
+		accountsEndpointPath string
+		body                 []byte
+		err                  error
+	)
+
+	if c.bankClientConfig.AccountsURL != nil {
+		accountsEndpointPath = c.bankClientConfig.AccountsURL.String()
+	} else {
+		accountsEndpointPath = c.bankClientConfig.URL.String() + "/internal/accounts"
+	}
+
+	if token, err = c.cc.Token(context.WithValue(ctx, oauth2.HTTPClient, c.httpClient)); err != nil {
+		return InternalAccounts{}, errors.Wrapf(err, "failed to get client credentials token for internal bank api call")
+	}
+
+	if request, err = http.NewRequestWithContext(ctx, http.MethodPost, accountsEndpointPath, strings.NewReader(
+		url.Values{
+			"customer_id": []string{id},
+		}.Encode(),
+	)); err != nil {
+		return InternalAccounts{}, err
+	}
+
+	request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+	request.Header.Set("Authorization", "Bearer "+token.AccessToken)
+
+	if response, err = c.httpClient.Do(request); err != nil {
+		return InternalAccounts{}, errors.Wrapf(err, "internal bank accounts api call failed")
+	}
+	defer response.Body.Close()
+
+	if body, err = ioutil.ReadAll(response.Body); err != nil {
+		return InternalAccounts{}, errors.Wrap(err, "internal bank accounts api call failed")
+	}
+
+	if response.StatusCode >= http.StatusBadRequest {
+		return InternalAccounts{}, errors.Wrap(errors.New(string(body)), "internal bank accounts api call failed")
+	}
+
+	return c.accountsResponseToInternalAccounts(body)
+}
+
+func (c *CDRBankClient) accountsResponseToInternalAccounts(body []byte) (accounts InternalAccounts, err error) {
+	var accountListResponse models.ResponseBankingAccountList
+
+	if err = json.Unmarshal(body, &accountListResponse); err != nil {
+		return accounts, err
+	}
+
+	for _, acc := range accountListResponse.Data.Accounts {
+		accounts.Accounts = append(accounts.Accounts, InternalAccount{
+			ID:   *acc.AccountID,
+			Name: acc.Nickname,
+		})
+	}
+
+	return accounts, nil
+}
+
+func (c *CDRBankClient) GetInternalBalances(ctx context.Context, id string) (BalanceResponse, error) {
 	return BalanceResponse{}, nil
 }

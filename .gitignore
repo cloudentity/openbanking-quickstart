@@ -24,3 +24,9 @@ my.db
 mount/conformance/
 .vscode/*
 !.vscode/launch.json
+.env
+
+mount/cdr/holder.json
+mount/cdr/recipient.json
+mount/cdr/holder-resource-api-appsettings.json
+mount/cdr/registry-seed.json

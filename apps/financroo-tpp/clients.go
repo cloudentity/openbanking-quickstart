@@ -2,11 +2,15 @@ package main
 
 import (
 	"context"
+	"encoding/json"
 	"fmt"
+	"io/ioutil"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 
+	cdrBank "github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/client"
 	obbrAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/client"
 	obbrPayments "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/client"
 	obc "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client"
@@ -44,16 +48,44 @@ type ConsentClient interface {
 
 func (c *Clients) RenewAccountsToken(ctx context.Context, bank ConnectedBank) (*oauth2Models.TokenResponse, error) {
 	var (
-		resp *oauth2.TokenOK
-		err  error
+		resp      oauth2.TokenOK
+		request   *http.Request
+		response  *http.Response
+		assertion string
+		body      []byte
+		err       error
 	)
 
-	if resp, err = c.AcpAccountsClient.Oauth2.Oauth2.Token(
-		oauth2.NewTokenParamsWithContext(ctx).
-			WithClientID(&c.AcpAccountsClient.Config.ClientID).
-			WithGrantType("refresh_token").
-			WithRefreshToken(&bank.RefreshToken)); err != nil {
-		return nil, errors.Wrapf(err, "can't renew access token for a bank: %s", bank.BankID)
+	values := url.Values{
+		"client_id":     {c.AcpAccountsClient.Config.ClientID},
+		"grant_type":    {"refresh_token"},
+		"refresh_token": {bank.RefreshToken},
+	}
+
+	if c.AcpAccountsClient.Config.AuthMethod == acpclient.PrivateKeyJwtAuthnMethod {
+		if assertion, err = c.AcpAccountsClient.GenerateClientAssertion(); err != nil {
+			return nil, err
+		}
+		values.Add("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer")
+		values.Add("client_assertion", assertion)
+	}
+
+	if request, err = http.NewRequest(http.MethodPost, c.AcpAccountsClient.Config.GetTokenURL(), strings.NewReader(values.Encode())); err != nil {
+		return nil, errors.Wrapf(err, "failed to create token request")
+	}
+	request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	if response, err = c.AcpAccountsClient.DoRequest(request); err != nil {
+		return nil, err
+	}
+	defer response.Body.Close()
+
+	if body, err = ioutil.ReadAll(response.Body); err != nil {
+		return nil, err
+	}
+
+	if err = json.Unmarshal(body, &resp.Payload); err != nil {
+		return nil, err
 	}
 
 	return resp.Payload, nil
@@ -82,15 +114,19 @@ func InitClients(config Config,
 		return clients, errors.Wrapf(err, "failed to create acp payments client")
 	}
 
-	if signer, err = signerCreateFn(config.KeyFile); err != nil {
-		return clients, errors.Wrapf(err, "failed to create consent message signer for %s", config.Spec)
+	if signerCreateFn != nil {
+		if signer, err = signerCreateFn(config.KeyFile); err != nil {
+			return clients, errors.Wrapf(err, "failed to create consent message signer for %s", config.Spec)
+		}
 	}
 
 	if bankClient, err = bankClientCreateFn(config); err != nil {
 		return clients, errors.Wrapf(err, "failed to create bank client for %s", config.Spec)
 	}
 
-	consentClient = consentClientCreateFn(acpAccountsWebClient, acpPaymentsWebClient, signer)
+	if consentClientCreateFn != nil {
+		consentClient = consentClientCreateFn(acpAccountsWebClient, acpPaymentsWebClient, signer)
+	}
 
 	return Clients{
 		AcpAccountsClient: acpAccountsWebClient,
@@ -121,17 +157,23 @@ func NewAcpClient(cfg Config, redirect string) (acpclient.Client, error) {
 
 	requestObjectExpiration := time.Minute * 10
 	config := acpclient.Config{
-		ClientID:                    cfg.ClientID,
-		IssuerURL:                   issuerURL,
-		AuthorizeURL:                authorizeURL,
-		RedirectURL:                 redirectURL,
-		RequestObjectSigningKeyFile: cfg.KeyFile,
-		RequestObjectExpiration:     &requestObjectExpiration,
-		Scopes:                      cfg.ClientScopes,
-		Timeout:                     time.Second * 5,
-		CertFile:                    cfg.CertFile,
-		KeyFile:                     cfg.KeyFile,
-		RootCA:                      cfg.RootCA,
+		ClientID:                      cfg.ClientID,
+		IssuerURL:                     issuerURL,
+		AuthorizeURL:                  authorizeURL,
+		RedirectURL:                   redirectURL,
+		RequestObjectSigningKeyFile:   cfg.KeyFile,
+		RequestObjectExpiration:       &requestObjectExpiration,
+		Scopes:                        cfg.ClientScopes,
+		Timeout:                       time.Second * 5,
+		CertFile:                      cfg.CertFile,
+		KeyFile:                       cfg.KeyFile,
+		RootCA:                        cfg.RootCA,
+		ClientAssertionSigningKeyFile: cfg.KeyFile,
+	}
+
+	if cfg.Spec == CDR {
+		config.SkipClientCredentialsAuthn = true
+		config.AuthMethod = acpclient.PrivateKeyJwtAuthnMethod
 	}
 
 	if client, err = acpclient.New(config); err != nil {
@@ -160,7 +202,7 @@ func NewOBUKClient(config Config) (BankClient, error) {
 
 	tr := NewHTTPRuntimeWithClient(
 		u.Host,
-		"/",
+		u.Path,
 		[]string{u.Scheme},
 		hc,
 	)
@@ -169,6 +211,31 @@ func NewOBUKClient(config Config) (BankClient, error) {
 	c.OpenbankingPaymentsClient = payments_client.New(tr, nil)
 
 	return c, nil
+}
+
+type CDRClient struct {
+	*cdrBank.Banking
+}
+
+func NewCDRClient(config Config) (BankClient, error) {
+	var (
+		u   *url.URL
+		err error
+	)
+
+	if u, err = url.Parse(config.BankURL); err != nil {
+		return nil, err
+	}
+
+	tr := NewHTTPRuntimeWithClient(
+		u.Host,
+		u.Path,
+		[]string{u.Scheme},
+		http.DefaultClient,
+	)
+	return &CDRClient{
+		cdrBank.New(tr, nil),
+	}, nil
 }
 
 type OBBRClient struct {
@@ -190,13 +257,13 @@ func NewOBBRClient(config Config) (BankClient, error) {
 
 	c.Accounts = obbrAccounts.New(NewHTTPRuntimeWithClient(
 		u.Host,
-		"/accounts/v1",
+		u.Path+"/accounts/v1",
 		[]string{u.Scheme},
 		hc,
 	), nil)
 	c.PaymentConsentsBrasil = obbrPayments.New(NewHTTPRuntimeWithClient(
 		u.Host,
-		"/payments/v1",
+		u.Path+"/payments/v1",
 		[]string{u.Scheme},
 		hc,
 	), nil)

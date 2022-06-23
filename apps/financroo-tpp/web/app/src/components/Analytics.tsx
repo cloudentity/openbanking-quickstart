@@ -6,7 +6,7 @@ import AnalyticsPieChart from "./AnalyticsPieChart";
 import {applyFiltering, mapTransactionsToBarChartData} from "./analytics.utils";
 import {pick} from "ramda";
 
-export default function Analytics ({transactions, filtering, onChangeFiltering}) {
+export default function Analytics ({currencyType, transactions, filtering, onChangeFiltering}) {
 
   const barChartData = mapTransactionsToBarChartData(applyFiltering(pick(['accounts'], filtering), transactions));
   const pieChartData = applyFiltering(pick(['accounts', 'months'], filtering), transactions);
@@ -19,7 +19,7 @@ export default function Analytics ({transactions, filtering, onChangeFiltering})
           <AnalyticsBarChart data={barChartData} filtering={filtering} onChangeFiltering={onChangeFiltering}/>
         </div>
         <div style={{flex: 1}}>
-          <AnalyticsPieChart data={pieChartData} filtering={filtering} onChangeFiltering={onChangeFiltering}/>
+          <AnalyticsPieChart currencyType={currencyType} data={pieChartData} filtering={filtering} onChangeFiltering={onChangeFiltering}/>
         </div>
       </Card>
       <AnalyticsTable data={tableData} style={{marginTop: 24, height: 'calc(100% - 332px - 24px'}}/>
