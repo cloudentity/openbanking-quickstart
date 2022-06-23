@@ -249,6 +249,12 @@ func RequireMFAMiddleware(s *Server) gin.HandlerFunc {
 				c.Abort()
 				return
 			}
+		} else {
+			if approved, err = s.OTPHandler.IsApproved(NewLoginRequest(c)); err != nil {
+				RenderInvalidRequestError(c, s.Trans, nil)
+				c.Abort()
+				return
+			}
 		}
 
 		if !approved {
