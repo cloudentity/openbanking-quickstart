@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
+	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -43,7 +44,7 @@ type Config struct {
 	BankURL          *url.URL      `env:"BANK_URL"`
 	BankIDClaim      string        `env:"BANK_ID_CLAIM" envDefault:"sub"`
 	EnableMFA        bool          `env:"ENABLE_MFA"`
-	EnableHypr       bool          `env:"ENABLE_HYPR"`
+	MFAProvider      string        `env:"MFA_PROVIDER"`
 	OTPMode          string        `env:"OTP_MODE" envDefault:"demo"`
 	TwilioAccountSid string        `env:"TWILIO_ACCOUNT_SID"`
 	TwilioAuthToken  string        `env:"TWILIO_AUTH_TOKEN"`
@@ -99,12 +100,12 @@ type Server struct {
 	SMSClient                       *SMSClient
 	OTPRepo                         *OTPRepo
 	OTPHandler                      OTPHandler
-	HyprHandler                     HyprHandler
 	Trans                           *Trans
 	PaymentConsentHandler           ConsentHandler
 	PaymentMFAConsentProvider       MFAConsentProvider
 	AccountAccessConsentHandler     ConsentHandler
 	AccountAccessMFAConsentProvider MFAConsentProvider
+	MFAStrategy                     MFAStrategy
 }
 
 func NewServer() (Server, error) {
@@ -134,6 +135,21 @@ func NewServer() (Server, error) {
 
 	if trans, err = ioutil.ReadDir(server.Config.TransDir); err != nil {
 		return server, errors.Wrapf(err, "failed to read dir %s", server.Config.TransDir)
+	}
+
+	switch server.Config.MFAProvider {
+	case "hypr":
+		var config []byte
+		if config, err = os.ReadFile("../config_hypr.yaml"); err != nil {
+			return server, errors.Wrapf(err, "failed to read hypr config %s", err)
+		}
+
+		var hyprConfig HyprConfig
+		if err = yaml.Unmarshal(config, &hyprConfig); err != nil {
+			return server, errors.Wrapf(err, "failed to marshal hypr config %s", err)
+		}
+
+		server.MFAStrategy = NewHyprHandler(hyprConfig)
 	}
 
 	for _, t := range trans {
@@ -167,10 +183,6 @@ func NewServer() (Server, error) {
 
 	if server.OTPHandler, err = NewOTPHandler(server.Config, server.OTPRepo, server.SMSClient); err != nil {
 		return server, errors.Wrapf(err, "failed to init otp handler")
-	}
-
-	if server.Config.EnableHypr {
-		server.HyprHandler = NewHyprHandler(server.Config.HyprBaseURL, server.Config.HyprToken, server.Config.HyprAppId)
 	}
 
 	tools := ConsentTools{Trans: server.Trans, Config: server.Config}
@@ -208,8 +220,8 @@ func RequireMFAMiddleware(s *Server) gin.HandlerFunc {
 			err      error
 		)
 
-		if s.Config.EnableHypr {
-			if approved, err = s.HyprHandler.IsApproved(NewLoginRequest(c)); err != nil {
+		if s.Config.MFAProvider != "" {
+			if approved, err = s.MFAStrategy.IsApproved(NewLoginRequest(c)); err != nil {
 				RenderInvalidRequestError(c, s.Trans, nil)
 				c.Abort()
 				return

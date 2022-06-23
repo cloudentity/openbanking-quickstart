@@ -23,3 +23,4 @@ tests/package-lock.json
 my.db
 mount/conformance/
 .vscode/*
+!.vscode/launch.json

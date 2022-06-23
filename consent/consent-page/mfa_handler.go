@@ -206,14 +206,13 @@ func (s *DomesticPaymentMFAConsentProvider) GetConsentMockData(loginRequest Logi
 func (s *Server) MFAHandler() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			r         = NewLoginRequest(c)
-			provider  MFAConsentProvider
-			requestId string
-			data      MFAData
-			ok        bool
-			valid     bool
-			mobile    string
-			err       error
+			r        = NewLoginRequest(c)
+			provider MFAConsentProvider
+			data     MFAData
+			ok       bool
+			valid    bool
+			mobile   string
+			err      error
 		)
 
 		if err = r.Validate(); err != nil {
@@ -333,53 +332,22 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 
 			c.Redirect(http.StatusMovedPermanently, redirect)
 			return
-		case "verify_hypr":
-			var (
-				devices UserDevices
-				user    = fmt.Sprintf("%s", data.AuthenticationContext["name"])
-			)
+		case "verify_mfa":
+			args := make(map[string]string)
+			args["username"] = fmt.Sprintf("%s", data.AuthenticationContext["name"])
 
-			if devices, err = s.HyprHandler.GetUserDevices(user); err != nil {
-				RenderError(c, 401, err.Error(), errors.Wrapf(err, "failed to get user devices"))
-				return
-			}
-
-			if len(devices) < 1 {
-				RenderError(c, 401, err.Error(), errors.New("User has no registered devices with Hypr"))
-				return
-			}
-
-			if requestId, err = s.HyprHandler.StartAuthentication(user); err != nil {
-				RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to start authenticate with hypr"))
-				return
-			}
-
-			var checkStatus *AuthStatusResponse
-			if checkStatus, err = s.HyprHandler.PollHypr(requestId); err != nil {
-				if errors.Is(err, ErrTimeoutWaitingForUser) {
-					RenderError(c, 401, err.Error(), errors.Wrapf(err, "timeout waiting for user to approve or deny"))
+			if err := s.MFAStrategy.Approve(args); err != nil {
+				switch err.code {
+				case http.StatusInternalServerError:
+					RenderInternalServerError(c, s.Trans, errors.Wrapf(err.err, err.message))
+				default:
+					RenderError(c, err.code, err.err, errors.Wrapf(err.err, err.message))
 					return
 				}
-				RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to check auth status"))
-				return
 			}
-
-			if len(checkStatus.State) == 0 {
-				RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to check auth status - invalid state length"))
-				return
-			}
-
-			switch checkStatus.State[len(checkStatus.State)-1].Value {
-			case "COMPLETED":
-				s.HyprHandler.SetStorage(r, true)
-				redirect := fmt.Sprintf("?%s", c.Request.URL.Query().Encode())
-				c.Redirect(http.StatusMovedPermanently, redirect)
-				return
-			default:
-				err = errors.New("user rejected consent on hypr")
-				RenderError(c, 401, err.Error(), err)
-				return
-			}
+			s.MFAStrategy.SetStorage(r, true)
+			redirect := fmt.Sprintf("?%s", c.Request.URL.Query().Encode())
+			c.Redirect(http.StatusMovedPermanently, redirect)
 		default:
 			templateData := map[string]interface{}{
 				"mobile":     MaskMobile(mobile),
@@ -394,9 +362,9 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 				},
 			}
 
-			if s.Config.EnableHypr {
-				templateData["showHypr"] = true
-				templateData["hyprUser"] = fmt.Sprintf("%s", data.AuthenticationContext["name"])
+			if s.Config.MFAProvider != "" {
+				templateData["showMFA"] = true
+				templateData["mfaUsername"] = fmt.Sprintf("%s", data.AuthenticationContext["name"])
 			}
 
 			if err = mergo.Merge(&templateData, provider.GetConsentMockData(r)); err != nil {

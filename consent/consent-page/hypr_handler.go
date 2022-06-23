@@ -7,14 +7,14 @@ import (
 	"net/http"
 	"strconv"
 	"time"
+
+	"github.com/pkg/errors"
 )
 
-type HyprHandler interface {
-	StartAuthentication(username string) (string, error)
-	PollHypr(requestID string) (*AuthStatusResponse, error)
-	SetStorage(LoginRequest, bool)
-	IsApproved(LoginRequest) (bool, error)
-	GetUserDevices(username string) (UserDevices, error)
+type HyprConfig struct {
+	Token   string `json:"HYPR_TOKEN"`
+	BaseUrl string `json:"HYPR_BASE_URL"`
+	AppID   string `json:"HYPR_APP_ID"`
 }
 
 type DefaultHyprHandler struct {
@@ -25,19 +25,109 @@ type DefaultHyprHandler struct {
 	Storage  map[LoginRequest]bool
 }
 
-func NewHyprHandler(host string, apiToken string, appId string) HyprHandler {
+func NewHyprHandler(hyprConfig HyprConfig) *DefaultHyprHandler {
 	return &DefaultHyprHandler{
-		HostURL: host,
-		AppId:   appId,
+		HostURL: hyprConfig.BaseUrl,
+		AppId:   hyprConfig.AppID,
 		Client: &http.Client{
 			Timeout: time.Second * 10,
 		},
-		APIToken: apiToken,
+		APIToken: hyprConfig.Token,
 		Storage:  make(map[LoginRequest]bool),
 	}
 }
 
-func (h *DefaultHyprHandler) StartAuthentication(username string) (string, error) {
+func (h *DefaultHyprHandler) Approve(args map[string]string) *MFAError {
+	var (
+		devices   UserDevices
+		username  string
+		requestId string
+		ok        bool
+		err       error
+	)
+
+	if username, ok = args["username"]; !ok {
+		return &MFAError{
+			err:     errors.New("missing parameter - username required"),
+			code:    http.StatusBadRequest,
+			message: "missing parameter - username required",
+		}
+	}
+
+	if devices, err = h.getUserDevices(username); err != nil {
+		return &MFAError{
+			err:     err,
+			code:    http.StatusUnauthorized,
+			message: "failed to get user devices",
+		}
+	}
+
+	if len(devices) < 1 {
+		return &MFAError{
+			err:     err,
+			code:    http.StatusBadGateway,
+			message: "no registered devices",
+		}
+	}
+
+	if requestId, err = h.startAuthentication(username); err != nil {
+		return &MFAError{
+			err:     err,
+			code:    http.StatusInternalServerError,
+			message: "failed to start authentication",
+		}
+	}
+
+	var checkStatus *AuthStatusResponse
+	if checkStatus, err = h.poll(requestId); err != nil {
+		if errors.Is(err, ErrTimeoutWaitingForUser) {
+			return &MFAError{
+				err:     err,
+				code:    http.StatusUnauthorized,
+				message: "timeout waiting for user to approve or denyr",
+			}
+		}
+		return &MFAError{
+			err:     err,
+			code:    http.StatusInternalServerError,
+			message: "failed to check auth status",
+		}
+	}
+
+	if len(checkStatus.State) == 0 {
+		return &MFAError{
+			err:     errors.New("failed to check auth status"),
+			code:    http.StatusInternalServerError,
+			message: "invalid state length",
+		}
+	}
+
+	switch checkStatus.State[len(checkStatus.State)-1].Value {
+	case "COMPLETED":
+		return nil
+	default:
+		return &MFAError{
+			err:     errors.New("user denied access"),
+			code:    http.StatusUnauthorized,
+			message: "user denied access",
+		}
+	}
+}
+
+func (o *DefaultHyprHandler) SetStorage(r LoginRequest, approved bool) {
+	o.Storage[r] = approved
+}
+
+func (o *DefaultHyprHandler) IsApproved(r LoginRequest) (bool, error) {
+	approved, ok := o.Storage[r]
+	if !ok {
+		return false, nil
+	}
+
+	return approved, nil
+}
+
+func (h *DefaultHyprHandler) startAuthentication(username string) (string, error) {
 	var (
 		endpoint = "/rp/api/oob/client/authentication/requests"
 		resp     *http.Response
@@ -69,7 +159,7 @@ func (h *DefaultHyprHandler) StartAuthentication(username string) (string, error
 	return data.Response.RequestID, nil
 }
 
-func (h *DefaultHyprHandler) PollHypr(requestID string) (*AuthStatusResponse, error) {
+func (h *DefaultHyprHandler) poll(requestID string) (*AuthStatusResponse, error) {
 	var (
 		checkStatus  *AuthStatusResponse
 		pollInterval = time.Tick(time.Duration(2) * time.Second)
@@ -114,7 +204,7 @@ func (h *DefaultHyprHandler) performAuthStatusCheck(requestID string) (*AuthStat
 	return &data, nil
 }
 
-func (h *DefaultHyprHandler) GetUserDevices(username string) (UserDevices, error) {
+func (h *DefaultHyprHandler) getUserDevices(username string) (UserDevices, error) {
 	var (
 		endpoint = fmt.Sprintf("/rp/api/oob/client/authentication/%s/%s/devices", "cloudentity", username)
 		resp     *http.Response
@@ -155,17 +245,4 @@ func (h *DefaultHyprHandler) performRequest(method string, endpoint string, payl
 	req.Header.Add("Authorization", fmt.Sprintf("Bearer %s", h.APIToken))
 
 	return h.Client.Do(req)
-}
-
-func (o *DefaultHyprHandler) SetStorage(r LoginRequest, approved bool) {
-	o.Storage[r] = approved
-}
-
-func (o *DefaultHyprHandler) IsApproved(r LoginRequest) (bool, error) {
-	approved, ok := o.Storage[r]
-	if !ok {
-		return false, nil
-	}
-
-	return approved, nil
 }
