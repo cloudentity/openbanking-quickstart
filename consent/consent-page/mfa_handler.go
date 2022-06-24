@@ -253,10 +253,6 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 
 		action := c.PostForm("action")
 
-		if action == "" {
-			action = s.OTPHandler.GetDefaultAction()
-		}
-
 		logrus.Debugf("action: %s, mobile: %s", action, mobile)
 
 		switch action {

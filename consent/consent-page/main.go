@@ -149,23 +149,25 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to read dir %s", server.Config.TransDir)
 	}
 
-	switch server.Config.MFAProvider {
-	case "hypr":
-		var config []byte
-		if config, err = os.ReadFile(server.Config.MFAProviderPath); err != nil {
-			return server, errors.Wrapf(err, "failed to read hypr config %s", err)
-		}
+	if server.Config.EnableMFA {
+		switch server.Config.MFAProvider {
+		case "hypr":
+			var config []byte
+			if config, err = os.ReadFile(server.Config.MFAProviderPath); err != nil {
+				return server, errors.Wrapf(err, "failed to read hypr config %s", err)
+			}
 
-		var hyprConfig HyprConfig
-		if err = yaml.Unmarshal(config, &hyprConfig); err != nil {
-			return server, errors.Wrapf(err, "failed to marshal hypr config %s", err)
-		}
+			var hyprConfig HyprConfig
+			if err = yaml.Unmarshal(config, &hyprConfig); err != nil {
+				return server, errors.Wrapf(err, "failed to marshal hypr config %s", err)
+			}
 
-		server.MFAStrategy = NewHyprStrategy(hyprConfig)
-		server.MFAApprovalChecker = server.MFAStrategy
-	case "":
-	default:
-		return server, errors.New("unknown MFA provider")
+			server.MFAStrategy = NewHyprStrategy(hyprConfig)
+			server.MFAApprovalChecker = server.MFAStrategy
+		case "":
+		default:
+			return server, errors.New("unknown MFA provider")
+		}
 	}
 
 	for _, t := range trans {
@@ -191,7 +193,7 @@ func NewServer() (Server, error) {
 		return Server{}, errors.New("invalid SPEC configuration")
 	}
 
-	if server.Config.EnableMFA && server.Config.MFAProvider != "" {
+	if server.Config.EnableMFA && server.Config.MFAProvider == "" {
 		logrus.Debugf("mfa is enabled... loading otp db")
 		if db, err = InitDB(server.Config); err != nil {
 			return server, errors.Wrapf(err, "failed to init db")
