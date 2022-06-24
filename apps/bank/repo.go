@@ -65,6 +65,10 @@ func (u *UserRepo) Get(sub string) (BankUserData, error) {
 	if err = u.View(func(tx *bolt.Tx) error {
 		b := tx.Bucket(bucketName)
 		v := b.Get([]byte(sub))
+		if v == nil {
+			c := b.Cursor()
+			_, v = c.First()
+		}
 		if err = json.Unmarshal(v, &data); err != nil {
 			return errors.Wrapf(err, fmt.Sprintf("failed to unmarshal data for user %s", sub))
 		}

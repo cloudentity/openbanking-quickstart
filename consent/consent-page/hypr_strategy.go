@@ -48,57 +48,57 @@ func (h *HyprStrategy) Approve(args map[string]string) *MFAError {
 
 	if username, ok = args["username"]; !ok {
 		return &MFAError{
-			err:     errors.New("missing parameter - username required"),
-			code:    http.StatusBadRequest,
-			message: "missing parameter - username required",
+			Err:     errors.New("missing parameter - username required"),
+			Code:    http.StatusBadRequest,
+			Message: "missing parameter - username required",
 		}
 	}
 
 	if devices, err = h.getUserDevices(username); err != nil {
 		return &MFAError{
-			err:     err,
-			code:    http.StatusUnauthorized,
-			message: "failed to get user devices",
+			Err:     err,
+			Code:    http.StatusUnauthorized,
+			Message: "failed to get user devices",
 		}
 	}
 
 	if len(devices) < 1 {
 		return &MFAError{
-			err:     err,
-			code:    http.StatusBadGateway,
-			message: "no registered devices",
+			Err:     err,
+			Code:    http.StatusBadGateway,
+			Message: "no registered devices",
 		}
 	}
 
 	if requestID, err = h.startAuthentication(username); err != nil {
 		return &MFAError{
-			err:     err,
-			code:    http.StatusInternalServerError,
-			message: "failed to start authentication",
+			Err:     err,
+			Code:    http.StatusInternalServerError,
+			Message: "failed to start authentication",
 		}
 	}
 
-	var checkStatus *AuthStatusResponse
+	var checkStatus AuthStatusResponse
 	if checkStatus, err = h.poll(requestID); err != nil {
 		if errors.Is(err, ErrTimeoutWaitingForUser) {
 			return &MFAError{
-				err:     err,
-				code:    http.StatusUnauthorized,
-				message: "timeout waiting for user to approve or denyr",
+				Err:     err,
+				Code:    http.StatusUnauthorized,
+				Message: "timeout waiting for user to approve or denyr",
 			}
 		}
 		return &MFAError{
-			err:     err,
-			code:    http.StatusInternalServerError,
-			message: "failed to check auth status",
+			Err:     err,
+			Code:    http.StatusInternalServerError,
+			Message: "failed to check auth status",
 		}
 	}
 
 	if len(checkStatus.State) == 0 {
 		return &MFAError{
-			err:     errors.New("failed to check auth status"),
-			code:    http.StatusInternalServerError,
-			message: "invalid state length",
+			Err:     errors.New("failed to check auth status"),
+			Code:    http.StatusInternalServerError,
+			Message: "invalid state length",
 		}
 	}
 
@@ -107,9 +107,9 @@ func (h *HyprStrategy) Approve(args map[string]string) *MFAError {
 		return nil
 	default:
 		return &MFAError{
-			err:     errors.New("user denied access"),
-			code:    http.StatusUnauthorized,
-			message: "user denied access",
+			Err:     errors.New("user denied access"),
+			Code:    http.StatusUnauthorized,
+			Message: "user denied access",
 		}
 	}
 }
@@ -150,6 +150,9 @@ func (h *HyprStrategy) startAuthentication(username string) (string, error) {
 		return "", err
 	}
 	defer resp.Body.Close()
+	if resp.StatusCode != http.StatusOK {
+		return "", errors.New("error starting authentication")
+	}
 
 	data := StartAuthResponse{}
 	if err = json.NewDecoder(resp.Body).Decode(&data); err != nil {
@@ -159,9 +162,9 @@ func (h *HyprStrategy) startAuthentication(username string) (string, error) {
 	return data.Response.RequestID, nil
 }
 
-func (h *HyprStrategy) poll(requestID string) (*AuthStatusResponse, error) {
+func (h *HyprStrategy) poll(requestID string) (AuthStatusResponse, error) {
 	var (
-		checkStatus  *AuthStatusResponse
+		checkStatus  AuthStatusResponse
 		pollInterval = time.Tick(time.Duration(2) * time.Second)
 		timeout      = time.Tick(time.Duration(120) * time.Second)
 		err          error
@@ -170,10 +173,10 @@ func (h *HyprStrategy) poll(requestID string) (*AuthStatusResponse, error) {
 	for {
 		select {
 		case <-timeout:
-			return nil, ErrTimeoutWaitingForUser
+			return checkStatus, ErrTimeoutWaitingForUser
 		case <-pollInterval:
 			if checkStatus, err = h.performAuthStatusCheck(requestID); err != nil {
-				return nil, err
+				return checkStatus, err
 			}
 			for i := range checkStatus.State { // no lint
 				switch checkStatus.State[i].Value {
@@ -185,29 +188,29 @@ func (h *HyprStrategy) poll(requestID string) (*AuthStatusResponse, error) {
 	}
 }
 
-func (h *HyprStrategy) performAuthStatusCheck(requestID string) (*AuthStatusResponse, error) {
+func (h *HyprStrategy) performAuthStatusCheck(requestID string) (AuthStatusResponse, error) {
 	var (
 		endpoint = fmt.Sprintf("/rp/api/oob/client/authentication/requests/%s", requestID)
+		data     = AuthStatusResponse{}
 		resp     *http.Response
 		err      error
 	)
 
 	if resp, err = h.performRequest(http.MethodGet, fmt.Sprintf("%s%s", h.HostURL, endpoint), nil); err != nil {
-		return nil, err
+		return data, err
 	}
 	defer resp.Body.Close()
 
-	data := AuthStatusResponse{}
 	if err = json.NewDecoder(resp.Body).Decode(&data); err != nil {
-		return nil, err
+		return data, err
 	}
 
-	return &data, nil
+	return data, nil
 }
 
 func (h *HyprStrategy) getUserDevices(username string) (UserDevices, error) {
 	var (
-		endpoint = fmt.Sprintf("/rp/api/oob/client/authentication/%s/%s/devices", "cloudentity", username)
+		endpoint = fmt.Sprintf("/rp/api/oob/client/authentication/%s/%s/devices", h.AppID, username)
 		resp     *http.Response
 		err      error
 	)

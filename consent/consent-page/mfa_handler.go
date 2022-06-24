@@ -344,11 +344,11 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 			}
 
 			if err := s.MFAStrategy.Approve(mfaProviderArgs); err != nil {
-				switch err.code {
+				switch err.Code {
 				case http.StatusInternalServerError:
-					RenderInternalServerError(c, s.Trans, errors.Wrapf(err.err, err.message))
+					RenderInternalServerError(c, s.Trans, errors.Wrapf(err.Err, err.Message))
 				default:
-					RenderError(c, err.code, err.err, errors.Wrapf(err.err, err.message))
+					RenderError(c, err.Code, err.Err, errors.Wrapf(err.Err, err.Message))
 					return
 				}
 			}
@@ -371,7 +371,7 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 
 			if s.Config.MFAProvider != "" {
 				templateData["showMFA"] = true
-				templateData["mfaUsername"] = mfaProviderArgs["username"]
+				templateData["mfaUsername"] = fmt.Sprintf("%s", data.AuthenticationContext["name"])
 				templateData["mfaProvider"] = strings.ToUpper(s.Config.MFAProvider)
 			}
 

@@ -109,7 +109,7 @@ var (
 type OTPHandler interface {
 	Send(r LoginRequest, provider MFAConsentProvider, to string, data MFAData) error
 	Verify(r LoginRequest, login string, otp string) (bool, error)
-	IsApproved(r LoginRequest) (bool, error)
+	MFAApprovalChecker
 	// GetDefaultAction can be used to start mfa flow from different a different point.
 	// Example:
 	// For TOTP we are skipping sending a request for OTP as it is generate by the user

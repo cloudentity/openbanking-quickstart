@@ -45,6 +45,7 @@ type Config struct {
 	BankIDClaim      string        `env:"BANK_ID_CLAIM" envDefault:"sub"`
 	EnableMFA        bool          `env:"ENABLE_MFA"`
 	MFAProvider      string        `env:"MFA_PROVIDER"`
+	MFAProviderPath  string        `env:"MFA_PROVIDER_CONFIG_PATH"`
 	OTPMode          string        `env:"OTP_MODE" envDefault:"demo"`
 	TwilioAccountSid string        `env:"TWILIO_ACCOUNT_SID"`
 	TwilioAuthToken  string        `env:"TWILIO_AUTH_TOKEN"`
@@ -110,6 +111,7 @@ type Server struct {
 	SMSClient                       *SMSClient
 	OTPRepo                         *OTPRepo
 	OTPHandler                      OTPHandler
+	MFAApprovalChecker              MFAApprovalChecker
 	Trans                           *Trans
 	PaymentConsentHandler           ConsentHandler
 	PaymentMFAConsentProvider       MFAConsentProvider
@@ -150,7 +152,7 @@ func NewServer() (Server, error) {
 	switch server.Config.MFAProvider {
 	case "hypr":
 		var config []byte
-		if config, err = os.ReadFile("../config_hypr.yaml"); err != nil {
+		if config, err = os.ReadFile(server.Config.MFAProviderPath); err != nil {
 			return server, errors.Wrapf(err, "failed to read hypr config %s", err)
 		}
 
@@ -160,6 +162,7 @@ func NewServer() (Server, error) {
 		}
 
 		server.MFAStrategy = NewHyprStrategy(hyprConfig)
+		server.MFAApprovalChecker = server.MFAStrategy
 	case "":
 	default:
 		return server, errors.New("unknown MFA provider")
@@ -188,7 +191,7 @@ func NewServer() (Server, error) {
 		return Server{}, errors.New("invalid SPEC configuration")
 	}
 
-	if server.Config.EnableMFA {
+	if server.Config.EnableMFA && server.Config.MFAProvider != "" {
 		logrus.Debugf("mfa is enabled... loading otp db")
 		if db, err = InitDB(server.Config); err != nil {
 			return server, errors.Wrapf(err, "failed to init db")
@@ -201,6 +204,7 @@ func NewServer() (Server, error) {
 		if server.OTPHandler, err = NewOTPHandler(server.Config, server.OTPRepo, server.SMSClient); err != nil {
 			return server, errors.Wrapf(err, "failed to init otp handler")
 		}
+		server.MFAApprovalChecker = server.OTPHandler
 	} else {
 		logrus.Debugf("mfa is disabled... skipping otp db load")
 	}
@@ -243,18 +247,10 @@ func RequireMFAMiddleware(s *Server) gin.HandlerFunc {
 			err      error
 		)
 
-		if s.Config.MFAProvider != "" {
-			if approved, err = s.MFAStrategy.IsApproved(NewLoginRequest(c)); err != nil {
-				RenderInvalidRequestError(c, s.Trans, nil)
-				c.Abort()
-				return
-			}
-		} else {
-			if approved, err = s.OTPHandler.IsApproved(NewLoginRequest(c)); err != nil {
-				RenderInvalidRequestError(c, s.Trans, nil)
-				c.Abort()
-				return
-			}
+		if approved, err = s.MFAApprovalChecker.IsApproved(NewLoginRequest(c)); err != nil {
+			RenderInvalidRequestError(c, s.Trans, nil)
+			c.Abort()
+			return
 		}
 
 		if !approved {
