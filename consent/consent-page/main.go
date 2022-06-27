@@ -47,7 +47,7 @@ type Config struct {
 	OTPMode          string        `env:"OTP_MODE" envDefault:"demo"`
 	HyprToken        string        `env:"HYPR_TOKEN"`
 	HyprBaseURL      string        `env:"HYPR_BASE_URL"`
-	HyprAppId        string        `env:"HYPR_APP_ID"`
+	HyprAppID        string        `env:"HYPR_APP_ID"`
 	TwilioAccountSid string        `env:"TWILIO_ACCOUNT_SID"`
 	TwilioAuthToken  string        `env:"TWILIO_AUTH_TOKEN"`
 	TwilioFrom       string        `env:"TWILIO_FROM" envDefault:"Cloudentity"`
@@ -156,7 +156,7 @@ func NewServer() (Server, error) {
 			hyprConfig := HyprConfig{
 				Token:   server.Config.HyprToken,
 				BaseURL: server.Config.HyprBaseURL,
-				AppID:   server.Config.HyprAppId,
+				AppID:   server.Config.HyprAppID,
 			}
 
 			server.MFAStrategy = NewHyprStrategy(hyprConfig)
