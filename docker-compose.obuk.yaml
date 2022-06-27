@@ -56,7 +56,6 @@ services:
     volumes:
       - ./mount/consent-page:/data
       - ./data/ca.pem:/ca.pem
-      - ./data/config_hypr.yaml:/config_hypr.yaml
       - ./data/bank_cert.pem:/bank_cert.pem
       - ./data/bank_key.pem:/bank_key.pem
     env_file:

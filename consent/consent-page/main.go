@@ -6,7 +6,6 @@ import (
 	"io/ioutil"
 	"net/http"
 	"net/url"
-	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -45,8 +44,10 @@ type Config struct {
 	BankIDClaim      string        `env:"BANK_ID_CLAIM" envDefault:"sub"`
 	EnableMFA        bool          `env:"ENABLE_MFA"`
 	MFAProvider      string        `env:"MFA_PROVIDER"`
-	MFAProviderPath  string        `env:"MFA_PROVIDER_CONFIG_PATH"`
 	OTPMode          string        `env:"OTP_MODE" envDefault:"demo"`
+	HyprToken        string        `env:"HYPR_TOKEN"`
+	HyprBaseURL      string        `env:"HYPR_BASE_URL"`
+	HyprAppId        string        `env:"HYPR_APP_ID"`
 	TwilioAccountSid string        `env:"TWILIO_ACCOUNT_SID"`
 	TwilioAuthToken  string        `env:"TWILIO_AUTH_TOKEN"`
 	TwilioFrom       string        `env:"TWILIO_FROM" envDefault:"Cloudentity"`
@@ -149,22 +150,17 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to read dir %s", server.Config.TransDir)
 	}
 
-	if server.Config.EnableMFA {
+	if server.Config.EnableMFA && server.Config.MFAProvider != "" {
 		switch server.Config.MFAProvider {
 		case "hypr":
-			var config []byte
-			if config, err = os.ReadFile(server.Config.MFAProviderPath); err != nil {
-				return server, errors.Wrapf(err, "failed to read hypr config %s", err)
-			}
-
-			var hyprConfig HyprConfig
-			if err = yaml.Unmarshal(config, &hyprConfig); err != nil {
-				return server, errors.Wrapf(err, "failed to marshal hypr config %s", err)
+			hyprConfig := HyprConfig{
+				Token:   server.Config.HyprToken,
+				BaseURL: server.Config.HyprBaseURL,
+				AppID:   server.Config.HyprAppId,
 			}
 
 			server.MFAStrategy = NewHyprStrategy(hyprConfig)
 			server.MFAApprovalChecker = server.MFAStrategy
-		case "":
 		default:
 			return server, errors.New("unknown MFA provider")
 		}
