@@ -22,6 +22,8 @@ data/seed.yaml.generated
 tests/package-lock.json
 my.db
 mount/conformance/
+.vscode/*
+!.vscode/launch.json
 .env
 
 mount/cdr/holder.json

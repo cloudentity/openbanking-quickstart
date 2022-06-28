@@ -36,6 +36,31 @@ The other option is to register and use ACP in SaaS: https://authz.cloudentity.i
 | Local      | .env-local   | No, everything is good to go out of the box. You shouldn't need to touch this file|
 | SAAS   | .env-saas        | <a href="#saas-configuration-instructions">Yes, running with saas takes a few extra steps</a>|
 
+> #### Additionally, quickstart can be used to showcase flows with MFA
+> By default, MFA is turned off.
+> 1. Run `make enable-mfa` to turn MFA on.
+> 2. Run `make disable-mfa` to turn MFA off.
+
+<br/>
+<h3 id="makefile-targets"> Makefile Targets</h3>
+
+The current types of runtimes are currently supported:
+1. Open Banking UK with local ACP instance: `make run-obuk-local`
+2. Open Banking UK with SAAS ACP: `make run-obuk-saas`
+3. Open Banking Brasil with local ACP instance: `make run-obbr-local`
+4. Open Banking Brasil with SAAS ACP: `make run-obbr-saas`
+5. CDR with local ACP instance: `make run-cdr-local`
+
+<br/>
+
+## How to run Cypress Tests
+| Mode      | Instructions |
+| ----------- | ----------- |
+| With Cypress UI      | Run `make run-tests` to open Cypress GUI with tests scenarios. Then click on the intended test suite name `{TEST_NAME}.ts`    |
+| Headless (commandline)   | Run one of the following: `run-obuk-tests-headless`, `run-obbr-tests-headless`, `run-cdr-tests-headless`        |
+
+<br/>
+
 <h2 id="saas-configuration-instructions">Configuring your ACP SAAS Tenant For Quickstart</h3>
 
 1. Enable System workspace on your ACP SAAS Tenant (you will most likely need to contact someone at Cloudentity to do this for you)
@@ -66,10 +91,16 @@ The current types of runtimes are currently supported:
 To cleanup the environment execute: `make clean`.
 This step is also necessary if you want to switch between different specs.
 
+>### Using Hypr
+>To run using Hypr Passwordless see [Hypr Passwordless Setup](docs/how_to_use_hypr.md)
+
 ## What to do next
 
 Once you can run the quickstart, you can visit our sample apps:
 
+## Credentials
+- ACP admin portal: `https://authorization.cloudentity.com:8443` `admin / admin`
+- Developer TPP: `https://localhost:8090` `user | user2 | user3 / p@ssw0rd!`
 - Financroo TPP: `https://localhost:8091` `test / p@ssw0rd!`
 - Developer TPP: `https://localhost:8090` `user | user2 | user3 / p@ssw0rd!`
 - Consent self service portal: `https://localhost:8085` `user | user2 | user3 / p@ssw0rd!`

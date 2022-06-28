@@ -1,4 +1,4 @@
-
+{{ if not .showMFA }}
   <form action="mfa?login_id={{ .login_request.ID }}&login_state={{ .login_request.State }}&consent_type={{ .login_request.ConsentType }}" method="post" id="form">
     <input type="hidden" name="action" value="request"/>
     <div class="mfa-container">
@@ -35,6 +35,38 @@
       </div>
     </div>
   </form>
+
+{{ else }}
+< <form action="mfa?login_id={{ .login_request.ID }}&login_state={{ .login_request.State }}&consent_type={{ .login_request.ConsentType }}" method="post" id="form">
+    <input type="hidden" name="action" value="verify_mfa"/>
+    <div class="mfa-container">
+      <div class="mfa-container__item">
+        <div class="mfa-container__item--left">
+          <div class="heading-2">{{.mfaTrans.title}}</div>
+          <div class="heading-4">{{.mfaTrans.subTitle}}</div>
+          <div class="caption" style="margin-top: 12px">{{.mfaTrans.caption1}}</div>
+          <div class="caption" style="margin-top: 12px">{{.mfaTrans.caption2}}</div>
+        </div>
+      </div>
+      <div class="mfa-container__item">
+
+           <form action="mfa?login_id={{ .login_request.ID }}&login_state={{ .login_request.State }}&consent_type={{ .login_request.ConsentType }}" method="post" id="form">
+            <input type="hidden" name="action" value="verify_mfa"/>
+            <div class="mfa-container__card hover" style="margin-top: 16px;" onclick="submit('form'); var elem = document.getElementById('okta_arrow'); elem.classList.add('loader'); elem.innerHTML=''">
+              <div>
+                <div style="font-size: 14px">Verify with {{ .mfaProvider }}</div>
+                <div class="caption" style="margin-top: 6px;">User: {{ .mfaUsername }}</div>
+              </div>
+              <div id="okta_arrow">
+                <i class="material-icons mdc-icon-button__icon"> keyboard_arrow_right</i>
+              </div>
+            </div>
+            </form>
+        </div>
+      </div>
+    </div>
+  </form>
+  {{ end }}
 
 <script>
   function submit(id) {

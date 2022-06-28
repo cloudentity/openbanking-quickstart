@@ -43,7 +43,11 @@ type Config struct {
 	KeyFile          string        `env:"KEY_FILE" envDefault:"/bank_key.pem"`
 	BankIDClaim      string        `env:"BANK_ID_CLAIM" envDefault:"sub"`
 	EnableMFA        bool          `env:"ENABLE_MFA"`
+	MFAProvider      string        `env:"MFA_PROVIDER"`
 	OTPMode          string        `env:"OTP_MODE" envDefault:"demo"`
+	HyprToken        string        `env:"HYPR_TOKEN"`
+	HyprBaseURL      string        `env:"HYPR_BASE_URL"`
+	HyprAppID        string        `env:"HYPR_APP_ID"`
 	TwilioAccountSid string        `env:"TWILIO_ACCOUNT_SID"`
 	TwilioAuthToken  string        `env:"TWILIO_AUTH_TOKEN"`
 	TwilioFrom       string        `env:"TWILIO_FROM" envDefault:"Cloudentity"`
@@ -54,10 +58,8 @@ type Config struct {
 	DefaultLanguage  language.Tag  `env:"DEFAULT_LANGUAGE"  envDefault:"en-us"`
 	TransDir         string        `env:"TRANS_DIR" envDefault:"./translations"`
 	Spec             Spec          `env:"SPEC,required"`
-	EnableTLSServer  bool          `env:"ENABLE_TLS_SERVER" envDefault:"true"`
-
-	Otp OtpConfig
-
+	Otp              OtpConfig
+	EnableTLSServer  bool `env:"ENABLE_TLS_SERVER" envDefault:"true"`
 	BankClientConfig BankClientConfig
 }
 
@@ -110,11 +112,13 @@ type Server struct {
 	SMSClient                       *SMSClient
 	OTPRepo                         *OTPRepo
 	OTPHandler                      OTPHandler
+	MFAApprovalChecker              MFAApprovalChecker
 	Trans                           *Trans
 	PaymentConsentHandler           ConsentHandler
 	PaymentMFAConsentProvider       MFAConsentProvider
 	AccountAccessConsentHandler     ConsentHandler
 	AccountAccessMFAConsentProvider MFAConsentProvider
+	MFAStrategy                     MFAStrategy
 }
 
 func NewServer() (Server, error) {
@@ -146,6 +150,22 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to read dir %s", server.Config.TransDir)
 	}
 
+	if server.Config.EnableMFA && server.Config.MFAProvider != "" {
+		switch server.Config.MFAProvider {
+		case "hypr":
+			hyprConfig := HyprConfig{
+				Token:   server.Config.HyprToken,
+				BaseURL: server.Config.HyprBaseURL,
+				AppID:   server.Config.HyprAppID,
+			}
+
+			server.MFAStrategy = NewHyprStrategy(hyprConfig)
+			server.MFAApprovalChecker = server.MFAStrategy
+		default:
+			return server, errors.New("unknown MFA provider")
+		}
+	}
+
 	for _, t := range trans {
 		if _, err = bundle.LoadMessageFile(server.Config.TransDir + "/" + t.Name()); err != nil {
 			return server, err
@@ -169,7 +189,7 @@ func NewServer() (Server, error) {
 		return Server{}, errors.New("invalid SPEC configuration")
 	}
 
-	if server.Config.EnableMFA {
+	if server.Config.EnableMFA && server.Config.MFAProvider == "" {
 		logrus.Debugf("mfa is enabled... loading otp db")
 		if db, err = InitDB(server.Config); err != nil {
 			return server, errors.Wrapf(err, "failed to init db")
@@ -182,6 +202,7 @@ func NewServer() (Server, error) {
 		if server.OTPHandler, err = NewOTPHandler(server.Config, server.OTPRepo, server.SMSClient); err != nil {
 			return server, errors.Wrapf(err, "failed to init otp handler")
 		}
+		server.MFAApprovalChecker = server.OTPHandler
 	} else {
 		logrus.Debugf("mfa is disabled... skipping otp db load")
 	}
@@ -224,7 +245,7 @@ func RequireMFAMiddleware(s *Server) gin.HandlerFunc {
 			err      error
 		)
 
-		if approved, err = s.OTPHandler.IsApproved(NewLoginRequest(c)); err != nil {
+		if approved, err = s.MFAApprovalChecker.IsApproved(NewLoginRequest(c)); err != nil {
 			RenderInvalidRequestError(c, s.Trans, nil)
 			c.Abort()
 			return

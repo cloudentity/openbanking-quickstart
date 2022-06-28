@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/imdario/mergo"
@@ -206,13 +207,14 @@ func (s *DomesticPaymentMFAConsentProvider) GetConsentMockData(loginRequest Logi
 func (s *Server) MFAHandler() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			r        = NewLoginRequest(c)
-			provider MFAConsentProvider
-			data     MFAData
-			ok       bool
-			valid    bool
-			mobile   string
-			err      error
+			r               = NewLoginRequest(c)
+			mfaProviderArgs = make(map[string]string)
+			provider        MFAConsentProvider
+			data            MFAData
+			ok              bool
+			valid           bool
+			mobile          string
+			err             error
 		)
 
 		if err = r.Validate(); err != nil {
@@ -229,7 +231,6 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 			RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to get authn context"))
 			return
 		}
-		logrus.Debugf("authentication context: %+v", data.AuthenticationContext)
 
 		claimData, ok := data.AuthenticationContext[s.Config.MFAClaim]
 
@@ -251,10 +252,6 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 		}
 
 		action := c.PostForm("action")
-
-		if action == "" {
-			action = s.OTPHandler.GetDefaultAction()
-		}
 
 		logrus.Debugf("action: %s, mobile: %s", action, mobile)
 
@@ -333,6 +330,27 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 
 			c.Redirect(http.StatusMovedPermanently, redirect)
 			return
+		case "verify_mfa":
+			switch s.Config.MFAProvider {
+			case "hypr":
+				mfaProviderArgs["username"] = fmt.Sprintf("%s", data.AuthenticationContext["name"])
+			default:
+				RenderInternalServerError(c, s.Trans, errors.New("invalid MFA provider"))
+				return
+			}
+
+			if err := s.MFAStrategy.Approve(mfaProviderArgs); err != nil {
+				switch err.Code {
+				case http.StatusInternalServerError:
+					RenderInternalServerError(c, s.Trans, errors.Wrapf(err.Err, err.Message))
+				default:
+					RenderError(c, err.Code, err.Err, errors.Wrapf(err.Err, err.Message))
+					return
+				}
+			}
+			s.MFAStrategy.SetStorage(r, true)
+			redirect := fmt.Sprintf("?%s", c.Request.URL.Query().Encode())
+			c.Redirect(http.StatusMovedPermanently, redirect)
 		default:
 			templateData := map[string]interface{}{
 				"mobile":     MaskMobile(mobile),
@@ -345,6 +363,12 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 					"sms":      s.Trans.T("mfa.init.sms"),
 					"email":    s.Trans.T("mfa.init.email"),
 				},
+			}
+
+			if s.Config.MFAProvider != "" {
+				templateData["showMFA"] = true
+				templateData["mfaUsername"] = fmt.Sprintf("%s", data.AuthenticationContext["name"])
+				templateData["mfaProvider"] = strings.ToUpper(s.Config.MFAProvider)
 			}
 
 			if err = mergo.Merge(&templateData, provider.GetConsentMockData(r)); err != nil {
