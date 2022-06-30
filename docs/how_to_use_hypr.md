@@ -29,11 +29,6 @@ This will return a response with a magic link(`webLink`). Go to the `webLink` on
 In QuickStart set the environment variables in `.env-saas`. The required environment variables are:
 - MFA_PROVIDER - set to `hypr`
 - ENABLE_MFA - must be set to `true`
-- MFA_PROVIDER_CONFIG_PATH - path to the Hypr mfa config: defaults to:`../config_hypr.yaml`
-
-### Configuration for Hypr
-
-Additionally, in `data/config_hypr.yaml` replace the placeholder values the following:
 - HYPR_TOKEN - your Hypr API Token
 - HYPR_BASE_URL - your hypr tenant base url which must match the application registered in the previous step
 - HYPR_APP_ID - your hypr application ID
