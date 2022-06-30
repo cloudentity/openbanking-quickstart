@@ -118,6 +118,6 @@ Once you can run the quickstart, you can visit our sample apps:
 - [Developer TPP](apps/developer-tpp/LICENSE) - Apache 2.0
 - [Financroo TPP](apps/financroo-tpp/LICENSE) - Apache 2.0
 - [Configuration app](apps/configuration/LICENSE) - Apache 2.0
-- [Consent self service portal](consent/self-service-portal/LICENSE) - Cloudentity
-- [Consent admin portal](consent/admin-portal/LICENSE) - Cloudentity
-- [Consent page](consent/consent-page/LICENSE) - Cloudentity
+- [Consent self service portal](consent/self-service-portal/LICENSE) - Apache 2.0
+- [Consent admin portal](consent/admin-portal/LICENSE) - Apache 2.0
+- [Consent page](consent/consent-page/LICENSE) - Apache 2.0
