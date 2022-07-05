@@ -334,7 +334,7 @@ policies:
 - id: block_cdr_dcr
   language: cloudentity
   policy_name: Unlock DCR
-  server_id: cdr
+  server_id: {{ .server_id }}
   tenant_id: {{ .tenant_id }}
   type: dcr
   validators:
