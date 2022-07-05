@@ -73,6 +73,7 @@ func (h *OBUKLogic) BuildLoginURL(c *gin.Context, consentID string, doRequestObj
 		acpclient.WithOpenbankingIntentID(consentID, []string{"urn:openbanking:psd2:sca"}),
 		acpclient.WithPKCE(),
 		acpclient.WithResponseType("code id_token"),
+		acpclient.WithResponseMode("jwt"),
 	)
 }
 
