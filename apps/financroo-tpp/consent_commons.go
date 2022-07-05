@@ -49,7 +49,6 @@ func (o *OBBRLoginURLBuilder) BuildLoginURL(consentID string, client acpclient.C
 		acpclient.WithOpenbankingIntentID(consentID, []string{"urn:brasil:openbanking:loa2"}),
 		acpclient.WithRequestObjectEncryption(o.key),
 		acpclient.WithPKCE(),
-		acpclient.WithResponseType("code id_token"),
 		acpclient.WithResponseMode("jwt"),
 	)
 }
@@ -64,7 +63,6 @@ func (o *OBUKLoginURLBuilder) BuildLoginURL(consentID string, client acpclient.C
 	return client.AuthorizeURL(
 		acpclient.WithOpenbankingIntentID(consentID, []string{"urn:openbanking:psd2:sca"}),
 		acpclient.WithPKCE(),
-		acpclient.WithResponseType("code id_token"),
 		acpclient.WithResponseMode("jwt"),
 	)
 }
@@ -80,7 +78,6 @@ func (o *CDRLoginURLBuilder) BuildLoginURL(arrangementID string, client acpclien
 	return client.AuthorizeURL(
 		acpclient.WithPKCE(),
 		acpclient.WithOpenbankingACR([]string{"urn:cds.au:cdr:2"}),
-		acpclient.WithResponseType("code id_token"),
 		acpclient.WithResponseMode("jwt"),
 	)
 }
