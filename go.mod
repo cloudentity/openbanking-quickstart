@@ -2,11 +2,10 @@ module github.com/cloudentity/openbanking-quickstart
 
 go 1.15
 
-
 require (
 	github.com/Masterminds/sprig/v3 v3.2.2
 	github.com/caarlos0/env/v6 v6.4.0
-	github.com/cloudentity/acp-client-go v0.0.0-20220705151953-d498478f1b28
+	github.com/cloudentity/acp-client-go v0.0.0-20220705170806-f85d16b166c0
 	github.com/dgrijalva/jwt-go v3.2.1-0.20200107013213-dc14462fd587+incompatible
 	github.com/ggicci/httpin v0.7.1
 	github.com/ghodss/yaml v1.0.0
@@ -17,7 +16,7 @@ require (
 	github.com/go-openapi/strfmt v0.20.1
 	github.com/go-openapi/swag v0.19.15
 	github.com/go-openapi/validate v0.20.2
-	github.com/golang-jwt/jwt/v4 v4.4.1 // indirect
+	github.com/golang-jwt/jwt/v4 v4.4.2 // indirect
 	github.com/google/uuid v1.1.2
 	github.com/gorilla/securecookie v1.1.1
 	github.com/imdario/mergo v0.3.12
