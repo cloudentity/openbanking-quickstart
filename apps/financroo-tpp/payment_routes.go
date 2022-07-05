@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	acpclient "github.com/cloudentity/acp-client-go"
+	"github.com/cloudentity/openbanking-quickstart/utils/request_utils"
 )
 
 func (s *Server) CreateDomesticPaymentConsent() func(*gin.Context) {
@@ -43,16 +44,21 @@ func (s *Server) DomesticPaymentCallback() func(*gin.Context) {
 		var (
 			app             string
 			appStorage      = AppStorage{}
-			code            = c.Query("code")
-			state           = c.Query("state")
+			responseToken   = c.Query("response")
+			responseClaims  request_utils.ResponseClaims
 			consentResponse interface{}
 			paymentCreated  PaymentCreated
 			token           acpclient.Token
 			err             error
 		)
 
-		if c.Query("error") != "" {
-			c.String(http.StatusBadRequest, fmt.Sprintf("acp returned an error: %s: %s", c.Query("error"), c.Query("error_description")))
+		if responseClaims, err = request_utils.DecodeResponseToken(responseToken); err != nil {
+			c.String(http.StatusBadRequest, fmt.Sprintf("failed to decode response jwt token %v", err))
+			return
+		}
+
+		if responseClaims.Error != "" {
+			c.String(http.StatusBadRequest, fmt.Sprintf("acp returned an error: %s: %s", responseClaims.Error, responseClaims.ErrorDescription))
 			return
 		}
 
@@ -66,7 +72,7 @@ func (s *Server) DomesticPaymentCallback() func(*gin.Context) {
 			return
 		}
 
-		if token, err = s.Clients.AcpPaymentsClient.Exchange(code, state, appStorage.CSRF); err != nil {
+		if token, err = s.Clients.AcpPaymentsClient.Exchange(responseClaims.Code, responseClaims.State, appStorage.CSRF); err != nil {
 			c.String(http.StatusUnauthorized, fmt.Sprintf("failed to exchange code: %+v", err))
 			return
 		}
