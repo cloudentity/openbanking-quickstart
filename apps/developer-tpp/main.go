@@ -10,6 +10,7 @@ import (
 	"time"
 
 	"github.com/caarlos0/env/v6"
+	"github.com/cloudentity/openbanking-quickstart/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/securecookie"
 	"github.com/pkg/errors"
@@ -18,7 +19,6 @@ import (
 
 	acpclient "github.com/cloudentity/acp-client-go"
 	oauth2 "github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
-	"github.com/cloudentity/openbanking-quickstart/utils"
 )
 
 type Spec string
