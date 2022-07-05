@@ -122,14 +122,13 @@ func (s *Server) Callback() func(*gin.Context) {
 			appStorage       = AppStorage{}
 			userinfoResponse map[string]interface{}
 			additionalData   map[string]interface{}
-			responseToken    = c.Query("response")
-			responseClaims   utils.ResponseClaims
+			responseClaims   utils.ResponseData
 			token            acpclient.Token
 			data             = gin.H{}
 			err              error
 		)
 
-		if responseClaims, err = utils.DecodeResponseToken(responseToken); err != nil {
+		if responseClaims, err = s.CallbackURLResponseModeParser(c.Request); err != nil {
 			c.String(http.StatusBadRequest, fmt.Sprintf("failed to decode response jwt token %v", err))
 			return
 		}

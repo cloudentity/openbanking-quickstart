@@ -18,6 +18,7 @@ import (
 
 	acpclient "github.com/cloudentity/acp-client-go"
 	oauth2 "github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
+	"github.com/cloudentity/openbanking-quickstart/utils"
 )
 
 type Spec string
@@ -88,6 +89,7 @@ type Server struct {
 	Client       acpclient.Client
 	BankClient   OpenbankingClient
 	SecureCookie *securecookie.SecureCookie
+	utils.CallbackURLResponseModeParser
 	SpecLogicHandler
 }
 
@@ -106,13 +108,16 @@ func NewServer() (Server, error) {
 	case OBUK:
 		server.Config.ClientScopes = []string{"openid", "accounts"}
 		acpConfig = server.Config.ClientConfig()
+		server.CallbackURLResponseModeParser = utils.GetResponseDataFromJWT
 	case OBBR:
 		server.Config.ClientScopes = []string{"openid", "consents", "consent:*"}
 		acpConfig = server.Config.ClientConfig()
+		server.CallbackURLResponseModeParser = utils.GetResponseDataFromJWT
 	case FDX:
 		acpConfig = server.Config.ClientConfig()
 		acpConfig.ClientSecret = server.Config.ClientSecret
 		acpConfig.AuthMethod = acpclient.ClientSecretPostAuthnMethod
+		server.CallbackURLResponseModeParser = utils.GetResponseDataFromQuery
 	}
 
 	if server.Client, err = acpclient.New(acpConfig); err != nil {

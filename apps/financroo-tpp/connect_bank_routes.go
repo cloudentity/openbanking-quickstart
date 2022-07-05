@@ -64,13 +64,12 @@ func (s *Server) ConnectBankCallback() func(*gin.Context) {
 		var (
 			app            string
 			appStorage     = AppStorage{}
-			responseToken  = c.Query("response")
 			token          acpclient.Token
-			responseClaims utils.ResponseClaims
+			responseClaims utils.ResponseData
 			err            error
 		)
 
-		if responseClaims, err = utils.DecodeResponseToken(responseToken); err != nil {
+		if responseClaims, err = utils.GetResponseDataFromJWT(c.Request); err != nil {
 			c.String(http.StatusBadRequest, fmt.Sprintf("failed to decode response jwt token %v", err))
 			return
 		}

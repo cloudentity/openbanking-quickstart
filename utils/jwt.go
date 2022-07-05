@@ -1,6 +1,10 @@
 package utils
 
-import "github.com/golang-jwt/jwt/v4"
+import (
+	"net/http"
+
+	"github.com/golang-jwt/jwt/v4"
+)
 
 type JwtClaims map[string]interface{}
 
@@ -22,24 +26,25 @@ func unpack(token string) (JwtClaims, error) {
 	return claims, nil
 }
 
-type ResponseClaims struct {
+type ResponseData struct {
 	State            string
 	Code             string
 	Error            string
 	ErrorDescription string
 }
 
-func DecodeResponseToken(token string) (ResponseClaims, error) {
+func GetResponseDataFromJWT(r *http.Request) (ResponseData, error) {
 	var (
 		claims         map[string]interface{}
-		responseClaims ResponseClaims
+		responseClaims ResponseData
+		token          = r.URL.Query().Get("response")
 		val            string
 		ok             bool
 		err            error
 	)
 
 	if claims, err = unpack(token); err != nil {
-		return ResponseClaims{}, err
+		return ResponseData{}, err
 	}
 	if claims["code"] != nil {
 		if val, ok = claims["code"].(string); ok {

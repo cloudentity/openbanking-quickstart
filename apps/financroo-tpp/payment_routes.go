@@ -44,15 +44,14 @@ func (s *Server) DomesticPaymentCallback() func(*gin.Context) {
 		var (
 			app             string
 			appStorage      = AppStorage{}
-			responseToken   = c.Query("response")
-			responseClaims  utils.ResponseClaims
+			responseClaims  utils.ResponseData
 			consentResponse interface{}
 			paymentCreated  PaymentCreated
 			token           acpclient.Token
 			err             error
 		)
 
-		if responseClaims, err = utils.DecodeResponseToken(responseToken); err != nil {
+		if responseClaims, err = utils.GetResponseDataFromJWT(c.Request); err != nil {
 			c.String(http.StatusBadRequest, fmt.Sprintf("failed to decode response jwt token %v", err))
 			return
 		}
