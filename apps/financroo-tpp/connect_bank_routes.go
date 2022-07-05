@@ -5,13 +5,13 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/cloudentity/openbanking-quickstart/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
 	acpclient "github.com/cloudentity/acp-client-go"
 	oauth2 "github.com/cloudentity/acp-client-go/clients/oauth2/models"
-	"github.com/cloudentity/openbanking-quickstart/utils"
 )
 
 type AppStorage struct {

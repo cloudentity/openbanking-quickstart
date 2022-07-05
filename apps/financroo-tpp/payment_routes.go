@@ -5,10 +5,10 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/cloudentity/openbanking-quickstart/utils"
 	"github.com/gin-gonic/gin"
 
 	acpclient "github.com/cloudentity/acp-client-go"
-	"github.com/cloudentity/openbanking-quickstart/utils"
 )
 
 func (s *Server) CreateDomesticPaymentConsent() func(*gin.Context) {
