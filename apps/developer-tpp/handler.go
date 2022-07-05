@@ -10,7 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	acpclient "github.com/cloudentity/acp-client-go"
-	"github.com/cloudentity/openbanking-quickstart/utils/request_utils"
+	"github.com/cloudentity/openbanking-quickstart/utils"
 )
 
 type AppStorage struct {
@@ -123,13 +123,13 @@ func (s *Server) Callback() func(*gin.Context) {
 			userinfoResponse map[string]interface{}
 			additionalData   map[string]interface{}
 			responseToken    = c.Query("response")
-			responseClaims   request_utils.ResponseClaims
+			responseClaims   utils.ResponseClaims
 			token            acpclient.Token
 			data             = gin.H{}
 			err              error
 		)
 
-		if responseClaims, err = request_utils.DecodeResponseToken(responseToken); err != nil {
+		if responseClaims, err = utils.DecodeResponseToken(responseToken); err != nil {
 			c.String(http.StatusBadRequest, fmt.Sprintf("failed to decode response jwt token %v", err))
 			return
 		}

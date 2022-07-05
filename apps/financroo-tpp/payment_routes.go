@@ -8,7 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	acpclient "github.com/cloudentity/acp-client-go"
-	"github.com/cloudentity/openbanking-quickstart/utils/request_utils"
+	"github.com/cloudentity/openbanking-quickstart/utils"
 )
 
 func (s *Server) CreateDomesticPaymentConsent() func(*gin.Context) {
@@ -45,14 +45,14 @@ func (s *Server) DomesticPaymentCallback() func(*gin.Context) {
 			app             string
 			appStorage      = AppStorage{}
 			responseToken   = c.Query("response")
-			responseClaims  request_utils.ResponseClaims
+			responseClaims  utils.ResponseClaims
 			consentResponse interface{}
 			paymentCreated  PaymentCreated
 			token           acpclient.Token
 			err             error
 		)
 
-		if responseClaims, err = request_utils.DecodeResponseToken(responseToken); err != nil {
+		if responseClaims, err = utils.DecodeResponseToken(responseToken); err != nil {
 			c.String(http.StatusBadRequest, fmt.Sprintf("failed to decode response jwt token %v", err))
 			return
 		}

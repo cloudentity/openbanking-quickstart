@@ -1,4 +1,4 @@
-package request_utils
+package utils
 
 import "github.com/golang-jwt/jwt/v4"
 

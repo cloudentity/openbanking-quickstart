@@ -11,7 +11,7 @@ import (
 
 	acpclient "github.com/cloudentity/acp-client-go"
 	oauth2 "github.com/cloudentity/acp-client-go/clients/oauth2/models"
-	"github.com/cloudentity/openbanking-quickstart/utils/request_utils"
+	"github.com/cloudentity/openbanking-quickstart/utils"
 )
 
 type AppStorage struct {
@@ -66,11 +66,11 @@ func (s *Server) ConnectBankCallback() func(*gin.Context) {
 			appStorage     = AppStorage{}
 			responseToken  = c.Query("response")
 			token          acpclient.Token
-			responseClaims request_utils.ResponseClaims
+			responseClaims utils.ResponseClaims
 			err            error
 		)
 
-		if responseClaims, err = request_utils.DecodeResponseToken(responseToken); err != nil {
+		if responseClaims, err = utils.DecodeResponseToken(responseToken); err != nil {
 			c.String(http.StatusBadRequest, fmt.Sprintf("failed to decode response jwt token %v", err))
 			return
 		}
