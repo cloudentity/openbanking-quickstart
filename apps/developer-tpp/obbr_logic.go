@@ -110,12 +110,14 @@ func (h *OBBRLogic) BuildLoginURL(c *gin.Context, consentID string, doRequestObj
 			acpclient.WithOpenbankingIntentID(consentID, []string{"urn:brasil:openbanking:loa2"}),
 			acpclient.WithRequestObjectEncryption(key),
 			acpclient.WithPKCE(),
+			acpclient.WithResponseType("code id_token"),
 		)
 	}
 
 	return client.AuthorizeURL(
 		acpclient.WithOpenbankingIntentID(consentID, []string{"urn:brasil:openbanking:loa2"}),
 		acpclient.WithPKCE(),
+		acpclient.WithResponseType("code id_token"),
 	)
 }
 
