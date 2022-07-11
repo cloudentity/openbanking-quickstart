@@ -6,66 +6,28 @@ import (
 	"github.com/golang-jwt/jwt/v4"
 )
 
-type JwtClaims map[string]interface{}
-
-func (j *JwtClaims) Valid() error {
-	return nil
-}
-
-func unpack(token string) (JwtClaims, error) {
-	var (
-		claims = JwtClaims{}
-		parser jwt.Parser
-		err    error
-	)
-
-	if _, _, err = parser.ParseUnverified(token, &claims); err != nil {
-		return claims, err
-	}
-
-	return claims, nil
-}
-
 type ResponseData struct {
-	State            string
-	Code             string
-	Error            string
-	ErrorDescription string
+	State            string `json:"state"`
+	Code             string `json:"code"`
+	Error            string `json:"error"`
+	ErrorDescription string `json:"error_description"`
+}
+
+func (r *ResponseData) Valid() error {
+	return nil
 }
 
 func GetResponseDataFromJWT(r *http.Request) (ResponseData, error) {
 	var (
-		claims         map[string]interface{}
-		responseClaims ResponseData
-		token          = r.URL.Query().Get("response")
-		val            string
-		ok             bool
-		err            error
+		responseData ResponseData
+		token        = r.URL.Query().Get("response")
+		parser       jwt.Parser
+		err          error
 	)
 
-	if claims, err = unpack(token); err != nil {
+	if _, _, err = parser.ParseUnverified(token, &responseData); err != nil {
 		return ResponseData{}, err
 	}
-	if claims["code"] != nil {
-		if val, ok = claims["code"].(string); ok {
-			responseClaims.Code = val
-		}
-	}
-	if claims["state"] != nil {
-		if val, ok = claims["state"].(string); ok {
-			responseClaims.State = val
-		}
-	}
-	if claims["error"] != nil {
-		if val, ok = claims["error"].(string); ok {
-			responseClaims.Error = val
-		}
-	}
-	if claims["error_description"] != nil {
-		if val, ok = claims["error_description"].(string); ok {
-			responseClaims.ErrorDescription = val
-		}
-	}
 
-	return responseClaims, nil
+	return responseData, nil
 }
