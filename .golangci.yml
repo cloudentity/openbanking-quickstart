@@ -242,6 +242,8 @@ linters:
     - wsl
     - rowserrcheck
     - interfacer
+    - tagliatelle 
+    - varnamelen
   fast: false
   
 
