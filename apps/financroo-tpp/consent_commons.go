@@ -67,8 +67,7 @@ func (o *OBUKLoginURLBuilder) BuildLoginURL(consentID string, client acpclient.C
 	)
 }
 
-type CDRLoginURLBuilder struct {
-}
+type CDRLoginURLBuilder struct{}
 
 func NewCDRLoginURLBuilder(config Config) (LoginURLBuilder, error) {
 	return &CDRLoginURLBuilder{}, nil
@@ -87,7 +86,8 @@ func (s *Server) CreateConsentResponse(
 	consentID string,
 	user User,
 	client acpclient.Client,
-	loginURLBuilder LoginURLBuilder) {
+	loginURLBuilder LoginURLBuilder,
+) {
 	var (
 		loginURL           string
 		err                error
