@@ -19,11 +19,13 @@ func (r *ResponseData) Valid() error {
 }
 
 func HandleAuthResponseMode(r *http.Request) (ResponseData, error) {
-	if r.URL.Query().Get("response") != "" {
+	query := r.URL.Query()
+
+	if query.Has("response") {
 		return GetResponseDataFromJWT(r)
 	}
 
-	if r.URL.Query().Get("code") != "" {
+	if query.Has("code") || query.Has("error") {
 		return GetResponseDataFromQuery(r)
 	}
 
