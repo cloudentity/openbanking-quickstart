@@ -29,6 +29,10 @@ build:
 build-financroo-tpp:
 	docker-compose -f docker-compose.obuk.yaml -f docker-compose.obbr.yaml -f docker-compose.cdr.yaml -f docker-compose.build.yaml build financroo-tpp
 
+.PHONY: build-developer-tpp 
+build-developer-tpp:
+	docker-compose -f docker-compose.obuk.yaml -f docker-compose.obbr.yaml -f docker-compose.cdr.yaml -f docker-compose.build.yaml build developer-tpp
+
 # obuk, obbr, cdr, fdx
 run-%-tests-headless:
 	yarn --cwd tests run cypress run -s cypress/integration/$*/*.ts
