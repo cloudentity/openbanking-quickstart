@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/golang-jwt/jwt/v4"
+	"gopkg.in/square/go-jose.v2"
 )
 
 type ResponseData struct {
@@ -18,11 +19,11 @@ func (r *ResponseData) Valid() error {
 	return nil
 }
 
-func HandleAuthResponseMode(r *http.Request) (ResponseData, error) {
+func HandleAuthResponseMode(r *http.Request, verificationKey jose.JSONWebKey) (ResponseData, error) {
 	query := r.URL.Query()
 
 	if query.Has("response") {
-		return GetResponseDataFromJWT(r)
+		return GetResponseDataFromJWT(r, verificationKey)
 	}
 
 	if query.Has("code") || query.Has("error") {
@@ -41,15 +42,18 @@ func GetResponseDataFromQuery(r *http.Request) (ResponseData, error) {
 	}, nil
 }
 
-func GetResponseDataFromJWT(r *http.Request) (ResponseData, error) {
+func GetResponseDataFromJWT(r *http.Request, key jose.JSONWebKey) (ResponseData, error) {
 	var (
 		responseData ResponseData
 		token        = r.URL.Query().Get("response")
 		parser       jwt.Parser
-		err          error
+		keyFunc      = func(t *jwt.Token) (interface{}, error) {
+			return key.Key, nil
+		}
+		err error
 	)
 
-	if _, _, err = parser.ParseUnverified(token, &responseData); err != nil {
+	if _, err = parser.ParseWithClaims(token, &responseData, keyFunc); err != nil {
 		return ResponseData{}, err
 	}
 
