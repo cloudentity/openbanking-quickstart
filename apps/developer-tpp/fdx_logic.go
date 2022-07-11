@@ -47,7 +47,7 @@ func NewFDXLogic(serverConfig Config) (*FDXLogic, error) {
 }
 
 func (h *FDXLogic) GetAccounts(c *gin.Context, token string) (interface{}, error) {
-	return nil, nil
+	return nil, nil // nolint
 }
 
 func (h *FDXLogic) CreateConsent(c *gin.Context) (interface{}, error) {
@@ -102,7 +102,7 @@ func (h *FDXLogic) CreateConsent(c *gin.Context) (interface{}, error) {
 func (h *FDXLogic) GetConsentID(data interface{}) string {
 	if m, ok := data.(*map[string]interface{}); ok {
 		m := *m
-		return m["request_uri"].(string)
+		return m["request_uri"].(string) // nolint
 	}
 
 	return ""

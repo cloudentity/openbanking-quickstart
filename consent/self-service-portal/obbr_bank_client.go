@@ -32,7 +32,7 @@ func (c *OBBRBankClient) GetInternalAccounts(subject string) (InternalAccounts, 
 		err      error
 	)
 
-	if request, err = http.NewRequest("GET", fmt.Sprintf("%s/internal/accounts?id=%s", c.baseURL, subject), http.NewRequest("GET", fmt.Sprintf("%s/internal/accounts?id=%s", c.baseURL, subject), http.NoBody)); err != nil {
+	if request, err = http.NewRequest("GET", fmt.Sprintf("%s/internal/accounts?id=%s", c.baseURL, subject), http.NoBody); err != nil {
 		return InternalAccounts{}, err
 	}
 

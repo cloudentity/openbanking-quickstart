@@ -157,10 +157,10 @@ const (
 	ContasSaldos                        PermissionGroup = "Contas Saldos"
 	ContasLimites                       PermissionGroup = "Contas Limites"
 	ContasExtratos                      PermissionGroup = "Contas Extratos"
-	CartaoDeCreditoLimites              PermissionGroup = "Cartão de Crédito Limites"
-	CartaoDeCreditoTransacoes           PermissionGroup = "Cartão de Crédito Transações"
-	CartaoDeCreditoFaturas              PermissionGroup = "Cartão de Crédito Faturas"
-	OperacoesDeCreditoDadosDoContrato   PermissionGroup = "Operações de Crédito Dados do Contrato"
+	CartaoDeCreditoLimites              PermissionGroup = "Cartão de Crédito Limites"              // nolint
+	CartaoDeCreditoTransacoes           PermissionGroup = "Cartão de Crédito Transações"           // nolint
+	CartaoDeCreditoFaturas              PermissionGroup = "Cartão de Crédito Faturas"              // nolint
+	OperacoesDeCreditoDadosDoContrato   PermissionGroup = "Operações de Crédito Dados do Contrato" // nolint
 )
 
 type Permissions []obbrModels.OpenbankingBrasilPermission

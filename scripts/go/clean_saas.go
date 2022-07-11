@@ -59,7 +59,7 @@ func main() {
 
 	for _, sid := range openbankingServersIDs {
 		fmt.Printf("INFO: Trying to delete server with ID: '%s'\n", sid)
-		if request, err = http.NewRequest("DELETE", fmt.Sprintf("%s/api/admin/%s/servers/%s", tURL.String(), *tenantID, sid), http.NewRequest("DELETE", fmt.Sprintf("%s/api/admin/%s/servers/%s", tURL.String(), *tenantID, sid), http.NoBody)); err != nil {
+		if request, err = http.NewRequest("DELETE", fmt.Sprintf("%s/api/admin/%s/servers/%s", tURL.String(), *tenantID, sid), http.NoBody); err != nil {
 			log.Fatalf("ERROR: Failed to setup delete server '%s' request: %v", sid, err)
 		}
 
@@ -72,7 +72,7 @@ func main() {
 
 	for _, cid := range openbankingClientsIDs {
 		fmt.Printf("INFO: Trying to delete client with ID: '%s'\n", cid)
-		if request, err = http.NewRequest("DELETE", fmt.Sprintf("%s/api/admin/%s/clients/%s", tURL.String(), *tenantID, cid), http.NewRequest("DELETE", fmt.Sprintf("%s/api/admin/%s/clients/%s", tURL.String(), *tenantID, cid), http.NoBody)); err != nil {
+		if request, err = http.NewRequest("DELETE", fmt.Sprintf("%s/api/admin/%s/clients/%s", tURL.String(), *tenantID, cid), http.NoBody); err != nil {
 			log.Fatalf("ERROR: Failed to setup delete client '%s' request: %v", cid, err)
 		}
 
