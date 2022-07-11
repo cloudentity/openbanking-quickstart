@@ -51,7 +51,7 @@ func (s *Server) DomesticPaymentCallback() func(*gin.Context) {
 			err             error
 		)
 
-		if responseClaims, err = utils.GetResponseDataFromJWT(c.Request); err != nil {
+		if responseClaims, err = utils.HandleAuthResponseMode(c.Request); err != nil {
 			c.String(http.StatusBadRequest, fmt.Sprintf("failed to decode response jwt token %v", err))
 			return
 		}
