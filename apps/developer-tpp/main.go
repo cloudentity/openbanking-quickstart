@@ -16,6 +16,8 @@ import (
 	"github.com/sirupsen/logrus"
 	"gopkg.in/square/go-jose.v2"
 
+	"github.com/cloudentity/openbanking-quickstart/utils"
+
 	acpclient "github.com/cloudentity/acp-client-go"
 	oauth2 "github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
 )
@@ -84,10 +86,11 @@ func LoadConfig() (config Config, err error) {
 }
 
 type Server struct {
-	Config       Config
-	Client       acpclient.Client
-	BankClient   OpenbankingClient
-	SecureCookie *securecookie.SecureCookie
+	Config                   Config
+	Client                   acpclient.Client
+	BankClient               OpenbankingClient
+	SecureCookie             *securecookie.SecureCookie
+	SignatureVerificationKey jose.JSONWebKey
 	SpecLogicHandler
 }
 
@@ -132,6 +135,10 @@ func NewServer() (Server, error) {
 		if server.SpecLogicHandler, err = NewFDXLogic(server.Config); err != nil {
 			return server, errors.Wrapf(err, "failed to init fdx logic handler")
 		}
+	}
+
+	if server.SignatureVerificationKey, err = utils.GetServerKey(&server.Client, utils.SIG); err != nil {
+		return server, errors.Wrapf(err, "failed to retrieve server signing key")
 	}
 
 	return server, nil

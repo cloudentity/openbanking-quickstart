@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/cloudentity/openbanking-quickstart/utils"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 
@@ -121,14 +122,19 @@ func (s *Server) Callback() func(*gin.Context) {
 			appStorage       = AppStorage{}
 			userinfoResponse map[string]interface{}
 			additionalData   map[string]interface{}
-			code             = c.Query("code")
+			responseClaims   utils.ResponseData
 			token            acpclient.Token
 			data             = gin.H{}
 			err              error
 		)
 
-		if c.Query("error") != "" {
-			c.String(http.StatusBadRequest, fmt.Sprintf("acp returned an error: %s: %s", c.Query("error"), c.Query("error_description")))
+		if responseClaims, err = utils.HandleAuthResponseMode(c.Request, s.SignatureVerificationKey); err != nil {
+			c.String(http.StatusBadRequest, fmt.Sprintf("failed to decode response jwt token %v", err))
+			return
+		}
+
+		if responseClaims.Error != "" {
+			c.String(http.StatusBadRequest, fmt.Sprintf("acp returned an error: %s: %s", responseClaims.Error, responseClaims.ErrorDescription))
 			return
 		}
 
@@ -142,7 +148,7 @@ func (s *Server) Callback() func(*gin.Context) {
 			return
 		}
 
-		if token, err = s.Client.Exchange(code, c.Query("state"), appStorage.CSRF); err != nil {
+		if token, err = s.Client.Exchange(responseClaims.Code, responseClaims.State, appStorage.CSRF); err != nil {
 			c.String(http.StatusUnauthorized, fmt.Sprintf("failed to exchange code: %+v", err))
 			return
 		}

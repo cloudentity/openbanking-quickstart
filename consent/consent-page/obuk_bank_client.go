@@ -35,7 +35,7 @@ func (c *OBUKBankClient) GetInternalAccounts(ctx context.Context, id string) (In
 		err      error
 	)
 
-	if request, err = http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s/internal/accounts?id=%s", c.baseURL, id), nil); err != nil {
+	if request, err = http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s/internal/accounts?id=%s", c.baseURL, id), http.NoBody); err != nil {
 		return InternalAccounts{}, err
 	}
 
@@ -80,7 +80,7 @@ func (c *OBUKBankClient) GetInternalBalances(ctx context.Context, id string) (Ba
 		err      error
 	)
 
-	if request, err = http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s/internal/balances?id=%s", c.baseURL, id), nil); err != nil {
+	if request, err = http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s/internal/balances?id=%s", c.baseURL, id), http.NoBody); err != nil {
 		return resp, err
 	}
 

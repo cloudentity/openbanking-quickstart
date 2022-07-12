@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.1.3-experimental
-FROM golang:1.16 as builder
+FROM golang:1.18 as builder
 
 WORKDIR /app
 
@@ -8,6 +8,7 @@ COPY go.sum .
 RUN go mod download
 
 COPY openbanking openbanking
+COPY utils utils
 COPY apps/developer-tpp .
 RUN --mount=type=cache,target=/root/.cache/go-build,mode=777 \
     CGO_ENABLED=0 go build -tags static_all -o main .

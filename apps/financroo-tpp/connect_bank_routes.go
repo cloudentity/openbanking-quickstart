@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"time"
 
+	"github.com/cloudentity/openbanking-quickstart/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -61,15 +62,20 @@ func (s *Server) ConnectBank() func(*gin.Context) {
 func (s *Server) ConnectBankCallback() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			app        string
-			appStorage = AppStorage{}
-			code       = c.Query("code")
-			token      acpclient.Token
-			err        error
+			app            string
+			appStorage     = AppStorage{}
+			token          acpclient.Token
+			responseClaims utils.ResponseData
+			err            error
 		)
 
-		if c.Query("error") != "" {
-			c.String(http.StatusBadRequest, fmt.Sprintf("acp returned an error: %s: %s", c.Query("error"), c.Query("error_description")))
+		if responseClaims, err = utils.HandleAuthResponseMode(c.Request, s.SignatureVerificationKey); err != nil {
+			c.String(http.StatusBadRequest, fmt.Sprintf("failed to decode response jwt token %v", err))
+			return
+		}
+
+		if responseClaims.Error != "" {
+			c.String(http.StatusBadRequest, fmt.Sprintf("acp returned an error: %v: %v", responseClaims.Error, responseClaims.ErrorDescription))
 			return
 		}
 
@@ -83,7 +89,7 @@ func (s *Server) ConnectBankCallback() func(*gin.Context) {
 			return
 		}
 
-		if token, err = s.Clients.AcpAccountsClient.Exchange(code, c.Query("state"), appStorage.CSRF); err != nil {
+		if token, err = s.Clients.AcpAccountsClient.Exchange(responseClaims.Code, responseClaims.State, appStorage.CSRF); err != nil {
 			c.String(http.StatusUnauthorized, fmt.Sprintf("failed to exchange code: %+v", err))
 			return
 		}

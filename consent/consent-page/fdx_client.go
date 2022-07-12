@@ -2,8 +2,7 @@ package main
 
 import "context"
 
-type FDXClient struct {
-}
+type FDXClient struct{}
 
 var _ BankClient = &FDXClient{}
 

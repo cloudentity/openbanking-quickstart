@@ -203,11 +203,7 @@ linters-settings:
     settings: # settings passed to gocritic
       captLocal: # must be valid enabled check name
         paramsOnly: true
-  godox:
-    # report any comments starting with keywords, this is useful for TODO or FIXME comments that
-    # might be left in the code accidentally and should be resolved before merging
-    # keywords: # default keywords are TODO, BUG, and FIXME, these can be overwritten by this setting
-    #   - NOTE
+
   dogsled:
     # checks assignments with too many blank identifiers; default is 2
     max-blank-identifiers: 2
@@ -220,6 +216,7 @@ linters:
   enable-all: true
   disable:
     - exhaustivestruct
+    - exhaustruct
     - wrapcheck
     - noctx
     - nlreturn
@@ -231,6 +228,7 @@ linters:
     - gochecknoglobals
     - gocyclo
     - gocognit
+    - gocritic
     - lll
     - funlen
     - dupl
@@ -242,6 +240,13 @@ linters:
     - wsl
     - rowserrcheck
     - interfacer
+    - tagliatelle 
+    - varnamelen
+    - nonamedreturns
+    - ireturn
+    - cyclop
+    - gci
+    - forbidigo
   fast: false
   
 
@@ -268,6 +273,10 @@ issues:
         - goconst
         - paralleltest
         - thelper
+
+    - path: _test\.go
+      linters:
+        - forcetypeassert
       
     - path: apps/bank/
       linters:

@@ -14,7 +14,7 @@ COPY apps/financroo-tpp/web/app/src src
 
 RUN npm run build
 
-FROM golang:1.16 as go-builder
+FROM golang:1.18 as go-builder
 
 WORKDIR /app
 
@@ -23,6 +23,7 @@ COPY go.sum .
 RUN go mod download
 
 COPY openbanking openbanking
+COPY utils utils 
 COPY apps/financroo-tpp .
 RUN --mount=type=cache,target=/root/.cache/go-build,mode=777 \
     CGO_ENABLED=0 go build -tags static_all -o main .

@@ -288,6 +288,7 @@ func (c *ConsentTools) GetFDXAccountAccessConsentTemplateData(
 		title          = c.Trans.T("fdx.account.title")
 	)
 
+	// nolint
 	for i, a := range accounts.Accounts {
 		accounts.Accounts[i] = a
 	}

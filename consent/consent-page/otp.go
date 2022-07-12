@@ -313,7 +313,7 @@ func MaskMobile(mobile string) string {
 
 	for i, m := range mobile {
 		if i < 3 || i > 8 {
-			sb.WriteRune(m) // nolint
+			sb.WriteRune(m)
 		} else {
 			sb.WriteString("*")
 		}

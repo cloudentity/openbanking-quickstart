@@ -59,7 +59,7 @@ func (h *OBUKGetTransactionsHandler) Validate(c *gin.Context) *Error {
 
 	grantedPermissions := h.introspectionResponse.Permissions
 	if !has(grantedPermissions, "ReadTransactionsBasic") {
-		return ErrForbidden.WithMessage("ReadTransactionsBasic permission has not been granted") // nolint
+		return ErrForbidden.WithMessage("ReadTransactionsBasic permission has not been granted")
 	}
 
 	return nil
