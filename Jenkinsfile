@@ -39,7 +39,9 @@ pipeline {
             steps {
                 sh 'rm -f docker-compose.log'
                 sh 'make clean'
-                sh 'make lint'
+                retry(3) {
+                    sh 'make lint'
+                }
                 sh 'make stop-runner'
                 sh 'make build'
             }
