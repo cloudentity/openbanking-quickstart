@@ -39,7 +39,6 @@ pipeline {
             steps {
                 sh 'rm -f docker-compose.log'
                 sh 'make clean'
-                sleep(time:20, unit:"MINUTES")
                 sh 'make lint'
                 sh 'make stop-runner'
                 sh 'make build'
