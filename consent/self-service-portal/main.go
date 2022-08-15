@@ -41,6 +41,7 @@ type Config struct {
 	IntrospectClientID          string        `env:"INTROSPECT_CLIENT_ID" envDefault:"bv2dkff8mll9cf6pvd6g"`
 	IntrospectClientSecret      string        `env:"INTROSPECT_CLIENT_SECRET" envDefault:"KThGH68f-gMC4cscGLFeOpIU4EYriYhKspOV9IwHbnw"`
 	IntrospectIssuerURL         *url.URL      `env:"INTROSPECT_ISSUER_URL,required"`
+	EnableTLSServer  			bool 		  `env:"ENABLE_TLS_SERVER" envDefault:"true"`
 }
 
 func (c *Config) SystemClientConfig() acpclient.Config {
@@ -144,7 +145,13 @@ func (s *Server) Start() error {
 		c.File("web/app/build/index.html")
 	})
 
-	return r.RunTLS(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)), s.Config.CertFile, s.Config.KeyFile)
+	if s.Config.EnableTLSServer {
+		logrus.Debugf("running consent page server tls")
+		return r.RunTLS(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)), s.Config.CertFile, s.Config.KeyFile)
+	}
+	logrus.Debugf("running consent page server non-tls")
+	return r.Run(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)))
+
 }
 
 func main() {
