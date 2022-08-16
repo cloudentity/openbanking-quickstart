@@ -13,7 +13,7 @@ export default function CheckBox({
   ...props
 }) {
   useEffect(() => {
-    form.register({  name  });
+    form.register({ name });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name]);
 
@@ -35,9 +35,8 @@ export default function CheckBox({
         {...props}
       />
       {helperText && (
-        (
-        <FormHelperText style={{  marginLeft: 28  }}>{helperText}</FormHelperText>
-      ))}
+        <FormHelperText style={{ marginLeft: 28 }}>{helperText}</FormHelperText>
+      )}
     </div>
   );
 }

@@ -8,7 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
-import {  banks  } from "./banks";
+import { banks } from "./banks";
 import Slide from "@mui/material/Slide";
 import Button from "@mui/material/Button";
 import connectArrows from "../assets/connect-arrows.svg";
@@ -18,7 +18,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import financrooIcon from "../assets/banks/financroo-icon.svg";
-import {  includes  } from "ramda";
+import { includes } from "ramda";
 
 const useStyles = makeStyles()(() => ({
   cardRoot: {
@@ -68,7 +68,7 @@ export default function ConnectAccount({ connected, onAllowAccess, onClose }) {
         )}
         {selected && <img alt="icon" src={selected.logo} />}
       </PageToolbar>
-      <PageContainer style={{  marginBottom: 112  }} withBackground>
+      <PageContainer style={{ marginBottom: 112 }} withBackground>
         {!selected && (
           <Grid container justifyContent="center" style={{ marginTop: 64 }}>
             <Grid item xs={12} sm={8} md={6} style={{ textAlign: "center" }}>
@@ -114,17 +114,11 @@ export default function ConnectAccount({ connected, onAllowAccess, onClose }) {
           </Grid>
         )}
         <Slide
-         
           direction="left"
-         
           in={!!selected}
-         
           mountOnEnter
-         
           unmountOnExit
-         
           exit={false}
-        
         >
           <div>
             <Grid container justifyContent="center" style={{ marginTop: 64 }}>

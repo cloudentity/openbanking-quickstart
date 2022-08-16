@@ -1,7 +1,7 @@
 import React, { useEffect } from "react";
 import FormControl from "@mui/material/FormControl";
 import { pathOr } from "ramda";
-import Autocomplete from '@mui/material/Autocomplete';
+import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import FormHelperText from "@mui/material/FormHelperText";
 import FormInputLabel from "./FormInputLabel";
@@ -15,7 +15,7 @@ export default function AutocompleteField({
   ...props
 }) {
   useEffect(() => {
-    form.register({  name  }, props.validate);
+    form.register({ name }, props.validate);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name]);
 
@@ -35,7 +35,7 @@ export default function AutocompleteField({
         id={`${id}-${name}-checkbox`}
         value={form.watch(name)}
         onChange={(e, option) => {
-          form.setValue(name, option, {  shouldValidate: true  });
+          form.setValue(name, option, { shouldValidate: true });
         }}
         renderInput={params => (
           <TextField
