@@ -1,13 +1,12 @@
 import React from "react";
 import { useHistory } from "react-router";
 import { makeStyles } from "@material-ui/core/styles";
-import { Theme } from "@material-ui/core";
 
 import PageContainer from "../common/PageContainer";
 import PageToolbar from "../common/PageToolbar";
 import dashboardImg from "../../assets/investments-dashboard.svg";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(theme => ({
   dashboardImage: {
     width: "100%",
     [theme.breakpoints.down("md")]: {

@@ -42,9 +42,8 @@ export default function Dashboard() {
   const [accountAddedDialog, setAccountAddedDialog] = useState<boolean | null>(
     null
   );
-  const {
-    state,
-  }: { state: undefined | { bankNeedsReconnect: boolean } } = useLocation();
+  const { state }: { state: undefined | { bankNeedsReconnect: boolean } } =
+    useLocation();
 
   useEffect(() => {
     if (state?.bankNeedsReconnect) {
@@ -88,13 +87,13 @@ export default function Dashboard() {
     setProgress(true);
     api
       .connectBank(bankId, { permissions })
-      .then((res) => {
+      .then(res => {
         window.location.href = res.login_url;
       })
       .catch(() => setProgress(false));
   };
 
-  const handleDisconnectBank = (bankId) => () => {
+  const handleDisconnectBank = bankId => () => {
     setProgress(true);
     api
       .disconnectBank(bankId)
@@ -106,7 +105,7 @@ export default function Dashboard() {
     setProgress(true);
     api
       .connectBank(bankId, { permissions })
-      .then((res) => {
+      .then(res => {
         window.location.href = res.login_url;
       })
       .catch(() => setProgress(false));

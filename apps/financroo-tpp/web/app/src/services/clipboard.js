@@ -1,5 +1,5 @@
 import copy from 'clipboard-copy';
-import {showNotification} from '../components/notifications/actions/actions';
+import { showNotification } from '../components/notifications/actions/actions';
 import getStore from '../store';
 
 export const copyToClipboard = (value, label) => {

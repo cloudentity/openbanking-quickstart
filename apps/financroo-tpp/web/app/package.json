@@ -19,8 +19,10 @@
     "@types/react-router-dom": "^5.1.6",
     "canvas-confetti": "^1.4.0",
     "clipboard-copy": "^3.2.0",
+    "eslint-config-prettier": "^8.5.0",
     "fast-text-encoding": "^1.0.3",
     "lodash.throttle": "^4.1.1",
+    "prettier": "^2.7.1",
     "query-string": "^4.3.4",
     "ramda": "^0.27.1",
     "react": "^17.0.1",
@@ -43,7 +45,29 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "prettier"
+    ],
+    "rules": {
+      "react/jsx-curly-brace-presence": [
+        "error",
+        {
+          "props": "never",
+          "children": "never"
+        }
+      ],
+      "no-restricted-imports": [
+        "error",
+        {
+          "paths": [
+            "@material-ui/core",
+            "@material-ui/icons",
+            "lodash"
+          ]
+        }
+      ]
+    }
   },
   "browserslist": {
     "production": [

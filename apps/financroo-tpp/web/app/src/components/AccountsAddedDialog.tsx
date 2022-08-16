@@ -5,10 +5,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import Dialog from "@material-ui/core/Dialog";
 import financrooLogo from "../assets/financroo-logo.svg";
 import icon from "../assets/icon-check.svg";
-import { Button } from "@material-ui/core";
+import Button from "@material-ui/core/Button";
 import { useHistory } from "react-router";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(theme => ({
   dialog: {
     width: 454,
     borderRadius: 0,
@@ -91,7 +91,7 @@ export default function AcccountsAddedDialog({ open, setOpen }) {
       <div className={classes.dialogButtons}>
         <Button
           variant="outlined"
-          id={"cancel-button"}
+          id="cancel-button"
           style={{ marginRight: 16 }}
           onClick={() => setOpen(false)}
         >
@@ -99,7 +99,7 @@ export default function AcccountsAddedDialog({ open, setOpen }) {
         </Button>
         <Button
           variant="outlined"
-          id={"start-investing-button"}
+          id="start-investing-button"
           onClick={() => {
             history.push("/investments");
           }}

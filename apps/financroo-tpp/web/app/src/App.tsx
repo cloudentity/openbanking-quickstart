@@ -1,15 +1,8 @@
-import React, { Suspense } from "react";
 import "./App.css";
-import { BrowserRouter as Router, Redirect, Route } from "react-router-dom";
-import { Switch } from "react-router";
-import { ThemeProvider } from "@material-ui/core";
-import { StylesProvider } from "@material-ui/core/styles";
-import Progress from "./components/Progress";
-import { ReactQueryDevtools } from "react-query-devtools";
-import { QueryCache, ReactQueryCacheProvider } from "react-query";
-import PrivateRoute from "./components/PrivateRoute";
 import AuthPage from "./components/AuthPage";
 import AuthenticatedAppBase from "./components/AuthenticatedAppBase";
+import PrivateRoute from "./components/PrivateRoute";
+import Progress from "./components/Progress";
 import {
   putExpiresInInStore,
   putIATInInStore,
@@ -17,6 +10,12 @@ import {
   putTokenInStore,
 } from "./components/auth.utils";
 import { theme } from "./theme";
+import { StylesProvider, ThemeProvider } from "@material-ui/core/styles";
+import React, { Suspense } from "react";
+import { QueryCache, ReactQueryCacheProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query-devtools";
+import { Switch } from "react-router";
+import { BrowserRouter as Router, Redirect, Route } from "react-router-dom";
 
 declare global {
   interface Window {
@@ -30,7 +29,7 @@ window.spec = window.spec || {};
 
 const queryCache = new QueryCache();
 
-const login = (data) => {
+const login = data => {
   if (data.token) {
     putTokenInStore(data.token);
     data.expires_in && putExpiresInInStore(data.expires_in);
@@ -49,14 +48,14 @@ function App() {
             <Suspense fallback={<Progress />}>
               <Switch>
                 <Route
-                  path={"/auth"}
+                  path="/auth"
                   render={() => <AuthPage loginFn={login} />}
                 />
                 <PrivateRoute
                   path="/"
                   component={() => <AuthenticatedAppBase />}
                 />
-                <Route component={() => <Redirect to={"/auth"} />} />
+                <Route component={() => <Redirect to="/auth" />} />
               </Switch>
             </Suspense>
           </Router>

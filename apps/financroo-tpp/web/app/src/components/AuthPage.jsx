@@ -33,7 +33,7 @@ const AuthPage = ({ loginFn }) => {
 
   if (isTokenInStore()) {
     loginFn({ token: getTokenFromStore() });
-    return <Redirect to={"/"} />;
+    return <Redirect to="/" />;
   }
 
   return <Register onLogin={HandleLogin} />;

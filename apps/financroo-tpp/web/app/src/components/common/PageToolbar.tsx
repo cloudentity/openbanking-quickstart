@@ -16,7 +16,7 @@ import { logout } from "../AuthPage";
 export const subHeaderHeight = 116;
 
 const useStyles = (withSubheader: boolean, mode: string) =>
-  makeStyles((theme) => ({
+  makeStyles(theme => ({
     appBar: {
       ...(withSubheader
         ? {
@@ -119,14 +119,14 @@ export default function PageToolbar({
                 <Tab
                   label="Accounts"
                   value="accounts"
-                  id={"accounts-tab"}
+                  id="accounts-tab"
                   style={{ height: 64 }}
                   onClick={() => history.push("/")}
                 />
                 <Tab
                   label="Investments"
                   value="investments"
-                  id={"investments-tab"}
+                  id="investments-tab"
                   style={{ height: 64 }}
                   onClick={() => history.push("/investments")}
                 />
@@ -134,10 +134,7 @@ export default function PageToolbar({
                 <Tab label="Settings" value="settings" style={{ height: 64 }} />
               </Tabs>
             </Hidden>
-            <Button
-              variant="outlined"
-              onClick={logout}
-            >
+            <Button variant="outlined" onClick={logout}>
               Logout
             </Button>
           </>
