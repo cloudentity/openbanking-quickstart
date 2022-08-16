@@ -10,7 +10,7 @@ export default function AuthenticatedAppBase() {
   return (
     <Suspense>
       <Routes>
-        <Route exact path="/" element={<Dashboard />} />
+        <Route path="/" element={<Dashboard />} />
         <Route path="/investments" element={<Investments />} />
         <Route
           path="/investments/contribute"

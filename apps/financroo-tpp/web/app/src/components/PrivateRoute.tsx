@@ -7,12 +7,6 @@ export default function PrivateRoute() {
   return isTokenInStore() ? (
     <Outlet />
   ) : (
-    <Navigate
-      to={{
-        pathname: "/auth",
-        state: { from: location },
-      }}
-      replace
-    />
+    <Navigate to="/auth" state={{ from: location }} replace />
   );
 }

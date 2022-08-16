@@ -8,7 +8,7 @@ import copy from "clipboard-copy";
 import React, { useState } from "react";
 import { Copy, ExternalLink } from "react-feather";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   root: {
     "&:hover $adornment": {
       opacity: 1,
