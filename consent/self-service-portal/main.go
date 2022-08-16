@@ -146,10 +146,10 @@ func (s *Server) Start() error {
 	})
 
 	if s.Config.EnableTLSServer {
-		logrus.Debugf("running consent page server tls")
+		logrus.Debugf("running consent self service server tls")
 		return r.RunTLS(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)), s.Config.CertFile, s.Config.KeyFile)
 	}
-	logrus.Debugf("running consent page server non-tls")
+	logrus.Debugf("running consent self service server non-tls")
 	return r.Run(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)))
 
 }
