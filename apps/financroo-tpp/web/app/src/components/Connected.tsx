@@ -3,11 +3,11 @@ import { makeStyles } from "tss-react/mui";
 import Grid from "@mui/material/Grid";
 import Accounts from "./Accounts";
 import Analytics from "./Analytics";
-import { useQuery } from "react-query";
-import { api } from "../api/api";
+import {  useQuery  } from "react-query";
+import {  api  } from "../api/api";
 import Progress from "./Progress";
-import { applyFiltering } from "./analytics.utils";
-import { path, pick } from "ramda";
+import {  applyFiltering  } from "./analytics.utils";
+import {  path, pick  } from "ramda";
 
 const useStyles = makeStyles()(() => ({
   root: {
@@ -25,7 +25,7 @@ export default function Connected({
   const [filtering, setFiltering] = useState({
     accounts: [],
     months: [],
-    categories: [],
+    categories: [],,
   });
 
   const {
@@ -37,10 +37,13 @@ export default function Connected({
     retry: false,
     onSuccess: data => {
       setFiltering(m => ({
+        
         ...m,
+       
         accounts: (data.accounts || []).map(a => a.AccountId),
+      ,
       }));
-    },
+    },,
   });
 
   const { isLoading: fetchBalancesProgress, data: balancesRes } = useQuery(
@@ -66,15 +69,16 @@ export default function Connected({
   );
 
   const isLoading =
+   
     fetchAccountsProgress || fetchBalancesProgress || fetchTransactionsProgress;
 
   const bankNeedsReconnect =
     path(["response", "error", "status"], fetchAccountsError) === 401;
 
-  const currencyType = balances[0]?.Currency || "N/A";
+  const currencyType = balances[0]?.Currency || "N/A";;
 
   if (isLoading) {
-    return <Progress />;
+    return <Progress  />;
   }
 
   return (
@@ -94,7 +98,7 @@ export default function Connected({
           accounts={accounts}
           balances={balances}
           filtering={filtering}
-          onChangeFiltering={f => setFiltering({ ...filtering, ...f })}
+          onChangeFiltering={f => setFiltering({  ...filtering, ...f  })}
           onConnectClick={onConnectClick}
           onDisconnect={onDisconnect}
           onReconnect={onReconnect}

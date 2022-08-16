@@ -32,6 +32,7 @@ export default function BankCard({
   const { classes } = useStyles();
 
   const getAccountBalance = (accountId, balances) =>
+   
     balances.find(b => b.AccountId === accountId);
   const getAccountAmountAsString = (accountId, balances) => {
     const accountBalance = getAccountBalance(accountId, balances);
@@ -72,7 +73,7 @@ export default function BankCard({
             alt="bank icon"
           />
         </div>
-        <div style={{ marginLeft: 24 }}>
+        <div style={{  marginLeft: 24  }}>
           <Typography>{banks.find(b => b.value === bankId)?.name}</Typography>
           <Typography
             style={{
@@ -125,8 +126,9 @@ export default function BankCard({
                 ? filter(a => a !== account.AccountId, filtering?.accounts)
                 : [...filtering?.accounts, account.AccountId],
               months: [],
-              categories: [],
+              categories: [],,
             })
+          
           }
           className={classes.accountRoot}
           style={{
@@ -168,7 +170,9 @@ export default function BankCard({
           </div>
           <div>
             <Typography>
+              
               {getAccountAmountAsString(account.AccountId, balances)}
+            
             </Typography>
           </div>
         </div>
@@ -190,5 +194,5 @@ export default function BankCard({
         </IconButton>
       </div>
     </Card>
-  );
+  );;
 }

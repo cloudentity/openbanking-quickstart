@@ -9,10 +9,15 @@ type Props = {
 };
 
 export default function FormInputLabel({
+  
   id,
+ 
   label,
+ 
   icon: Icon,
+ 
   caption,
+,
 }: Props) {
   return (
     <div

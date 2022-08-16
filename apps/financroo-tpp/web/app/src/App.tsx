@@ -3,6 +3,8 @@ import AuthPage from "./components/AuthPage";
 import AuthenticatedAppBase from "./components/AuthenticatedAppBase";
 import PrivateRoute from "./components/PrivateRoute";
 import Progress from "./components/Progress";
+import PrivateRoute from "./components/PrivateRoute";
+import Progress from "./components/Progress";
 import {
   putExpiresInInStore,
   putIATInInStore,

@@ -4,10 +4,13 @@ import AnalyticsTable, { mapTransactionToData } from "./AnalyticsTable";
 import AnalyticsBarChart from "./AnalyticsBarChart";
 import AnalyticsPieChart from "./AnalyticsPieChart";
 import {
+  
   applyFiltering,
+ 
   mapTransactionsToBarChartData,
+,
 } from "./analytics.utils";
-import { pick } from "ramda";
+import {  pick  } from "ramda";
 
 export default function Analytics({
   currencyType,
@@ -37,12 +40,17 @@ export default function Analytics({
             onChangeFiltering={onChangeFiltering}
           />
         </div>
-        <div style={{ flex: 1 }}>
+        <div style={{  flex: 1  }}>
           <AnalyticsPieChart
+           
             currencyType={currencyType}
+           
             data={pieChartData}
+           
             filtering={filtering}
+           
             onChangeFiltering={onChangeFiltering}
+          
           />
         </div>
       </Card>

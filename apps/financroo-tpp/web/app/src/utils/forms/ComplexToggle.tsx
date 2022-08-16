@@ -51,19 +51,19 @@ export default function ComplexToggle({
   const { classes } = useStyles();
 
   useEffect(() => {
-    form.register({ name });
+    form.register({  name  });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name]);
 
   return (
     <>
-      <FormInputLabel id={`${props.id}-label`} label={label} />
+      <FormInputLabel id={`${props.id}-label`} label={label}  />
       <div className={classes.root}>
         <div className={classes.left}>
           <Avatar style={{ background: "#008EFF" }}>
             <Icon />
           </Avatar>
-          <div style={{ marginLeft: 12 }}>
+          <div style={{  marginLeft: 12  }}>
             <Typography className={classes.title}>{title}</Typography>
             <Typography className={classes.subtitle}>{subtitle}</Typography>
           </div>

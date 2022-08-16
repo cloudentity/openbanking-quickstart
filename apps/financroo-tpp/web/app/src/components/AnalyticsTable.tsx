@@ -23,15 +23,16 @@ interface Data {
 }
 
 export const mapTransactionToData = t =>
+ 
   createData(
-    t.TransactionId,
-    t.BankId,
-    t.AccountId,
-    t.BookingDateTime,
-    t.TransactionInformation,
-    t.BankTransactionCode.Code,
-    t.Amount.Amount
-  );
+      t.TransactionId,
+      t.BankId,
+      t.AccountId,
+      t.BookingDateTime,
+      t.TransactionInformation,
+      t.BankTransactionCode.Code,
+      t.Amount.Amount
+    );
 
 function createData(
   id: number,
@@ -43,13 +44,21 @@ function createData(
   amount: string
 ): Data {
   return {
+    
     id,
+   
     bank_id,
+   
     account_id,
+   
     transaction_date,
+   
     description,
+   
     category,
+   
     amount,
+  ,
   };
 }
 
@@ -116,8 +125,11 @@ interface EnhancedTableProps {
   classes: any;
   numSelected: number;
   onRequestSort: (
+    
     event: React.MouseEvent<unknown>,
+   
     property: keyof Data
+  
   ) => void;
   onSelectAllClick: (event: React.ChangeEvent<HTMLInputElement>) => void;
   order: Order;
@@ -126,11 +138,12 @@ interface EnhancedTableProps {
 }
 
 function EnhancedTableHead(props: EnhancedTableProps) {
-  const { classes, order, orderBy, onRequestSort } = props;
+  const {  classes, order, orderBy, onRequestSort  } = props;
   const createSortHandler =
+   
     (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
-      onRequestSort(event, property);
-    };
+        onRequestSort(event, property);
+      };
 
   return (
     <TableHead>
@@ -249,7 +262,9 @@ export default function AnalyticsTable({
   };
 
   const handleChangeRowsPerPage = (
+    
     event: React.ChangeEvent<HTMLInputElement>
+  
   ) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);
@@ -325,7 +340,9 @@ export default function AnalyticsTable({
                         </div>
                         <div>
                           <Typography>
+                            
                             **** ***** **** {row.account_id}
+                          
                           </Typography>
                         </div>
                       </TableCell>
@@ -354,7 +371,9 @@ export default function AnalyticsTable({
               {data.length === 0 && (
                 <TableRow>
                   <TableCell colSpan={6}>
+                    
                     No transaction records found
+                  
                   </TableCell>
                 </TableRow>
               )}

@@ -1,10 +1,10 @@
-import React, { useEffect } from "react";
+import React, {  useEffect  } from "react";
 import FormInputLabel from "./FormInputLabel";
 import Switch from "@mui/material/Switch";
 
 export default function SwitchField({ form, id, name, label, ...props }) {
   useEffect(() => {
-    form.register({ name });
+    form.register({  name  });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name]);
 
