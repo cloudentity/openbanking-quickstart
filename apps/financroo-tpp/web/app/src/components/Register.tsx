@@ -1,119 +1,140 @@
 import React from "react";
-import {Theme} from "@material-ui/core";
-import {makeStyles} from "@material-ui/core/styles";
+import { makeStyles } from "@material-ui/core/styles";
 import backgroundLogin from "../assets/background-login.png";
 import financrooLogo from "../assets/financroo-logo.svg";
 import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 
-import { Alert } from '@material-ui/lab';
+import { Alert } from "@material-ui/lab";
 import TextField from "@material-ui/core/TextField";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(theme => ({
   root: {
-    height: '100vh'
+    height: "100vh",
   },
   image: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
     backgroundImage: `url(${backgroundLogin})`,
-    backgroundRepeat: 'no-repeat',
-    backgroundPosition: 'center',
-    backgroundSize: 'cover'
+    backgroundRepeat: "no-repeat",
+    backgroundPosition: "center",
+    backgroundSize: "cover",
   },
   formContainerRoot: {
-    height: '100%',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start',
-    justifyContent: 'center',
+    height: "100%",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "flex-start",
+    justifyContent: "center",
 
-    [theme.breakpoints.down('sm')]: {
-      padding: 16
+    [theme.breakpoints.down("sm")]: {
+      padding: 16,
     },
-    [theme.breakpoints.up('sm')]: {
-      padding: 48
+    [theme.breakpoints.up("sm")]: {
+      padding: 48,
     },
-    [theme.breakpoints.up('lg')]: {
-      padding: 82
-    }
-  }
+    [theme.breakpoints.up("lg")]: {
+      padding: 82,
+    },
+  },
 }));
 
-
-
-export default function Register({onLogin}) {
+export default function Register({ onLogin }) {
   const classes = useStyles();
 
   const [state, setState] = React.useState({
-    login: 'test',
-    password: 'p@ssw0rd!',
+    login: "test",
+    password: "p@ssw0rd!",
     error: false,
     processing: false,
-  })
+  });
 
-
-  const loginWrapper = (fn) => {
-    return async (e) => {
+  const loginWrapper = fn => {
+    return async e => {
       e.preventDefault();
-      setState({...state, processing: true})
+      setState({ ...state, processing: true });
 
       try {
         await fn(state.login, state.password);
-      }catch(e){
-        setState({...state, processing:false, password: '', error: true})
-        return
+      } catch (e) {
+        setState({ ...state, processing: false, password: "", error: true });
+        return;
       }
 
-      setState({...state, processing:false, password: '', error: false})
-    }
-  }
+      setState({ ...state, processing: false, password: "", error: false });
+    };
+  };
 
-  const handleLoginChange = (e) => {
-    setState({...state, login: e.target.value});
-  }
+  const handleLoginChange = e => {
+    setState({ ...state, login: e.target.value });
+  };
 
-  const handlePasswordChange = (e) =>{
-    setState({...state, password: e.target.value});
-  }
-
-
+  const handlePasswordChange = e => {
+    setState({ ...state, password: e.target.value });
+  };
 
   return (
     <div className={classes.root}>
-      <Grid container style={{height: '100%'}}>
+      <Grid container style={{ height: "100%" }}>
         <Grid item sm={6} lg={7}>
-          <div className={classes.image}/>
+          <div className={classes.image} />
         </Grid>
         <Grid item xs={12} sm={6} lg={5}>
           <div className={classes.formContainerRoot}>
-            <img alt="financroo logo" src={financrooLogo} style={{marginBottom: 44}}/>
+            <img
+              alt="financroo logo"
+              src={financrooLogo}
+              style={{ marginBottom: 44 }}
+            />
             <form onSubmit={loginWrapper(onLogin)}>
-              <TextField margin="normal"
+              <TextField
+                margin="normal"
                 id="standard-login-input"
                 label="Login"
                 type="text"
                 autoComplete="current-login"
                 value={state.login}
                 onChange={handleLoginChange}
-                style={{width: '100%'}}
+                style={{ width: "100%" }}
               />
-              <TextField margin="normal"
+              <TextField
+                margin="normal"
                 id="standard-password-input"
                 label="Password"
                 type="password"
                 autoComplete="current-password"
                 value={state.password}
                 onChange={handlePasswordChange}
-                style={{width: '100%'}}
+                style={{ width: "100%" }}
               />
 
-              <Button data-testid="login-button" disabled={state.processing} id="login-button" type="submit" className={'login-button'}color={'secondary'} style={{width: '100%', minHeight: 50, marginTop: 24,}} variant={'contained'}>Login</Button>
-              <Alert severity="error" variant="outlined" style={{width: '100%', marginTop: 24, visibility: state.error? 'visible': 'hidden',}}>Invalid login or password</Alert>
+              <Button
+                data-testid="login-button"
+                disabled={state.processing}
+                id="login-button"
+                type="submit"
+                className="login-button"
+                color="secondary"
+                style={{ width: "100%", minHeight: 50, marginTop: 24 }}
+                variant="contained"
+              >
+                Login
+              </Button>
+              <Alert
+                severity="error"
+                variant="outlined"
+                style={{
+                  width: "100%",
+                  marginTop: 24,
+                  visibility: state.error ? "visible" : "hidden",
+                }}
+              >
+                Invalid login or password
+              </Alert>
             </form>
           </div>
         </Grid>
       </Grid>
     </div>
-  )
-};
+  );
+}

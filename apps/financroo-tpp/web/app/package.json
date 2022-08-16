@@ -43,7 +43,29 @@
     "eject": "react-scripts eject"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": [
+      "react-app",
+      "prettier"
+    ],
+    "rules": {
+      "react/jsx-curly-brace-presence": [
+        "error",
+        {
+          "props": "never",
+          "children": "never"
+        }
+      ],
+      "no-restricted-imports": [
+        "error",
+        {
+          "paths": [
+            "@material-ui/core",
+            "@material-ui/icons",
+            "lodash"
+          ]
+        }
+      ]
+    }
   },
   "browserslist": {
     "production": [
@@ -58,6 +80,8 @@
     ]
   },
   "devDependencies": {
-    "react-scripts": "^5.0.0"
+    "react-scripts": "^5.0.0",
+    "prettier": "^2.7.1",
+    "eslint-config-prettier": "^8.5.0"
   }
 }

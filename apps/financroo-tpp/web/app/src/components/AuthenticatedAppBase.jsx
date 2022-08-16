@@ -11,28 +11,16 @@ export default function AuthenticatedAppBase() {
   return (
     <Suspense>
       <Switch>
+        <Route exact path="/" render={() => <Dashboard />} />
+        <Route path="/investments" exact render={() => <Investments />} />
         <Route
-          exact
-          path={"/"}
-          render={() => (
-            <Dashboard />
-          )}
-        />
-        <Route
-          path={"/investments"}
-          exact
-          render={() => (
-            <Investments />
-          )}
-        />
-        <Route
-          path={"/investments/contribute"}
+          path="/investments/contribute"
           exact
           render={() => <InvestmentsContribute />}
         />
 
         <Route
-          path={"/investments/contribute/:id/success"}
+          path="/investments/contribute/:id/success"
           exact
           render={() => <InvestmentsContributeSuccess />}
         />
