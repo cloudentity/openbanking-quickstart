@@ -9,15 +9,15 @@ import Progress from "./Progress";
 import PageContent from "./common/PageContent";
 import PageContainer from "./common/PageContainer";
 import { pathOr } from "ramda";
-import { useLocation, useHistory } from "react-router";
-import Snackbar from "@material-ui/core/Snackbar";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
-import Alert from "@material-ui/lab/Alert";
-import { makeStyles } from "@material-ui/core/styles";
+import { useLocation, useNavigate } from "react-router-dom";
+import Snackbar from "@mui/material/Snackbar";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import Alert from "@mui/material/Alert";
+import { makeStyles } from "tss-react/mui";
 import AcccountsAddedDialog from "./AccountsAddedDialog";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   alert: {
     width: "100%",
     "& > div:last-of-type": {
@@ -28,27 +28,26 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function useQueryParams() {
-  return new URLSearchParams(useLocation().search);
-}
-
 export default function Dashboard() {
   const [connectAccountOpen, setConnectAccountOpen] = useState(false);
   const [isProgress, setProgress] = useState(false);
   const [snackbar, setSnackbar] = useState("");
-  const classes = useStyles();
-  const history = useHistory();
-  const queryParams = useQueryParams();
+  const { classes } = useStyles();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(useLocation().search);
   const [accountAddedDialog, setAccountAddedDialog] = useState<boolean | null>(
     null
   );
-  const { state }: { state: undefined | { bankNeedsReconnect: boolean } } =
-    useLocation();
+  const state = location.state as { bankNeedsReconnect: boolean } | undefined;
 
   useEffect(() => {
     if (state?.bankNeedsReconnect) {
       setSnackbar("Error: unauthorized. Bank needs reconnect");
-      history.replace({ state: { bankNeedsReconnect: false } });
+      navigate(location, {
+        state: { bankNeedsReconnect: false },
+        replace: true,
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
@@ -76,9 +75,10 @@ export default function Dashboard() {
   useEffect(() => {
     if (accountAddedDialog === false) {
       queryParams.delete("connected");
-      history.replace({
-        search: queryParams.toString(),
-      });
+      navigate(
+        { pathname: location.pathname, search: queryParams.toString() },
+        { replace: true }
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountAddedDialog]);

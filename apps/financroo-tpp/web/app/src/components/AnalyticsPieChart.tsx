@@ -1,6 +1,6 @@
 import React from "react";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
-import Typography from "@material-ui/core/Typography";
+import Typography from "@mui/material/Typography";
 import classes from "./chartsStyles.module.css";
 import { mapTransactionsToPieChartData, stringToHex } from "./analytics.utils";
 import { includes } from "ramda";

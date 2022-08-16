@@ -1,16 +1,15 @@
 import React, { useEffect } from "react";
-import clsx from "clsx";
-import { createStyles, makeStyles, Theme } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableContainer from "@material-ui/core/TableContainer";
-import TableHead from "@material-ui/core/TableHead";
-import TablePagination from "@material-ui/core/TablePagination";
-import TableRow from "@material-ui/core/TableRow";
-import TableSortLabel from "@material-ui/core/TableSortLabel";
-import Typography from "@material-ui/core/Typography";
-import Paper from "@material-ui/core/Paper";
+import { makeStyles } from "tss-react/mui";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableContainer from "@mui/material/TableContainer";
+import TableHead from "@mui/material/TableHead";
+import TablePagination from "@mui/material/TablePagination";
+import TableRow from "@mui/material/TableRow";
+import TableSortLabel from "@mui/material/TableSortLabel";
+import Typography from "@mui/material/Typography";
+import Paper from "@mui/material/Paper";
 import { stringToHex } from "./analytics.utils";
 
 interface Data {
@@ -114,7 +113,7 @@ const headCells: HeadCell[] = [
 ];
 
 interface EnhancedTableProps {
-  classes: ReturnType<typeof useStyles>;
+  classes: any;
   numSelected: number;
   onRequestSort: (
     event: React.MouseEvent<unknown>,
@@ -140,7 +139,7 @@ function EnhancedTableHead(props: EnhancedTableProps) {
           <TableCell
             key={headCell.id}
             align="left"
-            padding={headCell.disablePadding ? "none" : "default"}
+            padding={headCell.disablePadding ? "none" : "normal"}
             sortDirection={orderBy === headCell.id ? order : false}
           >
             <TableSortLabel
@@ -162,37 +161,32 @@ function EnhancedTableHead(props: EnhancedTableProps) {
   );
 }
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      width: "100%",
-    },
-    paper: {
-      width: "100%",
-      height: "100%",
-      position: "relative",
-    },
-    table: {
-      //minWidth: 750,
-    },
-    visuallyHidden: {
-      border: 0,
-      clip: "rect(0 0 0 0)",
-      height: 1,
-      margin: -1,
-      overflow: "hidden",
-      padding: 0,
-      position: "absolute",
-      top: 20,
-      width: 1,
-    },
-    tablePagination: {
-      position: "absolute",
-      bottom: 0,
-      right: 0,
-    },
-  })
-);
+const useStyles = makeStyles()(() => ({
+  root: {
+    width: "100%",
+  },
+  paper: {
+    width: "100%",
+    height: "100%",
+    position: "relative",
+  },
+  visuallyHidden: {
+    border: 0,
+    clip: "rect(0 0 0 0)",
+    height: 1,
+    margin: -1,
+    overflow: "hidden",
+    padding: 0,
+    position: "absolute",
+    top: 20,
+    width: 1,
+  },
+  tablePagination: {
+    position: "absolute",
+    bottom: 0,
+    right: 0,
+  },
+}));
 
 type AnalyticsTableProps = {
   data: Data[];
@@ -203,7 +197,7 @@ export default function AnalyticsTable({
   data,
   style = {},
 }: AnalyticsTableProps) {
-  const classes = useStyles();
+  const { cx, classes } = useStyles();
   const [order, setOrder] = React.useState<Order>("asc");
   const [orderBy, setOrderBy] = React.useState<keyof Data>("transaction_date");
   const [selected, setSelected] = React.useState<number[]>([]);
@@ -268,7 +262,6 @@ export default function AnalyticsTable({
       <Paper className={classes.paper}>
         <TableContainer>
           <Table
-            className={classes.table}
             aria-labelledby="tableTitle"
             size={dense ? "small" : "medium"}
             aria-label="enhanced table"
@@ -369,17 +362,14 @@ export default function AnalyticsTable({
           </Table>
         </TableContainer>
         <TablePagination
-          className={clsx([
-            "analytics-table-pagination",
-            classes.tablePagination,
-          ])}
+          className={cx("analytics-table-pagination", classes.tablePagination)}
           rowsPerPageOptions={[]}
           component="div"
           count={data.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onPageChange={handleChangePage}
-          onChangeRowsPerPage={handleChangeRowsPerPage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Paper>
     </div>

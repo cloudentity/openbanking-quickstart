@@ -1,14 +1,14 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "tss-react/mui";
 import backgroundLogin from "../assets/background-login.png";
 import financrooLogo from "../assets/financroo-logo.svg";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
+import Grid from "@mui/material/Grid";
+import Button from "@mui/material/Button";
 
-import { Alert } from "@material-ui/lab";
-import TextField from "@material-ui/core/TextField";
+import { Alert } from "@mui/material";
+import TextField from "@mui/material/TextField";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   root: {
     height: "100vh",
   },
@@ -27,7 +27,7 @@ const useStyles = makeStyles(theme => ({
     alignItems: "flex-start",
     justifyContent: "center",
 
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       padding: 16,
     },
     [theme.breakpoints.up("sm")]: {
@@ -40,7 +40,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Register({ onLogin }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const [state, setState] = React.useState({
     login: "test",

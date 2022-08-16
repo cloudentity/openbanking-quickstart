@@ -1,27 +1,26 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Dialog from "@material-ui/core/Dialog";
+import { makeStyles } from "tss-react/mui";
+import Dialog from "@mui/material/Dialog";
 import PageContainer from "./common/PageContainer";
 import PageToolbar from "./common/PageToolbar";
-import CloseIcon from "@material-ui/icons/Close";
-import IconButton from "@material-ui/core/IconButton";
-import Grid from "@material-ui/core/Grid";
-import Typography from "@material-ui/core/Typography";
-import Card from "@material-ui/core/Card";
+import CloseIcon from "@mui/icons-material/Close";
+import IconButton from "@mui/material/IconButton";
+import Grid from "@mui/material/Grid";
+import Typography from "@mui/material/Typography";
+import Card from "@mui/material/Card";
 import { banks } from "./banks";
-import Slide from "@material-ui/core/Slide";
-import Button from "@material-ui/core/Button";
+import Slide from "@mui/material/Slide";
+import Button from "@mui/material/Button";
 import connectArrows from "../assets/connect-arrows.svg";
-import Paper from "@material-ui/core/Paper";
-import Accordion from "@material-ui/core/Accordion";
-import AccordionSummary from "@material-ui/core/AccordionSummary";
-import AccordionDetails from "@material-ui/core/AccordionDetails";
-import ExpandMoreIcon from "@material-ui/icons/ExpandMore";
+import Paper from "@mui/material/Paper";
+import Accordion from "@mui/material/Accordion";
+import AccordionSummary from "@mui/material/AccordionSummary";
+import AccordionDetails from "@mui/material/AccordionDetails";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import financrooIcon from "../assets/banks/financroo-icon.svg";
 import { includes } from "ramda";
-import clsx from "clsx";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   cardRoot: {
     height: 116,
     padding: "0 16px",
@@ -50,7 +49,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function ConnectAccount({ connected, onAllowAccess, onClose }) {
-  const classes = useStyles();
+  const { cx, classes } = useStyles();
   const [selected, setSelected] = useState<any | null>(null);
 
   return (
@@ -62,6 +61,7 @@ export default function ConnectAccount({ connected, onAllowAccess, onClose }) {
             color="inherit"
             aria-label="close"
             onClick={onClose}
+            size="large"
           >
             <CloseIcon />
           </IconButton>
@@ -88,11 +88,11 @@ export default function ConnectAccount({ connected, onAllowAccess, onClose }) {
                 {banks.map(bank => (
                   <Grid item xs={6} sm={4} key={bank.value} id={bank.value}>
                     <Card
-                      className={clsx({
-                        [classes.cardRoot]: true,
-                        [classes.disabled]:
-                          includes(bank.value, connected) || bank.disabled,
-                      })}
+                      className={cx(
+                        classes.cardRoot,
+                        includes(bank.value, connected) ||
+                          (bank.disabled && classes.disabled)
+                      )}
                       onClick={() => {
                         if (
                           !(includes(bank.value, connected) || bank.disabled)

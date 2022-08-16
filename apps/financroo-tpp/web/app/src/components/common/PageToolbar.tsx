@@ -1,22 +1,22 @@
 import React from "react";
-import { useHistory } from "react-router";
-import Toolbar from "@material-ui/core/Toolbar";
-import AppBar from "@material-ui/core/AppBar";
-import MenuIcon from "@material-ui/icons/Menu";
-import IconButton from "@material-ui/core/IconButton";
-import Tab from "@material-ui/core/Tab";
-import Hidden from "@material-ui/core/Hidden";
-import Tabs from "@material-ui/core/Tabs";
-import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core/styles";
+import Toolbar from "@mui/material/Toolbar";
+import AppBar from "@mui/material/AppBar";
+import MenuIcon from "@mui/icons-material/Menu";
+import IconButton from "@mui/material/IconButton";
+import Tab from "@mui/material/Tab";
+import Hidden from "@mui/material/Hidden";
+import Tabs from "@mui/material/Tabs";
+import Button from "@mui/material/Button";
+import { makeStyles } from "tss-react/mui";
 
 import financrooLogo from "../../assets/financroo-logo.svg";
 import { logout } from "../AuthPage";
+import { useNavigate } from "react-router-dom";
 
 export const subHeaderHeight = 116;
 
 const useStyles = (withSubheader: boolean, mode: string) =>
-  makeStyles(theme => ({
+  makeStyles()(theme => ({
     appBar: {
       ...(withSubheader
         ? {
@@ -87,8 +87,8 @@ export default function PageToolbar({
   subHeaderTitle,
   subHeaderButton,
 }: Props) {
-  const history = useHistory();
-  const classes = useStyles(!!subHeaderTitle, mode)();
+  const navigate = useNavigate();
+  const { classes } = useStyles(!!subHeaderTitle, mode)();
 
   return (
     <AppBar
@@ -96,6 +96,7 @@ export default function PageToolbar({
       color="inherit"
       variant="outlined"
       className={classes.appBar}
+      elevation={0}
     >
       <Toolbar className={classes.toolBar}>
         <img alt="financroo logo" src={financrooLogo} />
@@ -105,11 +106,16 @@ export default function PageToolbar({
         {mode === "main" && (
           <>
             <Hidden mdUp>
-              <IconButton edge="start" color="inherit" aria-label="menu">
+              <IconButton
+                edge="start"
+                color="inherit"
+                aria-label="menu"
+                size="large"
+              >
                 <MenuIcon />
               </IconButton>
             </Hidden>
-            <Hidden smDown>
+            <Hidden mdDown>
               <Tabs
                 value={tab || "accounts"}
                 indicatorColor="primary"
@@ -121,14 +127,14 @@ export default function PageToolbar({
                   value="accounts"
                   id="accounts-tab"
                   style={{ height: 64 }}
-                  onClick={() => history.push("/")}
+                  onClick={() => navigate("/")}
                 />
                 <Tab
                   label="Investments"
                   value="investments"
                   id="investments-tab"
                   style={{ height: 64 }}
-                  onClick={() => history.push("/investments")}
+                  onClick={() => navigate("/investments")}
                 />
                 <Tab label="Spending" value="spending" style={{ height: 64 }} />
                 <Tab label="Settings" value="settings" style={{ height: 64 }} />

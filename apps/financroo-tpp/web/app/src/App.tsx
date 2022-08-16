@@ -10,12 +10,12 @@ import {
   putTokenInStore,
 } from "./components/auth.utils";
 import { theme } from "./theme";
-import { StylesProvider, ThemeProvider } from "@material-ui/core/styles";
+import { ThemeProvider, StyledEngineProvider } from "@mui/material/styles";
+
 import React, { Suspense } from "react";
-import { QueryCache, ReactQueryCacheProvider } from "react-query";
-import { ReactQueryDevtools } from "react-query-devtools";
-import { Switch } from "react-router";
-import { BrowserRouter as Router, Redirect, Route } from "react-router-dom";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 declare global {
   interface Window {
@@ -27,7 +27,7 @@ declare global {
 window.featureFlags = window.featureFlags || {};
 window.spec = window.spec || {};
 
-const queryCache = new QueryCache();
+const queryClient = new QueryClient();
 
 const login = data => {
   if (data.token) {
@@ -40,28 +40,23 @@ const login = data => {
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <StylesProvider injectFirst>
-        <ReactQueryCacheProvider queryCache={queryCache}>
+    <QueryClientProvider client={queryClient}>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
           <ReactQueryDevtools />
           <Router>
             <Suspense fallback={<Progress />}>
-              <Switch>
-                <Route
-                  path="/auth"
-                  render={() => <AuthPage loginFn={login} />}
-                />
-                <PrivateRoute
-                  path="/"
-                  component={() => <AuthenticatedAppBase />}
-                />
-                <Route component={() => <Redirect to="/auth" />} />
-              </Switch>
+              <Routes>
+                <Route path="/auth" element={<AuthPage loginFn={login} />} />
+                <Route path="*" element={<PrivateRoute />}>
+                  <Route path="*" element={<AuthenticatedAppBase />} />
+                </Route>
+              </Routes>
             </Suspense>
           </Router>
-        </ReactQueryCacheProvider>
-      </StylesProvider>
-    </ThemeProvider>
+        </ThemeProvider>
+      </StyledEngineProvider>
+    </QueryClientProvider>
   );
 }
 

@@ -1,11 +1,11 @@
 import React, { useEffect } from "react";
-import Typography from "@material-ui/core/Typography";
-import Switch from "@material-ui/core/Switch";
-import Avatar from "@material-ui/core/Avatar";
-import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@mui/material/Typography";
+import Switch from "@mui/material/Switch";
+import Avatar from "@mui/material/Avatar";
+import { makeStyles } from "tss-react/mui";
 import FormInputLabel from "./FormInputLabel";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   root: {
     padding: "24px 16px",
     border: "1px solid #ECECEC",
@@ -48,7 +48,7 @@ export default function ComplexToggle({
   icon: Icon,
   ...props
 }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   useEffect(() => {
     form.register({ name });

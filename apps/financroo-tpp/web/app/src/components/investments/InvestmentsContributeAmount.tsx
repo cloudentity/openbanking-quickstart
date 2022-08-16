@@ -1,12 +1,12 @@
 import React from "react";
-import TextField from "@material-ui/core/TextField";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import { makeStyles } from "@material-ui/core/styles";
+import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
+import { makeStyles } from "tss-react/mui";
 
 import CardIcon from "../../assets/icon-card.svg";
 import ContributionCard from "./ContributionCard";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()(theme => ({
   input: {
     marginTop: 30,
     "& label.Mui-focused": {
@@ -37,7 +37,7 @@ export default function InvestmentsContributeAmount({
   account,
   setAlert,
 }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <ContributionCard
@@ -56,7 +56,7 @@ export default function InvestmentsContributeAmount({
         }}
         variant="outlined"
         value={amount}
-        onChange={(v) => {
+        onChange={v => {
           setAmount(v.target.value);
           if (
             account &&

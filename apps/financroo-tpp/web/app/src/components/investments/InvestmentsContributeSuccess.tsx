@@ -1,8 +1,8 @@
 import React from "react";
-import { useHistory, useParams } from "react-router";
-import Button from "@material-ui/core/Button";
-import Chip from "@material-ui/core/Chip";
-import { makeStyles } from "@material-ui/core/styles";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
+import { makeStyles } from "tss-react/mui";
 
 import PageContainer from "../common/PageContainer";
 import PageToolbar from "../common/PageToolbar";
@@ -13,7 +13,7 @@ import bankIcon from "../../assets/banks/gobank-icon.svg";
 import checkIcon from "../../assets/icon-check.svg";
 import qs from "query-string";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()(theme => ({
   title: {
     marginBottom: 68,
     display: "flex",
@@ -103,11 +103,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function InvestmentsContributeSuccess() {
-  const history = useHistory();
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { id } = useParams<{ id: string }>();
-  const search = history.location.search;
-  const searchParsed = qs.parse(search);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const searchParsed = qs.parse(location.search);
 
   return (
     <div style={{ position: "relative" }}>
@@ -175,7 +175,7 @@ export default function InvestmentsContributeSuccess() {
           </Field>
         </ContributionCard>
         <Button
-          onClick={() => history.push("/investments")}
+          onClick={() => navigate("/investments")}
           id="back-to-portfolio"
           variant="contained"
           color="primary"

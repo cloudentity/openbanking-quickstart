@@ -1,9 +1,9 @@
-import IconButton from "@material-ui/core/IconButton";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import { makeStyles } from "@material-ui/core/styles";
-import TextField from "@material-ui/core/TextField";
-import Visibility from "@material-ui/icons/Visibility";
-import VisibilityOff from "@material-ui/icons/VisibilityOff";
+import IconButton from "@mui/material/IconButton";
+import InputAdornment from "@mui/material/InputAdornment";
+import { makeStyles } from "tss-react/mui";
+import TextField from "@mui/material/TextField";
+import Visibility from "@mui/icons-material/Visibility";
+import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import copy from "clipboard-copy";
 import React, { useState } from "react";
 import { Copy, ExternalLink } from "react-feather";
@@ -36,7 +36,7 @@ export default function AdornmentTextField({
   withCopy,
   ...props
 }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const [visibility, setVisibility] = useState(defaultVisibility);
 
@@ -56,6 +56,7 @@ export default function AdornmentTextField({
                 aria-label="copy to clipboard"
                 tabIndex={-1}
                 onClick={() => copy(getValue())}
+                size="large"
               >
                 <Copy className={classes.primaryMainColor} />
               </IconButton>
@@ -65,6 +66,7 @@ export default function AdornmentTextField({
                 aria-label="toggle password visibility"
                 tabIndex={-1}
                 onClick={() => setVisibility(!visibility)}
+                size="large"
               >
                 {visibility ? (
                   <Visibility className={classes.primaryMainColor} />
@@ -83,6 +85,7 @@ export default function AdornmentTextField({
                     "_blank"
                   )
                 }
+                size="large"
               >
                 <ExternalLink className={classes.primaryMainColor} />
               </IconButton>

@@ -1,11 +1,11 @@
 import React from "react";
-import Card from "@material-ui/core/Card";
-import CardContent from "@material-ui/core/CardContent";
-import CardActions from "@material-ui/core/CardActions";
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
+import Card from "@mui/material/Card";
+import CardContent from "@mui/material/CardContent";
+import CardActions from "@mui/material/CardActions";
+import { makeStyles } from "tss-react/mui";
+import Button from "@mui/material/Button";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()(theme => ({
   card: {
     width: 500,
     padding: "24px 0",
@@ -62,11 +62,15 @@ export default function ContributionCard({
   backButton,
   nextButton,
 }: Props) {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <Card className={classes.card}>
-      {title && <div className={classes.title} id="title">{title}</div>}
+      {title && (
+        <div className={classes.title} id="title">
+          {title}
+        </div>
+      )}
       <CardContent className={classes.content}>{children}</CardContent>
       {backButton && nextButton && (
         <CardActions className={classes.buttons}>

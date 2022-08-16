@@ -7,7 +7,6 @@ import FormFooter from "./FormFooter";
 import CheckBox from "./CheckBox";
 import SwitchField from "./SwitchField";
 import AutocompleteField from "./AutocompleteField";
-import SelectField from "./SelectField";
 import SwitchBlock from "./SwitchBlock";
 
 export const useFormFactory = ({ id, data = {} }) => {
@@ -31,19 +30,6 @@ export const useFormFactory = ({ id, data = {} }) => {
     commonTextField({
       validate: {
         maxLength: validators.maxLength({ label: props.label }),
-        ...validate,
-      },
-      id,
-      form,
-      ...props,
-    });
-
-  const createSelect = props => SelectField({ id, form, ...props });
-
-  const createRequiredSelect = ({ validate = {}, ...props }: any) =>
-    SelectField({
-      validate: {
-        required: `${props.label} is required`,
         ...validate,
       },
       id,
@@ -75,8 +61,6 @@ export const useFormFactory = ({ id, data = {} }) => {
     ...form,
     createRequiredField,
     createField,
-    createSelect,
-    createRequiredSelect,
     createCheckBox,
     createSwitch,
     createSwitchBlock,

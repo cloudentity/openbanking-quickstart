@@ -1,25 +1,18 @@
-import React, { Fragment } from "react";
-import { Redirect, Route } from "react-router";
+import React from "react";
+import { Outlet, Navigate, useLocation } from "react-router-dom";
 import { isTokenInStore } from "./auth.utils";
 
-export default function PrivateRoute({ component: Component, ...rest }) {
-  return (
-    <Fragment>
-      <Route
-        {...rest}
-        render={props =>
-          isTokenInStore() ? (
-            <Component {...props} />
-          ) : (
-            <Redirect
-              to={{
-                pathname: "/auth",
-                state: { from: props.location },
-              }}
-            />
-          )
-        }
-      />
-    </Fragment>
+export default function PrivateRoute() {
+  const location = useLocation();
+  return isTokenInStore() ? (
+    <Outlet />
+  ) : (
+    <Navigate
+      to={{
+        pathname: "/auth",
+        state: { from: location },
+      }}
+      replace
+    />
   );
 }

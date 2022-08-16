@@ -1,5 +1,5 @@
 import React from "react";
-import { Redirect } from "react-router";
+import { Navigate } from "react-router-dom";
 
 import {
   getTokenFromStore,
@@ -33,7 +33,7 @@ const AuthPage = ({ loginFn }) => {
 
   if (isTokenInStore()) {
     loginFn({ token: getTokenFromStore() });
-    return <Redirect to="/" />;
+    return <Navigate to="/" replace />;
   }
 
   return <Register onLogin={HandleLogin} />;

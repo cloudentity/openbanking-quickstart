@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
-import IconButton from "@material-ui/core/IconButton";
-import { makeStyles } from "@material-ui/core/styles";
+import IconButton from "@mui/material/IconButton";
+import { makeStyles } from "tss-react/mui";
 import { ArrowLeft, Lock } from "react-feather";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 
 import PageContainer from "../common/PageContainer";
@@ -14,7 +14,6 @@ import { api } from "../../api/api";
 import Progress from "../Progress";
 import { banks as banksArray } from "../banks";
 import InvestmentsContributeRedirecting from "./InvestmentsContributeRedirecting";
-import { CreateCSSProperties } from "@material-ui/core/styles/withStyles";
 
 export type BalanceType = {
   AccountId: string;
@@ -45,7 +44,7 @@ export type AccountType = {
   StatusUpdateDateTime: string;
 };
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()(theme => ({
   toolbarButton: {
     color: theme.palette.primary.main,
   },
@@ -57,7 +56,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 34,
     display: "flex",
     alignItems: "center",
-    ...(theme.custom.caption as CreateCSSProperties),
+    ...(theme.custom.caption as any),
   },
   spacer: {
     flex: 1,
@@ -71,8 +70,8 @@ const stepsTitle = {
 };
 
 export default function InvestmentsContribute() {
-  const classes = useStyles();
-  const history = useHistory();
+  const { classes } = useStyles();
+  const navigate = useNavigate();
   const [step, setStep] = useState(0);
   const [amount, setAmount] = useState("");
   const [bank, setBank] = useState("");
@@ -110,14 +109,15 @@ export default function InvestmentsContribute() {
 
   useEffect(() => {
     if (step === -1) {
-      history.push("/investments");
+      navigate("/investments");
       setStep(0);
       setAmount("");
     }
-  }, [step, history, amount, bank, account]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step, amount, bank, account]);
 
   function handleBack() {
-    setStep((step) => step - 1);
+    setStep(step => step - 1);
   }
 
   function handleNext() {
@@ -134,15 +134,15 @@ export default function InvestmentsContribute() {
           payee_account_sort_code: "123456",
           payment_reference: "financroo-investment-123",
         })
-        .then((res) => {
+        .then(res => {
           window.location.href = res.login_url;
         })
         .finally(() => {
           setProgress(false);
         });
-      //history.push("/investments/contribute/mock-id/success");
+      //navigate("/investments/contribute/mock-id/success");
     } else {
-      setStep((step) => step + 1);
+      setStep(step => step + 1);
     }
   }
 
@@ -160,7 +160,7 @@ export default function InvestmentsContribute() {
       setBank(tmpBanks[0]);
     }
     return tmpBanks.map(
-      (b) => banksArray.find((v) => v.value === b) || { value: b, name: b }
+      b => banksArray.find(v => v.value === b) || { value: b, name: b }
     );
   }, [banksRes]);
 
@@ -179,7 +179,7 @@ export default function InvestmentsContribute() {
   //     path(["response", "error", "status"], fetchBalancesError) === 401;
 
   //   if (bankNeedsReconnect) {
-  //     history.push({ pathname: "/", state: { bankNeedsReconnect } });
+  //     navigate({ pathname: "/", state: { bankNeedsReconnect } });
   //   }
   // }, [fetchBanksError, fetchBalancesError, fetchAccountsError, history]);
 
@@ -192,8 +192,9 @@ export default function InvestmentsContribute() {
             <IconButton
               className={classes.toolbarButton}
               onClick={() => {
-                setStep((step) => step - 1);
+                setStep(step => step - 1);
               }}
+              size="large"
             >
               <ArrowLeft style={{ color: "#36C6AF" }} />
             </IconButton>
