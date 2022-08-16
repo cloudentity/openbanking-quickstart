@@ -15,10 +15,10 @@ const useStyles = makeStyles(theme => ({
     },
   },
   adornment: {
-    opacity: 0.1,,
+    opacity: 0.1,
   },
   primaryMainColor: {
-    color: theme.palette.primary.main,,
+    color: theme.palette.primary.main,
   },
   disabled: {
     color: "rgba(0, 0, 0, 0.38)",
@@ -87,7 +87,7 @@ export default function AdornmentTextField({
                 }
                 size="large"
               >
-                <ExternalLink className={classes.primaryMainColor}  />
+                <ExternalLink className={classes.primaryMainColor} />
               </IconButton>
             )}
           </InputAdornment>

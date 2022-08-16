@@ -2,8 +2,8 @@ import React from "react";
 import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 import Typography from "@mui/material/Typography";
 import classes from "./chartsStyles.module.css";
-import {  mapTransactionsToPieChartData, stringToHex  } from "./analytics.utils";
-import {  includes  } from "ramda";
+import { mapTransactionsToPieChartData, stringToHex } from "./analytics.utils";
+import { includes } from "ramda";
 
 export default function AnalyticsPieChart({
   currencyType,
@@ -14,18 +14,15 @@ export default function AnalyticsPieChart({
   const mappedAsNameValue = mapTransactionsToPieChartData(data);
 
   const filteredByCategories =
-   
     filtering.categories.length > 0
-        ? data.filter(t =>
-         
+      ? data.filter(t =>
           includes(t.BankTransactionCode.Code, filtering.categories)
-        
         )
-        : data;
+      : data;
 
   const filteredSumAsString = filteredByCategories
     .reduce((sum, t) => sum + parseInt(t.Amount.Amount), 0)
-    
+
     .toFixed(2);
 
   return (
@@ -60,10 +57,9 @@ export default function AnalyticsPieChart({
             // paddingAngle={5}
             dataKey="value"
             onClick={e =>
-             
               !filtering?.categories.includes(e.name)
-                  ? onChangeFiltering({  categories: [e.name]  })
-                  : onChangeFiltering({  categories: []  })
+                ? onChangeFiltering({ categories: [e.name] })
+                : onChangeFiltering({ categories: [] })
             }
           >
             {mappedAsNameValue.map((entry, index) => (
@@ -81,5 +77,5 @@ export default function AnalyticsPieChart({
         </PieChart>
       </ResponsiveContainer>
     </div>
-  );;
+  );
 }
