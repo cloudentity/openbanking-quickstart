@@ -4,8 +4,7 @@ import backgroundLogin from "../assets/background-login.png";
 import financrooLogo from "../assets/financroo-logo.svg";
 import Grid from "@mui/material/Grid";
 import Button from "@mui/material/Button";
-
-import { Alert } from "@mui/material";
+import Alert from "@mui/material/Alert";
 import TextField from "@mui/material/TextField";
 
 const useStyles = makeStyles()(theme => ({
@@ -47,7 +46,7 @@ export default function Register({ onLogin }) {
     password: "p@ssw0rd!",
     error: false,
     processing: false,
-  });;
+  });
 
   const loginWrapper = fn => {
     return async e => {
@@ -68,13 +67,7 @@ export default function Register({ onLogin }) {
   const handleLoginChange = e => {
     setState({ ...state, login: e.target.value });
   };
-  const handleLoginChange = e => {
-    setState({ ...state, login: e.target.value });
-  };
 
-  const handlePasswordChange = e => {
-    setState({ ...state, password: e.target.value });
-  };
   const handlePasswordChange = e => {
     setState({ ...state, password: e.target.value });
   };
@@ -83,7 +76,7 @@ export default function Register({ onLogin }) {
     <div className={classes.root}>
       <Grid container style={{ height: "100%" }}>
         <Grid item sm={6} lg={7}>
-          <div className={classes.image}  />
+          <div className={classes.image} />
         </Grid>
         <Grid item xs={12} sm={6} lg={5}>
           <div className={classes.formContainerRoot}>
@@ -94,7 +87,6 @@ export default function Register({ onLogin }) {
             />
             <form onSubmit={loginWrapper(onLogin)}>
               <TextField
-               
                 margin="normal"
                 id="standard-login-input"
                 label="Login"
@@ -105,7 +97,6 @@ export default function Register({ onLogin }) {
                 style={{ width: "100%" }}
               />
               <TextField
-               
                 margin="normal"
                 id="standard-password-input"
                 label="Password"
