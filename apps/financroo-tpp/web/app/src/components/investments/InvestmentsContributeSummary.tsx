@@ -1,7 +1,6 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Chip from "@material-ui/core/Chip";
-import clsx from "clsx";
+import { makeStyles } from "tss-react/mui";
+import Chip from "@mui/material/Chip";
 
 import ContributionCard from "./ContributionCard";
 import Field from "./Field";
@@ -9,7 +8,7 @@ import { theme } from "../../theme";
 import { BalanceType, AccountType } from "./InvestmentsContribute";
 import { banks } from "../banks";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()(theme => ({
   title: {
     ...theme.custom.heading6,
   },
@@ -107,11 +106,11 @@ export default function InvestmentsContributeSummary({
   handleNext,
   accounts,
 }: Props) {
-  const classes = useStyles();
+  const { cx, classes } = useStyles();
 
-  const selectedBalance = balances.find((a) => a.AccountId === account);
-  const selectedBank = banks.find((a) => a.value === bank);
-  const selectedAccountInfo = accounts.find((a) => a.AccountId === account);
+  const selectedBalance = balances.find(a => a.AccountId === account);
+  const selectedBank = banks.find(a => a.value === bank);
+  const selectedAccountInfo = accounts.find(a => a.AccountId === account);
 
   return (
     <ContributionCard
@@ -121,7 +120,7 @@ export default function InvestmentsContributeSummary({
     >
       <Field>
         <div
-          className={clsx([classes.information, classes.informationOneRow])}
+          className={cx(classes.information, classes.informationOneRow)}
           style={{ alignItems: "center", paddingBottom: 20 }}
         >
           <div className={classes.heading}>PAYMENT TOTAL</div>
@@ -146,7 +145,7 @@ export default function InvestmentsContributeSummary({
         </div>
       </Field>
       <Field label="Payment Information">
-        <div className={clsx([classes.information, classes.informationOneRow])}>
+        <div className={cx(classes.information, classes.informationOneRow)}>
           <div className={classes.heading}>Bank Name</div>
           <div className={classes.bankRow}>
             {selectedBank?.name}

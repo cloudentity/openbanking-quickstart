@@ -1,14 +1,14 @@
 import React from "react";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
-import { makeStyles } from "@material-ui/core/styles";
-import Dialog from "@material-ui/core/Dialog";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import { makeStyles } from "tss-react/mui";
+import Dialog from "@mui/material/Dialog";
 import financrooLogo from "../assets/financroo-logo.svg";
 import icon from "../assets/icon-check.svg";
-import Button from "@material-ui/core/Button";
-import { useHistory } from "react-router";
+import Button from "@mui/material/Button";
+import { useNavigate } from "react-router-dom";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   dialog: {
     width: 454,
     borderRadius: 0,
@@ -64,14 +64,18 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function AcccountsAddedDialog({ open, setOpen }) {
-  const classes = useStyles();
-  const history = useHistory();
+  const { classes } = useStyles();
+  const navigate = useNavigate();
 
   return (
     <Dialog onClose={() => setOpen(false)} open={open}>
       <div className={classes.dialogHeader}>
         <div className={classes.closeButton}>
-          <IconButton id="close-icon" onClick={() => setOpen(false)}>
+          <IconButton
+            id="close-icon"
+            onClick={() => setOpen(false)}
+            size="large"
+          >
             <CloseIcon />
           </IconButton>
         </div>
@@ -101,7 +105,7 @@ export default function AcccountsAddedDialog({ open, setOpen }) {
           variant="outlined"
           id="start-investing-button"
           onClick={() => {
-            history.push("/investments");
+            navigate("/investments");
           }}
         >
           Start investing

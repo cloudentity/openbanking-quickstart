@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
-import Chip from "@material-ui/core/Chip";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import Radio from "@material-ui/core/Radio";
-import Alert from "@material-ui/lab/Alert";
-import { makeStyles } from "@material-ui/core/styles";
-import clsx from "clsx";
+import Chip from "@mui/material/Chip";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import Radio from "@mui/material/Radio";
+import Alert from "@mui/material/Alert";
+import { makeStyles } from "tss-react/mui";
 
 import ContributionCard from "./ContributionCard";
 import Field from "./Field";
@@ -16,7 +15,7 @@ import walletIcon from "../../assets/icon-wallet.svg";
 import { Bank } from "../banks";
 import { BalanceType, AccountType } from "./InvestmentsContribute";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()(theme => ({
   titleContainer: {
     display: "flex",
     alignItems: "center",
@@ -172,9 +171,9 @@ export default function InvestmentsContributeMethod({
   setAlert,
   accounts,
 }: Props) {
-  const classes = useStyles();
-  const selectedAccount = balances.find((a) => a.AccountId === account);
-  const selectedAccountInfo = accounts.find((a) => a.AccountId === account);
+  const { cx, classes } = useStyles();
+  const selectedAccount = balances.find(a => a.AccountId === account);
+  const selectedAccountInfo = accounts.find(a => a.AccountId === account);
 
   useEffect(() => {
     if (selectedAccount) {
@@ -210,11 +209,11 @@ export default function InvestmentsContributeMethod({
             <img src={bankIcon} alt="bank icon" />
             <span>Bank Transfer</span>
           </div>
-          <div className={clsx([classes.card, classes.disabled])}>
+          <div className={cx(classes.card, classes.disabled)}>
             <img src={cardIcon} alt="card icon" />
             <span>Credit / Debit card</span>
           </div>
-          <div className={clsx([classes.card, classes.disabled])}>
+          <div className={cx(classes.card, classes.disabled)}>
             <img src={paypalIcon} alt="bank icon" />
             <span>Paypal Transfer</span>
           </div>
@@ -226,7 +225,7 @@ export default function InvestmentsContributeMethod({
       >
         <Select
           value={bank}
-          onChange={(v) => setBank(v.target.value as any)}
+          onChange={v => setBank(v.target.value as any)}
           style={{ width: "100%" }}
           variant="outlined"
         >
@@ -253,19 +252,19 @@ export default function InvestmentsContributeMethod({
       <Field>
         <div id="accounts-list" className={classes.accountSelect}>
           {balances
-            .filter((b) => b.BankId === bank)
+            .filter(b => b.BankId === bank)
             .map(({ AccountId, Amount }) => (
               <div
                 key={AccountId}
-                className={clsx([
+                className={cx(
                   classes.accountSelectItem,
-                  account === AccountId && classes.active,
-                ])}
+                  account === AccountId && classes.active
+                )}
               >
                 <Radio
                   checked={account === AccountId}
                   color="primary"
-                  onChange={(e) => {
+                  onChange={e => {
                     if (e.target.checked) {
                       setAcccount(AccountId);
                     }
@@ -276,7 +275,9 @@ export default function InvestmentsContributeMethod({
                   <div>Checking account</div>
                   <div>**** ***** **** {AccountId} </div>
                 </div>
-                <div style={{ flex: 1, textAlign: "right" }}>£ {Amount}</div>
+                <div style={{ flex: 1, textAlign: "right" }}>
+                  £ <>{Amount}</>
+                </div>
               </div>
             ))}
         </div>

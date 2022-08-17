@@ -1,6 +1,5 @@
 import React, { Suspense } from "react";
-import { Switch } from "react-router";
-import { Route } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 import Dashboard from "./Dashboard";
 import Investments from "./investments/Investments";
@@ -10,21 +9,19 @@ import InvestmentsContributeSuccess from "./investments/InvestmentsContributeSuc
 export default function AuthenticatedAppBase() {
   return (
     <Suspense>
-      <Switch>
-        <Route exact path="/" render={() => <Dashboard />} />
-        <Route path="/investments" exact render={() => <Investments />} />
+      <Routes>
+        <Route path="/" element={<Dashboard />} />
+        <Route path="/investments" element={<Investments />} />
         <Route
           path="/investments/contribute"
-          exact
-          render={() => <InvestmentsContribute />}
+          element={<InvestmentsContribute />}
         />
-
         <Route
           path="/investments/contribute/:id/success"
-          exact
-          render={() => <InvestmentsContributeSuccess />}
+          element={<InvestmentsContributeSuccess />}
         />
-      </Switch>
+        <Route path="*" element={<Navigate to="/" replace />} />
+      </Routes>
     </Suspense>
   );
 }

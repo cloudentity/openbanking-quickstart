@@ -1,15 +1,15 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Grid from "@material-ui/core/Grid";
+import { makeStyles } from "tss-react/mui";
+import Grid from "@mui/material/Grid";
 import Accounts from "./Accounts";
-import Analytics from "./Analytics";
 import { useQuery } from "react-query";
 import { api } from "../api/api";
 import Progress from "./Progress";
 import { applyFiltering } from "./analytics.utils";
 import { path, pick } from "ramda";
+import Analytics from "./Analytics";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   root: {
     height: "100%;",
   },
@@ -21,7 +21,7 @@ export default function Connected({
   onDisconnect,
   onReconnect,
 }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [filtering, setFiltering] = useState({
     accounts: [],
     months: [],

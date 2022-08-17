@@ -1,15 +1,15 @@
 import React from "react";
-import { useHistory } from "react-router";
-import { makeStyles } from "@material-ui/core/styles";
+import { useNavigate } from "react-router-dom";
+import { makeStyles } from "tss-react/mui";
 
 import PageContainer from "../common/PageContainer";
 import PageToolbar from "../common/PageToolbar";
 import dashboardImg from "../../assets/investments-dashboard.svg";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   dashboardImage: {
     width: "100%",
-    [theme.breakpoints.down("md")]: {
+    [theme.breakpoints.down("lg")]: {
       position: "absolute",
       left: 24,
       right: 24,
@@ -19,8 +19,8 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function Investments() {
-  const history = useHistory();
-  const classes = useStyles();
+  const navigate = useNavigate();
+  const { classes } = useStyles();
 
   return (
     <div style={{ position: "relative" }}>
@@ -33,7 +33,7 @@ export default function Investments() {
           title: "Contribute now",
           onClick: () => {
             if (window.spec !== "cdr") {
-              history.push("/investments/contribute");
+              navigate("/investments/contribute");
             }
           },
         }}
