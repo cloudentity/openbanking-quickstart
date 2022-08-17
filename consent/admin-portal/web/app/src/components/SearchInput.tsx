@@ -4,7 +4,7 @@ import IconButton from "@material-ui/core/IconButton";
 import OutlinedInput from "@material-ui/core/OutlinedInput";
 import InputAdornment from "@material-ui/core/InputAdornment";
 import CancelOutlined from "@material-ui/icons/CancelOutlined";
-import { Search } from "react-feather";
+import Search from "@material-ui/icons/Search";
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -96,7 +96,7 @@ export default function SearchInput({
                   id="search-account"
                   onClick={() => value !== "" && onSearch(value)}
                 >
-                  <Search style={{ color: "white" }} />
+                  <Search style={{ color: "white", fontSize: 24 }} />
                 </IconButton>
               </div>
             </InputAdornment>

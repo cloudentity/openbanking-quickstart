@@ -4,9 +4,9 @@ import DialogContent from "@material-ui/core/DialogContent";
 import DialogTitle from "@material-ui/core/DialogTitle";
 import DoneIcon from "@material-ui/icons/Done";
 import React from "react";
-import { Typography } from "@material-ui/core";
+import Typography from "@material-ui/core/Typography";
 
-type Props = {
+interface Props {
   title?: string;
   content?: string;
   warningItems?: string[] | undefined;
@@ -16,7 +16,7 @@ type Props = {
   onExtraAction?: () => void;
   onCancel: () => void;
   onConfirm: () => void;
-};
+}
 
 const ConfirmationDialog = ({
   title,
@@ -31,11 +31,11 @@ const ConfirmationDialog = ({
 }: Props) => {
   return (
     <Dialog
-      open={true}
+      open
       onClose={onCancel}
       aria-labelledby="confirmation-dialog-title"
       aria-describedby="confirmation-dialog-description"
-      maxWidth={"sm"}
+      maxWidth="sm"
       fullWidth
     >
       <DialogTitle
@@ -52,14 +52,14 @@ const ConfirmationDialog = ({
       <DialogContent style={{ padding: "24px 32px" }}>
         <Typography
           id="confirmation-dialog-content"
-          component={"div"}
+          component="div"
           variant="body1"
         >
           <strong>{content}</strong>
         </Typography>
         {warningItems && (
           <div style={{ marginTop: 8 }}>
-            {warningItems.map((i) => (
+            {warningItems.map(i => (
               <div
                 style={{ marginTop: 4, display: "flex", alignItems: "center" }}
               >
@@ -76,7 +76,7 @@ const ConfirmationDialog = ({
             onClick={() => onConfirm()}
             color="secondary"
             style={{ background: "#BD271E" }}
-            variant={"contained"}
+            variant="contained"
           >
             {confirmText || "Confirm"}
           </Button>
@@ -87,7 +87,7 @@ const ConfirmationDialog = ({
               onClick={() => onExtraAction()}
               color="primary"
               style={{ marginLeft: 12 }}
-              variant={"contained"}
+              variant="contained"
             >
               {extraActionText}
             </Button>
@@ -98,7 +98,7 @@ const ConfirmationDialog = ({
             onClick={() => onCancel()}
             color="primary"
             style={{ marginLeft: 12 }}
-            variant={"outlined"}
+            variant="outlined"
           >
             {cancelText || "Cancel"}
           </Button>

@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { Container, makeStyles, Theme, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import Container from "@material-ui/core/Container";
+import Typography from "@material-ui/core/Typography";
 
 import PageToolbar from "../PageToolbar";
 import Progress from "../Progress";
@@ -11,7 +13,7 @@ import Subheader from "../Subheader";
 import SearchInput from "../SearchInput";
 import { ClientType } from "../utils";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(theme => ({
   subtitle: {
     ...theme.custom.body1,
     maxWidth: 588,
@@ -56,7 +58,7 @@ export default function ThirdPartyProvidersView({
       .then(({ clients }: { clients: ClientType[] }) => {
         setClients(clients || []);
       })
-      .catch((err) => console.log(err))
+      .catch(err => console.log(err))
       .finally(() => setProgress(false));
   }, []);
 
@@ -75,11 +77,11 @@ export default function ThirdPartyProvidersView({
     api
       .deleteClient({ id, provider_type })
       .then(api.getClients)
-      .then((res) => {
-        console.log(res)
-        setClients(res.clients || [])
+      .then(res => {
+        console.log(res);
+        setClients(res.clients || []);
       })
-      .catch((err) => console.log(err))
+      .catch(err => console.log(err))
       .finally(() => setProgress(false));
   };
 

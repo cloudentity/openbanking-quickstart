@@ -14,10 +14,10 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-type Props = {
+interface Props {
   drawerData: any;
   setDrawerData: (data: string | null) => void;
-};
+}
 
 function PaymentDrawer({ drawerData, setDrawerData }: Props) {
   const classes = useStyles();

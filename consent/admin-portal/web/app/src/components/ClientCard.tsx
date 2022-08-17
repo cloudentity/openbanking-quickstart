@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 function getAuthorisedDate(client) {
-  const accountAccessConsent = client?.consents?.find((v) => {
+  const accountAccessConsent = client?.consents?.find(v => {
     return (
       v.consent_type === "account_access" ||
       v.consent_type === "cdr_arrangement" ||
@@ -71,12 +71,12 @@ function getAuthorisedDate(client) {
   return "N/A";
 }
 
-interface PropTypes {
+interface Props {
   client: ClientType;
   onRevokeClient: (id: string, provider_type: string) => void;
 }
 
-export default function ClientCard({ client, onRevokeClient }: PropTypes) {
+export default function ClientCard({ client, onRevokeClient }: Props) {
   const classes = useStyles();
   const date = getAuthorisedDate(client);
   const [openDrawer, setOpenDrawer] = useState(false);

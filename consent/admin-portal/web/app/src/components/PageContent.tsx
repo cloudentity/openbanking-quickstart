@@ -1,10 +1,9 @@
 import React from "react";
-import { Theme } from "@material-ui/core";
 import { makeStyles } from "@material-ui/core/styles";
 import brandingMask from "../assets/branding-mask.png";
 
-const useStyles = (withBackground) =>
-  makeStyles((theme: Theme) => ({
+const useStyles = withBackground =>
+  makeStyles(theme => ({
     root: {
       marginTop: 56,
       height: "calc(100vh - 56px)",

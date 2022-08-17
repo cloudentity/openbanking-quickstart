@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { makeStyles, Theme } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import { useHistory, useLocation, useParams } from "react-router";
 import ArrowBack from "@material-ui/icons/ArrowBack";
 import IconButton from "@material-ui/core/IconButton";
@@ -12,7 +12,7 @@ import { api } from "../../api/api";
 import { ClientType, handleSearch, searchTabs } from "../utils";
 import AccountClientsList from "./AccountClientsList";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(theme => ({
   subtitle: {
     ...theme.custom.body1,
   },
@@ -79,14 +79,14 @@ export default function AccountView({
     api
       .getClients()
       .then(({ clients }: { clients: ClientType[] }) => {
-        const found = clients.filter((v) =>
+        const found = clients.filter(v =>
           state?.clientIds?.includes(v.client_id)
         );
         if (found.length) {
           setClients(found);
         }
       })
-      .catch((err) => console.log(err))
+      .catch(err => console.log(err))
       .finally(() => setProgress(false));
   }, [state?.clientIds]);
 
@@ -131,7 +131,7 @@ export default function AccountView({
                 }}
               >
                 <CustomTabs
-                  tabs={searchTabs((searchText) => {
+                  tabs={searchTabs(searchText => {
                     handleSearch(searchText)(history, state?.accounts);
                   }, id)}
                 />
