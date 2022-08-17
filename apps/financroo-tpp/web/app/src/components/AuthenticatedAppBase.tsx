@@ -1,5 +1,5 @@
 import React, { Suspense } from "react";
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 
 import Dashboard from "./Dashboard";
 import Investments from "./investments/Investments";
@@ -20,6 +20,7 @@ export default function AuthenticatedAppBase() {
           path="/investments/contribute/:id/success"
           element={<InvestmentsContributeSuccess />}
         />
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </Suspense>
   );

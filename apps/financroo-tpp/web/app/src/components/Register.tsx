@@ -25,10 +25,7 @@ const useStyles = makeStyles()(theme => ({
     flexDirection: "column",
     alignItems: "flex-start",
     justifyContent: "center",
-
-    [theme.breakpoints.down("md")]: {
-      padding: 16,
-    },
+    padding: 16,
     [theme.breakpoints.up("sm")]: {
       padding: 48,
     },

@@ -90,8 +90,8 @@ export default function ConnectAccount({ connected, onAllowAccess, onClose }) {
                     <Card
                       className={cx(
                         classes.cardRoot,
-                        includes(bank.value, connected) ||
-                          (bank.disabled && classes.disabled)
+                        (includes(bank.value, connected) || bank.disabled) &&
+                          classes.disabled
                       )}
                       onClick={() => {
                         if (

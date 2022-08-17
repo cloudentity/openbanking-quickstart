@@ -22,7 +22,6 @@ export default function AnalyticsPieChart({
 
   const filteredSumAsString = filteredByCategories
     .reduce((sum, t) => sum + parseInt(t.Amount.Amount), 0)
-
     .toFixed(2);
 
   return (
