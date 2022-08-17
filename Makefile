@@ -5,12 +5,12 @@ export COMPOSE_DOCKER_CLI_BUILD=1
 ACP_LOCAL_APPS=acp crdb redis
 
 # obuk, obbr, cdr
-run-%-local: 
+run-%-local:
 	./scripts/additional_configuration.sh $*
 	cp -f .env-local .env
 	docker-compose -f docker-compose.acp.local.yaml up -d --no-build ${ACP_LOCAL_APPS}
-	./scripts/wait.sh 
-	docker-compose -f docker-compose.$*.yaml up --no-build -d 
+	./scripts/wait.sh
+	docker-compose -f docker-compose.$*.yaml up --no-build -d
 	./scripts/wait.sh
 
 # obuk, obbr
@@ -25,11 +25,11 @@ build:
 	cp -f .env-local .env
 	docker-compose -f docker-compose.obuk.yaml -f docker-compose.obbr.yaml -f docker-compose.cdr.yaml -f docker-compose.build.yaml build
 
-.PHONY: build-financroo-tpp 
+.PHONY: build-financroo-tpp
 build-financroo-tpp:
 	docker-compose -f docker-compose.obuk.yaml -f docker-compose.obbr.yaml -f docker-compose.cdr.yaml -f docker-compose.build.yaml build financroo-tpp
 
-.PHONY: build-developer-tpp 
+.PHONY: build-developer-tpp
 build-developer-tpp:
 	docker-compose -f docker-compose.obuk.yaml -f docker-compose.obbr.yaml -f docker-compose.cdr.yaml -f docker-compose.build.yaml build developer-tpp
 
@@ -45,8 +45,8 @@ run-saas-%-tests-headless:
 run-tests:
 	yarn --cwd tests run cypress open
 
-.PHONY: run-tests-verify 
-run-tests-verify: 
+.PHONY: run-tests-verify
+run-tests-verify:
 	VERIFY_TEST_RUNNER_TIMEOUT_MS=80000 yarn --cwd tests run cypress verify
 
 .PHONY: restart-acp
@@ -59,7 +59,7 @@ lint: start-runner
 	docker exec quickstart-runner sh -c "golangci-lint run --fix --deadline=5m ./..."
 
 .PHONY: clean
-clean: 
+clean:
 	docker-compose -f docker-compose.build.yaml down --remove-orphans
 ifeq (${DEBUG},true)
 	docker ps -a

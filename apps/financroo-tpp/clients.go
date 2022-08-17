@@ -28,6 +28,7 @@ type Clients struct {
 	AcpPaymentsClient acpclient.Client
 	BankClient        BankClient
 	ConsentClient     ConsentClient
+	FDXConsentClient  FDXConsentClient
 }
 
 type BankClient interface {
@@ -95,6 +96,7 @@ func InitClients(config Config,
 	signerCreateFn SignerCreationFn,
 	bankClientCreateFn BankClientCreationFn,
 	consentClientCreateFn ConsentClientCreationFn,
+	fdxConsentClientFn FDXConsentClientFn,
 ) (Clients, error) {
 	var (
 		clients              = Clients{}
@@ -103,6 +105,7 @@ func InitClients(config Config,
 		bankClient           BankClient
 		signer               Signer
 		consentClient        ConsentClient
+		fdxConsentClient     FDXConsentClient
 		err                  error
 	)
 
@@ -120,12 +123,16 @@ func InitClients(config Config,
 		}
 	}
 
-	if bankClient, err = bankClientCreateFn(config); err != nil {
-		return clients, errors.Wrapf(err, "failed to create bank client for %s", config.Spec)
-	}
+	// if bankClient, err = bankClientCreateFn(config); err != nil {
+	// 	return clients, errors.Wrapf(err, "failed to create bank client for %s", config.Spec)
+	// }
 
 	if consentClientCreateFn != nil {
 		consentClient = consentClientCreateFn(acpAccountsWebClient, acpPaymentsWebClient, signer)
+	}
+
+	if fdxConsentClientFn != nil {
+		fdxConsentClient = fdxConsentClientFn(acpPaymentsWebClient, acpAccountsWebClient)
 	}
 
 	return Clients{
@@ -133,6 +140,7 @@ func InitClients(config Config,
 		AcpPaymentsClient: acpPaymentsWebClient,
 		BankClient:        bankClient,
 		ConsentClient:     consentClient,
+		FDXConsentClient:  fdxConsentClient,
 	}, nil
 }
 
@@ -158,6 +166,7 @@ func NewAcpClient(cfg Config, redirect string) (acpclient.Client, error) {
 	requestObjectExpiration := time.Minute * 10
 	config := acpclient.Config{
 		ClientID:                      cfg.ClientID,
+		ClientSecret:                  cfg.ClientSecret,
 		IssuerURL:                     issuerURL,
 		AuthorizeURL:                  authorizeURL,
 		RedirectURL:                   redirectURL,
@@ -174,6 +183,11 @@ func NewAcpClient(cfg Config, redirect string) (acpclient.Client, error) {
 	if cfg.Spec == CDR {
 		config.SkipClientCredentialsAuthn = true
 		config.AuthMethod = acpclient.PrivateKeyJwtAuthnMethod
+	}
+
+	if cfg.Spec == FDX {
+		config.SkipClientCredentialsAuthn = true
+		config.AuthMethod = acpclient.ClientSecretPostAuthnMethod
 	}
 
 	if client, err = acpclient.New(config); err != nil {

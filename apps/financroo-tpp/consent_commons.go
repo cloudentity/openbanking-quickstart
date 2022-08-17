@@ -155,3 +155,21 @@ func getEncryptionKey(client acpclient.Client) (jose.JSONWebKey, error) {
 
 	return encKey, nil
 }
+
+type FDXLoginURLBuilder struct{}
+
+func NewFDXLoginURLBuilder(config Config) (LoginURLBuilder, error) {
+	return &CDRLoginURLBuilder{}, nil
+}
+
+func (f *FDXLoginURLBuilder) BuildLoginURL(consentID string, client acpclient.Client) (authorizeURL string, csrf acpclient.CSRF, err error) {
+	var (
+		u string
+	)
+
+	if u, err = client.AuthorizeURLWithPAR(consentID); err != nil {
+		return "", acpclient.CSRF{}, errors.Wrapf(err, "failed to create authorize url with par")
+	}
+
+	return u, acpclient.CSRF{}, nil
+}

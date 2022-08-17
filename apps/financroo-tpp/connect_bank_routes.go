@@ -44,6 +44,7 @@ func (s *Server) ConnectBank() func(*gin.Context) {
 		)
 
 		if user, _, err = s.WithUser(c); err != nil {
+			fmt.Printf("Failed getting WithUser %v", err)
 			c.String(http.StatusUnauthorized, err.Error())
 			return
 		}

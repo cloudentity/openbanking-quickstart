@@ -45,7 +45,7 @@ func NewServer() (Server, error) {
 	switch server.Config.Spec {
 	case OBUK:
 		server.Config.ClientScopes = []string{"accounts", "payments", "openid", "offline_access"}
-		if server.Clients, err = InitClients(server.Config, NewOBUKSigner, NewOBUKClient, NewOBUKConsentClient); err != nil {
+		if server.Clients, err = InitClients(server.Config, NewOBUKSigner, NewOBUKClient, NewOBUKConsentClient, nil); err != nil {
 			return server, errors.Wrapf(err, "failed to create clients")
 		}
 		if server.LoginURLBuilder, err = NewOBUKLoginURLBuilder(); err != nil {
@@ -53,7 +53,7 @@ func NewServer() (Server, error) {
 		}
 	case OBBR:
 		server.Config.ClientScopes = []string{"accounts", "payments", "openid", "offline_access", "consents"}
-		if server.Clients, err = InitClients(server.Config, NewOBBRSigner, NewOBBRClient, NewOBBRConsentClient); err != nil {
+		if server.Clients, err = InitClients(server.Config, NewOBBRSigner, NewOBBRClient, NewOBBRConsentClient, nil); err != nil {
 			return server, errors.Wrapf(err, "failed to create clients")
 		}
 		if server.LoginURLBuilder, err = NewOBBRLoginURLBuilder(server.Clients.AcpAccountsClient); err != nil {
@@ -61,10 +61,18 @@ func NewServer() (Server, error) {
 		}
 	case CDR:
 		server.Config.ClientScopes = []string{"offline_access", "openid", "bank:accounts.basic:read", "bank:accounts.detail:read", "bank:transactions:read", "common:customer.basic:read"} // TODO
-		if server.Clients, err = InitClients(server.Config, nil, NewCDRClient, nil); err != nil {
+		if server.Clients, err = InitClients(server.Config, nil, NewCDRClient, nil, nil); err != nil {
 			return server, errors.Wrapf(err, "failed to create clients")
 		}
 		if server.LoginURLBuilder, err = NewCDRLoginURLBuilder(server.Config); err != nil {
+			return server, errors.Wrapf(err, "failed to create login url builder")
+		}
+	case FDX:
+		server.Config.ClientScopes = []string{"READ_CONSENTS"}
+		if server.Clients, err = InitClients(server.Config, nil, nil, nil, NewFDXClient); err != nil {
+			return server, errors.Wrapf(err, "failed to create clients")
+		}
+		if server.LoginURLBuilder, err = NewFDXLoginURLBuilder(server.Config); err != nil {
 			return server, errors.Wrapf(err, "failed to create login url builder")
 		}
 	default:
