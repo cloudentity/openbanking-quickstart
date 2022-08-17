@@ -123,9 +123,9 @@ func InitClients(config Config,
 		}
 	}
 
-	// if bankClient, err = bankClientCreateFn(config); err != nil {
-	// 	return clients, errors.Wrapf(err, "failed to create bank client for %s", config.Spec)
-	// }
+	if bankClient, err = bankClientCreateFn(config); err != nil {
+		return clients, errors.Wrapf(err, "failed to create bank client for %s", config.Spec)
+	}
 
 	if consentClientCreateFn != nil {
 		consentClient = consentClientCreateFn(acpAccountsWebClient, acpPaymentsWebClient, signer)
@@ -305,4 +305,10 @@ type OBBRConsentClient struct {
 
 func NewOBBRConsentClient(accountsClient, paymentsClient acpclient.Client, signer Signer) ConsentClient {
 	return &OBBRConsentClient{accountsClient, paymentsClient, signer}
+}
+
+type FDXBankClient struct{}
+
+func NewFDXBankClient(config Config) (BankClient, error) {
+	return &FDXBankClient{}, nil
 }

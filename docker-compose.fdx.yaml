@@ -42,6 +42,7 @@ services:
         - BANK_URL=http://bank:8070
         - OPENBANKING_SERVER_ID=${SERVER}
         - ENABLE_TLS_SERVER=true
+        - REDIRECT_URL=https://${APP_HOST}:8091/api/callback
       depends_on:
         configuration:
           condition: service_completed_successfully

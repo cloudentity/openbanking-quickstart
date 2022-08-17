@@ -104,3 +104,8 @@ func (o *OBBRClient) CreatePayment(c *gin.Context, data interface{}, accessToken
 func (o *CDRClient) CreatePayment(c *gin.Context, data interface{}, accessToken string) (PaymentCreated, error) {
 	return PaymentCreated{}, nil
 }
+
+func (o *FDXBankClient) CreatePayment(c *gin.Context, data interface{}, accessToken string) (PaymentCreated, error) {
+	// TODO mocked until APIs for FDX added to bank
+	return PaymentCreated{}, nil
+}

@@ -69,7 +69,7 @@ func NewServer() (Server, error) {
 		}
 	case FDX:
 		server.Config.ClientScopes = []string{"READ_CONSENTS"}
-		if server.Clients, err = InitClients(server.Config, nil, nil, nil, NewFDXClient); err != nil {
+		if server.Clients, err = InitClients(server.Config, nil, NewFDXBankClient, nil, NewFDXConsentClient); err != nil {
 			return server, errors.Wrapf(err, "failed to create clients")
 		}
 		if server.LoginURLBuilder, err = NewFDXLoginURLBuilder(server.Config); err != nil {

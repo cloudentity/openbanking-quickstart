@@ -1,7 +1,7 @@
 package main
 
 import (
-	"encoding/json"
+	"log"
 
 	acpclient "github.com/cloudentity/acp-client-go"
 	a2 "github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
@@ -10,7 +10,7 @@ import (
 )
 
 type FDXConsentClient interface {
-	CreateConsent(c *gin.Context) (interface{}, error)
+	CreateConsent(c *gin.Context) (string, error)
 }
 
 type FDXClient struct {
@@ -18,11 +18,12 @@ type FDXClient struct {
 	ClientSecret            string
 	PublicClient            acpclient.Client
 	ClientCredentialsClient acpclient.Client
+	RedirectURI             string
 }
 
 type FDXConsentClientFn func(publicClient, clientCredentialsClient acpclient.Client) FDXConsentClient
 
-func NewFDXClient(publicClient, clientCredentialsClient acpclient.Client) FDXConsentClient {
+func NewFDXConsentClient(publicClient, clientCredentialsClient acpclient.Client) FDXConsentClient {
 	return &FDXClient{
 		ClientID:                clientCredentialsClient.Config.ClientID,
 		ClientSecret:            clientCredentialsClient.Config.ClientSecret,
@@ -31,7 +32,7 @@ func NewFDXClient(publicClient, clientCredentialsClient acpclient.Client) FDXCon
 	}
 }
 
-func (f *FDXClient) CreateConsent(c *gin.Context) (interface{}, error) {
+func (f *FDXClient) CreateConsent(c *gin.Context) (string, error) {
 	var (
 		resp *a2.PushedAuthorizationRequestCreated
 		err  error
@@ -64,9 +65,11 @@ func (f *FDXClient) CreateConsent(c *gin.Context) (interface{}, error) {
       }
    ]`
 
+	log.Printf("client id %s secret %s", f.ClientID, f.ClientSecret)
 	if resp, err = f.PublicClient.Oauth2.Oauth2.PushedAuthorizationRequest(
 		a2.NewPushedAuthorizationRequestParams().
 			WithContext(c.Request.Context()).
+			WithRedirectURI(f.PublicClient.Config.RedirectURL.String()).
 			WithClientID(f.ClientID).
 			WithClientSecret(&f.ClientSecret).
 			WithResponseType(responseType).
@@ -75,11 +78,7 @@ func (f *FDXClient) CreateConsent(c *gin.Context) (interface{}, error) {
 		return "", errors.Wrapf(err, "failed to register par request")
 	}
 
-	strResp, err := json.Marshal(&map[string]interface{}{
-		"request_uri": resp.Payload.RequestURI,
-	})
-
-	return string(strResp), err
+	return resp.Payload.RequestURI, err
 }
 
 func (f *FDXClient) GetConsentID(data interface{}) string {
@@ -93,17 +92,4 @@ func (f *FDXClient) GetConsentID(data interface{}) string {
 
 func (f *FDXClient) DoRequestObjectEncryption() bool {
 	return false
-}
-
-func (f *FDXClient) BuildLoginURL(c *gin.Context, consentID string, _ bool) (string, acpclient.CSRF, error) {
-	var (
-		u   string
-		err error
-	)
-
-	if u, err = f.PublicClient.AuthorizeURLWithPAR(consentID); err != nil {
-		return "", acpclient.CSRF{}, errors.Wrapf(err, "failed to create authorize url with par")
-	}
-
-	return u, acpclient.CSRF{}, nil
 }

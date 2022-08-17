@@ -159,7 +159,7 @@ func getEncryptionKey(client acpclient.Client) (jose.JSONWebKey, error) {
 type FDXLoginURLBuilder struct{}
 
 func NewFDXLoginURLBuilder(config Config) (LoginURLBuilder, error) {
-	return &CDRLoginURLBuilder{}, nil
+	return &FDXLoginURLBuilder{}, nil
 }
 
 func (f *FDXLoginURLBuilder) BuildLoginURL(consentID string, client acpclient.Client) (authorizeURL string, csrf acpclient.CSRF, err error) {

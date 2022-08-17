@@ -44,13 +44,19 @@ func (s *Server) ConnectBank() func(*gin.Context) {
 		)
 
 		if user, _, err = s.WithUser(c); err != nil {
-			fmt.Printf("Failed getting WithUser %v", err)
 			c.String(http.StatusUnauthorized, err.Error())
 			return
 		}
 
 		if s.Clients.ConsentClient != nil {
 			if consentID, err = s.Clients.ConsentClient.CreateAccountConsent(c); err != nil {
+				c.String(http.StatusBadRequest, fmt.Sprintf("failed to register account access consent: %+v", err))
+				return
+			}
+		}
+
+		if s.Clients.FDXConsentClient != nil {
+			if consentID, err = s.Clients.FDXConsentClient.CreateConsent(c); err != nil {
 				c.String(http.StatusBadRequest, fmt.Sprintf("failed to register account access consent: %+v", err))
 				return
 			}
