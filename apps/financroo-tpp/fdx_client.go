@@ -1,8 +1,6 @@
 package main
 
 import (
-	"log"
-
 	acpclient "github.com/cloudentity/acp-client-go"
 	a2 "github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
 	"github.com/gin-gonic/gin"
@@ -18,7 +16,6 @@ type FDXClient struct {
 	ClientSecret            string
 	PublicClient            acpclient.Client
 	ClientCredentialsClient acpclient.Client
-	RedirectURI             string
 }
 
 type FDXConsentClientFn func(publicClient, clientCredentialsClient acpclient.Client) FDXConsentClient
@@ -65,7 +62,6 @@ func (f *FDXClient) CreateConsent(c *gin.Context) (string, error) {
       }
    ]`
 
-	log.Printf("client id %s secret %s", f.ClientID, f.ClientSecret)
 	if resp, err = f.PublicClient.Oauth2.Oauth2.PushedAuthorizationRequest(
 		a2.NewPushedAuthorizationRequestParams().
 			WithContext(c.Request.Context()).

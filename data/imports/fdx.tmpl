@@ -59,10 +59,10 @@ clients:
   - manage_openbanking_consents
   token_endpoint_auth_method: client_secret_basic
 
+# financroo / developer tpp
 - tenant_id: {{ .tenant_id }}
   authorization_server_id: {{ .server_id }}
   client_id: bugkgm23g9kregtu051g
-  organisation_id: 3333-3333-3333-3333
   client_name: Financroo
   client_uri: https://localhost:8090
   client_secret: {{ default "-TlfoycUiE0qNi-XUBFDfTxMlhHTCjVxOF6pLrWZbQA" .fdx_developer_tpp_client_secret }}
@@ -70,7 +70,6 @@ clients:
   redirect_uris:
   - {{ .developer_tpp_url }}/callback
   - {{ .financroo_tpp_url }}/api/callback
-  - {{ .financroo_tpp_url }}/api/domestic/callback
   subject_type: pairwise
   response_types:
   - token
@@ -82,5 +81,3 @@ clients:
   - client_credentials
   - authorization_code
   - refresh_token
-  jwks:
-{{ readFile .financroo_pem_file | pemToPublicJwks | indent 4 }}
