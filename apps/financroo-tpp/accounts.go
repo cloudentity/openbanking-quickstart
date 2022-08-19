@@ -99,7 +99,8 @@ func (o *OBBRClient) GetAccounts(c *gin.Context, accessToken string, bank Connec
 
 	return accountsData, nil
 }
-func (f *FDXBankClient) GetAccounts(c *gin.Context, accessToken string, bank ConnectedBank) (accountsData []Account, err error) {
+
+func (o *FDXBankClient) GetAccounts(c *gin.Context, accessToken string, bank ConnectedBank) (accountsData []Account, err error) {
 	// TODO mocked until APIs for FDX added to bank
 	accID := "abc123"
 	ident := "anIdent"

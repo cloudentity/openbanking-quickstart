@@ -1,10 +1,11 @@
 package main
 
 import (
-	acpclient "github.com/cloudentity/acp-client-go"
-	a2 "github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
+
+	acpclient "github.com/cloudentity/acp-client-go"
+	a2 "github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
 )
 
 type FDXConsentClient interface {
