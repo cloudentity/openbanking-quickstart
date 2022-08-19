@@ -25,6 +25,7 @@ mount/conformance/
 .vscode/*
 !.vscode/launch.json
 .env
+test.sh
 
 mount/cdr/holder.json
 mount/cdr/recipient.json
