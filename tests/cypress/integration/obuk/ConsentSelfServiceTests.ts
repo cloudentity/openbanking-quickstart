@@ -59,11 +59,13 @@ describe(`Consent self service app`, () => {
   })
 
   beforeEach(() => {
-    consentSelfServicePage.visit(true)
+    consentSelfServicePage.visit()
+    Urls.clearLocalStorage()
+    consentSelfServicePage.visit()
+    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
   })
 
   it(`Happy path with account consent`, () => {
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
     consentSelfServicePage.clickOnApplicationCard()
     consentSelfServiceApplicationPage.expandAccountsTab()
     consentSelfServiceApplicationPage.checkAccount("22289")
@@ -71,7 +73,6 @@ describe(`Consent self service app`, () => {
   })
 
   it(`Happy path with payment consent`, () => {
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
     consentSelfServicePage.clickOnApplicationCard()
     consentSelfServiceApplicationPage.expandPaymentsTab()
     consentSelfServiceApplicationPage.checkAccount("22289")
