@@ -1,5 +1,5 @@
 tenant_id: default
-server_id: cdr
+server_id: openbanking
 consent_self_service_portal_url: https://localhost:8085
 consent_admin_portal_url: https://localhost:8086
 consent_page_url: https://localhost:7080

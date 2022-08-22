@@ -5,6 +5,7 @@ import (
 	"crypto/tls"
 	"crypto/x509"
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"net/http"
 	"net/url"
@@ -13,7 +14,6 @@ import (
 
 	"github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/models"
 	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/clientcredentials"
 )
@@ -25,7 +25,7 @@ type CDRBankClient struct {
 	baseURL          string
 }
 
-func NewCDRBankClient(config Config) BankClient {
+func NewCDRBankClient(config Config) (BankClient, error) {
 	var (
 		pool  *x509.CertPool
 		cert  tls.Certificate
@@ -35,17 +35,17 @@ func NewCDRBankClient(config Config) BankClient {
 	)
 
 	if pool, err = x509.SystemCertPool(); err != nil {
-		logrus.Fatalf("failed to read system root CAs %v", err)
+		return &CDRBankClient{}, errors.Wrap(err, "failed to read system root CAs")
 	}
 
 	if data, err = os.ReadFile(config.RootCA); err != nil {
-		logrus.Fatalf("failed to read http client root ca: %v", err)
+		return &CDRBankClient{}, errors.Wrap(err, "failed to read http client root ca")
 	}
 	pool.AppendCertsFromPEM(data)
 
 	if config.BankClientConfig.CertFile != "" && config.BankClientConfig.KeyFile != "" {
 		if cert, err = tls.LoadX509KeyPair(config.BankClientConfig.CertFile, config.BankClientConfig.KeyFile); err != nil {
-			logrus.Fatalf("failed to read certificate and private key %v", err)
+			return &CDRBankClient{}, errors.Wrap(err, "failed to read certificate and private key")
 		}
 		certs = append(certs, cert)
 	}
@@ -69,7 +69,7 @@ func NewCDRBankClient(config Config) BankClient {
 			TokenURL:     config.BankClientConfig.TokenURL,
 			Scopes:       config.BankClientConfig.Scopes,
 		},
-	}
+	}, nil
 }
 
 func (c *CDRBankClient) GetInternalAccounts(ctx context.Context, id string) (InternalAccounts, error) {
@@ -113,7 +113,7 @@ func (c *CDRBankClient) GetInternalAccounts(ctx context.Context, id string) (Int
 	}
 
 	if response.StatusCode >= http.StatusBadRequest {
-		return InternalAccounts{}, errors.Wrap(errors.New(string(body)), "internal bank accounts api call failed")
+		return InternalAccounts{}, fmt.Errorf("internal bank accounts api returned unexpected status code: %d, body: %s", response.StatusCode, string(body))
 	}
 
 	return c.accountsResponseToInternalAccounts(body)
