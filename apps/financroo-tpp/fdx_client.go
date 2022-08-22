@@ -78,15 +78,6 @@ func (f *FDXClient) CreateConsent(c *gin.Context) (string, error) {
 	return resp.Payload.RequestURI, err
 }
 
-func (f *FDXClient) GetConsentID(data interface{}) string {
-	if m, ok := data.(*map[string]interface{}); ok {
-		m := *m
-		return m["request_uri"].(string) // nolint
-	}
-
-	return ""
-}
-
 func (f *FDXClient) DoRequestObjectEncryption() bool {
 	return false
 }

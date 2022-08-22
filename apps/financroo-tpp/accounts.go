@@ -102,7 +102,7 @@ func (o *OBBRClient) GetAccounts(c *gin.Context, accessToken string, bank Connec
 
 func (o *FDXBankClient) GetAccounts(c *gin.Context, accessToken string, bank ConnectedBank) (accountsData []Account, err error) {
 	// TODO mocked until APIs for FDX added to bank
-	accID := "abc123"
+	accID := "123456"
 	ident := "anIdent"
 	acc := Account{
 		OBAccount6: models.OBAccount6{
