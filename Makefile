@@ -4,7 +4,7 @@ export COMPOSE_DOCKER_CLI_BUILD=1
 .EXPORT_ALL_VARIABLES: ;
 ACP_LOCAL_APPS=acp crdb redis
 
-# obuk, obbr, cdr
+# obuk, obbr, cdr, fdx
 run-%-local:
 	./scripts/additional_configuration.sh $*
 	cp -f .env-local .env
