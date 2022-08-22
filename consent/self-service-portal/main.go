@@ -125,7 +125,7 @@ func NewServer() (Server, error) {
 		server.ConsentClient = NewOBBRConsentImpl(&server)
 	case CDR:
 		if cdrBankClient, err = NewCDRBankClient(server.Config); err != nil {
-			return server, fmt.Errorf("failed to creating new CDR bank client %v", err)
+			return server, fmt.Errorf("failed to creating new CDR bank client %w", err)
 		}
 		server.BankClient = cdrBankClient
 		server.ConsentClient = NewCDRArrangementImpl(&server)
