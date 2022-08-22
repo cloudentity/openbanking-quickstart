@@ -8,10 +8,6 @@ import (
 	a2 "github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
 )
 
-type FDXConsentClient interface {
-	CreateConsent(c *gin.Context) (string, error)
-}
-
 type FDXClient struct {
 	ClientID                string
 	ClientSecret            string
@@ -19,18 +15,16 @@ type FDXClient struct {
 	ClientCredentialsClient acpclient.Client
 }
 
-type FDXConsentClientFn func(publicClient, clientCredentialsClient acpclient.Client) FDXConsentClient
-
-func NewFDXConsentClient(publicClient, clientCredentialsClient acpclient.Client) FDXConsentClient {
+func NewFDXConsentClient(publicClient, clientCredentialsClient acpclient.Client, _ Signer) ConsentClient {
 	return &FDXClient{
 		ClientID:                clientCredentialsClient.Config.ClientID,
 		ClientSecret:            clientCredentialsClient.Config.ClientSecret,
-		PublicClient:            clientCredentialsClient,
-		ClientCredentialsClient: publicClient,
+		PublicClient:            publicClient,
+		ClientCredentialsClient: clientCredentialsClient,
 	}
 }
 
-func (f *FDXClient) CreateConsent(c *gin.Context) (string, error) {
+func (f *FDXClient) CreateAccountConsent(c *gin.Context) (string, error) {
 	var (
 		resp *a2.PushedAuthorizationRequestCreated
 		err  error
@@ -80,4 +74,16 @@ func (f *FDXClient) CreateConsent(c *gin.Context) (string, error) {
 
 func (f *FDXClient) DoRequestObjectEncryption() bool {
 	return false
+}
+
+func (f *FDXClient) GetPaymentConsent(c *gin.Context, consentID string) (interface{}, error) {
+	return nil, nil
+}
+
+func (f *FDXClient) CreatePaymentConsent(c *gin.Context, req CreatePaymentRequest) (string, error) {
+	return "", nil
+}
+
+func (f *FDXClient) Sign([]byte) (string, error) {
+	return "", nil
 }

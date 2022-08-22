@@ -28,7 +28,6 @@ type Clients struct {
 	AcpPaymentsClient acpclient.Client
 	BankClient        BankClient
 	ConsentClient     ConsentClient
-	FDXConsentClient  FDXConsentClient
 }
 
 type BankClient interface {
@@ -96,7 +95,6 @@ func InitClients(config Config,
 	signerCreateFn SignerCreationFn,
 	bankClientCreateFn BankClientCreationFn,
 	consentClientCreateFn ConsentClientCreationFn,
-	fdxConsentClientFn FDXConsentClientFn,
 ) (Clients, error) {
 	var (
 		clients              = Clients{}
@@ -105,7 +103,6 @@ func InitClients(config Config,
 		bankClient           BankClient
 		signer               Signer
 		consentClient        ConsentClient
-		fdxConsentClient     FDXConsentClient
 		err                  error
 	)
 
@@ -131,16 +128,11 @@ func InitClients(config Config,
 		consentClient = consentClientCreateFn(acpAccountsWebClient, acpPaymentsWebClient, signer)
 	}
 
-	if fdxConsentClientFn != nil {
-		fdxConsentClient = fdxConsentClientFn(acpPaymentsWebClient, acpAccountsWebClient)
-	}
-
 	return Clients{
 		AcpAccountsClient: acpAccountsWebClient,
 		AcpPaymentsClient: acpPaymentsWebClient,
 		BankClient:        bankClient,
 		ConsentClient:     consentClient,
-		FDXConsentClient:  fdxConsentClient,
 	}, nil
 }
 
