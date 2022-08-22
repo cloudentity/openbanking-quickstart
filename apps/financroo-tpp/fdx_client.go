@@ -77,7 +77,7 @@ func (f *FDXClient) DoRequestObjectEncryption() bool {
 }
 
 func (f *FDXClient) GetPaymentConsent(c *gin.Context, consentID string) (interface{}, error) {
-	return nil, nil
+	return "", nil
 }
 
 func (f *FDXClient) CreatePaymentConsent(c *gin.Context, req CreatePaymentRequest) (string, error) {
