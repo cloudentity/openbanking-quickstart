@@ -103,6 +103,7 @@ export default function ClientCard({ client, onRevokeClient }: Props) {
           variant="outlined"
           classes={{ root: classes.buttonRoot }}
           onClick={() => setOpenDrawer(true)}
+          id="revoke-access"
         >
           Revoke
         </Button>
