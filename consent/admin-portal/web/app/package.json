@@ -46,9 +46,9 @@
         "error",
         {
           "paths": [
-            "@material-ui/icons",
-            "@material-ui/core",
-            "@material-ui/lab",
+            "@mui/icons-material",
+            "@mui/material",
+            "@mui/lab",
             "lodash"
           ]
         }
