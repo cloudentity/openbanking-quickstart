@@ -177,11 +177,6 @@ func NewAcpClient(cfg Config, redirect string) (acpclient.Client, error) {
 		config.AuthMethod = acpclient.PrivateKeyJwtAuthnMethod
 	}
 
-	// if cfg.Spec == FDX {
-	// 	config.SkipClientCredentialsAuthn = true
-	// 	config.AuthMethod = acpclient.ClientSecretPostAuthnMethod
-	// }
-
 	if client, err = acpclient.New(config); err != nil {
 		return client, err
 	}
