@@ -99,12 +99,12 @@ function getTableBody(type: "account" | "payment", rows, setDrawerData, data) {
   if (type === "account") {
     return (
       <TableBody>
-        {rows.map((row) => (
+        {rows.map(row => (
           <TableRow
             key={row.id}
-            className={`consent-row`}
+            className="consent-row"
             onClick={() => {
-              setDrawerData(data.find((v) => row.id === v.consent_id));
+              setDrawerData(data.find(v => row.id === v.consent_id));
             }}
           >
             <TableCell>{row.account}</TableCell>
@@ -125,12 +125,12 @@ function getTableBody(type: "account" | "payment", rows, setDrawerData, data) {
   if (type === "payment") {
     return (
       <TableBody>
-        {rows.map((row) => (
+        {rows.map(row => (
           <TableRow
             key={row.id}
-            className={`consent-row`}
+            className="consent-row"
             onClick={() => {
-              setDrawerData(data.find((v) => row.id === v.consent_id));
+              setDrawerData(data.find(v => row.id === v.consent_id));
             }}
           >
             <TableCell>{row.authorised}</TableCell>
@@ -150,10 +150,10 @@ function getTableBody(type: "account" | "payment", rows, setDrawerData, data) {
   return null;
 }
 
-type Props = {
+interface Props {
   data: any;
   type: "account" | "payment";
-};
+}
 
 function ConsentTable({ data, type }: Props) {
   const classes = useStyles();

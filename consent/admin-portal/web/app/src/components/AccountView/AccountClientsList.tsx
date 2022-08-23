@@ -1,5 +1,5 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 
 import AccountClientCard from "./AccountClientCard";
 
@@ -19,7 +19,7 @@ export default function AccountClientsList({ clients, accountId, accounts }) {
         .sort((a, b) =>
           String(a?.client_name ?? "").localeCompare(b?.client_name ?? "")
         )
-        .map((client) => (
+        .map(client => (
           <AccountClientCard
             key={client?.client_id}
             client={client}

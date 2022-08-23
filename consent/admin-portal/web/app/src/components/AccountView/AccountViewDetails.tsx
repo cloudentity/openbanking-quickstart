@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { makeStyles, Theme } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import { useHistory, useLocation, useParams } from "react-router";
 import ArrowBack from "@material-ui/icons/ArrowBack";
 import IconButton from "@material-ui/core/IconButton";
@@ -13,7 +13,7 @@ import AccountClientCard from "./AccountClientCard";
 import { api } from "../../api/api";
 import ConsentTabs from "./ConsentTabs";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(theme => ({
   subtitle: {
     ...theme.custom.body1,
   },
@@ -82,16 +82,16 @@ export default function AccountViewDetails({
       .then(({ clients }: { clients: ClientType[] }) => {
         setClients(clients);
       })
-      .catch((err) => console.log(err))
+      .catch(err => console.log(err))
       .finally(() => setProgress(false));
   };
 
   useEffect(() => {
     if (clients && clientId && id) {
-      const found = clients.find((v) => v.client_id === clientId);
+      const found = clients.find(v => v.client_id === clientId);
       if (found) {
         setClient(found);
-        const consents = found.consents?.filter((v) =>
+        const consents = found.consents?.filter(v =>
           v.account_ids?.includes(id)
         );
         setConsents(consents ?? []);
@@ -104,10 +104,10 @@ export default function AccountViewDetails({
     api
       .deleteClient({ id, provider_type })
       .then(fetchClients)
-      .then((res) => {
+      .then(res => {
         setClients(res?.clients || []);
       })
-      .catch((err) => console.log(err))
+      .catch(err => console.log(err))
       .finally(() => setProgress(false));
   };
 
@@ -156,7 +156,7 @@ export default function AccountViewDetails({
               >
                 <CustomTabs
                   tabs={searchTabs(
-                    (searchText) =>
+                    searchText =>
                       handleSearch(searchText)(history, state?.accounts),
                     id
                   )}

@@ -1,3 +1,4 @@
+import React from "react";
 import { Redirect, Route } from "react-router";
 import { isTokenInStore } from "./auth.utils";
 
@@ -5,7 +6,7 @@ export default function PrivateRoute({ component: Component, login, ...rest }) {
   return (
     <Route
       {...rest}
-      render={(props) =>
+      render={props =>
         isTokenInStore() ? (
           <Component {...props} />
         ) : (

@@ -28,13 +28,13 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-type Props = {
+interface Props {
   children: ReactNode;
   header: ReactNode;
   bottomBar?: ReactNode;
   setDrawerData?: (data: string | null) => void;
   handleClose?: () => void;
-};
+}
 
 function CustomDrawer({
   children,

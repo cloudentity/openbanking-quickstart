@@ -23,11 +23,11 @@ const colorMapper = {
   other: "#BD271E",
 };
 
-type Props = {
+interface Props {
   children: ReactNode;
   type?: keyof typeof colorMapper;
   id?: string;
-};
+}
 
 function Chip({ children, type, id }: Props) {
   const classes = useStyles();

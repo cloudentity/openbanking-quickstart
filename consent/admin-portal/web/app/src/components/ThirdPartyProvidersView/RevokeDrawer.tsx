@@ -2,11 +2,11 @@ import React, { useState } from "react";
 import Checkbox from "@material-ui/core/Checkbox";
 import Alert from "@material-ui/lab/Alert";
 import Button from "@material-ui/core/Button";
-import { makeStyles, Theme } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import CustomDrawer from "../AccountView/Drawers/CustomDrawer";
 import { ClientType, drawerStyles } from "../utils";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(theme => ({
   ...drawerStyles,
   button: {
     width: "100%",
@@ -105,7 +105,7 @@ export default function RevokeDrawer({
         <div className={classes.revokeInfoCheckbox}>
           <Checkbox
             checked={revokeAccessAgree}
-            onChange={(e) => setRevokeAccessAgree(e.target.checked)}
+            onChange={e => setRevokeAccessAgree(e.target.checked)}
             color="primary"
             id="revoke-access-accept-checkbox"
           />{" "}

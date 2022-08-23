@@ -14,28 +14,11 @@ export default function AuthenticatedAppBase() {
         <Switch>
           <Route
             path="/accounts/:id/apps/:clientId"
-            render={() => (
-              <AccountViewDetails />
-            )}
+            render={() => <AccountViewDetails />}
           />
-          <Route
-            path="/accounts/:id"
-            render={() => (
-              <AccountView />
-            )}
-          />
-          <Route
-            path="/providers"
-            render={() => (
-              <ThirdPartyProvidersView />
-            )}
-          />
-          <Route
-            path="/"
-            render={() => (
-              <ConsentManagementView />
-            )}
-          />
+          <Route path="/accounts/:id" render={() => <AccountView />} />
+          <Route path="/providers" render={() => <ThirdPartyProvidersView />} />
+          <Route path="/" render={() => <ConsentManagementView />} />
         </Switch>
       </Suspense>
     </div>

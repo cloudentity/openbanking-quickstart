@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { makeStyles, Theme, Typography } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@material-ui/core/Typography";
 import { useHistory } from "react-router";
 import mergeWith from "lodash/mergeWith";
 import uniq from "lodash/uniq";
@@ -20,7 +21,7 @@ const mergeCustomizer = (objValue, srcValue) => {
   }
 };
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(theme => ({
   subtitle: {
     ...theme.custom.body1,
   },
@@ -54,11 +55,11 @@ export default function ConsentManagementView({
       .then(({ clients }: { clients: ClientType[] }) => {
         setClients(clients || []);
         const accountIdToClients = clients?.reduce((clientsAcc, client) => {
-          const { client_id, consents } = client;               
+          const { client_id, consents } = client;
           return mergeWith(
             clientsAcc,
             (consents ?? [])
-              .flatMap((v) => v.account_ids)
+              .flatMap(v => v.account_ids)
               .reduce(
                 (accountsIdsAcc, accountId) => ({
                   ...accountsIdsAcc,
@@ -68,13 +69,14 @@ export default function ConsentManagementView({
                   ]),
                 }),
                 {}
-              ), [],
+              ),
+            [],
             mergeCustomizer
           );
         }, {});
         setAccounts(accountIdToClients);
       })
-      .catch((err) => console.log(err))
+      .catch(err => console.log(err))
       .finally(() => setProgress(false));
   }, []);
 
@@ -114,12 +116,12 @@ export default function ConsentManagementView({
                     backgroundSize: "contain",
                   }}
                 >
-                  <div id='search-content' className={classes.subtitle}>
+                  <div id="search-content" className={classes.subtitle}>
                     Search and manage consents on behalf of bank members
                   </div>
                   <div style={{ marginTop: 32 }}>
                     <CustomTabs
-                      tabs={searchTabs((searchText) =>
+                      tabs={searchTabs(searchText =>
                         handleSearch(searchText)(history, accounts)
                       )}
                     />

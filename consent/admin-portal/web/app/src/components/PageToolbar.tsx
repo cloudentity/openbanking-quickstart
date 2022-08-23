@@ -3,7 +3,6 @@ import { useHistory, useLocation } from "react-router";
 import Toolbar from "@material-ui/core/Toolbar";
 import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
-import { Theme } from "@material-ui/core";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { makeStyles } from "@material-ui/core/styles";
 import Tabs from "@material-ui/core/Tabs";
@@ -12,7 +11,7 @@ import Tab from "@material-ui/core/Tab";
 import logo from "../assets/gobank-logo.svg";
 import { logout } from "./AuthPage";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(theme => ({
   indicator: {
     backgroundColor: "#fff",
   },
