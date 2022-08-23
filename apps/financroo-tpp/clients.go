@@ -158,7 +158,6 @@ func NewAcpClient(cfg Config, redirect string) (acpclient.Client, error) {
 	requestObjectExpiration := time.Minute * 10
 	config := acpclient.Config{
 		ClientID:                      cfg.ClientID,
-		ClientSecret:                  cfg.ClientSecret,
 		IssuerURL:                     issuerURL,
 		AuthorizeURL:                  authorizeURL,
 		RedirectURL:                   redirectURL,
@@ -175,6 +174,12 @@ func NewAcpClient(cfg Config, redirect string) (acpclient.Client, error) {
 	if cfg.Spec == CDR {
 		config.SkipClientCredentialsAuthn = true
 		config.AuthMethod = acpclient.PrivateKeyJwtAuthnMethod
+	}
+
+	if cfg.Spec == FDX {
+		config.ClientSecret = cfg.ClientSecret
+		config.SkipClientCredentialsAuthn = true
+		config.AuthMethod = acpclient.ClientSecretPostAuthnMethod
 	}
 
 	if client, err = acpclient.New(config); err != nil {
