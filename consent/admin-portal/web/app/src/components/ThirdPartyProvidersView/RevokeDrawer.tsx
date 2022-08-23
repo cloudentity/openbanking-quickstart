@@ -1,12 +1,12 @@
 import React, { useState } from "react";
-import Checkbox from "@material-ui/core/Checkbox";
-import Alert from "@material-ui/lab/Alert";
-import Button from "@material-ui/core/Button";
-import { makeStyles } from "@material-ui/core/styles";
+import Checkbox from "@mui/material/Checkbox";
+import Alert from "@mui/material/Alert";
+import Button from "@mui/material/Button";
+import { makeStyles } from "tss-react/mui";
 import CustomDrawer from "../AccountView/Drawers/CustomDrawer";
 import { ClientType, drawerStyles } from "../utils";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   ...drawerStyles,
   button: {
     width: "100%",
@@ -42,7 +42,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-interface PropTypes {
+interface Props {
   onConfirm: () => void;
   handleClose: () => void;
   client?: ClientType;
@@ -52,8 +52,8 @@ export default function RevokeDrawer({
   onConfirm,
   handleClose,
   client,
-}: PropTypes) {
-  const classes = useStyles();
+}: Props) {
+  const { classes } = useStyles();
   const [revokeAccessAgree, setRevokeAccessAgree] = useState(false);
 
   return (

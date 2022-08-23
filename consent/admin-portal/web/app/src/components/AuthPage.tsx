@@ -1,9 +1,9 @@
 import React from "react";
-import { Redirect } from "react-router";
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Alert from "@material-ui/lab/Alert";
-import TextField from "@material-ui/core/TextField";
+import { Navigate } from "react-router-dom";
+import { makeStyles } from "tss-react/mui";
+import Button from "@mui/material/Button";
+import Alert from "@mui/material/Alert";
+import TextField from "@mui/material/TextField";
 
 import logo from "../assets/gobank-logo.svg";
 import background from "../assets/background.svg";
@@ -14,7 +14,7 @@ import {
   removeAllAuthDataFromStore,
 } from "./auth.utils";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   container: {
     background: "#FFFFFF",
     boxShadow:
@@ -57,11 +57,11 @@ const AuthPage = ({ login }) => {
     processing: false,
   });
 
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   if (isTokenInStore()) {
     login({ token: getTokenFromStore() });
-    return <Redirect to="/" />;
+    return <Navigate to="/" replace />;
   }
 
   const onSubmit = e => {

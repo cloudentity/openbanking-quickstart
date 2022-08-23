@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
+import { makeStyles } from "tss-react/mui";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 
 import Chip from "../Chip";
 import { getDate } from "../utils";
 import PaymentDrawer from "./Drawers/PaymentDrawer";
 import AccountAccessDrawer from "./Drawers/AccountAccessDrawer";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   table: {
     "& tr": {
       borderBottom: "solid 1px #ECECEC",
@@ -55,7 +55,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const useTableStyles = makeStyles(() => ({
+const useTableStyles = makeStyles()(() => ({
   tableRowRoot: {
     "& th": {
       fontWeight: "bold",
@@ -64,7 +64,7 @@ const useTableStyles = makeStyles(() => ({
 }));
 
 function TableHeadComponent({ type }: { type: "account" | "payment" }) {
-  const classes = useTableStyles();
+  const { classes } = useTableStyles();
 
   if (type === "account") {
     return (
@@ -156,7 +156,7 @@ interface Props {
 }
 
 function ConsentTable({ data, type }: Props) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [drawerPaymentData, setDrawerPaymentData] = useState<any>(null);
   const [drawerAccountData, setDrawerAccountData] = useState<any>(null);
 

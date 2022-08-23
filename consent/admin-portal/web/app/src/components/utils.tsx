@@ -3,6 +3,7 @@ import React from "react";
 import Chip from "./Chip";
 import SearchInput from "./SearchInput";
 import { theme } from "../theme";
+import { NavigateFunction } from "react-router";
 
 export const drawerStyles = {
   name: {
@@ -220,8 +221,8 @@ export const availableConstentTypesJoined = availableConstentTypes.join(",");
 
 export function getRawConsents(consents) {
   return consents
-    .filter((c) => availableConstentTypes.includes(c.consent_type))
-    .map((c) => {
+    .filter(c => availableConstentTypes.includes(c.consent_type))
+    .map(c => {
       return {
         consent_type: c.consent_type,
         consent: c,
@@ -289,11 +290,13 @@ export type ClientType = {
 
 export const handleSearch =
   (searchText: string) =>
-  (history: any, accounts?: { [accountId: string]: string[] }) => {
+  (
+    navigate: NavigateFunction,
+    accounts?: { [accountId: string]: string[] }
+  ) => {
     if (accounts) {
       const foundAccount = accounts[searchText];
-      history.push({
-        pathname: `/accounts/${searchText}`,
+      navigate(`/accounts/${searchText}`, {
         state: { clientIds: foundAccount || null, accounts },
       });
     }
@@ -308,7 +311,7 @@ export const currencyDict = {
 export function getStatus(client: ClientType) {
   const accountConsents = ["account_access", "consents", "cdr_arrangement"];
   const found = client?.consents?.find(
-    (consent) =>
+    consent =>
       consent &&
       accountConsents.includes(consent.consent_type) &&
       consent.status === "Authorised"

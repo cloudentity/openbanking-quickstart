@@ -1,16 +1,16 @@
 import React, { useCallback, useEffect, useState } from "react";
-import OutlinedInput from "@material-ui/core/OutlinedInput";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import IconButton from "@material-ui/core/IconButton";
-import CancelOutlined from "@material-ui/icons/CancelOutlined";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import CancelOutlined from "@mui/icons-material/CancelOutlined";
 import debounce from "lodash/debounce";
-import Search from "@material-ui/icons/Search";
+import Search from "@mui/icons-material/Search";
 
 import ClientCard from "./ClientCard";
 import { ConsentStatus, getStatus } from "./utils";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "tss-react/mui";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   container: {
     maxWidth: 850,
     margin: "32px auto",
@@ -50,7 +50,7 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export default function ClientsList({ clients, onRevokeClient }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [searchText, setSearchText] = useState("");
   const [debouncedSearchText, setDebouncedSearchText] = useState("");
   const [clientsWithStatus] = useState(
@@ -110,6 +110,7 @@ export default function ClientsList({ clients, onRevokeClient }) {
                       setSearchText("");
                       setDebouncedSearchText("");
                     }}
+                    size="large"
                   >
                     <CancelOutlined
                       fontSize="small"
@@ -123,7 +124,6 @@ export default function ClientsList({ clients, onRevokeClient }) {
                 )}
               </InputAdornment>
             }
-            labelWidth={0}
           />
         </div>
       </div>
