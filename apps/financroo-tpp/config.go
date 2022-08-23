@@ -16,7 +16,7 @@ const (
 	OBUK Spec = "obuk"
 	OBBR Spec = "obbr"
 	CDR  Spec = "cdr"
-	FDX  Spec = "fdxbbbb"
+	FDX  Spec = "fdx"
 )
 
 type Config struct {
