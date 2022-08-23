@@ -69,7 +69,6 @@ clients:
   token_endpoint_auth_method: client_secret_post
   redirect_uris:
   - {{ .developer_tpp_url }}/callback
-  - {{ .financroo_tpp_url }}/api/callback
   subject_type: pairwise
   response_types:
   - token
@@ -80,4 +79,3 @@ clients:
   grant_types:
   - client_credentials
   - authorization_code
-  - refresh_token
