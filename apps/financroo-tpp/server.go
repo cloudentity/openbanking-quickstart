@@ -68,7 +68,7 @@ func NewServer() (Server, error) {
 			return server, errors.Wrapf(err, "failed to create login url builder")
 		}
 	case FDX:
-		server.Config.ClientScopes = []string{"READ_CONSENTS"}
+		server.Config.ClientScopes = []string{"offline_access", "READ_CONSENTS"}
 		if server.Clients, err = InitClients(server.Config, nil, NewFDXBankClient, NewFDXConsentClient); err != nil {
 			return server, errors.Wrapf(err, "failed to create clients")
 		}
