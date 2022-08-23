@@ -72,6 +72,7 @@ func NewServer() (Server, error) {
 		if server.Clients, err = InitClients(server.Config, nil, NewFDXBankClient, NewFDXConsentClient); err != nil {
 			return server, errors.Wrapf(err, "failed to create clients")
 		}
+
 		if server.LoginURLBuilder, err = NewFDXLoginURLBuilder(server.Config); err != nil {
 			return server, errors.Wrapf(err, "failed to create login url builder")
 		}
