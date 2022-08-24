@@ -1,8 +1,7 @@
 import React, { Suspense } from "react";
 import "./App.css";
-import { BrowserRouter as Router, Redirect, Route } from "react-router-dom";
-import { Switch } from "react-router";
-import { StylesProvider, ThemeProvider } from "@material-ui/core/styles";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ThemeProvider, StyledEngineProvider } from "@mui/material/styles";
 import Progress from "./components/Progress";
 import PrivateRoute from "./components/PrivateRoute";
 import AuthPage from "./components/AuthPage";
@@ -34,23 +33,20 @@ const login = data => {
 function App() {
   return (
     <>
-      <ThemeProvider theme={theme}>
-        <StylesProvider injectFirst>
-          <Router>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
+          <BrowserRouter>
             <Suspense fallback={<Progress />}>
-              <Switch>
-                <Route path="/auth" render={() => <AuthPage login={login} />} />
-                <PrivateRoute
-                  path="/"
-                  login={login}
-                  component={() => <AuthenticatedAppBase />}
-                />
-                <Route component={() => <Redirect to="/auth" />} />
-              </Switch>
+              <Routes>
+                <Route path="/auth" element={<AuthPage login={login} />} />
+                <Route path="*" element={<PrivateRoute />}>
+                  <Route path="*" element={<AuthenticatedAppBase />} />
+                </Route>
+              </Routes>
             </Suspense>
-          </Router>
-        </StylesProvider>
-      </ThemeProvider>
+          </BrowserRouter>
+        </ThemeProvider>
+      </StyledEngineProvider>
     </>
   );
 }

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Typography from "@material-ui/core/Typography";
-import { useHistory } from "react-router";
+import { makeStyles } from "tss-react/mui";
+import Typography from "@mui/material/Typography";
+import { useNavigate } from "react-router-dom";
 import mergeWith from "lodash/mergeWith";
 import uniq from "lodash/uniq";
 
@@ -21,7 +21,7 @@ const mergeCustomizer = (objValue, srcValue) => {
   }
 };
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   subtitle: {
     ...theme.custom.body1,
   },
@@ -31,7 +31,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-interface PropTypes {
+interface Props {
   authorizationServerURL?: string;
   authorizationServerId?: string;
   tenantId?: string;
@@ -41,12 +41,12 @@ export default function ConsentManagementView({
   authorizationServerURL,
   authorizationServerId,
   tenantId,
-}: PropTypes) {
+}: Props) {
   const [isProgress, setProgress] = useState(true);
   const [clients, setClients] = useState<ClientType[] | []>([]);
   const [accounts, setAccounts] = useState<any>([]);
-  const classes = useStyles();
-  const history = useHistory();
+  const { classes } = useStyles();
+  const navigate = useNavigate();
 
   useEffect(() => {
     setProgress(true);
@@ -122,7 +122,7 @@ export default function ConsentManagementView({
                   <div style={{ marginTop: 32 }}>
                     <CustomTabs
                       tabs={searchTabs(searchText =>
-                        handleSearch(searchText)(history, accounts)
+                        handleSearch(searchText)(navigate, accounts)
                       )}
                     />
                   </div>

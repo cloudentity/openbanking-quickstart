@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
+import { makeStyles } from "tss-react/mui";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
 import { uniq } from "ramda";
-import clsx from "clsx";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router-dom";
 
 import {
   ClientType,
@@ -15,7 +14,7 @@ import {
 } from "../utils";
 import RevokeDrawer from "../ThirdPartyProvidersView/RevokeDrawer";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()(theme => ({
   card: {
     background: "#FFFFFF",
     padding: "12px 24px",
@@ -111,7 +110,7 @@ const consentTypesMapper = {
   international_standing_order: null,
 };
 
-interface PropTypes {
+interface Props {
   client?: ClientType;
   accountId?: string;
   accounts?: string[];
@@ -123,14 +122,14 @@ export default function AccountClientCard({
   accountId,
   accounts,
   onRevokeClient,
-}: PropTypes) {
-  const classes = useStyles();
-  const history = useHistory();
+}: Props) {
+  const { cx, classes } = useStyles();
+  const navigate = useNavigate();
   const [openDrawer, setOpenDrawer] = useState(false);
 
   const rawConsents = getRawConsents(client?.consents ?? []);
 
-  const accountAccessConsent = rawConsents.find((v) => {
+  const accountAccessConsent = rawConsents.find(v => {
     return (
       v?.consent_type === "account_access" ||
       v?.consent_type === "cdr_arrangement" ||
@@ -148,7 +147,7 @@ export default function AccountClientCard({
     .map(({ consent_type }) => {
       return consentTypesMapper[consent_type] || null;
     })
-    .filter((v) => v);
+    .filter(v => v);
 
   const isApplicationListView = accountId && accounts;
   const clientWithStatus = client && enrichClientWithStatus(client);
@@ -156,11 +155,10 @@ export default function AccountClientCard({
   return (
     <div
       id={`client-${clientWithStatus?.client_name.toLocaleLowerCase()}`}
-      className={clsx(classes.card, isApplicationListView && classes.clickable)}
+      className={cx(classes.card, isApplicationListView && classes.clickable)}
       onClick={() => {
         if (isApplicationListView) {
-          history.push({
-            pathname: `/accounts/${accountId}/apps/${client?.client_id}`,
+          navigate(`/accounts/${accountId}/apps/${client?.client_id}`, {
             state: { accounts, client: clientWithStatus },
           });
         }

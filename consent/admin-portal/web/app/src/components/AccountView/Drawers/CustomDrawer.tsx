@@ -1,8 +1,8 @@
 import React, { ReactNode } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Drawer from "@material-ui/core/Drawer";
+import { makeStyles } from "tss-react/mui";
+import Drawer from "@mui/material/Drawer";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   container: {
     width: 500,
     overflow: "auto",
@@ -43,7 +43,7 @@ function CustomDrawer({
   setDrawerData,
   handleClose,
 }: Props) {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <Drawer

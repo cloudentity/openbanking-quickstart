@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
+import { makeStyles } from "tss-react/mui";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
 import ConsentTable from "./ConsentTable";
 import { ClientType } from "../utils";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   container: {
     background: "#FFFFFF",
     boxShadow:
@@ -44,7 +44,7 @@ interface Props {
 }
 
 function ConsentTabs({ consents, id }: Props) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [tab, setTab] = useState<"account" | "payment">("account");
 
   return (

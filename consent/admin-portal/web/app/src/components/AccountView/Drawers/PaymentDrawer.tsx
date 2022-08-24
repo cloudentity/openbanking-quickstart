@@ -1,12 +1,12 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Avatar from "@material-ui/core/Avatar";
+import { makeStyles } from "tss-react/mui";
+import Avatar from "@mui/material/Avatar";
 
 import CustomDrawer from "./CustomDrawer";
 import { currencyDict, drawerStyles, getDate } from "../../utils";
 import Chip from "../../Chip";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   ...drawerStyles,
   cardsWrapper: {
     display: "flex",
@@ -20,7 +20,7 @@ interface Props {
 }
 
 function PaymentDrawer({ drawerData, setDrawerData }: Props) {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const details = drawerData?.domestic_payment_consent;
 

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Container from "@material-ui/core/Container";
-import Typography from "@material-ui/core/Typography";
+import { makeStyles } from "tss-react/mui";
+import Container from "@mui/material/Container";
+import Typography from "@mui/material/Typography";
 
 import PageToolbar from "../PageToolbar";
 import Progress from "../Progress";
@@ -13,7 +13,7 @@ import Subheader from "../Subheader";
 import SearchInput from "../SearchInput";
 import { ClientType } from "../utils";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   subtitle: {
     ...theme.custom.body1,
     maxWidth: 588,
@@ -49,7 +49,7 @@ export default function ThirdPartyProvidersView({
 }: PropTypes) {
   const [isProgress, setProgress] = useState(true);
   const [clients, setClients] = useState<ClientType[] | []>([]);
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   useEffect(() => {
     setProgress(true);

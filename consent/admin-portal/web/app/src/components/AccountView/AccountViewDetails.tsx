@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { useHistory, useLocation, useParams } from "react-router";
-import ArrowBack from "@material-ui/icons/ArrowBack";
-import IconButton from "@material-ui/core/IconButton";
+import { makeStyles } from "tss-react/mui";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import ArrowBack from "@mui/icons-material/ArrowBack";
+import IconButton from "@mui/material/IconButton";
 
 import CustomTabs from "../CustomTabs";
 import PageToolbar from "../PageToolbar";
@@ -13,7 +13,7 @@ import AccountClientCard from "./AccountClientCard";
 import { api } from "../../api/api";
 import ConsentTabs from "./ConsentTabs";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   subtitle: {
     ...theme.custom.body1,
   },
@@ -47,7 +47,7 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-interface PropTypes {
+interface Props {
   authorizationServerURL?: string;
   authorizationServerId?: string;
   tenantId?: string;
@@ -61,15 +61,16 @@ export default function AccountViewDetails({
   authorizationServerURL,
   authorizationServerId,
   tenantId,
-}: PropTypes) {
+}: Props) {
   const { id, clientId } = useParams<Record<string, string | undefined>>();
-  const history = useHistory();
-  const { state } = useLocation<LocationState>();
-  const classes = useStyles();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const state = location.state as LocationState | undefined;
+  const { classes } = useStyles();
   const [isProgress, setProgress] = useState(true);
   const [clients, setClients] = useState<ClientType[]>();
   const [client, setClient] = useState<ClientType>();
-  const [consents, setConsents] = useState<any>();
+  const [consents, setConsents] = useState<ClientType["consents"]>([]);
 
   useEffect(() => {
     fetchClients();
@@ -137,9 +138,10 @@ export default function AccountViewDetails({
                     style={{ padding: 4 }}
                     onClick={() => {
                       if (id) {
-                        handleSearch(id)(history, state?.accounts);
+                        handleSearch(id)(navigate, state?.accounts);
                       }
                     }}
+                    size="large"
                   >
                     <ArrowBack fontSize="small" style={{ color: "white" }} />
                     <div className={classes.back}>Back</div>
@@ -157,7 +159,7 @@ export default function AccountViewDetails({
                 <CustomTabs
                   tabs={searchTabs(
                     searchText =>
-                      handleSearch(searchText)(history, state?.accounts),
+                      handleSearch(searchText)(navigate, state?.accounts),
                     id
                   )}
                 />

@@ -1,8 +1,8 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import CircularProgress from "@material-ui/core/CircularProgress";
+import { makeStyles } from "tss-react/mui";
+import CircularProgress from "@mui/material/CircularProgress";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   progress: {
     width: 100,
     height: 100,
@@ -17,7 +17,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const Progress = ({ size = 100, top = 40 }) => {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <div className={classes.progress} style={{ top }}>

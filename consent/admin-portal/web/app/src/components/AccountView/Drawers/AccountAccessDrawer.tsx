@@ -1,6 +1,6 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Avatar from "@material-ui/core/Avatar";
+import { makeStyles } from "tss-react/mui";
+import Avatar from "@mui/material/Avatar";
 import { uniq } from "ramda";
 
 import CustomDrawer from "./CustomDrawer";
@@ -12,7 +12,7 @@ import {
 } from "../../utils";
 import Chip from "../../Chip";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   ...drawerStyles,
   cardsWrapperGrid: {
     display: "grid",
@@ -62,7 +62,7 @@ interface Props {
 }
 
 function AccountAccessDrawer({ drawerData, setDrawerData }: Props) {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const permissionDates = {
     Authorised: getDate(drawerData?.created_at),
