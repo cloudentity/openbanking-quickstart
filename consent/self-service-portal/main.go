@@ -41,6 +41,18 @@ type Config struct {
 	IntrospectClientID          string        `env:"INTROSPECT_CLIENT_ID" envDefault:"bv2dkff8mll9cf6pvd6g"`
 	IntrospectClientSecret      string        `env:"INTROSPECT_CLIENT_SECRET" envDefault:"KThGH68f-gMC4cscGLFeOpIU4EYriYhKspOV9IwHbnw"`
 	IntrospectIssuerURL         *url.URL      `env:"INTROSPECT_ISSUER_URL,required"`
+	BankClientConfig            BankClientConfig
+}
+
+type BankClientConfig struct {
+	URL          *url.URL `env:"BANK_URL,required"`
+	AccountsURL  *url.URL `env:"BANK_ACCOUNTS_ENDPOINT"`
+	TokenURL     string   `env:"BANK_CLIENT_TOKEN_URL"`
+	ClientID     string   `env:"BANK_CLIENT_ID"`
+	ClientSecret string   `env:"BANK_CLIENT_SECRET"`
+	Scopes       []string `env:"BANK_CLIENT_SCOPES"`
+	CertFile     string   `env:"BANK_CLIENT_CERT_FILE"`
+	KeyFile      string   `env:"BANK_CLIENT_KEY_FILE"`
 }
 
 func (c *Config) SystemClientConfig() acpclient.Config {
@@ -87,8 +99,9 @@ type Server struct {
 
 func NewServer() (Server, error) {
 	var (
-		server = Server{}
-		err    error
+		cdrBankClient BankClient
+		server        = Server{}
+		err           error
 	)
 
 	if server.Config, err = LoadConfig(); err != nil {
@@ -111,7 +124,10 @@ func NewServer() (Server, error) {
 		server.BankClient = NewOBBRBankClient(server.Config)
 		server.ConsentClient = NewOBBRConsentImpl(&server)
 	case CDR:
-		server.BankClient = &CDRBankClient{}
+		if cdrBankClient, err = NewCDRBankClient(server.Config); err != nil {
+			return server, fmt.Errorf("failed to creating new CDR bank client %w", err)
+		}
+		server.BankClient = cdrBankClient
 		server.ConsentClient = NewCDRArrangementImpl(&server)
 	default:
 		return server, fmt.Errorf("unsupported spec %s", server.Config.Spec)

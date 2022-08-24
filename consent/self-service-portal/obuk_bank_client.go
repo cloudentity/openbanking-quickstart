@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
@@ -23,7 +24,7 @@ func NewOBUKBankClient(config Config) BankClient {
 	return &c
 }
 
-func (c *OBUKBankClient) GetInternalAccounts(subject string) (InternalAccounts, error) {
+func (c *OBUKBankClient) GetInternalAccounts(_ context.Context, subject string) (InternalAccounts, error) {
 	var (
 		request  *http.Request
 		response *http.Response
