@@ -99,3 +99,24 @@ func (o *OBBRClient) GetAccounts(c *gin.Context, accessToken string, bank Connec
 
 	return accountsData, nil
 }
+
+func (o *FDXBankClient) GetAccounts(c *gin.Context, accessToken string, bank ConnectedBank) (accountsData []Account, err error) {
+	// TODO mocked until APIs for FDX added to bank
+	accID := "123456"
+	ident := "anIdent"
+	acc := Account{
+		OBAccount6: models.OBAccount6{
+			AccountID: (*models.AccountID)(&accID),
+			Nickname:  models.Nickname("Mock Account"),
+			Account: []*models.OBAccount6AccountItems0{
+				{
+					Name:           models.Name0("An Account Name"),
+					Identification: (*models.Identification0)(&ident),
+				},
+			},
+		},
+		BankID: bank.BankID,
+	}
+	accountsData = append(accountsData, acc)
+	return accountsData, nil
+}

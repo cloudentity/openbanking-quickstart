@@ -46,6 +46,11 @@ func (o *OBBRClient) GetTransactions(c *gin.Context, accessToken string, bank Co
 	return []Transaction{}, nil
 }
 
+func (o *FDXBankClient) GetTransactions(c *gin.Context, accessToken string, bank ConnectedBank) (trans []Transaction, err error) {
+	// TODO mocked until APIs for FDX added to bank
+	return trans, nil
+}
+
 func (o *CDRClient) GetTransactions(c *gin.Context, accessToken string, bank ConnectedBank) (transactionsData []Transaction, err error) {
 	var (
 		resp     *banking.GetTransactionsOK

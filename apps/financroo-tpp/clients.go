@@ -176,6 +176,12 @@ func NewAcpClient(cfg Config, redirect string) (acpclient.Client, error) {
 		config.AuthMethod = acpclient.PrivateKeyJwtAuthnMethod
 	}
 
+	if cfg.Spec == FDX {
+		config.ClientSecret = cfg.ClientSecret
+		config.SkipClientCredentialsAuthn = true
+		config.AuthMethod = acpclient.ClientSecretPostAuthnMethod
+	}
+
 	if client, err = acpclient.New(config); err != nil {
 		return client, err
 	}
@@ -291,4 +297,10 @@ type OBBRConsentClient struct {
 
 func NewOBBRConsentClient(accountsClient, paymentsClient acpclient.Client, signer Signer) ConsentClient {
 	return &OBBRConsentClient{accountsClient, paymentsClient, signer}
+}
+
+type FDXBankClient struct{}
+
+func NewFDXBankClient(config Config) (BankClient, error) {
+	return &FDXBankClient{}, nil
 }

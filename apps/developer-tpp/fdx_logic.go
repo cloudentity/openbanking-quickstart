@@ -87,6 +87,7 @@ func (h *FDXLogic) CreateConsent(c *gin.Context) (interface{}, error) {
 		a2.NewPushedAuthorizationRequestParams().
 			WithContext(c.Request.Context()).
 			WithClientID(h.ClientID).
+			WithRedirectURI(h.PublicClient.Config.RedirectURL.String()).
 			WithClientSecret(&h.ClientSecret).
 			WithResponseType(responseType).
 			WithAuthorizationDetails(&authorizationDetails),

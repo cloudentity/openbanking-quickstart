@@ -99,3 +99,15 @@ func (o *OBBRClient) GetBalances(c *gin.Context, accessToken string, bank Connec
 
 	return balancesData, nil
 }
+
+func (o *FDXBankClient) GetBalances(c *gin.Context, accessToken string, bank ConnectedBank) (balancesData []Balance, err error) {
+	// TODO mocked until APIs for FDX added to bank
+	balancesData = append(balancesData, Balance{
+		AccountID: "123456",
+		Amount:    "5280.00",
+		Currency:  "USD",
+		BankID:    bank.BankID,
+	})
+
+	return balancesData, nil
+}
