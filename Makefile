@@ -139,12 +139,12 @@ generate-cdr-clients: start-runner
 
 .PHONY: generate-fdx-clients
 generate-fdx-clients: start-runner
-	rm -rf ./openbanking/fdx/accounts/*
+	rm -rf ./openbanking/fdx/client/*
 	docker-compose -f docker-compose.acp.local.yaml exec runner sh -c \
 	"swagger generate client \
-		-f api/fdx/fdx_temp.yaml \
-		-A accounts \
-		-t ./openbanking/fdx/accounts"
+		-f api/fdx/fdx_core.yaml \
+		-A client \
+		-t ./openbanking/fdx/client"
 
 .PHONY: obbr
 obbr:
