@@ -1,0 +1,556 @@
+openapi: 3.1.0
+info:
+  version: '5.1.0'
+  title: FDX V5.1.0
+  description: Financial Data Exchange V5.1.0 Event Publication and Subscription API
+  contact:
+    name: Financial Data Exchange
+    url: 'https://financialdataexchange.org/'
+    email: fdxsupport@financialdataexchange.org
+servers:
+  - url: 'https://api.fi.com/fdx/v5'
+    description: Financial Data Exchange V5.1.0 Event Publication and Subscription API
+tags:
+  - name: Event Notifications
+    description: Manage Event Notifications
+paths:
+  ############################################################
+  #
+  # Event Notifications paths
+  #
+  ############################################################
+  /notification-subscriptions:
+    post:
+      summary: Create a notification subscription
+      operationId: createNotificationSubscription
+      description: Creates notification susbcription entry on the server
+      tags:
+        - Event Notifications
+      requestBody:
+        description: Notification subscription
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NotificationSubscription'
+            examples:
+              Create Consent Revoked Notification:
+                value:
+                  type: CONSENT_REVOKED
+                  category: CONSENT
+                  callbackUrl: 'https://abc.com/notification'
+                  subscriber:
+                    name: ABC Inc
+                    type: DATA_ACCESS_PLATFORM
+                    homeUri: 'https://abc.com/logo'
+                    logoUri: 'https://abc.com/logo'
+                    registry: FDX
+                    registeredEntityName: ABC
+                    registeredEntityId: ABC123
+                  effectiveDate: '2021-11-24'
+                  subscriptionId: GUID-SubscriptionId1
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationSubscription'
+              examples:
+                Consent Revoked Notification created:
+                  value:
+                    type: CONSENT_REVOKED
+                    category: CONSENT
+                    callbackUrl: 'https://abc.com/notification'
+                    subscriber:
+                      name: ABC Inc
+                      type: DATA_ACCESS_PLATFORM
+                      homeUri: 'https://abc.com/logo'
+                      logoUri: 'https://abc.com/logo'
+                      registry: FDX
+                      registeredEntityName: ABC
+                      registeredEntityId: ABC123
+                    effectiveDate: '2021-11-24'
+                    subscriptionId: GUID-SubscriptionId2
+        '400':
+          description: Input sent by client does not satisfy API specification
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Invalid Input:
+                    value:
+                      code: 401
+                      message: Invalid Input
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '401':
+          description: Unauthorized to create a notification subscription
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Unauthorized:
+                    value:
+                      code: 1205
+                      message: Unauthorized
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '405':
+          description: Method Not Allowed
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Method Not Allowed:
+                    value:
+                      code: 1206
+                      message: Method Not Allowed
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Too Many Requests:
+                    value:
+                      code: 1207
+                      message: Too Many Requests
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '500':
+          $ref: './fdxapi.components.yaml#/components/responses/500'
+        '501':
+          $ref: './fdxapi.components.yaml#/components/responses/501'
+        '503':
+          $ref: './fdxapi.components.yaml#/components/responses/503'
+
+  /notification-subscriptions/{subscriptionId}:
+    parameters:
+      - $ref: '#/components/parameters/SubscriptionIdPath'
+    get:
+      summary: Get a notification subscription
+      operationId: getNotificationSubscription
+      description: Call to get notification subscription
+      tags:
+        - Event Notifications
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NotificationSubscription'
+              examples:
+                Notification Subscription by ID success response:
+                  value:
+                    type: CONSENT_REVOKED
+                    category: CONSENT
+                    callbackUrl: 'https://abc.com/notification'
+                    subscriber:
+                      name: ABC Inc
+                      type: DATA_ACCESS_PLATFORM
+                      homeUri: 'https://abc.com/logo'
+                      logoUri: 'https://abc.com/logo'
+                      registry: FDX
+                      registeredEntityName: ABC
+                      registeredEntityId: ABC123
+                    effectiveDate: '2021-11-24'
+                    subscriptionId: GUID-SubscriptionId2
+        '400':
+          description: Input sent by client does not satisfy API specification
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Invalid Input:
+                    value:
+                      code: 401
+                      message: Invalid Input
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '401':
+          description: Unauthorized to create a notification subscription
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Unauthorized:
+                    value:
+                      code: 1205
+                      message: Unauthorized
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '405':
+          description: Method Not Allowed
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Method Not Allowed:
+                    value:
+                      code: 1206
+                      message: Method Not Allowed
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Too Many Requests:
+                    value:
+                      code: 1207
+                      message: Too Many Requests
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '500':
+          $ref: './fdxapi.components.yaml#/components/responses/500'
+        '501':
+          $ref: './fdxapi.components.yaml#/components/responses/501'
+        '503':
+          $ref: './fdxapi.components.yaml#/components/responses/503'
+
+    delete:
+      summary: Delete a notification subscription
+      operationId: deleteNotificationSubscription
+      description: Delete a notification subscription
+      tags:
+        - Event Notifications
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+        '401':
+          description: Unauthorized to create a notification subscription
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Unauthorized:
+                    value:
+                      code: 1205
+                      message: Unauthorized
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '405':
+          description: Method Not Allowed
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Method Not Allowed:
+                    value:
+                      code: 1206
+                      message: Method Not Allowed
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Too Many Requests:
+                    value:
+                      code: 1207
+                      message: Too Many Requests
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '500':
+          $ref: './fdxapi.components.yaml#/components/responses/500'
+        '501':
+          $ref: './fdxapi.components.yaml#/components/responses/501'
+        '503':
+          $ref: './fdxapi.components.yaml#/components/responses/503'
+
+  /notifications:
+    post:
+      summary: Publish a notification
+      operationId: publishNotification
+      description: Publish Notification
+      tags:
+        - Event Notifications
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Notification'
+            examples:
+              Publish Consent Revoked Notification:
+                value:
+                  notificationId: 'req123456-GUID'
+                  type: CONSENT_REVOKED
+                  sentOn: '2021-07-15T14:46:41.375Z'
+                  category: SECURITY
+                  severity: EMERGENCY
+                  priority: HIGH
+                  publisher:
+                    name: 'XYZ Inc'
+                    type: DATA_ACCESS_PLATFORM
+                    homeUri: 'http://example.com'
+                    logoUri: 'http://example.com'
+                    registry: FDX
+                    registeredEntityName: XYZ
+                    registeredEntityId: xyz1234
+                  subscriber:
+                    name: 'ABC Inc'
+                    type: DATA_ACCESS_PLATFORM
+                    homeUri: 'http://example.com'
+                    logoUri: 'http://example.com'
+                    registry: FDX
+                    registeredEntityName: ABC
+                    registeredEntityId: ABC123
+                  notificationPayload:
+                    id: 'ConsentID-1'
+                    idType: CONSENT
+                    customFields:
+                      name: INITIATOR
+                      value: INDIVIDUAL
+                  url:
+                    href: 'https://api.xyz.com/fdx/v4/consents/ConsentID-1'
+                    action: GET
+                    rel: consent
+                    types:
+                      - application/json
+              Publish Consent Updated Notification:
+                value:
+                  notificationId: 'req123457-GUID'
+                  type: CONSENT_UPDATED
+                  sentOn: '2022-04-15T14:46:41.375Z'
+                  category: CONSENT
+                  severity: EMERGENCY
+                  priority: HIGH
+                  publisher:
+                    name: 'XYZ Inc'
+                    type: DATA_ACCESS_PLATFORM
+                    homeUri: 'http://example.com'
+                    logoUri: 'http://example.com'
+                    registry: FDX
+                    registeredEntityName: XYZ
+                    registeredEntityId: xyz1234
+                  subscriber:
+                    name: 'ABC Inc'
+                    type: DATA_ACCESS_PLATFORM
+                    homeUri: 'http://example.com'
+                    logoUri: 'http://example.com'
+                    registry: FDX
+                    registeredEntityName: ABC
+                    registeredEntityId: ABC123
+                  notificationPayload:
+                    id: '9585694d3ae58863'
+                    idType: CONSENT
+                    customFields:
+                      name: INITIATOR
+                      value: INDIVIDUAL
+                  url:
+                    href: 'https://api.xyz.com/fdx/v5/consents/9585694d3ae58863'
+                    action: GET
+                    rel: consent
+                    types:
+                      - application/json
+      responses:
+        '204':
+          description: No Content
+        '405':
+          description: Method Not Allowed
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Method Not Allowed:
+                    value:
+                      code: 1206
+                      message: Method Not Allowed
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '429':
+          description: Too Many Requests
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Too Many Requests:
+                    value:
+                      code: 1207
+                      message: Too Many Requests
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '500':
+          $ref: './fdxapi.components.yaml#/components/responses/500'
+        '501':
+          $ref: './fdxapi.components.yaml#/components/responses/501'
+        '503':
+          $ref: './fdxapi.components.yaml#/components/responses/503'
+
+components:
+
+  parameters:
+
+    ############################################################
+    #
+    # Event Notifications request parameters
+    #
+    ############################################################
+
+    SubscriptionIdPath:
+      name: subscriptionId
+      in: path
+      description: ID of notification subscription
+      required: true
+      schema:
+        $ref: './fdxapi.components.yaml#/components/schemas/Identifier'
+
+  schemas:
+
+    ############################################################
+    #
+    # Event Notifications entities
+    #
+    ############################################################
+    Notification:
+      title: Notification entity
+      type: object
+      description: Provides the base fields of a notification. Clients will read the
+                   `type` property to determine the expected notification payload
+      properties:
+        notificationId:
+          type: string
+          description: Id of notification
+        type:
+          $ref: '#/components/schemas/NotificationType'
+          description: Type of notification
+        sentOn:
+          $ref: './fdxapi.components.yaml#/components/schemas/Timestamp'
+          description: Time notification was sent
+        category:
+          $ref: '#/components/schemas/NotificationCategory'
+          description: Category of notification
+        severity:
+          $ref: '#/components/schemas/NotificationSeverity'
+          description: Notification severity
+        priority:
+          $ref: '#/components/schemas/NotificationPriority'
+          description: Notification priority
+        publisher:
+          $ref: './fdxapi.components.yaml#/components/schemas/Party'
+          description: Publisher of notification
+        subscriber:
+          $ref: './fdxapi.components.yaml#/components/schemas/Party'
+          description: Subscriber to this notification
+        notificationPayload:
+          $ref: '#/components/schemas/NotificationPayload'
+          description: Notification-specific key-value paired data
+        url:
+          $ref: './fdxapi.components.yaml#/components/schemas/HateoasLink'
+          description: URL to retrieve further details related to notification
+      required:
+        - notificationId
+        - type
+        - sentOn
+        - category
+        - publisher
+        - notificationPayload
+    NotificationPayload:
+      title: Notification Payload entity
+      type: object
+      description: Custom key-value pairs payload for a notification
+      properties:
+        id:
+          type: string
+          description: ID for the origination entity related to the notification
+        idType:
+          $ref: '#/components/schemas/NotificationPayloadIdType'
+          description: Type of entity causing origination of the notification with the given ID
+        customFields:
+          $ref: './fdxapi.components.yaml#/components/schemas/FiAttribute'
+          description: Custom key-value pairs for a notification
+    NotificationSubscription:
+      title: Notification Subscription entity
+      type: object
+      description: Provides the fields of a notification subscription
+      properties:
+        type:
+          $ref: '#/components/schemas/NotificationType'
+          description: Type of notification
+        category:
+          $ref: '#/components/schemas/NotificationCategory'
+          description: Category of notification
+        callbackUrl:
+          type: string
+          description: Callback URL. Previous callback URL will be updated with latest.
+        subscriber:
+          $ref: './fdxapi.components.yaml#/components/schemas/Party'
+          description: Party object from main spec RFC 124 (tbd)
+        effectiveDate:
+          $ref: './fdxapi.components.yaml#/components/schemas/DateString'
+          description: Effective date of notification
+        subscriptionId:
+          type: string
+          description: Subscription id of notification
+      required:
+        - type
+        - category
+        - callbackUrl
+        - subscriber
+    ############################################################
+    #
+    # Event Notifications data types
+    #
+    ############################################################
+    NotificationPayloadIdType:
+      type: string
+      title: Notification Payload Id Type
+      enum:
+        - ACCOUNT
+        - CUSTOMER
+        - PARTY
+        - MAINTENANCE
+        - CONSENT
+      description: Type of entity causing origination of a notification
+    NotificationCategory:
+      type: string
+      title: Notification Category
+      enum:
+        - SECURITY
+        - MAINTENANCE
+        - FRAUD
+        - CONSENT
+        - NEW_DATA
+      description: Category of Notification
+    NotificationType:
+      type: string
+      title: Notification Type
+      enum:
+        - CONSENT_REVOKED
+        - CONSENT_UPDATED
+        - CUSTOM
+        - SERVICE
+        - BALANCE
+        - PLANNED_OUTAGE
+      description: Type of Notification
+    NotificationPriority:
+      type: string
+      title: Notification Priority
+      description: Priority of notification
+      enum:
+        - HIGH
+        - MEDIUM
+        - LOW
+    NotificationSeverity:
+      type: string
+      title: Notification Severity
+      enum:
+        - EMERGENCY
+        - ALERT
+        - WARNING
+        - NOTICE
+        - INFO
+      description: Severity level of notification

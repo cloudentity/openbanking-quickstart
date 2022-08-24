@@ -1,0 +1,1212 @@
+openapi: 3.1.0
+info:
+  version: '5.1.0'
+  title: FDX V5.1.0
+  description: Financial Data Exchange V5.1.0 API shared components
+  contact:
+    name: Financial Data Exchange
+    url: 'https://financialdataexchange.org/'
+    email: fdxsupport@financialdataexchange.org
+servers:
+  - url: 'https://api.fi.com/fdx/v5'
+    description: Financial Data Exchange V5.1.0 API shared components
+
+# paths: {}
+
+components:
+
+  parameters:
+
+    ############################################################
+    #
+    # Shared request parameters (usable by core and all extensions)
+    #
+    ############################################################
+
+    LimitQuery:
+      name: limit
+      in: query
+      description: >-
+        Number of elements that the consumer wishes to receive.
+        Providers should implement reasonable default and maximum values
+      schema:
+        type: integer
+
+    OffsetQuery:
+      name: offset
+      in: query
+      description: >-
+        Opaque cursor used by the provider to send the next set of records
+      schema:
+        type: string
+
+    ResultTypeQuery:
+      name: resultType
+      in: query
+      description: >-
+        Flag to indicate if you want a lightweight array of metadata (AccountDescriptor
+        or Tax or Operations) or full item details (Account or a Tax subclass or
+        Availability details). If set to 'lightweight', should only return the
+        fields associated with the metadata entity.
+        This field is not required, defaults to lightweight
+      required: false
+      schema:
+        $ref: '#/components/schemas/ResultType'
+
+  schemas:
+
+    ############################################################
+    #
+    # Shared data entities (usable by core and all extensions)
+    #
+    ############################################################
+
+    Address:
+      title: Address
+      description: Postal address
+      type: object
+      properties:
+        line1:
+          $ref: '#/components/schemas/String64'
+          description: Address line 1
+        line2:
+          $ref: '#/components/schemas/String64'
+          description: Address line 2
+        line3:
+          $ref: '#/components/schemas/String64'
+          description: Address line 3
+        city:
+          $ref: '#/components/schemas/String64'
+          description: City
+        state:
+          allOf:
+            - $ref: '#/components/schemas/String64'
+          description: State or province. Deprecated, will remove in FDX V6.0
+          deprecated: true
+        region:
+          $ref: '#/components/schemas/String64'
+          description: State or province or territory. Replaces "state" property
+        postalCode:
+          type: string
+          maxLength: 16
+          description: Postal code
+        country:
+          $ref: '#/components/schemas/Iso3166CountryCode'
+          description: Country code
+
+    Customer:
+      title: Customer entity
+      description: Represents a customer
+      type: object
+      properties:
+        customerId:
+          $ref: '#/components/schemas/Identifier'
+          description: >-
+            Long-term persistent identity of the customer.
+            This identity must be unique to the owning institution
+        name:
+          $ref: '#/components/schemas/CustomerName'
+          description: The customer's name
+        dateOfBirth:
+          $ref: '#/components/schemas/DateString'
+          description: The customer's date of birth
+        taxId:
+          type: string
+          description: Country specific Tax Id associated with this customer (SIN or NAS in Canada, SSN or TIN in US, etc.)
+        taxIdCountry:
+          $ref: '#/components/schemas/Iso3166CountryCode'
+          description: Country originating the Customer’s taxId element
+        governmentId:
+          type: string
+          description: >-
+            A federal (such as passport) or state (such as driver's license)
+            issued identifier
+        email:
+          type: array
+          items:
+            type: string
+          description: >-
+            An array of the customer's electronic mail addresses
+        addresses:
+          type: array
+          items:
+            $ref: '#/components/schemas/DeliveryAddress'
+          description: >-
+            An array of the customer's physical mail addresses
+        telephones:
+          type: array
+          items:
+            $ref: '#/components/schemas/TelephoneNumber'
+          description: An array of the customer's telephone numbers
+        accounts:
+          type: array
+          items:
+            $ref: '#/components/schemas/CustomerToAccountRelationship'
+          description: List of accounts related to this customer
+
+    CustomerName:
+      title: Customer Name entity
+      description: The name of an individual in their role as a customer
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/IndividualName'
+        - type: object
+          properties:
+            prefix:
+              description: Name prefix, e.g. Mr.
+              type: string
+            company:
+              type: string
+              description: Company name
+
+    CustomerToAccountRelationship:
+      title: Customer to Account Relationship entity
+      description: Describes an account related to a customer
+      type: object
+      properties:
+        accountId:
+          $ref: '#/components/schemas/Identifier'
+          description: Account ID of the related account
+        links:
+          $ref: '#/components/schemas/HateoasLinks'
+          description: Links to the account, or to invoke other APIs
+        relationship:
+          $ref: '#/components/schemas/AccountHolderRelationship'
+          description: Type of relationship to the account
+
+    DeliveryAddress:
+      title: Delivery Address
+      description: A delivery address and its location type
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/Address'
+        - type: object
+          properties:
+            type:
+              $ref: '#/components/schemas/DeliveryAddressType'
+              description: Type of address location. One of BUSINESS, HOME, MAILING
+
+    Error:
+      title: Error
+      description: >-
+        An error entity which can be used at the API level for error responses
+        or at the account level to indicate a problem specific to a particular
+        account
+      type: object
+      properties:
+        code:
+          type: string
+          description: >-
+            Long term persistent identifier which can be used to trace error
+            condition back to log information
+        message:
+          type: string
+          description: >-
+            End user displayable information which might help the customer
+            diagnose an error
+        debugMessage:
+          type: string
+          description: >-
+            Message used to debug the root cause of the error.
+            Contents should not be used in consumer's business logic.
+            Can change at any time and should only be used for consumer
+            to communicate with the data provider about an issue.
+            Provider can include an error GUID in message for their use.
+
+    FiAttribute:
+      title: FI Attribute entity
+      description: Financial Institution provider-specific attribute
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of attribute
+        value:
+          type: string
+          description: Value of attribute
+
+    HateoasLink:
+      title: HATEOAS Link
+      description: REST application constraint (Hypermedia As The Engine Of Application State)
+      required: [href]
+      type: object
+      properties:
+        href:
+          type: string
+          format: uri-reference
+          description: URL to invoke the action on the resource
+          example: "https://api.fi.com/fdx/v4/accounts/12345"
+        action:
+          type: string
+          enum: [GET, POST, PATCH, DELETE, PUT]
+          description: HTTP Method to use for the request
+        rel:
+          description: >-
+            Relation of this link to its containing entity, as defined by and with many
+            example relation values at [IETF RFC5988](https://datatracker.ietf.org/doc/html/rfc5988)
+          type: string
+        types:
+          type: array
+          items:
+            $ref: '#/components/schemas/ContentTypes'
+          description: Content-types that can be used in the Accept header
+
+    IndividualName:
+      title: Individual name
+      description: First name, middle initial, last name, suffix fields
+      type: object
+      properties:
+        first:
+          description: First name
+          type: string
+        middle:
+          description: Middle initial
+          type: string
+        last:
+          description: Last name
+          type: string
+        suffix:
+          description: Generational or academic suffix
+          type: string
+
+    Intermediary:
+      title: Intermediary
+      description: Data Access Platform, Service Provider, or any other entity in
+                   the data sharing chain between a Data Provider to a Data Recipient.
+                   In snake case to match IETF RFC 7591 naming formats
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of intermediary party
+        description:
+          type: string
+          description: A short description of the intermediary
+        uri:
+          type: string
+          format: uri
+          description: A URL string of a web page providing information about the intermediary
+        logo_uri:
+          type: string
+          format: uri
+          description: A URL string that references a logo for this intermediary
+        contacts:
+          type: array
+          items:
+            type: string
+          description: Array of strings representing ways to contact people responsible for this intermediary
+        registry_references:
+          type: array
+          items:
+            $ref: '#/components/schemas/RegistryReference'
+          description: Registry references for this intermediary
+
+    NameAddress:
+      title: Name and Address
+      description: Individual or business name with address
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/Address'
+        - type: object
+          properties:
+            name1:
+              $ref: '#/components/schemas/String64'
+              description: Name line 1
+            name2:
+              $ref: '#/components/schemas/String64'
+              description: Name line 2
+
+    NameAddressPhone:
+      title: Name, Address and Phone
+      description: Contact phone number with name and address
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/NameAddress'
+        - type: object
+          properties:
+            phone:
+              $ref: '#/components/schemas/TelephoneNumberPlusExtension'
+              description: Phone number
+
+    PageMetadata:
+      title: Page Metadata
+      description: Offset IDs for paginated result sets
+      type: object
+      properties:
+        nextOffset:
+          type: string
+          example: "2"
+          description: Opaque identifier. Does not need to be numeric or have any specific pattern.
+            Implementation specific
+        prevOffset:
+          type: string
+          example: "1"
+          description: Opaque identifier. Does not need to be numeric or have any specific pattern.
+            Implementation specific
+        totalElements:
+          type: integer
+          example: 3
+          description: Total number of elements
+
+    PageMetadataLinks:
+      title: Page Metadata Links
+      description: Resource URLs for retrieving next or previous datasets
+      type: object
+      properties:
+        next:
+          $ref: '#/components/schemas/HateoasLink'
+          description: Resource URL for retrieving next dataset
+        prev:
+          $ref: '#/components/schemas/HateoasLink'
+          description: Resource URL for retrieving previous dataset
+
+    PaginatedArray:
+      title: Paginated Array
+      description: Base class for results that may be paginated
+      type: object
+      properties:
+        page:
+          $ref: '#/components/schemas/PageMetadata'
+          description: Offset IDs for navigating result sets
+        links:
+          $ref: '#/components/schemas/PageMetadataLinks'
+          description: Resource URLs for navigating result sets
+
+    Party:
+      title: Party entity
+      description: FDX Participant - an entity or person that is a part of a FDX API transaction
+      type: object
+      required:
+        - name
+        - type
+      properties:
+        name:
+          description: Human recognizable common name
+          type: string
+        type:
+          description: Extensible string enum identifying the type of the party
+          $ref: '#/components/schemas/PartyType'
+        homeUri:
+          description: >-
+            URI for party, where an end user could learn more about the company
+            or application involved in the data sharing chain
+          type: string
+          format: uri
+        logoUri:
+          description: URI for a logo asset to be displayed to the end user
+          type: string
+          format: uri
+        registry:
+          description: >-
+            The registry containing the party’s registration with name and id:
+            FDX, GLEIF, ICANN, PRIVATE
+          $ref: '#/components/schemas/PartyRegistry'
+        registeredEntityName:
+          description: Registered name of party
+          type: string
+        registeredEntityId:
+          description: Registered id of party
+          type: string
+
+    PaymentDetails:
+      title: Payment Details entity
+      description: Details of this payment
+      type: object
+      properties:
+        principalAmount:
+          type: number
+          description: The amount of payment applied to principal
+        interestAmount:
+          type: number
+          description: The amount of payment applied to interest
+        insuranceAmount:
+          type: number
+          description: The amount of payment applied to life/health/accident insurance on the loan
+        escrowAmount:
+          type: number
+          description: The amount of payment applied to escrow
+        pmiAmount:
+          type: number
+          description: The amount of payment applied to PMI
+        feesAmount:
+          type: number
+          description: The amount of payment applied to fees
+
+    RecipientRequest:
+      title: Recipient Request
+      type: object
+      description: Used to request a recipient registration.
+                   In snake case to match IETF RFC 7591 naming formats
+      properties:
+        client_name:
+          $ref: '#/components/schemas/Identifier'
+          description: The Data Recipient or Data Recipient Application name displayed by Data Provider during
+                       the consent Flow as well as in the Consent Dashboard
+        description:
+          type: string
+          description: A short description of the Data Recipient application
+        redirect_uris:
+          type: array
+          items:
+            type: string
+          description: An array of eligible Redirect URI targets
+        logo_uri:
+          type: string
+          description: Data Recipient Logo URL location
+          format: uri
+        client_uri:
+          type: string
+          description: The URI which provides additional information about the Data Recipient
+          format: uri
+        contacts:
+          type: array
+          items:
+            type: string
+          description: Array of strings representing ways to contact individuals responsible for the Data Recipient application
+        scope:
+          type: string
+          description: String form field with a list of data clusters
+        duration_type:
+          type: array
+          items:
+            $ref: '#/components/schemas/ConsentDurationType'
+          description: The duration of consent for the Data Recipient consumers
+        duration_period:
+          type: number
+          description: The duration period is the maximum consent duration that would be requested for a Recipient consumer
+        lookback_period:
+          type: number
+          description: The maximum number of days allowed for Data Recipient consumers to obtain in transaction history,
+                       effective from the current date
+        registry_references:
+          type: array
+          items:
+            $ref: '#/components/schemas/RegistryReference'
+          description: An array of external registries containing registered entity name, registered entity id and
+            registry fields for the registries where the data recipient is registered
+        intermediaries:
+          type: array
+          items:
+            $ref: '#/components/schemas/Intermediary'
+          description: An array of the intermediaries for this data recipient
+      required:
+        - client_name
+        - redirect_uris
+
+    RegistryReference:
+      title: Registry Reference
+      type: object
+      description: Used for registry references. In snake case to match IETF RFC 7591 naming formats
+      properties:
+        registered_entity_name:
+          type: string
+          description: The legal company name for the intermediary
+        registered_entity_id:
+          type: string
+          description: An ID representing the intermediary that can be looked up from a legal identity registry source
+        registry:
+          $ref: '#/components/schemas/Registry'
+          description: The Registry source
+
+    TelephoneNumber:
+      title: Telephone Number
+      description: Standard for international phone numbers
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/TelephoneNumberType'
+          description: 'Type of phone number: HOME, BUSINESS, CELL, FAX'
+        country:
+          type: string
+          maxLength: 3
+          description: Country calling codes defined by ITU-T recommendations E.123 and E.164
+        number:
+          type: string
+          maxLength: 15
+          pattern: '\d+'
+          description: Telephone subscriber number defined by ITU-T recommendation E.164
+
+    TelephoneNumberPlusExtension:
+      title: Telephone Number Plus Extension
+      description: A telephone number that can contain optional text for an arbitrary length
+        telephone extension number
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/TelephoneNumber'
+        - type: object
+          properties:
+            extension:
+              description: An arbitrary length telephone number extension
+              type: string
+
+    ############################################################
+    #
+    # Shared data types (usable by core and all extensions)
+    #
+    ############################################################
+
+    AccountHolderRelationship:
+      title: Account Holder Relationship
+      description: Types of relationships between accounts and holders. Suggested values
+      type: string
+      enum:
+        - AUTHORIZED_USER
+        - BUSINESS
+        - FOR_BENEFIT_OF
+        - FOR_BENEFIT_OF_PRIMARY
+        - FOR_BENEFIT_OF_PRIMARY_JOINT_RESTRICTED
+        - FOR_BENEFIT_OF_SECONDARY
+        - FOR_BENEFIT_OF_SECONDARY_JOINT_RESTRICTED
+        - FOR_BENEFIT_OF_SOLE_OWNER_RESTRICTED
+        - POWER_OF_ATTORNEY
+        - PRIMARY_JOINT_TENANTS
+        - PRIMARY
+        - PRIMARY_BORROWER
+        - PRIMARY_JOINT
+        - SECONDARY
+        - SECONDARY_JOINT_TENANTS
+        - SECONDARY_BORROWER
+        - SECONDARY_JOINT
+        - SOLE_OWNER
+        - TRUSTEE
+        - UNIFORM_TRANSFER_TO_MINOR
+
+    ConsentDurationType:
+      title: Consent Duration Type
+      description: Duration of the Consent Grant, per FDX UX Guidelines v1.0 (pp 18 - 20)
+      type: string
+      enum:
+        - ONE_TIME
+        - PERSISTENT
+        - TIME_BOUND
+
+    ContentTypes:
+      title: Content Types
+      description: Types of document formats. (Suggested values)
+      type: string
+      enum:
+        - application/pdf
+        - image/gif
+        - image/jpeg
+        - image/tiff
+        - image/png
+        - application/json
+
+    DateString:
+      title: Date String
+      description: >-
+        ISO 8601 full-date in format 'YYYY-MM-DD' according
+        to [IETF RFC3339](https://xml2rfc.tools.ietf.org/public/rfc/html/rfc3339.html#anchor14)
+      type: string
+      format: date
+      maxLength: 10
+      example: '2021-07-15'
+
+    DeliveryAddressType:
+      title: Delivery Address Type
+      description: The location type of an address
+      type: string
+      enum:
+        - BUSINESS
+        - HOME
+        - MAILING
+
+    FdxVersion:
+      title: FDX Version
+      description: The list of prior and current FDX major and minor versions.
+      type: string
+      enum:
+        - V1.0
+        - V2.0
+        - V2.1
+        - V3.0
+        - V4.0
+        - V4.1
+        - V4.2
+        - V4.5
+        - V4.6
+        - V5.0
+        - V5.0.1
+        - V5.1
+
+    HateoasLinks:
+      title: HATEOAS Links array
+      description: Links relative to this containing entity
+      type: array
+      items:
+        $ref: '#/components/schemas/HateoasLink'
+
+    Identifier:
+      title: Identifier
+      description: Value for a unique identifier
+      type: string
+      maxLength: 256
+
+    Iso3166CountryCode:
+      title: ISO 3166 Country Code
+      description: ISO 3166 Codes for the representation of names of countries and their subdivisions
+      type: string
+      enum:
+        - AD
+        - AE
+        - AF
+        - AG
+        - AI
+        - AL
+        - AM
+        - AN
+        - AO
+        - AQ
+        - AR
+        - AS
+        - AT
+        - AU
+        - AW
+        - AX
+        - AZ
+        - BA
+        - BB
+        - BD
+        - BE
+        - BF
+        - BG
+        - BH
+        - BI
+        - BJ
+        - BM
+        - BN
+        - BO
+        - BR
+        - BS
+        - BT
+        - BV
+        - BW
+        - BY
+        - BZ
+        - CA
+        - CC
+        - CD
+        - CF
+        - CG
+        - CH
+        - CI
+        - CK
+        - CL
+        - CM
+        - CN
+        - CO
+        - CR
+        - CS
+        - CU
+        - CV
+        - CX
+        - CY
+        - CZ
+        - DE
+        - DJ
+        - DK
+        - DM
+        - DO
+        - DZ
+        - EC
+        - EE
+        - EG
+        - EH
+        - ER
+        - ES
+        - ET
+        - FI
+        - FJ
+        - FK
+        - FM
+        - FO
+        - FR
+        - GA
+        - GB
+        - GD
+        - GE
+        - GF
+        - GG
+        - GH
+        - GI
+        - GL
+        - GM
+        - GN
+        - GP
+        - GQ
+        - GR
+        - GS
+        - GT
+        - GU
+        - GW
+        - GY
+        - HK
+        - HM
+        - HN
+        - HR
+        - HT
+        - HU
+        - ID
+        - IE
+        - IL
+        - IM
+        - IN
+        - IO
+        - IQ
+        - IR
+        - IS
+        - IT
+        - JE
+        - JM
+        - JO
+        - JP
+        - KE
+        - KG
+        - KH
+        - KI
+        - KM
+        - KN
+        - KP
+        - KR
+        - KW
+        - KY
+        - KZ
+        - LA
+        - LB
+        - LC
+        - LI
+        - LK
+        - LR
+        - LS
+        - LT
+        - LU
+        - LV
+        - LY
+        - MA
+        - MC
+        - MD
+        - MG
+        - MH
+        - MK
+        - ML
+        - MM
+        - MN
+        - MO
+        - MP
+        - MQ
+        - MR
+        - MS
+        - MT
+        - MU
+        - MV
+        - MW
+        - MX
+        - MY
+        - MZ
+        - NA
+        - NC
+        - NE
+        - NF
+        - NG
+        - NI
+        - NL
+        - 'NO'
+        - NP
+        - NR
+        - NU
+        - NZ
+        - OM
+        - PA
+        - PE
+        - PF
+        - PG
+        - PH
+        - PK
+        - PL
+        - PM
+        - PN
+        - PR
+        - PS
+        - PT
+        - PW
+        - PY
+        - QA
+        - RE
+        - RO
+        - RU
+        - RW
+        - SA
+        - SB
+        - SC
+        - SD
+        - SE
+        - SG
+        - SH
+        - SI
+        - SJ
+        - SK
+        - SL
+        - SM
+        - SN
+        - SO
+        - SR
+        - ST
+        - SV
+        - SY
+        - SZ
+        - TC
+        - TD
+        - TF
+        - TG
+        - TH
+        - TJ
+        - TK
+        - TL
+        - TM
+        - TN
+        - TO
+        - TR
+        - TT
+        - TV
+        - TW
+        - TZ
+        - UA
+        - UG
+        - UM
+        - US
+        - UY
+        - UZ
+        - VA
+        - VC
+        - VE
+        - VG
+        - VI
+        - VN
+        - VU
+        - WF
+        - WS
+        - YE
+        - YT
+        - ZA
+        - ZM
+        - ZW
+
+    Iso4217Code:
+      title: ISO 4217 Code
+      description: ISO 4217 Currency codes
+      type: string
+      enum:
+        - AED
+        - AFN
+        - ALL
+        - AMD
+        - ANG
+        - AOA
+        - ARS
+        - AUD
+        - AWG
+        - AZN
+        - BAM
+        - BBD
+        - BDT
+        - BGN
+        - BHD
+        - BIF
+        - BMD
+        - BND
+        - BOB
+        - BOV
+        - BRL
+        - BSD
+        - BTN
+        - BWP
+        - BYR
+        - BZD
+        - CAD
+        - CDF
+        - CHE
+        - CHF
+        - CHW
+        - CLF
+        - CLP
+        - CNY
+        - COP
+        - COU
+        - CRC
+        - CUC
+        - CUP
+        - CVE
+        - CZK
+        - DJF
+        - DKK
+        - DOP
+        - DZD
+        - EGP
+        - ERN
+        - ETB
+        - EUR
+        - FJD
+        - FKP
+        - GBP
+        - GEL
+        - GHS
+        - GIP
+        - GMD
+        - GNF
+        - GTQ
+        - GYD
+        - HKD
+        - HNL
+        - HRK
+        - HTG
+        - HUF
+        - IDR
+        - ILS
+        - INR
+        - IQD
+        - IRR
+        - ISK
+        - JMD
+        - JOD
+        - JPY
+        - KES
+        - KGS
+        - KHR
+        - KMF
+        - KPW
+        - KRW
+        - KWD
+        - KYD
+        - KZT
+        - LAK
+        - LBP
+        - LKR
+        - LRD
+        - LSL
+        - LYD
+        - MAD
+        - MDL
+        - MGA
+        - MKD
+        - MMK
+        - MNT
+        - MOP
+        - MRO
+        - MUR
+        - MVR
+        - MWK
+        - MXN
+        - MXV
+        - MYR
+        - MZN
+        - NAD
+        - NGN
+        - NIO
+        - NOK
+        - NPR
+        - NZD
+        - OMR
+        - PAB
+        - PEN
+        - PGK
+        - PHP
+        - PKR
+        - PLN
+        - PYG
+        - QAR
+        - RON
+        - RSD
+        - RUB
+        - RWF
+        - SAR
+        - SBD
+        - SCR
+        - SDG
+        - SEK
+        - SGD
+        - SHP
+        - SLL
+        - SOS
+        - SRD
+        - SSP
+        - STD
+        - SVC
+        - SYP
+        - SZL
+        - THB
+        - TJS
+        - TMT
+        - TND
+        - TOP
+        - TRY
+        - TTD
+        - TWD
+        - TZS
+        - UAH
+        - UGX
+        - USD
+        - USN
+        - UYI
+        - UYU
+        - UZS
+        - VEF
+        - VND
+        - VUV
+        - WST
+        - XAF
+        - XAG
+        - XAU
+        - XBA
+        - XBB
+        - XBC
+        - XBD
+        - XCD
+        - XDR
+        - XOF
+        - XPD
+        - XPF
+        - XPT
+        - XSU
+        - XTS
+        - XUA
+        - XXX
+        - YER
+        - ZAR
+        - ZMW
+        - ZWL
+
+    PartyRegistry:
+      title: Party Registry
+      description: The registry containing the party’s registration with name and id
+      type: string
+      enum:
+        - FDX
+        - GLEIF
+        - ICANN
+        - PRIVATE
+
+    PartyType:
+      title: Party Type
+      description: Identifies the type of a party
+      type: string
+      enum:
+        - DATA_ACCESS_PLATFORM
+        - DATA_PROVIDER
+        - DATA_RECIPIENT
+        - INDIVIDUAL
+        - MERCHANT
+        - VENDOR
+
+    Registry:
+      title: Registry
+      description: Identifies the type of a Registry
+      type: string
+      enum:
+        - PRIVATE
+        - FDX
+        - GLEIF
+        - ICANN
+
+    ResultType:
+      title: Result Type
+      description: >-
+        Flag to indicate if you want a lightweight array of metadata (AccountDescriptor
+        or Tax or Operations) or full item details (Account or a Tax subclass or
+        Availability details). If set to 'lightweight', should only return the
+        fields associated with the metadata entity.
+      type: string
+      enum:
+        - lightweight
+        - details
+      default: lightweight
+
+    String255:
+      title: String 255
+      description: String of maximum length 255
+      type: string
+      maxLength: 255
+
+    String64:
+      title: String 64
+      description: String of maximum length 64
+      type: string
+      maxLength: 64
+
+    TelephoneNumberType:
+      title: Telephone Number Type
+      description: Purpose or type of telephone number
+      type: string
+      enum:
+        - HOME
+        - BUSINESS
+        - CELL
+        - FAX
+
+    Timestamp:
+      title: Timestamp
+      description: >-
+        ISO 8601 date-time in format 'YYYY-MM-DDThh:mm:ss.nnn[Z|[+|-]hh:mm]' according to
+        [IETF RFC3339](https://xml2rfc.tools.ietf.org/public/rfc/html/rfc3339.html#anchor14)
+      type: string
+      format: date-time
+      example: '2021-07-15T14:46:41.375Z'
+
+  responses:
+
+    ############################################################
+    #
+    # Standard error responses
+    #
+    ############################################################
+    '406':
+      description: Content Type not Supported
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+            examples:
+              Content Type not Supported:
+                value:
+                  code: 1203
+                  message: Content Type not Supported
+                  debugMessage: Provider custom developer-level error details for troubleshooting
+
+    '500':
+      description: Catch all exception where request was not processed due to an internal outage/issue.
+        Consider other more specific errors before using this error
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+            examples:
+              Internal server error:
+                value:
+                  code: 500
+                  message: Internal server error
+                  debugMessage: Provider custom developer-level error details for troubleshooting
+
+    '501':
+      description: Error when FdxVersion in Header is not one of those implemented at backend
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+            examples:
+              FdxVersion not supported or not implemented:
+                value:
+                  code: 1106
+                  message: FdxVersion not supported or not implemented
+                  debugMessage: Provider custom developer-level error details for troubleshooting
+
+    '503':
+      description: System is down for maintenance
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Error'
+            examples:
+              Scheduled Maintenance:
+                value:
+                  code: 503
+                  message: Scheduled Maintenance
+                  debugMessage: Provider custom developer-level error details for troubleshooting

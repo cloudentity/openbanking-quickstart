@@ -1,0 +1,357 @@
+openapi: 3.1.0
+info:
+  version: '5.1.0'
+  title: FDX V5.1.0
+  description: Financial Data Exchange V5.1.0 Meta API
+  contact:
+    name: Financial Data Exchange
+    url: 'https://financialdataexchange.org/'
+    email: fdxsupport@financialdataexchange.org
+servers:
+  - url: 'https://api.fi.com/fdx/v5'
+    description: Financial Data Exchange V5.1.0 Meta API
+tags:
+  - name: Meta
+    description: API management and metrics
+
+paths:
+
+  ############################################################
+  #
+  # Meta management and metrics paths
+  #
+  ############################################################
+
+  /availability:
+    get:
+      operationId: getAvailability
+      tags:
+        - Meta
+      description: Get information about this API's availability
+      summary: Get API availability
+      parameters:
+        - $ref: '#/components/parameters/OperationIdQuery'
+      responses:
+        '200':
+          description: Status and planned times of API availability
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvailabilityList'
+  /capability:
+    get:
+      operationId: getCapability
+      tags:
+        - Meta
+      description: Get information about this API's capability
+      summary: Get API capability
+      parameters:
+        - $ref: '#/components/parameters/OperationIdQuery'
+        - $ref: '#/components/parameters/FdxVersionQuery'
+        - $ref: './fdxapi.components.yaml#/components/parameters/ResultTypeQuery'
+      responses:
+        '200':
+          description: >-
+            API's capability for connections, cutoff times
+            and product types
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Capability'
+  /certification-metrics:
+    get:
+      operationId: getCertificationMetrics
+      tags:
+        - Meta
+      description: Get certification performance metrics for this implementer's APIs
+      summary: Get certification performance metrics
+      parameters:
+        - $ref: '#/components/parameters/OperationIdQuery'
+      responses:
+        '200':
+          description: Array of API's certification metrics
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CertificationMetrics'
+
+components:
+
+  parameters:
+
+    ############################################################
+    #
+    # Meta management and metrics request parameters
+    #
+    ############################################################
+
+    FdxVersionQuery:
+      name: fdxVersion
+      in: query
+      description: Specific FDX version for which to get the capability. Optional
+      required: false
+      schema:
+        $ref: './fdxapi.components.yaml#/components/schemas/FdxVersion'
+
+    OperationIdQuery:
+      name: operationId
+      in: query
+      description: Specific operationId for which to get the metrics. Optional
+      required: false
+      schema:
+        $ref: '#/components/schemas/OperationId'
+
+  schemas:
+    ############################################################
+    #
+    # Meta management and metrics data entities
+    #
+    ############################################################
+
+    Availability:
+      title: Availability entity
+      description: Response object for /availability API
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/AvailabilityStatus'
+          description: Status of API availability
+        description:
+          type: string
+          description: Description of availability status
+        operationId:
+          description: Operation ID (e.g. name) for this Availability
+          $ref: '#/components/schemas/OperationId'
+        plannedAvailability:
+          type: array
+          description: Provider's plan for API availability
+          items:
+            $ref: '#/components/schemas/PlannedAvailability'
+
+    AvailabilityList:
+      title: Availability List entity
+      description: Response object for /availability API
+      type: object
+      properties:
+        availability:
+          description: Zero or more API availability metrics
+          type: array
+          items:
+            $ref: '#/components/schemas/Availability'
+
+    Capability:
+      title: Capability entity
+      description: The response object for the API /capability request
+      type: object
+      properties:
+        fdxVersions:
+          type: array
+          description: The FDX schema versions supported by one or more operations
+          items:
+            $ref: './fdxapi.components.yaml#/components/schemas/FdxVersion'
+        allowedConnections:
+          type: integer
+          description: The number of concurrent connections allowed for this client
+        activeConnections:
+          type: integer
+          description: The current number of active connections for this client
+        messageFormat:
+          $ref: '#/components/schemas/MessageFormat'
+          description: Defaults to JSON
+        operations:
+          type: array
+          description: The FDX API endpoints supported
+          items:
+            $ref: '#/components/schemas/Operation'
+        jwksUrl:
+          description: >-
+            The URL to retrieve the JWKS public keys from the data provider,
+            needed to enable payload level encryption above the TLS layer
+          $ref: './fdxapi.components.yaml#/components/schemas/HateoasLink'
+
+    Operation:
+      title: Operation entity
+      description: Definition of a supported API for the /capability response object
+      type: object
+      properties:
+        id:
+          description: Operation ID (e.g. name) of this API
+          $ref: '#/components/schemas/OperationId'
+        availability:
+          description: Whether and how this API is currently supported
+          $ref: '#/components/schemas/Availability'
+        alsoSupported:
+          description: >-
+            Additional FDX API endpoints supported at this API, e.g. Transactions
+            within Accounts, or TxImages within Transactions
+          type: array
+          items:
+            $ref: '#/components/schemas/OperationId'
+        version:
+          description: >-
+            Data provider's implementation version number for this operation,
+            which is unrelated to the FDX API version
+          type: string
+        fdxVersions:
+          description: FDX schema versions supported at this endpoint
+          type: array
+          items:
+            $ref: './fdxapi.components.yaml#/components/schemas/FdxVersion'
+        cutOffTime:
+          description: >-
+            Cut off time for same-day execution of activity request submitted to this API.
+            Alternatively, the as-of time when EOD account balances are typically set
+          $ref: './fdxapi.components.yaml#/components/schemas/Timestamp'
+        link:
+          description: >-
+            General HATEOAS link for this API, specifying supported action (GET, POST, etc) and
+            contentTypes (application/json, image/png, etc), but without any path parameter values
+          $ref: './fdxapi.components.yaml#/components/schemas/HateoasLink'
+
+    PlannedAvailability:
+      title: Planned Availability entity
+      description: Provider's plan for API availability
+      type: object
+      properties:
+        status:
+          $ref: '#/components/schemas/AvailabilityStatus'
+          description: API availability status for this time period
+        description:
+          type: string
+          description: Description of API availability status
+        startTime:
+          $ref: './fdxapi.components.yaml#/components/schemas/Timestamp'
+          description: Start time for this status period
+        endTime:
+          $ref: './fdxapi.components.yaml#/components/schemas/Timestamp'
+          description: End time for this status period
+
+    CertificationMetric:
+      title: Certification Metric entity
+      description: A single certification performance metric
+      type: object
+      properties:
+        reportStartTimestamp:
+          $ref: './fdxapi.components.yaml#/components/schemas/Timestamp'
+          description: When the reported metrics period began
+        reportEndTimestamp:
+          $ref: './fdxapi.components.yaml#/components/schemas/Timestamp'
+          description: When the reported metrics period ended
+        metricsName:
+          type: string
+          description: >-
+            Any provider descriptive name for the measurement.
+            Optional, can be omitted if operationIds are returned
+        operationIds:
+          description: >-
+            One or more Operation IDs for which these metrics apply.
+            Optional, can be omitted if metricsName is returned
+          type: array
+          items:
+            $ref: '#/components/schemas/OperationId'
+        responseTimeAverage:
+          type: number
+          description: The self-reported average response time in milliseconds for all combined data responses
+        averageUpTime:
+          type: number
+          description: >-
+            See the Certification Performance section that describes how this measurement
+            will be calculated, defines the % of availability during the measurement
+        reportTimestamp:
+          $ref: './fdxapi.components.yaml#/components/schemas/Timestamp'
+          description: Time when these performance and availability metrics were created
+
+    CertificationMetrics:
+      title: Certification Metrics entity
+      description: Response object for /certification-metrics API
+      type: object
+      properties:
+        metrics:
+          description: Zero or more certification performance metrics
+          type: array
+          items:
+            $ref: '#/components/schemas/CertificationMetric'
+
+    ############################################################
+    #
+    # Meta management and metrics data types
+    #
+    ############################################################
+
+    AvailabilityStatus:
+      title: Availability Status
+      description: Statuses for reporting API availability
+      type: string
+      enum:
+        - ALIVE
+        - PARTIAL
+        - MAINTENANCE
+        - DOWN
+
+    MessageFormat:
+      title: Message Format
+      description: Message format used in /capability API
+      type: string
+      enum:
+        - JSON
+
+    OperationId:
+      title: FDX Resource Operation ID
+      description: The operationIds for all FDX APIs
+      type: string
+      enum:
+        - cancelPayment
+        - cancelRecurringPayment
+        - cancelTransfer
+        - createNotificationSubscription
+        - createPayee
+        - createRecipient
+        - createTaxForm
+        - deleteNotificationSubscription
+        - deletePayee
+        - deleteRecipient
+        - getAccount
+        - getAccountContact
+        - getAccountPaymentNetworks
+        - getAccountStatement
+        - getAccountTransactionImages
+        - getAvailability
+        - getCapability
+        - getCertificationMetrics
+        - getConsentGrant
+        - getConsentRevocation
+        - getCustomer
+        - getCustomerInfo
+        - getCustomers
+        - getNotificationSubscription
+        - getPayee
+        - getPayment
+        - getPaymentsForRecurringPayment
+        - getRecipient
+        - getRecipients
+        - getRecurringPayment
+        - getRewardProgram
+        - getRewardProgramCategories
+        - getTaxForm
+        - getTransfer
+        - getTransferStatus
+        - publishNotification
+        - reportSuspectedFraudIncident
+        - requestAccountTransfer
+        - revokeConsentGrant
+        - schedulePayment
+        - scheduleRecurringPayment
+        - searchForAccountStatements
+        - searchForAccountTransactions
+        - searchForAccounts
+        - searchForPayees
+        - searchForPayments
+        - searchForRecurringPayments
+        - searchForTaxForms
+        - searchForTransfers
+        - searchRewardPrograms
+        - updatePayee
+        - updatePayment
+        - updateRecipient
+        - updateRecurringPayment
+        - updateTaxForm

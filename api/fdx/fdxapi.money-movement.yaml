@@ -1,0 +1,2361 @@
+openapi: 3.1.0
+info:
+  version: '5.1.0'
+  title: FDX V5.1.0
+  description: Financial Data Exchange V5.1.0 Money Movement API
+  contact:
+    name: Financial Data Exchange
+    url: 'https://financialdataexchange.org/'
+    email: fdxsupport@financialdataexchange.org
+servers:
+  - url: 'https://api.fi.com/fdx/v5'
+    description: Financial Data Exchange V5.1.0 Money Movement API
+tags:
+  - name: Personal Information
+    description: Search and view customer or customers
+  - name: Internal Transfers
+    description: Manage internal transfers
+  - name: Payee Management
+    description: Manage payees for payments
+  - name: Payments
+    description: Manage payments
+  - name: Recurring Payments
+    description: Manage recurring payments
+paths:
+
+  ############################################################
+  #
+  # Money Movement paths
+  #
+  ############################################################
+
+  /payees:
+    get:
+      operationId: searchForPayees
+      tags:
+        - Payee Management
+      summary: Search for payees
+      description: Search for payees
+      parameters:
+        - $ref: '#/components/parameters/UpdatedSinceQuery'
+        - $ref: './fdxapi.components.yaml#/components/parameters/OffsetQuery'
+        - $ref: './fdxapi.components.yaml#/components/parameters/LimitQuery'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payees'
+              examples:
+                Retrieve Payees:
+                  value:
+                    page:
+                      nextOffset: "next-offset-123-xyz"
+                      prevOffset: "prev-offset-456-abc"
+                      totalElements: 100
+                    updates:
+                      nextUpdateId: "next-update-id-456-krl"
+                    links:
+                      next:
+                        href: "/payees?offset=next-offset-123-xyz"
+                      prev:
+                        href: "/payees?offset=prev-offset-456-abc"
+                      updates:
+                        href: "/payees?updatedSince=next-update-id-456-krl"
+                    payees:
+                      - merchant:
+                          displayName: "My Cell Phone Biller"
+                          name:
+                            company: "US Cellular"
+                          address:
+                            line1: "10 Cellular way"
+                            city: "New York"
+                            state: "NY"
+                            postalCode: "10001"
+                          phone:
+                            type: CELL
+                            country: US
+                            number: "2013329944"
+                          payeeId: "payee-1001"
+                          merchantAccountIds:
+                            - "999900008888"
+                          status: "ACTIVE"
+                          expiresTimestamp: "2025-03-15T13:29:19+0000"
+        '404':
+          description: Data not found for request parameters
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Data not found for request parameters:
+                    value:
+                      code: 1107
+                      message: Data not found for request parameters
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '500':
+          $ref: './fdxapi.components.yaml#/components/responses/500'
+        '501':
+          $ref: './fdxapi.components.yaml#/components/responses/501'
+        '503':
+          $ref: './fdxapi.components.yaml#/components/responses/503'
+    post:
+      operationId: createPayee
+      tags:
+        - Payee Management
+      summary: Create a payee
+      description: Create a payee
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKeyHeader'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: The data of the Payee to be updated
+              $ref: '#/components/schemas/PayeeForUpdate'
+            examples:
+              Create a Payee:
+                value:
+                  merchant:
+                    displayName: "My Cell Phone Biller"
+                    name:
+                      company: "US Cellular"
+                    address:
+                      line1: "10 Cellular way"
+                      city: "New York"
+                      state: "NY"
+                      postalCode: "10001"
+                    phone:
+                      type: CELL
+                      country: US
+                      number: "2013329944"
+                    merchantAccountIds:
+                      - "999900008888"
+      responses:
+        '200':
+          description: Payee Exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payee'
+              examples:
+                Existing Payee:
+                  value:
+                    merchant:
+                      displayName: "My Cell Phone Biller"
+                      name:
+                        company: "US Cellular"
+                      address:
+                        line1: "10 Cellular way"
+                        city: "New York"
+                        state: "NY"
+                        postalCode: "10001"
+                      phone:
+                        type: CELL
+                        country: US
+                        number: "2013329944"
+                      payeeId: "payee-1001"
+                      merchantAccountIds:
+                        - "999900008888"
+                      status: "ACTIVE"
+                      expiresTimestamp: "2025-03-15T13:29:19+0000"
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payee'
+              examples:
+                Created Payee:
+                  value:
+                    merchant:
+                      displayName: "My Cell Phone Biller"
+                      name:
+                        company: "US Cellular"
+                      address:
+                        line1: "10 Cellular way"
+                        city: "New York"
+                        state: "NY"
+                        postalCode: "10001"
+                      phone:
+                        type: CELL
+                        country: US
+                        number: "2013329944"
+                      payeeId: "payee-1001"
+                      merchantAccountIds:
+                        - "999900008888"
+                      status: "ACTIVE"
+                      expiresTimestamp: "2025-03-15T13:29:19+0000"
+        '409':
+          description: Duplicate Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payee'
+              examples:
+                Duplicate Request:
+                  value:
+                    merchant:
+                      displayName: "My Cell Phone Biller"
+                      name:
+                        company: "US Cellular"
+                      address:
+                        line1: "10 Cellular way"
+                        city: "New York"
+                        state: "NY"
+                        postalCode: "10001"
+                      phone:
+                        type: CELL
+                        country: US
+                        number: "2013329944"
+                      payeeId: "payee-1001"
+                      merchantAccountIds:
+                        - "999900008888"
+                      status: "ACTIVE"
+                      expiresTimestamp: "2025-03-15T13:29:19+0000"
+  /payees/{payeeId}:
+    get:
+      operationId: getPayee
+      tags:
+        - Payee Management
+      summary: Get a payee
+      description: Get a payee
+      parameters:
+        - $ref: '#/components/parameters/PayeeIdPath'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payee'
+              examples:
+                Retrieve Payee by Payee Id Response:
+                  value:
+                    merchant:
+                      displayName: "My Cell Phone Biller"
+                      name:
+                        company: "US Cellular"
+                      address:
+                        line1: "10 Cellular way"
+                        city: "New York"
+                        state: "NY"
+                        postalCode: "10001"
+                      phone:
+                        type: CELL
+                        country: US
+                        number: "2013329944"
+                      payeeId: "payee-1001"
+                      merchantAccountIds:
+                        - "999900008888"
+                      status: "ACTIVE"
+                      expiresTimestamp: "2025-03-15T13:29:19+0000"
+        '404':
+          description: Payee with provided ID was not found
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Payee not found:
+                    value:
+                      code: 800
+                      message: Payee not found
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '500':
+          $ref: './fdxapi.components.yaml#/components/responses/500'
+        '501':
+          $ref: './fdxapi.components.yaml#/components/responses/501'
+        '503':
+          $ref: './fdxapi.components.yaml#/components/responses/503'
+    patch:
+      operationId: updatePayee
+      tags:
+        - Payee Management
+      summary: Update a payee
+      description: >-
+        Used to update an existing payee. The payee type must match the existing payee.
+        This call updates the payee's fields to the values provided.
+        If a field is not provided, the payee's field is not updated
+      parameters:
+        - $ref: '#/components/parameters/PayeeIdPath'
+        - $ref: '#/components/parameters/IdempotencyKeyHeader'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PayeeForUpdate'
+            examples:
+              Update Display Name:
+                value:
+                  merchant:
+                    displayName: "My Business Cell Phone Biller"
+              Update Phone Number:
+                value:
+                  merchant:
+                    phone:
+                      type: CELL
+                      country: US
+                      number: "9085550000"
+              Update Name and Address:
+                value:
+                  merchant:
+                    name:
+                      company: "My Business Cell Phone Biller"
+                    address:
+                      line1: "10 Cellular way"
+                      city: "New York"
+                      state: "NY"
+                      postalCode: "10001"
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payee'
+              examples:
+                Successful Update:
+                  value:
+                    merchant:
+                      displayName: "My Cell Phone Biller"
+                      name:
+                        company: "US Cellular"
+                      address:
+                        line1: "10 Cellular way"
+                        city: "New York"
+                        state: "NY"
+                        postalCode: "10001"
+                      phone:
+                        type: CELL
+                        country: US
+                        number: "2013329944"
+                      payeeId: "payee-1001"
+                      merchantAccountIds:
+                        - "999900008888"
+                      status: "ACTIVE"
+                      expiresTimestamp: "2025-03-15T13:29:19+0000"
+        '400':
+          description: Input sent by client does not satisfy API specification
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Invalid Input:
+                    value:
+                      code: 401
+                      message: Invalid Input
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Payee cannot be modified or deleted:
+                    value:
+                      code: 801
+                      message: Payee cannot be modified or deleted
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '404':
+          description: Payee with provided ID was not found
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Payee not found:
+                    value:
+                      code: 800
+                      message: Payee not found
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '409':
+          description: Duplicate Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payee'
+              examples:
+                Duplicate Request:
+                  value:
+                    merchant:
+                      displayName: My Cell Phone Biller
+                      name:
+                        company: US Cellular
+                      address:
+                        line1: 10 Cellular way
+                        city: New York
+                        state: NY
+                        postalCode: '10001'
+                      phone:
+                        type: CELL
+                        country: US
+                        number: '2013329944'
+                      payeeId: payee-1001
+                      merchantAccountIds:
+                        - '999900008888'
+                      status: ACTIVE
+                      expiresTimestamp: '2025-03-15T13:29:19+0000'
+        '500':
+          $ref: './fdxapi.components.yaml#/components/responses/500'
+        '501':
+          $ref: './fdxapi.components.yaml#/components/responses/501'
+        '503':
+          $ref: './fdxapi.components.yaml#/components/responses/503'
+    delete:
+      operationId: deletePayee
+      tags:
+        - Payee Management
+      summary: Delete a payee
+      description: Delete a payee
+      parameters:
+        - $ref: '#/components/parameters/PayeeIdPath'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payee'
+              examples:
+                Successful Deletion:
+                  value:
+                    merchant:
+                      status: "DELETED"
+        '400':
+          description: Payee cannot be modified or deleted
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Payee cannot be modified or deleted:
+                    value:
+                      code: 801
+                      message: Payee cannot be modified or deleted
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '404':
+          description: Payee with provided ID was not found
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Payee not found:
+                    value:
+                      code: 800
+                      message: Payee not found
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '500':
+          $ref: './fdxapi.components.yaml#/components/responses/500'
+        '501':
+          $ref: './fdxapi.components.yaml#/components/responses/501'
+        '503':
+          $ref: './fdxapi.components.yaml#/components/responses/503'
+  /payments:
+    get:
+      operationId: searchForPayments
+      tags:
+        - Payments
+      summary: Search for payments
+      description: Search for payments
+      parameters:
+        - $ref: '#/components/parameters/UpdatedSinceQuery'
+        - $ref: './fdxapi.components.yaml#/components/parameters/OffsetQuery'
+        - $ref: './fdxapi.components.yaml#/components/parameters/LimitQuery'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payments'
+              examples:
+                Retrieve Payments:
+                  value:
+                    page:
+                      nextOffset: "next-offset-123-xyz"
+                      prevOffset: "prev-offset-456-abc"
+                      totalElements: 100
+                    updates:
+                      nextUpdateId: "next-update-id-456-krl"
+                    links:
+                      next:
+                        href: "/payments?offset=next-offset-123-xyz"
+                      prev:
+                        href: "/payments?offset=prev-offset-456-abc"
+                      updates:
+                        href: "/payments?updatedSince=next-update-id-456-krl"
+                    payments:
+                      - fromAccountId: "ACCOUNT-123"
+                        toPayeeId: "PAYEE-ABC"
+                        amount: 10.99
+                        merchantAccountId: "MERCHANT-ACCOUNT-ID-0001"
+                        dueDate: "2021-08-17"
+                        paymentId: "PAYMENT-213"
+                        recurringPaymentId: "RECURRING-PAYMENT-485"
+                        processedTimestamp: "2021-03-15T13:29:19+0000"
+                        startedProcessingTimestamp: "2021-03-14T13:29:19+0000"
+                        status: "PROCESSED"
+                        links:
+                          - href: "/recurring-payment/RECURRING-PAYMENT-485"
+                            rel: recurringPayment
+        '404':
+          description: Data not found for request parameters
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Data not found for request parameters:
+                    value:
+                      code: 1107
+                      message: Data not found for request parameters
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '500':
+          $ref: './fdxapi.components.yaml#/components/responses/500'
+        '501':
+          $ref: './fdxapi.components.yaml#/components/responses/501'
+        '503':
+          $ref: './fdxapi.components.yaml#/components/responses/503'
+    post:
+      operationId: schedulePayment
+      tags:
+        - Payments
+      summary: Schedule payment
+      description: Schedule a payment
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKeyHeader'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: The data of the Payment to be scheduled
+              $ref: '#/components/schemas/PaymentForUpdate'
+            examples:
+              Schedule a Payment:
+                value:
+                  fromAccountId: "ACCOUNT-123"
+                  toPayeeId: "PAYEE-ABC"
+                  amount: 10.99
+                  merchantAccountId: "MERCHANT-ACCOUNT-ID-0001"
+                  dueDate: "2021-08-17"
+      responses:
+        '200':
+          description: Duplicate Payment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+              examples:
+                Duplicate Payment:
+                  value:
+                    fromAccountId: "ACCOUNT-123"
+                    toPayeeId: "PAYEE-ABC"
+                    amount: 10.99
+                    merchantAccountId: "MERCHANT-ACCOUNT-ID-0001"
+                    dueDate: "2021-08-17"
+                    paymentId: "PAYMENT-213"
+                    status: "SCHEDULED"
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+              examples:
+                Successful Creation:
+                  value:
+                    fromAccountId: "ACCOUNT-123"
+                    toPayeeId: "PAYEE-ABC"
+                    amount: 10.99
+                    merchantAccountId: "MERCHANT-ACCOUNT-ID-0001"
+                    dueDate: "2021-08-17"
+                    paymentId: "PAYMENT-213"
+                    status: "SCHEDULED"
+        '400':
+          description: Request is invalid
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Due date too soon:
+                    value:
+                      code: 803
+                      message: Due date too soon
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Payment rejected:
+                    value:
+                      code: 804
+                      message: Payment rejected
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '404':
+          description: Requested payment is invalid
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Payee not found:
+                    value:
+                      code: 800
+                      message: Payee not found
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Source account not found:
+                    value:
+                      code: 901
+                      message: Source account not found
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Source account closed:
+                    value:
+                      code: 902
+                      message: Source account closed
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Destination account not found:
+                    value:
+                      code: 904
+                      message: Destination account not found
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Destination account closed:
+                    value:
+                      code: 905
+                      message: Destination account closed
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Invalid amount:
+                    value:
+                      code: 907
+                      message: Invalid amount
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Insufficient funds:
+                    value:
+                      code: 910
+                      message: Insufficient funds
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '409':
+          description: Duplicate Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+              examples:
+                Duplicate Request:
+                  value:
+                    fromAccountId: ACCOUNT-123
+                    toPayeeId: PAYEE-ABC
+                    amount: 10.99
+                    merchantAccountId: MERCHANT-ACCOUNT-ID-0001
+                    dueDate: '2021-08-17'
+                    paymentId: PAYMENT-213
+                    status: SCHEDULED
+        '422':
+          description: Account type not supported
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Account type not supported:
+                    value:
+                      code: 704
+                      message: Account type not supported
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '500':
+          $ref: './fdxapi.components.yaml#/components/responses/500'
+        '501':
+          $ref: './fdxapi.components.yaml#/components/responses/501'
+        '503':
+          $ref: './fdxapi.components.yaml#/components/responses/503'
+  /payments/{paymentId}:
+    get:
+      operationId: getPayment
+      tags:
+        - Payments
+      summary: Get payment
+      description: Get a payment
+      parameters:
+        - $ref: '#/components/parameters/PaymentIdPath'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+              examples:
+                Retrieve Payment:
+                  value:
+                    fromAccountId: "ACCOUNT-123"
+                    toPayeeId: "PAYEE-ABC"
+                    amount: 10.99
+                    merchantAccountId: "MERCHANT-ACCOUNT-ID-0001"
+                    dueDate: "2021-08-17"
+                    paymentId: "PAYMENT-213"
+                    recurringPaymentId: "RECURRING-PAYMENT-485"
+                    processedTimestamp: "2021-03-15T13:29:19+0000"
+                    startedProcessingTimestamp: "2021-03-14T13:29:19+0000"
+                    status: "PROCESSED"
+                    links:
+                      - href: "/recurring-payment/RECURRING-PAYMENT-854"
+                        rel: recurringPayment
+        '404':
+          description: A payment with provided ID was not found
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Payment not found:
+                    value:
+                      code: 802
+                      message: Payment not found
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '500':
+          $ref: './fdxapi.components.yaml#/components/responses/500'
+        '501':
+          $ref: './fdxapi.components.yaml#/components/responses/501'
+        '503':
+          $ref: './fdxapi.components.yaml#/components/responses/503'
+    patch:
+      operationId: updatePayment
+      tags:
+        - Payments
+      summary: Update a payment
+      description: Update a payment
+      parameters:
+        - $ref: '#/components/parameters/PaymentIdPath'
+        - $ref: '#/components/parameters/IdempotencyKeyHeader'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: The data of the Payment to be updated
+              $ref: '#/components/schemas/PaymentForUpdate'
+            examples:
+              Update Amount:
+                value:
+                  fromAccountId: "ACCOUNT-890"
+                  amount: 5
+                  dueDate: "2021-08-30"
+                  toPayeeId: "PAYEE-XYZ"
+              Update Payee:
+                value:
+                  fromAccountId: "ACCOUNT-890"
+                  toPayeeId: "PAYEE-XYZ"
+                  amount: 5
+                  dueDate: "2021-08-30"
+              Update From Account and Due Date:
+                value:
+                  fromAccountId: "ACCOUNT-890"
+                  dueDate: "2021-08-30"
+                  toPayeeId: "PAYEE-XYZ"
+                  amount: 5
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+              examples:
+                Successful Update:
+                  value:
+                    fromAccountId: "ACCOUNT-123"
+                    toPayeeId: "PAYEE-ABC"
+                    amount: 10.99
+                    merchantAccountId: "MERCHANT-ACCOUNT-ID-0001"
+                    dueDate: "2021-08-17"
+                    paymentId: "PAYMENT-213"
+                    recurringPaymentId: "RECURRING-PAYMENT-485"
+                    processedTimestamp: "2021-03-15T13:29:19+0000"
+                    startedProcessingTimestamp: "2021-03-14T13:29:19+0000"
+                    status: "PROCESSED"
+                    links:
+                      - href: "/recurring-payment/RECURRING-PAYMENT-548"
+                        rel: recurringPayment
+        '400':
+          description: Request is invalid
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Due date too soon:
+                    value:
+                      code: 803
+                      message: Due date too soon
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Payment cannot be modified or cancelled:
+                    value:
+                      code: 805
+                      message: Payment cannot be modified or cancelled
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Insufficient funds:
+                    value:
+                      code: 910
+                      message: Insufficient funds
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '404':
+          description: Requested payment change is invalid
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Payment not found:
+                    value:
+                      code: 802
+                      message: Payment not found
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Payee not found:
+                    value:
+                      code: 800
+                      message: Payee not found
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Source account not found:
+                    value:
+                      code: 901
+                      message: Source account not found
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Source account closed:
+                    value:
+                      code: 902
+                      message: Source account closed
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Destination account not found:
+                    value:
+                      code: 904
+                      message: Destination account not found
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Destination account closed:
+                    value:
+                      code: 905
+                      message: Destination account closed
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Invalid amount:
+                    value:
+                      code: 907
+                      message: Invalid amount
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Insufficient funds:
+                    value:
+                      code: 910
+                      message: Insufficient funds
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '409':
+          description: Duplicate Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+              examples:
+                Duplicate Request:
+                  value:
+                    fromAccountId: ACCOUNT-123
+                    toPayeeId: PAYEE-ABC
+                    amount: 10.99
+                    merchantAccountId: MERCHANT-ACCOUNT-ID-0001
+                    dueDate: '2021-08-17'
+                    paymentId: PAYMENT-213
+                    recurringPaymentId: RECURRING-PAYMENT-485
+                    processedTimestamp: '2021-03-15T13:29:19+0000'
+                    startedProcessingTimestamp: '2021-03-14T13:29:19+0000'
+                    status: PROCESSED
+                    links:
+                      - href: /recurring-payment/RECURRING-PAYMENT-584
+                        rel: recurringPayment
+        '422':
+          description: Account type not supported
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Internal server error:
+                    value:
+                      code: 704
+                      message: Account type not supported
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '500':
+          $ref: './fdxapi.components.yaml#/components/responses/500'
+        '501':
+          $ref: './fdxapi.components.yaml#/components/responses/501'
+        '503':
+          $ref: './fdxapi.components.yaml#/components/responses/503'
+    delete:
+      operationId: cancelPayment
+      tags:
+        - Payments
+      summary: Cancel payment
+      description: Cancel a payment
+      parameters:
+        - $ref: '#/components/parameters/PaymentIdPath'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payment'
+              examples:
+                Successful Cancel:
+                  value:
+                    fromAccountId: "ACCOUNT-123"
+                    toPayeeId: "PAYEE-ABC"
+                    amount: 10.99
+                    merchantAccountId: "MERCHANT-ACCOUNT-ID-0001"
+                    dueDate: "2021-08-17"
+                    paymentId: "PAYMENT-213"
+                    recurringPaymentId: "RECURRING-PAYMENT-485"
+                    cancelledTimestamp: "2021-03-14T13:29:19+0000"
+                    status: "CANCELLED"
+                    links:
+                      - href: "/recurring-payment/RECURRING-PAYMENT-845"
+                        rel: recurringPayment
+        '404':
+          description: A payment with provided ID was not found
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Payment not found:
+                    value:
+                      code: 802
+                      message: Payment not found
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '400':
+          description: Payment cannot be modified or cancelled at this time. Likely due to the state that it is in
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Payment cannot be modified or cancelled:
+                    value:
+                      code: 805
+                      message: Payment cannot be modified or cancelled
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '500':
+          $ref: './fdxapi.components.yaml#/components/responses/500'
+        '501':
+          $ref: './fdxapi.components.yaml#/components/responses/501'
+        '503':
+          $ref: './fdxapi.components.yaml#/components/responses/503'
+  /recurring-payments:
+    get:
+      operationId: searchForRecurringPayments
+      tags:
+        - Recurring Payments
+      summary: Search for recurring payments
+      description: Search for recurring payments
+      parameters:
+        - $ref: '#/components/parameters/UpdatedSinceQuery'
+        - $ref: './fdxapi.components.yaml#/components/parameters/OffsetQuery'
+        - $ref: './fdxapi.components.yaml#/components/parameters/LimitQuery'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecurringPayments'
+              examples:
+                Retrieve Recurring Payments:
+                  value:
+                    page:
+                      nextOffset: "next-offset-123-xyz"
+                      prevOffset: "prev-offset-456-abc"
+                      totalElements: 100
+                    updates:
+                      nextUpdateId: "next-update-id-456-krl"
+                    links:
+                      next:
+                        href: "/recurring-payments?offset=next-offset-123-xyz"
+                      prev:
+                        href: "/recurring-payments?offset=prev-offset-456-abc"
+                      updates:
+                        href: "/recurring-payments?updatedSince=next-update-id-456-krl"
+                    recurringPayments:
+                      - frequency: "MONTHLY"
+                        duration:
+                          type: "NUMBEROFTIMES"
+                          numberOfTimes: 12
+                        fromAccountId: "ACCOUNT-123"
+                        toPayeeId: "PAYEE-ABC"
+                        amount: 10.99
+                        merchantAccountId: "MERCHANT-ACCOUNT-ID-0001"
+                        dueDate: "2021-08-17"
+                        recurringPaymentId: "RECURRING-PAYMENT-485"
+                        cancelledTimestamp: "2021-03-14T13:29:19+0000"
+                        status: "CANCELLED"
+        '404':
+          description: Data not found for request parameters
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Data not found for request parameters:
+                    value:
+                      code: 1107
+                      message: Data not found for request parameters
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '500':
+          $ref: './fdxapi.components.yaml#/components/responses/500'
+        '501':
+          $ref: './fdxapi.components.yaml#/components/responses/501'
+        '503':
+          $ref: './fdxapi.components.yaml#/components/responses/503'
+
+    post:
+      operationId: scheduleRecurringPayment
+      tags:
+        - Recurring Payments
+      summary: Schedule recurring payments
+      description: Schedule a recurring payment
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKeyHeader'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: The data of the Recurring Payment to be scheduled
+              $ref: '#/components/schemas/RecurringPaymentForUpdate'
+            examples:
+              Create Recurring Payment:
+                value:
+                  frequency: "MONTHLY"
+                  duration:
+                    type: "NUMBEROFTIMES"
+                    numberOfTimes: 12
+                  fromAccountId: "ACCOUNT-123"
+                  toPayeeId: "PAYEE-ABC"
+                  amount: 10.99
+                  merchantAccountId: "MERCHANT-ACCOUNT-ID-0001"
+                  dueDate: "2021-08-17"
+      responses:
+        '200':
+          description: Duplicate Recurring Payment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecurringPayment'
+              examples:
+                Duplicate Recurring Payment:
+                  value:
+                    frequency: "MONTHLY"
+                    duration:
+                      type: "NUMBEROFTIMES"
+                      numberOfTimes: 12
+                    fromAccountId: "ACCOUNT-123"
+                    toPayeeId: "PAYEE-ABC"
+                    amount: 10.99
+                    merchantAccountId: "MERCHANT-ACCOUNT-ID-0001"
+                    dueDate: "2021-08-17"
+                    recurringPaymentId: "RECURRING-PAYMENT-485"
+                    status: "SCHEDULED"
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecurringPayment'
+              examples:
+                Successful Creation:
+                  value:
+                    frequency: "MONTHLY"
+                    duration:
+                      type: "NUMBEROFTIMES"
+                      numberOfTimes: 12
+                    fromAccountId: "ACCOUNT-123"
+                    toPayeeId: "PAYEE-ABC"
+                    amount: 10.99
+                    merchantAccountId: "MERCHANT-ACCOUNT-ID-0001"
+                    dueDate: "2021-08-17"
+                    recurringPaymentId: "RECURRING-PAYMENT-485"
+                    status: "SCHEDULED"
+        '400':
+          description: Request is invalid
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Due date too soon:
+                    value:
+                      code: 803
+                      message: Due date too soon
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Payment rejected:
+                    value:
+                      code: 804
+                      message: Payment rejected
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Recurring payment rejected:
+                    value:
+                      code: 807
+                      message: Recurring payment rejected
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '404':
+          description: Requested payment is invalid
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Payee not found:
+                    value:
+                      code: 800
+                      message: Payee not found
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Source account not found:
+                    value:
+                      code: 901
+                      message: Source account not found
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Source account closed:
+                    value:
+                      code: 902
+                      message: Source account closed
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Destination account not found:
+                    value:
+                      code: 904
+                      message: Destination account not found
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Destination account closed:
+                    value:
+                      code: 905
+                      message: Destination account closed
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Invalid amount:
+                    value:
+                      code: 907
+                      message: Invalid amount
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Insufficient funds:
+                    value:
+                      code: 910
+                      message: Insufficient funds
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '409':
+          description: Duplicate Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecurringPayment'
+              examples:
+                Duplicate Request:
+                  value:
+                    frequency: MONTHLY
+                    duration:
+                      type: NUMBEROFTIMES
+                      numberOfTimes: 12
+                    fromAccountId: ACCOUNT-123
+                    toPayeeId: PAYEE-ABC
+                    amount: 10.99
+                    merchantAccountId: MERCHANT-ACCOUNT-ID-0001
+                    dueDate: '2021-08-17'
+                    recurringPaymentId: RECURRING-PAYMENT-485
+                    status: SCHEDULED
+        '422':
+          description: Account type not supported
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Account type not supported:
+                    value:
+                      code: 704
+                      message: Account type not supported
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '500':
+          $ref: './fdxapi.components.yaml#/components/responses/500'
+        '501':
+          $ref: './fdxapi.components.yaml#/components/responses/501'
+        '503':
+          $ref: './fdxapi.components.yaml#/components/responses/503'
+  /recurring-payments/{recurringPaymentId}:
+    get:
+      operationId: getRecurringPayment
+      tags:
+        - Recurring Payments
+      summary: Get a recurring payment
+      description: Get a recurring payment
+      parameters:
+        - $ref: '#/components/parameters/RecurringPaymentIdPath'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecurringPayment'
+              examples:
+                Retrieve Recurring Payment:
+                  value:
+                    frequency: "MONTHLY"
+                    duration:
+                      type: "NUMBEROFTIMES"
+                      numberOfTimes: 12
+                    fromAccountId: "ACCOUNT-123"
+                    toPayeeId: "PAYEE-ABC"
+                    amount: 10.99
+                    merchantAccountId: "MERCHANT-ACCOUNT-ID-0001"
+                    dueDate: "2021-08-17"
+                    recurringPaymentId: "RECURRING-PAYMENT-485"
+                    status: "SCHEDULED"
+        '404':
+          description: A recurring payment with provided ID was not found
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Recurring payment not found:
+                    value:
+                      code: 806
+                      message: Recurring payment not found
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '500':
+          $ref: './fdxapi.components.yaml#/components/responses/500'
+        '501':
+          $ref: './fdxapi.components.yaml#/components/responses/501'
+        '503':
+          $ref: './fdxapi.components.yaml#/components/responses/503'
+    patch:
+      operationId: updateRecurringPayment
+      tags:
+        - Recurring Payments
+      summary: Update a recurring payment
+      description: Update a recurring payment
+      parameters:
+        - $ref: '#/components/parameters/RecurringPaymentIdPath'
+        - $ref: '#/components/parameters/IdempotencyKeyHeader'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              description: The data of the Recurring Payment to be updated
+              $ref: '#/components/schemas/RecurringPaymentForUpdate'
+            examples:
+              Update Duration (type and numberOfTimes is required if type is NUMBEROFTIMES):
+                value:
+                  frequency: "MONTHLY"
+                  dueDate: "2021-08-30"
+                  fromAccountId: "ACCOUNT-890"
+                  toPayeeId: "PAYEE-XYZ"
+                  amount: 5
+                  duration:
+                    type: "NUMBEROFTIMES"
+                    numberOfTimes: 12
+              Update Amount:
+                value:
+                  frequency: "MONTHLY"
+                  amount: 10.99
+                  dueDate: "2021-08-30"
+                  fromAccountId: "ACCOUNT-890"
+                  toPayeeId: "PAYEE-XYZ"
+              Update Frequency and Due Date:
+                value:
+                  fromAccountId: "ACCOUNT-123"
+                  frequency: "MONTHLY"
+                  dueDate: "2021-08-17"
+                  toPayeeId: "PAYEE-XYZ"
+                  amount: 5
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecurringPayment'
+              examples:
+                Successful Update:
+                  value:
+                    frequency: "MONTHLY"
+                    duration:
+                      type: "NUMBEROFTIMES"
+                      numberOfTimes: 12
+                    fromAccountId: "ACCOUNT-123"
+                    toPayeeId: "PAYEE-ABC"
+                    amount: 10.99
+                    merchantAccountId: "MERCHANT-ACCOUNT-ID-0001"
+                    dueDate: "2021-08-17"
+                    recurringPaymentId: "RECURRING-PAYMENT-485"
+                    status: "SCHEDULED"
+        '400':
+          description: Request is invalid
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Due date too soon:
+                    value:
+                      code: 803
+                      message: Due date too soon
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Recurring payment cannot be modified or cancelled:
+                    value:
+                      code: 808
+                      message: Recurring payment cannot be modified or cancelled
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '404':
+          description: Requested recurring payment change is invalid
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Recurring payment not found:
+                    value:
+                      code: 806
+                      message: Recurring payment not found
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Payee not found:
+                    value:
+                      code: 800
+                      message: Payee not found
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Source account not found:
+                    value:
+                      code: 901
+                      message: Source account not found
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Source account closed:
+                    value:
+                      code: 902
+                      message: Source account closed
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Destination account not found:
+                    value:
+                      code: 904
+                      message: Destination account not found
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Destination account closed:
+                    value:
+                      code: 905
+                      message: Destination account closed
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Invalid amount:
+                    value:
+                      code: 907
+                      message: Invalid amount
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Insufficient funds:
+                    value:
+                      code: 910
+                      message: Insufficient funds
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '409':
+          description: Duplicate Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecurringPayment'
+              examples:
+                Duplicate Request:
+                  value:
+                    frequency: MONTHLY
+                    duration:
+                      type: NUMBEROFTIMES
+                      numberOfTimes: 12
+                    fromAccountId: ACCOUNT-123
+                    toPayeeId: PAYEE-ABC
+                    amount: 10.99
+                    merchantAccountId: MERCHANT-ACCOUNT-ID-0001
+                    dueDate: '2021-08-17'
+                    recurringPaymentId: RECURRING-PAYMENT-485
+                    status: SCHEDULED
+        '422':
+          description: Account type not supported
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Account type not supported:
+                    value:
+                      code: 704
+                      message: Account type not supported
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '500':
+          $ref: './fdxapi.components.yaml#/components/responses/500'
+        '501':
+          $ref: './fdxapi.components.yaml#/components/responses/501'
+        '503':
+          $ref: './fdxapi.components.yaml#/components/responses/503'
+    delete:
+      operationId: cancelRecurringPayment
+      tags:
+        - Recurring Payments
+      summary: Cancel a recurring payment
+      description: Cancel a recurring payment
+      parameters:
+        - $ref: '#/components/parameters/RecurringPaymentIdPath'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/RecurringPayment'
+              examples:
+                Successful Cancel:
+                  value:
+                    frequency: "MONTHLY"
+                    duration:
+                      type: "NUMBEROFTIMES"
+                      numberOfTimes: 12
+                    fromAccountId: "ACCOUNT-123"
+                    toPayeeId: "PAYEE-ABC"
+                    amount: 10.99
+                    merchantAccountId: "MERCHANT-ACCOUNT-ID-0001"
+                    dueDate: "2021-08-17"
+                    recurringPaymentId: "RECURRING-PAYMENT-485"
+                    cancelledTimestamp: "2021-03-14T13:29:19+0000"
+                    status: "CANCELLED"
+        '400':
+          description: Recurring payment cannot be modified or cancelled at this time. Likely due to the state that it is in
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Recurring payment cannot be modified or cancelled:
+                    value:
+                      code: 808
+                      message: Recurring payment cannot be modified or cancelled
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '404':
+          description: A recurring payment with provided ID was not found
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Recurring payment not found:
+                    value:
+                      code: 806
+                      message: Recurring payment not found
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '500':
+          $ref: './fdxapi.components.yaml#/components/responses/500'
+        '501':
+          $ref: './fdxapi.components.yaml#/components/responses/501'
+        '503':
+          $ref: './fdxapi.components.yaml#/components/responses/503'
+  /recurring-payments/{recurringPaymentId}/payments:
+    get:
+      operationId: paymentsForRecurringPayment
+      tags:
+        - Recurring Payments
+      summary: Payments associated with the recurring payment
+      description: Search for payments associated with the recurring payment
+      parameters:
+        - $ref: '#/components/parameters/RecurringPaymentIdPath'
+        - $ref: '#/components/parameters/UpdatedSinceQuery'
+        - $ref: './fdxapi.components.yaml#/components/parameters/OffsetQuery'
+        - $ref: './fdxapi.components.yaml#/components/parameters/LimitQuery'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Payments'
+              examples:
+                Payments Associated with Recurring Payment:
+                  value:
+                    page:
+                      nextOffset: "next-offset-123-xyz"
+                      prevOffset: "prev-offset-456-abc"
+                      totalElements: 100
+                    updates:
+                      nextUpdateId: "next-update-id-456-krl"
+                    links:
+                      next:
+                        href: "/recurring-payment/RECURRING-PAYMENT-485/payments?offset=next-offset-123-xyz"
+                      prev:
+                        href: "/recurring-payment/RECURRING-PAYMENT-485/payments?offset=prev-offset-456-abc"
+                      updates:
+                        href: "/recurring-payment/RECURRING-PAYMENT-485/payments?updatedSince=next-update-id-456-krl"
+                    payments:
+                      - fromAccountId: "ACCOUNT-123"
+                        toPayeeId: "PAYEE-ABC"
+                        amount: 10.99
+                        merchantAccountId: "MERCHANT-ACCOUNT-ID-0001"
+                        dueDate: "2021-08-17"
+                        paymentId: "PAYMENT-213"
+                        recurringPaymentId: "RECURRING-PAYMENT-485"
+                        processedTimestamp: "2021-03-15T13:29:19+0000"
+                        startedProcessingTimestamp: "2021-03-14T13:29:19+0000"
+                        status: "PROCESSED"
+                        links:
+                          - href: "/recurring-payment/RECURRING-PAYMENT-458"
+                            rel: recurringPayment
+        '404':
+          description: A recurring payment with provided ID was not found
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Recurring payment not found:
+                    value:
+                      code: 806
+                      message: Recurring payment not found
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '500':
+          $ref: './fdxapi.components.yaml#/components/responses/500'
+        '501':
+          $ref: './fdxapi.components.yaml#/components/responses/501'
+        '503':
+          $ref: './fdxapi.components.yaml#/components/responses/503'
+  /transfers:
+    get:
+      operationId: searchForTransfers
+      tags:
+        - Internal Transfers
+      description: Search for transfers
+      summary: Search for transfers between accounts
+      parameters:
+        - $ref: '#/components/parameters/UpdatedSinceQuery'
+        - name: searchStartTransferDate
+          in: query
+          description: Start time for use in retrieval of transfers by transfer date
+          schema:
+            $ref: './fdxapi.components.yaml#/components/schemas/DateString'
+        - name: searchEndTransferDate
+          in: query
+          description: End time for use in retrieval of transfers by transfer date
+          schema:
+            $ref: './fdxapi.components.yaml#/components/schemas/DateString'
+        - name: searchFromAccountIds
+          in: query
+          description: Search for transfers by source account
+          schema:
+            type: array
+            items:
+              type: string
+        - name: searchToAccountIds
+          in: query
+          description: Search for transfers by source account
+          schema:
+            type: array
+            items:
+              type: string
+        - name: searchStatuses
+          in: query
+          description: Search for transfers by source account
+          schema:
+            type: array
+            items:
+              $ref: '#/components/schemas/PaymentStatus'
+        - name: searchTransferIds
+          in: query
+          description: Search for transfers by id
+          schema:
+            type: array
+            items:
+              type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transfers'
+        '400':
+          description: Start or end date value is not in the ISO 8601 format
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Invalid start or end date:
+                    value:
+                      code: 702
+                      message: Invalid start or end date
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Invalid date range:
+                    value:
+                      code: 703
+                      message: Invalid date range
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '404':
+          description: Data not found for request parameters
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Data not found for request parameters:
+                    value:
+                      code: 1107
+                      message: Data not found for request parameters
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '500':
+          $ref: './fdxapi.components.yaml#/components/responses/500'
+        '501':
+          $ref: './fdxapi.components.yaml#/components/responses/501'
+        '503':
+          $ref: './fdxapi.components.yaml#/components/responses/503'
+    post:
+      operationId: requestAccountTransfer
+      tags:
+        - Internal Transfers
+      description: Create a transfer between accounts
+      summary: Request account transfer
+      parameters:
+        - $ref: '#/components/parameters/IdempotencyKeyHeader'
+      requestBody:
+        description: Data of the transfer request
+        content:
+          application/json:
+            schema:
+              description: Data of the transfer request
+              $ref: '#/components/schemas/TransferForCreate'
+            examples:
+              Transfer Example:
+                value:
+                  transferId: "MY-TRANSFER-ID"
+                  fromAccountId: "ACCOUNT-123"
+                  toAccountId: "ACCOUNT-456"
+                  amount: 100
+                  memo: "FDX Transfer Example"
+                  paymentDetails:
+                    principalAmount: 75
+                    interestAmount: 10
+                    insuranceAmount: 5
+                    escrowAmount: 5
+                    pmiAmount: 5
+                    feesAmount: 0
+      responses:
+        '200':
+          description: Initial status of the requested transfer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transfer'
+                examples:
+                  Successful Transfer:
+                    value:
+                      transferId: "MY-TRANSFER-ID"
+                      fromAccountId: "ACCOUNT-123"
+                      toAccountId: "ACCOUNT-456"
+                      amount: 100
+                      memo: "FDX Transfer Example"
+                      paymentDetails:
+                        principalAmount: 75
+                        interestAmount: 10
+                        insuranceAmount: 5
+                        escrowAmount: 5
+                        pmiAmount: 5
+                        feesAmount: 0
+                      referenceId: "FI-TRANSFER-ID"
+                      status: "SCHEDULED"
+                      transferDate: "2021-03-14"
+        '400':
+          description: Source account does not have sufficient funds
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Insufficient funds:
+                    value:
+                      code: 910
+                      message: Insufficient funds
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '404':
+          description: Requested transfer is invalid
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Source account not found:
+                    value:
+                      code: 901
+                      message: Source account not found
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Destination account not found:
+                    value:
+                      code: 904
+                      message: Destination account not found
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Invalid amount:
+                    value:
+                      code: 907
+                      message: Invalid amount
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Transfer not found:
+                    value:
+                      code: 950
+                      message: Transfer not found
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '401':
+          description: Account not authorized for transfer
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Source account not authorized for transfer:
+                    value:
+                      code: 903
+                      message: Source account not authorized for transfer
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+                  Destination account not authorized for transfer:
+                    value:
+                      code: 906
+                      message: Destination account not authorized for transfer
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '409':
+          description: Duplicate transfer request
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Duplicate transfer request:
+                    value:
+                      code: 908
+                      message: Duplicate transfer request
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '500':
+          $ref: './fdxapi.components.yaml#/components/responses/500'
+        '501':
+          $ref: './fdxapi.components.yaml#/components/responses/501'
+        '503':
+          $ref: './fdxapi.components.yaml#/components/responses/503'
+  /transfers/{transferId}:
+    get:
+      operationId: getTransfer
+      tags:
+        - Internal Transfers
+      description: Get a transfer been accounts
+      summary: Get a transfer
+      parameters:
+        - $ref: '#/components/parameters/TransferIdPath'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transfer'
+              examples:
+                Retrieved Transfer:
+                  value:
+                    transferId: "MY-TRANSFER-ID"
+                    fromAccountId: "ACCOUNT-123"
+                    toAccountId: "ACCOUNT-456"
+                    amount: 100
+                    memo: "FDX Transfer Example"
+                    paymentDetails:
+                      principalAmount: 75
+                      interestAmount: 10
+                      insuranceAmount: 5
+                      escrowAmount: 5
+                      pmiAmount: 5
+                      feesAmount: 0
+                    referenceId: "FI-TRANSFER-ID"
+                    status: "SCHEDULED"
+                    transferDate: "2021-03-14"
+    delete:
+      operationId: cancelTransfer
+      tags:
+        - Internal Transfers
+      description: Cancel a transfer between accounts
+      summary: Cancel transfer
+      parameters:
+        - $ref: '#/components/parameters/TransferIdPath'
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Transfer'
+              examples:
+                Deleted Transfer:
+                  value:
+                    transferId: "MY-TRANSFER-ID"
+                    fromAccountId: "ACCOUNT-123"
+                    toAccountId: "ACCOUNT-456"
+                    amount: 100
+                    memo: "FDX Transfer Example"
+                    paymentDetails:
+                      principalAmount: 75
+                      interestAmount: 10
+                      insuranceAmount: 5
+                      escrowAmount: 5
+                      pmiAmount: 5
+                      feesAmount: 0
+                    referenceId: "FI-TRANSFER-ID"
+                    status: "SCHEDULED"
+                    transferDate: "2021-03-14"
+  /transfers/{transferId}/status:
+    get:
+      operationId: getTransferStatus
+      tags:
+        - Internal Transfers
+      description: >-
+        This endpoint has been deprecated in favor of the `getTransfer`
+        (`GET /transfers/{transferId}`) operation. Get status of transfer between accounts
+      deprecated: true
+      summary: Get transfer status
+      parameters:
+        - $ref: '#/components/parameters/TransferIdPath'
+      responses:
+        '200':
+          description: Current status of the requested transfer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransferStatus'
+              examples:
+                Successful Transfer:
+                  value:
+                    transferId: "MY-TRANSFER-ID"
+                    referenceId: "FI-TRANSFER-ID"
+                    status: "SCHEDULED"
+                    transferDate: "2021-03-14"
+        '404':
+          description: Transfer with id was not found
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Transfer not found:
+                    value:
+                      code: 950
+                      message: Transfer not found
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '500':
+          $ref: './fdxapi.components.yaml#/components/responses/500'
+        '501':
+          $ref: './fdxapi.components.yaml#/components/responses/501'
+        '503':
+          $ref: './fdxapi.components.yaml#/components/responses/503'
+
+components:
+
+  parameters:
+
+    ############################################################
+    #
+    # Money Movement request parameters
+    #
+    ############################################################
+
+    IdempotencyKeyHeader:
+      in: header
+      name: idempotency-key
+      required: true
+      schema:
+        $ref: './fdxapi.components.yaml#/components/schemas/Identifier'
+      description: Used to de-duplicate requests
+
+    PayeeIdPath:
+      name: payeeId
+      in: path
+      description: Payee Identifier. Uniquely identifies a payee
+      required: true
+      schema:
+        $ref: './fdxapi.components.yaml#/components/schemas/Identifier'
+
+    PaymentIdPath:
+      name: paymentId
+      in: path
+      description: Payment Identifier. Uniquely identifies a payment
+      required: true
+      schema:
+        $ref: './fdxapi.components.yaml#/components/schemas/Identifier'
+
+    RecurringPaymentIdPath:
+      name: recurringPaymentId
+      in: path
+      description: Recurring Payment Identifier. Uniquely identifies a recurring payment
+      required: true
+      schema:
+        $ref: './fdxapi.components.yaml#/components/schemas/Identifier'
+
+    TransferIdPath:
+      name: transferId
+      in: path
+      required: true
+      description: Transfer identifier
+      schema:
+        type: string
+
+    UpdatedSinceQuery:
+      name: updatedSince
+      in: query
+      description: Return items that have been created or updated since the update id
+      schema:
+        type: string
+
+  schemas:
+    ############################################################
+    #
+    # Money Movement data entities
+    #
+    ############################################################
+
+    Merchant:
+      title: Merchant entity
+      description: Business or person to whom bill payments can be sent for products or services
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/MerchantForUpdate'
+        - type: object
+          required: [status]
+          properties:
+            payeeId:
+              $ref: './fdxapi.components.yaml#/components/schemas/Identifier'
+              description: Uniquely identifies a payee. Used within the API to reference a payee
+            status:
+              $ref: '#/components/schemas/PayeeStatus'
+              description: Defines the Payee’s lifecycle
+            expiresTimestamp:
+              $ref: './fdxapi.components.yaml#/components/schemas/Timestamp'
+              description: >-
+                Describes when the entity will be automatically deleted. The entity will not go into the
+                "DELETED" state. If this value is null or not provided, the entity will not expire automatically
+
+    MerchantForUpdate:
+      title: Merchant For Update entity
+      description: >-
+        Merchant's fields to be updated. Describes the fields that can be updated by the client.
+        Supported fields could be server dependent
+      type: object
+      properties:
+        displayName:
+          type: string
+          description: >-
+            User defined name for the payee. Used by the customer to identify the payee.
+            Not used by the system to process payments
+        name:
+          $ref: './fdxapi.components.yaml#/components/schemas/CustomerName'
+          description: Name of the payee used to execute the payment
+        address:
+          $ref: './fdxapi.components.yaml#/components/schemas/DeliveryAddress'
+          description: Address of the payee used to execute the payment
+        phone:
+          $ref: './fdxapi.components.yaml#/components/schemas/TelephoneNumber'
+          description: Phone number of the payee used to execute the payment
+        merchantAccountIds:
+          type: array
+          description: Account identifier(s) the customer has with the payee
+          items:
+            type: string
+
+    Payment:
+      title: Payment entity
+      description: Represents a payment
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/PaymentForUpdate'
+        - type: object
+          required: [paymentId, status]
+          properties:
+            paymentId:
+              $ref: './fdxapi.components.yaml#/components/schemas/Identifier'
+              description: Uniquely identifies a payment. Used within the API to reference a payment
+            recurringPaymentId:
+              $ref: './fdxapi.components.yaml#/components/schemas/Identifier'
+              description: >-
+                The recurring payment that spawned this payment.
+                Null if payment is not associated with a recurring payment
+            scheduledTimestamp:
+              $ref: './fdxapi.components.yaml#/components/schemas/Timestamp'
+              description: When the payment was scheduled
+            processedTimestamp:
+              $ref: './fdxapi.components.yaml#/components/schemas/Timestamp'
+              description: When the payment was processed
+            failedTimestamp:
+              $ref: './fdxapi.components.yaml#/components/schemas/Timestamp'
+              description: When the payment failed.
+                Includes when the payment was determined to lack sufficient funds
+            cancelledTimestamp:
+              $ref: './fdxapi.components.yaml#/components/schemas/Timestamp'
+              description: When the payment was cancelled
+            startedProcessingTimestamp:
+              $ref: './fdxapi.components.yaml#/components/schemas/Timestamp'
+              description: When the payment execution started
+            status:
+              $ref: '#/components/schemas/PaymentStatus'
+              description: Defines the status of the payment
+            links:
+              $ref: './fdxapi.components.yaml#/components/schemas/HateoasLinks'
+              description: Links to related payment entities
+
+    Payments:
+      title: Payments entity
+      description: A list of payments
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/SynchronizableArray'
+        - type: object
+          required: [payments]
+          properties:
+            payments:
+              type: array
+              items:
+                $ref: '#/components/schemas/Payment'
+              description: Payments retrieved by the operation
+
+    PaymentForUpdate:
+      title: Payment For Update entity
+      description: Payment entity used for creation and update of a payment
+      type: object
+      required: [fromAccountId, toPayeeId, amount, dueDate]
+      properties:
+        fromAccountId:
+          $ref: './fdxapi.components.yaml#/components/schemas/Identifier'
+          description: ID of the account used to source funds for payment
+        toPayeeId:
+          $ref: './fdxapi.components.yaml#/components/schemas/Identifier'
+          description: ID of the payee to receive funds for the payment
+        amount:
+          type: number
+          minimum: 0
+          description: Amount for the payment. Must be positive
+        merchantAccountId:
+          type: string
+          description: User's account identifier with the payee
+        dueDate:
+          $ref: './fdxapi.components.yaml#/components/schemas/DateString'
+          description: Date that the funds are scheduled to be delivered
+
+    Payee:
+      title: Payee entity
+      description: Payee to whom funds can be transferred. Can be extended to support additional types of payees
+      type: object
+      required: [merchant]
+      properties:
+        merchant:
+          $ref: '#/components/schemas/Merchant'
+          description: >-
+            When payee is a merchant, typically a business from which goods or services are rendered,
+            this field will be populated
+
+    Payees:
+      title: Payees entity
+      description: A list of payees
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/SynchronizableArray'
+        - type: object
+          required: [payees]
+          properties:
+            payees:
+              type: array
+              items:
+                $ref: '#/components/schemas/Payee'
+              description: Payees retrieved by the operation
+
+    PayeeForUpdate:
+      title: Payee For Update entity
+      description: Payee's fields to be updated
+      type: object
+      required: [merchant]
+      properties:
+        merchant:
+          $ref: '#/components/schemas/MerchantForUpdate'
+          description: >-
+            When payee is a merchant, typically a business from which goods or services are rendered,
+            this field will be populated
+
+    RecurringPayment:
+      title: Recurring Payment entity
+      description: A recurring payment. Financial institution is free to adjust the payment date to
+        accommodate weekends and holidays
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/RecurringPaymentForUpdate'
+        - type: object
+          required: [status]
+          properties:
+            recurringPaymentId:
+              $ref: './fdxapi.components.yaml#/components/schemas/Identifier'
+              description: >-
+                Uniquely identifies a recurring payment.
+                Used within the API to reference a recurring payment
+            scheduledTimestamp:
+              $ref: './fdxapi.components.yaml#/components/schemas/Timestamp'
+              description: When the recurring payment was scheduled
+            cancelledTimestamp:
+              $ref: './fdxapi.components.yaml#/components/schemas/Timestamp'
+              description: When the recurring payment was cancelled
+            processedTimestamp:
+              $ref: './fdxapi.components.yaml#/components/schemas/Timestamp'
+              description: When the last payment executed
+            failedTimestamp:
+              $ref: './fdxapi.components.yaml#/components/schemas/Timestamp'
+              description: When the recurring payment failed
+            status:
+              $ref: '#/components/schemas/RecurringPaymentStatus'
+              description: Defines the status of the recurring payment
+
+    RecurringPayments:
+      title: Recurring Payments entity
+      description: A list of recurring payments
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/SynchronizableArray'
+        - type: object
+          required: [recurringPayments]
+          properties:
+            recurringPayments:
+              type: array
+              items:
+                $ref: '#/components/schemas/RecurringPayment'
+              description: Recurring payments retrieved by the operation
+
+    RecurringPaymentDuration:
+      title: Recurring Payment Duration entity
+      description: Describes a payment's duration
+      type: object
+      required: [type]
+      properties:
+        type:
+          $ref: '#/components/schemas/RecurringPaymentDurationType'
+          description: Type of duration
+        numberOfTimes:
+          type: number
+          description: Maximum number of times a payment is to be sent. Required if type is set to NUMBEROFTIMES
+
+    RecurringPaymentForUpdate:
+      title: Recurring Payment for Update entity
+      description: Used to create or update a recurring payment.
+        Financial institution is free to adjust the payment date to accommodate weekends and holidays
+      type: object
+      required: [frequency, fromAccountId, toPayeeId, amount, dueDate]
+      properties:
+        frequency:
+          $ref: '#/components/schemas/RecurringPaymentFrequency'
+          description: Defines how often the payment repeats
+        duration:
+          $ref: '#/components/schemas/RecurringPaymentDuration'
+          description: Defines how long the payment repeats for
+        fromAccountId:
+          $ref: './fdxapi.components.yaml#/components/schemas/Identifier'
+          description: ID of the account used to source funds for payment
+        toPayeeId:
+          $ref: './fdxapi.components.yaml#/components/schemas/Identifier'
+          description: ID of the payee to receive funds for the payment
+        amount:
+          type: number
+          minimum: 0
+          description: Amount for the payment. Must be positive
+        merchantAccountId:
+          type: string
+          description: User's account identifier with the payee
+        dueDate:
+          $ref: './fdxapi.components.yaml#/components/schemas/DateString'
+          description: Date that the funds are scheduled to be delivered
+
+    SynchronizableArray:
+      title: Synchronizable Array entity
+      description: >-
+        Base class for results that can be synchronized over time.
+        A synchronizable array is also paginated
+      type: object
+      properties:
+        page:
+          $ref: './fdxapi.components.yaml#/components/schemas/PageMetadata'
+          description: Offset IDs for navigating result sets
+        updates:
+          $ref: '#/components/schemas/UpdatesMetadata'
+          description: Update IDs for retrieving updates since query
+        links:
+          $ref: '#/components/schemas/SynchronizableArrayLinks'
+          description: Resource URLs for navigating result sets
+
+    SynchronizableArrayLinks:
+      title: Synchronizable Array Links entity
+      description: Resource URLs for retrieving changes, next or previous datasets
+      type: object
+      allOf:
+        - $ref: './fdxapi.components.yaml#/components/schemas/PageMetadataLinks'
+        - type: object
+          properties:
+            updates:
+              $ref: './fdxapi.components.yaml#/components/schemas/HateoasLink'
+              description: Resource URL for retrieving updates since last request
+
+    TransferForCreate:
+      title: Transfer for Create entity
+      description: Used to request a transfer
+      type: object
+      properties:
+        transferId:
+          $ref: './fdxapi.components.yaml#/components/schemas/Identifier'
+          description: >-
+            Client generated, long-term persistent identity of the transfer action.
+            This ID should be maintained and returned by institution
+        fromAccountId:
+          $ref: './fdxapi.components.yaml#/components/schemas/Identifier'
+          description: Long-term persistent identity of the source account
+        toAccountId:
+          $ref: './fdxapi.components.yaml#/components/schemas/Identifier'
+          description: Long-term persistent identity of the destination account
+        amount:
+          type: number
+          description: Positive amount of money to be transferred
+        memo:
+          $ref: './fdxapi.components.yaml#/components/schemas/String255'
+          description: User-entered reason for transfer
+        paymentDetails:
+          $ref: './fdxapi.components.yaml#/components/schemas/PaymentDetails'
+          description: Payment details
+
+    Transfer:
+      title: Transfer entity
+      description: A single transfer of money. Refer to Transfers for a list of multiple transfers.
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/TransferForCreate'
+        - type: object
+          properties:
+            referenceId:
+              $ref: './fdxapi.components.yaml#/components/schemas/Identifier'
+              description: Long-term persistent identifier for transfer attempt
+            status:
+              $ref: '#/components/schemas/PaymentStatus'
+              description: CANCELLED, FAILED, NOFUNDS, PROCESSED, PROCESSING, SCHEDULED
+            transferTime:
+              $ref: './fdxapi.components.yaml#/components/schemas/Timestamp'
+              description: Date of transfer attempt
+
+    Transfers:
+      title: Transfers entity
+      description: A list of transfers
+      type: object
+      allOf:
+        - $ref: '#/components/schemas/SynchronizableArray'
+        - type: object
+          required: [transfers]
+          properties:
+            transfers:
+              type: array
+              items:
+                $ref: '#/components/schemas/Transfer'
+              description: Transfers retrieved by the operation
+
+    TransferStatus:
+      title: Transfer Status entity
+      deprecated: true
+      description: The status of a transfer of money. Used only by the deprecated endpoint `/transfers/{transferId}/status`.
+      type: object
+      properties:
+        transferId:
+          $ref: './fdxapi.components.yaml#/components/schemas/Identifier'
+          description: >-
+            Client generated, long-term persistent identity of the transfer action.
+            This ID should be maintained and returned by institution
+        referenceId:
+          $ref: './fdxapi.components.yaml#/components/schemas/Identifier'
+          description: Long-term persistent identifier for transfer attempt
+        status:
+          $ref: '#/components/schemas/PaymentStatus'
+          description: CANCELLED, FAILED, NOFUNDS, PROCESSED, PROCESSING, SCHEDULED
+        transferDate:
+          $ref: './fdxapi.components.yaml#/components/schemas/DateString'
+          description: Date of transfer attempt
+
+    UpdatesMetadata:
+      title: Updates Metadata entity
+      description: Change IDs for synchronizable result sets
+      type: object
+      properties:
+        nextUpdateId:
+          $ref: './fdxapi.components.yaml#/components/schemas/Identifier'
+          example: "abc-xyz-123"
+          description: Opaque identifier. Does not need to be numeric or have any specific pattern.
+            Implementation specific
+    ############################################################
+    #
+    # Money Movement data types
+    #
+    ############################################################
+
+    PayeeStatus:
+      title: Payee Status
+      description: >-
+        Defines the payee lifecycle.<br/>
+        * `ACTIVE`: Payee is ready to receive payments<br/>
+        * `DELETED`: Payee has been deleted and will not move into any other state<br/>
+        * `PENDING`: Payee is not ready to receive payments<br/>
+        * `REJECTED`: Payee was found to be invalid and cannot to receive payments
+      type: string
+      enum:
+        - ACTIVE
+        - DELETED
+        - PENDING
+        - REJECTED
+
+    PaymentStatus:
+      title: Payment Status
+      description: >-
+        Defines the payment lifecycle<br/>
+        * `CANCELLED`: Payment was cancelled by the user<br/>
+        * `FAILED`: Payment failed for reasons other then “No Funds”. For example: fraud, invalid payee, source account was closed etc.<br/>
+        * `NOFUNDS`: Payment failed because of the lack of funds<br/>
+        * `PROCESSED`: The payment has been executed by the payment service provider.<br/>
+        * `PROCESSING`: Payment is in the process of being executed by the payment service provider<br/>
+        * `SCHEDULED`: Payment has been scheduled
+      type: string
+      enum:
+        - CANCELLED
+        - FAILED
+        - NOFUNDS
+        - PROCESSED
+        - PROCESSING
+        - SCHEDULED
+
+    RecurringPaymentDurationType:
+      title: Recurring payment duration type enum
+      description: Describes if the recurring payment has an end or will occur a fixed number of times
+      type: string
+      enum:
+        - NOEND
+        - NUMBEROFTIMES
+
+    RecurringPaymentFrequency:
+      title: Recurring Payment Frequency enum
+      description: >-
+        Defines how often a payment is made relative to the starting day.<br/>
+        * `BIWEEKLY`: Every 14 days<br/>
+        * `TWICEMONTHLY`: Every 15 days<br/>
+        * `WEEKLY`: Every 7 days
+      type: string
+      enum:
+        - WEEKLY
+        - BIWEEKLY
+        - TWICEMONTHLY
+        - MONTHLY
+        - FOURWEEKS
+        - BIMONTHLY
+        - QUARTERLY
+        - SEMIANNUALLY
+        - ANNUALLY
+
+    RecurringPaymentStatus:
+      title: Recurring Payment Status
+      description: >-
+        Defines the recurring payment lifecycle<br/>
+        * `CANCELLED`: Recurring Payment was cancelled by the user<br/>
+        * `FAILED`: Recurring Payment failed. For example: fraud, invalid payee, source account was closed etc.<br/>
+        * `PROCESSED`: The scheduled duration of the recurrence has completed.<br/>
+        * `SCHEDULED`: Recurring Payment has been scheduled
+      type: string
+      enum:
+        - CANCELLED
+        - FAILED
+        - PROCESSED
+        - SCHEDULED

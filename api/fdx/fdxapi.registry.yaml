@@ -1,0 +1,178 @@
+openapi: 3.1.0
+info:
+  version: '5.1.0'
+  title: FDX V5.1.0
+  description: Financial Data Exchange V5.1.0 Registry API
+  contact:
+    name: Registry Host Contact
+    url: 'https://registryhost.org/'
+    email: support@registryhost.org
+servers:
+  - url: 'https://api.registryhost.com/fdx/v5'
+    description: Financial Data Exchange V5.1.0 Registry API
+tags:
+  - name: Recipients
+    description: Manage recipients
+
+paths:
+  ############################################################
+  #
+  # Recipient Registry paths
+  #
+  ############################################################
+  /recipients/{recipientId}:
+    get:
+      summary: Get Recipient by Id
+      operationId: getRecipient
+      tags:
+        - Recipients
+      description: Get a specific recipient
+      parameters:
+        - $ref: '#/components/parameters/RecipientIdPath'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Recipient'
+              examples:
+                Example retrieval of a recipient record from the ecosystem registry:
+                  value:
+                    recipient_id: '12345'
+                    client_name: My Example Client
+                    redirect_uris:
+                      - 'https://partner.example/callback'
+                    description: Recipient Application servicing financial use case requiring permissioned data sharing
+                    logo_uri: 'https://client.example.org/logo.png'
+                    client_uri: 'https://example.net/'
+                    contacts:
+                      - support@example.net
+                    scope: ACCOUNT_DETAILED,TRANSACTIONS,INVESTMENTS
+                    duration_type:
+                      - TIME_BOUND
+                    duration_period: 365
+                    lookback_period: 365
+                    registry_references:
+                      - registered_entity_name: Official recipient name
+                        registered_entity_id: 4HCHXIURY78NNH6JH
+                        registry: GLEIF
+  /recipients:
+    get:
+      summary: Get Recipients
+      operationId: getRecipients
+      description: Get recipients
+      tags:
+        - Recipients
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Recipients'
+              examples:
+                Example retrieval of a list of recipient records from the ecosystem registry:
+                  value:
+                    page:
+                      nextOffset: nextoffset
+                      prevOffset: prevoffset
+                      total: 5000
+                    links:
+                      next:
+                        href: /recipients?offset=nextoffset
+                      prev:
+                        href: /recipients?offset=prevoffset
+                    recipients:
+                      - recipient_id: '12345'
+                        client_name: My Example Client
+                        redirect_uris:
+                          - 'https://partner.example/callback'
+                        description: Recipient Application servicing financial use case requiring permissioned data sharing
+                        logo_uri: 'https://client.example1.org/logo.png'
+                        client_uri: 'https://example1.net/'
+                        contacts:
+                          - support@example1.net
+                        scope: ACCOUNT_DETAILED,TRANSACTIONS,INVESTMENTS
+                        duration_type:
+                          - TIME_BOUND
+                        duration_period: 365
+                        lookback_period: 365
+                        registry_references:
+                          - registered_entity_name: Official recipient name
+                            registered_entity_id: 4HCHXIURY78NNH6JH
+                            registry: GLEIF
+                      - recipient_id: '23456'
+                        client_name: Another Example Client
+                        redirect_uris:
+                          - 'https://partner.example/callback'
+                        description: Recipient Application servicing financial use case requiring permissioned data sharing
+                        logo_uri: 'https://client.example2.org/logo.png'
+                        client_uri: 'https://example2.net/'
+                        contacts:
+                          - support@example2.net
+                        scope: ACCOUNT_DETAILED,INVESTMENTS
+                        duration_type:
+                          - TIME_BOUND
+                        duration_period: 365
+                        lookback_period: 365
+                        registry_references:
+                          - registered_entity_name: Official recipient name
+                            registered_entity_id: 8XKSJGEU2465KSOGI
+                            registry: GLEIF
+
+components:
+
+  parameters:
+
+    ############################################################
+    #
+    # Recipient Registry request parameters
+    #
+    ############################################################
+
+    RecipientIdPath:
+      name: recipientId
+      in: path
+      description: Recipient Identifier. Uniquely identifies a Recipient
+      required: true
+      schema:
+        $ref: './fdxapi.components.yaml#/components/schemas/Identifier'
+
+
+  schemas:
+    ############################################################
+    #
+    # Recipient Registry data entities
+    #
+    ############################################################
+
+    Recipients:
+      title: Recipient records at ecosystem registry
+      type: object
+      description: Record of Recipients at the Ecosystem Registry in snake case to match IETF RFC 7591 naming formats
+      allOf:
+        - $ref: './fdxapi.components.yaml#/components/schemas/PaginatedArray'
+        - type: object
+          properties:
+            recipients:
+              type: array
+              items:
+                $ref: '#/components/schemas/Recipient'
+              description: Recipients retrieved by the operation
+      required:
+        - recipients
+
+    Recipient:
+      title: Recipient record at ecosystem registry
+      type: object
+      description: Record of Recipient at the Ecosystem Registry in snake case to match IETF RFC 7591 naming formats
+      allOf:
+        - $ref: './fdxapi.components.yaml#/components/schemas/RecipientRequest'
+        - type: object
+          properties:
+            recipient_id:
+              type: string
+              description: Recipient Id at ecosystem registry
+      required:
+        - recipient_id

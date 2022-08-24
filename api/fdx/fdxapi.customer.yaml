@@ -1,0 +1,122 @@
+openapi: 3.1.0
+info:
+  version: '5.1.0'
+  title: FDX V5.1.0
+  description: Financial Data Exchange V5.1.0 Common API
+  contact:
+    name: Financial Data Exchange
+    url: 'https://financialdataexchange.org/'
+    email: fdxsupport@financialdataexchange.org
+servers:
+  - url: 'https://api.fi.com/fdx/v5'
+    description: Financial Data Exchange V5.1.0 Common API
+tags:
+  - name: Personal Information
+    description: Search and view customer or customers
+paths:
+
+  ############################################################
+  #
+  # Common paths
+  #
+  ############################################################
+
+  /customers:
+    get:
+      operationId: getCustomers
+      tags:
+        - Personal Information
+      description: Retrieve account holders related to consented accounts
+      summary: Retrieve customers
+      parameters:
+        - $ref: './fdxapi.components.yaml#/components/parameters/OffsetQuery'
+        - $ref: './fdxapi.components.yaml#/components/parameters/LimitQuery'
+      responses:
+        '200':
+          description: Customers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Customers'
+  /customers/current:
+    get:
+      operationId: getCustomerInfo
+      tags:
+        - Personal Information
+      description: Get information about the customer within the authorization scope
+      summary: Get current authenticated customer information
+      responses:
+        '200':
+          description: Data describing current authenticated customer
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Customer'
+  /customers/{customerId}:
+    get:
+      operationId: getCustomer
+      tags:
+        - Personal Information
+      description: Retrieve customer information by customer id
+      summary: Customer by id
+      parameters:
+        - name: customerId
+          in: path
+          description: Customer Identifier
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Customer
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Customer'
+        '404':
+          description: Customer with id not found
+          content:
+            application/json:
+              schema:
+                $ref: './fdxapi.components.yaml#/components/schemas/Error'
+                examples:
+                  Customer not found:
+                    value:
+                      code: 601
+                      message: Customer not found
+                      debugMessage: Provider custom developer-level error details for troubleshooting
+        '500':
+          $ref: './fdxapi.components.yaml#/components/responses/500'
+        '501':
+          $ref: './fdxapi.components.yaml#/components/responses/501'
+        '503':
+          $ref: './fdxapi.components.yaml#/components/responses/503'
+
+components:
+
+  parameters: {}
+
+  schemas:
+    ############################################################
+    #
+    # Common data entities
+    #
+    ############################################################
+
+    Customers:
+      title: Customers Entity
+      description: List of customers
+      type: object
+      properties:
+        page:
+          $ref: './fdxapi.components.yaml#/components/schemas/PageMetadata'
+          description: Information required to paginate results
+        links:
+          $ref: './fdxapi.components.yaml#/components/schemas/PageMetadataLinks'
+          description: Links used to paginate results
+        customers:
+          type: array
+          items:
+            $ref: './fdxapi.components.yaml#/components/schemas/Customer'
+          description: Array of customers
+

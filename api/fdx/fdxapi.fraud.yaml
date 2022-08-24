@@ -1,0 +1,87 @@
+openapi: 3.1.0
+info:
+  version: '5.1.0'
+  title: FDX V5.1.0
+  description: Financial Data Exchange V5.1.0 Fraud API
+  contact:
+    name: Financial Data Exchange
+    url: 'https://financialdataexchange.org/'
+    email: fdxsupport@financialdataexchange.org
+servers:
+  - url: 'https://api.fi.com/fdx/v5'
+    description: Financial Data Exchange V5.1.0 Fraud API
+tags:
+  - name: Fraud Notification
+    description: Notify of suspected fraud
+paths:
+  ############################################################
+  #
+  # Fraud paths
+  #
+  ############################################################
+
+  /fraud/suspected-incident:
+    post:
+      summary: Notify Data Provider of fraud
+      description: Notify Data Provider of suspected fraud
+      operationId: reportSuspectedFraudIncident
+      tags:
+        - Fraud Notification
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SuspectedFraudIncident'
+      responses:
+        '200':
+          description: OK
+
+components:
+  schemas:
+
+    ############################################################
+    #
+    # Fraud entities
+    #
+    ############################################################
+
+    SuspectedFraudIncident:
+      title: Suspected Fraud Incident entity
+      description: Notification of suspected fraud
+      type: object
+      properties:
+        type:
+          description: >-
+            Extensible string enum identifying the type of suspected fraud.
+            Initially this will always be set to "ACCOUNT_TAKEOVER". Additional
+            values may be defined in the future.
+          type: string
+          minLength: 1
+          maxLength: 256
+          example: "ACCOUNT_TAKEOVER"
+        incidentId:
+          description: Unique identifier for the fraud incident.
+          type: string
+          minLength: 1
+          maxLength: 256
+          example: "0a318518-ca16-4e66-be76-865a632ea771"
+        reason:
+          description: Free text justification for suspected fraud
+          type: string
+          minLength: 1
+          maxLength: 256
+          example: User submitted identity data did not match account
+        fiAttributes:
+          type: array
+          description: >-
+            Array of financial institution-specific attributes. Can be used to
+            provide additional structured context on the suspected fraud for the
+            FI to use in determining a resolution.
+          items:
+            $ref: './fdxapi.components.yaml#/components/schemas/FiAttribute'
+        reporter:
+          description: >-
+            Identity of the party responsible for identifying and reporting the
+            suspected fraud. This might be the DP, DAP, a vendor, a payment
+            network, or other entity.
+          $ref: './fdxapi.components.yaml#/components/schemas/Party'
