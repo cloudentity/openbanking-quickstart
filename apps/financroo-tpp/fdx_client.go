@@ -62,7 +62,6 @@ func (f *FDXClient) CreateAccountConsent(c *gin.Context) (string, error) {
 			WithContext(c.Request.Context()).
 			WithRedirectURI(f.PublicClient.Config.RedirectURL.String()).
 			WithClientID(f.ClientID).
-			WithClientSecret(&f.ClientSecret).
 			WithResponseType(responseType).
 			WithAuthorizationDetails(&authorizationDetails),
 	); err != nil {

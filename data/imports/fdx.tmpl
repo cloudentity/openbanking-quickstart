@@ -20,6 +20,14 @@ servers:
       registered_entity_name: "Midwest Primary Bank, NA"
       registered_entity_identifier: "549300ATG070THRDJ595"
 
+
+  {{ if .read_client_certificate_from_header }}
+  read_client_certificate_from_header: {{ .read_client_certificate_from_header }}
+  client_certificate_header: {{ .client_certificate_header }}
+  {{ end }}
+  root_cas: |
+{{ readFile .ca_pem_file | indent 4 }}
+
 idps:
 - tenant_id: {{ .tenant_id }}
   authorization_server_id: {{ .server_id }}
@@ -66,7 +74,9 @@ clients:
   client_name: Financroo
   client_uri: https://localhost:8090
   client_secret: {{ default "-TlfoycUiE0qNi-XUBFDfTxMlhHTCjVxOF6pLrWZbQA" .fdx_developer_tpp_client_secret }}
-  token_endpoint_auth_method: client_secret_post
+  tls_client_auth_subject_dn: {{ .financroo_tls_client_auth_subject_dn }}
+  tls_client_certificate_bound_access_tokens: true
+  token_endpoint_auth_method: tls_client_auth
   redirect_uris:
   - {{ .developer_tpp_url }}/callback
   - {{ .financroo_tpp_url }}/api/callback
