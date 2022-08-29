@@ -11,6 +11,7 @@ import (
 	"time"
 
 	cdrBank "github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/client"
+	fdxBank "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/client"
 	obbrAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/client"
 	obbrPayments "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/client"
 	obc "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client"
@@ -299,8 +300,58 @@ func NewOBBRConsentClient(accountsClient, paymentsClient acpclient.Client, signe
 	return &OBBRConsentClient{accountsClient, paymentsClient, signer}
 }
 
-type FDXBankClient struct{}
+type FDXBankClient struct {
+	*fdxBank.Client
+}
 
 func NewFDXBankClient(config Config) (BankClient, error) {
-	return &FDXBankClient{}, nil
+	var (
+		c   = &FDXBankClient{}
+		hc  = &http.Client{}
+		u   *url.URL
+		err error
+	)
+
+	if u, err = url.Parse(config.BankURL); err != nil {
+		return c, errors.Wrapf(err, "failed to parse bank url")
+	}
+
+	c.Client = fdxBank.New(NewHTTPRuntimeWithClient(
+		u.Host,
+		u.Path+"/accounts/v1", // TODO fix
+		[]string{u.Scheme},
+		hc,
+	), nil)
+
+	return c, nil
 }
+
+// type OBUKClient struct {
+// 	*obc.OpenbankingAccountsClient
+// 	*payments_client.OpenbankingPaymentsClient
+// }
+
+// func NewOBUKClient(config Config) (BankClient, error) {
+// 	var (
+// 		c   = &OBUKClient{}
+// 		hc  = &http.Client{}
+// 		u   *url.URL
+// 		err error
+// 	)
+
+// 	if u, err = url.Parse(config.BankURL); err != nil {
+// 		return c, errors.Wrapf(err, "failed to parse bank url")
+// 	}
+
+// 	tr := NewHTTPRuntimeWithClient(
+// 		u.Host,
+// 		u.Path,
+// 		[]string{u.Scheme},
+// 		hc,
+// 	)
+
+// 	c.OpenbankingAccountsClient = obc.New(tr, nil)
+// 	c.OpenbankingPaymentsClient = payments_client.New(tr, nil)
+
+// 	return c, nil
+// }

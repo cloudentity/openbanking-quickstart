@@ -289,6 +289,9 @@ paths:
         AllowDynamicQueryParameters: false
         AllowDynamicFormParameters: false
         IsMultiContentStreaming: false
+    security:
+          - defaultcc:
+            - bank:accounts.basic:read
   '/accounts/{accountId}':
     get:
       description: Get a specific account

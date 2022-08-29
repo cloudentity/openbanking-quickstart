@@ -5,6 +5,7 @@ import (
 
 	cdrModels "github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/client/banking"
 	obbrAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/client/accounts"
+	fdxAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/client/account_information"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client/accounts"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
 	"github.com/gin-gonic/gin"
@@ -101,22 +102,55 @@ func (o *OBBRClient) GetAccounts(c *gin.Context, accessToken string, bank Connec
 }
 
 func (o *FDXBankClient) GetAccounts(c *gin.Context, accessToken string, bank ConnectedBank) (accountsData []Account, err error) {
-	// TODO mocked until APIs for FDX added to bank
-	accID := "123456"
-	ident := "anIdent"
-	acc := Account{
-		OBAccount6: models.OBAccount6{
-			AccountID: (*models.AccountID)(&accID),
-			Nickname:  models.Nickname("Mock Account"),
-			Account: []*models.OBAccount6AccountItems0{
-				{
-					Name:           models.Name0("An Account Name"),
-					Identification: (*models.Identification0)(&ident),
+	var (
+		resp *fdx.GetAccountOK
+		accountsData = []Account{}
+		err          error
+	)
+
+	if resp, err = o.AccountInformation.SearchForAccounts(fdxAccounts.NewSearchForAccountsParamsWithContext(c).)
+	if resp, err = o.Accounts.Accounts.AccountsGetAccounts(obbrAccounts.NewAccountsGetAccountsParamsWithContext(c).WithAuthorization(accessToken), nil); err != nil {
+		return accountsData, err
+	}
+
+	for _, a := range resp.Payload.Data {
+		accountsData = append(accountsData, Account{
+			OBAccount6: models.OBAccount6{
+				AccountID: (*models.AccountID)(a.AccountID),
+				Nickname:  models.Nickname(*a.AccountID),
+				Account: []*models.OBAccount6AccountItems0{
+					{
+						Name:           models.Name0(*a.AccountID),
+						Identification: (*models.Identification0)(a.Number),
+					},
 				},
 			},
-		},
-		BankID: bank.BankID,
+			BankID: bank.BankID,
+		})
 	}
-	accountsData = append(accountsData, acc)
+
 	return accountsData, nil
 }
+
+
+// func (o *OBUKClient) GetAccounts(c *gin.Context, accessToken string, bank ConnectedBank) ([]Account, error) {
+// 	var (
+// 		resp         *accounts.GetAccountsOK
+// 		accountsData = []Account{}
+// 		err          error
+// 	)
+
+// 	if resp, err = o.Accounts.GetAccounts(accounts.NewGetAccountsParamsWithContext(c).WithAuthorization(accessToken), nil); err != nil {
+// 		return accountsData, err
+// 	}
+
+// 	for _, a := range resp.Payload.Data.Account {
+// 		accountsData = append(accountsData, Account{
+// 			OBAccount6: *a,
+// 			BankID:     bank.BankID,
+// 		},
+// 		)
+// 	}
+
+// 	return accountsData, nil
+// }
