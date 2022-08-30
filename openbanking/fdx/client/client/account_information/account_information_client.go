@@ -32,7 +32,7 @@ type ClientOption func(*runtime.ClientOperation)
 type ClientService interface {
 	GetAccount(params *GetAccountParams, opts ...ClientOption) (*GetAccountOK, error)
 
-	SearchForAccounts(params *SearchForAccountsParams, opts ...ClientOption) (*SearchForAccountsOK, error)
+	SearchForAccounts(params *SearchForAccountsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SearchForAccountsOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -82,7 +82,7 @@ func (a *Client) GetAccount(params *GetAccountParams, opts ...ClientOption) (*Ge
 
   Query all information for a set of accounts provided in the payload
 */
-func (a *Client) SearchForAccounts(params *SearchForAccountsParams, opts ...ClientOption) (*SearchForAccountsOK, error) {
+func (a *Client) SearchForAccounts(params *SearchForAccountsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SearchForAccountsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewSearchForAccountsParams()
@@ -96,6 +96,7 @@ func (a *Client) SearchForAccounts(params *SearchForAccountsParams, opts ...Clie
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &SearchForAccountsReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}

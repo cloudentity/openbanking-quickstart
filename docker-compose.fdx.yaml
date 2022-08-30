@@ -73,6 +73,27 @@ services:
       configuration:
         condition: service_completed_successfully
 
+
+  bank:
+    image: cloudentity/openbanking-quickstart-bank:${VERSION}
+    container_name: bank
+    restart: always
+    ports:
+      - "8070:8070"
+    volumes:
+      - ./data/ca.pem:/ca.pem
+      - ./data/bank_cert.pem:/bank_cert.pem
+      - ./data/bank_key.pem:/bank_key.pem
+      - ./mount/bank-fdx:/app/data
+    environment:
+      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/${SERVER}
+      - SPEC=fdx
+      - GIN_MODE=debug
+      - USER_IDENTIFIER_CLAIM=customer_id
+    depends_on:
+      configuration:
+        condition: service_completed_successfully
+
   configuration:
     container_name: configuration
     image: cloudentity/openbanking-quickstart-configuration:latest

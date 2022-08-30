@@ -7,6 +7,7 @@ import (
 	"time"
 
 	cdrAccountModels "github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/models"
+	fdxAccountModels "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/models"
 	obbrAccountModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/models"
 	obbrPaymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/models"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
@@ -28,6 +29,11 @@ type BankUserData struct {
 	CDRAccounts     []cdrAccountModels.BankingAccount     `json:"cdr_accounts"`
 	CDRTransactions []cdrAccountModels.BankingTransaction `json:"cdr_transactions"`
 	CDRBalances     []cdrAccountModels.BankingBalance     `json:"cdr_balances"`
+
+	FDXAccounts []fdxAccountModels.Accountentity          `json:"fdx_accounts"`
+	FDXBalances fdxAccountModels.AccountWithDetailsentity `json:"fdx_balances"`
+	// TODO add transactions and balances fdx
+	// FDXTransactions []cdrAccountModels.BankingTransaction `json:"cdr_transactions"`
 }
 
 type AccountData struct {

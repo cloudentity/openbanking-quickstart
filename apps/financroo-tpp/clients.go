@@ -325,33 +325,3 @@ func NewFDXBankClient(config Config) (BankClient, error) {
 
 	return c, nil
 }
-
-// type OBUKClient struct {
-// 	*obc.OpenbankingAccountsClient
-// 	*payments_client.OpenbankingPaymentsClient
-// }
-
-// func NewOBUKClient(config Config) (BankClient, error) {
-// 	var (
-// 		c   = &OBUKClient{}
-// 		hc  = &http.Client{}
-// 		u   *url.URL
-// 		err error
-// 	)
-
-// 	if u, err = url.Parse(config.BankURL); err != nil {
-// 		return c, errors.Wrapf(err, "failed to parse bank url")
-// 	}
-
-// 	tr := NewHTTPRuntimeWithClient(
-// 		u.Host,
-// 		u.Path,
-// 		[]string{u.Scheme},
-// 		hc,
-// 	)
-
-// 	c.OpenbankingAccountsClient = obc.New(tr, nil)
-// 	c.OpenbankingPaymentsClient = payments_client.New(tr, nil)
-
-// 	return c, nil
-// }

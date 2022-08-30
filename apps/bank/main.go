@@ -20,6 +20,7 @@ const (
 	OBUK Spec = "obuk"
 	OBBR Spec = "obbr"
 	CDR  Spec = "cdr"
+	FDX  Spec = "fdx"
 )
 
 type Config struct {
@@ -122,6 +123,15 @@ func (s *Server) Start() error {
 		r.GET("/banking/accounts", s.Get(NewCDRGetAccountsHandler))
 		r.GET("/banking/accounts/:accountId/transactions", s.Get(NewCDRGetTransactionsHandler))
 		r.GET("/banking/accounts/balances", s.Get(NewCDRGetBalancesHandler))
+
+	case FDX:
+		r.GET("/accounts", s.Get(NewOBUKGetAccountsHandler))
+		r.GET("/internal/accounts", s.Get(NewOBUKGetAccountsInternalHandler))
+		r.GET("/balances", s.Get(NewOBUKGetBalancesHandler))
+		r.GET("/internal/balances", s.Get(NewOBUKGetBalancesInternalHandler))
+		r.GET("/transactions", s.Get(NewOBUKGetTransactionsHandler))
+		r.POST("/domestic-payments", s.Post(NewOBUKCreatePaymentHandler))
+		r.GET("/domestic-payments/:DomesticPaymentId", s.Get(NewOBUKGetPaymentHandler))
 
 	default:
 		return fmt.Errorf("unsupported spec %s", s.Config.Spec)
