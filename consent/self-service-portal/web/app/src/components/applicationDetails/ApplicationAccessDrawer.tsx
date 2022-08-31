@@ -1,8 +1,8 @@
 import React, { ReactNode } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Drawer from "@material-ui/core/Drawer";
+import { makeStyles } from "tss-react/mui";
+import Drawer from "@mui/material/Drawer";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   container: {
     width: 500,
     marginBottom: 84,
@@ -29,12 +29,12 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-type Props = {
+interface Props {
   children: ReactNode;
   header: ReactNode;
   bottomBar?: ReactNode;
   setDrawerData: (data: string | null) => void;
-};
+}
 
 function ApplicationAccessDrawer({
   children,
@@ -42,7 +42,7 @@ function ApplicationAccessDrawer({
   bottomBar,
   setDrawerData,
 }: Props) {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <Drawer anchor="right" open={true} onClose={() => setDrawerData(null)}>

@@ -1,8 +1,8 @@
 import React, { useContext, useState } from "react";
 import { CommonCtx } from "../services/common";
-import Alert from "@material-ui/lab/Alert";
-import Typography from "@material-ui/core/Typography";
-import Snackbar from "@material-ui/core/Snackbar";
+import Alert from '@mui/material/Alert';
+import Typography from "@mui/material/Typography";
+import Snackbar from "@mui/material/Snackbar";
 
 export const Snacks = () => {
   const commons = useContext(CommonCtx);

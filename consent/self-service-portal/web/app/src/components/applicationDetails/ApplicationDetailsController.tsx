@@ -1,8 +1,8 @@
 import React, { useContext, useEffect, useState } from "react";
-import ArrowBack from "@material-ui/icons/ArrowBack";
-import IconButton from "@material-ui/core/IconButton";
-import { makeStyles } from "@material-ui/core/styles";
-import { useHistory, useParams } from "react-router";
+import ArrowBack from "@mui/icons-material/ArrowBack";
+import IconButton from "@mui/material/IconButton";
+import { useNavigate, useParams } from "react-router";
+import { makeStyles } from "tss-react/mui";
 
 import PageToolbar from "../PageToolbar";
 import Subheader from "../Subheader";
@@ -11,7 +11,7 @@ import ApplicationAccessTabs from "./ApplicationAccessTabs";
 import { api } from "../../api/api";
 import { CommonCtx } from "../../services/common";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   backButton: {
     color: "white",
     marginRight: 10,
@@ -29,8 +29,8 @@ function ApplicationDetailsController({
   tenantId,
 }) {
   const { id } = useParams<Record<string, string | undefined>>();
-  const classes = useStyles();
-  const history = useHistory();
+  const { classes } = useStyles();
+  const navigate = useNavigate();
   const [isProgress, setProgress] = useState(true);
   const [clientConsent, setClientConsent] = useState<any>([]);
   const [accounts, setAccounts] = useState([]);
@@ -64,7 +64,7 @@ function ApplicationDetailsController({
       .deleteConsent({ id, consent_type })
       .then(api.getConsents)
       .then(res => setClientConsent(res.client_consents))
-      .then(() => history.push("/"))
+      .then(() => navigate("/"))
       .catch(err => {
         console.log(err);
         setError && setError(err.error);
@@ -107,9 +107,10 @@ function ApplicationDetailsController({
           <div>
             <IconButton
               onClick={() => {
-                history.push("/");
+                navigate("/");
               }}
               className={classes.backButton}
+              size="large"
             >
               <ArrowBack />
             </IconButton>

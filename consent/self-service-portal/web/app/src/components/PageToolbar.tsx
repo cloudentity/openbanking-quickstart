@@ -1,14 +1,14 @@
 import React from "react";
-import Toolbar from "@material-ui/core/Toolbar";
-import AppBar from "@material-ui/core/AppBar";
-import Button from "@material-ui/core/Button";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import { makeStyles } from "@material-ui/core/styles";
+import Toolbar from "@mui/material/Toolbar";
+import AppBar from "@mui/material/AppBar";
+import Button from "@mui/material/Button";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import { makeStyles } from "tss-react/mui";
 
 import logo from "../assets/gobank-logo.svg";
 import { logout } from "./AuthPage";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   indicator: {
     backgroundColor: "#fff",
   },
@@ -29,7 +29,7 @@ export default function PageToolbar({
   authorizationServerId,
   tenantId,
 }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <AppBar

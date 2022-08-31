@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
+import { makeStyles } from "tss-react/mui";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
 import ApplicationAccessTable from "./ApplicationAccessTable";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   container: {
     background: "#FFFFFF",
     boxShadow:
@@ -31,12 +31,12 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-type Props = {
+interface Props {
   data: any; // FIXME
   accounts: any; // FIXME
   handleRevoke: (id: string, consent_type: string) => void;
   status: string;
-};
+}
 
 function ApplicationAccessTabs({
   data,
@@ -44,7 +44,7 @@ function ApplicationAccessTabs({
   accounts,
   status,
 }: Props) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [tab, setTab] = useState<"account" | "payment">("account");
 
   return (

@@ -1,18 +1,22 @@
 import React, { Fragment, useEffect, useState } from "react";
-import { Redirect, Route } from "react-router";
+import { Navigate, Outlet, useLocation } from "react-router-dom";
 import { api } from "../api/api";
 import { isTokenInStore, removeAllAuthDataFromStore } from "./auth.utils";
 import Progress from "./Progress";
 
+interface Props {
+  authorizationServerURL: string | undefined;
+  tenantId: string | undefined;
+  authorizationServerId: string | undefined;
+}
+
 export default function PrivateRoute({
-  component: Component,
-  login,
   authorizationServerURL,
   tenantId,
   authorizationServerId,
-  ...rest
-}) {
+}: Props) {
   const [progress, setProgress] = useState(true);
+  const location = useLocation();
 
   useEffect(() => {
     api
@@ -24,23 +28,12 @@ export default function PrivateRoute({
   return (
     <Fragment>
       {progress && <Progress />}
-      {!progress && (
-        <Route
-          {...rest}
-          render={props =>
-            isTokenInStore() ? (
-              <Component {...props} />
-            ) : (
-              <Redirect
-                to={{
-                  pathname: "/auth",
-                  state: { from: props.location },
-                }}
-              />
-            )
-          }
-        />
-      )}
+      {!progress &&
+        (isTokenInStore() ? (
+          <Outlet />
+        ) : (
+          <Navigate to="/auth" state={{ from: location }} replace />
+        ))}
     </Fragment>
   );
 }

@@ -1,9 +1,9 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Button from "@material-ui/core/Button";
-import Checkbox from "@material-ui/core/Checkbox";
-import Avatar from "@material-ui/core/Avatar";
-import Alert from "@material-ui/lab/Alert";
+import { makeStyles } from "tss-react/mui";
+import Button from "@mui/material/Button";
+import Checkbox from "@mui/material/Checkbox";
+import Avatar from "@mui/material/Avatar";
+import Alert from "@mui/material/Alert";
 
 import Chip from "../Chip";
 import ApplicationAccessDrawer from "./ApplicationAccessDrawer";
@@ -11,7 +11,7 @@ import { getDate } from "../ApplicationSimpleCard";
 import { drawerStyles, permissionsDict } from "./utils";
 import { uniq } from "ramda";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   ...drawerStyles,
   cardsWrapperGrid: {
     display: "grid",
@@ -81,13 +81,13 @@ function getAccounts(accountIds, accounts) {
   return accountIds.map(id => accounts.find(v => v.id === id)).filter(v => v);
 }
 
-type Props = {
+interface Props {
   drawerData: any;
   accounts: any;
   setDrawerData: (data: string | null) => void;
   handleRevoke: (id: string, consent_type: string) => void;
   status: string;
-};
+}
 
 function ApplicationAccessPaymentDrawer({
   drawerData,
@@ -96,7 +96,7 @@ function ApplicationAccessPaymentDrawer({
   accounts,
   status,
 }: Props) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [revokeAccess, setRevokeAccess] = useState(false);
   const [revokeAccessAgree, setRevokeAccessAgree] = useState(false);
 
