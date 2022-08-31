@@ -1,7 +1,7 @@
-import React, {useContext, useEffect, useState} from "react";
+import React, { useContext, useEffect, useState } from "react";
 import ArrowBack from "@material-ui/icons/ArrowBack";
 import IconButton from "@material-ui/core/IconButton";
-import { makeStyles } from "@material-ui/core";
+import { makeStyles } from "@material-ui/core/styles";
 import { useHistory, useParams } from "react-router";
 
 import PageToolbar from "../PageToolbar";
@@ -9,8 +9,7 @@ import Subheader from "../Subheader";
 import ApplicationSimpleCard from "../ApplicationSimpleCard";
 import ApplicationAccessTabs from "./ApplicationAccessTabs";
 import { api } from "../../api/api";
-import {CommonCtx} from "../../services/common";
-import {Snacks} from "../Snacks";
+import { CommonCtx } from "../../services/common";
 
 const useStyles = makeStyles(() => ({
   backButton: {
@@ -36,14 +35,14 @@ function ApplicationDetailsController({
   const [clientConsent, setClientConsent] = useState<any>([]);
   const [accounts, setAccounts] = useState([]);
   const commons = useContext(CommonCtx);
-  const setError = commons!.setError
+  const setError = commons!.setError;
 
   useEffect(() => {
     setProgress(true);
     api
       .getConsents()
-      .then((res) => {
-        const client = res.client_consents.find((v) => v.id === id);
+      .then(res => {
+        const client = res.client_consents.find(v => v.id === id);
         if (client) {
           setClientConsent(client);
         } else {
@@ -51,11 +50,12 @@ function ApplicationDetailsController({
         }
         setAccounts(res?.accounts?.accounts ?? []);
       })
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
-        setError && setError(err.error)
+        setError && setError(err.error);
       })
       .finally(() => setProgress(false));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
   const handleRevoke = (id, consent_type) => {
@@ -63,82 +63,75 @@ function ApplicationDetailsController({
     api
       .deleteConsent({ id, consent_type })
       .then(api.getConsents)
-      .then((res) => setClientConsent(res.client_consents))
+      .then(res => setClientConsent(res.client_consents))
       .then(() => history.push("/"))
-      .catch((err) => {
+      .catch(err => {
         console.log(err);
-        setError && setError(err.error)
+        setError && setError(err.error);
       })
       .finally(() => setProgress(false));
   };
 
-  const nonZeroStatusDateContents = clientConsent?.consents?.filter((v) => {
+  const nonZeroStatusDateContents = clientConsent?.consents?.filter(v => {
     const d = new Date(v?.StatusUpdateDateTime);
     return d.getFullYear() !== 1;
   });
 
   const newestConsent = nonZeroStatusDateContents?.reduce((prev, curr) =>
-    prev?.StatusUpdateDateTime <
-    curr?.StatusUpdateDateTime
-      ? curr
-      : prev
+    prev?.StatusUpdateDateTime < curr?.StatusUpdateDateTime ? curr : prev
   );
 
-  const expirationDateTime = new Date(
-    newestConsent?.ExpirationDateTime
-  );
+  const expirationDateTime = new Date(newestConsent?.ExpirationDateTime);
 
   const status =
     (expirationDateTime.getFullYear() !== 1 &&
       (expirationDateTime < new Date() ? "Expired" : "Active")) ||
     "Active";
 
-  return !isProgress
-    ? (
-        <div
-          style={{
-            background: "#F7FAFF",
-            marginTop: 64,
-            position: "relative",
-            minHeight: "100vh",
-          }}
-        >
-          <PageToolbar
-            authorizationServerURL={authorizationServerURL}
-            authorizationServerId={authorizationServerId}
-            tenantId={tenantId}
-          />
-          <Subheader
-            title={
-              <div>
-                <IconButton
-                  onClick={() => {
-                    history.push("/");
-                  }}
-                  className={classes.backButton}
-                >
-                  <ArrowBack />
-                </IconButton>
-                Connected apps
-              </div>
-            }
-          />
-          <div className={classes.content}>
-            <ApplicationSimpleCard
-              key={clientConsent.id}
-              client={clientConsent}
-              clickable={false}
-            />
-            <ApplicationAccessTabs
-              data={clientConsent}
-              accounts={accounts}
-              handleRevoke={handleRevoke}
-              status={status}
-            />
+  return !isProgress ? (
+    <div
+      style={{
+        background: "#F7FAFF",
+        marginTop: 64,
+        position: "relative",
+        minHeight: "100vh",
+      }}
+    >
+      <PageToolbar
+        authorizationServerURL={authorizationServerURL}
+        authorizationServerId={authorizationServerId}
+        tenantId={tenantId}
+      />
+      <Subheader
+        title={
+          <div>
+            <IconButton
+              onClick={() => {
+                history.push("/");
+              }}
+              className={classes.backButton}
+            >
+              <ArrowBack />
+            </IconButton>
+            Connected apps
           </div>
-        </div>
-      )
-    : null;
+        }
+      />
+      <div className={classes.content}>
+        <ApplicationSimpleCard
+          key={clientConsent.id}
+          client={clientConsent}
+          clickable={false}
+        />
+        <ApplicationAccessTabs
+          data={clientConsent}
+          accounts={accounts}
+          handleRevoke={handleRevoke}
+          status={status}
+        />
+      </div>
+    </div>
+  ) : null;
 }
 
 export default ApplicationDetailsController;

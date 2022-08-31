@@ -2,14 +2,13 @@ import React from "react";
 import Toolbar from "@material-ui/core/Toolbar";
 import AppBar from "@material-ui/core/AppBar";
 import Button from "@material-ui/core/Button";
-import { Theme } from "@material-ui/core";
 import ExitToAppIcon from "@material-ui/icons/ExitToApp";
 import { makeStyles } from "@material-ui/core/styles";
 
 import logo from "../assets/gobank-logo.svg";
 import { logout } from "./AuthPage";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   indicator: {
     backgroundColor: "#fff",
   },
@@ -20,7 +19,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: "#006580",
   },
   signOutButton: {
- //   ...theme.custom.button,
+    //   ...theme.custom.button,
     color: "#DC1B37",
   },
 }));

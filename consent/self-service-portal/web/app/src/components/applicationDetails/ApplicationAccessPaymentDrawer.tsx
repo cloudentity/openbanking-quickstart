@@ -1,6 +1,5 @@
 import React from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Theme } from "@material-ui/core";
 
 import Chip from "../Chip";
 import logo from "../../assets/welcome-image.png";
@@ -29,12 +28,10 @@ function ApplicationAccessPaymentDrawer({
 }: Props) {
   const classes = useStyles();
 
-
   const transactionDetails = {
-    Amount: `${
-      currencyDict[drawerData?.Currency] ||
-      currencyDict.GBP
-    } ${drawerData?.Amount}`,
+    Amount: `${currencyDict[drawerData?.Currency] || currencyDict.GBP} ${
+      drawerData?.Amount
+    }`,
     Status: drawerData?.Status,
     "Consent id": drawerData?.ConsentID,
     "Debtor Account": {

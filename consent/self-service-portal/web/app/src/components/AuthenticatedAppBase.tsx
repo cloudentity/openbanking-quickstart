@@ -3,6 +3,7 @@ import { Switch } from "react-router";
 import { Route } from "react-router-dom";
 import ApplicationDetailsController from "./applicationDetails/ApplicationDetailsController";
 import Dashboard from "./Dashboard";
+import Progress from "./Progress";
 import { useSilentAuthentication } from "./useSilentAuthentication";
 
 export default function AuthenticatedAppBase({
@@ -11,7 +12,6 @@ export default function AuthenticatedAppBase({
   tenantId,
   clientId,
   scopes,
-  userinfo = {},
 }) {
   useSilentAuthentication(
     authorizationServerURL,
@@ -22,7 +22,7 @@ export default function AuthenticatedAppBase({
   );
 
   return (
-    <Suspense>
+    <Suspense fallback={<Progress />}>
       <Switch>
         <Route
           exact
@@ -32,7 +32,6 @@ export default function AuthenticatedAppBase({
               authorizationServerURL={authorizationServerURL}
               authorizationServerId={authorizationServerId}
               tenantId={tenantId}
-              userinfo={userinfo}
             />
           )}
         />
