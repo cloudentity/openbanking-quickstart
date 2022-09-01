@@ -1,4 +1,4 @@
-import { createTheme, Theme } from "@material-ui/core";
+import { createTheme, Theme } from "@material-ui/core/styles";
 
 declare module "@material-ui/core/styles/createTheme" {
   interface Theme {
@@ -118,27 +118,27 @@ export const theme: Theme = createTheme({
   },
   palette: {
     primary: {
-      main: "#007FFF"
+      main: "#007FFF",
     },
     secondary: {
-      main: "#434656"
-    }
+      main: "#434656",
+    },
   },
   overrides: {
     MuiTableRow: {
       root: {
-        '&$selected': {
+        "&$selected": {
           backgroundColor: "rgba(54, 198, 175, 0.08)",
-          '&:hover': {
+          "&:hover": {
             backgroundColor: "rgba(54, 198, 175, 0.2)",
-          }
-        }
-      }
+          },
+        },
+      },
     },
     MuiTableCell: {
       root: {
-        borderBottom: 'none'
-      }
-    }
-  }
+        borderBottom: "none",
+      },
+    },
+  },
 });

@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Theme } from "@material-ui/core";
 import Tabs from "@material-ui/core/Tabs";
 import Tab from "@material-ui/core/Tab";
 import ApplicationAccessTable from "./ApplicationAccessTable";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(theme => ({
   container: {
     background: "#FFFFFF",
     boxShadow:
@@ -76,7 +75,12 @@ function ApplicationAccessTabs({
       <div>
         {tab === "account" && (
           <ApplicationAccessTable
-            data={data.consents.filter((v) => v.type === "account_access" || v.type == "cdr_arrangement" || v.type == "consents")}
+            data={data.consents.filter(
+              v =>
+                v.type === "account_access" ||
+                v.type === "cdr_arrangement" ||
+                v.type === "consents"
+            )}
             type="account"
             handleRevoke={handleRevoke}
             accounts={accounts}
@@ -85,7 +89,7 @@ function ApplicationAccessTabs({
         )}
         {tab === "payment" && (
           <ApplicationAccessTable
-            data={data.consents.filter((v) => v.type === "domestic_payment")}
+            data={data.consents.filter(v => v.type === "domestic_payment")}
             type="payment"
             handleRevoke={handleRevoke}
             accounts={accounts}

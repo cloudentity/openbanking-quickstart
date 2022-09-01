@@ -1,8 +1,7 @@
 import React, { ReactNode } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Theme } from "@material-ui/core";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   container: {
     border: "1px solid #4CAF50",
     boxSizing: "border-box",

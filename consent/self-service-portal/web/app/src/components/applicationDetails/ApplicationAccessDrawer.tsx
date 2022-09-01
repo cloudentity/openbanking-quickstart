@@ -1,9 +1,8 @@
 import React, { ReactNode } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Theme } from "@material-ui/core";
 import Drawer from "@material-ui/core/Drawer";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   container: {
     width: 500,
     marginBottom: 84,

@@ -1,14 +1,13 @@
 import React from "react";
 import { useHistory } from "react-router";
 import { makeStyles } from "@material-ui/core/styles";
-import { Theme } from "@material-ui/core";
 import Avatar from "@material-ui/core/Avatar";
 import { uniq } from "ramda";
 
 import Chip from "./Chip";
 
 const useStyles = (clickable: boolean) =>
-  makeStyles((theme: Theme) => ({
+  makeStyles(() => ({
     container: {
       background: "#FFFFFF",
       boxShadow:
@@ -52,7 +51,7 @@ const useStyles = (clickable: boolean) =>
       lineHeight: "22px",
     },
     caption: {
-   //   ...theme.custom.caption,
+      //   ...theme.custom.caption,
     },
   }));
 
@@ -81,41 +80,33 @@ function ApplicationSimpleCard({ client, clickable = true }) {
   const classes = useStyles(clickable)();
   const history = useHistory();
 
-  const nonZeroStatusDateContents = client?.consents?.filter((v) => {
+  const nonZeroStatusDateContents = client?.consents?.filter(v => {
     const d = new Date(v?.StatusUpdateDateTime);
     return d.getFullYear() !== 1;
   });
 
   const newestConsent = nonZeroStatusDateContents?.reduce((prev, curr) =>
-    prev?.StatusUpdateDateTime <
-    curr?.StatusUpdateDateTime
-      ? curr
-      : prev
+    prev?.StatusUpdateDateTime < curr?.StatusUpdateDateTime ? curr : prev
   );
 
   const oldestConsent = nonZeroStatusDateContents?.reduce((prev, curr) =>
-    prev?.StatusUpdateDateTime >
-    curr?.StatusUpdateDateTime
-      ? curr
-      : prev
+    prev?.StatusUpdateDateTime > curr?.StatusUpdateDateTime ? curr : prev
   );
 
   const permissions = uniq(
     client?.consents
       ?.map(
-        (v) =>
+        v =>
           (v.type === "account_access" && "Accounts") ||
           (v.type === "domestic_payment" && "Payments") ||
           (v.type === "consents" && "Accounts") ||
           (v.type === "cdr_arrangement" && "Accounts") ||
-          null 
+          null
       )
-      .filter((v) => v)
+      .filter(v => v)
   ).join(", ");
 
-  const expirationDateTime = new Date(
-    newestConsent?.ExpirationDateTime
-  );
+  const expirationDateTime = new Date(newestConsent?.ExpirationDateTime);
 
   const status =
     (expirationDateTime.getFullYear() !== 1 &&

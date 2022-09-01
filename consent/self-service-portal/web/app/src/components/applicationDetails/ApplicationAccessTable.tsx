@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Theme } from "@material-ui/core";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
@@ -12,7 +11,7 @@ import ApplicationAccessAccountDrawer from "./ApplicationAccessAccountDrawer";
 import Chip from "../Chip";
 import { getDate } from "../ApplicationSimpleCard";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(() => ({
   table: {
     "& tr": {
       borderBottom: "solid 1px #ECECEC",
@@ -75,12 +74,12 @@ function getTableBody(type: "account" | "payment", rows, setDrawerData, data) {
   if (type === "account") {
     return (
       <TableBody>
-        {rows.map((row) => (
+        {rows.map(row => (
           <TableRow
             key={row.id}
-            className={`consent-row`}
+            className="consent-row"
             onClick={() => {
-              setDrawerData(data.find((v) => row.id === v.ConsentID));
+              setDrawerData(data.find(v => row.id === v.ConsentID));
             }}
           >
             <TableCell>{row.authorised}</TableCell>
@@ -117,12 +116,12 @@ function getTableBody(type: "account" | "payment", rows, setDrawerData, data) {
   if (type === "payment") {
     return (
       <TableBody>
-        {rows.map((row) => (
+        {rows.map(row => (
           <TableRow
             key={row.id}
-            className={`consent-row`}
+            className="consent-row"
             onClick={() => {
-              setDrawerData(data.find((v) => row.id === v.ConsentID));
+              setDrawerData(data.find(v => row.id === v.ConsentID));
             }}
           >
             <TableCell>{row.authorised}</TableCell>
@@ -144,14 +143,14 @@ function getTableBody(type: "account" | "payment", rows, setDrawerData, data) {
 
 function getAccountNames(accountIds, accounts) {
   const names = accountIds
-    .map((id) => {
-      const found = accounts.find((v) => v.id === id);
+    .map(id => {
+      const found = accounts.find(v => v.id === id);
       if (found) {
         return `${found.name} *${found.id}`;
       }
       return null;
     })
-    .filter((v) => v);
+    .filter(v => v);
 
   return {
     data: names.slice(0, 2).join(", "),
@@ -195,31 +194,43 @@ function ApplicationAccessTable({
 
   const rowsAccount =
     type === "account"
-      ? data.map(({ AccountIDs, CreationDateTime, ExpirationDateTime, ConsentID, Status }) =>
-          createDataAccount(
-            getDate(CreationDateTime),
-            getAccountNames(AccountIDs ?? [], accounts),
+      ? data.map(
+          ({
+            AccountIDs,
+            CreationDateTime,
+            ExpirationDateTime,
+            ConsentID,
             Status,
-            getDate(ExpirationDateTime),
-            ConsentID
-          )
+          }) =>
+            createDataAccount(
+              getDate(CreationDateTime),
+              getAccountNames(AccountIDs ?? [], accounts),
+              Status,
+              getDate(ExpirationDateTime),
+              ConsentID
+            )
         )
       : [];
 
   const rowsPayment =
     type === "payment"
-      ? data.map(({ AccountIDs, CreationDateTime, Status, ConsentID, Amount, CreditorAccountName }) =>
-          createDataPayment(
-            getDate(CreationDateTime),
-            getAccountNames(
-              AccountIDs ?? [],
-              accounts
-            ),
-            CreditorAccountName,
+      ? data.map(
+          ({
+            AccountIDs,
+            CreationDateTime,
             Status,
+            ConsentID,
             Amount,
-            ConsentID
-          )
+            CreditorAccountName,
+          }) =>
+            createDataPayment(
+              getDate(CreationDateTime),
+              getAccountNames(AccountIDs ?? [], accounts),
+              CreditorAccountName,
+              Status,
+              Amount,
+              ConsentID
+            )
         )
       : [];
 

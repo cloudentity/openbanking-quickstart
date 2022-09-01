@@ -1,8 +1,7 @@
 import React, { ReactNode } from "react";
 import { makeStyles } from "@material-ui/core/styles";
-import { Theme } from "@material-ui/core";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles(theme => ({
   container: {
     backgroundColor: "#002D4C",
     padding: "30px 0",
@@ -14,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: "white",
   },
   title: {
-  //  ...theme.custom.heading2,
+    //  ...theme.custom.heading2,
   },
   info: {
     marginTop: 12,
