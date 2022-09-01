@@ -55,7 +55,6 @@ function ApplicationDetailsController({
         setError && setError(err.error);
       })
       .finally(() => setProgress(false));
-      
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id]);
 
