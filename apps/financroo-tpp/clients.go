@@ -179,7 +179,7 @@ func NewAcpClient(cfg Config, redirect string) (acpclient.Client, error) {
 	if cfg.Spec == FDX {
 		config.ClientSecret = cfg.ClientSecret
 		config.SkipClientCredentialsAuthn = true
-		config.AuthMethod = acpclient.ClientSecretPostAuthnMethod
+		config.AuthMethod = acpclient.TLSClientAuthnMethod
 	}
 
 	if client, err = acpclient.New(config); err != nil {
