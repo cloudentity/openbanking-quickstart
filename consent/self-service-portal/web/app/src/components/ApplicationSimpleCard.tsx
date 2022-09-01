@@ -1,59 +1,58 @@
 import React from "react";
-import { useHistory } from "react-router";
-import { makeStyles } from "@material-ui/core/styles";
-import Avatar from "@material-ui/core/Avatar";
+import { useNavigate } from "react-router-dom";
+import { makeStyles } from "tss-react/mui";
+import Avatar from "@mui/material/Avatar";
 import { uniq } from "ramda";
 
 import Chip from "./Chip";
 
-const useStyles = (clickable: boolean) =>
-  makeStyles(() => ({
-    container: {
-      background: "#FFFFFF",
-      boxShadow:
-        "0px 1px 1px rgba(0, 0, 0, 0.08), 0px 0px 1px rgba(0, 0, 0, 0.31)",
-      borderRadius: 4,
-      maxWidth: 850,
-      margin: "0 auto 24px auto",
-      padding: "15px 32px",
-      boxSizing: "border-box",
-      cursor: clickable ? "pointer" : "default",
+const useStyles = makeStyles<{ clickable: boolean }>()((_, { clickable }) => ({
+  container: {
+    background: "#FFFFFF",
+    boxShadow:
+      "0px 1px 1px rgba(0, 0, 0, 0.08), 0px 0px 1px rgba(0, 0, 0, 0.31)",
+    borderRadius: 4,
+    maxWidth: 850,
+    margin: "0 auto 24px auto",
+    padding: "15px 32px",
+    boxSizing: "border-box",
+    cursor: clickable ? "pointer" : "default",
+  },
+  header: {
+    display: "flex",
+    alignItems: "center",
+    borderBottom: "1px solid #ECECEC",
+    paddingBottom: 16,
+  },
+  name: {
+    fontWeight: "normal",
+    fontSize: 20,
+    lineHeight: "32px",
+    margin: "0 16px",
+  },
+  logo: {
+    border: "1.5px solid #F4F4F4",
+    borderRadius: 4,
+    width: 48,
+    height: 48,
+    objectFit: "contain",
+  },
+  content: {
+    display: "flex",
+    paddingTop: 16,
+    "& > div": {
+      flex: 1,
     },
-    header: {
-      display: "flex",
-      alignItems: "center",
-      borderBottom: "1px solid #ECECEC",
-      paddingBottom: 16,
-    },
-    name: {
-      fontWeight: "normal",
-      fontSize: 20,
-      lineHeight: "32px",
-      margin: "0 16px",
-    },
-    logo: {
-      border: "1.5px solid #F4F4F4",
-      borderRadius: 4,
-      width: 48,
-      height: 48,
-      objectFit: "contain",
-    },
-    content: {
-      display: "flex",
-      paddingTop: 16,
-      "& > div": {
-        flex: 1,
-      },
-    },
-    label: {
-      fontWeight: "bold",
-      fontSize: 12,
-      lineHeight: "22px",
-    },
-    caption: {
-      //   ...theme.custom.caption,
-    },
-  }));
+  },
+  label: {
+    fontWeight: "bold",
+    fontSize: 12,
+    lineHeight: "22px",
+  },
+  caption: {
+    //   ...theme.custom.caption,
+  },
+}));
 
 const monthNames = [
   "January",
@@ -77,8 +76,9 @@ export function getDate(date) {
 }
 
 function ApplicationSimpleCard({ client, clickable = true }) {
-  const classes = useStyles(clickable)();
-  const history = useHistory();
+  const { classes } = useStyles({ clickable });
+
+  const navigate = useNavigate();
 
   const nonZeroStatusDateContents = client?.consents?.filter(v => {
     const d = new Date(v?.StatusUpdateDateTime);
@@ -119,7 +119,7 @@ function ApplicationSimpleCard({ client, clickable = true }) {
       className={`${classes.container} application-card`}
       onClick={() => {
         if (clickable) {
-          history.push(`/app/${client.id}`);
+          navigate(`/app/${client.id}`);
         }
       }}
     >

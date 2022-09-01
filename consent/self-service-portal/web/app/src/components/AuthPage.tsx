@@ -1,5 +1,6 @@
 import React from "react";
-import { Redirect } from "react-router";
+import { Navigate } from "react-router-dom";
+import { LoginData } from "../App";
 
 import {
   getTokenFromStore,
@@ -9,12 +10,12 @@ import {
 import { generateRandomString, pkceChallengeFromVerifier } from "./pkce.utils";
 
 const calcAuthorizationUrl = async (
-  authorizationServerURL,
-  tenantId,
-  authorizationServerId,
-  clientId,
-  scopes = [],
-  silent = false,
+  authorizationServerURL: string | undefined,
+  tenantId: string | undefined,
+  authorizationServerId: string | undefined,
+  clientId: string | undefined,
+  scopes: string[] = [],
+  silent: boolean = false,
   idTokenHint = ""
 ) => {
   const authorizationUri = `${authorizationServerURL}/${tenantId}/${authorizationServerId}/oauth2/authorize`;
@@ -34,7 +35,7 @@ const calcAuthorizationUrl = async (
     authorizationUri +
     "?response_type=code" +
     "&client_id=" +
-    encodeURIComponent(clientId) +
+    encodeURIComponent(clientId ?? "") +
     "&state=" +
     encodeURIComponent(state) +
     "&scope=" +
@@ -51,11 +52,11 @@ const calcAuthorizationUrl = async (
 };
 
 export const authorize = async (
-  authorizationServerURL,
-  tenantId,
-  authorizationServerId,
-  clientId,
-  scopes = []
+  authorizationServerURL: string | undefined,
+  tenantId: string | undefined,
+  authorizationServerId: string | undefined,
+  clientId: string | undefined,
+  scopes: string[] = []
 ) => {
   // Authorization URL
   window.location.href = await calcAuthorizationUrl(
@@ -118,6 +119,15 @@ export const logout = (
   window.location.href = `${authorizationServerURL}/${tenantId}/${authorizationServerId}/logout?redirect_to=${window.location.origin}`;
 };
 
+interface Props {
+  login: (data: LoginData) => void;
+  authorizationServerURL: string | undefined;
+  tenantId: string | undefined;
+  authorizationServerId: string | undefined;
+  clientId: string | undefined;
+  scopes: string[];
+}
+
 const AuthPage = ({
   login,
   authorizationServerURL,
@@ -125,7 +135,7 @@ const AuthPage = ({
   authorizationServerId,
   clientId,
   scopes,
-}) => {
+}: Props) => {
   const handleLogin = () => {
     authorize(
       authorizationServerURL,
@@ -138,7 +148,7 @@ const AuthPage = ({
 
   if (isTokenInStore()) {
     login({ token: getTokenFromStore() });
-    return <Redirect to="/" />;
+    return <Navigate to="/" replace />;
   }
 
   handleLogin();

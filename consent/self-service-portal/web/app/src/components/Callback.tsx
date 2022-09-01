@@ -1,16 +1,17 @@
-import Button from "@material-ui/core/Button";
-import Card from "@material-ui/core/Card";
-import Typography from "@material-ui/core/Typography";
-import ErrorIcon from "@material-ui/icons/ErrorOutline";
+import Button from "@mui/material/Button";
+import Card from "@mui/material/Card";
+import Typography from "@mui/material/Typography";
+import ErrorIcon from "@mui/icons-material/ErrorOutline";
 import { pathOr } from "ramda";
 import React, { useEffect, useState } from "react";
-import { Redirect, useHistory } from "react-router";
+import { Navigate, useNavigate } from "react-router-dom";
 import authApi from "./authApi";
 import {
   SILENT_AUTH_ERROR_MESSAGE,
   SILENT_AUTH_SUCCESS_MESSAGE,
 } from "./AuthPage";
 import Progress from "./Progress";
+import { LoginData } from "../App";
 
 const getParamFromUrl = param => {
   const match = RegExp(`${param}=([^&]*)`, "g").exec(window.location.href);
@@ -24,6 +25,15 @@ const capitalizeFirstLetter = (string = "") => {
 const errorCodeToDisplay = error =>
   capitalizeFirstLetter((error || "").replace(/(\+|_)/g, " "));
 
+interface Props {
+  authorizationServerURL: string | undefined;
+  tenantId: string | undefined;
+  authorizationServerId: string | undefined;
+  clientId: string | undefined;
+  login: (data: LoginData) => void;
+  silent?: boolean;
+}
+
 export default function Callback({
   authorizationServerURL,
   tenantId,
@@ -31,8 +41,8 @@ export default function Callback({
   clientId,
   login,
   silent = false,
-}) {
-  const history = useHistory();
+}: Props) {
+  const navigate = useNavigate();
 
   const [exchangeCompleted, setExchangeCompleted] = useState(false);
   const [error, setError] = useState<{
@@ -166,7 +176,7 @@ export default function Callback({
             <Button
               variant="contained"
               color="primary"
-              onClick={() => history.push("/")}
+              onClick={() => navigate("/")}
             >
               Try again
             </Button>
@@ -177,7 +187,7 @@ export default function Callback({
   }
 
   if (exchangeCompleted && !silent) {
-    return <Redirect to="/" />;
+    return <Navigate to="/" replace />;
   }
 
   return <Progress />;

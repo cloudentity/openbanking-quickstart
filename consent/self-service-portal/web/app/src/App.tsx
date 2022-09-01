@@ -1,9 +1,8 @@
 import React, { Suspense, useEffect, useState } from "react";
 import "./App.css";
-import { BrowserRouter as Router, Redirect, Route } from "react-router-dom";
-import { Switch } from "react-router";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { ThemeProvider, StyledEngineProvider } from "@mui/material/styles";
 
-import { StylesProvider, ThemeProvider } from "@material-ui/core/styles";
 import superagent from "superagent";
 import Progress from "./components/Progress";
 import { toJson } from "./api/api-base";
@@ -28,9 +27,16 @@ export type Config = {
   tenantId: string;
 };
 
-const scopes = [];
+export type LoginData = {
+  token: string | null;
+  expires_in?: string;
+  iat?: number;
+  idToken?: string;
+};
 
-const login = data => {
+const scopes: string[] = [];
+
+const login = (data: LoginData) => {
   if (data.token) {
     putTokenInStore(data.token);
     data.expires_in && putExpiresInInStore(data.expires_in);
@@ -53,18 +59,18 @@ function App() {
 
   return (
     <>
-      <ThemeProvider theme={theme}>
-        <StylesProvider injectFirst>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
           {progress && <Progress />}
           {!progress && (
-            <Router>
+            <BrowserRouter>
               <CommonProvider>
                 <Snacks />
                 <Suspense fallback={<Progress />}>
-                  <Switch>
+                  <Routes>
                     <Route
                       path="/callback"
-                      render={() => (
+                      element={
                         <Callback
                           authorizationServerURL={
                             config?.authorizationServerURL
@@ -74,11 +80,11 @@ function App() {
                           clientId={config?.clientId}
                           login={login}
                         />
-                      )}
+                      }
                     />
                     <Route
                       path="/silent"
-                      render={() => (
+                      element={
                         <Callback
                           silent
                           authorizationServerURL={
@@ -89,11 +95,11 @@ function App() {
                           clientId={config?.clientId}
                           login={login}
                         />
-                      )}
+                      }
                     />
                     <Route
                       path="/auth"
-                      render={() => (
+                      element={
                         <AuthPage
                           login={login}
                           authorizationServerURL={
@@ -104,34 +110,44 @@ function App() {
                           clientId={config?.clientId}
                           scopes={scopes}
                         />
-                      )}
+                      }
                     />
-                    <PrivateRoute
-                      path="/"
-                      authorizationServerURL={config?.authorizationServerURL}
-                      authorizationServerId={config?.authorizationServerId}
-                      tenantId={config?.tenantId}
-                      login={login}
-                      component={() => (
-                        <AuthenticatedAppBase
+                    <Route
+                      path="*"
+                      element={
+                        <PrivateRoute
                           authorizationServerURL={
                             config?.authorizationServerURL
                           }
                           authorizationServerId={config?.authorizationServerId}
                           tenantId={config?.tenantId}
-                          clientId={config?.clientId}
-                          scopes={scopes}
                         />
-                      )}
-                    />
-                    <Route component={() => <Redirect to="/auth" />} />
-                  </Switch>
+                      }
+                    >
+                      <Route
+                        path="*"
+                        element={
+                          <AuthenticatedAppBase
+                            authorizationServerURL={
+                              config?.authorizationServerURL
+                            }
+                            authorizationServerId={
+                              config?.authorizationServerId
+                            }
+                            tenantId={config?.tenantId}
+                            clientId={config?.clientId}
+                            scopes={scopes}
+                          />
+                        }
+                      />
+                    </Route>
+                  </Routes>
                 </Suspense>
               </CommonProvider>
-            </Router>
+            </BrowserRouter>
           )}
-        </StylesProvider>
-      </ThemeProvider>
+        </ThemeProvider>
+      </StyledEngineProvider>
     </>
   );
 }

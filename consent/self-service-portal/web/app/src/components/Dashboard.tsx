@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from "react";
 import PageToolbar from "./PageToolbar";
 import Progress from "./Progress";
-import Typography from "@material-ui/core/Typography";
-import Grid from "@material-ui/core/Grid";
-import Container from "@material-ui/core/Container";
-import Chip from "@material-ui/core/Chip";
-import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
+import Container from "@mui/material/Container";
+import Chip from "@mui/material/Chip";
+import { makeStyles } from "tss-react/mui";
 
 import { api } from "../api/api";
 import noAccountEmptyState from "../assets/no-accounts-empty-state.svg";
 import Subheader from "./Subheader";
 import ApplicationSimpleCard from "./ApplicationSimpleCard";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   filterTitle: {
     //  ...theme.custom.label,
     marginBottom: 12,
@@ -38,7 +38,7 @@ export default function Dashboard({
 }) {
   const [isProgress, setProgress] = useState(true);
   const [clientConsents, setClientConsents] = useState<any>([]);
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [filter, setFilter] = useState<"all" | "account" | "payment">("all");
 
   useEffect(() => {
@@ -89,7 +89,7 @@ export default function Dashboard({
               </Subheader>
             )}
             <Container style={{ marginTop: 64 }}>
-              <Grid container justify="center">
+              <Grid container justifyContent="center">
                 <Grid item xs={8}>
                   {clientConsents.length === 0 ? (
                     <div style={{ textAlign: "center", marginTop: 64 }}>

@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
+import { makeStyles } from "tss-react/mui";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 
 import ApplicationAccessPaymentDrawer from "./ApplicationAccessPaymentDrawer";
 import ApplicationAccessAccountDrawer from "./ApplicationAccessAccountDrawer";
 import Chip from "../Chip";
 import { getDate } from "../ApplicationSimpleCard";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   table: {
     "& tr": {
       borderBottom: "solid 1px #ECECEC",
@@ -158,13 +158,13 @@ function getAccountNames(accountIds, accounts) {
   };
 }
 
-type Props = {
+interface Props {
   data: any;
   accounts: any;
   type: "account" | "payment";
   handleRevoke: (id: string, consent_type: string) => void;
   status: string;
-};
+}
 
 function ApplicationAccessTable({
   data,
@@ -173,7 +173,7 @@ function ApplicationAccessTable({
   accounts,
   status,
 }: Props) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [drawerPaymentData, setDrawerPaymentData] = useState<any>(null); //FIXME any
   const [drawerAccountData, setDrawerAccountData] = useState<any>(null); //FIXME any
 

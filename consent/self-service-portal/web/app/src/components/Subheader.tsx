@@ -1,7 +1,7 @@
 import React, { ReactNode } from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "tss-react/mui";
 
-const useStyles = makeStyles(theme => ({
+const useStyles = makeStyles()(theme => ({
   container: {
     backgroundColor: "#002D4C",
     padding: "30px 0",
@@ -21,13 +21,13 @@ const useStyles = makeStyles(theme => ({
   },
 }));
 
-type Props = {
+interface Props {
   title: string | ReactNode;
   children?: ReactNode;
-};
+}
 
 function Subheader({ title, children }: Props) {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <div className={classes.container}>
