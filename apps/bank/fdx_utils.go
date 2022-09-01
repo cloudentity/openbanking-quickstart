@@ -27,30 +27,21 @@ type DepositAccount struct {
 	CurrentBalance float64 `json:"currentBalance"`
 }
 
-func NewFDXAccountsResponse(accounts []fdxModels.Accountentity, self strfmt.URI) fdxAccounts.SearchForAccountsOK {
+func NewFDXAccountsResponse(accounts []fdxModels.AccountWithDetailsentity, self strfmt.URI) fdxAccounts.SearchForAccountsOK {
 	accountPointers := &fdxModels.Accountsentity{}
 
-	// TODO accounts is empty and returns the number request but with empty data
 	log.Printf("NewFDXAccountsResponse called with accounts %+v", accounts)
-
-
-	// acct := DepositAccount{
-	// 	AccountID: "10001",
-	// 	Nickname: "My Checking Acc XXXX3223",
-	// 	Status: "OPEN",
-	// 	BalanceAsOf: "2017-11-05T13:15:30.751Z",
-	// 	CurrentBalance: 13300.35,
-	// }
-
-
 
 	for _, account := range accounts {
 		accountPointers.Accounts = append(accountPointers.Accounts, account)
 	}
 
-	return fdxAccounts.SearchForAccountsOK{
+	t := fdxAccounts.SearchForAccountsOK{
 		Payload: accountPointers,
 	}
+
+	log.Printf("Returning %+v", t.Payload.Accounts)
+	return t
 }
 
 func NewFDXBalancesResponse(balances fdxModels.AccountWithDetailsentity) interface{} {

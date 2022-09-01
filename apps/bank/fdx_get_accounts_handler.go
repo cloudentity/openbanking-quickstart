@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"strconv"
 	"strings"
 
@@ -64,6 +65,7 @@ func (h *FDXGetAccountsHandler) Validate(c *gin.Context) *Error {
 }
 
 func (h *FDXGetAccountsHandler) GetUserIdentifier(c *gin.Context) string {
+	log.Printf("Check sub %v", h.introspectionResponse.Sub)
 	return h.introspectionResponse.Sub
 }
 
@@ -71,12 +73,9 @@ func (h *FDXGetAccountsHandler) Filter(c *gin.Context, data BankUserData) BankUs
 
 	// TODO understand what is going on here and implement it
 
-	// var ret BankUserData
-	// for _, account := range data.FDXAccounts {
-	// 	h.introspectionResponse
-	// 	if has(h.introspectionResponse.Payload.IntrospectResponse.RE, *account.AccountID) {
-	// 		ret.CDRAccounts = append(ret.CDRAccounts, account)
-	// 	}
-	// }
-	return data
+	var ret BankUserData
+	for _, account := range data.FDXAccounts {
+		ret.FDXAccounts = append(ret.FDXAccounts, account)
+	}
+	return ret
 }

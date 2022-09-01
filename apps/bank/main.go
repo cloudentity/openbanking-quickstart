@@ -26,7 +26,6 @@ const (
 type Config struct {
 	Port                int           `env:"PORT" envDefault:"8070"`
 	ClientID            string        `env:"CLIENT_ID" envDefault:"bukj5p6k7qdmm5ppbi4g"`
-	ClientSecret        string        `env:"CLIENT_SECRET"`
 	IssuerURL           *url.URL      `env:"ISSUER_URL,required"`
 	Timeout             time.Duration `env:"TIMEOUT" envDefault:"5s"`
 	RootCA              string        `env:"ROOT_CA" envDefault:"/ca.pem"`
@@ -40,14 +39,13 @@ type Config struct {
 
 func (c *Config) ClientConfig() acpclient.Config {
 	return acpclient.Config{
-		ClientID:     c.ClientID,
-		ClientSecret: c.ClientSecret,
-		IssuerURL:    c.IssuerURL,
-		Scopes:       []string{"introspect_openbanking_tokens"},
-		Timeout:      c.Timeout,
-		CertFile:     c.CertFile,
-		KeyFile:      c.KeyFile,
-		RootCA:       c.RootCA,
+		ClientID:  c.ClientID,
+		IssuerURL: c.IssuerURL,
+		Scopes:    []string{"introspect_openbanking_tokens"},
+		Timeout:   c.Timeout,
+		CertFile:  c.CertFile,
+		KeyFile:   c.KeyFile,
+		RootCA:    c.RootCA,
 	}
 }
 

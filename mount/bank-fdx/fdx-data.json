@@ -18,18 +18,6 @@
             "balanceAsOf" : "2017-11-05T13:15:30.751Z",
             "currentBalance" : 332.22
           }
-        },
-        {
-          "loanAccount" : {
-            "accountId" : "20001",
-            "nickname" : "My Mortgage Acc XXXX9979",
-            "status" : "OPEN",
-            "balanceAsOf" : "2017-11-05T13:15:30.751Z",
-            "principalBalance" : 133000.35,
-            "loanTerm" : 30,
-            "nextPaymentDate" : "2017-12-01",
-            "nextPaymentAmount" : 2333.32
-          }
         }
       ]
    }

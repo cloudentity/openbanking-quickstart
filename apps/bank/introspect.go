@@ -138,8 +138,9 @@ func (s *Server) FDXIntrospectAccountsToken(c *gin.Context) (*fdx.FdxConsentIntr
 	)
 
 	token := c.GetHeader("Authorization")
+	log.Printf("Token probably empty %s", token)
+
 	token = strings.ReplaceAll(token, "Bearer ", "")
-	log.Printf("Get a bearer token: %s for client ID: %s with secret: %s", token, s.Client.Config.ClientID, s.Client.Config.ClientSecret)
 	if introspectResponse, err = s.Client.FdxConsentIntrospect(
 		fdx.NewFdxConsentIntrospectParamsWithContext(c).
 			WithToken(&token),

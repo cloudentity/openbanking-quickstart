@@ -57,11 +57,13 @@ func (f *FDXClient) CreateAccountConsent(c *gin.Context) (string, error) {
       }
    ]`
 
+	s := "offline_access ACCOUNT_DETAILED READ_CONSENTS"
 	if resp, err = f.PublicClient.Oauth2.Oauth2.PushedAuthorizationRequest(
 		a2.NewPushedAuthorizationRequestParams().
 			WithContext(c.Request.Context()).
 			WithRedirectURI(f.PublicClient.Config.RedirectURL.String()).
 			WithClientID(f.ClientID).
+			WithScope(&s).
 			WithResponseType(responseType).
 			WithAuthorizationDetails(&authorizationDetails),
 	); err != nil {

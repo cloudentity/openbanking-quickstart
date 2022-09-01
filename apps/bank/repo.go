@@ -30,8 +30,8 @@ type BankUserData struct {
 	CDRTransactions []cdrAccountModels.BankingTransaction `json:"cdr_transactions"`
 	CDRBalances     []cdrAccountModels.BankingBalance     `json:"cdr_balances"`
 
-	FDXAccounts []fdxAccountModels.Accountentity          `json:"fdx_accounts"`
-	FDXBalances fdxAccountModels.AccountWithDetailsentity `json:"fdx_balances"`
+	FDXAccounts []fdxAccountModels.AccountWithDetailsentity `json:"fdx_accounts"`
+	FDXBalances fdxAccountModels.AccountWithDetailsentity   `json:"fdx_balances"`
 	// TODO add transactions and balances fdx
 	// FDXTransactions []cdrAccountModels.BankingTransaction `json:"cdr_transactions"`
 }

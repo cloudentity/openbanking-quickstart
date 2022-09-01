@@ -1,7 +1,6 @@
 package main
 
 import (
-	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
@@ -91,12 +90,6 @@ func (c *Clients) RenewAccountsToken(ctx context.Context, bank ConnectedBank) (*
 	if response.StatusCode != 200 {
 		log.Printf("Error - status %d", response.StatusCode)
 	}
-
-	x, _ := ioutil.ReadAll(response.Body)
-
-	bodyString := string(x)
-	log.Printf("body as string %s", bodyString)
-	response.Body = ioutil.NopCloser(bytes.NewBuffer(x))
 
 	if body, err = ioutil.ReadAll(response.Body); err != nil {
 		return nil, err
@@ -196,7 +189,7 @@ func NewAcpClient(cfg Config, redirect string) (acpclient.Client, error) {
 	}
 
 	if cfg.Spec == FDX {
-		config.ClientSecret = cfg.ClientSecret
+		// config.ClientSecret = cfg.ClientSecret
 		config.SkipClientCredentialsAuthn = true
 		config.AuthMethod = acpclient.TLSClientAuthnMethod
 	}

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -93,6 +94,8 @@ func (s *Server) ConnectBankCallback() func(*gin.Context) {
 			c.String(http.StatusUnauthorized, fmt.Sprintf("failed to exchange code: %+v", err))
 			return
 		}
+
+		log.Printf("After exchange %+v", token)
 
 		if err = s.ConnectBankForUser(appStorage, token); err != nil {
 			c.String(http.StatusUnauthorized, fmt.Sprintf("failed to exchange code: %+v", err))
