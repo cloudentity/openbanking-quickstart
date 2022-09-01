@@ -1,10 +1,9 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Theme } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
-import Checkbox from "@material-ui/core/Checkbox";
-import Avatar from "@material-ui/core/Avatar";
-import Alert from "@material-ui/lab/Alert";
+import { makeStyles } from "tss-react/mui";
+import Button from "@mui/material/Button";
+import Checkbox from "@mui/material/Checkbox";
+import Avatar from "@mui/material/Avatar";
+import Alert from "@mui/material/Alert";
 
 import Chip from "../Chip";
 import ApplicationAccessDrawer from "./ApplicationAccessDrawer";
@@ -12,7 +11,7 @@ import { getDate } from "../ApplicationSimpleCard";
 import { drawerStyles, permissionsDict } from "./utils";
 import { uniq } from "ramda";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()(() => ({
   ...drawerStyles,
   cardsWrapperGrid: {
     display: "grid",
@@ -28,7 +27,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginRight: 16,
     },
     textTransform: "none",
-  //  ...theme.custom.button,
+    //  ...theme.custom.button,
     color: "#626576",
     "&:disabled": {
       backgroundColor: "#626576 !important",
@@ -37,7 +36,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   alertRoot: {
     backgroundColor: "#FFE3E6",
     border: "1px solid rgba(189, 39, 30, 0.3)",
- //   ...theme.custom.body2,
+    //   ...theme.custom.body2,
   },
   alertIcon: {
     position: "relative",
@@ -79,18 +78,16 @@ function getRevokeHeader() {
 }
 
 function getAccounts(accountIds, accounts) {
-  return accountIds
-    .map((id) => accounts.find((v) => v.id === id))
-    .filter((v) => v);
+  return accountIds.map(id => accounts.find(v => v.id === id)).filter(v => v);
 }
 
-type Props = {
+interface Props {
   drawerData: any;
   accounts: any;
   setDrawerData: (data: string | null) => void;
   handleRevoke: (id: string, consent_type: string) => void;
   status: string;
-};
+}
 
 function ApplicationAccessPaymentDrawer({
   drawerData,
@@ -99,7 +96,7 @@ function ApplicationAccessPaymentDrawer({
   accounts,
   status,
 }: Props) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [revokeAccess, setRevokeAccess] = useState(false);
   const [revokeAccessAgree, setRevokeAccessAgree] = useState(false);
 
@@ -110,25 +107,19 @@ function ApplicationAccessPaymentDrawer({
 
   const permissionDates = {
     Authorised: getDate(drawerData?.CreationDateTime),
-    "Last updated": getDate(
-      drawerData?.StatusUpdateDateTime
-    ),
-    "Active until": getDate(
-      drawerData?.ExpirationDateTime
-    ),
+    "Last updated": getDate(drawerData?.StatusUpdateDateTime),
+    "Active until": getDate(drawerData?.ExpirationDateTime),
   };
 
   const clusters = uniq(
-    drawerData?.Permissions.map(
-      (v) => permissionsDict[v].Cluster
-    )
+    drawerData?.Permissions.map(v => permissionsDict[v].Cluster)
   ) as any;
 
-  const permissionItems = clusters.map((cluster) => ({
+  const permissionItems = clusters.map(cluster => ({
     title: cluster,
     items: Object.values(permissionsDict)
-      .filter((p) => p.Cluster === cluster)
-      .map((v) => v.Language),
+      .filter(p => p.Cluster === cluster)
+      .map(v => v.Language),
   }));
 
   return (
@@ -169,7 +160,7 @@ function ApplicationAccessPaymentDrawer({
             Cancel
           </Button>
           <Button
-            id={'revoke-access-button'}
+            id="revoke-access-button"
             variant="outlined"
             className={classes.button}
             style={{
@@ -211,7 +202,7 @@ function ApplicationAccessPaymentDrawer({
           <div className={classes.revokeInfoCheckbox}>
             <Checkbox
               checked={revokeAccessAgree}
-              onChange={(e) => setRevokeAccessAgree(e.target.checked)}
+              onChange={e => setRevokeAccessAgree(e.target.checked)}
               color="primary"
             />{" "}
             I agree
@@ -257,11 +248,11 @@ function ApplicationAccessPaymentDrawer({
           <div>
             <div className={classes.subHeader}>Details being shared</div>
             <div>
-              {permissionItems.map((v) => (
+              {permissionItems.map(v => (
                 <div key={v.title}>
                   <div className={classes.detailsTitle}>{v.title}</div>
                   <ul className={classes.ulList}>
-                    {v.items.map((item) => (
+                    {v.items.map(item => (
                       <li key={item}>{item}</li>
                     ))}
                   </ul>

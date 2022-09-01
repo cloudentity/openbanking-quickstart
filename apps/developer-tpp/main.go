@@ -114,8 +114,7 @@ func NewServer() (Server, error) {
 		acpConfig = server.Config.ClientConfig()
 	case FDX:
 		acpConfig = server.Config.ClientConfig()
-		acpConfig.ClientSecret = server.Config.ClientSecret
-		acpConfig.AuthMethod = acpclient.ClientSecretPostAuthnMethod
+		acpConfig.AuthMethod = acpclient.TLSClientAuthnMethod
 	}
 
 	if server.Client, err = acpclient.New(acpConfig); err != nil {

@@ -1,8 +1,7 @@
 import React, { ReactNode } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Theme } from "@material-ui/core";
+import { makeStyles } from "tss-react/mui";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()(theme => ({
   container: {
     backgroundColor: "#002D4C",
     padding: "30px 0",
@@ -14,7 +13,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     color: "white",
   },
   title: {
-  //  ...theme.custom.heading2,
+    //  ...theme.custom.heading2,
   },
   info: {
     marginTop: 12,
@@ -22,13 +21,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type Props = {
+interface Props {
   title: string | ReactNode;
   children?: ReactNode;
-};
+}
 
 function Subheader({ title, children }: Props) {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <div className={classes.container}>

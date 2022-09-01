@@ -1,18 +1,20 @@
 import React, { useEffect, useState } from "react";
 import PageToolbar from "./PageToolbar";
 import Progress from "./Progress";
-import { Chip, Container, Grid, Typography } from "@material-ui/core";
-import { Theme } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import Typography from "@mui/material/Typography";
+import Grid from "@mui/material/Grid";
+import Container from "@mui/material/Container";
+import Chip from "@mui/material/Chip";
+import { makeStyles } from "tss-react/mui";
 
 import { api } from "../api/api";
-import noAccountEmptyState from "./no-accounts-empty-state.svg";
+import noAccountEmptyState from "../assets/no-accounts-empty-state.svg";
 import Subheader from "./Subheader";
 import ApplicationSimpleCard from "./ApplicationSimpleCard";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()(theme => ({
   filterTitle: {
-  //  ...theme.custom.label,
+    //  ...theme.custom.label,
     marginBottom: 12,
   },
   filterChips: {
@@ -36,26 +38,33 @@ export default function Dashboard({
 }) {
   const [isProgress, setProgress] = useState(true);
   const [clientConsents, setClientConsents] = useState<any>([]);
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [filter, setFilter] = useState<"all" | "account" | "payment">("all");
 
   useEffect(() => {
     setProgress(true);
     api
       .getConsents()
-      .then((res) => setClientConsents((res.client_consents) ? res.client_consents : []))
-      .catch((err) => console.log(err))
+      .then(res =>
+        setClientConsents(res.client_consents ? res.client_consents : [])
+      )
+      .catch(err => console.log(err))
       .finally(() => setProgress(false));
   }, []);
 
   const filteredClientConsents =
     (filter === "account" &&
-      clientConsents.filter((v) =>
-        v.consents.every((c) => c.type === "account_access" || c.type == "cdr_arrangement" || c.type == "consents")
+      clientConsents.filter(v =>
+        v.consents.every(
+          c =>
+            c.type === "account_access" ||
+            c.type === "cdr_arrangement" ||
+            c.type === "consents"
+        )
       )) ||
     (filter === "payment" &&
-      clientConsents.filter((v) =>
-        v.consents.every((c) => c.type === "domestic_payment")
+      clientConsents.filter(v =>
+        v.consents.every(c => c.type === "domestic_payment")
       )) ||
     clientConsents;
 
@@ -80,20 +89,27 @@ export default function Dashboard({
               </Subheader>
             )}
             <Container style={{ marginTop: 64 }}>
-              <Grid container justify={"center"}>
+              <Grid container justifyContent="center">
                 <Grid item xs={8}>
                   {clientConsents.length === 0 ? (
                     <div style={{ textAlign: "center", marginTop: 64 }}>
-                      <Typography id="no-account-title" variant={"h3"} style={{ color: "#626576" }}>
+                      <Typography
+                        id="no-account-title"
+                        variant="h3"
+                        style={{ color: "#626576" }}
+                      >
                         No connected accounts
                       </Typography>
-                      <Typography id="no-account-subtitle" style={{ marginTop: 12, color: "#A0A3B5" }}>
+                      <Typography
+                        id="no-account-subtitle"
+                        style={{ marginTop: 12, color: "#A0A3B5" }}
+                      >
                         You haven’t connected any accounts yet to manage access
                       </Typography>
                       <img
                         src={noAccountEmptyState}
                         style={{ marginTop: 64 }}
-                        alt={"empty state"}
+                        alt="empty state"
                       />
                     </div>
                   ) : (
@@ -121,7 +137,7 @@ export default function Dashboard({
                           style={filter === "payment" ? activeChipStyle : {}}
                         />
                       </div>
-                      {filteredClientConsents.map((clientConsent) => (
+                      {filteredClientConsents.map(clientConsent => (
                         <ApplicationSimpleCard
                           key={clientConsent.id}
                           client={clientConsent}

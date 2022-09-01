@@ -1,6 +1,5 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Theme } from "@material-ui/core";
+import { makeStyles } from "tss-react/mui";
 
 import Chip from "../Chip";
 import logo from "../../assets/welcome-image.png";
@@ -8,7 +7,7 @@ import ApplicationAccessDrawer from "./ApplicationAccessDrawer";
 import { getDate } from "../ApplicationSimpleCard";
 import { currencyDict, drawerStyles } from "./utils";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   ...drawerStyles,
   cardsWrapper: {
     display: "flex",
@@ -16,25 +15,23 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-type Props = {
+interface Props {
   drawerData: any;
   setDrawerData: (data: string | null) => void;
   status: string;
-};
+}
 
 function ApplicationAccessPaymentDrawer({
   drawerData,
   setDrawerData,
   status,
 }: Props) {
-  const classes = useStyles();
-
+  const { classes } = useStyles();
 
   const transactionDetails = {
-    Amount: `${
-      currencyDict[drawerData?.Currency] ||
-      currencyDict.GBP
-    } ${drawerData?.Amount}`,
+    Amount: `${currencyDict[drawerData?.Currency] || currencyDict.GBP} ${
+      drawerData?.Amount
+    }`,
     Status: drawerData?.Status,
     "Consent id": drawerData?.ConsentID,
     "Debtor Account": {

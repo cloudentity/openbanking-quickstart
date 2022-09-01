@@ -1,15 +1,19 @@
-import React, {createContext, FunctionComponent, useCallback, useState} from "react";
+import React, { createContext, ReactNode, useCallback, useState } from "react";
 
-interface CommonCtx {
+interface CommonCtxType {
   error?: string;
   setError(msg: string);
   clearError();
 }
 
-export const CommonCtx = createContext<CommonCtx | undefined>(undefined);
+export const CommonCtx = createContext<CommonCtxType | undefined>(undefined);
 
-export const CommonProvider: FunctionComponent = (props) => {
+export const CommonProvider = ({ children }: { children: ReactNode }) => {
   const [error, setError] = useState<string | undefined>();
-  const clearError = useCallback(() => setError(undefined), [])
-  return <CommonCtx.Provider value={{error, setError, clearError}}>{props.children}</CommonCtx.Provider>
-}
+  const clearError = useCallback(() => setError(undefined), []);
+  return (
+    <CommonCtx.Provider value={{ error, setError, clearError }}>
+      {children}
+    </CommonCtx.Provider>
+  );
+};
