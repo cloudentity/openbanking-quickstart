@@ -1,43 +1,37 @@
 {
-    "page": {
-      "nextOffset": "2",
-      "total": 3
-    },
-    "links": {
-      "next": {
-        "href": "/accounts?offSet=2&limit=10"
-      }
-    },
-    "accounts" : [
-      {
-        "depositAccount" : {
-          "accountId" : "10001",
-          "nickname" : "My Checking Acc XXXX3223",
-          "status" : "OPEN",
-          "balanceAsOf" : "2017-11-05T13:15:30.751Z",
-          "currentBalance" : 13300.35
+   "user": {
+    "fdx_accounts" : [
+        {
+          "depositAccount" : {
+            "accountId" : "10001",
+            "nickname" : "My Checking Acc XXXX3223",
+            "status" : "OPEN",
+            "balanceAsOf" : "2017-11-05T13:15:30.751Z",
+            "currentBalance" : 13300.35
+          }
+        },
+        {
+          "depositAccount" : {
+            "accountId" : "10002",
+            "nickname" : "My Checking Acc XXXX4443",
+            "status" : "OPEN",
+            "balanceAsOf" : "2017-11-05T13:15:30.751Z",
+            "currentBalance" : 332.22
+          }
+        },
+        {
+          "loanAccount" : {
+            "accountId" : "20001",
+            "nickname" : "My Mortgage Acc XXXX9979",
+            "status" : "OPEN",
+            "balanceAsOf" : "2017-11-05T13:15:30.751Z",
+            "principalBalance" : 133000.35,
+            "loanTerm" : 30,
+            "nextPaymentDate" : "2017-12-01",
+            "nextPaymentAmount" : 2333.32
+          }
         }
-      },
-      {
-        "depositAccount" : {
-          "accountId" : "10002",
-          "nickname" : "My Checking Acc XXXX4443",
-          "status" : "OPEN",
-          "balanceAsOf" : "2017-11-05T13:15:30.751Z",
-          "currentBalance" : 332.22
-        }
-      },
-      {
-        "loanAccount" : {
-          "accountId" : "20001",
-          "nickname" : "My Mortgage Acc XXXX9979",
-          "status" : "OPEN",
-          "balanceAsOf" : "2017-11-05T13:15:30.751Z",
-          "principalBalance" : 133000.35,
-          "loanTerm" : 30,
-          "nextPaymentDate" : "2017-12-01",
-          "nextPaymentAmount" : 2333.32
-        }
-      }
-    ]
+      ]
+   }
+
   }

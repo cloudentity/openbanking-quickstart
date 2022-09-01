@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"log"
 
 	fdx "github.com/cloudentity/acp-client-go/clients/openbanking/client/f_d_x"
 	fdxAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/client/account_information"
@@ -18,8 +19,30 @@ func FDXMapError(err *Error) (int, fdxModels.Error1) {
 	}
 }
 
+type DepositAccount struct {
+	AccountID      string  `json:"accountId"`
+	Nickname       string  `json:"nickname"`
+	Status         string  `json:"status"`
+	BalanceAsOf    string  `json:"balanceAsOf"`
+	CurrentBalance float64 `json:"currentBalance"`
+}
+
 func NewFDXAccountsResponse(accounts []fdxModels.Accountentity, self strfmt.URI) fdxAccounts.SearchForAccountsOK {
 	accountPointers := &fdxModels.Accountsentity{}
+
+	// TODO accounts is empty and returns the number request but with empty data
+	log.Printf("NewFDXAccountsResponse called with accounts %+v", accounts)
+
+
+	// acct := DepositAccount{
+	// 	AccountID: "10001",
+	// 	Nickname: "My Checking Acc XXXX3223",
+	// 	Status: "OPEN",
+	// 	BalanceAsOf: "2017-11-05T13:15:30.751Z",
+	// 	CurrentBalance: 13300.35,
+	// }
+
+
 
 	for _, account := range accounts {
 		accountPointers.Accounts = append(accountPointers.Accounts, account)

@@ -90,6 +90,7 @@ services:
       - SPEC=fdx
       - GIN_MODE=debug
       - USER_IDENTIFIER_CLAIM=customer_id
+      - CLIENT_SECRET=8DPOMd3ZOvsjuUnU9goRMHTIUUXtSkgwQeo8v_S74aE
     depends_on:
       configuration:
         condition: service_completed_successfully

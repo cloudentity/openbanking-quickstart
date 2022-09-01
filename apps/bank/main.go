@@ -26,6 +26,7 @@ const (
 type Config struct {
 	Port                int           `env:"PORT" envDefault:"8070"`
 	ClientID            string        `env:"CLIENT_ID" envDefault:"bukj5p6k7qdmm5ppbi4g"`
+	ClientSecret        string        `env:"CLIENT_SECRET"`
 	IssuerURL           *url.URL      `env:"ISSUER_URL,required"`
 	Timeout             time.Duration `env:"TIMEOUT" envDefault:"5s"`
 	RootCA              string        `env:"ROOT_CA" envDefault:"/ca.pem"`
@@ -39,13 +40,14 @@ type Config struct {
 
 func (c *Config) ClientConfig() acpclient.Config {
 	return acpclient.Config{
-		ClientID:  c.ClientID,
-		IssuerURL: c.IssuerURL,
-		Scopes:    []string{"introspect_openbanking_tokens"},
-		Timeout:   c.Timeout,
-		CertFile:  c.CertFile,
-		KeyFile:   c.KeyFile,
-		RootCA:    c.RootCA,
+		ClientID:     c.ClientID,
+		ClientSecret: c.ClientSecret,
+		IssuerURL:    c.IssuerURL,
+		Scopes:       []string{"introspect_openbanking_tokens"},
+		Timeout:      c.Timeout,
+		CertFile:     c.CertFile,
+		KeyFile:      c.KeyFile,
+		RootCA:       c.RootCA,
 	}
 }
 
@@ -61,6 +63,8 @@ func LoadConfig() (config Config, err error) {
 		config.SeedFilePath = fmt.Sprintf("data/%s-data.json", OBBR)
 	case CDR:
 		config.SeedFilePath = fmt.Sprintf("data/%s-data.json", CDR)
+	case FDX:
+		config.SeedFilePath = fmt.Sprintf("data/%s-data.json", FDX)
 	}
 
 	if config.GINMODE == "debug" {
@@ -125,13 +129,14 @@ func (s *Server) Start() error {
 		r.GET("/banking/accounts/balances", s.Get(NewCDRGetBalancesHandler))
 
 	case FDX:
-		r.GET("/accounts", s.Get(NewOBUKGetAccountsHandler))
-		r.GET("/internal/accounts", s.Get(NewOBUKGetAccountsInternalHandler))
-		r.GET("/balances", s.Get(NewOBUKGetBalancesHandler))
-		r.GET("/internal/balances", s.Get(NewOBUKGetBalancesInternalHandler))
-		r.GET("/transactions", s.Get(NewOBUKGetTransactionsHandler))
-		r.POST("/domestic-payments", s.Post(NewOBUKCreatePaymentHandler))
-		r.GET("/domestic-payments/:DomesticPaymentId", s.Get(NewOBUKGetPaymentHandler))
+		r.GET("/accounts", s.Get(NewFDXGetAccountsHandler))
+		r.GET("/internal/accounts", s.Get(NewFDXGetAccountsInternalHandler))
+		r.GET("/balances", s.Get(NewFDXGetBalancesHandler))
+		// TODO switch below to FDX
+		// r.GET("/internal/balances", s.Get(NewOBUKGetBalancesInternalHandler))
+		// r.GET("/transactions", s.Get(NewOBUKGetTransactionsHandler))
+		// r.POST("/domestic-payments", s.Post(NewOBUKCreatePaymentHandler))
+		// r.GET("/domestic-payments/:DomesticPaymentId", s.Get(NewOBUKGetPaymentHandler))
 
 	default:
 		return fmt.Errorf("unsupported spec %s", s.Config.Spec)

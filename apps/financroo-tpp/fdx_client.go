@@ -57,12 +57,14 @@ func (f *FDXClient) CreateAccountConsent(c *gin.Context) (string, error) {
       }
    ]`
 
+	scope := "openid introspect_tokens offline_access READ_CONSENTS ACCOUNT_DETAILED"
 	if resp, err = f.PublicClient.Oauth2.Oauth2.PushedAuthorizationRequest(
 		a2.NewPushedAuthorizationRequestParams().
 			WithContext(c.Request.Context()).
 			WithRedirectURI(f.PublicClient.Config.RedirectURL.String()).
 			WithClientID(f.ClientID).
 			WithClientSecret(&f.ClientSecret).
+			WithScope(&scope).
 			WithResponseType(responseType).
 			WithAuthorizationDetails(&authorizationDetails),
 	); err != nil {

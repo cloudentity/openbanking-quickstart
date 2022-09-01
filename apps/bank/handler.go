@@ -59,6 +59,7 @@ func (s *Server) Get(factory GetEndpointLogicFactory) func(*gin.Context) {
 				return nil, err
 			}
 
+			// TODO this not populated with correct data
 			if data, e = s.Storage.Get(h.GetUserIdentifier(c)); e != nil {
 				return nil, err
 			}

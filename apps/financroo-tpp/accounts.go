@@ -13,6 +13,7 @@ import (
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/runtime"
+	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 )
 
@@ -111,13 +112,13 @@ func (o *FDXBankClient) GetAccounts(c *gin.Context, accessToken string, bank Con
 		err          error
 	)
 
-	// TODO get IDs from token
-
-	if resp, err = o.AccountInformation.SearchForAccounts(fdxAccounts.NewSearchForAccountsParamsWithContext(c).WithAccountIds([]string{"10001"}), nil); err != nil {
+	log.Printf("Passed in token from financroo '%s' for bank %+v", accessToken, bank.BankID)
+	if resp, err = o.AccountInformation.SearchForAccounts(fdxAccounts.NewSearchForAccountsParamsWithContext(c).WithAccountIds([]string{"10001"}), httptransport.BearerToken(accessToken)); err != nil {
 		log.Printf("Failed to search for accounts %v", err)
 		return accountsData, err
 	}
 
+	log.Printf("Resp from bank %+v", resp.Payload)
 	for _, a := range resp.Payload.Accounts {
 		v, ok := a.(fdxModel.Accountentity)
 		if !ok {

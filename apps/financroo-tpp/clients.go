@@ -1,10 +1,12 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
+	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -63,6 +65,10 @@ func (c *Clients) RenewAccountsToken(ctx context.Context, bank ConnectedBank) (*
 		"refresh_token": {bank.RefreshToken},
 	}
 
+	if c.AcpAccountsClient.Config.AuthMethod == acpclient.ClientSecretPostAuthnMethod && c.AcpAccountsClient.Config.ClientSecret != "" {
+		values.Add("client_secret", c.AcpAccountsClient.Config.ClientSecret)
+	}
+
 	if c.AcpAccountsClient.Config.AuthMethod == acpclient.PrivateKeyJwtAuthnMethod {
 		if assertion, err = c.AcpAccountsClient.GenerateClientAssertion(); err != nil {
 			return nil, err
@@ -81,6 +87,17 @@ func (c *Clients) RenewAccountsToken(ctx context.Context, bank ConnectedBank) (*
 	}
 	defer response.Body.Close()
 
+	// TODO this should check status and return error - is there a reason we aren't?
+	if response.StatusCode != 200 {
+		log.Printf("Error - status %d", response.StatusCode)
+	}
+
+	x, _ := ioutil.ReadAll(response.Body)
+
+	bodyString := string(x)
+	log.Printf("body as string %s", bodyString)
+	response.Body = ioutil.NopCloser(bytes.NewBuffer(x))
+
 	if body, err = ioutil.ReadAll(response.Body); err != nil {
 		return nil, err
 	}
@@ -89,6 +106,7 @@ func (c *Clients) RenewAccountsToken(ctx context.Context, bank ConnectedBank) (*
 		return nil, err
 	}
 
+	log.Printf("Payload %+v", resp.Payload)
 	return resp.Payload, nil
 }
 
@@ -318,7 +336,7 @@ func NewFDXBankClient(config Config) (BankClient, error) {
 
 	c.Client = fdxBank.New(NewHTTPRuntimeWithClient(
 		u.Host,
-		u.Path+"/accounts/v1", // TODO fix
+		u.Path,
 		[]string{u.Scheme},
 		hc,
 	), nil)

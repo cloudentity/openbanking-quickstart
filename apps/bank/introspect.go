@@ -2,6 +2,7 @@ package main
 
 import (
 	"errors"
+	"log"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -115,7 +116,6 @@ func (s *Server) CDRIntrospectAccountsToken(c *gin.Context) (*cdr.CdrConsentIntr
 
 	token := c.GetHeader("Authorization")
 	token = strings.ReplaceAll(token, "Bearer ", "")
-	
 	if introspectResponse, err = s.Client.Openbanking.Cdr.CdrConsentIntrospect(
 		cdr.NewCdrConsentIntrospectParamsWithContext(c).
 			WithToken(&token),
@@ -139,11 +139,13 @@ func (s *Server) FDXIntrospectAccountsToken(c *gin.Context) (*fdx.FdxConsentIntr
 
 	token := c.GetHeader("Authorization")
 	token = strings.ReplaceAll(token, "Bearer ", "")
+	log.Printf("Get a bearer token: %s for client ID: %s with secret: %s", token, s.Client.Config.ClientID, s.Client.Config.ClientSecret)
 	if introspectResponse, err = s.Client.FdxConsentIntrospect(
 		fdx.NewFdxConsentIntrospectParamsWithContext(c).
 			WithToken(&token),
 		nil,
 	); err != nil {
+		log.Printf("Err on introspect %v for client ID %s", err, s.Client.Config.ClientID)
 		return nil, err
 	}
 

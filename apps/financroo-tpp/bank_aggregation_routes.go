@@ -4,6 +4,7 @@ import (
 	"encoding/base64"
 	"encoding/json"
 	"fmt"
+	"log"
 	"net/http"
 	"strings"
 
@@ -97,12 +98,16 @@ func (s *Server) GetAccounts() func(ctx *gin.Context) {
 		}
 
 		// todo parallel
+
 		for _, b := range user.Banks {
 			if client, accessToken, err = s.GetClientWithToken(b, tokens); err != nil {
 				continue
 			}
 
 			var data []Account
+			// accessToken == ""
+			log.Printf("Sending Access Token %v\n", accessToken)
+
 			if data, err = client.GetAccounts(c, accessToken, b); err != nil {
 				c.String(http.StatusUnauthorized, fmt.Sprintf("failed to call bank get accounts: %+v", err))
 				return

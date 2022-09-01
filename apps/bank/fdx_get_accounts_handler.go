@@ -73,6 +73,7 @@ func (h *FDXGetAccountsHandler) Filter(c *gin.Context, data BankUserData) BankUs
 
 	// var ret BankUserData
 	// for _, account := range data.FDXAccounts {
+	// 	h.introspectionResponse
 	// 	if has(h.introspectionResponse.Payload.IntrospectResponse.RE, *account.AccountID) {
 	// 		ret.CDRAccounts = append(ret.CDRAccounts, account)
 	// 	}
