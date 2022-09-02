@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"net/url"
 	"strings"
@@ -86,9 +85,8 @@ func (c *Clients) RenewAccountsToken(ctx context.Context, bank ConnectedBank) (*
 	}
 	defer response.Body.Close()
 
-	// TODO this should check status and return error - is there a reason we aren't?
 	if response.StatusCode != 200 {
-		log.Printf("Error - status %d", response.StatusCode)
+		return nil, fmt.Errorf("received unexpected response status %d", response.StatusCode)
 	}
 
 	if body, err = ioutil.ReadAll(response.Body); err != nil {

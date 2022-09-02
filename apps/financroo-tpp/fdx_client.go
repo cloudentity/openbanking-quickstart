@@ -57,7 +57,7 @@ func (f *FDXClient) CreateAccountConsent(c *gin.Context) (string, error) {
       }
    ]`
 
-	s := "offline_access ACCOUNT_DETAILED READ_CONSENTS"
+	s := "offline_access ACCOUNT_DETAILED READ_CONSENTS ACCOUNT_BASIC TRANSACTIONS"
 	if resp, err = f.PublicClient.Oauth2.Oauth2.PushedAuthorizationRequest(
 		a2.NewPushedAuthorizationRequestParams().
 			WithContext(c.Request.Context()).

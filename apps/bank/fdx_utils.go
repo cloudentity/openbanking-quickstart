@@ -2,10 +2,8 @@ package main
 
 import (
 	"fmt"
-	"log"
 
 	fdx "github.com/cloudentity/acp-client-go/clients/openbanking/client/f_d_x"
-	fdxAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/client/account_information"
 	fdxModels "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/models"
 	"github.com/sirupsen/logrus"
 
@@ -27,22 +25,15 @@ type DepositAccount struct {
 	CurrentBalance float64 `json:"currentBalance"`
 }
 
-func NewFDXAccountsResponse(accounts fdxModels.Accountsentity, self strfmt.URI) fdxAccounts.SearchForAccountsOK {
-
-	log.Printf("NewFDXAccountsResponse called with accounts %+v", accounts)
-
-	return fdxAccounts.SearchForAccountsOK{
-		Payload: &accounts,
-	}
+func NewFDXAccountsResponse(accounts fdxModels.Accountsentity, self strfmt.URI) fdxModels.Accountsentity {
+	return accounts
 }
 
-func NewFDXBalancesResponse(balances fdxModels.AccountWithDetailsentity) interface{} {
-	// TODO hard code for now
-	resp := fdxModels.AccountWithDetailsentity{
-		DepositAccount: &fdxModels.DepositAccountentity2{CurrentBalance: 512.00},
+func NewFDXBalancesResponse(balance []fdxModels.AccountWithDetailsentity) *fdxModels.DepositAccountentity2 {
+	if len(balance) < 1 {
+		return &fdxModels.DepositAccountentity2{}
 	}
-
-	return resp
+	return balance[0].DepositAccount
 }
 
 func GetFDXUserIdentifierClaimFromIntrospectionResponse(config Config, introspectResponse *fdx.FdxConsentIntrospectOKBody) string {
@@ -52,4 +43,8 @@ func GetFDXUserIdentifierClaimFromIntrospectionResponse(config Config, introspec
 
 	logrus.Info("No user identifier claim configured. Falling back to sub")
 	return introspectResponse.Sub
+}
+
+func NewFDXTransactionsResponse(transactions []fdxModels.Transaction) interface{} {
+	return transactions
 }

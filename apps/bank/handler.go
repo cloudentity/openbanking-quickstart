@@ -70,11 +70,8 @@ func (s *Server) Get(factory GetEndpointLogicFactory) func(*gin.Context) {
 			filtered := h.Filter(c, data)
 
 			if resp, err = h.BuildResponse(c, filtered); err != nil {
-				log.Printf("Error %v", err)
 				return nil, err
 			}
-
-			log.Printf("Filtered: %v Resp %v", filtered, resp)
 
 			return resp, nil
 		})

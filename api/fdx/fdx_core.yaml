@@ -348,6 +348,9 @@ paths:
         AllowDynamicQueryParameters: false
         AllowDynamicFormParameters: false
         IsMultiContentStreaming: false
+      security:
+            - defaultcc:
+              - ACCOUNT_DETAILED
   '/accounts/{accountId}/statements':
     get:
       description: >-

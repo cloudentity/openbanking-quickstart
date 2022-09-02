@@ -36,7 +36,7 @@ func (h *FDXGetAccountsInternalHandler) Validate(c *gin.Context) *Error {
 }
 
 func (h *FDXGetAccountsInternalHandler) GetUserIdentifier(c *gin.Context) string {
-	return "user" //c.PostForm("customer_id")
+	return "user"
 }
 
 func (h *FDXGetAccountsInternalHandler) Filter(c *gin.Context, data BankUserData) BankUserData {

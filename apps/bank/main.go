@@ -129,12 +129,8 @@ func (s *Server) Start() error {
 	case FDX:
 		r.GET("/accounts", s.Get(NewFDXGetAccountsHandler))
 		r.GET("/internal/accounts", s.Get(NewFDXGetAccountsInternalHandler))
-		r.GET("/balances", s.Get(NewFDXGetBalancesHandler))
-		// TODO switch below to FDX
-		// r.GET("/internal/balances", s.Get(NewOBUKGetBalancesInternalHandler))
-		// r.GET("/transactions", s.Get(NewOBUKGetTransactionsHandler))
-		// r.POST("/domestic-payments", s.Post(NewOBUKCreatePaymentHandler))
-		// r.GET("/domestic-payments/:DomesticPaymentId", s.Get(NewOBUKGetPaymentHandler))
+		r.GET("/accounts/:accountId", s.Get(NewFDXGetBalancesHandler))
+		r.GET("/transactions", s.Get(NewFDXGetTransactionsHandler))
 
 	default:
 		return fmt.Errorf("unsupported spec %s", s.Config.Spec)

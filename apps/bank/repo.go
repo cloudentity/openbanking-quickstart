@@ -30,11 +30,21 @@ type BankUserData struct {
 	CDRTransactions []cdrAccountModels.BankingTransaction `json:"cdr_transactions"`
 	CDRBalances     []cdrAccountModels.BankingBalance     `json:"cdr_balances"`
 
-	FDXAccounts fdxAccountModels.Accountsentity           `json:"fdx_accounts"`
-	FDXBalances fdxAccountModels.AccountWithDetailsentity `json:"fdx_balances"`
+	FDXAccounts fdxAccountModels.Accountsentity             `json:"fdx_accounts"`
+	FDXBalances []fdxAccountModels.AccountWithDetailsentity `json:"fdx_balances"`
 	// TODO add transactions and balances fdx
-	// FDXTransactions []cdrAccountModels.BankingTransaction `json:"cdr_transactions"`
+	FDXTransactions []fdxAccountModels.Transaction `json:"fdx_transactions"`
 }
+
+// {
+// 	"accountId": "10001",
+// 	"accountType": "DEPOSIT",
+// 	"displayName": "XXXX3223",
+// 	"status": "OPEN",
+// 	"description": "Savings",
+// 	"nickname": "My Checking Acc XXXX3223",
+// 	"currency": {"currencyCode": "USD"}
+//   },
 
 type AccountData struct {
 	BrandName   string `json:"brandName"`

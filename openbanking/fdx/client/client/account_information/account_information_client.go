@@ -30,7 +30,7 @@ type ClientOption func(*runtime.ClientOperation)
 
 // ClientService is the interface for Client methods
 type ClientService interface {
-	GetAccount(params *GetAccountParams, opts ...ClientOption) (*GetAccountOK, error)
+	GetAccount(params *GetAccountParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetAccountOK, error)
 
 	SearchForAccounts(params *SearchForAccountsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SearchForAccountsOK, error)
 
@@ -42,7 +42,7 @@ type ClientService interface {
 
   Get a specific account
 */
-func (a *Client) GetAccount(params *GetAccountParams, opts ...ClientOption) (*GetAccountOK, error) {
+func (a *Client) GetAccount(params *GetAccountParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*GetAccountOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewGetAccountParams()
@@ -56,6 +56,7 @@ func (a *Client) GetAccount(params *GetAccountParams, opts ...ClientOption) (*Ge
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &GetAccountReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}
@@ -108,9 +109,7 @@ func (a *Client) SearchForAccounts(params *SearchForAccountsParams, authInfo run
 	if err != nil {
 		return nil, err
 	}
-
 	success, ok := result.(*SearchForAccountsOK)
-
 	if ok {
 		return success, nil
 	}

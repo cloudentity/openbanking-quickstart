@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/client/banking"
 	cdrBankingModels "github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/models"
@@ -45,11 +46,6 @@ func (o *OBBRClient) GetTransactions(c *gin.Context, accessToken string, bank Co
 	return []Transaction{}, nil
 }
 
-func (o *FDXBankClient) GetTransactions(c *gin.Context, accessToken string, bank ConnectedBank) (trans []Transaction, err error) {
-	// TODO mocked until APIs for FDX added to bank
-	return trans, nil
-}
-
 func (o *CDRClient) GetTransactions(c *gin.Context, accessToken string, bank ConnectedBank) (transactionsData []Transaction, err error) {
 	var (
 		resp     *banking.GetTransactionsOK
@@ -84,33 +80,36 @@ func (o *CDRClient) GetTransactions(c *gin.Context, accessToken string, bank Con
 }
 
 func cdrTransactionToInternalTransaction(transaction *cdrBankingModels.BankingTransaction, bank ConnectedBank) (Transaction, error) {
-	// var (
-	// 	parsedTime time.Time
-	// 	err        error
-	// )
+	var (
+		parsedTime time.Time
+		err        error
+	)
 
-	// if parsedTime, err = time.Parse(time.RFC3339, transaction.ExecutionDateTime); err != nil {
-	// 	logrus.Infof("failed to parse time %v", err)
-	// 	return Transaction{}, err
-	// }
+	if parsedTime, err = time.Parse(time.RFC3339, transaction.ExecutionDateTime); err != nil {
+		logrus.Infof("failed to parse time %v", err)
+		return Transaction{}, err
+	}
 
-	// bookingDateTime := models.BookingDateTime(parsedTime)
+	bookingDateTime := models.BookingDateTime(parsedTime)
 
-	// return Transaction{
-	// 	OBTransaction6: models.OBTransaction6{
-	// 		AccountID:       (*models.AccountID)(transaction.AccountID),
-	// 		TransactionID:   models.TransactionID(transaction.TransactionID),
-	// 		BookingDateTime: &bookingDateTime,
-	// 		Amount: &models.OBActiveOrHistoricCurrencyAndAmount9{
-	// 			Amount: (*models.OBActiveCurrencyAndAmountSimpleType)(transaction.Amount),
-	// 		},
-	// 		BankTransactionCode: &models.OBBankTransactionCodeStructure1{
-	// 			Code: &transaction.MerchantCategoryCode,
-	// 		},
-	// 		TransactionInformation: models.TransactionInformation(*transaction.Description),
-	// 	},
-	// 	BankID: bank.BankID,
-	// }, nil
+	return Transaction{
+		OBTransaction6: models.OBTransaction6{
+			AccountID:       (*models.AccountID)(transaction.AccountID),
+			TransactionID:   models.TransactionID(transaction.TransactionID),
+			BookingDateTime: &bookingDateTime,
+			Amount: &models.OBActiveOrHistoricCurrencyAndAmount9{
+				Amount: (*models.OBActiveCurrencyAndAmountSimpleType)(transaction.Amount),
+			},
+			BankTransactionCode: &models.OBBankTransactionCodeStructure1{
+				Code: &transaction.MerchantCategoryCode,
+			},
+			TransactionInformation: models.TransactionInformation(*transaction.Description),
+		},
+		BankID: bank.BankID,
+	}, nil
+}
 
-	return Transaction{}, nil
+func (o *FDXBankClient) GetTransactions(c *gin.Context, accessToken string, bank ConnectedBank) (transactions []Transaction, err error) {
+	// TODO - add transactions
+	return transactions, err
 }

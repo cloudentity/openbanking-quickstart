@@ -1,11 +1,12 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
-	"log"
 
 	cdrModels "github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/client/banking"
 	fdxAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/client/account_information"
+	fdxModels "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/models"
 	obbrAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/client/accounts"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client/accounts"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
@@ -114,22 +115,33 @@ func (o *FDXBankClient) GetAccounts(c *gin.Context, accessToken string, bank Con
 		return accountsData, err
 	}
 
-	log.Printf("Resp from bank %v", resp)
-	// for _, a := range resp.Payload.Accounts {
-	// 	accountsData = append(accountsData, Account{
-	// 		OBAccount6: models.OBAccount6{
-	// 			AccountID: (*models.AccountID)(&a.AccountID),
-	// 			Nickname:  models.Nickname(a.Nickname),
-	// 			Account: []*models.OBAccount6AccountItems0{
-	// 				{
-	// 					Name:           models.Name0(a.ProductName),
-	// 					Identification: (*models.Identification0)(&a.AccountNumber),
-	// 				},
-	// 			},
-	// 		},
-	// 		BankID: bank.BankID,
-	// 	})
-	// }
+	for _, acct := range resp.Payload.Accounts {
+		var (
+			depositAccount fdxModels.AccountWithDetailsentity
+			jsonStr        []byte
+		)
+		if jsonStr, err = json.Marshal(acct); err != nil {
+			return accountsData, err
+		}
+
+		if err = json.Unmarshal(jsonStr, &depositAccount); err != nil {
+			return accountsData, err
+		}
+
+		accountsData = append(accountsData, Account{
+			OBAccount6: models.OBAccount6{
+				AccountID: (*models.AccountID)(&depositAccount.DepositAccount.AccountID),
+				Nickname:  models.Nickname(depositAccount.DepositAccount.Nickname),
+				Account: []*models.OBAccount6AccountItems0{
+					{
+						Name:           models.Name0(depositAccount.DepositAccount.ProductName),
+						Identification: (*models.Identification0)(&depositAccount.DepositAccount.AccountNumber),
+					},
+				},
+			},
+			BankID: bank.BankID,
+		})
+	}
 
 	return accountsData, nil
 }

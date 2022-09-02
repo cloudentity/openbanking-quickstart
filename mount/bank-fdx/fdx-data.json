@@ -28,20 +28,32 @@
             "balanceAsOf" : "2017-11-05T13:15:30.751Z",
             "currentBalance" : 332.22
           }
-        },
-        {
-          "loanAccount" : {
-            "accountId" : "20001",
-            "nickname" : "My Mortgage Acc XXXX9979",
-            "status" : "OPEN",
-            "balanceAsOf" : "2017-11-05T13:15:30.751Z",
-            "principalBalance" : 133000.35,
-            "loanTerm" : 30,
-            "nextPaymentDate" : "2017-12-01",
-            "nextPaymentAmount" : 2333.32
-          }
         }
       ]
-    }
+    },
+    "fdx_balances": [
+      {
+        "depositAccount": {
+        "accountId": "10002",
+        "accountType": "DEPOSIT",
+        "displayName": "XXXX4443",
+        "status": "OPEN",
+        "description": "Checking 2",
+        "nickname": "My Checking Acc XXXX4443",
+        "currency": {"currencyCode": "USD"}
+      }
+      },
+      {
+        "depositAccount": {
+        "accountId": "10001",
+        "accountType": "DEPOSIT",
+        "displayName": "XXXX3223",
+        "status": "OPEN",
+        "description": "Checking 1",
+        "nickname": "My Checking Acc XXXX3223",
+        "currency": {"currencyCode": "USD"}
+        }
+      }
+      ]
   }
 }
