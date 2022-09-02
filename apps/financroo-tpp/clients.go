@@ -99,7 +99,6 @@ func (c *Clients) RenewAccountsToken(ctx context.Context, bank ConnectedBank) (*
 		return nil, err
 	}
 
-	log.Printf("Payload %+v", resp.Payload)
 	return resp.Payload, nil
 }
 
@@ -189,7 +188,6 @@ func NewAcpClient(cfg Config, redirect string) (acpclient.Client, error) {
 	}
 
 	if cfg.Spec == FDX {
-		// config.ClientSecret = cfg.ClientSecret
 		config.SkipClientCredentialsAuthn = true
 		config.AuthMethod = acpclient.TLSClientAuthnMethod
 	}

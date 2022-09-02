@@ -1,13 +1,11 @@
 package main
 
 import (
-	"errors"
 	"fmt"
 	"log"
 
 	cdrModels "github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/client/banking"
 	fdxAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/client/account_information"
-	fdxModel "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/models"
 	obbrAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/client/accounts"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client/accounts"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
@@ -112,33 +110,26 @@ func (o *FDXBankClient) GetAccounts(c *gin.Context, accessToken string, bank Con
 		err          error
 	)
 
-	log.Printf("Passed in token from financroo '%s' for bank %+v", accessToken, bank.BankID)
-	if resp, err = o.AccountInformation.SearchForAccounts(fdxAccounts.NewSearchForAccountsParamsWithContext(c).WithAccountIds([]string{"10001"}), httptransport.BearerToken(accessToken)); err != nil {
-		log.Printf("Failed to search for accounts %v", err)
+	if resp, err = o.AccountInformation.SearchForAccounts(fdxAccounts.NewSearchForAccountsParamsWithContext(c), httptransport.BearerToken(accessToken)); err != nil {
 		return accountsData, err
 	}
 
-	log.Printf("Resp from bank %+v", resp.Payload)
-	for _, a := range resp.Payload.Accounts {
-		v, ok := a.(fdxModel.Accountentity)
-		if !ok {
-			return accountsData, errors.New("unable to get account from accounts data")
-		}
-
-		accountsData = append(accountsData, Account{
-			OBAccount6: models.OBAccount6{
-				AccountID: (*models.AccountID)(&v.AccountID),
-				Nickname:  models.Nickname(v.Nickname),
-				Account: []*models.OBAccount6AccountItems0{
-					{
-						Name:           models.Name0(v.ProductName),
-						Identification: (*models.Identification0)(&v.AccountNumber),
-					},
-				},
-			},
-			BankID: bank.BankID,
-		})
-	}
+	log.Printf("Resp from bank %v", resp)
+	// for _, a := range resp.Payload.Accounts {
+	// 	accountsData = append(accountsData, Account{
+	// 		OBAccount6: models.OBAccount6{
+	// 			AccountID: (*models.AccountID)(&a.AccountID),
+	// 			Nickname:  models.Nickname(a.Nickname),
+	// 			Account: []*models.OBAccount6AccountItems0{
+	// 				{
+	// 					Name:           models.Name0(a.ProductName),
+	// 					Identification: (*models.Identification0)(&a.AccountNumber),
+	// 				},
+	// 			},
+	// 		},
+	// 		BankID: bank.BankID,
+	// 	})
+	// }
 
 	return accountsData, nil
 }

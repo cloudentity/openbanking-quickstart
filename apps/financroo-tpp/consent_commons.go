@@ -3,7 +3,6 @@ package main
 import (
 	"encoding/json"
 	"fmt"
-	"log"
 	"net/http"
 	"net/url"
 
@@ -166,10 +165,6 @@ func NewFDXLoginURLBuilder(config Config) (LoginURLBuilder, error) {
 func (f *FDXLoginURLBuilder) BuildLoginURL(consentID string, client acpclient.Client) (authorizeURL string, csrf acpclient.CSRF, err error) {
 	var u string
 
-	config := client.Config
-	for _, s := range config.Scopes {
-		log.Printf("Scope %s", s)
-	}
 	if u, err = client.AuthorizeURLWithPAR(consentID); err != nil {
 		return "", acpclient.CSRF{}, errors.Wrapf(err, "failed to create authorize url with par")
 	}

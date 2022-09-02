@@ -108,7 +108,9 @@ func (a *Client) SearchForAccounts(params *SearchForAccountsParams, authInfo run
 	if err != nil {
 		return nil, err
 	}
+
 	success, ok := result.(*SearchForAccountsOK)
+
 	if ok {
 		return success, nil
 	}

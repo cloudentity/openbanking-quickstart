@@ -34,6 +34,7 @@ func (s *Server) Get(factory GetEndpointLogicFactory) func(*gin.Context) {
 			if resp, err = f(); err != nil {
 				code, errResp := h.MapError(c, err)
 				logrus.WithField("response", errResp).Warnf("GET %s", c.FullPath())
+				log.Printf("Error response? %v", err)
 				c.PureJSON(code, errResp)
 				return
 			}
@@ -60,7 +61,6 @@ func (s *Server) Get(factory GetEndpointLogicFactory) func(*gin.Context) {
 				return nil, err
 			}
 
-			// TODO this not populated with correct data
 			if data, e = s.Storage.Get(h.GetUserIdentifier(c)); e != nil {
 				return nil, err
 			}
