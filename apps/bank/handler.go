@@ -1,7 +1,6 @@
 package main
 
 import (
-	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -34,7 +33,6 @@ func (s *Server) Get(factory GetEndpointLogicFactory) func(*gin.Context) {
 			if resp, err = f(); err != nil {
 				code, errResp := h.MapError(c, err)
 				logrus.WithField("response", errResp).Warnf("GET %s", c.FullPath())
-				log.Printf("Error response? %v", err)
 				c.PureJSON(code, errResp)
 				return
 			}

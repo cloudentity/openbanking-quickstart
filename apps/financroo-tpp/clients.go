@@ -85,10 +85,6 @@ func (c *Clients) RenewAccountsToken(ctx context.Context, bank ConnectedBank) (*
 	}
 	defer response.Body.Close()
 
-	if response.StatusCode != 200 {
-		return nil, fmt.Errorf("received unexpected response status %d", response.StatusCode)
-	}
-
 	if body, err = ioutil.ReadAll(response.Body); err != nil {
 		return nil, err
 	}

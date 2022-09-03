@@ -2,7 +2,6 @@ package main
 
 import (
 	"errors"
-	"log"
 	"strings"
 
 	"github.com/gin-gonic/gin"
@@ -138,15 +137,12 @@ func (s *Server) FDXIntrospectAccountsToken(c *gin.Context) (*fdx.FdxConsentIntr
 	)
 
 	token := c.GetHeader("Authorization")
-	log.Printf("Token probably empty %s", token)
-
 	token = strings.ReplaceAll(token, "Bearer ", "")
 	if introspectResponse, err = s.Client.FdxConsentIntrospect(
 		fdx.NewFdxConsentIntrospectParamsWithContext(c).
 			WithToken(&token),
 		nil,
 	); err != nil {
-		log.Printf("Err on introspect %v for client ID %s", err, s.Client.Config.ClientID)
 		return nil, err
 	}
 

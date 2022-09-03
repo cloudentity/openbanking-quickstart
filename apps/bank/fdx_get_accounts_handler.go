@@ -52,6 +52,6 @@ func (h *FDXGetAccountsHandler) GetUserIdentifier(c *gin.Context) string {
 }
 
 func (h *FDXGetAccountsHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
-	// TODO handle filter but returning all counts for now for the demo
+	// TODO handle filter but returning all counts for now for demo
 	return data
 }
