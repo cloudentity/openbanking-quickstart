@@ -38,8 +38,8 @@ func (h *FDXGetTransactionsHandler) BuildResponse(c *gin.Context, data BankUserD
 
 func (h *FDXGetTransactionsHandler) Validate(c *gin.Context) *Error {
 	scopes := strings.Split(h.introspectionResponse.Scope, " ")
-	if !has(scopes, "bank:transactions:read") {
-		return ErrForbidden.WithMessage("token has no bank:transactions:read scope granted")
+	if !has(scopes, "TRANSACTIONS") {
+		return ErrForbidden.WithMessage("token has no TRANSACTIONS scope granted")
 	}
 	return nil
 }
@@ -49,5 +49,6 @@ func (h *FDXGetTransactionsHandler) GetUserIdentifier(c *gin.Context) string {
 }
 
 func (h *FDXGetTransactionsHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
+	// TODO filter transactions but there is only 1 account so passing for now
 	return data
 }

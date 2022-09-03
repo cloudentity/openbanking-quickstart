@@ -45,6 +45,6 @@ func GetFDXUserIdentifierClaimFromIntrospectionResponse(config Config, introspec
 	return introspectResponse.Sub
 }
 
-func NewFDXTransactionsResponse(transactions []fdxModels.Transaction) interface{} {
+func NewFDXTransactionsResponse(transactions fdxModels.Transactionsentity) interface{} {
 	return transactions
 }

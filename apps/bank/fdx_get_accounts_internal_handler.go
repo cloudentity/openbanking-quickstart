@@ -17,7 +17,6 @@ func NewFDXGetAccountsInternalHandler(server *Server) GetEndpointLogic {
 }
 
 func (h *FDXGetAccountsInternalHandler) SetIntrospectionResponse(c *gin.Context) *Error {
-	// should try introspecting for this at some point
 	return nil
 }
 

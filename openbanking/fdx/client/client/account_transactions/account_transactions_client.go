@@ -32,7 +32,7 @@ type ClientOption func(*runtime.ClientOperation)
 type ClientService interface {
 	GetAccountTransactionImages(params *GetAccountTransactionImagesParams, opts ...ClientOption) (*GetAccountTransactionImagesOK, error)
 
-	SearchForAccountTransactions(params *SearchForAccountTransactionsParams, opts ...ClientOption) (*SearchForAccountTransactionsOK, error)
+	SearchForAccountTransactions(params *SearchForAccountTransactionsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SearchForAccountTransactionsOK, error)
 
 	SetTransport(transport runtime.ClientTransport)
 }
@@ -82,7 +82,7 @@ func (a *Client) GetAccountTransactionImages(params *GetAccountTransactionImages
 
   Search for account transactions. Example: /accounts/{accountId}/transactions?startTime=value1&endTime=value2
 */
-func (a *Client) SearchForAccountTransactions(params *SearchForAccountTransactionsParams, opts ...ClientOption) (*SearchForAccountTransactionsOK, error) {
+func (a *Client) SearchForAccountTransactions(params *SearchForAccountTransactionsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*SearchForAccountTransactionsOK, error) {
 	// TODO: Validate the params before sending
 	if params == nil {
 		params = NewSearchForAccountTransactionsParams()
@@ -96,6 +96,7 @@ func (a *Client) SearchForAccountTransactions(params *SearchForAccountTransactio
 		Schemes:            []string{"https"},
 		Params:             params,
 		Reader:             &SearchForAccountTransactionsReader{formats: a.formats},
+		AuthInfo:           authInfo,
 		Context:            params.Context,
 		Client:             params.HTTPClient,
 	}

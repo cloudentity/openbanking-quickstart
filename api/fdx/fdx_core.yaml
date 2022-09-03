@@ -691,6 +691,9 @@ paths:
         AllowDynamicQueryParameters: false
         AllowDynamicFormParameters: false
         IsMultiContentStreaming: false
+      security:
+            - defaultcc:
+              - TRANSACTIONS
   '/accounts/{accountId}/payment-networks':
     get:
       description: Get payment networks supported by the account

@@ -1,15 +1,20 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"time"
 
 	"github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/client/banking"
 	cdrBankingModels "github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/models"
+	"github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/client/account_transactions"
+	fdxModels "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/models"
+
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client/transactions"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/runtime"
+	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -109,7 +114,47 @@ func cdrTransactionToInternalTransaction(transaction *cdrBankingModels.BankingTr
 	}, nil
 }
 
-func (o *FDXBankClient) GetTransactions(c *gin.Context, accessToken string, bank ConnectedBank) (transactions []Transaction, err error) {
-	// TODO - add transactions
+func (o *FDXBankClient) GetTransactions(c *gin.Context, accessToken string, bank ConnectedBank) ([]Transaction, error) {
+	var (
+		resp         *account_transactions.SearchForAccountTransactionsOK
+		transactions []Transaction
+		err          error
+	)
+
+	if resp, err = o.AccountTransactions.SearchForAccountTransactions(account_transactions.NewSearchForAccountTransactionsParamsWithContext(c).WithAccountID("10001"), httptransport.BearerToken(accessToken)); err != nil {
+		return transactions, err
+	}
+
+	for _, tx := range resp.Payload.Transactions {
+		var (
+			transaction fdxModels.Transaction1
+			jsonStr     []byte
+		)
+		if jsonStr, err = json.Marshal(tx); err != nil {
+			return transactions, err
+		}
+
+		if err = json.Unmarshal(jsonStr, &transaction); err != nil {
+			return transactions, err
+		}
+
+		amount := fmt.Sprint(transaction.DepositTransaction.Amount)
+		transactions = append(transactions, Transaction{
+			OBTransaction6: models.OBTransaction6{
+				AccountID:       (*models.AccountID)(&transaction.DepositTransaction.AccountID),
+				TransactionID:   models.TransactionID(transaction.DepositTransaction.TransactionID),
+				BookingDateTime: (*models.BookingDateTime)(&transaction.DepositTransaction.PostedTimestamp),
+				Amount: &models.OBActiveOrHistoricCurrencyAndAmount9{
+					Amount: (*models.OBActiveCurrencyAndAmountSimpleType)(&amount),
+				},
+				BankTransactionCode: &models.OBBankTransactionCodeStructure1{
+					Code: &transaction.DepositTransaction.Category,
+				},
+				TransactionInformation: models.TransactionInformation(transaction.DepositTransaction.Description),
+			},
+			BankID: bank.BankID,
+		})
+	}
+
 	return transactions, err
 }

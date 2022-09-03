@@ -11,22 +11,6 @@ import (
 	fdxModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/f_d_x"
 )
 
-// swagger:route GET /accounts bank fdx getAccountsRequest
-//
-// get accounts
-//
-// Security:
-//
-//	defaultcc: accounts
-//
-// TODO - add the correct responses
-// Responses:
-//
-//	  200: OBReadAccount6
-//		 400: OBErrorResponse1
-//	  403: OBErrorResponse1
-//	  404: OBErrorResponse1
-//	  500: OBErrorResponse1
 type FDXGetAccountsHandler struct {
 	*Server
 	introspectionResponse *fdxModels.FdxConsentIntrospectOKBody
@@ -68,8 +52,6 @@ func (h *FDXGetAccountsHandler) GetUserIdentifier(c *gin.Context) string {
 }
 
 func (h *FDXGetAccountsHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
-
-	// TODO handle filter
-
+	// TODO handle filter but returning all counts for now for the demo
 	return data
 }

@@ -54,6 +54,40 @@
         "currency": {"currencyCode": "USD"}
         }
       }
-      ]
+      ],
+      "fdx_transactions":
+        {
+          "page": {
+            "nextOffset": "2",
+            "total": 3
+          },
+          "links": {
+            "next": {
+              "href": "/accounts/33333/transactions?offSet=2&limit=10"
+            }
+          },
+          "transactions": [
+            {"depositTransaction":{
+              "accountId": "10001",
+              "transactionId": "20001",
+              "category": "MCC",
+              "transactionCategory": "DEPOSIT_ACCOUNT_TRANSACTION",
+              "postedTimestamp": "2017-11-05T13:15:30.751Z",
+              "description": "Direct deposit from XYZ",
+              "debitCreditMemo": "CREDIT",
+              "amount": 220.00
+            }},
+            {"depositTransaction":{
+              "accountId": "10001",
+              "transactionId": "20001",
+              "category": "SIG",
+              "transactionCategory": "DEPOSIT_ACCOUNT_TRANSACTION",
+              "postedTimestamp": "2017-11-05T13:15:31.751Z",
+              "description": "Deposit at ATM",
+              "debitCreditMemo": "CREDIT",
+              "amount": 1200.00
+            }}
+          ]
+        }
   }
 }
