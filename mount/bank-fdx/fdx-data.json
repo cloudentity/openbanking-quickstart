@@ -14,9 +14,9 @@
         {
           "depositAccount" : {
             "accountId" : "10001",
-            "nickname" : "My Checking Acc XXXX3223",
+            "nickname" : "My Savings Acc XXXX3223",
             "status" : "OPEN",
-            "balanceAsOf" : "2017-11-05T13:15:30.751Z",
+            "balanceAsOf" : "2017-09-05T13:15:30.751Z",
             "currentBalance" : 13300.35
           }
         },
@@ -25,7 +25,7 @@
             "accountId" : "10002",
             "nickname" : "My Checking Acc XXXX4443",
             "status" : "OPEN",
-            "balanceAsOf" : "2017-11-05T13:15:30.751Z",
+            "balanceAsOf" : "2017-09-05T13:15:30.751Z",
             "currentBalance" : 332.22
           }
         }
@@ -38,7 +38,7 @@
         "accountType": "DEPOSIT",
         "displayName": "XXXX4443",
         "status": "OPEN",
-        "description": "Checking 2",
+        "description": "Checking 1",
         "nickname": "My Checking Acc XXXX4443",
         "currency": {"currencyCode": "USD"}
       }
@@ -49,8 +49,8 @@
         "accountType": "DEPOSIT",
         "displayName": "XXXX3223",
         "status": "OPEN",
-        "description": "Checking 1",
-        "nickname": "My Checking Acc XXXX3223",
+        "description": "Savings 1",
+        "nickname": "My Savings Acc XXXX3223",
         "currency": {"currencyCode": "USD"}
         }
       }
@@ -72,7 +72,7 @@
               "transactionId": "20001",
               "category": "MCC",
               "transactionCategory": "DEPOSIT_ACCOUNT_TRANSACTION",
-              "postedTimestamp": "2017-11-05T13:15:30.751Z",
+              "postedTimestamp": "2017-08-05T13:15:30.751Z",
               "description": "Direct deposit from XYZ",
               "debitCreditMemo": "CREDIT",
               "amount": 220.00
@@ -82,7 +82,7 @@
               "transactionId": "20001",
               "category": "SIG",
               "transactionCategory": "DEPOSIT_ACCOUNT_TRANSACTION",
-              "postedTimestamp": "2017-11-05T13:15:31.751Z",
+              "postedTimestamp": "2017-07-05T13:15:31.751Z",
               "description": "Deposit at ATM",
               "debitCreditMemo": "CREDIT",
               "amount": 1200.00

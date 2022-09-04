@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"strconv"
 	"strings"
@@ -9,6 +10,7 @@ import (
 	"github.com/go-openapi/strfmt"
 
 	fdxModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/f_d_x"
+	"github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/models"
 )
 
 type FDXGetAccountsHandler struct {
@@ -22,9 +24,11 @@ func NewFDXGetAccountsHandler(server *Server) GetEndpointLogic {
 
 func (h *FDXGetAccountsHandler) SetIntrospectionResponse(c *gin.Context) *Error {
 	var err error
+
 	if h.introspectionResponse, err = h.FDXIntrospectAccountsToken(c); err != nil {
 		return ErrBadRequest.WithMessage("failed to introspect token")
 	}
+
 	return nil
 }
 
@@ -52,6 +56,32 @@ func (h *FDXGetAccountsHandler) GetUserIdentifier(c *gin.Context) string {
 }
 
 func (h *FDXGetAccountsHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
-	// TODO handle filter but returning all counts for now for demo
-	return data
+	var (
+		jsonStr []byte
+		err     error
+	)
+
+	var depositAccounts []models.AccountWithDetailsentity
+	for _, acct := range data.FDXAccounts.Accounts {
+		var depositAccount models.AccountWithDetailsentity
+		if jsonStr, err = json.Marshal(acct); err != nil {
+			continue
+		}
+
+		if err = json.Unmarshal(jsonStr, &depositAccount); err != nil {
+			continue
+		}
+		depositAccounts = append(depositAccounts, depositAccount)
+	}
+
+	var filteredData BankUserData
+	for _, a := range depositAccounts {
+		for _, c := range h.introspectionResponse.FdxConsent.Resources {
+			if c.ID == a.DepositAccount.AccountID {
+				filteredData.FDXAccounts.Accounts = append(filteredData.FDXAccounts.Accounts, a)
+			}
+		}
+	}
+
+	return filteredData
 }
