@@ -28,6 +28,15 @@
             "balanceAsOf" : "2017-09-05T13:15:30.751Z",
             "currentBalance" : 332.22
           }
+        },
+        {
+          "depositAccount" : {
+            "accountId" : "96534987",
+            "nickname" : "Digital banking account",
+            "status" : "OPEN",
+            "balanceAsOf" : "2017-09-05T13:15:30.751Z",
+            "currentBalance" : 100.00
+          }
         }
       ]
     },
