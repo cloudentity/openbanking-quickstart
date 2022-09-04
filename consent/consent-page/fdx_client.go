@@ -110,7 +110,7 @@ func ToInternalFDXAccounts(data FdxAccounts) InternalAccounts {
 	accounts := make([]InternalAccount, len(data.Accounts))
 	for i, account := range data.Accounts {
 		accounts[i] = InternalAccount{
-			ID:   string(*&account.DepositAccount.AccountID),
+			ID:   string(account.DepositAccount.AccountID),
 			Name: string(account.DepositAccount.Nickname),
 		}
 	}
