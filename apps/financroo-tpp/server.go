@@ -26,7 +26,7 @@ import (
 type Server struct {
 	Config                   Config
 	Clients                  Clients
-	MtlsHttpClient           *http.Client
+	MtlsHTTPClient           *http.Client
 	SecureCookie             *securecookie.SecureCookie
 	DB                       *bolt.DB
 	UserRepo                 UserRepo
@@ -47,7 +47,7 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to load config")
 	}
 
-	if server.MtlsHttpClient, err = newMtlsHttpClient(server.Config); err != nil {
+	if server.MtlsHTTPClient, err = newMtlsHTTPClient(server.Config); err != nil {
 		return server, errors.Wrapf(err, "failed to get mtls http client")
 	}
 
@@ -108,8 +108,9 @@ func NewServer() (Server, error) {
 	return server, nil
 }
 
-func newMtlsHttpClient(config Config) (*http.Client, error) {
+func newMtlsHTTPClient(config Config) (*http.Client, error) {
 	var (
+		cert   tls.Certificate
 		rootCA []byte
 		err    error
 	)
@@ -120,7 +121,9 @@ func newMtlsHttpClient(config Config) (*http.Client, error) {
 	pool := x509.NewCertPool()
 	pool.AppendCertsFromPEM(rootCA)
 
-	cert, err := tls.LoadX509KeyPair(config.CertFile, config.KeyFile)
+	if cert, err = tls.LoadX509KeyPair(config.CertFile, config.KeyFile); err != nil {
+		return nil, err
+	}
 
 	return &http.Client{
 		Timeout: time.Second * 10,
