@@ -27,10 +27,10 @@ export class FinancrooModalPage {
     }
 
     private assertThatModalIsNotDisplayed(): void {
-        cy.get(this.closeIcon).should('not.be.visible');
+        cy.get(this.closeIcon).should('not.exist');
         cy.get(this.modalContentLabel).should('not.exist');
-        cy.get(this.cancelButton).should('be.visible', false);
-        cy.get(this.startInvestingButton).should('be.visible', false);
+        cy.get(this.cancelButton).should('not.exist');
+        cy.get(this.startInvestingButton).should('not.exist');
     }
 
     private interceptAccountsRequest(): void {

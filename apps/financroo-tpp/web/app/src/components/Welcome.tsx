@@ -12,11 +12,16 @@ export default function Welcome({ onConnectClick }) {
         <Typography
           color="primary"
           variant="h2"
+          id="financroo-welcome-title"
           style={{ marginTop: 24, fontSize: 28 }}
         >
           Welcome to Financroo Smart Banking{" "}
         </Typography>
-        <Typography variant="body1" style={{ marginTop: 16 }}>
+        <Typography 
+          variant="body1"
+          id="financroo-welcome-subtitle"
+          style={{ marginTop: 16 }}
+        >
           Connect your bank, bills and credit cards to uncover insights that can
           improve your financial well being
         </Typography>
@@ -24,6 +29,7 @@ export default function Welcome({ onConnectClick }) {
           style={{ marginTop: 24 }}
           size="large"
           variant="contained"
+          id="connect-bank-button"
           className="connect-button"
           color="secondary"
           onClick={onConnectClick}
