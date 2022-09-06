@@ -1,14 +1,10 @@
 package main
 
 import (
-	"crypto/tls"
-	"crypto/x509"
 	"fmt"
 	"log"
 	"net/http"
-	"os"
 	"strconv"
-	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/securecookie"
@@ -26,7 +22,7 @@ import (
 type Server struct {
 	Config                   Config
 	Clients                  Clients
-	MtlsHTTPClient           *http.Client
+	MtlsHTTPClient           acpclient.Client
 	SecureCookie             *securecookie.SecureCookie
 	DB                       *bolt.DB
 	UserRepo                 UserRepo
@@ -47,7 +43,15 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to load config")
 	}
 
-	if server.MtlsHTTPClient, err = newMtlsHTTPClient(server.Config); err != nil {
+	// config.CertFile, config.KeyFile
+	if server.MtlsHTTPClient, err = acpclient.New(acpclient.Config{
+		ClientID: server.Config.ClientID,
+		ServerID: server.Config.ServerID,
+		CertFile: server.Config.CertFile,
+		KeyFile:  server.Config.KeyFile,
+		RootCA:   server.Config.RootCA,
+		
+	}); err != nil {
 		return server, errors.Wrapf(err, "failed to get mtls http client")
 	}
 
@@ -106,35 +110,6 @@ func NewServer() (Server, error) {
 	}
 
 	return server, nil
-}
-
-func newMtlsHTTPClient(config Config) (*http.Client, error) {
-	var (
-		cert   tls.Certificate
-		rootCA []byte
-		err    error
-	)
-
-	if rootCA, err = os.ReadFile(config.RootCA); err != nil {
-		return nil, err
-	}
-	pool := x509.NewCertPool()
-	pool.AppendCertsFromPEM(rootCA)
-
-	if cert, err = tls.LoadX509KeyPair(config.CertFile, config.KeyFile); err != nil {
-		return nil, err
-	}
-
-	return &http.Client{
-		Timeout: time.Second * 10,
-		Transport: &http.Transport{
-			TLSClientConfig: &tls.Config{
-				Certificates: []tls.Certificate{cert},
-				MinVersion:   tls.VersionTLS12,
-				RootCAs:      pool,
-			},
-		},
-	}, nil
 }
 
 func (s *Server) Start() error {
