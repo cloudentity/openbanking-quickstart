@@ -22,7 +22,6 @@ import (
 type Server struct {
 	Config                   Config
 	Clients                  Clients
-	MtlsHTTPClient           acpclient.Client
 	SecureCookie             *securecookie.SecureCookie
 	DB                       *bolt.DB
 	UserRepo                 UserRepo
@@ -41,18 +40,6 @@ func NewServer() (Server, error) {
 
 	if server.Config, err = LoadConfig(); err != nil {
 		return server, errors.Wrapf(err, "failed to load config")
-	}
-
-	// config.CertFile, config.KeyFile
-	if server.MtlsHTTPClient, err = acpclient.New(acpclient.Config{
-		ClientID: server.Config.ClientID,
-		ServerID: server.Config.ServerID,
-		CertFile: server.Config.CertFile,
-		KeyFile:  server.Config.KeyFile,
-		RootCA:   server.Config.RootCA,
-		
-	}); err != nil {
-		return server, errors.Wrapf(err, "failed to get mtls http client")
 	}
 
 	switch server.Config.Spec {
