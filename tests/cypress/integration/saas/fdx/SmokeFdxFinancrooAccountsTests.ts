@@ -47,13 +47,14 @@ describe(`FDX Financroo app`, () => {
       consentPage.assertPermissions(4);
       consentPage.assertThatAccountsAreNotVisible(accountsIds);
       consentPage.confirm();
-      financrooAccountsPage.assertAccounts(accountsIds)
+      consentPage.checkAccounts(accountsIds)
       consentPage.confirm();
 
       financrooModalPage.assertThatModalIsDisplayed()
       financrooModalPage.close()
 
       financrooAccountsPage.assertThatPageIsDisplayed()
+      financrooAccountsPage.assertAccounts(accountsIds)
       financrooAccountsPage.disconnectAccounts()
 
       financrooWelcomePage.assertThatConnectBankPageIsDisplayed()
