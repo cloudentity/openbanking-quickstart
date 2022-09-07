@@ -47,9 +47,7 @@ describe(`FDX Financroo app`, () => {
       if (environmentVariables.isMfaEnabled()) {
         mfaPage.typePin()
       }
-      consentPage.assertPermissions(4);
-      consentPage.assertThatAccountsAreNotVisible(accountsIds);
-      consentPage.clickContinue();
+
       consentPage.clickContinue();
       consentPage.checkAccounts(accountsIds)
       consentPage.confirm();
