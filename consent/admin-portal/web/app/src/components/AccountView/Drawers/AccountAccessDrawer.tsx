@@ -4,12 +4,7 @@ import Avatar from "@mui/material/Avatar";
 import { uniq } from "ramda";
 
 import CustomDrawer from "./CustomDrawer";
-import {
-  drawerStyles,
-  permissionsDict,
-  getDate,
-  ClientType,
-} from "../../utils";
+import { drawerStyles, permissionsDict, getDate, Consent } from "../../utils";
 import Chip from "../../Chip";
 
 const useStyles = makeStyles()(theme => ({
@@ -57,8 +52,8 @@ const useStyles = makeStyles()(theme => ({
 }));
 
 interface Props {
-  drawerData: ClientType["consents"][0];
-  setDrawerData: (data: string | null) => void;
+  drawerData: Consent;
+  setDrawerData: (data: Consent | undefined) => void;
 }
 
 function AccountAccessDrawer({ drawerData, setDrawerData }: Props) {
@@ -92,9 +87,13 @@ function AccountAccessDrawer({ drawerData, setDrawerData }: Props) {
             className={classes.logo}
             style={{ backgroundColor: "white", color: "#626576" }}
           >
-            {drawerData?.Client?.name[0]?.toUpperCase()}
+            {drawerData.CreditorAccountName
+              ? drawerData.CreditorAccountName[0].toUpperCase()
+              : ""}
           </Avatar>
-          <h3 className={classes.name}>{drawerData?.Client?.name}</h3>
+          <h3 className={classes.name}>
+            {drawerData.CreditorAccountName ?? ""}
+          </h3>
           <div style={{ flex: 1 }} />
           <Chip type={status && status.toLowerCase()}>{status}</Chip>
         </div>

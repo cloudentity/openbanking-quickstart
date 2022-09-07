@@ -63,7 +63,12 @@ const useStyles = makeStyles()(theme => ({
   },
 }));
 
-export default function AcccountsAddedDialog({ open, setOpen }) {
+interface Props {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}
+
+export default function AcccountsAddedDialog({ open, setOpen }: Props) {
   const { classes } = useStyles();
   const navigate = useNavigate();
 

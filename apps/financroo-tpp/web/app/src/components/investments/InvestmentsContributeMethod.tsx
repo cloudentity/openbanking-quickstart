@@ -13,7 +13,8 @@ import cardIcon from "../../assets/icon-credit-card.svg";
 import paypalIcon from "../../assets/icon-paypal.svg";
 import walletIcon from "../../assets/icon-wallet.svg";
 import { Bank } from "../banks";
-import { BalanceType, AccountType } from "./InvestmentsContribute";
+import { Account, Balance } from "../types";
+import { getCurrency } from "../utils";
 
 const useStyles = makeStyles()(theme => ({
   titleContainer: {
@@ -142,38 +143,46 @@ const useStyles = makeStyles()(theme => ({
   },
 }));
 
-type Props = {
+interface Props {
   amount: string;
+  currency: string | undefined;
   handleBack: () => void;
   handleNext: () => void;
-  bank: string;
-  setBank: (bank: string) => void;
-  account: string;
-  setAcccount: (account: string) => void;
+  selectedBankId: string;
+  setSelectedBankId: (bankId: string) => void;
+  selectedAccountId: string;
+  setSelectedAccountId: (accountId: string) => void;
   banks: Bank[];
-  balances: BalanceType[];
   alert: string;
   setAlert: (message: string) => void;
-  accounts: AccountType[];
-};
+  balances: Balance[];
+  accounts: Account[];
+}
 
 export default function InvestmentsContributeMethod({
   amount,
+  currency,
   handleBack,
   handleNext,
-  bank,
-  setBank,
-  account,
-  setAcccount,
-  banks,
-  balances,
+  selectedBankId,
+  setSelectedBankId,
+  selectedAccountId,
+  setSelectedAccountId,
   alert,
   setAlert,
+  balances,
   accounts,
+  banks,
 }: Props) {
   const { cx, classes } = useStyles();
-  const selectedAccount = balances.find(a => a.AccountId === account);
-  const selectedAccountInfo = accounts.find(a => a.AccountId === account);
+
+  const selectedAccount = balances.find(
+    balance => balance.AccountId === selectedAccountId
+  );
+
+  const selectedAccountInfo = accounts.find(
+    account => account.AccountId === selectedAccountId
+  );
 
   useEffect(() => {
     if (selectedAccount) {
@@ -183,14 +192,17 @@ export default function InvestmentsContributeMethod({
         setAlert("Payment amount exceeds account balance");
       }
     }
-  }, [account, amount, selectedAccount, setAlert]);
+  }, [amount, selectedAccount, setAlert]);
 
   return (
     <ContributionCard
       title={
         <div className={classes.titleContainer}>
           <div className={classes.heading}>PAYMENT TOTAL</div>
-          <Chip label={`£ ${amount}`} className={classes.chip} />
+          <Chip
+            label={`${getCurrency(currency)} ${parseFloat(amount).toFixed(2)}`}
+            className={classes.chip}
+          />
         </div>
       }
       backButton={{ title: "Back", onClick: handleBack }}
@@ -201,6 +213,7 @@ export default function InvestmentsContributeMethod({
             handleNext();
           }
         },
+        disabled: !!alert,
       }}
     >
       <Field label="Select payment method">
@@ -224,8 +237,8 @@ export default function InvestmentsContributeMethod({
         helperText="Paying with your bank is completely safe and secure with Open Banking"
       >
         <Select
-          value={bank}
-          onChange={v => setBank(v.target.value as any)}
+          value={selectedBankId}
+          onChange={v => setSelectedBankId(v.target.value)}
           style={{ width: "100%" }}
           variant="outlined"
         >
@@ -252,21 +265,21 @@ export default function InvestmentsContributeMethod({
       <Field>
         <div id="accounts-list" className={classes.accountSelect}>
           {balances
-            .filter(b => b.BankId === bank)
+            .filter(b => b.BankId === selectedBankId)
             .map(({ AccountId, Amount }) => (
               <div
                 key={AccountId}
                 className={cx(
                   classes.accountSelectItem,
-                  account === AccountId && classes.active
+                  selectedAccountId === AccountId && classes.active
                 )}
               >
                 <Radio
-                  checked={account === AccountId}
+                  checked={selectedAccountId === AccountId}
                   color="primary"
                   onChange={e => {
                     if (e.target.checked) {
-                      setAcccount(AccountId);
+                      setSelectedAccountId(AccountId);
                     }
                   }}
                 />
@@ -276,7 +289,7 @@ export default function InvestmentsContributeMethod({
                   <div>**** ***** **** {AccountId} </div>
                 </div>
                 <div style={{ flex: 1, textAlign: "right" }}>
-                  £ <>{Amount}</>
+                  {getCurrency(currency)} <>{parseFloat(Amount).toFixed(2)}</>
                 </div>
               </div>
             ))}

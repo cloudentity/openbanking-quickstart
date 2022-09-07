@@ -5,8 +5,9 @@ import Chip from "@mui/material/Chip";
 import ContributionCard from "./ContributionCard";
 import Field from "./Field";
 import { theme } from "../../theme";
-import { BalanceType, AccountType } from "./InvestmentsContribute";
 import { banks } from "../banks";
+import { Account, Balance } from "../types";
+import { getCurrency } from "../utils";
 
 const useStyles = makeStyles()(theme => ({
   title: {
@@ -87,20 +88,22 @@ const useStyles = makeStyles()(theme => ({
   },
 }));
 
-type Props = {
+interface Props {
   amount: string;
-  bank: string;
-  account: string;
-  balances: BalanceType[];
+  currency: string | undefined;
+  selectedBankId: string;
+  selectedAccountId: string;
+  balances: Balance[];
+  accounts: Account[];
   handleBack: () => void;
   handleNext: () => void;
-  accounts: AccountType[];
-};
+}
 
 export default function InvestmentsContributeSummary({
   amount,
-  bank,
-  account,
+  currency,
+  selectedBankId,
+  selectedAccountId,
   balances,
   handleBack,
   handleNext,
@@ -108,9 +111,11 @@ export default function InvestmentsContributeSummary({
 }: Props) {
   const { cx, classes } = useStyles();
 
-  const selectedBalance = balances.find(a => a.AccountId === account);
-  const selectedBank = banks.find(a => a.value === bank);
-  const selectedAccountInfo = accounts.find(a => a.AccountId === account);
+  const selectedBalance = balances.find(a => a.AccountId === selectedAccountId);
+  const selectedBank = banks.find(a => a.value === selectedBankId);
+  const selectedAccountInfo = accounts.find(
+    a => a.AccountId === selectedAccountId
+  );
 
   return (
     <ContributionCard
@@ -125,11 +130,16 @@ export default function InvestmentsContributeSummary({
         >
           <div className={classes.heading}>PAYMENT TOTAL</div>
           <div>
-            <Chip label={`£ ${amount}`} className={classes.chip} />
+            <Chip
+              label={`${getCurrency(currency)} ${parseFloat(amount).toFixed(
+                2
+              )}`}
+              className={classes.chip}
+            />
           </div>
         </div>
       </Field>
-      <Field style={{ ...theme.custom.caption } as any}>
+      <Field style={theme.custom.caption}>
         To consent to this transaction, confirm the details below
       </Field>
       <Field label="Payee Information">
@@ -157,7 +167,7 @@ export default function InvestmentsContributeSummary({
           </div>
         </div>
       </Field>
-      <Field style={{ ...theme.custom.caption, marginBottom: 0 } as any}>
+      <Field style={{ ...theme.custom.caption, marginBottom: 0 }}>
         You will be securely transferred to <strong>Go Bank</strong> to
         authorize the payment
       </Field>

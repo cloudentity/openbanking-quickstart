@@ -12,6 +12,7 @@ import Confetti from "./Confetti";
 import bankIcon from "../../assets/banks/gobank-icon.svg";
 import checkIcon from "../../assets/icon-check.svg";
 import qs from "query-string";
+import { getCurrency } from "../utils";
 
 const useStyles = makeStyles()(theme => ({
   title: {
@@ -143,7 +144,9 @@ export default function InvestmentsContributeSuccess() {
               </div>
               <div style={{ paddingBottom: 0 }}>
                 <Chip
-                  label={`${searchParsed.amount} ${searchParsed.currency}`}
+                  label={`${searchParsed.amount} ${getCurrency(
+                    searchParsed.currency
+                  )}`}
                   className={classes.chip}
                 />
               </div>

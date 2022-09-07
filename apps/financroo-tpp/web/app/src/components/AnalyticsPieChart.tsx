@@ -3,20 +3,27 @@ import { Cell, Pie, PieChart, ResponsiveContainer } from "recharts";
 import Typography from "@mui/material/Typography";
 import classes from "./chartsStyles.module.css";
 import { mapTransactionsToPieChartData, stringToHex } from "./analytics.utils";
-import { includes } from "ramda";
+import { Filter, Transaction } from "./types";
+
+interface Props {
+  currencyType: string;
+  data: Transaction[];
+  filtering: Filter;
+  onChangeFiltering: (filter: Filter) => void;
+}
 
 export default function AnalyticsPieChart({
   currencyType,
   data,
   filtering,
   onChangeFiltering,
-}) {
+}: Props) {
   const mappedAsNameValue = mapTransactionsToPieChartData(data);
 
   const filteredByCategories =
-    filtering.categories.length > 0
+    filtering.categories && filtering.categories.length > 0
       ? data.filter(t =>
-          includes(t.BankTransactionCode.Code, filtering.categories)
+          filtering.categories?.includes(t.BankTransactionCode.Code)
         )
       : data;
 
@@ -35,13 +42,13 @@ export default function AnalyticsPieChart({
             minHeight: 22,
           }}
         >
-          {filtering?.months.join(" ")}
+          {filtering?.months?.join(" ")}
         </Typography>
         <Typography style={{ fontSize: 16, fontWeight: 600, marginTop: 6 }}>
           {currencyType} {filteredSumAsString}
         </Typography>
         <Typography style={{ fontSize: 12, marginTop: 2, color: "#626576" }}>
-          {filtering?.categories.join(" ")}
+          {filtering?.categories?.join(" ")}
         </Typography>
       </div>
       <ResponsiveContainer width="100%" height={300}>
@@ -56,7 +63,7 @@ export default function AnalyticsPieChart({
             // paddingAngle={5}
             dataKey="value"
             onClick={e =>
-              !filtering?.categories.includes(e.name)
+              !filtering?.categories?.includes(e.name)
                 ? onChangeFiltering({ categories: [e.name] })
                 : onChangeFiltering({ categories: [] })
             }
@@ -66,7 +73,7 @@ export default function AnalyticsPieChart({
                 cursor="pointer"
                 key={`cell-${index}`}
                 fill={
-                  filtering?.categories.includes(entry.name)
+                  filtering?.categories?.includes(entry.name)
                     ? "#36C6AF"
                     : (stringToHex(entry.name) as string)
                 }

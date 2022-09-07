@@ -1,5 +1,4 @@
 import {
-  includes,
   lensIndex,
   lensProp,
   map,
@@ -9,6 +8,7 @@ import {
   toPairs,
   zip,
 } from "ramda";
+import { Transaction } from "./types";
 
 const months = [
   "JAN",
@@ -25,30 +25,33 @@ const months = [
   "DEV",
 ];
 
-export const applyFiltering = (filtering, data) => {
+export const applyFiltering = (
+  filtering: { accounts?: string[]; months?: string[]; categories?: string[] },
+  data: Transaction[]
+) => {
   let transactions = data;
 
-  if (filtering?.accounts?.length > 0) {
+  if (filtering.accounts && filtering.accounts.length > 0) {
     transactions = transactions.filter(t =>
-      includes(t.AccountId, filtering.accounts)
+      filtering.accounts?.includes(t.AccountId)
     );
   } else {
     transactions = [];
   }
 
-  if (filtering?.months?.length > 0) {
+  if (filtering.months && filtering.months.length > 0) {
     transactions = transactions.filter(t => {
       const arr = t.BookingDateTime.split("-");
       const monthIndex = parseInt(arr[1], 10) - 1;
       const monthName = months[monthIndex];
 
-      return includes(monthName, filtering.months);
+      return filtering.months?.includes(monthName);
     });
   }
 
-  if (filtering?.categories?.length > 0) {
+  if (filtering?.categories && filtering.categories.length > 0) {
     transactions = transactions.filter(t =>
-      includes(t.BankTransactionCode.Code, filtering.categories)
+      filtering.categories?.includes(t.BankTransactionCode.Code)
     );
   }
 

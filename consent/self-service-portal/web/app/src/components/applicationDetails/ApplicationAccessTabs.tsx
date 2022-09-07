@@ -3,6 +3,7 @@ import { makeStyles } from "tss-react/mui";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import ApplicationAccessTable from "./ApplicationAccessTable";
+import { ClientConsent, ConsentAccount } from "../types";
 
 const useStyles = makeStyles()(theme => ({
   container: {
@@ -32,8 +33,8 @@ const useStyles = makeStyles()(theme => ({
 }));
 
 interface Props {
-  data: any; // FIXME
-  accounts: any; // FIXME
+  data: ClientConsent;
+  accounts: ConsentAccount[];
   handleRevoke: (id: string, consent_type: string) => void;
   status: string;
 }

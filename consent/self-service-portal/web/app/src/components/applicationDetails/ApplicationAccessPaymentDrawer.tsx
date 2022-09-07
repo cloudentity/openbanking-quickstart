@@ -5,7 +5,8 @@ import Chip from "../Chip";
 import logo from "../../assets/welcome-image.png";
 import ApplicationAccessDrawer from "./ApplicationAccessDrawer";
 import { getDate } from "../ApplicationSimpleCard";
-import { currencyDict, drawerStyles } from "./utils";
+import { getCurrency, drawerStyles } from "./utils";
+import { Consent } from "../types";
 
 const useStyles = makeStyles()(() => ({
   ...drawerStyles,
@@ -16,8 +17,8 @@ const useStyles = makeStyles()(() => ({
 }));
 
 interface Props {
-  drawerData: any;
-  setDrawerData: (data: string | null) => void;
+  drawerData: Consent;
+  setDrawerData: (data: Consent | undefined) => void;
   status: string;
 }
 
@@ -29,9 +30,7 @@ function ApplicationAccessPaymentDrawer({
   const { classes } = useStyles();
 
   const transactionDetails = {
-    Amount: `${currencyDict[drawerData?.Currency] || currencyDict.GBP} ${
-      drawerData?.Amount
-    }`,
+    Amount: `${getCurrency(drawerData?.Currency)} ${drawerData?.Amount}`,
     Status: drawerData?.Status,
     "Consent id": drawerData?.ConsentID,
     "Debtor Account": {

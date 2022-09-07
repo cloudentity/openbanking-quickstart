@@ -1,6 +1,7 @@
 import React, { ReactNode } from "react";
 import { makeStyles } from "tss-react/mui";
 import Drawer from "@mui/material/Drawer";
+import { Consent } from "../../utils";
 
 const useStyles = makeStyles()(() => ({
   container: {
@@ -32,7 +33,7 @@ interface Props {
   children: ReactNode;
   header: ReactNode;
   bottomBar?: ReactNode;
-  setDrawerData?: (data: string | null) => void;
+  setDrawerData?: (data: Consent | undefined) => void;
   handleClose?: () => void;
 }
 
@@ -50,7 +51,8 @@ function CustomDrawer({
       anchor="right"
       open={true}
       onClose={() =>
-        (setDrawerData && setDrawerData(null)) || (handleClose && handleClose())
+        (setDrawerData && setDrawerData(undefined)) ||
+        (handleClose && handleClose())
       }
     >
       <div className={classes.header}>{header}</div>

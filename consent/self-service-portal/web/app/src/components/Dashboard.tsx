@@ -11,6 +11,7 @@ import { api } from "../api/api";
 import noAccountEmptyState from "../assets/no-accounts-empty-state.svg";
 import Subheader from "./Subheader";
 import ApplicationSimpleCard from "./ApplicationSimpleCard";
+import { ClientConsent, ConsentsResponse } from "./types";
 
 const useStyles = makeStyles()(theme => ({
   filterTitle: {
@@ -37,7 +38,7 @@ export default function Dashboard({
   tenantId,
 }) {
   const [isProgress, setProgress] = useState(true);
-  const [clientConsents, setClientConsents] = useState<any>([]);
+  const [clientConsents, setClientConsents] = useState<ClientConsent[]>([]);
   const { classes } = useStyles();
   const [filter, setFilter] = useState<"all" | "account" | "payment">("all");
 
@@ -45,7 +46,7 @@ export default function Dashboard({
     setProgress(true);
     api
       .getConsents()
-      .then(res =>
+      .then((res: ConsentsResponse) =>
         setClientConsents(res.client_consents ? res.client_consents : [])
       )
       .catch(err => console.log(err))
@@ -104,7 +105,7 @@ export default function Dashboard({
                         id="no-account-subtitle"
                         style={{ marginTop: 12, color: "#A0A3B5" }}
                       >
-                        You haven’t connected any accounts yet to manage access
+                        You haven't connected any accounts yet to manage access
                       </Typography>
                       <img
                         src={noAccountEmptyState}

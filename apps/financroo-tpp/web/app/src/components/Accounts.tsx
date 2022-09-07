@@ -4,6 +4,20 @@ import Button from "@mui/material/Button";
 import BankCard from "./BankCard";
 import mainClasses from "./main.module.css";
 import Card from "@mui/material/Card";
+import { getCurrency } from "./utils";
+import { Account, Balance, Filter } from "./types";
+
+interface Props {
+  banks: string[];
+  reconnectBank: boolean;
+  accounts: Account[];
+  balances: Balance[];
+  filtering: Filter;
+  onChangeFiltering: (filter: Filter) => void;
+  onConnectClick: () => void;
+  onDisconnect: (bankId: string) => () => void;
+  onReconnect: (bankId: string, permissions: string[]) => () => void;
+}
 
 export default function Accounts({
   banks,
@@ -15,11 +29,11 @@ export default function Accounts({
   onConnectClick,
   onDisconnect,
   onReconnect,
-}) {
+}: Props) {
   const totalBalance = balances
     .reduce((total, b) => total + parseFloat(b.Amount), 0)
     .toFixed(2);
-  const currencyType = balances[0]?.Currency || "N/A";
+  const currencyType = getCurrency(balances[0]?.Currency);
 
   return (
     <div style={{ height: "100%", display: "flex", flexDirection: "column" }}>
@@ -58,7 +72,7 @@ export default function Accounts({
         <BankCard
           key={bankId}
           bankId={bankId}
-          reconnect={reconnectBank}
+          reconnectBank={reconnectBank}
           accounts={accounts.filter(a => a.BankId === bankId)}
           balances={balances}
           filtering={filtering}

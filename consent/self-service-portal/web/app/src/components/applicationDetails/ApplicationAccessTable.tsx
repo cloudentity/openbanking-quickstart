@@ -10,6 +10,8 @@ import ApplicationAccessPaymentDrawer from "./ApplicationAccessPaymentDrawer";
 import ApplicationAccessAccountDrawer from "./ApplicationAccessAccountDrawer";
 import Chip from "../Chip";
 import { getDate } from "../ApplicationSimpleCard";
+import { Consent, ConsentAccount } from "../types";
+import { getCurrency } from "./utils";
 
 const useStyles = makeStyles()(() => ({
   table: {
@@ -70,7 +72,12 @@ function getTableHead(type: "account" | "payment") {
   return null;
 }
 
-function getTableBody(type: "account" | "payment", rows, setDrawerData, data) {
+function getTableBody(
+  type: "account" | "payment",
+  rows: Row[],
+  setDrawerData: (consent: Consent | undefined) => void,
+  data: Consent[]
+) {
   if (type === "account") {
     return (
       <TableBody>
@@ -103,7 +110,7 @@ function getTableBody(type: "account" | "payment", rows, setDrawerData, data) {
               )}
             </TableCell>
             <TableCell>
-              <Chip type={row.status && row.status.toLowerCase()}>
+              <Chip type={row.status && (row.status.toLowerCase() as any)}>
                 {row.status}
               </Chip>
             </TableCell>
@@ -128,11 +135,13 @@ function getTableBody(type: "account" | "payment", rows, setDrawerData, data) {
             <TableCell>{row.account.data}</TableCell>
             <TableCell>{row.creditor}</TableCell>
             <TableCell>
-              <Chip type={row.status && row.status.toLowerCase()}>
+              <Chip type={row.status && (row.status.toLowerCase() as any)}>
                 {row.status}
               </Chip>
             </TableCell>
-            <TableCell align="right">£ {row.amount}</TableCell>
+            <TableCell align="right">
+              {getCurrency(row.currency)} {row.amount}
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
@@ -141,7 +150,7 @@ function getTableBody(type: "account" | "payment", rows, setDrawerData, data) {
   return null;
 }
 
-function getAccountNames(accountIds, accounts) {
+function getAccountNames(accountIds: string[], accounts: ConsentAccount[]) {
   const names = accountIds
     .map(id => {
       const found = accounts.find(v => v.id === id);
@@ -158,9 +167,20 @@ function getAccountNames(accountIds, accounts) {
   };
 }
 
+type Row = {
+  authorised: string;
+  account: { data: string; more: number | null };
+  status: string;
+  activeUntil?: string;
+  id: string;
+  creditor?: string;
+  amount?: string;
+  currency?: string;
+};
+
 interface Props {
-  data: any;
-  accounts: any;
+  data: Consent[];
+  accounts: ConsentAccount[];
   type: "account" | "payment";
   handleRevoke: (id: string, consent_type: string) => void;
   status: string;
@@ -174,22 +194,29 @@ function ApplicationAccessTable({
   status,
 }: Props) {
   const { classes } = useStyles();
-  const [drawerPaymentData, setDrawerPaymentData] = useState<any>(null); //FIXME any
-  const [drawerAccountData, setDrawerAccountData] = useState<any>(null); //FIXME any
+  const [drawerPaymentData, setDrawerPaymentData] = useState<Consent>();
+  const [drawerAccountData, setDrawerAccountData] = useState<Consent>();
 
-  function createDataAccount(authorised, account, status, activeUntil, id) {
+  function createDataAccount(
+    authorised: string,
+    account: { data: string; more: number | null },
+    status: string,
+    activeUntil: string,
+    id: string
+  ) {
     return { authorised, account, status, activeUntil, id };
   }
 
   function createDataPayment(
-    authorised,
-    account,
-    creditor,
-    status,
-    amount,
-    id
+    authorised: string,
+    account: { data: string; more: number | null },
+    creditor: string,
+    status: string,
+    amount: string,
+    id: string,
+    currency: string
   ) {
-    return { authorised, account, creditor, status, amount, id };
+    return { authorised, account, creditor, status, amount, id, currency };
   }
 
   const rowsAccount =
@@ -222,6 +249,7 @@ function ApplicationAccessTable({
             ConsentID,
             Amount,
             CreditorAccountName,
+            Currency,
           }) =>
             createDataPayment(
               getDate(CreationDateTime),
@@ -229,7 +257,8 @@ function ApplicationAccessTable({
               CreditorAccountName,
               Status,
               Amount,
-              ConsentID
+              ConsentID,
+              Currency
             )
         )
       : [];
