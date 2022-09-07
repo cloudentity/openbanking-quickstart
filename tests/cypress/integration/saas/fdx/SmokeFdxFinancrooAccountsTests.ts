@@ -20,12 +20,8 @@ describe(`FDX Financroo app`, () => {
   const financrooModalPage: FinancrooModalPage = new FinancrooModalPage();
   const financrooAccountsPage: FinancrooAccountsPage = new FinancrooAccountsPage();
 
-  const creditsAccountId: string = `96534987`;
-  const savingsAccountId: string = `1000002`;
-  const savings2AccountId: string = `1000001`;
-
-
-
+  const savingsAccountId: string = `1122334455`;
+  const creditsAccountId: string = `96565987`;
 
   beforeEach(() => {
     financrooLoginPage.visit()
@@ -35,10 +31,9 @@ describe(`FDX Financroo app`, () => {
   });
 
   [
-    [creditsAccountId, savingsAccountId, savings2AccountId],
+    [creditsAccountId, savingsAccountId],
     [creditsAccountId],
     [savingsAccountId],
-    [savings2AccountId],
   ].forEach((accountsIds) => {
     it(`Happy path with selected accounts: ${accountsIds}`, () => {
       financrooWelcomePage.reconnectGoBank()
@@ -49,7 +44,7 @@ describe(`FDX Financroo app`, () => {
       }
       consentPage.assertPermissions(4);
       consentPage.assertThatAccountsAreNotVisible(accountsIds);
-      consentPage.confirm();
+      consentPage.clickContinue();
       consentPage.checkAccounts(accountsIds)
       consentPage.confirm();
 
