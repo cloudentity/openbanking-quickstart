@@ -18,13 +18,6 @@ export class FinancrooWelcomePage {
     })
   }
 
-  public connectSantanderBank(): void {
-    cy.get(this.accessBankLocator).click()
-    this.financrooConnectAccountPage.clickSantanderBankIcon()
-    this.financrooConnectAccountPage.allow()
-
- }
-
  public assertThatConnectBankPageIsDisplayed(): void {
     cy.get(this.welcomeTitleLocator).should('be.visible')
     cy.get(this.welcomeTitleLocator).should('contain.text', 'Welcome to Financroo Smart Banking');
