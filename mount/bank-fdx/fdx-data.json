@@ -13,7 +13,7 @@
       "accounts" : [
         {
           "depositAccount" : {
-            "accountId" : "10001",
+            "accountId" : "1000001",
             "nickname" : "My Savings Acc XXXX3223",
             "status" : "OPEN",
             "balanceAsOf" : "2017-09-05T13:15:30.751Z",
@@ -22,11 +22,20 @@
         },
         {
           "depositAccount" : {
-            "accountId" : "10002",
+            "accountId" : "1000002",
             "nickname" : "My Checking Acc XXXX4443",
             "status" : "OPEN",
             "balanceAsOf" : "2017-09-05T13:15:30.751Z",
             "currentBalance" : 332.22
+          }
+        },
+        {
+          "depositAccount" : {
+            "accountId" : "96534987",
+            "nickname" : "My Savings 2 Acc XXXX3224",
+            "status" : "OPEN",
+            "balanceAsOf" : "2017-09-05T13:15:30.751Z",
+            "currentBalance" : 1200.00
           }
         }
       ]
@@ -34,7 +43,7 @@
     "fdx_balances": [
       {
         "depositAccount": {
-        "accountId": "10002",
+        "accountId": "1000002",
         "accountType": "DEPOSIT",
         "displayName": "XXXX4443",
         "status": "OPEN",
@@ -45,12 +54,23 @@
       },
       {
         "depositAccount": {
-        "accountId": "10001",
+        "accountId": "1000001",
         "accountType": "DEPOSIT",
         "displayName": "XXXX3223",
         "status": "OPEN",
         "description": "Savings 1",
         "nickname": "My Savings Acc XXXX3223",
+        "currency": {"currencyCode": "USD"}
+        }
+      },
+      {
+        "depositAccount": {
+        "accountId": "96534987",
+        "accountType": "DEPOSIT",
+        "displayName": "XXXX3223",
+        "status": "OPEN",
+        "description": "Savings 2",
+        "nickname": "My Savings 2 Acc XXXX3224",
         "currency": {"currencyCode": "USD"}
         }
       }
@@ -68,7 +88,7 @@
           },
           "transactions": [
             {"depositTransaction":{
-              "accountId": "10001",
+              "accountId": "1000001",
               "transactionId": "20001",
               "category": "MCC",
               "transactionCategory": "DEPOSIT_ACCOUNT_TRANSACTION",
@@ -78,7 +98,7 @@
               "amount": 220.00
             }},
             {"depositTransaction":{
-              "accountId": "10001",
+              "accountId": "1000001",
               "transactionId": "20001",
               "category": "SIG",
               "transactionCategory": "DEPOSIT_ACCOUNT_TRANSACTION",
