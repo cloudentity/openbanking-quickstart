@@ -12,12 +12,12 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// PaymentDetailsentity1 PaymentDetailsentity1
+// PaymentDetailsentity2 PaymentDetailsentity2
 //
 // Breakdown of payment details
 //
-// swagger:model PaymentDetailsentity1
-type PaymentDetailsentity1 struct {
+// swagger:model PaymentDetailsentity2
+type PaymentDetailsentity2 struct {
 
 	// The amount of payment applied to escrow
 	EscrowAmount float64 `json:"escrowAmount,omitempty"`
@@ -38,18 +38,18 @@ type PaymentDetailsentity1 struct {
 	PrincipalAmount float64 `json:"principalAmount,omitempty"`
 }
 
-// Validate validates this payment detailsentity1
-func (m *PaymentDetailsentity1) Validate(formats strfmt.Registry) error {
+// Validate validates this payment detailsentity2
+func (m *PaymentDetailsentity2) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validates this payment detailsentity1 based on context it is used
-func (m *PaymentDetailsentity1) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validates this payment detailsentity2 based on context it is used
+func (m *PaymentDetailsentity2) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 
 // MarshalBinary interface implementation
-func (m *PaymentDetailsentity1) MarshalBinary() ([]byte, error) {
+func (m *PaymentDetailsentity2) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -57,8 +57,8 @@ func (m *PaymentDetailsentity1) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *PaymentDetailsentity1) UnmarshalBinary(b []byte) error {
-	var res PaymentDetailsentity1
+func (m *PaymentDetailsentity2) UnmarshalBinary(b []byte) error {
+	var res PaymentDetailsentity2
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

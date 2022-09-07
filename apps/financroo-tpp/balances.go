@@ -111,6 +111,7 @@ func (o *FDXBankClient) GetBalances(c *gin.Context, accessToken string, bank Con
 		balanceData = []Balance{}
 		err         error
 	)
+
 	if resp, err = o.AccountInformation.SearchForAccounts(fdxAccounts.NewSearchForAccountsParamsWithContext(c), httptransport.BearerToken(accessToken)); err != nil {
 		return balanceData, err
 	}

@@ -25,7 +25,7 @@ type Anarrayofstatements struct {
 	Links *PageMetadataLinks1 `json:"links,omitempty"`
 
 	// page
-	Page *PageMetadata1 `json:"page,omitempty"`
+	Page *PageMetadata2 `json:"page,omitempty"`
 
 	// An array of Statement, each with its HATEOAS link to retrieve the account statement
 	Statements []*Statemententity `json:"statements"`

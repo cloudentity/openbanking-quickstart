@@ -61,7 +61,7 @@ type LoanTransactionentity1 struct {
 	Memo string `json:"memo,omitempty"`
 
 	// payment details
-	PaymentDetails *PaymentDetailsentity1 `json:"paymentDetails,omitempty"`
+	PaymentDetails *PaymentDetailsentity2 `json:"paymentDetails,omitempty"`
 
 	// The date and time that the transaction was posted to the account. If not provided then TransactionTimestamp can be used as PostedTimeStamp
 	// Example: 2021-07-15T14:46:41.375Z

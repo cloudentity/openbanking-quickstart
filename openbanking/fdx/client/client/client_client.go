@@ -13,8 +13,12 @@ import (
 	"github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/client/account_information"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/client/account_statements"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/client/account_transactions"
+	"github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/client/internal_transfers"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/client/money_movement"
+	"github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/client/payee_management"
+	"github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/client/payments"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/client/personal_information"
+	"github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/client/recurring_payments"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/client/reward_program_categories"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/client/reward_program_information"
 )
@@ -64,8 +68,12 @@ func New(transport runtime.ClientTransport, formats strfmt.Registry) *Client {
 	cli.AccountInformation = account_information.New(transport, formats)
 	cli.AccountStatements = account_statements.New(transport, formats)
 	cli.AccountTransactions = account_transactions.New(transport, formats)
+	cli.InternalTransfers = internal_transfers.New(transport, formats)
 	cli.MoneyMovement = money_movement.New(transport, formats)
+	cli.PayeeManagement = payee_management.New(transport, formats)
+	cli.Payments = payments.New(transport, formats)
 	cli.PersonalInformation = personal_information.New(transport, formats)
+	cli.RecurringPayments = recurring_payments.New(transport, formats)
 	cli.RewardProgramCategories = reward_program_categories.New(transport, formats)
 	cli.RewardProgramInformation = reward_program_information.New(transport, formats)
 	return cli
@@ -118,9 +126,17 @@ type Client struct {
 
 	AccountTransactions account_transactions.ClientService
 
+	InternalTransfers internal_transfers.ClientService
+
 	MoneyMovement money_movement.ClientService
 
+	PayeeManagement payee_management.ClientService
+
+	Payments payments.ClientService
+
 	PersonalInformation personal_information.ClientService
+
+	RecurringPayments recurring_payments.ClientService
 
 	RewardProgramCategories reward_program_categories.ClientService
 
@@ -135,8 +151,12 @@ func (c *Client) SetTransport(transport runtime.ClientTransport) {
 	c.AccountInformation.SetTransport(transport)
 	c.AccountStatements.SetTransport(transport)
 	c.AccountTransactions.SetTransport(transport)
+	c.InternalTransfers.SetTransport(transport)
 	c.MoneyMovement.SetTransport(transport)
+	c.PayeeManagement.SetTransport(transport)
+	c.Payments.SetTransport(transport)
 	c.PersonalInformation.SetTransport(transport)
+	c.RecurringPayments.SetTransport(transport)
 	c.RewardProgramCategories.SetTransport(transport)
 	c.RewardProgramInformation.SetTransport(transport)
 }
