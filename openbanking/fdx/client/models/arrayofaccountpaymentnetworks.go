@@ -25,7 +25,7 @@ type Arrayofaccountpaymentnetworks struct {
 	Links *PageMetadataLinks1 `json:"links,omitempty"`
 
 	// page
-	Page *PageMetadata1 `json:"page,omitempty"`
+	Page *PageMetadata2 `json:"page,omitempty"`
 
 	// Array of payment networks
 	PaymentNetworks []*PaymentNetworkSupportedbyAccount `json:"paymentNetworks"`

@@ -44,7 +44,7 @@ type Customerentity struct {
 	GovernmentID string `json:"governmentId,omitempty"`
 
 	// name
-	Name *CustomerNameentity2 `json:"name,omitempty"`
+	Name *CustomerNameentity1 `json:"name,omitempty"`
 
 	// Country specific Tax Id associated with this customer (SIN or NAS in Canada, SSN or TIN in US, etc.)
 	TaxID string `json:"taxId,omitempty"`

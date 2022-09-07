@@ -12,12 +12,12 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// PageMetadata1 PageMetadata1
+// PageMetadata2 PageMetadata2
 //
 // Offset IDs for navigating result sets
 //
-// swagger:model PageMetadata1
-type PageMetadata1 struct {
+// swagger:model PageMetadata2
+type PageMetadata2 struct {
 
 	// Opaque identifier. Does not need to be numeric or have any specific pattern. Implementation specific
 	// Example: 2
@@ -32,18 +32,18 @@ type PageMetadata1 struct {
 	TotalElements int32 `json:"totalElements,omitempty"`
 }
 
-// Validate validates this page metadata1
-func (m *PageMetadata1) Validate(formats strfmt.Registry) error {
+// Validate validates this page metadata2
+func (m *PageMetadata2) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validates this page metadata1 based on context it is used
-func (m *PageMetadata1) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validates this page metadata2 based on context it is used
+func (m *PageMetadata2) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 
 // MarshalBinary interface implementation
-func (m *PageMetadata1) MarshalBinary() ([]byte, error) {
+func (m *PageMetadata2) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -51,8 +51,8 @@ func (m *PageMetadata1) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *PageMetadata1) UnmarshalBinary(b []byte) error {
-	var res PageMetadata1
+func (m *PageMetadata2) UnmarshalBinary(b []byte) error {
+	var res PageMetadata2
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}

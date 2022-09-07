@@ -33,6 +33,7 @@ type BankUserData struct {
 	FDXAccounts     fdxAccountModels.Accountsentity             `json:"fdx_accounts"`
 	FDXBalances     []fdxAccountModels.AccountWithDetailsentity `json:"fdx_balances"`
 	FDXTransactions fdxAccountModels.Transactionsentity         `json:"fdx_transactions"`
+	FDXPayments     []fdxAccountModels.Paymententity            `json:"fdx_payments"`
 }
 
 type AccountData struct {

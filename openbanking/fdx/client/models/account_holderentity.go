@@ -44,7 +44,7 @@ type AccountHolderentity struct {
 	GovernmentID string `json:"governmentId,omitempty"`
 
 	// name
-	Name *CustomerNameentity2 `json:"name,omitempty"`
+	Name *CustomerNameentity1 `json:"name,omitempty"`
 
 	// relationship
 	Relationship AccountHolderRelationship2 `json:"relationship,omitempty"`

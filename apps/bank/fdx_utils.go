@@ -2,9 +2,12 @@ package main
 
 import (
 	"fmt"
+	"log"
+	"time"
 
 	fdx "github.com/cloudentity/acp-client-go/clients/openbanking/client/f_d_x"
 	fdxModels "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/models"
+
 	"github.com/sirupsen/logrus"
 
 	"github.com/go-openapi/strfmt"
@@ -47,4 +50,13 @@ func GetFDXUserIdentifierClaimFromIntrospectionResponse(config Config, introspec
 
 func NewFDXTransactionsResponse(transactions fdxModels.Transactionsentity) interface{} {
 	return transactions
+}
+
+func NewFDXPayment(introspectionResponse *fdx.FdxConsentIntrospectOKBody, self strfmt.URI, id string) fdxModels.Paymententity {
+	log.Println("NewFDXPayment called")
+	t := strfmt.Date(time.Now())
+	return fdxModels.Paymententity{
+		PaymentID: &id,
+		DueDate:   &t,
+	}
 }

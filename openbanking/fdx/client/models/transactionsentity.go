@@ -24,7 +24,7 @@ type Transactionsentity struct {
 	Links *PageMetadataLinks1 `json:"links,omitempty"`
 
 	// page
-	Page *PageMetadata1 `json:"page,omitempty"`
+	Page *PageMetadata2 `json:"page,omitempty"`
 
 	// An array of transactions with entity type dependent on the account type (deposit, loan, line of credit, investment or insurance)
 	Transactions []interface{} `json:"transactions"`

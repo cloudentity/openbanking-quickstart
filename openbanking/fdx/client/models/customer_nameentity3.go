@@ -12,12 +12,12 @@ import (
 	"github.com/go-openapi/swag"
 )
 
-// CustomerNameentity2 CustomerNameentity2
+// CustomerNameentity3 CustomerNameentity3
 //
-// The customer's name
+// Name of the payee used to execute the payment
 //
-// swagger:model CustomerNameentity2
-type CustomerNameentity2 struct {
+// swagger:model CustomerNameentity3
+type CustomerNameentity3 struct {
 
 	// Company name
 	Company string `json:"company,omitempty"`
@@ -38,18 +38,18 @@ type CustomerNameentity2 struct {
 	Suffix string `json:"suffix,omitempty"`
 }
 
-// Validate validates this customer nameentity2
-func (m *CustomerNameentity2) Validate(formats strfmt.Registry) error {
+// Validate validates this customer nameentity3
+func (m *CustomerNameentity3) Validate(formats strfmt.Registry) error {
 	return nil
 }
 
-// ContextValidate validates this customer nameentity2 based on context it is used
-func (m *CustomerNameentity2) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
+// ContextValidate validates this customer nameentity3 based on context it is used
+func (m *CustomerNameentity3) ContextValidate(ctx context.Context, formats strfmt.Registry) error {
 	return nil
 }
 
 // MarshalBinary interface implementation
-func (m *CustomerNameentity2) MarshalBinary() ([]byte, error) {
+func (m *CustomerNameentity3) MarshalBinary() ([]byte, error) {
 	if m == nil {
 		return nil, nil
 	}
@@ -57,8 +57,8 @@ func (m *CustomerNameentity2) MarshalBinary() ([]byte, error) {
 }
 
 // UnmarshalBinary interface implementation
-func (m *CustomerNameentity2) UnmarshalBinary(b []byte) error {
-	var res CustomerNameentity2
+func (m *CustomerNameentity3) UnmarshalBinary(b []byte) error {
+	var res CustomerNameentity3
 	if err := swag.ReadJSON(b, &res); err != nil {
 		return err
 	}
