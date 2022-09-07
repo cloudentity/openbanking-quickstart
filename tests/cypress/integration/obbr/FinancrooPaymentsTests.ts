@@ -53,7 +53,7 @@ describe(`Financroo payments app test`, () => {
       mfaPage.typePin()
     }
     consentPage.confirm()
-    financrooContributePage.assertAmount(amount, "BRL")
+    financrooContributePage.assertAmount(amount, "R$")
     financrooContributePage.assertItIsFinished()
   })
 
