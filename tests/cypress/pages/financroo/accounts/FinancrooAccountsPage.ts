@@ -1,10 +1,9 @@
-import { isConstTypeReference } from "../../../../node_modules/typescript/lib/typescript";
 
 export class FinancrooAccountsPage {
   private readonly accountsLocator: string = `.account-name`;
   private readonly investmentsTabLocator: string = `#investments-tab`;
   private readonly accountsTabLocator: string = `#accounts-tab`;
-  private readonly disconnectAccountsButtonLocator: string = `[class*='disconnect-button']`;
+  private readonly disconnectAccountsButtonLocator: string = `#access-bank-button`;
 
   public assertAccounts(accounts: string[]): void {
     const accountElements = cy.get(this.accountsLocator);

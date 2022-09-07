@@ -36,7 +36,7 @@ describe(`Smoke Consent self service app`, () => {
     financrooLoginPage.visit()
     financrooLoginPage.login()
 
-    financrooWelcomePage.connectGoBank()
+    financrooWelcomePage.reconnectGoBank()
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin()

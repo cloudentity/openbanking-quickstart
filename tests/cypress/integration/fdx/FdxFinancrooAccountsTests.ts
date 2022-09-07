@@ -39,7 +39,7 @@ describe(`FDX Financroo app`, () => {
     [savings2AccountId],
   ].forEach((accountsIds) => {
     it(`Happy path with selected accounts: ${accountsIds}`, () => {
-      financrooWelcomePage.connectGoBank()
+      financrooWelcomePage.reconnectGoBank()
 
       acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
       if (environmentVariables.isMfaEnabled()) {
@@ -66,7 +66,7 @@ describe(`FDX Financroo app`, () => {
   // });
 
   it('Cancel on consent page', () => {
-    financrooWelcomePage.connectGoBank()
+    financrooWelcomePage.reconnectGoBank()
 
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
     if (environmentVariables.isMfaEnabled()) {
@@ -81,7 +81,7 @@ describe(`FDX Financroo app`, () => {
   })
 
   it('Cancel on ACP login', () => {
-    financrooWelcomePage.connectGoBank()
+    financrooWelcomePage.reconnectGoBank()
 
     acpLoginPage.cancel();
     // UI error page improvements AUT-5845

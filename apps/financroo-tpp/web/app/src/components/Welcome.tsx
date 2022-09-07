@@ -29,7 +29,7 @@ export default function Welcome({ onConnectClick }) {
           style={{ marginTop: 24 }}
           size="large"
           variant="contained"
-          id="connect-bank-button"
+          id="access-bank-button"
           className="connect-button"
           color="secondary"
           onClick={onConnectClick}
