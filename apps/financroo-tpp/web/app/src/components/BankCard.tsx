@@ -94,6 +94,7 @@ export default function BankCard({
               className="reconnect-button"
               variant="contained"
               color="primary"
+              id="access-bank-button"
               style={{ color: "#fff" }}
               onClick={onReconnect(
                 bankId,
@@ -109,6 +110,7 @@ export default function BankCard({
               size="small"
               className="disconnect-button"
               variant="outlined"
+              id="access-bank-button"
               onClick={onDisconnect(bankId)}
             >
               disconnect
