@@ -51,7 +51,7 @@ describe(`Smoke Financroo payments app test`, () => {
       mfaPage.typePin()
     }
     consentPage.confirm()
-    financrooContributePage.assertAmount(amount, "GBP")
+    financrooContributePage.assertAmount(amount, "£")
     financrooContributePage.assertItIsFinished()
   })
 })
