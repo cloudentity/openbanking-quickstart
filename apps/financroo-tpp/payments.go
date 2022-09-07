@@ -1,18 +1,9 @@
 package main
 
 import (
-	"encoding/json"
-	"log"
-	"time"
-
-	fdxPayment "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/client/payments"
-	fdxModels "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/models"
-
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/client/pagamentos"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/models"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/client/domestic_payments"
-	httptransport "github.com/go-openapi/runtime/client"
-	"github.com/go-openapi/strfmt"
 
 	obModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
 	"github.com/gin-gonic/gin"
@@ -116,31 +107,5 @@ func (o *CDRClient) CreatePayment(c *gin.Context, data interface{}, accessToken 
 }
 
 func (o *FDXBankClient) CreatePayment(c *gin.Context, data interface{}, accessToken string) (PaymentCreated, error) {
-	var (
-		resp    *fdxPayment.GetPaymentOK
-		jsonStr []byte
-		err     error
-	)
-
-	if jsonStr, err = json.Marshal(data); err != nil {
-		log.Printf("Failed to marshal data %v", err)
-	}
-
-	log.Printf("Data as  json: %s", jsonStr)
-
-	amt := 43.21
-	d := strfmt.Date(time.Now())
-	fm := "10001"
-	pmnt := &fdxModels.PaymentForUpdateentity1{
-		Amount:            &amt,
-		DueDate:           &d,
-		FromAccountID:     &fm,
-		MerchantAccountID: "xyz123",
-		ToPayeeID:         &fm,
-	}
-	if o.Payments.SchedulePayment(fdxPayment.NewSchedulePaymentParamsWithContext(c).WithBody(pmnt), httptransport.BearerToken(accessToken)); err != nil {
-		return PaymentCreated{}, errors.Wrapf(err, "failed to call fdx payments endpoint")
-	}
-	log.Printf("Payments response %+v", resp)
 	return PaymentCreated{}, nil
 }
