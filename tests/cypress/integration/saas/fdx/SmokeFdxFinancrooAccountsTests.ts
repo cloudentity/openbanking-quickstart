@@ -20,8 +20,9 @@ describe(`FDX Financroo app`, () => {
   const financrooModalPage: FinancrooModalPage = new FinancrooModalPage();
   const financrooAccountsPage: FinancrooAccountsPage = new FinancrooAccountsPage();
 
-  const creditsAccountId: string = `96534987`;
-  const savingsAccountId: string = `1000001`;
+  const creditsAccountId: string = `96565987`;
+  const savingsAccountId: string = `1122334455`;
+
 
 
   beforeEach(() => {

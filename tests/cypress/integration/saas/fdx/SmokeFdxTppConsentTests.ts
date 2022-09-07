@@ -19,8 +19,8 @@ describe(`FDX Tpp consent app`, () => {
   const mfaPage: MfaPage = new MfaPage();
   const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
 
-  const creditsAccountId: string = `96534987`;
-  const savingsAccountId: string = `1000001`;
+  const creditsAccountId: string = `96565987`;
+  const savingsAccountId: string = `1122334455`;
 
   beforeEach(() => {
     fdxTppLoginPage.visit();
