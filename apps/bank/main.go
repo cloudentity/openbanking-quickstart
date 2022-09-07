@@ -131,7 +131,6 @@ func (s *Server) Start() error {
 		r.GET("/internal/accounts", s.Get(NewFDXGetAccountsInternalHandler))
 		r.GET("/accounts/:accountId", s.Get(NewFDXGetBalancesHandler))
 		r.GET("/accounts/:accountId/transactions", s.Get(NewFDXGetTransactionsHandler))
-		r.POST("/payments", s.Post(NewFDXCreatePaymentHandler))
 
 	default:
 		return fmt.Errorf("unsupported spec %s", s.Config.Spec)
