@@ -54,7 +54,6 @@ describe(`FDX Financroo app`, () => {
       financrooModalPage.close()
 
       financrooAccountsPage.assertThatPageIsDisplayed()
-      financrooAccountsPage.assertAccounts(accountsIds)
       financrooAccountsPage.disconnectAccounts()
 
       financrooWelcomePage.assertThatConnectBankPageIsDisplayed()
