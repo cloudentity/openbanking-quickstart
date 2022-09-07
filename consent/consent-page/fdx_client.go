@@ -73,27 +73,37 @@ func (c *FDXClient) GetInternalAccounts(ctx context.Context, id string) (Interna
 
 		return ToInternalFDXAccounts(fdxAccounts), nil
 	}
-
 	return InternalAccounts{
 		Accounts: []InternalAccount{
 			{
-				ID:   "96565987",
-				Name: "Credit",
+				ID:   "1000001",
+				Name: "Savings",
 				Balance: Balance{
 					AccountID: "96565987",
 					Amount: BalanceAmount{
-						Amount:   "100",
+						Amount:   "13300.35",
 						Currency: "USD",
 					},
 				},
 			},
 			{
-				ID:   "1122334455",
+				ID:   "1000002",
+				Name: "Checking",
+				Balance: Balance{
+					AccountID: "96565987",
+					Amount: BalanceAmount{
+						Amount:   "332.22",
+						Currency: "USD",
+					},
+				},
+			},
+			{
+				ID:   "96534987",
 				Name: "Savings",
 				Balance: Balance{
 					AccountID: "1122334455",
 					Amount: BalanceAmount{
-						Amount:   "150",
+						Amount:   "1200.00",
 						Currency: "USD",
 					},
 				},
