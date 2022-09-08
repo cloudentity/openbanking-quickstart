@@ -57,6 +57,7 @@ describe(`FDX Financroo app`, () => {
       financrooAccountsPage.disconnectAccounts()
 
       financrooWelcomePage.assertThatConnectBankPageIsDisplayed()
+      cy.wait(3000) // Workaround due to pipeline issues >>> AUT-6292
     });
   });
 
