@@ -20,6 +20,7 @@ const (
 	OBUK Spec = "obuk"
 	OBBR Spec = "obbr"
 	CDR  Spec = "cdr"
+	FDX  Spec = "fdx"
 )
 
 type Config struct {
@@ -60,6 +61,8 @@ func LoadConfig() (config Config, err error) {
 		config.SeedFilePath = fmt.Sprintf("data/%s-data.json", OBBR)
 	case CDR:
 		config.SeedFilePath = fmt.Sprintf("data/%s-data.json", CDR)
+	case FDX:
+		config.SeedFilePath = fmt.Sprintf("data/%s-data.json", FDX)
 	}
 
 	if config.GINMODE == "debug" {
@@ -122,6 +125,12 @@ func (s *Server) Start() error {
 		r.GET("/banking/accounts", s.Get(NewCDRGetAccountsHandler))
 		r.GET("/banking/accounts/:accountId/transactions", s.Get(NewCDRGetTransactionsHandler))
 		r.GET("/banking/accounts/balances", s.Get(NewCDRGetBalancesHandler))
+
+	case FDX:
+		r.GET("/accounts", s.Get(NewFDXGetAccountsHandler))
+		r.GET("/internal/accounts", s.Get(NewFDXGetAccountsInternalHandler))
+		r.GET("/accounts/:accountId", s.Get(NewFDXGetBalancesHandler))
+		r.GET("/accounts/:accountId/transactions", s.Get(NewFDXGetTransactionsHandler))
 
 	default:
 		return fmt.Errorf("unsupported spec %s", s.Config.Spec)

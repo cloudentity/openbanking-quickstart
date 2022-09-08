@@ -8,6 +8,7 @@ import (
 	"github.com/sirupsen/logrus"
 
 	cdr "github.com/cloudentity/acp-client-go/clients/openbanking/client/c_d_r"
+	fdx "github.com/cloudentity/acp-client-go/clients/openbanking/client/f_d_x"
 	obbr "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_b_r"
 	obuk "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
 	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
@@ -114,9 +115,31 @@ func (s *Server) CDRIntrospectAccountsToken(c *gin.Context) (*cdr.CdrConsentIntr
 
 	token := c.GetHeader("Authorization")
 	token = strings.ReplaceAll(token, "Bearer ", "")
-
 	if introspectResponse, err = s.Client.Openbanking.Cdr.CdrConsentIntrospect(
 		cdr.NewCdrConsentIntrospectParamsWithContext(c).
+			WithToken(&token),
+		nil,
+	); err != nil {
+		return nil, err
+	}
+
+	if !introspectResponse.Payload.Active {
+		return nil, errors.New("access token is not active")
+	}
+
+	return introspectResponse.Payload, nil
+}
+
+func (s *Server) FDXIntrospectAccountsToken(c *gin.Context) (*fdx.FdxConsentIntrospectOKBody, error) {
+	var (
+		introspectResponse *fdx.FdxConsentIntrospectOK
+		err                error
+	)
+
+	token := c.GetHeader("Authorization")
+	token = strings.ReplaceAll(token, "Bearer ", "")
+	if introspectResponse, err = s.Client.FdxConsentIntrospect(
+		fdx.NewFdxConsentIntrospectParamsWithContext(c).
 			WithToken(&token),
 		nil,
 	); err != nil {

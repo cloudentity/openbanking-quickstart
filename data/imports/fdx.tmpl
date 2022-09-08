@@ -19,8 +19,6 @@ servers:
       registry_name: "GLEIF"
       registered_entity_name: "Midwest Primary Bank, NA"
       registered_entity_identifier: "549300ATG070THRDJ595"
-
-
   {{ if .read_client_certificate_from_header }}
   read_client_certificate_from_header: {{ .read_client_certificate_from_header }}
   client_certificate_header: {{ .client_certificate_header }}
@@ -86,9 +84,31 @@ clients:
   - code
   scopes:
   - openid
+  - offline_access
   - READ_CONSENTS
   - UPDATE_CONSENTS
+  - ACCOUNT_DETAILED
+  - ACCOUNT_BASIC
+  - TRANSACTIONS
   grant_types:
   - client_credentials
   - authorization_code
   - refresh_token
+
+- tenant_id: {{ .tenant_id }}
+  authorization_server_id: {{ .server_id }}
+  client_id: bukj5p6k7qdmm5ppbi4g
+  client_name: bank
+  description: bank resource server app used to introspect tokens
+  client_secret: 8DPOMd3ZOvsjuUnU9goRMHTIUUXtSkgwQeo8v_S74aE
+  grant_types:
+  - client_credentials
+  scopes:
+  - introspect_tokens
+  - revoke_tokens
+  - introspect_openbanking_tokens
+  subject_type: pairwise
+  system: true
+  tls_client_auth_subject_dn: {{ .bank_tls_client_auth_subject_dn }}
+  tls_client_certificate_bound_access_tokens: true
+  token_endpoint_auth_method: tls_client_auth
