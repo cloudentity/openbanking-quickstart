@@ -21,11 +21,13 @@ declare global {
   interface Window {
     featureFlags: any;
     spec: any;
+    currency: any;
   }
 }
 
 window.featureFlags = window.featureFlags || {};
 window.spec = window.spec || {};
+window.currency = window.currency || null;
 
 const queryClient = new QueryClient();
 
