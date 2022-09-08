@@ -7,25 +7,31 @@ import {
   applyFiltering,
   mapTransactionsToBarChartData,
 } from "./analytics.utils";
-import { pick } from "ramda";
+import { Filter, Transaction } from "./types";
+
+interface Props {
+  currencyType: string;
+  transactions: Transaction[];
+  filtering: Filter;
+  onChangeFiltering: (filter: Filter) => void;
+}
 
 export default function Analytics({
   currencyType,
   transactions,
   filtering,
   onChangeFiltering,
-}) {
+}: Props) {
   const barChartData = mapTransactionsToBarChartData(
-    applyFiltering(pick(["accounts"], filtering), transactions)
+    applyFiltering({ accounts: filtering.accounts }, transactions)
   );
   const pieChartData = applyFiltering(
-    pick(["accounts", "months"], filtering),
+    { accounts: filtering.accounts, months: filtering.months },
     transactions
   );
-  const tableData = applyFiltering(
-    pick(["accounts", "months", "categories"], filtering),
-    transactions
-  ).map(mapTransactionToData);
+  const tableData = applyFiltering(filtering, transactions).map(
+    mapTransactionToData
+  );
 
   return (
     <>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { CSSProperties } from "react";
 import Button from "@mui/material/Button";
 import { makeStyles } from "tss-react/mui";
 import Typography from "@mui/material/Typography";
@@ -7,7 +7,8 @@ import { Plus } from "react-feather";
 import Card from "@mui/material/Card";
 import Checkbox from "@mui/material/Checkbox";
 import { banks } from "./banks";
-import { filter, pathOr } from "ramda";
+import { getCurrency } from "./utils";
+import { Account, Balance, Filter } from "./types";
 
 const useStyles = makeStyles()(() => ({
   accountRoot: {
@@ -16,27 +17,66 @@ const useStyles = makeStyles()(() => ({
       cursor: "pointer",
     },
   },
+  header: {
+    padding: 20,
+    display: "flex",
+    alignItems: "center",
+    borderBottom: "1px solid #ECECEC",
+  },
+  iconContainer: {
+    background: "#FCFCFF",
+    borderRadius: "50%",
+    width: 52,
+    height: 52,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    boxShadow:
+      "0px 0.574468px 0.574468px rgba(0, 0, 0, 0.08), 0px 0px 0.574468px rgba(0, 0, 0, 0.31)",
+  },
+  footer: {
+    height: 52,
+    padding: "0 21px",
+    background: "rgba(54, 198, 175, 0.08)",
+    color: "#36C6AF",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "space-between",
+  },
 }));
+
+interface Props {
+  bankId: string;
+  reconnectBank: boolean;
+  accounts: Account[];
+  balances: Balance[];
+  filtering: Filter;
+  onChangeFiltering: (filter: Filter) => void;
+  onDisconnect: (bankId: string) => () => void;
+  onReconnect: (bankId: string, permissions: string[]) => () => void;
+  style?: CSSProperties;
+}
 
 export default function BankCard({
   bankId,
-  reconnect,
+  reconnectBank,
   accounts,
   balances,
   filtering,
-  style = {},
   onChangeFiltering,
   onDisconnect,
   onReconnect,
-}) {
+  style = {},
+}: Props) {
   const { classes } = useStyles();
 
   const getAccountBalance = (accountId, balances) =>
     balances.find(b => b.AccountId === accountId);
   const getAccountAmountAsString = (accountId, balances) => {
     const accountBalance = getAccountBalance(accountId, balances);
+
     return accountBalance
-      ? `${accountBalance.Currency} ${pathOr(0, ["Amount"], accountBalance)}`
+      ? `${getCurrency(accountBalance.Currency)} ${accountBalance.Amount ?? 0}`
       : "N/A";
   };
   const isAccountChecked = id => filtering?.accounts?.includes(id);
@@ -45,27 +85,8 @@ export default function BankCard({
 
   return (
     <Card style={style} id={bankId}>
-      <div
-        style={{
-          padding: 20,
-          display: "flex",
-          alignItems: "center",
-          borderBottom: "1px solid #ECECEC",
-        }}
-      >
-        <div
-          style={{
-            background: "#FCFCFF",
-            borderRadius: "50%",
-            width: 52,
-            height: 52,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            boxShadow:
-              "0px 0.574468px 0.574468px rgba(0, 0, 0, 0.08), 0px 0px 0.574468px rgba(0, 0, 0, 0.31)",
-          }}
-        >
+      <div className={classes.header}>
+        <div className={classes.iconContainer}>
           <img
             src={selectedBank?.icon}
             style={{ width: 24, height: 24 }}
@@ -88,7 +109,7 @@ export default function BankCard({
         </div>
         <div style={{ flex: 1 }} />
         <div>
-          {reconnect && (
+          {reconnectBank && (
             <Button
               size="small"
               className="reconnect-button"
@@ -105,7 +126,7 @@ export default function BankCard({
               reconnect
             </Button>
           )}
-          {!reconnect && (
+          {!reconnectBank && (
             <Button
               size="small"
               className="disconnect-button"
@@ -124,8 +145,8 @@ export default function BankCard({
           onClick={() =>
             onChangeFiltering({
               accounts: isAccountChecked(account.AccountId)
-                ? filter(a => a !== account.AccountId, filtering?.accounts)
-                : [...filtering?.accounts, account.AccountId],
+                ? filtering?.accounts?.filter(a => a !== account.AccountId)
+                : [...(filtering.accounts ?? []), account.AccountId],
               months: [],
               categories: [],
             })
@@ -149,8 +170,8 @@ export default function BankCard({
               onChange={() =>
                 onChangeFiltering({
                   accounts: isAccountChecked(account.AccountId)
-                    ? filter(a => a !== account.AccountId, filtering?.accounts)
-                    : [...filtering?.accounts, account.AccountId],
+                    ? filtering.accounts?.filter(a => a !== account.AccountId)
+                    : [...(filtering.accounts ?? []), account.AccountId],
                   months: [],
                   categories: [],
                 })
@@ -175,17 +196,7 @@ export default function BankCard({
           </div>
         </div>
       ))}
-      <div
-        style={{
-          height: 52,
-          padding: "0 21px",
-          background: "rgba(54, 198, 175, 0.08)",
-          color: "#36C6AF",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-        }}
-      >
+      <div className={classes.footer}>
         <Typography>Add new account</Typography>
         <IconButton size="large">
           <Plus style={{ color: "#36C6AF" }} />

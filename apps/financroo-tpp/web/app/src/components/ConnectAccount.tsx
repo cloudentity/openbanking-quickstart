@@ -8,7 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
-import { banks } from "./banks";
+import { banks, Bank } from "./banks";
 import Slide from "@mui/material/Slide";
 import Button from "@mui/material/Button";
 import connectArrows from "../assets/connect-arrows.svg";
@@ -48,9 +48,19 @@ const useStyles = makeStyles()(() => ({
   },
 }));
 
-export default function ConnectAccount({ connected, onAllowAccess, onClose }) {
+interface Props {
+  connected: string[];
+  onAllowAccess: (bankId: string, permissions: string[] | undefined) => void;
+  onClose: () => void;
+}
+
+export default function ConnectAccount({
+  connected,
+  onAllowAccess,
+  onClose,
+}: Props) {
   const { cx, classes } = useStyles();
-  const [selected, setSelected] = useState<any | null>(null);
+  const [selected, setSelected] = useState<Bank | null>(null);
 
   return (
     <Dialog open={true} fullScreen>
@@ -243,12 +253,10 @@ export default function ConnectAccount({ connected, onAllowAccess, onClose }) {
               color="secondary"
               style={{ marginLeft: 16 }}
               onClick={() =>
-                onAllowAccess({
-                  bankId: selected.value,
-                  permissions: selected?.permissions
-                    ?.map(p => p.value)
-                    ?.filter(p => p),
-                })
+                onAllowAccess(
+                  selected.value,
+                  selected?.permissions?.map(p => p.value)?.filter(p => p)
+                )
               }
             >
               Allow access

@@ -10,6 +10,7 @@ import ApplicationSimpleCard from "../ApplicationSimpleCard";
 import ApplicationAccessTabs from "./ApplicationAccessTabs";
 import { api } from "../../api/api";
 import { CommonCtx } from "../../services/common";
+import { ClientConsent, ConsentAccount, ConsentsResponse } from "../types";
 
 const useStyles = makeStyles()(() => ({
   backButton: {
@@ -23,17 +24,23 @@ const useStyles = makeStyles()(() => ({
   },
 }));
 
+interface Props {
+  authorizationServerURL: string | undefined;
+  authorizationServerId: string | undefined;
+  tenantId: string | undefined;
+}
+
 function ApplicationDetailsController({
   authorizationServerURL,
   authorizationServerId,
   tenantId,
-}) {
+}: Props) {
   const { id } = useParams<Record<string, string | undefined>>();
   const { classes } = useStyles();
   const navigate = useNavigate();
   const [isProgress, setProgress] = useState(true);
-  const [clientConsent, setClientConsent] = useState<any>([]);
-  const [accounts, setAccounts] = useState([]);
+  const [clientConsent, setClientConsent] = useState<ClientConsent>();
+  const [accounts, setAccounts] = useState<ConsentAccount[]>([]);
   const commons = useContext(CommonCtx);
   const setError = commons!.setError;
 
@@ -41,7 +48,7 @@ function ApplicationDetailsController({
     setProgress(true);
     api
       .getConsents()
-      .then(res => {
+      .then((res: ConsentsResponse) => {
         const client = res.client_consents.find(v => v.id === id);
         if (client) {
           setClientConsent(client);
@@ -81,7 +88,7 @@ function ApplicationDetailsController({
     prev?.StatusUpdateDateTime < curr?.StatusUpdateDateTime ? curr : prev
   );
 
-  const expirationDateTime = new Date(newestConsent?.ExpirationDateTime);
+  const expirationDateTime = new Date(newestConsent?.ExpirationDateTime ?? "");
 
   const status =
     (expirationDateTime.getFullYear() !== 1 &&
@@ -118,19 +125,23 @@ function ApplicationDetailsController({
           </div>
         }
       />
-      <div className={classes.content}>
-        <ApplicationSimpleCard
-          key={clientConsent.id}
-          client={clientConsent}
-          clickable={false}
-        />
-        <ApplicationAccessTabs
-          data={clientConsent}
-          accounts={accounts}
-          handleRevoke={handleRevoke}
-          status={status}
-        />
-      </div>
+      {clientConsent ? (
+        <div className={classes.content}>
+          <ApplicationSimpleCard
+            key={clientConsent.id}
+            client={clientConsent}
+            clickable={false}
+          />
+          <ApplicationAccessTabs
+            data={clientConsent}
+            accounts={accounts}
+            handleRevoke={handleRevoke}
+            status={status}
+          />
+        </div>
+      ) : (
+        "No app to show"
+      )}
     </div>
   ) : null;
 }

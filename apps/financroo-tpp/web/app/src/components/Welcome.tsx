@@ -4,7 +4,11 @@ import welcomeImage from "../assets/welcome-image.png";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
 
-export default function Welcome({ onConnectClick }) {
+interface Props {
+  onConnectClick: () => void;
+}
+
+export default function Welcome({ onConnectClick }: Props) {
   return (
     <Grid container justifyContent="center">
       <Grid item xs={12} sm={8} md={6} style={{ textAlign: "center" }}>

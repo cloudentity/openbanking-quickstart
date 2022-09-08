@@ -258,34 +258,34 @@ export function getChipForStatus(client?: ClientType) {
   );
 }
 
+export type Consent = {
+  Amount: string;
+  CreditorAccountIdentification: string;
+  CreditorAccountName: string;
+  DebtorAccountIdentification: string;
+  DebtorAccountName: string;
+  account_ids: string[];
+  consent_id: string;
+  client_id: string;
+  tenant_id: string;
+  server_id: string;
+  status: string;
+  consent_type: string;
+  created_at: string;
+  expires_at?: string;
+  updated_at?: string;
+  completed_at?: string | null;
+  permissions?: string[];
+  currency: string;
+};
+
 export type ClientType = {
   client_id: string;
   client_name: string;
   client_uri: string;
   provider_type: string;
-  consents: {
-    Client: {
-      client_uri: string;
-      id: string;
-      name: string;
-    };
-    account_ids: string[];
-    consent_id: string;
-    client_id: string;
-    tenant_id: string;
-    server_id: string;
-    status: string;
-    consent_type: string;
-    created_at: string;
-    expires_at?: string;
-    updated_at?: string;
-    completed_at?: string | null;
-    permissions?: string[];
-
-    currency: string;
-    amount: string;
-  }[];
   mainStatus?: ConsentStatus;
+  consents: Consent[];
 };
 
 export const handleSearch =
@@ -302,10 +302,19 @@ export const handleSearch =
     }
   };
 
-export const currencyDict = {
-  USD: "$",
-  GBP: "£",
-  EUR: "€",
+export const getCurrency = (currency: any) => {
+  switch (currency) {
+    case "USD":
+      return "$";
+    case "GBP":
+      return "£";
+    case "EUR":
+      return "€";
+    case "BRL":
+      return "R$";
+    default:
+      return currency;
+  }
 };
 
 export function getStatus(client: ClientType) {

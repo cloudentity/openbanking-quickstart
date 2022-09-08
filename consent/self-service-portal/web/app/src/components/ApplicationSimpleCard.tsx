@@ -5,6 +5,7 @@ import Avatar from "@mui/material/Avatar";
 import { uniq } from "ramda";
 
 import Chip from "./Chip";
+import { ClientConsent } from "./types";
 
 const useStyles = makeStyles<{ clickable: boolean }>()((_, { clickable }) => ({
   container: {
@@ -69,13 +70,18 @@ const monthNames = [
   "December",
 ];
 
-export function getDate(date) {
+export function getDate(date: string) {
   const d = new Date(date);
   if (d.getFullYear() === 1) return "N/A";
   return `${d.getDate()} ${monthNames[d.getMonth()]} ${d.getFullYear()}`;
 }
 
-function ApplicationSimpleCard({ client, clickable = true }) {
+interface Props {
+  client: ClientConsent;
+  clickable?: boolean;
+}
+
+function ApplicationSimpleCard({ client, clickable = true }: Props) {
   const { classes } = useStyles({ clickable });
 
   const navigate = useNavigate();

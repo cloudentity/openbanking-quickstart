@@ -9,7 +9,8 @@ import Chip from "../Chip";
 import ApplicationAccessDrawer from "./ApplicationAccessDrawer";
 import { getDate } from "../ApplicationSimpleCard";
 import { drawerStyles, permissionsDict } from "./utils";
-import { uniq } from "ramda";
+import uniq from "lodash/uniq";
+import { Consent, ConsentAccount } from "../types";
 
 const useStyles = makeStyles()(() => ({
   ...drawerStyles,
@@ -77,14 +78,14 @@ function getRevokeHeader() {
   );
 }
 
-function getAccounts(accountIds, accounts) {
+function getAccounts(accountIds: string[], accounts: ConsentAccount[]) {
   return accountIds.map(id => accounts.find(v => v.id === id)).filter(v => v);
 }
 
 interface Props {
-  drawerData: any;
-  accounts: any;
-  setDrawerData: (data: string | null) => void;
+  drawerData: Consent;
+  accounts: ConsentAccount[];
+  setDrawerData: (data: Consent | undefined) => void;
   handleRevoke: (id: string, consent_type: string) => void;
   status: string;
 }
@@ -103,7 +104,7 @@ function ApplicationAccessPaymentDrawer({
   const accountsDetails = getAccounts(
     drawerData?.AccountIDs ?? [],
     accounts
-  ).reduce((acc, curr) => ({ ...acc, [curr.name]: "*" + curr.id }), {});
+  ).reduce((acc, curr) => ({ ...acc, [curr?.name ?? ""]: "*" + curr?.id }), {});
 
   const permissionDates = {
     Authorised: getDate(drawerData?.CreationDateTime),
@@ -112,8 +113,8 @@ function ApplicationAccessPaymentDrawer({
   };
 
   const clusters = uniq(
-    drawerData?.Permissions.map(v => permissionsDict[v].Cluster)
-  ) as any;
+    drawerData.Permissions?.map(v => permissionsDict[v].Cluster)
+  );
 
   const permissionItems = clusters.map(cluster => ({
     title: cluster,
@@ -134,10 +135,10 @@ function ApplicationAccessPaymentDrawer({
               className={classes.logo}
               style={{ backgroundColor: "white", color: "#626576" }}
             >
-              {drawerData?.Client?.name[0]?.toUpperCase()}
+              {drawerData.CreditorAccountName?.toUpperCase()}
             </Avatar>
 
-            <h3 className={classes.name}>{drawerData?.Client?.name}</h3>
+            <h3 className={classes.name}>{drawerData.CreditorAccountName}</h3>
             <div style={{ flex: 1 }} />
             <Chip type="active">{status}</Chip>
           </div>
@@ -153,7 +154,7 @@ function ApplicationAccessPaymentDrawer({
               if (revokeAccess) {
                 setRevokeAccess(false);
               } else {
-                setDrawerData(null);
+                setDrawerData(undefined);
               }
             }}
           >
@@ -173,7 +174,7 @@ function ApplicationAccessPaymentDrawer({
               if (revokeAccess) {
                 handleRevoke(drawerData?.ConsentID, drawerData?.type);
                 setRevokeAccess(false);
-                setDrawerData(null);
+                setDrawerData(undefined);
               } else {
                 setRevokeAccess(true);
               }

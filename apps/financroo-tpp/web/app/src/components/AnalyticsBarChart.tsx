@@ -8,12 +8,19 @@ import {
   XAxis,
   YAxis,
 } from "recharts";
+import { Filter } from "./types";
+
+interface Props {
+  data: { name: string; value: number }[];
+  filtering: Filter;
+  onChangeFiltering: (filter: Filter) => void;
+}
 
 export default function AnalyticsBarChart({
   data,
   filtering,
   onChangeFiltering,
-}) {
+}: Props) {
   return (
     <ResponsiveContainer width="100%" height={300}>
       <BarChart
@@ -32,7 +39,7 @@ export default function AnalyticsBarChart({
           dataKey="value"
           background={{ fill: "#eee" }}
           onClick={e =>
-            !filtering?.months.includes(e.name)
+            !filtering?.months?.includes(e.name)
               ? onChangeFiltering({ months: [e.name], categories: [] })
               : onChangeFiltering({ months: [], categories: [] })
           }
@@ -41,7 +48,7 @@ export default function AnalyticsBarChart({
             <Cell
               cursor="pointer"
               fill={
-                filtering?.months.includes(entry.name) ? "#36C6AF" : "#1F2D48"
+                filtering?.months?.includes(entry.name) ? "#36C6AF" : "#1F2D48"
               }
               key={`cell-${index}`}
             />

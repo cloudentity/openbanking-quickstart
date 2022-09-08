@@ -5,6 +5,7 @@ import { makeStyles } from "tss-react/mui";
 
 import CardIcon from "../../assets/icon-card.svg";
 import ContributionCard from "./ContributionCard";
+import { getCurrency } from "../utils";
 
 const useStyles = makeStyles()(theme => ({
   input: {
@@ -29,14 +30,25 @@ const useStyles = makeStyles()(theme => ({
   },
 }));
 
+interface Props {
+  amount: string;
+  setAmount: (amount: string) => void;
+  handleBack: () => void;
+  handleNext: () => void;
+  accountDetails:
+    | { amount: string | undefined; currency: string | undefined }
+    | undefined;
+  setAlert: (message: string) => void;
+}
+
 export default function InvestmentsContributeAmount({
   amount,
   setAmount,
   handleBack,
   handleNext,
-  account,
+  accountDetails,
   setAlert,
-}) {
+}: Props) {
   const { classes } = useStyles();
 
   return (
@@ -59,9 +71,9 @@ export default function InvestmentsContributeAmount({
         onChange={v => {
           setAmount(v.target.value);
           if (
-            account &&
-            account.Amount?.Amount &&
-            Number(v.target.value) <= Number(account.Amount?.Amount)
+            accountDetails &&
+            accountDetails.amount &&
+            Number(v.target.value) <= Number(accountDetails.amount)
           ) {
             setAlert("");
           }
@@ -73,7 +85,7 @@ export default function InvestmentsContributeAmount({
               position="start"
               style={{ position: "relative", top: 1 }}
             >
-              £
+              {getCurrency(accountDetails?.currency)}
             </InputAdornment>
           ),
           inputProps: {

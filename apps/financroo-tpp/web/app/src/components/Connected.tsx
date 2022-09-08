@@ -6,8 +6,14 @@ import { useQuery } from "react-query";
 import { api } from "../api/api";
 import Progress from "./Progress";
 import { applyFiltering } from "./analytics.utils";
-import { path, pick } from "ramda";
 import Analytics from "./Analytics";
+import { getCurrency } from "./utils";
+import {
+  AccountsResponse,
+  BalancesResponse,
+  Filter,
+  TransactionsResponse,
+} from "./types";
 
 const useStyles = makeStyles()(() => ({
   root: {
@@ -15,14 +21,21 @@ const useStyles = makeStyles()(() => ({
   },
 }));
 
+interface Props {
+  banks: string[];
+  onConnectClick: () => void;
+  onDisconnect: (bankId: string) => () => void;
+  onReconnect: (bankId: string, permissions: string[]) => () => void;
+}
+
 export default function Connected({
   banks,
   onConnectClick,
   onDisconnect,
   onReconnect,
-}) {
+}: Props) {
   const { classes } = useStyles();
-  const [filtering, setFiltering] = useState({
+  const [filtering, setFiltering] = useState<Filter>({
     accounts: [],
     months: [],
     categories: [],
@@ -32,7 +45,7 @@ export default function Connected({
     isLoading: fetchAccountsProgress,
     error: fetchAccountsError,
     data: accountsRes,
-  } = useQuery("fetchAccounts", api.fetchAccounts, {
+  } = useQuery<AccountsResponse, any>("fetchAccounts", api.fetchAccounts, {
     refetchOnWindowFocus: false,
     retry: false,
     onSuccess: data => {
@@ -43,35 +56,33 @@ export default function Connected({
     },
   });
 
-  const { isLoading: fetchBalancesProgress, data: balancesRes } = useQuery(
-    "fetchBalances",
-    api.fetchBalances,
-    {
+  const { isLoading: fetchBalancesProgress, data: balancesRes } =
+    useQuery<BalancesResponse>("fetchBalances", api.fetchBalances, {
       refetchOnWindowFocus: false,
       retry: false,
-    }
-  );
+    });
 
   const { isLoading: fetchTransactionsProgress, data: transactionsRes } =
-    useQuery("fetchTransactions", api.fetchTransactions, {
+    useQuery<TransactionsResponse>("fetchTransactions", api.fetchTransactions, {
       refetchOnWindowFocus: false,
       retry: false,
     });
 
   const accounts = accountsRes?.accounts || [];
   const balances = balancesRes?.balances || [];
+
   const transactions = applyFiltering(
-    pick(["accounts"], filtering),
-    transactionsRes?.transactions || []
+    filtering,
+    transactionsRes?.transactions ?? []
   );
 
   const isLoading =
     fetchAccountsProgress || fetchBalancesProgress || fetchTransactionsProgress;
 
   const bankNeedsReconnect =
-    path(["response", "error", "status"], fetchAccountsError) === 401;
+    fetchAccountsError?.response?.error?.status === 401;
 
-  const currencyType = balances[0]?.Currency || "N/A";
+  const currencyType = getCurrency(balances[0]?.Currency);
 
   if (isLoading) {
     return <Progress />;
@@ -94,7 +105,9 @@ export default function Connected({
           accounts={accounts}
           balances={balances}
           filtering={filtering}
-          onChangeFiltering={f => setFiltering({ ...filtering, ...f })}
+          onChangeFiltering={(f: Filter) =>
+            setFiltering({ ...filtering, ...f })
+          }
           onConnectClick={onConnectClick}
           onDisconnect={onDisconnect}
           onReconnect={onReconnect}
@@ -109,7 +122,9 @@ export default function Connected({
           currencyType={currencyType}
           transactions={transactions}
           filtering={filtering}
-          onChangeFiltering={f => setFiltering({ ...filtering, ...f })}
+          onChangeFiltering={(f: Filter) =>
+            setFiltering({ ...filtering, ...f })
+          }
         />
       </Grid>
     </Grid>
