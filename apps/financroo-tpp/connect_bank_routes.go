@@ -26,6 +26,7 @@ func (s *Server) Index() func(*gin.Context) {
 		c.HTML(http.StatusOK, "index.html", gin.H{
 			"featureFlags": s.Config.FeatureFlags,
 			"spec":         s.Config.Spec,
+			"currency":     s.Config.Currency,
 		})
 	}
 }

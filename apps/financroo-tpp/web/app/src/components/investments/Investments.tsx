@@ -4,7 +4,10 @@ import { makeStyles } from "tss-react/mui";
 
 import PageContainer from "../common/PageContainer";
 import PageToolbar from "../common/PageToolbar";
-import dashboardImg from "../../assets/investments-dashboard.svg";
+import dashboardImgGBP from "../../assets/investments-dashboard-GBP.svg";
+import dashboardImgBRL from "../../assets/investments-dashboard-BRL.svg";
+import dashboardImgUSD from "../../assets/investments-dashboard-USD.svg";
+import dashboardImgEUR from "../../assets/investments-dashboard-EUR.svg";
 
 const useStyles = makeStyles()(theme => ({
   dashboardImage: {
@@ -17,6 +20,21 @@ const useStyles = makeStyles()(theme => ({
     },
   },
 }));
+
+function getDashboardImage(currency: string) {
+  switch (currency) {
+    case "USD":
+      return dashboardImgUSD;
+    case "GBP":
+      return dashboardImgGBP;
+    case "EUR":
+      return dashboardImgEUR;
+    case "BRL":
+      return dashboardImgBRL;
+    default:
+      return dashboardImgGBP;
+  }
+}
 
 export default function Investments() {
   const navigate = useNavigate();
@@ -44,7 +62,7 @@ export default function Investments() {
       >
         <img
           alt="financroo logo"
-          src={dashboardImg}
+          src={getDashboardImage(window.currency || "GBP")}
           className={classes.dashboardImage}
         />
       </PageContainer>

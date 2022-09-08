@@ -59,8 +59,26 @@ type Config struct {
 	TransDir         string        `env:"TRANS_DIR" envDefault:"./translations"`
 	Spec             Spec          `env:"SPEC,required"`
 	Otp              OtpConfig
-	EnableTLSServer  bool `env:"ENABLE_TLS_SERVER" envDefault:"true"`
+	EnableTLSServer  bool     `env:"ENABLE_TLS_SERVER" envDefault:"true"`
+	Currency         Currency `env:"CURRENCY"` // optional custom currency, one of=USD GBP BRL EUR
 	BankClientConfig BankClientConfig
+}
+
+type Currency string
+
+func (c Currency) ToString() string {
+	switch c {
+	case "USD":
+		return "$"
+	case "GBP":
+		return "£"
+	case "EUR":
+		return "€"
+	case "BRL":
+		return "R$"
+	default:
+		return "$"
+	}
 }
 
 type OtpConfig struct {

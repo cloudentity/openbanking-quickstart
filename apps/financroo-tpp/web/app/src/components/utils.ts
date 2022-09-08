@@ -1,5 +1,6 @@
 export const getCurrency = (currency: any) => {
-  switch (currency) {
+  const currentCurrency = window.currency || currency;
+  switch (currentCurrency) {
     case "USD":
       return "$";
     case "GBP":
@@ -9,6 +10,6 @@ export const getCurrency = (currency: any) => {
     case "BRL":
       return "R$";
     default:
-      return currency;
+      return currentCurrency;
   }
 };
