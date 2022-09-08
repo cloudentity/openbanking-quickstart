@@ -137,7 +137,7 @@ func (c *ConsentTools) GetDomesticPaymentTemplateData(
 		"login_request": loginRequest,
 		"accounts":      c.GetAccountsWithBalance(accounts, balances, string(*consent.DomesticPaymentConsent.Initiation.DebtorAccount.Identification)),
 		"client_name":   clientName,
-		"consent":       OBUKPaymentConsentTemplateData(consent.DomesticPaymentConsent),
+		"consent":       OBUKPaymentConsentTemplateData(consent.DomesticPaymentConsent, c.Config.Currency),
 		"ctx":           consent.AuthenticationContext,
 	}
 }
@@ -207,7 +207,7 @@ func (c *ConsentTools) GetOBBRPaymentConsentTemplateData(
 		"login_request": loginRequest,
 		"accounts":      c.GetAccountsWithBalance(accounts, balances, consent.CustomerPaymentConsent.DebtorAccount.Number),
 		"client_name":   clientName,
-		"consent":       OBBRPaymentConsentTemplateData(consent.CustomerPaymentConsent),
+		"consent":       OBBRPaymentConsentTemplateData(consent.CustomerPaymentConsent, c.Config.Currency),
 		"ctx":           consent.AuthenticationContext,
 	}
 }
@@ -330,21 +330,33 @@ type PaymentConsentTemplateData struct {
 	Amount         string
 }
 
-func OBUKPaymentConsentTemplateData(consent *obModels.DomesticPaymentConsent) PaymentConsentTemplateData {
-	return PaymentConsentTemplateData{
+func OBUKPaymentConsentTemplateData(consent *obModels.DomesticPaymentConsent, customCurrency Currency) PaymentConsentTemplateData {
+	data := PaymentConsentTemplateData{
 		AccountName:    consent.Initiation.CreditorAccount.Name,
 		Identification: string(*consent.Initiation.DebtorAccount.Identification),
 		Reference:      consent.Initiation.RemittanceInformation.Reference,
 		Currency:       string(*consent.Initiation.InstructedAmount.Currency),
 		Amount:         string(*consent.Initiation.InstructedAmount.Amount),
 	}
+
+	if customCurrency != "" {
+		data.Currency = customCurrency.ToString()
+	}
+
+	return data
 }
 
-func OBBRPaymentConsentTemplateData(consent *obModels.BrazilCustomerPaymentConsent) PaymentConsentTemplateData {
-	return PaymentConsentTemplateData{
+func OBBRPaymentConsentTemplateData(consent *obModels.BrazilCustomerPaymentConsent, customCurrency Currency) PaymentConsentTemplateData {
+	data := PaymentConsentTemplateData{
 		AccountName:    consent.Creditor.Name,
 		Identification: consent.DebtorAccount.Number,
 		Currency:       consent.Payment.Currency,
 		Amount:         consent.Payment.Amount,
 	}
+
+	if customCurrency != "" {
+		data.Currency = customCurrency.ToString()
+	}
+
+	return data
 }

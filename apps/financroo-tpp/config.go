@@ -32,7 +32,6 @@ type Config struct {
 	CookieHashKey   string       `env:"COOKIE_HASH_KEY" envDefault:"secret-key"`
 	CookieBlockKey  string       `env:"COOKIE_BLOCK_KEY" envDefault:"this-is-32-len-block-key"`
 	FeatureFlags    FeatureFlags `env:"FEATURE_FLAGS"`
-	Currency        string       `env:"CURRENCY"`
 	Spec            Spec         `env:"SPEC" validate:"required"`
 	BankURL         string       `env:"BANK_URL" validate:"required"`
 	RootCA          string       `env:"ROOT_CA" envDefault:"/certs/ca.pem"`
@@ -40,6 +39,7 @@ type Config struct {
 	ClientSecret    string       `env:"CLIENT_SECRET" envDefault:"-TlfoycUiE0qNi-XUBFDfTxMlhHTCjVxOF6pLrWZbQA"` // only required for fdx
 	ServerID        string       `env:"OPENBANKING_SERVER_ID" validate:"required"`
 	EnableTLSServer bool         `env:"ENABLE_TLS_SERVER" envDefault:"true"`
+	Currency        string       `env:"CURRENCY"` // optional custom currency, one of=USD GBP BRL EUR
 	ClientScopes    []string
 }
 
