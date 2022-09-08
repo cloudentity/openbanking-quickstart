@@ -103,7 +103,6 @@ export default function BankCard({
               padding: 2,
               marginTop: 4,
             }}
-            id="accounts-synced-number"
           >
             {accounts.length} accounts synced
           </Typography>
@@ -183,7 +182,7 @@ export default function BankCard({
               }}
               inputProps={{ "aria-label": "primary checkbox" }}
             />
-            <div style={{ marginLeft: 12 }} id={`account-id-${account.AccountId}`}>
+            <div style={{ marginLeft: 12 }}>
               <Typography className="account-name">
                 {account.Nickname}
               </Typography>

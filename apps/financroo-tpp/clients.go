@@ -11,7 +11,6 @@ import (
 	"time"
 
 	cdrBank "github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/client"
-	fdxBank "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/client"
 	obbrAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/client"
 	obbrPayments "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/client"
 	obc "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client"
@@ -61,10 +60,6 @@ func (c *Clients) RenewAccountsToken(ctx context.Context, bank ConnectedBank) (*
 		"client_id":     {c.AcpAccountsClient.Config.ClientID},
 		"grant_type":    {"refresh_token"},
 		"refresh_token": {bank.RefreshToken},
-	}
-
-	if c.AcpAccountsClient.Config.AuthMethod == acpclient.ClientSecretPostAuthnMethod && c.AcpAccountsClient.Config.ClientSecret != "" {
-		values.Add("client_secret", c.AcpAccountsClient.Config.ClientSecret)
 	}
 
 	if c.AcpAccountsClient.Config.AuthMethod == acpclient.PrivateKeyJwtAuthnMethod {
@@ -182,6 +177,7 @@ func NewAcpClient(cfg Config, redirect string) (acpclient.Client, error) {
 	}
 
 	if cfg.Spec == FDX {
+		config.ClientSecret = cfg.ClientSecret
 		config.SkipClientCredentialsAuthn = true
 		config.AuthMethod = acpclient.TLSClientAuthnMethod
 	}
@@ -303,28 +299,8 @@ func NewOBBRConsentClient(accountsClient, paymentsClient acpclient.Client, signe
 	return &OBBRConsentClient{accountsClient, paymentsClient, signer}
 }
 
-type FDXBankClient struct {
-	*fdxBank.Client
-}
+type FDXBankClient struct{}
 
 func NewFDXBankClient(config Config) (BankClient, error) {
-	var (
-		c   = &FDXBankClient{}
-		hc  = &http.Client{}
-		u   *url.URL
-		err error
-	)
-
-	if u, err = url.Parse(config.BankURL); err != nil {
-		return c, errors.Wrapf(err, "failed to parse bank url")
-	}
-
-	c.Client = fdxBank.New(NewHTTPRuntimeWithClient(
-		u.Host,
-		u.Path,
-		[]string{u.Scheme},
-		hc,
-	), nil)
-
-	return c, nil
+	return &FDXBankClient{}, nil
 }

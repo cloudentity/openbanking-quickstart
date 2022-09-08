@@ -55,34 +55,15 @@ describe(`FDX Financroo app`, () => {
       financrooModalPage.close()
 
       financrooAccountsPage.assertThatPageIsDisplayed()
-      financrooAccountsPage.assertAccountsSyncedNumber(accountsIds.length)
-      financrooAccountsPage.assertAccountsIds(accountsIds)
       financrooAccountsPage.disconnectAccounts()
 
       financrooWelcomePage.assertThatConnectBankPageIsDisplayed()
     });
   });
 
-  it(`Happy path with not selected account`, () => {
-      financrooWelcomePage.reconnectGoBank()
-
-      acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
-      if (environmentVariables.isMfaEnabled()) {
-        mfaPage.typePin()
-      }
-      consentPage.assertPermissions(4);
-      consentPage.clickContinue();
-      consentPage.confirm();
-
-      financrooModalPage.assertThatModalIsDisplayed()
-      financrooModalPage.close()
-
-      financrooAccountsPage.assertThatPageIsDisplayed()
-      financrooAccountsPage.assertAccountsSyncedNumber(0)
-      financrooAccountsPage.disconnectAccounts()
-
-      financrooWelcomePage.assertThatConnectBankPageIsDisplayed()
-  });
+  // it(`Happy path with not selected account`, () => {
+  //   TBA
+  // });
 
   it('Cancel on consent page', () => {
     financrooWelcomePage.reconnectGoBank()

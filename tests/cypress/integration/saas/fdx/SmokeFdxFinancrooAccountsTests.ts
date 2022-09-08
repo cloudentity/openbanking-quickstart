@@ -20,9 +20,10 @@ describe(`FDX Financroo app`, () => {
   const financrooModalPage: FinancrooModalPage = new FinancrooModalPage();
   const financrooAccountsPage: FinancrooAccountsPage = new FinancrooAccountsPage();
 
-  const creditsAccountId: string = `96534987`;
-  const savingsAccountId: string = `1000002`;
-  const savings2AccountId: string = `1000001`;
+  const creditsAccountId: string = `96565987`;
+  const savingsAccountId: string = `1122334455`;
+
+
 
   beforeEach(() => {
     financrooLoginPage.visit()
@@ -32,10 +33,9 @@ describe(`FDX Financroo app`, () => {
   });
 
   [
-    [creditsAccountId, savingsAccountId, savings2AccountId],
+    [creditsAccountId, savingsAccountId],
     [creditsAccountId],
     [savingsAccountId],
-    [savings2AccountId],
   ].forEach((accountsIds) => {
     it(`Happy path with selected accounts: ${accountsIds}`, () => {
       financrooWelcomePage.reconnectGoBank()
@@ -46,7 +46,7 @@ describe(`FDX Financroo app`, () => {
       }
       consentPage.assertPermissions(4);
       consentPage.assertThatAccountsAreNotVisible(accountsIds);
-      consentPage.clickContinue()
+      consentPage.clickContinue();
       consentPage.checkAccounts(accountsIds)
       consentPage.confirm();
 
@@ -54,33 +54,14 @@ describe(`FDX Financroo app`, () => {
       financrooModalPage.close()
 
       financrooAccountsPage.assertThatPageIsDisplayed()
-      financrooAccountsPage.assertAccountsSyncedNumber(accountsIds.length)
-      financrooAccountsPage.assertAccountsIds(accountsIds)
       financrooAccountsPage.disconnectAccounts()
 
       financrooWelcomePage.assertThatConnectBankPageIsDisplayed()
-      cy.wait(3000) // Workaround due to pipeline issues >>> AUT-6292
     });
   });
 
-  it(`Happy path with not selected account`, () => {
-    financrooWelcomePage.reconnectGoBank()
+  // it(`Happy path with not selected account`, () => {
+  //   TBA
+  // });
 
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
-    if (environmentVariables.isMfaEnabled()) {
-      mfaPage.typePin()
-    }
-    consentPage.assertPermissions(4);
-    consentPage.clickContinue();
-    consentPage.confirm();
-
-    financrooModalPage.assertThatModalIsDisplayed()
-    financrooModalPage.close()
-
-    financrooAccountsPage.assertThatPageIsDisplayed()
-    financrooAccountsPage.assertAccountsSyncedNumber(0)
-    financrooAccountsPage.disconnectAccounts()
-
-    financrooWelcomePage.assertThatConnectBankPageIsDisplayed()
-});
 });
