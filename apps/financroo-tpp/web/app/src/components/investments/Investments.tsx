@@ -25,6 +25,8 @@ function getDashboardImage(currency: string) {
   switch (currency) {
     case "USD":
       return dashboardImgUSD;
+    case "AUD":
+      return dashboardImgUSD;
     case "GBP":
       return dashboardImgGBP;
     case "EUR":
