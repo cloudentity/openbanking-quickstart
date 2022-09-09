@@ -22,7 +22,7 @@ func NewFDXConsentClient(publicClient, clientCredentialsClient acpclient.Client,
 	}
 }
 
-func (f *FDXClient) CreateAccountConsent(c *gin.Context) (string, error) {
+func (f *FDXClient) DoPAR(c *gin.Context) (string, acpclient.CSRF, error) {
 	var (
 		resp *a2.PushedAuthorizationRequestCreated
 		err  error
@@ -65,10 +65,14 @@ func (f *FDXClient) CreateAccountConsent(c *gin.Context) (string, error) {
 			WithResponseType(responseType).
 			WithAuthorizationDetails(&authorizationDetails),
 	); err != nil {
-		return "", errors.Wrapf(err, "failed to register par request")
+		return "", acpclient.CSRF{}, errors.Wrapf(err, "failed to register par request")
 	}
 
-	return resp.Payload.RequestURI, err
+	return resp.Payload.RequestURI, acpclient.CSRF{}, err
+}
+
+func (f *FDXClient) CreateAccountConsent(c *gin.Context) (string, error) {
+	return "", nil
 }
 
 func (f *FDXClient) DoRequestObjectEncryption() bool {

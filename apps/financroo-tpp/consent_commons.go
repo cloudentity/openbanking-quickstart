@@ -74,11 +74,18 @@ func NewCDRLoginURLBuilder(config Config) (LoginURLBuilder, error) {
 }
 
 func (o *CDRLoginURLBuilder) BuildLoginURL(arrangementID string, client acpclient.Client) (authorizeURL string, csrf acpclient.CSRF, err error) {
-	return client.AuthorizeURL(
+	authorizedUrl, csrf, err := client.AuthorizeURL(
 		acpclient.WithPKCE(),
 		acpclient.WithOpenbankingACR([]string{"urn:cds.au:cdr:2"}),
 		acpclient.WithResponseMode("jwt"),
 	)
+	// move to acp-client-go as WithPAR?
+	values := url.Values{
+		"client_id":   {client.Config.ClientID},
+		"request_uri": {arrangementID},
+	}
+
+	return fmt.Sprintf("%s?%s", authorizedUrl, values.Encode()), csrf, err
 }
 
 func (s *Server) CreateConsentResponse(
@@ -87,6 +94,7 @@ func (s *Server) CreateConsentResponse(
 	user User,
 	client acpclient.Client,
 	loginURLBuilder LoginURLBuilder,
+	csrf *acpclient.CSRF,
 ) {
 	var (
 		loginURL           string
@@ -103,6 +111,10 @@ func (s *Server) CreateConsentResponse(
 	if loginURL, app.CSRF, err = loginURLBuilder.BuildLoginURL(consentID, client); err != nil {
 		c.String(http.StatusInternalServerError, fmt.Sprintf("failed to build authorize url: %+v", err))
 		return
+	}
+
+	if csrf != nil {
+		app.CSRF = *csrf
 	}
 
 	if _, err = url.Parse(loginURL); err != nil {
