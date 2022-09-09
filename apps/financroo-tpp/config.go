@@ -39,7 +39,7 @@ type Config struct {
 	ClientSecret    string       `env:"CLIENT_SECRET" envDefault:"-TlfoycUiE0qNi-XUBFDfTxMlhHTCjVxOF6pLrWZbQA"` // only required for fdx
 	ServerID        string       `env:"OPENBANKING_SERVER_ID" validate:"required"`
 	EnableTLSServer bool         `env:"ENABLE_TLS_SERVER" envDefault:"true"`
-	Currency        string       `env:"CURRENCY"` // optional custom currency, one of=USD GBP BRL EUR
+	Currency        string       `env:"CURRENCY"` // optional custom currency, one of=USD AUD GBP BRL EUR
 	ClientScopes    []string
 }
 
@@ -49,7 +49,7 @@ func (c *Config) SetImplicitValues() {
 		case FDX:
 			c.Currency = "USD"
 		case CDR:
-			c.Currency = "USD"
+			c.Currency = "AUD"
 		case OBBR:
 			c.Currency = "BRL"
 		case OBUK:
