@@ -43,6 +43,21 @@ type Config struct {
 	ClientScopes    []string
 }
 
+func (c *Config) SetImplicitValues() {
+	if c.Currency == "" {
+		switch c.Spec {
+		case FDX:
+			c.Currency = "USD"
+		case CDR:
+			c.Currency = "USD"
+		case OBBR:
+			c.Currency = "BRL"
+		case OBUK:
+			c.Currency = "GBP"
+		}
+	}
+}
+
 func LoadConfig() (Config, error) {
 	var (
 		config = Config{}
@@ -52,6 +67,8 @@ func LoadConfig() (Config, error) {
 	if err = env.Parse(&config); err != nil {
 		return config, err
 	}
+
+	config.SetImplicitValues()
 
 	return config, nil
 }
