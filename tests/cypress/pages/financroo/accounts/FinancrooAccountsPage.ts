@@ -1,9 +1,11 @@
 
 export class FinancrooAccountsPage {
   private readonly accountsLocator: string = `.account-name`;
+  private readonly accountsSyncedNumberLocator: string = `#accounts-synced-number`;
   private readonly investmentsTabLocator: string = `#investments-tab`;
   private readonly accountsTabLocator: string = `#accounts-tab`;
   private readonly disconnectAccountsButtonLocator: string = `#access-bank-button`;
+  private getAccountLocator = (id: string) => `#account-id-${id}`;
 
   public assertAccounts(accounts: string[]): void {
     const accountElements = cy.get(this.accountsLocator);
@@ -12,6 +14,17 @@ export class FinancrooAccountsPage {
     } else {
       accountElements.should(`not.exist`);
     }
+  }
+
+  public assertAccountsIds(accountsIds: string[]): void {
+    accountsIds.forEach(accountId => {
+      cy.get(this.getAccountLocator(accountId)).should(`be.visible`)
+    });
+  }
+
+  public assertAccountsSyncedNumber(accountsNumber): void {
+    cy.get(this.accountsSyncedNumberLocator).should(`have.text`, `${accountsNumber} accounts synced`)
+
   }
 
   public goToInvestmentsTab(): void {
@@ -24,7 +37,7 @@ export class FinancrooAccountsPage {
       "have.text",
       "disconnect"
     );
-    cy.get(this.accountsLocator).should("be.visible");
+    cy.get(this.accountsSyncedNumberLocator).should("be.visible");
   }
 
   public disconnectAccounts(): void {

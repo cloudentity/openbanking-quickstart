@@ -4,6 +4,7 @@ import (
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/client/pagamentos"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/models"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/client/domestic_payments"
+
 	obModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
@@ -106,6 +107,5 @@ func (o *CDRClient) CreatePayment(c *gin.Context, data interface{}, accessToken 
 }
 
 func (o *FDXBankClient) CreatePayment(c *gin.Context, data interface{}, accessToken string) (PaymentCreated, error) {
-	// TODO mocked until APIs for FDX added to bank
 	return PaymentCreated{}, nil
 }

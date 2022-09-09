@@ -1,14 +1,18 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 
 	cdrModels "github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/client/banking"
+	fdxAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/client/account_information"
+	fdxModels "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/models"
 	obbrAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/client/accounts"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client/accounts"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/runtime"
+	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 )
 
@@ -100,23 +104,44 @@ func (o *OBBRClient) GetAccounts(c *gin.Context, accessToken string, bank Connec
 	return accountsData, nil
 }
 
-func (o *FDXBankClient) GetAccounts(c *gin.Context, accessToken string, bank ConnectedBank) (accountsData []Account, err error) {
-	// TODO mocked until APIs for FDX added to bank
-	accID := "123456"
-	ident := "anIdent"
-	acc := Account{
-		OBAccount6: models.OBAccount6{
-			AccountID: (*models.AccountID)(&accID),
-			Nickname:  models.Nickname("Mock Account"),
-			Account: []*models.OBAccount6AccountItems0{
-				{
-					Name:           models.Name0("An Account Name"),
-					Identification: (*models.Identification0)(&ident),
+func (o *FDXBankClient) GetAccounts(c *gin.Context, accessToken string, bank ConnectedBank) ([]Account, error) {
+	var (
+		resp         *fdxAccounts.SearchForAccountsOK
+		accountsData = []Account{}
+		err          error
+	)
+
+	if resp, err = o.AccountInformation.SearchForAccounts(fdxAccounts.NewSearchForAccountsParamsWithContext(c), httptransport.BearerToken(accessToken)); err != nil {
+		return accountsData, err
+	}
+
+	for _, acct := range resp.Payload.Accounts {
+		var (
+			depositAccount fdxModels.AccountWithDetailsentity
+			jsonStr        []byte
+		)
+		if jsonStr, err = json.Marshal(acct); err != nil {
+			return accountsData, err
+		}
+
+		if err = json.Unmarshal(jsonStr, &depositAccount); err != nil {
+			return accountsData, err
+		}
+
+		accountsData = append(accountsData, Account{
+			OBAccount6: models.OBAccount6{
+				AccountID: (*models.AccountID)(&depositAccount.DepositAccount.AccountID),
+				Nickname:  models.Nickname(depositAccount.DepositAccount.Nickname),
+				Account: []*models.OBAccount6AccountItems0{
+					{
+						Name:           models.Name0(depositAccount.DepositAccount.ProductName),
+						Identification: (*models.Identification0)(&depositAccount.DepositAccount.AccountNumber),
+					},
 				},
 			},
-		},
-		BankID: bank.BankID,
+			BankID: bank.BankID,
+		})
 	}
-	accountsData = append(accountsData, acc)
+
 	return accountsData, nil
 }

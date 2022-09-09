@@ -19,8 +19,9 @@ describe(`FDX Tpp consent app`, () => {
   const mfaPage: MfaPage = new MfaPage();
   const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
 
-  const creditsAccountId: string = `96565987`;
-  const savingsAccountId: string = `1122334455`;
+  const creditsAccountId: string = `96534987`;
+  const savingsAccountId: string = `1000002`;
+  const savings2AccountId: string = `1000001`;
 
   beforeEach(() => {
     fdxTppLoginPage.visit();
@@ -29,9 +30,10 @@ describe(`FDX Tpp consent app`, () => {
   });
 
   [
-    [creditsAccountId, savingsAccountId],
-    [savingsAccountId],
+    [creditsAccountId, savingsAccountId, savings2AccountId],
     [creditsAccountId],
+    [savingsAccountId],
+    [savings2AccountId],
   ].forEach((accountsIds) => {
     it(`Happy path with selected accounts: ${accountsIds}`, () => {
       fdxTppLoginPage.assertThatPageIsDisplayed();
