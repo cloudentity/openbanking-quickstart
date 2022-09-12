@@ -22,6 +22,10 @@ func NewFDXConsentClient(publicClient, clientCredentialsClient acpclient.Client,
 	}
 }
 
+func (f *FDXClient) ShouldDoPAR() bool{
+	return true
+}
+
 func (f *FDXClient) DoPAR(c *gin.Context) (string, acpclient.CSRF, error) {
 	var (
 		resp *a2.PushedAuthorizationRequestCreated

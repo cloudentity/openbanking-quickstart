@@ -29,7 +29,6 @@ type Clients struct {
 	AcpPaymentsClient acpclient.Client
 	BankClient        BankClient
 	ConsentClient     ConsentClient
-	PARClient         ConsentClient
 }
 
 type BankClient interface {
@@ -46,6 +45,7 @@ type ConsentClient interface {
 	GetPaymentConsent(c *gin.Context, consentID string) (interface{}, error)
 	CreateAccountConsent(c *gin.Context) (string, error)
 	DoPAR(c *gin.Context) (string, acpclient.CSRF, error)
+	ShouldDoPAR() bool
 	Signer
 }
 
@@ -102,7 +102,6 @@ func InitClients(config Config,
 	signerCreateFn SignerCreationFn,
 	bankClientCreateFn BankClientCreationFn,
 	consentClientCreateFn ConsentClientCreationFn,
-	PARClientCreateFn ConsentClientCreationFn,
 ) (Clients, error) {
 	var (
 		clients              = Clients{}
@@ -111,7 +110,6 @@ func InitClients(config Config,
 		bankClient           BankClient
 		signer               Signer
 		consentClient        ConsentClient
-		PARClient            ConsentClient
 		err                  error
 	)
 
@@ -137,16 +135,11 @@ func InitClients(config Config,
 		consentClient = consentClientCreateFn(acpAccountsWebClient, acpPaymentsWebClient, signer)
 	}
 
-	if PARClientCreateFn != nil {
-		PARClient = PARClientCreateFn(acpAccountsWebClient, acpPaymentsWebClient, signer)
-	}
-
 	return Clients{
 		AcpAccountsClient: acpAccountsWebClient,
 		AcpPaymentsClient: acpPaymentsWebClient,
 		BankClient:        bankClient,
 		ConsentClient:     consentClient,
-		PARClient:         PARClient,
 	}, nil
 }
 
@@ -351,14 +344,18 @@ func NewCDRConsentClient(publicClient, clientCredentialsClient acpclient.Client,
 	}
 }
 
-func (f *CDRConsentClient) DoPAR(c *gin.Context) (string, acpclient.CSRF, error) {
+func (c *CDRConsentClient) ShouldDoPAR() bool {
+	return true
+}
+
+func (c *CDRConsentClient) DoPAR(ctx *gin.Context) (string, acpclient.CSRF, error) {
 	var (
 		csrf acpclient.CSRF
 		resp acpclient.PARResponse
 		err  error
 	)
 
-	if resp, csrf, err = f.PublicClient.DoPAR(
+	if resp, csrf, err = c.PublicClient.DoPAR(
 		acpclient.WithPKCE(),
 		acpclient.WithOpenbankingACR([]string{"urn:cds.au:cdr:3"}),
 	); err != nil {
@@ -367,22 +364,22 @@ func (f *CDRConsentClient) DoPAR(c *gin.Context) (string, acpclient.CSRF, error)
 	return resp.RequestURI, csrf, err
 }
 
-func (f *CDRConsentClient) CreateAccountConsent(c *gin.Context) (string, error) {
+func (c *CDRConsentClient) CreateAccountConsent(ctx *gin.Context) (string, error) {
 	return "", nil
 }
 
-func (f *CDRConsentClient) DoRequestObjectEncryption() bool {
+func (c *CDRConsentClient) DoRequestObjectEncryption() bool {
 	return false
 }
 
-func (f *CDRConsentClient) GetPaymentConsent(c *gin.Context, consentID string) (interface{}, error) {
+func (c *CDRConsentClient) GetPaymentConsent(ctx *gin.Context, consentID string) (interface{}, error) {
 	return "", nil
 }
 
-func (f *CDRConsentClient) CreatePaymentConsent(c *gin.Context, req CreatePaymentRequest) (string, error) {
+func (c *CDRConsentClient) CreatePaymentConsent(ctx *gin.Context, req CreatePaymentRequest) (string, error) {
 	return "", nil
 }
 
-func (f *CDRConsentClient) Sign([]byte) (string, error) {
+func (c *CDRConsentClient) Sign([]byte) (string, error) {
 	return "", nil
 }

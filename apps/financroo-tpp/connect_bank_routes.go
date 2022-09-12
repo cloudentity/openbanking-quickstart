@@ -49,17 +49,15 @@ func (s *Server) ConnectBank() func(*gin.Context) {
 			c.String(http.StatusUnauthorized, err.Error())
 			return
 		}
-		// what if we need both?
-		if s.Clients.PARClient != nil {
-			if consentID, csrf, err = s.Clients.PARClient.DoPAR(c); err != nil {
+
+		if s.Clients.ConsentClient.ShouldDoPAR() {
+			if consentID, csrf, err = s.Clients.ConsentClient.DoPAR(c); err != nil {
 				c.String(http.StatusBadRequest, fmt.Sprintf("failed to register PAR request: %+v", err))
 				return
 			}
-		} else if s.Clients.ConsentClient != nil {
-			if consentID, err = s.Clients.ConsentClient.CreateAccountConsent(c); err != nil {
-				c.String(http.StatusBadRequest, fmt.Sprintf("failed to register account access consent: %+v", err))
-				return
-			}
+		} else if consentID, err = s.Clients.ConsentClient.CreateAccountConsent(c); err != nil {
+			c.String(http.StatusBadRequest, fmt.Sprintf("failed to register account access consent: %+v", err))
+			return
 		}
 
 		s.CreateConsentResponse(c, bankID, consentID, user, s.Clients.AcpAccountsClient, s.LoginURLBuilder, &csrf)
