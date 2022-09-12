@@ -88,7 +88,6 @@ func (s *Server) CreateConsentResponse(
 	user User,
 	client acpclient.Client,
 	loginURLBuilder LoginURLBuilder,
-	csrf *acpclient.CSRF,
 ) {
 	var (
 		loginURL           string
@@ -102,13 +101,26 @@ func (s *Server) CreateConsentResponse(
 		data = gin.H{}
 	)
 
-	if loginURL, app.CSRF, err = loginURLBuilder.BuildLoginURL(consentID, client); err != nil {
-		c.String(http.StatusInternalServerError, fmt.Sprintf("failed to build authorize url: %+v", err))
-		return
-	}
+	if s.Clients.ConsentClient.ShouldDoPAR() {
+		if consentID, app.CSRF, err = s.Clients.ConsentClient.DoPAR(c); err != nil {
+			c.String(http.StatusBadRequest, fmt.Sprintf("failed to register PAR request: %+v", err))
+			return
+		}
 
-	if csrf != nil {
-		app.CSRF = *csrf
+		if loginURL, _, err = loginURLBuilder.BuildLoginURL(consentID, client); err != nil {
+			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to build authorize url: %+v", err))
+			return
+		}
+
+	} else {
+		if consentID, err = s.Clients.ConsentClient.CreateAccountConsent(c); err != nil {
+			c.String(http.StatusBadRequest, fmt.Sprintf("failed to register account access consent: %+v", err))
+			return
+		}
+		if loginURL, app.CSRF, err = loginURLBuilder.BuildLoginURL(consentID, client); err != nil {
+			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to build authorize url: %+v", err))
+			return
+		}
 	}
 
 	if _, err = url.Parse(loginURL); err != nil {

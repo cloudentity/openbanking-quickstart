@@ -35,7 +35,7 @@ func (s *Server) CreateDomesticPaymentConsent() func(*gin.Context) {
 			return
 		}
 
-		s.CreateConsentResponse(c, request.BankID, consentID, user, s.Clients.AcpPaymentsClient, s.LoginURLBuilder, nil)
+		s.CreateConsentResponse(c, request.BankID, consentID, user, s.Clients.AcpPaymentsClient, s.LoginURLBuilder)
 	}
 }
 

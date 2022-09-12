@@ -42,7 +42,6 @@ func (s *Server) ConnectBank() func(*gin.Context) {
 			consentID string
 			user      User
 			err       error
-			csrf      acpclient.CSRF
 		)
 
 		if user, _, err = s.WithUser(c); err != nil {
@@ -50,17 +49,7 @@ func (s *Server) ConnectBank() func(*gin.Context) {
 			return
 		}
 
-		if s.Clients.ConsentClient.ShouldDoPAR() {
-			if consentID, csrf, err = s.Clients.ConsentClient.DoPAR(c); err != nil {
-				c.String(http.StatusBadRequest, fmt.Sprintf("failed to register PAR request: %+v", err))
-				return
-			}
-		} else if consentID, err = s.Clients.ConsentClient.CreateAccountConsent(c); err != nil {
-			c.String(http.StatusBadRequest, fmt.Sprintf("failed to register account access consent: %+v", err))
-			return
-		}
-
-		s.CreateConsentResponse(c, bankID, consentID, user, s.Clients.AcpAccountsClient, s.LoginURLBuilder, &csrf)
+		s.CreateConsentResponse(c, bankID, consentID, user, s.Clients.AcpAccountsClient, s.LoginURLBuilder)
 	}
 }
 
