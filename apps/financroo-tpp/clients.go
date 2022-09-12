@@ -356,6 +356,7 @@ func (c *CDRConsentClient) DoPAR(ctx *gin.Context) (string, acpclient.CSRF, erro
 	)
 
 	if resp, csrf, err = c.PublicClient.DoPAR(
+		acpclient.WithResponseType("code id_token"),
 		acpclient.WithPKCE(),
 		acpclient.WithOpenbankingACR([]string{"urn:cds.au:cdr:3"}),
 	); err != nil {
