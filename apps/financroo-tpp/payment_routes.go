@@ -14,10 +14,9 @@ import (
 func (s *Server) CreateDomesticPaymentConsent() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			request   CreatePaymentRequest
-			consentID string
-			user      User
-			err       error
+			request CreatePaymentRequest
+			user    User
+			err     error
 		)
 
 		if user, _, err = s.WithUser(c); err != nil {
@@ -30,12 +29,7 @@ func (s *Server) CreateDomesticPaymentConsent() func(*gin.Context) {
 			return
 		}
 
-		if consentID, err = s.Clients.ConsentClient.CreatePaymentConsent(c, request); err != nil {
-			c.String(http.StatusBadRequest, fmt.Sprintf("failed to register payment consent: %+v", err))
-			return
-		}
-
-		s.CreateConsentResponse(c, request.BankID, consentID, user, s.Clients.AcpPaymentsClient, s.LoginURLBuilder)
+		s.CreateConsentResponse(c, request.BankID, user, s.Clients.AcpPaymentsClient, s.LoginURLBuilder, true, request)
 	}
 }
 

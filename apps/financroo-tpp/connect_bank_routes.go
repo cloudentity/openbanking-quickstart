@@ -38,10 +38,9 @@ type ConnectBankRequest struct {
 func (s *Server) ConnectBank() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			bankID    = BankID(c.Param("bankId"))
-			consentID string
-			user      User
-			err       error
+			bankID = BankID(c.Param("bankId"))
+			user   User
+			err    error
 		)
 
 		if user, _, err = s.WithUser(c); err != nil {
@@ -49,7 +48,7 @@ func (s *Server) ConnectBank() func(*gin.Context) {
 			return
 		}
 
-		s.CreateConsentResponse(c, bankID, consentID, user, s.Clients.AcpAccountsClient, s.LoginURLBuilder)
+		s.CreateConsentResponse(c, bankID, user, s.Clients.AcpAccountsClient, s.LoginURLBuilder, false, CreatePaymentRequest{})
 	}
 }
 
