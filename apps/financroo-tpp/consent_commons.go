@@ -75,8 +75,6 @@ func NewCDRLoginURLBuilder(config Config) (LoginURLBuilder, error) {
 
 func (o *CDRLoginURLBuilder) BuildLoginURL(arrangementID string, client acpclient.Client) (authorizeURL string, csrf acpclient.CSRF, err error) {
 	return client.AuthorizeURL(
-		acpclient.WithPKCE(),
-		acpclient.WithOpenbankingACR([]string{"urn:cds.au:cdr:2"}),
 		acpclient.WithResponseMode("jwt"),
 		acpclient.WithPAR(client.Config.ClientID, arrangementID),
 	)
@@ -112,7 +110,6 @@ func (s *Server) CreateConsentResponse(
 			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to build authorize url: %+v", err))
 			return
 		}
-
 	} else {
 		if paymentConsent {
 			if consentID, err = s.Clients.ConsentClient.CreatePaymentConsent(c, request); err != nil {
@@ -194,6 +191,5 @@ func NewFDXLoginURLBuilder(config Config) (LoginURLBuilder, error) {
 func (f *FDXLoginURLBuilder) BuildLoginURL(consentID string, client acpclient.Client) (authorizeURL string, csrf acpclient.CSRF, err error) {
 	return client.AuthorizeURL(
 		acpclient.WithPAR(client.Config.ClientID, consentID),
-		acpclient.WithResponseMode("jwt"),
 	)
 }

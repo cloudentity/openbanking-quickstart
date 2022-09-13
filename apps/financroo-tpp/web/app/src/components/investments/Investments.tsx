@@ -50,7 +50,7 @@ export default function Investments() {
           id: "invest-button",
           title: "Contribute now",
           onClick: () => {
-            if (window.spec !== "cdr") {
+            if (window.spec !== "cdr" && window.spec !== "fdx") {
               navigate("/investments/contribute");
             }
           },
