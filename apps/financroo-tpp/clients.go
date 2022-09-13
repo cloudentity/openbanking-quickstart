@@ -45,7 +45,7 @@ type ConsentClient interface {
 	GetPaymentConsent(c *gin.Context, consentID string) (interface{}, error)
 	CreateAccountConsent(c *gin.Context) (string, error)
 	DoPAR(c *gin.Context) (string, acpclient.CSRF, error)
-	ShouldDoPAR() bool
+	IsPAR() bool
 	Signer
 }
 
@@ -344,7 +344,7 @@ func NewCDRConsentClient(publicClient, clientCredentialsClient acpclient.Client,
 	}
 }
 
-func (c *CDRConsentClient) ShouldDoPAR() bool {
+func (c *CDRConsentClient) IsDoPAR() bool {
 	return true
 }
 

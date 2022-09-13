@@ -20,7 +20,7 @@ func NewFDXConsentClient(publicClient, clientCredentialsClient acpclient.Client,
 	}
 }
 
-func (f *FDXClient) ShouldDoPAR() bool {
+func (f *FDXClient) IsPAR() bool {
 	return true
 }
 

@@ -21,7 +21,7 @@ import (
 	"github.com/cloudentity/acp-client-go/clients/openbankingBR/payments/client/pagamentos"
 )
 
-func (o *OBUKConsentClient) ShouldDoPAR() bool {
+func (o *OBUKConsentClient) IsPAR() bool {
 	return false
 }
 
@@ -244,7 +244,7 @@ var PermissionGroupMap = map[PermissionGroup]Permissions{
 	},
 }
 
-func (o *OBBRConsentClient) ShouldDoPAR() bool {
+func (o *OBBRConsentClient) IsPAR() bool {
 	return false
 }
 

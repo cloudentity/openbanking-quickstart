@@ -100,7 +100,7 @@ func (s *Server) CreateConsentResponse(
 		consentID string
 	)
 
-	if s.Clients.ConsentClient.ShouldDoPAR() {
+	if s.Clients.ConsentClient.IsPAR() {
 		if consentID, app.CSRF, err = s.Clients.ConsentClient.DoPAR(c); err != nil {
 			c.String(http.StatusBadRequest, fmt.Sprintf("failed to register PAR request: %+v", err))
 			return
