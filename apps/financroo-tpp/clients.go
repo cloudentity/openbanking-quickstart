@@ -360,7 +360,7 @@ func (c *CDRConsentClient) DoPAR(ctx *gin.Context) (string, acpclient.CSRF, erro
 		acpclient.WithPKCE(),
 		acpclient.WithOpenbankingACR([]string{"urn:cds.au:cdr:3"}),
 	); err != nil {
-		return "", acpclient.CSRF{}, nil
+		return "", acpclient.CSRF{}, err
 	}
 	return resp.RequestURI, csrf, err
 }

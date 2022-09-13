@@ -2,10 +2,8 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/pkg/errors"
 
 	acpclient "github.com/cloudentity/acp-client-go"
-	a2 "github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
 )
 
 type FDXClient struct {
@@ -22,17 +20,17 @@ func NewFDXConsentClient(publicClient, clientCredentialsClient acpclient.Client,
 	}
 }
 
-func (f *FDXClient) ShouldDoPAR() bool{
+func (f *FDXClient) ShouldDoPAR() bool {
 	return true
 }
 
 func (f *FDXClient) DoPAR(c *gin.Context) (string, acpclient.CSRF, error) {
 	var (
-		resp *a2.PushedAuthorizationRequestCreated
+		csrf acpclient.CSRF
+		resp acpclient.PARResponse
 		err  error
 	)
 
-	responseType := "code"
 	authorizationDetails := `[
       {
          "type":"fdx_v1.0",
@@ -59,20 +57,13 @@ func (f *FDXClient) DoPAR(c *gin.Context) (string, acpclient.CSRF, error) {
       }
    ]`
 
-	scopes := "offline_access ACCOUNT_DETAILED READ_CONSENTS ACCOUNT_BASIC TRANSACTIONS"
-	if resp, err = f.PublicClient.Oauth2.Oauth2.PushedAuthorizationRequest(
-		a2.NewPushedAuthorizationRequestParams().
-			WithContext(c.Request.Context()).
-			WithRedirectURI(f.PublicClient.Config.RedirectURL.String()).
-			WithClientID(f.ClientID).
-			WithScope(&scopes).
-			WithResponseType(responseType).
-			WithAuthorizationDetails(&authorizationDetails),
+	if resp, csrf, err = f.PublicClient.DoPAR(
+		acpclient.WithResponseType("code"),
+		acpclient.WithAuthorizationDetails(authorizationDetails),
 	); err != nil {
-		return "", acpclient.CSRF{}, errors.Wrapf(err, "failed to register par request")
+		return "", acpclient.CSRF{}, err
 	}
-
-	return resp.Payload.RequestURI, acpclient.CSRF{}, err
+	return resp.RequestURI, csrf, err
 }
 
 func (f *FDXClient) CreateAccountConsent(c *gin.Context) (string, error) {

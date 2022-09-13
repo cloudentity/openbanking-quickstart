@@ -192,11 +192,7 @@ func NewFDXLoginURLBuilder(config Config) (LoginURLBuilder, error) {
 }
 
 func (f *FDXLoginURLBuilder) BuildLoginURL(consentID string, client acpclient.Client) (authorizeURL string, csrf acpclient.CSRF, err error) {
-	var u string
-
-	if u, err = client.AuthorizeURLWithPAR(consentID); err != nil {
-		return "", acpclient.CSRF{}, errors.Wrapf(err, "failed to create authorize url with par")
-	}
-
-	return u, acpclient.CSRF{}, nil
+	return client.AuthorizeURL(
+		acpclient.WithPAR(client.Config.ClientID, consentID),
+	)
 }
