@@ -194,5 +194,6 @@ func NewFDXLoginURLBuilder(config Config) (LoginURLBuilder, error) {
 func (f *FDXLoginURLBuilder) BuildLoginURL(consentID string, client acpclient.Client) (authorizeURL string, csrf acpclient.CSRF, err error) {
 	return client.AuthorizeURL(
 		acpclient.WithPAR(client.Config.ClientID, consentID),
+		acpclient.WithResponseMode("jwt"),
 	)
 }
