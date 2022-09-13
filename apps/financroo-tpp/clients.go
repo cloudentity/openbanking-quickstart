@@ -344,7 +344,7 @@ func NewCDRConsentClient(publicClient, clientCredentialsClient acpclient.Client,
 	}
 }
 
-func (c *CDRConsentClient) IsDoPAR() bool {
+func (c *CDRConsentClient) IsPAR() bool {
 	return true
 }
 
