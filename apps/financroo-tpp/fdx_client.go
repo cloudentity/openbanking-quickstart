@@ -20,7 +20,11 @@ func NewFDXConsentClient(publicClient, clientCredentialsClient acpclient.Client,
 	}
 }
 
-func (f *FDXClient) IsPAR() bool {
+func (f *FDXClient) CreateConsentExplicitly() bool {
+	return false
+}
+
+func (f *FDXClient) UsePAR() bool {
 	return true
 }
 

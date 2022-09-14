@@ -81,48 +81,37 @@ func (o *CDRLoginURLBuilder) BuildLoginURL(arrangementID string, client acpclien
 }
 
 func (s *Server) CreateConsentResponse(
-	c *gin.Context, bankID BankID,
+	c *gin.Context,
+	bankID BankID,
 	user User,
 	client acpclient.Client,
 	loginURLBuilder LoginURLBuilder,
-	paymentConsent bool,
-	request CreatePaymentRequest,
+	consentID string,
 ) {
 	var (
 		loginURL           string
 		err                error
 		encodedCookieValue string
 		app                = AppStorage{
-			BankID: bankID,
-			Sub:    user.Sub,
+			BankID:   bankID,
+			Sub:      user.Sub,
+			IntentID: consentID,
 		}
-		data      = gin.H{}
-		consentID string
+		data           = gin.H{}
+		parRequestURI string
 	)
 
-	if s.Clients.ConsentClient.IsPAR() {
-		if consentID, app.CSRF, err = s.Clients.ConsentClient.DoPAR(c); err != nil {
+	if s.Clients.ConsentClient.UsePAR() {
+		if parRequestURI, app.CSRF, err = s.Clients.ConsentClient.DoPAR(c); err != nil {
 			c.String(http.StatusBadRequest, fmt.Sprintf("failed to register PAR request: %+v", err))
 			return
 		}
 
-		if loginURL, _, err = loginURLBuilder.BuildLoginURL(consentID, client); err != nil {
+		if loginURL, _, err = loginURLBuilder.BuildLoginURL(parRequestURI, client); err != nil {
 			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to build authorize url: %+v", err))
 			return
 		}
 	} else {
-		if paymentConsent {
-			if consentID, err = s.Clients.ConsentClient.CreatePaymentConsent(c, request); err != nil {
-				c.String(http.StatusBadRequest, fmt.Sprintf("failed to register payment consent: %+v", err))
-				return
-			}
-		} else {
-			if consentID, err = s.Clients.ConsentClient.CreateAccountConsent(c); err != nil {
-				c.String(http.StatusBadRequest, fmt.Sprintf("failed to register account access consent: %+v", err))
-				return
-			}
-		}
-
 		if loginURL, app.CSRF, err = loginURLBuilder.BuildLoginURL(consentID, client); err != nil {
 			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to build authorize url: %+v", err))
 			return
@@ -133,8 +122,6 @@ func (s *Server) CreateConsentResponse(
 		c.String(http.StatusInternalServerError, fmt.Sprintf("failed to parse login url: %+v", err))
 		return
 	}
-
-	app.IntentID = consentID
 
 	// persist verifier and nonce in a secure encrypted cookie
 	if encodedCookieValue, err = s.SecureCookie.Encode("app", app); err != nil {

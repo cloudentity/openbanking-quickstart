@@ -41,11 +41,13 @@ type BankClient interface {
 type BankClientCreationFn func(Config) (BankClient, error)
 
 type ConsentClient interface {
+	CreateConsentExplicitly() bool
+	CreateAccountConsent(c *gin.Context) (string, error)
 	CreatePaymentConsent(c *gin.Context, req CreatePaymentRequest) (string, error)
 	GetPaymentConsent(c *gin.Context, consentID string) (interface{}, error)
-	CreateAccountConsent(c *gin.Context) (string, error)
+	
+	UsePAR() bool
 	DoPAR(c *gin.Context) (string, acpclient.CSRF, error)
-	IsPAR() bool
 	Signer
 }
 
@@ -344,7 +346,11 @@ func NewCDRConsentClient(publicClient, clientCredentialsClient acpclient.Client,
 	}
 }
 
-func (c *CDRConsentClient) IsPAR() bool {
+func (c *CDRConsentClient) CreateConsentExplicitly() bool {
+	return false
+}
+
+func (c *CDRConsentClient) UsePAR() bool {
 	return true
 }
 

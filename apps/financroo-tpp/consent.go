@@ -21,7 +21,11 @@ import (
 	"github.com/cloudentity/acp-client-go/clients/openbankingBR/payments/client/pagamentos"
 )
 
-func (o *OBUKConsentClient) IsPAR() bool {
+func (o *OBUKConsentClient) CreateConsentExplicitly() bool {
+	return true
+}
+
+func (o *OBUKConsentClient) UsePAR() bool {
 	return false
 }
 
@@ -244,12 +248,16 @@ var PermissionGroupMap = map[PermissionGroup]Permissions{
 	},
 }
 
-func (o *OBBRConsentClient) IsPAR() bool {
+func (o *OBBRConsentClient) UsePAR() bool {
 	return false
 }
 
 func (o *OBBRConsentClient) DoPAR(c *gin.Context) (string, acpclient.CSRF, error) {
 	return "", acpclient.CSRF{}, nil
+}
+
+func (o *OBBRConsentClient) CreateConsentExplicitly() bool {
+	return true
 }
 
 func (o *OBBRConsentClient) CreateAccountConsent(c *gin.Context) (string, error) {
