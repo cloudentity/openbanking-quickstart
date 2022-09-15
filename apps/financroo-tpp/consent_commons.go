@@ -46,6 +46,7 @@ func (o *OBBRLoginURLBuilder) BuildLoginURL(consentID string, client acpclient.C
 	}
 
 	return client.AuthorizeURL(
+		acpclient.WithResponseType("code"),
 		acpclient.WithOpenbankingIntentID(consentID, []string{"urn:brasil:openbanking:loa2"}),
 		acpclient.WithRequestObjectEncryption(o.key),
 		acpclient.WithPKCE(),
@@ -61,6 +62,7 @@ func NewOBUKLoginURLBuilder() (LoginURLBuilder, error) {
 
 func (o *OBUKLoginURLBuilder) BuildLoginURL(consentID string, client acpclient.Client) (string, acpclient.CSRF, error) {
 	return client.AuthorizeURL(
+		acpclient.WithResponseType("code"),
 		acpclient.WithOpenbankingIntentID(consentID, []string{"urn:openbanking:psd2:sca"}),
 		acpclient.WithPKCE(),
 		acpclient.WithResponseMode("jwt"),
@@ -75,6 +77,7 @@ func NewCDRLoginURLBuilder(config Config) (LoginURLBuilder, error) {
 
 func (o *CDRLoginURLBuilder) BuildLoginURL(arrangementID string, client acpclient.Client) (authorizeURL string, csrf acpclient.CSRF, err error) {
 	return client.AuthorizeURL(
+		acpclient.WithResponseType("code"),
 		acpclient.WithResponseMode("jwt"),
 		acpclient.WithPAR(client.Config.ClientID, arrangementID),
 	)
@@ -97,7 +100,7 @@ func (s *Server) CreateConsentResponse(
 			Sub:      user.Sub,
 			IntentID: consentID,
 		}
-		data           = gin.H{}
+		data          = gin.H{}
 		parRequestURI string
 	)
 
@@ -177,6 +180,7 @@ func NewFDXLoginURLBuilder(config Config) (LoginURLBuilder, error) {
 
 func (f *FDXLoginURLBuilder) BuildLoginURL(consentID string, client acpclient.Client) (authorizeURL string, csrf acpclient.CSRF, err error) {
 	return client.AuthorizeURL(
+		acpclient.WithResponseType("code"),
 		acpclient.WithPAR(client.Config.ClientID, consentID),
 	)
 }

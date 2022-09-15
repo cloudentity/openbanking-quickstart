@@ -76,6 +76,16 @@ github.com/cloudentity/acp-client-go v0.0.0-20220913085326-03caf3ec78d5 h1:6Vzev
 github.com/cloudentity/acp-client-go v0.0.0-20220913085326-03caf3ec78d5/go.mod h1:FBO+AWNnRHSkYnDCTYA5IdU1MeSbAqq7bhRjACLvKZ8=
 github.com/cloudentity/acp-client-go v0.0.0-20220913101217-96ff4617ffb4 h1:qqxJZfVkoK/94y8bxAENb8U69OVLlezWqrDS93/4e9E=
 github.com/cloudentity/acp-client-go v0.0.0-20220913101217-96ff4617ffb4/go.mod h1:FBO+AWNnRHSkYnDCTYA5IdU1MeSbAqq7bhRjACLvKZ8=
+github.com/cloudentity/acp-client-go v0.0.0-20220914133528-570e7f057a6e h1:J3ur59S7LPwDqOLhfgJlAB1dJsXkysNZF395UhcK0/g=
+github.com/cloudentity/acp-client-go v0.0.0-20220914133528-570e7f057a6e/go.mod h1:FBO+AWNnRHSkYnDCTYA5IdU1MeSbAqq7bhRjACLvKZ8=
+github.com/cloudentity/acp-client-go v0.0.0-20220914140924-88f5786f7e98 h1:Pp14P6B9aAWECOlQYLkSAC31tTCVcItfUfewXrpaQgs=
+github.com/cloudentity/acp-client-go v0.0.0-20220914140924-88f5786f7e98/go.mod h1:FBO+AWNnRHSkYnDCTYA5IdU1MeSbAqq7bhRjACLvKZ8=
+github.com/cloudentity/acp-client-go v0.0.0-20220914141912-379b37137057 h1:w4ARMNCQhHRWCf5b9zwt69T+muMB8bgsw+MpSrLT40M=
+github.com/cloudentity/acp-client-go v0.0.0-20220914141912-379b37137057/go.mod h1:FBO+AWNnRHSkYnDCTYA5IdU1MeSbAqq7bhRjACLvKZ8=
+github.com/cloudentity/acp-client-go v0.0.0-20220914143129-e54e1a5fe5f1 h1:oxKN/+596lCJQBiKlTPhJGxWYNPzeewnsD9UMNdiNPg=
+github.com/cloudentity/acp-client-go v0.0.0-20220914143129-e54e1a5fe5f1/go.mod h1:FBO+AWNnRHSkYnDCTYA5IdU1MeSbAqq7bhRjACLvKZ8=
+github.com/cloudentity/acp-client-go v0.0.0-20220915070545-32cb81e730cb h1:vgYqU8gTD1G03wROt58vsqjhDsTH4fMbx+3iPghEDtA=
+github.com/cloudentity/acp-client-go v0.0.0-20220915070545-32cb81e730cb/go.mod h1:FBO+AWNnRHSkYnDCTYA5IdU1MeSbAqq7bhRjACLvKZ8=
 github.com/cncf/udpa/go v0.0.0-20191209042840-269d4d468f6f/go.mod h1:M8M6+tZqaGXZJjfX53e64911xZQV5JYwmTeXPW+k8Sc=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=

@@ -5,7 +5,7 @@ go 1.18
 require (
 	github.com/Masterminds/sprig/v3 v3.2.2
 	github.com/caarlos0/env/v6 v6.4.0
-	github.com/cloudentity/acp-client-go v0.0.0-20220913101217-96ff4617ffb4
+	github.com/cloudentity/acp-client-go v0.0.0-20220915070545-32cb81e730cb
 	github.com/dgrijalva/jwt-go v3.2.1-0.20200107013213-dc14462fd587+incompatible
 	github.com/ggicci/httpin v0.7.1
 	github.com/ghodss/yaml v1.0.0

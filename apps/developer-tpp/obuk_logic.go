@@ -70,6 +70,7 @@ func (h *OBUKLogic) GetConsentID(data interface{}) string {
 
 func (h *OBUKLogic) BuildLoginURL(c *gin.Context, consentID string, doRequestObjectEncryption bool) (string, acpclient.CSRF, error) {
 	return h.Client.AuthorizeURL(
+		acpclient.WithResponseType("code"),
 		acpclient.WithOpenbankingIntentID(consentID, []string{"urn:openbanking:psd2:sca"}),
 		acpclient.WithPKCE(),
 		acpclient.WithResponseMode("jwt"),
