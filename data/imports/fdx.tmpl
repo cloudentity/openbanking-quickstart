@@ -65,7 +65,7 @@ clients:
   - manage_openbanking_consents
   token_endpoint_auth_method: client_secret_basic
 
-# financroo / developer tpp
+# financroo
 - tenant_id: {{ .tenant_id }}
   authorization_server_id: {{ .server_id }}
   client_id: bugkgm23g9kregtu051g
@@ -76,8 +76,36 @@ clients:
   tls_client_certificate_bound_access_tokens: true
   token_endpoint_auth_method: tls_client_auth
   redirect_uris:
-  - {{ .developer_tpp_url }}/callback
   - {{ .financroo_tpp_url }}/api/callback
+  subject_type: pairwise
+  response_types:
+  - token
+  - code
+  scopes:
+  - openid
+  - offline_access
+  - READ_CONSENTS
+  - UPDATE_CONSENTS
+  - ACCOUNT_DETAILED
+  - ACCOUNT_BASIC
+  - TRANSACTIONS
+  grant_types:
+  - client_credentials
+  - authorization_code
+  - refresh_token
+
+#  developer tpp
+- tenant_id: {{ .tenant_id }}
+  authorization_server_id: {{ .server_id }}
+  client_id: bukj5p6k7qdmm5fdJjJvhG
+  client_name: Developer TPP
+  client_uri: https://localhost:8090
+  client_secret: {{ default "-TlfoycUiE0qNi-XUBFDfTxMlhHTCjVxOF6pLrWZbQA" .fdx_developer_tpp_client_secret }}
+  tls_client_auth_subject_dn: {{ .financroo_tls_client_auth_subject_dn }}
+  tls_client_certificate_bound_access_tokens: true
+  token_endpoint_auth_method: tls_client_auth
+  redirect_uris:
+  - {{ .developer_tpp_url }}/callback
   subject_type: pairwise
   response_types:
   - token
