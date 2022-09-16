@@ -41,13 +41,9 @@ type BankClient interface {
 type BankClientCreationFn func(Config) (BankClient, error)
 
 type ConsentClient interface {
-	CreateConsentExplicitly() bool
-	CreateAccountConsent(c *gin.Context) (string, error)
 	CreatePaymentConsent(c *gin.Context, req CreatePaymentRequest) (string, error)
 	GetPaymentConsent(c *gin.Context, consentID string) (interface{}, error)
-	
-	UsePAR() bool
-	DoPAR(c *gin.Context) (string, acpclient.CSRF, error)
+	CreateAccountConsent(c *gin.Context) (string, error)
 	Signer
 }
 
@@ -331,62 +327,4 @@ func NewFDXBankClient(config Config) (BankClient, error) {
 	), nil)
 
 	return c, nil
-}
-
-type CDRConsentClient struct {
-	ClientID     string
-	ClientSecret string
-	PublicClient acpclient.Client
-}
-
-func NewCDRConsentClient(publicClient, clientCredentialsClient acpclient.Client, _ Signer) ConsentClient {
-	return &CDRConsentClient{ClientID: clientCredentialsClient.Config.ClientID,
-		ClientSecret: clientCredentialsClient.Config.ClientSecret,
-		PublicClient: publicClient,
-	}
-}
-
-func (c *CDRConsentClient) CreateConsentExplicitly() bool {
-	return false
-}
-
-func (c *CDRConsentClient) UsePAR() bool {
-	return true
-}
-
-func (c *CDRConsentClient) DoPAR(ctx *gin.Context) (string, acpclient.CSRF, error) {
-	var (
-		csrf acpclient.CSRF
-		resp acpclient.PARResponse
-		err  error
-	)
-
-	if resp, csrf, err = c.PublicClient.DoPAR(
-		acpclient.WithResponseType("code id_token"),
-		acpclient.WithPKCE(),
-		acpclient.WithOpenbankingACR([]string{"urn:cds.au:cdr:3"}),
-	); err != nil {
-		return "", acpclient.CSRF{}, err
-	}
-	return resp.RequestURI, csrf, err
-}
-
-func (c *CDRConsentClient) CreateAccountConsent(ctx *gin.Context) (string, error) {
-	return "", nil
-}
-
-func (c *CDRConsentClient) DoRequestObjectEncryption() bool {
-	return false
-}
-
-func (c *CDRConsentClient) GetPaymentConsent(ctx *gin.Context, consentID string) (interface{}, error) {
-	return "", nil
-}
-
-func (c *CDRConsentClient) CreatePaymentConsent(ctx *gin.Context, req CreatePaymentRequest) (string, error) {
-	return "", nil
-}
-
-func (c *CDRConsentClient) Sign([]byte) (string, error) {
-	return "", nil
 }
