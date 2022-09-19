@@ -7,6 +7,7 @@ import (
 	"strconv"
 	"time"
 
+	acpclient "github.com/cloudentity/acp-client-go"
 	obbrModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/consents/models"
 	obModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
 	"github.com/gin-gonic/gin"
@@ -19,6 +20,18 @@ import (
 	ob "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 	"github.com/cloudentity/acp-client-go/clients/openbankingBR/payments/client/pagamentos"
 )
+
+func (o *OBUKConsentClient) CreateConsentExplicitly() bool {
+	return true
+}
+
+func (o *OBUKConsentClient) UsePAR() bool {
+	return false
+}
+
+func (o *OBUKConsentClient) DoPAR(c *gin.Context) (string, acpclient.CSRF, error) {
+	return "", acpclient.CSRF{}, nil
+}
 
 func (o *OBUKConsentClient) CreateAccountConsent(c *gin.Context) (string, error) {
 	var (
@@ -233,6 +246,18 @@ var PermissionGroupMap = map[PermissionGroup]Permissions{
 		obbrModels.OpenbankingBrasilPermissionINVOICEFINANCINGSPAYMENTSREAD,
 		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
 	},
+}
+
+func (o *OBBRConsentClient) UsePAR() bool {
+	return false
+}
+
+func (o *OBBRConsentClient) DoPAR(c *gin.Context) (string, acpclient.CSRF, error) {
+	return "", acpclient.CSRF{}, nil
+}
+
+func (o *OBBRConsentClient) CreateConsentExplicitly() bool {
+	return true
 }
 
 func (o *OBBRConsentClient) CreateAccountConsent(c *gin.Context) (string, error) {
