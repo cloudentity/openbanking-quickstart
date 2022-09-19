@@ -29,7 +29,7 @@ export class FdxTppAuthenticatedPage {
       expect(text).to.match(/\"access_token\"\: \"[a-zA-Z0-9_.-]+\"/);
       expect(text).to.match(/\"id_token\"\: \"[a-zA-Z0-9_.-]+\"/);
       expect(text).to.contain('"token_type": "bearer"');
-      expect(text).to.contain('"scope": "openid"');
+      expect(text).to.contain('"scope": "openid READ_CONSENTS UPDATE_CONSENTS"');
       expect(text).to.match(/\"expires_in\"\: [0-9]+\,/);
       expect(text).to.match(/\"grant_id\"\: \"[a-zA-Z0-9]+\"/);
     });
