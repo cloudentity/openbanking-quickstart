@@ -61,14 +61,14 @@ func NewServer() (Server, error) {
 		}
 	case CDR:
 		server.Config.ClientScopes = []string{"offline_access", "openid", "bank:accounts.basic:read", "bank:accounts.detail:read", "bank:transactions:read", "common:customer.basic:read"} // TODO
-		if server.Clients, err = InitClients(server.Config, nil, NewCDRClient, NewCDRConsentClient); err != nil {
+		if server.Clients, err = InitClients(server.Config, nil, NewCDRClient, nil); err != nil {
 			return server, errors.Wrapf(err, "failed to create clients")
 		}
 		if server.LoginURLBuilder, err = NewCDRLoginURLBuilder(server.Config); err != nil {
 			return server, errors.Wrapf(err, "failed to create login url builder")
 		}
 	case FDX:
-		server.Config.ClientScopes = []string{"offline_access", "ACCOUNT_DETAILED", "READ_CONSENTS", "ACCOUNT_BASIC", "TRANSACTIONS"}
+		server.Config.ClientScopes = []string{"offline_access", "ACCOUNT_DETAILED", "READ_CONSENTS", "ACCOUNT_BASIC", "TRANSACTIONS", "ACCOUNT_PAYMENTS"}
 		if server.Clients, err = InitClients(server.Config, nil, NewFDXBankClient, NewFDXConsentClient); err != nil {
 			return server, errors.Wrapf(err, "failed to create clients")
 		}
