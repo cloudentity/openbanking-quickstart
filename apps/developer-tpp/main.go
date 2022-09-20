@@ -113,6 +113,7 @@ func NewServer() (Server, error) {
 		server.Config.ClientScopes = []string{"openid", "consents", "consent:*"}
 		acpConfig = server.Config.ClientConfig()
 	case FDX:
+		server.Config.ClientScopes = []string{"openid", "READ_CONSENTS", "UPDATE_CONSENTS"}
 		acpConfig = server.Config.ClientConfig()
 		acpConfig.AuthMethod = acpclient.TLSClientAuthnMethod
 	}
