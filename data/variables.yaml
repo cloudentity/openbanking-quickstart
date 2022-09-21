@@ -22,4 +22,4 @@ conf_tpp_2_url: https://fapi-test
 conf_tpp_2_public_jwks: /certs/brasil/cid2/jwks-public.json
 conf_tpp_2_pem_file: /certs/brasil/cid2/cert.pem
 conf_tpp_2_sub_dn: C = BR, ST = RS, L = BOTAFOGO, O = Open Banking Brasil, OU = 74e929d9-33b6-4d85-8ba7-c146c867a817, CN = mock-tpp-1.raidiam.com, serialNumber = 1335323600189, UID = 9e357995-a191-4860-9db7-ceda3692a8c9, businessCategory = Private Organization, jurisdictionC = BR
-cdr_register_url: https://mock-register:7000
+cdr_adr_validation_enabled: true

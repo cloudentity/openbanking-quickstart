@@ -19,7 +19,7 @@ configure_cdr() {
     envsubst < ./data/cdr/mock-apps/recipient.template > ./mount/cdr/recipient.json
     envsubst < ./data/cdr/mock-apps/registry-seed.template > ./mount/cdr/registry-seed.json
     envsubst < ./data/cdr/mock-apps/resource-api-appsettings.template > ./mount/cdr/holder-resource-api-appsettings.json
-    if [[ "$1" == "saas" ]]; then ./scripts/override_variables.sh cdr_register_url "https://tpp1.cdr.cloudentity-se.com:7000"; fi
+    if [[ "$1" == "saas" ]]; then ./scripts/override_variables.sh cdr_adr_validation_enabled false; fi
 }
 
 override_server() {
