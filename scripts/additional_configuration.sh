@@ -19,6 +19,7 @@ configure_cdr() {
     envsubst < ./data/cdr/mock-apps/recipient.template > ./mount/cdr/recipient.json
     envsubst < ./data/cdr/mock-apps/registry-seed.template > ./mount/cdr/registry-seed.json
     envsubst < ./data/cdr/mock-apps/resource-api-appsettings.template > ./mount/cdr/holder-resource-api-appsettings.json
+    [[ "$1" == "saas" ]] && ./scripts/override_variables.sh cdr_register_url "https://tpp1.cdr.cloudentity-se.com:7000"
 }
 
 override_server() {
@@ -28,6 +29,7 @@ override_server() {
 
 for ACTION in "$@"
 do
+  env=$2
   case "$ACTION" in
   obuk)
     override_server openbanking
@@ -37,7 +39,7 @@ do
     ;;
   cdr)
     override_server cdr
-    configure_cdr
+    configure_cdr $env
     ;;
   fdx)
     override_server fdx

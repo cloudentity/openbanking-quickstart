@@ -145,7 +145,7 @@ servers:
   cdr:
     brand_id:
     adr_validation_enabled: true
-    register_url: "https://tpp1.cdr.cloudentity-se.com:7000"
+    register_url: {{ .cdr_register_url }}
     industry: banking
   {{ if .read_client_certificate_from_header }}
   read_client_certificate_from_header: {{ .read_client_certificate_from_header }}
