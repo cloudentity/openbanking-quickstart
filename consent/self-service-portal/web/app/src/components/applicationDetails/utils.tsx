@@ -212,6 +212,8 @@ export const getCurrency = (currency: any) => {
   switch (currency) {
     case "USD":
       return "$";
+    case "AUD":
+      return "$";
     case "GBP":
       return "£";
     case "EUR":

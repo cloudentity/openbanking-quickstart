@@ -60,7 +60,7 @@ type Config struct {
 	Spec             Spec          `env:"SPEC,required"`
 	Otp              OtpConfig
 	EnableTLSServer  bool     `env:"ENABLE_TLS_SERVER" envDefault:"true"`
-	Currency         Currency `env:"CURRENCY"` // optional custom currency, one of=USD GBP BRL EUR
+	Currency         Currency `env:"CURRENCY"` // optional custom currency, one of=USD AUD GBP BRL EUR
 	BankClientConfig BankClientConfig
 }
 
@@ -69,6 +69,8 @@ type Currency string
 func (c Currency) ToString() string {
 	switch c {
 	case "USD":
+		return "$"
+	case "AUD":
 		return "$"
 	case "GBP":
 		return "£"
