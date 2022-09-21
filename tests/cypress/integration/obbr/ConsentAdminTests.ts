@@ -53,11 +53,11 @@ describe(`Consent admin app`, () => {
     consentAdminPage.assertThatConsentManagementTabIsDisplayed()
     consentAdminPage.searchAccount("94088392");
     consentAdminPage.assertAccountResult("94088392");
-    consentAdminPage.assertClientAccountWithStatus("Financroo", "Active");
-    consentAdminPage.manageAccount("Financroo");
+    consentAdminPage.assertClientAccountWithStatus("Developer", "Active");
+    consentAdminPage.manageAccount("Developer");
     consentAdminPage.assertConsentsDetails();
-    consentAdminPage.revokeClientConsentByAccountName("Financroo");
-    consentAdminPage.assertClientAccountWithStatus("Financroo", "Inactive");
+    consentAdminPage.revokeClientConsentByAccountName("Developer");
+    consentAdminPage.assertClientAccountWithStatus("Developer", "Inactive");
   })
 
   it(`Cancel first ACP login`, () => {
