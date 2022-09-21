@@ -19,7 +19,7 @@ configure_cdr() {
     envsubst < ./data/cdr/mock-apps/recipient.template > ./mount/cdr/recipient.json
     envsubst < ./data/cdr/mock-apps/registry-seed.template > ./mount/cdr/registry-seed.json
     envsubst < ./data/cdr/mock-apps/resource-api-appsettings.template > ./mount/cdr/holder-resource-api-appsettings.json
-    [[ "$1" == "saas" ]] && ./scripts/override_variables.sh cdr_register_url "https://tpp1.cdr.cloudentity-se.com:7000"
+    if [[ "$1" == "saas" ]]; then ./scripts/override_variables.sh cdr_register_url "https://tpp1.cdr.cloudentity-se.com:7000"; fi
 }
 
 override_server() {
