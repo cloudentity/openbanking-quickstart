@@ -61,6 +61,7 @@ lint: start-runner
 .PHONY: clean
 clean:
 	docker-compose -f docker-compose.build.yaml down --remove-orphans
+	docker-compose -f docker-compose.cdr.yaml down --remove-orphans || true
 ifeq (${DEBUG},true)
 	docker ps -a
 	rm -fr mount/cdr/*

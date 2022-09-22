@@ -308,6 +308,8 @@ export const getCurrency = (currency: any) => {
       return "$";
     case "GBP":
       return "£";
+    case "AUD":
+      return "$";
     case "EUR":
       return "€";
     case "BRL":
