@@ -3,9 +3,10 @@ package main
 import (
 	"strings"
 
-	fdx "github.com/cloudentity/acp-client-go/clients/openbanking/client/f_d_x"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
+
+	fdx "github.com/cloudentity/acp-client-go/clients/openbanking/client/f_d_x"
 )
 
 type FDXGetBalancesHandler struct {

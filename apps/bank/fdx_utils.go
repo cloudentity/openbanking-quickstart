@@ -5,8 +5,9 @@ import (
 	"log"
 	"time"
 
-	fdx "github.com/cloudentity/acp-client-go/clients/openbanking/client/f_d_x"
 	fdxModels "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/models"
+
+	fdx "github.com/cloudentity/acp-client-go/clients/openbanking/client/f_d_x"
 
 	"github.com/sirupsen/logrus"
 

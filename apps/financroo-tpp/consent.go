@@ -7,13 +7,14 @@ import (
 	"strconv"
 	"time"
 
-	acpclient "github.com/cloudentity/acp-client-go"
 	obbrModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/consents/models"
 	obModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
+
+	acpclient "github.com/cloudentity/acp-client-go"
 
 	obbrClientModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_b_r"
 	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
