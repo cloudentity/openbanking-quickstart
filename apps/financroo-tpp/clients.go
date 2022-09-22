@@ -45,7 +45,7 @@ type ConsentClient interface {
 	CreateAccountConsent(c *gin.Context) (string, error)
 	CreatePaymentConsent(c *gin.Context, req CreatePaymentRequest) (string, error)
 	GetPaymentConsent(c *gin.Context, consentID string) (interface{}, error)
-	
+
 	UsePAR() bool
 	DoPAR(c *gin.Context) (string, acpclient.CSRF, error)
 	Signer
@@ -340,7 +340,8 @@ type CDRConsentClient struct {
 }
 
 func NewCDRConsentClient(publicClient, clientCredentialsClient acpclient.Client, _ Signer) ConsentClient {
-	return &CDRConsentClient{ClientID: clientCredentialsClient.Config.ClientID,
+	return &CDRConsentClient{
+		ClientID:     clientCredentialsClient.Config.ClientID,
 		ClientSecret: clientCredentialsClient.Config.ClientSecret,
 		PublicClient: publicClient,
 	}

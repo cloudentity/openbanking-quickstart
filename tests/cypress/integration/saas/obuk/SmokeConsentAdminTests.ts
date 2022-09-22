@@ -34,7 +34,7 @@ describe(`Consent admin app`, () => {
     consentPage.confirm();
     consentAdminPage.visit(true);
     consentAdminPage.login();
-  
+
     consentAdminPage.assertThatConsentManagementTabIsDisplayed()
     consentAdminPage.revokeClientConsent();
   });
@@ -51,11 +51,11 @@ describe(`Consent admin app`, () => {
     consentAdminPage.assertThatConsentManagementTabIsDisplayed()
     consentAdminPage.searchAccount("22289");
     consentAdminPage.assertAccountResult("22289");
-    consentAdminPage.assertClientAccountWithStatus("Financroo", "Active");
-    consentAdminPage.manageAccount("Financroo");
+    consentAdminPage.assertClientAccountWithStatus("Developer", "Active");
+    consentAdminPage.manageAccount("Developer");
     consentAdminPage.assertConsentsDetails();
-    consentAdminPage.revokeClientConsentByAccountName("Financroo");
-    consentAdminPage.assertClientAccountWithStatus("Financroo", "Inactive");
+    consentAdminPage.revokeClientConsentByAccountName("Developer");
+    consentAdminPage.assertClientAccountWithStatus("Developer", "Inactive");
   })
 
 });

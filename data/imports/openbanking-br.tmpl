@@ -176,7 +176,8 @@ clients:
   tls_client_auth_subject_dn: {{ .bank_tls_client_auth_subject_dn }}
   tls_client_certificate_bound_access_tokens: true
   token_endpoint_auth_method: tls_client_auth
-# financroo / developer tpp
+
+# financroo
 - tenant_id: {{ .tenant_id }}
   authorization_server_id: {{ .server_id }}
   client_id: bugkgm23g9kregtu051g
@@ -188,7 +189,6 @@ clients:
   tls_client_certificate_bound_access_tokens: true
   token_endpoint_auth_method: tls_client_auth
   redirect_uris:
-  - {{ .developer_tpp_url }}/callback
   - {{ .financroo_tpp_url }}/api/callback
   - {{ .financroo_tpp_url }}/api/domestic/callback
   subject_type: pairwise
@@ -211,6 +211,39 @@ clients:
   - refresh_token
   jwks:
 {{ readFile .financroo_pem_file | pemToPublicJwks | indent 4 }}
+
+#  developer tpp
+- tenant_id: {{ .tenant_id }}
+  authorization_server_id: {{ .server_id }}
+  client_id: bukj5p6k7qdmm5fdJjJvhG
+  client_name: Developer TPP
+  client_uri: https://localhost:8090
+  client_secret: {{ default "-TlfoycUiE0qNi-XUBFDfTxMlhHTCjVxOF6pLrWZbQA" .fdx_developer_tpp_client_secret }}
+  tls_client_auth_subject_dn: {{ .financroo_tls_client_auth_subject_dn }}
+  tls_client_certificate_bound_access_tokens: true
+  token_endpoint_auth_method: tls_client_auth
+  redirect_uris:
+  - {{ .developer_tpp_url }}/callback
+  subject_type: pairwise
+  response_types:
+  - token
+  - code
+  scopes:
+  - consents
+  - consent:*
+  - introspect_tokens
+  - offline_access
+  - openid
+  - revoke_tokens
+  - accounts
+  - payments
+  grant_types:
+  - client_credentials
+  - authorization_code
+  - refresh_token
+  jwks:
+{{ readFile .financroo_pem_file | pemToPublicJwks | indent 4 }}
+
 - tenant_id: default
   authorization_server_id: {{ .server_id }}
   organisation_id: 74e929d9-33b6-4d85-8ba7-c146c867a817

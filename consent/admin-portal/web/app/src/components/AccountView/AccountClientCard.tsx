@@ -154,7 +154,7 @@ export default function AccountClientCard({
 
   return (
     <div
-      id={`client-${clientWithStatus?.client_name.toLocaleLowerCase()}`}
+      id={`client-${clientWithStatus?.client_name.replace(" TPP", "").toLowerCase()}`}
       className={cx(classes.card, isApplicationListView && classes.clickable)}
       onClick={() => {
         if (isApplicationListView) {

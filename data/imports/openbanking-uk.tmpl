@@ -19,8 +19,8 @@ idps:
   id: bugkgai3g9kregtu04u0
   name: Sandbox IDP
   method: static
-  settings: 
-    static: 
+  settings:
+    static:
       hint: true
   credentials:
     static:
@@ -38,6 +38,7 @@ idps:
         password: p@ssw0rd!
         authentication_context:
           name: user3
+
 server_consents:
 - tenant_id: {{ .tenant_id }}
   client_id: {{ default "bv0ocudfotn6edhsiu7g" .consent_page_client_id }}
@@ -74,7 +75,8 @@ clients:
   tls_client_auth_subject_dn: {{ .bank_tls_client_auth_subject_dn }}
   tls_client_certificate_bound_access_tokens: true
   token_endpoint_auth_method: tls_client_auth
-# financroo / developer tpp
+
+# financroo
 - tenant_id: {{ .tenant_id }}
   authorization_server_id: {{ .server_id }}
   client_id: bugkgm23g9kregtu051g
@@ -85,7 +87,6 @@ clients:
   tls_client_certificate_bound_access_tokens: true
   token_endpoint_auth_method: tls_client_auth
   redirect_uris:
-  - {{ .developer_tpp_url }}/callback
   - {{ .financroo_tpp_url }}/api/callback
   - {{ .financroo_tpp_url }}/api/domestic/callback
   subject_type: pairwise
@@ -106,3 +107,35 @@ clients:
   - refresh_token
   jwks:
 {{ readFile .financroo_pem_file | pemToPublicJwks | indent 4 }}
+
+#  developer tpp
+- tenant_id: {{ .tenant_id }}
+  authorization_server_id: {{ .server_id }}
+  client_id: bukj5p6k7qdmm5fdJjJvhG
+  client_name: Developer TPP
+  client_uri: https://localhost:8090
+  client_secret: -TlfoycUiE0qNi-XUBFDfTxMlhHTCjVxOF6pLrWZbQA
+  tls_client_auth_subject_dn: {{ .financroo_tls_client_auth_subject_dn }}
+  tls_client_certificate_bound_access_tokens: true
+  token_endpoint_auth_method: tls_client_auth
+  redirect_uris:
+  - {{ .developer_tpp_url }}/callback
+  subject_type: pairwise
+  response_types:
+  - token
+  - code
+  scopes:
+  - accounts
+  - payments
+  - introspect_tokens
+  - offline_access
+  - openid
+  - revoke_tokens
+  grant_types:
+  - client_credentials
+  - authorization_code
+  - refresh_token
+  jwks:
+{{ readFile .financroo_pem_file | pemToPublicJwks | indent 4 }}
+
+
