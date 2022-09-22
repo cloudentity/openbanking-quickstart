@@ -28,7 +28,8 @@ pipeline {
                         cd tests && yarn install
                  '''
                  sh 'docker-compose version'
-
+                 sh "docker rm -f \$(docker ps -aq) || true"
+                 
                  retry(3) {
                    sh "make run-tests-verify"
                  }
