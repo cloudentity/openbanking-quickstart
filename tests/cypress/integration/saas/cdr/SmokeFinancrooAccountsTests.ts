@@ -34,9 +34,8 @@ describe(`Smoke Financroo app`, () => {
     [savingsAccount, loanAccount, checkingsAccount],
     []
   ].forEach(accounts => {
-    cy.wait(5000)
     it(`Happy path with accounts: ${accounts}`, () => {
-      
+      cy.wait(5000)
       financrooWelcomePage.reconnectGoBank()
       acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
       if (environmentVariables.isMfaEnabled()) {
