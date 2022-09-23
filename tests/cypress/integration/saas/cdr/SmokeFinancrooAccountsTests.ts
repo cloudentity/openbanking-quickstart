@@ -34,6 +34,7 @@ describe(`Smoke Financroo app`, () => {
     [savingsAccount, loanAccount, checkingsAccount],
     []
   ].forEach(accounts => {
+    cy.wait(5000)
     it(`Happy path with accounts: ${accounts}`, () => {
       
       financrooWelcomePage.reconnectGoBank()
