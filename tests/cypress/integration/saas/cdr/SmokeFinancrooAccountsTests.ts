@@ -7,6 +7,7 @@ import {Credentials} from "../../../pages/Credentials";
 import {Urls} from "../../../pages/Urls";
 import {MfaPage} from "../../../pages/mfa/MfaPage";
 import {EnvironmentVariables} from "../../../pages/EnvironmentVariables"
+import { delay } from '../../../../node_modules/cypress/types/lodash/index';
 
 describe(`Smoke Financroo app`, () => {
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
@@ -45,6 +46,11 @@ describe(`Smoke Financroo app`, () => {
       consentPage.confirm()
       financrooAccountsPage.assertAccounts(accounts)
     })
+    delay(5000)
   })
 
 })
+
+function delay(ms: number) {
+  return new Promise( resolve => setTimeout(resolve, ms) );
+}
