@@ -6,7 +6,7 @@ ACP_LOCAL_APPS=acp crdb redis
 
 # obuk, obbr, cdr, fdx
 run-%-local:
-	./scripts/additional_configuration.sh $*
+	./scripts/additional_configuration.sh $* "local"
 	cp -f .env-local .env
 	docker-compose -f docker-compose.acp.local.yaml up -d --no-build ${ACP_LOCAL_APPS}
 	./scripts/wait.sh
@@ -15,7 +15,7 @@ run-%-local:
 
 # obuk, obbr
 run-%-saas:
-	./scripts/additional_configuration.sh $*
+	./scripts/additional_configuration.sh $* "saas"
 	cp -f .env-saas .env
 	docker-compose -f docker-compose.$*.yaml up --no-build -d
 	./scripts/wait.sh
