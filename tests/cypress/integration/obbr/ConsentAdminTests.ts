@@ -33,7 +33,7 @@ describe(`Consent admin app`, () => {
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }
-    consentPage.confirm();
+    consentPage.clickConfirm();
     consentAdminPage.visit(true);
     consentAdminPage.login();
 
@@ -46,7 +46,7 @@ describe(`Consent admin app`, () => {
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }
-    consentPage.confirm();
+    consentPage.clickConfirm();
     consentAdminPage.visit();
     consentAdminPage.login();
 

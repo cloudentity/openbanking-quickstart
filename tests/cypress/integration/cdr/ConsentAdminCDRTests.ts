@@ -44,7 +44,7 @@ describe(`Consent admin portal CDR`, () => {
     consentAndAuthorisationPage.clickOnAuthorizationUriLink();
 
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    consentPage.confirm();
+    consentPage.clickConfirm();
     consentPage.assertThatPageIsNotVisible();
     consentAndAuthorisationCallbackPage.assertThatPageIsDisplayed();
   })
@@ -90,7 +90,7 @@ describe(`Consent admin portal CDR`, () => {
     consentAndAuthorisationPage.clickOnAuthorizationUriLink();
 
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
-    consentPage.confirm();
+    consentPage.clickConfirm();
     consentPage.assertThatPageIsNotVisible();
     consentAndAuthorisationCallbackPage.assertThatPageIsDisplayed();
 

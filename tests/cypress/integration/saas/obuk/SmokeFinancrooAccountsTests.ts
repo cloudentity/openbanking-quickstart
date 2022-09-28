@@ -43,7 +43,7 @@ describe(`Smoke Financroo app`, () => {
       consentPage.checkAccounts(accounts)
       consentPage.expandPermissions()
       consentPage.assertPermissions(7)
-      consentPage.confirm()
+      consentPage.clickConfirm()
       financrooAccountsPage.assertAccounts(accounts)
     })
   })

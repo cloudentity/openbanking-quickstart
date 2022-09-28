@@ -5,12 +5,16 @@ export class ConsentPage {
   private readonly permissionContentLocator: string = `[data-desc-id="account_permissions"] .caption`;
   private readonly permissionRowLocator: string = `[data-desc-id="account_permissions"] li`;
   private readonly expandPermissionsButtonLocator: string = `[data-icon-id="account_permissions"]`
-  private readonly accountIdsLocator: string = `[name="account_ids"]`;
-  private readonly continueButtonLocator: string = `[value="confirm"]`;
+  private readonly accountsIdsLocator: string = `[id^="account-id"]`;
+  private readonly getAccountIdLocator = (id: string) => `#account-id-${id}`;
 
   public checkAccounts(accounts: string[]): void {
-    cy.get(this.accountIdsLocator).uncheck()
-    accounts.forEach(account => cy.get(`[id*="${account}"]`).check())
+    this.uncheckAllAccounts()
+    accounts.forEach(account => cy.get(this.getAccountIdLocator(account)).check())
+  }
+
+  public uncheckAllAccounts(): void {
+    cy.get(this.accountsIdsLocator).uncheck()
   }
 
   public expandPermissions(): void {
@@ -26,12 +30,16 @@ export class ConsentPage {
     cy.get(this.permissionRowLocator).should('have.length', length)
   }
 
-  public confirm(): void {
-    cy.get(this.confirmButtonLocator).click();
+  public clickContinue(): void {
+    this.clickButton(this.confirmButtonLocator, 'Continue');
   }
 
-  public cancel(): void {
-    cy.get(this.cancelButtonLocator).click();
+  public clickConfirm(): void {
+    this.clickButton(this.confirmButtonLocator, 'I Agree');
+  }
+
+  public clickCancel(): void {
+    this.clickButton(this.cancelButtonLocator, 'Cancel');
   }
 
   public assertThatPageIsNotVisible(): void {
@@ -40,12 +48,11 @@ export class ConsentPage {
   }
 
   public assertThatAccountsAreNotVisible(accounts: string[]): void {
-    accounts.forEach(account => cy.get(`[id*="${account}"]`).should('not.be.visible'))
+    accounts.forEach(account => cy.get(this.getAccountIdLocator(account)).should('not.be.visible'))
   }
 
-  public clickContinue(): void {
-    let btn = cy.get(this.continueButtonLocator);
-    btn.contains('Continue').should('be.visible');
-    btn.click({force: true});
+  private clickButton(locator: string, label: string): void {
+    cy.get(locator).should('contain.text', label);
+    cy.get(locator).click();
   }
 }

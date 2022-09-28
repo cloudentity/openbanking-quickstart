@@ -47,7 +47,7 @@ describe(`Consent self service app CDR`, () => {
 
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
     consentPage.checkAccounts(['1000001', '1000002']);
-    consentPage.confirm();
+    consentPage.clickConfirm();
     consentPage.assertThatPageIsNotVisible();
     consentAndAuthorisationCallbackPage.assertThatPageIsDisplayed();
   })

@@ -49,7 +49,7 @@ describe(`Tpp technical app`, () => {
           }
           consentPage.expandPermissions()
           consentPage.assertPermissions(permissions.length)
-          consentPage.confirm();
+          consentPage.clickConfirm();
           if (!permissions.includes(basicPermission) && permissions.includes(detailPermission)) {
             // ReadAccountsDetail permission selected - UI error page improvements AUT-5845
             errorPage.assertError(`failed to call bank get accounts`)
@@ -75,7 +75,7 @@ describe(`Tpp technical app`, () => {
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin()
     }
-    consentPage.cancel()
+    consentPage.clickCancel()
     // UI error page improvements AUT-5845
     errorPage.assertError(`rejected`)
   })

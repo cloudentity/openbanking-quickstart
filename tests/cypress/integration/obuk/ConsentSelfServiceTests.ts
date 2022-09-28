@@ -43,7 +43,7 @@ describe(`Consent self service app`, () => {
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin()
     }
-    consentPage.confirm()
+    consentPage.clickConfirm()
     financrooModalPage.assertThatModalIsDisplayed()
 
     financrooLoginPage.visit()
@@ -55,7 +55,7 @@ describe(`Consent self service app`, () => {
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin()
     }
-    consentPage.confirm()
+    consentPage.clickConfirm()
   })
 
   beforeEach(() => {

@@ -48,7 +48,7 @@ describe(`Financroo app`, () => {
       consentPage.checkAccounts(accounts)
       consentPage.expandPermissions()
       consentPage.assertPermissions(7)
-      consentPage.confirm()
+      consentPage.clickConfirm()
 
       financrooModalPage.assertThatModalIsDisplayed()
       financrooModalPage.close()
@@ -73,7 +73,7 @@ describe(`Financroo app`, () => {
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin()
     }
-    consentPage.cancel()
+    consentPage.clickCancel()
     // UI error page improvements AUT-5845
     errorPage.assertError(`rejected`)
   })

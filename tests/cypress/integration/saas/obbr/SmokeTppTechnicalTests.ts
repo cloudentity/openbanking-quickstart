@@ -52,7 +52,7 @@ describe(`Tpp technical app`, () => {
         consentPage.assertPermissionsDetails(
           "Purpose for sharing data",
           "To uncover insights that can improve your financial well being.")
-        consentPage.confirm();
+        consentPage.clickConfirm();
         tppAuthenticatedPage.assertSuccess()
       })
     });

@@ -36,7 +36,7 @@ describe(`Smoke Financroo payments app test`, () => {
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin()
     }
-    consentPage.confirm()
+    consentPage.clickConfirm()
     financrooModalPage.assertThatModalIsDisplayed()
   });
 
@@ -50,7 +50,7 @@ describe(`Smoke Financroo payments app test`, () => {
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin()
     }
-    consentPage.confirm()
+    consentPage.clickConfirm()
     financrooContributePage.assertAmount(amount, "£")
     financrooContributePage.assertItIsFinished()
   })

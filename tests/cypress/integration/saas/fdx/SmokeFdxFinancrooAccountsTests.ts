@@ -48,7 +48,7 @@ describe(`FDX Financroo app`, () => {
       consentPage.assertThatAccountsAreNotVisible(accountsIds);
       consentPage.clickContinue()
       consentPage.checkAccounts(accountsIds)
-      consentPage.confirm();
+      consentPage.clickConfirm();
 
       financrooModalPage.assertThatModalIsDisplayed()
       financrooModalPage.close()
@@ -72,7 +72,7 @@ describe(`FDX Financroo app`, () => {
     }
     consentPage.assertPermissions(4);
     consentPage.clickContinue();
-    consentPage.confirm();
+    consentPage.clickConfirm();
 
     financrooModalPage.assertThatModalIsDisplayed()
     financrooModalPage.close()

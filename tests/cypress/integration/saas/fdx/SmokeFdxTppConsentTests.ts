@@ -52,7 +52,7 @@ describe(`FDX Tpp consent app`, () => {
       consentPage.assertPermissions(4);
       consentPage.clickContinue();
       consentPage.checkAccounts(accountsIds);
-      consentPage.confirm();
+      consentPage.clickConfirm();
 
       fdxTppAuthenticatedPage.assertThatPageIsDisplayed();
       fdxTppAuthenticatedPage.assertThatTokenResponseFieldIsNotEmpty();
@@ -82,7 +82,7 @@ describe(`FDX Tpp consent app`, () => {
     }
 
     consentPage.clickContinue();
-    consentPage.confirm();
+    consentPage.clickConfirm();
 
     fdxTppAuthenticatedPage.assertThatPageIsDisplayed();
     fdxTppAuthenticatedPage.assertThatConsentResponseFieldNotContainsAccountsIds(

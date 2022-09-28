@@ -54,7 +54,7 @@ describe(`FDX Tpp consent app`, () => {
       consentPage.assertThatAccountsAreNotVisible(accountsIds);
       consentPage.clickContinue();
       consentPage.checkAccounts(accountsIds);
-      consentPage.confirm();
+      consentPage.clickConfirm();
 
       fdxTppAuthenticatedPage.assertThatPageIsDisplayed();
       fdxTppAuthenticatedPage.assertThatTokenResponseFieldIsNotEmpty();
@@ -83,7 +83,7 @@ describe(`FDX Tpp consent app`, () => {
     }
 
     consentPage.clickContinue();
-    consentPage.confirm();
+    consentPage.clickConfirm();
 
     fdxTppAuthenticatedPage.assertThatPageIsDisplayed();
     fdxTppAuthenticatedPage.assertThatConsentResponseFieldNotContainsAccountsIds(
@@ -106,7 +106,7 @@ describe(`FDX Tpp consent app`, () => {
     }
 
     consentPage.assertPermissions(4);
-    consentPage.cancel();
+    consentPage.clickCancel();
 
     // UI error page improvements AUT-5845
     errorPage.assertError(`acp returned an error: rejected: `);

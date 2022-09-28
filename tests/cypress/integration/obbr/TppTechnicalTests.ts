@@ -52,7 +52,7 @@ describe(`Tpp technical app`, () => {
         consentPage.assertPermissionsDetails(
           "Purpose for sharing data",
           "To uncover insights that can improve your financial well being.")
-        consentPage.confirm();
+        consentPage.clickConfirm();
         tppAuthenticatedPage.assertSuccess()
       })
     });
@@ -72,7 +72,7 @@ describe(`Tpp technical app`, () => {
      if (environmentVariables.isMfaEnabled()) {
        mfaPage.typePin()
      }
-     consentPage.cancel()
+     consentPage.clickCancel()
      // UI error page improvements AUT-5845
      errorPage.assertError(`rejected`)
   })

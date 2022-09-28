@@ -49,7 +49,7 @@ describe(`FDX Financroo app`, () => {
       consentPage.assertThatAccountsAreNotVisible(accountsIds);
       consentPage.clickContinue();
       consentPage.checkAccounts(accountsIds)
-      consentPage.confirm();
+      consentPage.clickConfirm();
 
       financrooModalPage.assertThatModalIsDisplayed()
       financrooModalPage.close()
@@ -72,7 +72,7 @@ describe(`FDX Financroo app`, () => {
       }
       consentPage.assertPermissions(4);
       consentPage.clickContinue();
-      consentPage.confirm();
+      consentPage.clickConfirm();
 
       financrooModalPage.assertThatModalIsDisplayed()
       financrooModalPage.close()
@@ -93,7 +93,7 @@ describe(`FDX Financroo app`, () => {
     }
     consentPage.assertPermissions(4);
     consentPage.clickContinue();
-    consentPage.cancel()
+    consentPage.clickCancel()
 
     // UI error page improvements AUT-5845
     errorPage.assertError(`acp returned an error: rejected: `);

@@ -38,7 +38,7 @@ describe(`Financroo payments app test`, () => {
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin()
     }
-    consentPage.confirm()
+    consentPage.clickConfirm()
     financrooModalPage.assertThatModalIsDisplayed()
   });
 
@@ -52,7 +52,7 @@ describe(`Financroo payments app test`, () => {
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin()
     }
-    consentPage.confirm()
+    consentPage.clickConfirm()
     financrooContributePage.assertAmount(amount, "£")
     financrooContributePage.assertItIsFinished()
   })
@@ -67,7 +67,7 @@ describe(`Financroo payments app test`, () => {
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin()
     }
-    consentPage.cancel()
+    consentPage.clickCancel()
     // UI error page improvements AUT-5845
     errorPage.assertError(`acp returned an error: rejected:`)
   })
