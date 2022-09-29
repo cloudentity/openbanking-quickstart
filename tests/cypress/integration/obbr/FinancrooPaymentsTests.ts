@@ -1,20 +1,20 @@
-import {AcpLoginPage} from '../../pages/acp/AcpLoginPage';
-import {FinancrooLoginPage} from '../../pages/financroo/FinancrooLoginPage';
-import {ConsentPage} from '../../pages/consent/ConsentPage';
-import {ErrorPage} from '../../pages/ErrorPage';
-import {FinancrooWelcomePage} from '../../pages/financroo/FinancrooWelcomePage';
-import {FinancrooAccountsPage} from '../../pages/financroo/accounts/FinancrooAccountsPage';
-import {Credentials} from "../../pages/Credentials";
-import {Urls} from "../../pages/Urls";
-import {MfaPage} from "../../pages/mfa/MfaPage";
-import {FinancrooInvestmentsPage} from "../../pages/financroo/investments/FinancrooInvestmentsPage";
-import {FinancrooContributePage} from "../../pages/financroo/investments/FinancrooContributePage";
-import {EnvironmentVariables} from "../../pages/EnvironmentVariables"
+import { AcpLoginPage } from '../../pages/acp/AcpLoginPage';
+import { FinancrooLoginPage } from '../../pages/financroo/FinancrooLoginPage';
+import { AccountConsentPage } from '../../pages/consent/AccountConsentPage';
+import { ErrorPage } from '../../pages/ErrorPage';
+import { FinancrooWelcomePage } from '../../pages/financroo/FinancrooWelcomePage';
+import { FinancrooAccountsPage } from '../../pages/financroo/accounts/FinancrooAccountsPage';
+import { Credentials } from "../../pages/Credentials";
+import { Urls } from "../../pages/Urls";
+import { MfaPage } from "../../pages/mfa/MfaPage";
+import { FinancrooInvestmentsPage } from "../../pages/financroo/investments/FinancrooInvestmentsPage";
+import { FinancrooContributePage } from "../../pages/financroo/investments/FinancrooContributePage";
+import { EnvironmentVariables } from "../../pages/EnvironmentVariables"
 import { FinancrooModalPage } from '../../pages/financroo/accounts/FinancrooModalPage';
 
 describe(`Financroo payments app test`, () => {
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
-  const consentPage: ConsentPage = new ConsentPage();
+  const accountConsentPage: AccountConsentPage = new AccountConsentPage();
   const errorPage: ErrorPage = new ErrorPage();
   const financrooLoginPage: FinancrooLoginPage = new FinancrooLoginPage();
   const financrooWelcomePage: FinancrooWelcomePage = new FinancrooWelcomePage();
@@ -38,7 +38,7 @@ describe(`Financroo payments app test`, () => {
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin()
     }
-    consentPage.clickConfirm()
+    accountConsentPage.clickAgree()
     financrooModalPage.assertThatModalIsDisplayed()
   });
 
@@ -46,13 +46,13 @@ describe(`Financroo payments app test`, () => {
     financrooLoginPage.visit()
     financrooAccountsPage.assertThatPageIsDisplayed()
     financrooAccountsPage.goToInvestmentsTab()
-    financrooInvestmentsPage.invest()
+    financrooInvestmentsPage.clickInvest()
     financrooContributePage.contribute(amount)
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin()
     }
-    consentPage.clickConfirm()
+    accountConsentPage.clickAgree()
     financrooContributePage.assertAmount(amount, "R$")
     financrooContributePage.assertItIsFinished()
   })
@@ -61,13 +61,13 @@ describe(`Financroo payments app test`, () => {
     financrooLoginPage.visit()
     financrooAccountsPage.assertThatPageIsDisplayed()
     financrooAccountsPage.goToInvestmentsTab()
-    financrooInvestmentsPage.invest()
+    financrooInvestmentsPage.clickInvest()
     financrooContributePage.contribute(amount + 1)
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin()
     }
-    consentPage.clickCancel()
+    accountConsentPage.clickCancel()
     // UI error page improvements AUT-5845
     errorPage.assertError(`acp returned an error: access_denied: rejected`)
   })
@@ -76,7 +76,7 @@ describe(`Financroo payments app test`, () => {
     financrooLoginPage.visit()
     financrooAccountsPage.assertThatPageIsDisplayed()
     financrooAccountsPage.goToInvestmentsTab()
-    financrooInvestmentsPage.invest()
+    financrooInvestmentsPage.clickInvest()
     financrooContributePage.contribute(amount + 2)
     acpLoginPage.cancel()
     // UI error page improvements AUT-5845

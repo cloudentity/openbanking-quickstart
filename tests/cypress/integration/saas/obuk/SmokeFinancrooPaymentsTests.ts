@@ -1,19 +1,23 @@
-import {AcpLoginPage} from '../../../pages/acp/AcpLoginPage';
-import {FinancrooLoginPage} from '../../../pages/financroo/FinancrooLoginPage';
-import {ConsentPage} from '../../../pages/consent/ConsentPage';
-import {FinancrooWelcomePage} from '../../../pages/financroo/FinancrooWelcomePage';
-import {FinancrooAccountsPage} from '../../../pages/financroo/accounts/FinancrooAccountsPage';
-import {Credentials} from "../../../pages/Credentials";
-import {Urls} from "../../../pages/Urls";
-import {MfaPage} from "../../../pages/mfa/MfaPage";
-import {FinancrooInvestmentsPage} from "../../../pages/financroo/investments/FinancrooInvestmentsPage";
-import {FinancrooContributePage} from "../../../pages/financroo/investments/FinancrooContributePage";
-import {EnvironmentVariables} from "../../../pages/EnvironmentVariables"
-import { FinancrooModalPage } from '../../../pages/financroo/accounts/FinancrooModalPage';
+import { AcpLoginPage } from "../../../pages/acp/AcpLoginPage";
+import { FinancrooLoginPage } from "../../../pages/financroo/FinancrooLoginPage";
+import { AccountConsentPage } from "../../../pages/consent/AccountConsentPage";
+import { PaymentConsentPage } from "../../../pages/consent/PaymentConsentPage";
+import { FinancrooWelcomePage } from "../../../pages/financroo/FinancrooWelcomePage";
+import { FinancrooAccountsPage } from "../../../pages/financroo/accounts/FinancrooAccountsPage";
+import { Credentials } from "../../../pages/Credentials";
+import { Currencies } from "../../../pages/Currencies";
+import { Accounts } from "../../../pages/Accounts";
+import { Urls } from "../../../pages/Urls";
+import { MfaPage } from "../../../pages/mfa/MfaPage";
+import { FinancrooInvestmentsPage } from "../../../pages/financroo/investments/FinancrooInvestmentsPage";
+import { FinancrooContributePage } from "../../../pages/financroo/investments/FinancrooContributePage";
+import { EnvironmentVariables } from "../../../pages/EnvironmentVariables";
+import { FinancrooModalPage } from "../../../pages/financroo/accounts/FinancrooModalPage";
 
 describe(`Smoke Financroo payments app test`, () => {
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
-  const consentPage: ConsentPage = new ConsentPage();
+  const accountConsentPage: AccountConsentPage = new AccountConsentPage();
+  const paymentConsentPage: PaymentConsentPage = new PaymentConsentPage();
   const financrooLoginPage: FinancrooLoginPage = new FinancrooLoginPage();
   const financrooWelcomePage: FinancrooWelcomePage = new FinancrooWelcomePage();
   const financrooModalPage: FinancrooModalPage = new FinancrooModalPage();
@@ -26,32 +30,46 @@ describe(`Smoke Financroo payments app test`, () => {
   const amount: number = Math.floor(Math.random() * 50) + 1;
 
   before(() => {
-    financrooLoginPage.visit()
-    Urls.clearLocalStorage()
-    financrooLoginPage.visit()
-    financrooLoginPage.login()
-    
-    financrooWelcomePage.reconnectGoBank()
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
+    financrooLoginPage.visit();
+    Urls.clearLocalStorage();
+    financrooLoginPage.visit();
+    financrooLoginPage.login();
+
+    financrooWelcomePage.reconnectGoBank();
+
+    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
     if (environmentVariables.isMfaEnabled()) {
-      mfaPage.typePin()
+      mfaPage.typePin();
     }
-    consentPage.clickConfirm()
-    financrooModalPage.assertThatModalIsDisplayed()
+
+    accountConsentPage.checkAllAccounts();
+    accountConsentPage.clickAgree();
+
+    financrooModalPage.assertThatModalIsDisplayed();
   });
 
-  it(`Happy path with confirm consent to add new amount`, () => {
-    financrooLoginPage.visit()
-    financrooAccountsPage.assertThatPageIsDisplayed()
-    financrooAccountsPage.goToInvestmentsTab()
-    financrooInvestmentsPage.invest()
-    financrooContributePage.contribute(amount)
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
+  it(`Happy path with confirm consent to add new amount for account ${Accounts.ids.UK.bills}`, () => {
+    financrooLoginPage.visit();
+    financrooAccountsPage.assertThatPageIsDisplayed();
+    financrooAccountsPage.goToInvestmentsTab();
+    
+    financrooInvestmentsPage.assertThatDashboardIsVisible(Currencies.currency.UK.code);
+    financrooInvestmentsPage.clickInvest();
+
+    financrooContributePage.contributeAmmount(amount, Currencies.currency.UK.symbol);
+    financrooContributePage.contributePaymentMethod(amount, Currencies.currency.UK.symbol, Accounts.ids.UK.bills);
+    financrooContributePage.contributeInvestmentSummary(amount, Currencies.currency.UK.symbol, Accounts.ids.UK.bills);
+
+    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
     if (environmentVariables.isMfaEnabled()) {
-      mfaPage.typePin()
+      mfaPage.typePin();
     }
-    consentPage.clickConfirm()
-    financrooContributePage.assertAmount(amount, "£")
-    financrooContributePage.assertItIsFinished()
-  })
-})
+    
+    paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.UK.code, Accounts.ids.UK.bills);  
+    paymentConsentPage.clickConfirm();
+
+    financrooInvestmentsPage.assertThatTransactionWasCompleted(amount, Currencies.currency.UK.symbol);
+    financrooInvestmentsPage.clickBackToPortfolio();
+    financrooInvestmentsPage.assertThatDashboardIsVisible(Currencies.currency.UK.code);
+  });
+});

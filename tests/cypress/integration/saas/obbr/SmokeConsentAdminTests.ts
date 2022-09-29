@@ -1,7 +1,7 @@
 import { TppIntentPage } from "../../../pages/tpp/TppIntentPage";
 import { TppLoginPage } from "../../../pages/tpp/TppLoginPage";
 import { AcpLoginPage } from "../../../pages/acp/AcpLoginPage";
-import { ConsentPage } from "../../../pages/consent/ConsentPage";
+import { AccountConsentPage } from "../../../pages/consent/AccountConsentPage";
 import { Credentials } from "../../../pages/Credentials";
 import { ConsentAdminPage } from "../../../pages/consent-admin/ConsentAdminPage";
 import { Urls } from "../../../pages/Urls";
@@ -12,7 +12,7 @@ describe(`Consent admin app`, () => {
   const tppIntentPage: TppIntentPage = new TppIntentPage();
   const tppLoginPage: TppLoginPage = new TppLoginPage();
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
-  const consentPage: ConsentPage = new ConsentPage();
+  const accountConsentPage: AccountConsentPage = new AccountConsentPage();
   const consentAdminPage: ConsentAdminPage = new ConsentAdminPage();
   const mfaPage: MfaPage = new MfaPage();
   const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
@@ -31,7 +31,7 @@ describe(`Consent admin app`, () => {
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }
-    consentPage.clickConfirm();
+    accountConsentPage.clickAgree();
     consentAdminPage.visit(true);
     consentAdminPage.login();
 
@@ -44,7 +44,7 @@ describe(`Consent admin app`, () => {
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }
-    consentPage.clickConfirm();
+    accountConsentPage.clickAgree();
     consentAdminPage.visit();
     consentAdminPage.login();
 

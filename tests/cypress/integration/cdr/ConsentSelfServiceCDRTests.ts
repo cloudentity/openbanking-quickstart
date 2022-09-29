@@ -1,23 +1,23 @@
-import {AcpLoginPage} from '../../pages/acp/AcpLoginPage';
-import {ConsentPage} from '../../pages/consent/ConsentPage';
-import {Credentials} from "../../pages/Credentials";
-import {ConsentSelfServicePage} from '../../pages/consent-self-service/ConsentSelfServicePage';
-import {ConsentSelfServiceApplicationPage} from "../../pages/consent-self-service/ConsentSelfServiceApplicationPage";
-import {MockDataRecipientNavigationPage} from '../../pages/mock-data-recipient/MockDataRecipientNavigationPage'
-import {DiscoverDataHoldersPage} from '../../pages/mock-data-recipient/DiscoverDataHoldersPage'
-import {DynamicClientRegistrationPage} from '../../pages/mock-data-recipient/DynamicClientRegistrationPage'
-import {ConsentAndAuthorisationPage} from '../../pages/mock-data-recipient/ConsentAndAuthorisationPage'
-import {ConsentAndAuthorisationCallbackPage} from '../../pages/mock-data-recipient/ConsentAndAuthorisationCallbackPage'
-import {Urls} from '../../pages/Urls';
+import { AcpLoginPage } from "../../pages/acp/AcpLoginPage";
+import { AccountConsentPage } from "../../pages/consent/AccountConsentPage";
+import { Credentials } from "../../pages/Credentials";
+import { ConsentSelfServicePage } from "../../pages/consent-self-service/ConsentSelfServicePage";
+import { ConsentSelfServiceApplicationPage } from "../../pages/consent-self-service/ConsentSelfServiceApplicationPage";
+import { MockDataRecipientNavigationPage } from "../../pages/mock-data-recipient/MockDataRecipientNavigationPage";
+import { DiscoverDataHoldersPage } from "../../pages/mock-data-recipient/DiscoverDataHoldersPage";
+import { DynamicClientRegistrationPage } from "../../pages/mock-data-recipient/DynamicClientRegistrationPage";
+import { ConsentAndAuthorisationPage } from "../../pages/mock-data-recipient/ConsentAndAuthorisationPage";
+import { ConsentAndAuthorisationCallbackPage } from "../../pages/mock-data-recipient/ConsentAndAuthorisationCallbackPage";
+import { Urls } from "../../pages/Urls";
 
 describe(`Consent self service app CDR`, () => {
-  const mockDataRecipientNavigationPage: MockDataRecipientNavigationPage = new MockDataRecipientNavigationPage(); 
+  const mockDataRecipientNavigationPage: MockDataRecipientNavigationPage = new MockDataRecipientNavigationPage();
   const discoverDataHoldersPage: DiscoverDataHoldersPage = new DiscoverDataHoldersPage();
   const dynamicClientRegistrationPage: DynamicClientRegistrationPage = new DynamicClientRegistrationPage();
   const consentAndAuthorisationPage: ConsentAndAuthorisationPage = new ConsentAndAuthorisationPage();
   const consentAndAuthorisationCallbackPage: ConsentAndAuthorisationCallbackPage = new ConsentAndAuthorisationCallbackPage();
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
-  const consentPage: ConsentPage = new ConsentPage();
+  const consentPage: AccountConsentPage = new AccountConsentPage();
   const consentSelfServicePage: ConsentSelfServicePage = new ConsentSelfServicePage();
   const consentSelfServiceApplicationPage: ConsentSelfServiceApplicationPage = new ConsentSelfServiceApplicationPage();
 
@@ -46,15 +46,15 @@ describe(`Consent self service app CDR`, () => {
     consentAndAuthorisationPage.clickOnAuthorizationUriLink();
 
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    consentPage.checkAccounts(['1000001', '1000002']);
-    consentPage.clickConfirm();
+    consentPage.checkAccounts(["1000001", "1000002"]);
+    consentPage.clickAgree();
     consentPage.assertThatPageIsNotVisible();
     consentAndAuthorisationCallbackPage.assertThatPageIsDisplayed();
-  })
+  });
 
   beforeEach(() => {
     consentSelfServicePage.visit(true);
-  })
+  });
 
   it(`Happy path with account consent`, () => {
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
@@ -63,8 +63,10 @@ describe(`Consent self service app CDR`, () => {
     consentSelfServiceApplicationPage.checkAccount("1000001");
     consentSelfServiceApplicationPage.checkAccount("1000002");
     consentSelfServiceApplicationPage.expandAccountConsentRow();
-    consentSelfServiceApplicationPage.assertAccountRevokePopupContainsText('Your Name and occupation'); 
-  })
+    consentSelfServiceApplicationPage.assertAccountRevokePopupContainsText(
+      "Your Name and occupation"
+    );
+  });
 
   it(`Revoke CDR Arrangement`, () => {
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
@@ -74,5 +76,5 @@ describe(`Consent self service app CDR`, () => {
     consentSelfServiceApplicationPage.expandAccountConsentRow();
     consentSelfServiceApplicationPage.clickRevokeAccessButton();
     consentSelfServiceApplicationPage.assertNumberOfConsents(0);
-  })
-})
+  });
+});

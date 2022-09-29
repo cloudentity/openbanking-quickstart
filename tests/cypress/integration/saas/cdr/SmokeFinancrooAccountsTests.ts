@@ -4,7 +4,7 @@ import { FinancrooWelcomePage } from "../../../pages/financroo/FinancrooWelcomeP
 import { AcpLoginPage } from "../../../pages/acp/AcpLoginPage";
 import { EnvironmentVariables } from "../../../pages/EnvironmentVariables";
 import { MfaPage } from "../../../pages/mfa/MfaPage";
-import { ConsentPage } from "../../../pages/consent/ConsentPage";
+import { AccountConsentPage } from "../../../pages/consent/AccountConsentPage";
 import { FinancrooModalPage } from "../../../pages/financroo/accounts/FinancrooModalPage";
 import { FinancrooAccountsPage } from "../../../pages/financroo/accounts/FinancrooAccountsPage";
 import { Credentials } from "../../../pages/Credentials";
@@ -16,7 +16,7 @@ describe(`Smoke Financroo app`, () => {
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
   const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
   const mfaPage: MfaPage = new MfaPage();
-  const consentPage: ConsentPage = new ConsentPage();
+  const accountConsentPage: AccountConsentPage = new AccountConsentPage();
   const financrooModalPage: FinancrooModalPage = new FinancrooModalPage();
   const financrooAccountsPage: FinancrooAccountsPage = new FinancrooAccountsPage();
 
@@ -44,8 +44,8 @@ describe(`Smoke Financroo app`, () => {
         mfaPage.typePin();
       }
 
-      consentPage.checkAccounts(accountsIds);
-      consentPage.clickConfirm();
+      accountConsentPage.checkAccounts(accountsIds);
+      accountConsentPage.clickConfirm();
 
       financrooModalPage.assertThatModalIsDisplayed()
       financrooModalPage.close()
@@ -68,8 +68,8 @@ describe(`Smoke Financroo app`, () => {
       mfaPage.typePin()
     }
 
-    consentPage.uncheckAllAccounts();
-    consentPage.clickConfirm();
+    accountConsentPage.uncheckAllAccounts();
+    accountConsentPage.clickConfirm();
 
     financrooModalPage.assertThatModalIsDisplayed()
     financrooModalPage.close()

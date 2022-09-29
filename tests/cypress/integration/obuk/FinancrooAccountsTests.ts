@@ -1,18 +1,19 @@
-import {AcpLoginPage} from '../../pages/acp/AcpLoginPage';
-import {FinancrooLoginPage} from '../../pages/financroo/FinancrooLoginPage';
-import {ConsentPage} from '../../pages/consent/ConsentPage';
-import {ErrorPage} from '../../pages/ErrorPage';
-import {FinancrooWelcomePage} from '../../pages/financroo/FinancrooWelcomePage';
-import {FinancrooAccountsPage} from '../../pages/financroo/accounts/FinancrooAccountsPage';
-import {Credentials} from "../../pages/Credentials";
-import {Urls} from "../../pages/Urls";
-import {MfaPage} from "../../pages/mfa/MfaPage";
-import {EnvironmentVariables} from "../../pages/EnvironmentVariables"
-import {FinancrooModalPage} from '../../pages/financroo/accounts/FinancrooModalPage';
+import { AcpLoginPage } from "../../pages/acp/AcpLoginPage";
+import { FinancrooLoginPage } from "../../pages/financroo/FinancrooLoginPage";
+import { AccountConsentPage } from "../../pages/consent/AccountConsentPage";
+import { ErrorPage } from "../../pages/ErrorPage";
+import { FinancrooWelcomePage } from "../../pages/financroo/FinancrooWelcomePage";
+import { FinancrooAccountsPage } from "../../pages/financroo/accounts/FinancrooAccountsPage";
+import { Credentials } from "../../pages/Credentials";
+import { Urls } from "../../pages/Urls";
+import { Accounts } from "../../pages/Accounts";
+import { MfaPage } from "../../pages/mfa/MfaPage";
+import { EnvironmentVariables } from "../../pages/EnvironmentVariables";
+import { FinancrooModalPage } from "../../pages/financroo/accounts/FinancrooModalPage";
 
 describe(`Financroo app`, () => {
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
-  const consentPage: ConsentPage = new ConsentPage();
+  const accountConsentPage: AccountConsentPage = new AccountConsentPage();
   const errorPage: ErrorPage = new ErrorPage();
   const financrooLoginPage: FinancrooLoginPage = new FinancrooLoginPage();
   const financrooWelcomePage: FinancrooWelcomePage = new FinancrooWelcomePage();
@@ -22,60 +23,79 @@ describe(`Financroo app`, () => {
   const financrooModalPage: FinancrooModalPage = new FinancrooModalPage();
 
 
-  const billsAccount: string = `Bills`;
-  const householdAccount: string = `Household`;
-
   beforeEach(() => {
-    financrooLoginPage.visit()
-    Urls.clearLocalStorage()
-    financrooLoginPage.visit()
-    financrooLoginPage.login()
+    financrooLoginPage.visit();
+    Urls.clearLocalStorage();
+    financrooLoginPage.visit();
+    financrooLoginPage.login();
   });
 
   [
-    [billsAccount, householdAccount],
-    [billsAccount],
-    [householdAccount],
-    []
-  ].forEach(accounts => {
-    it(`Happy path with accounts: ${accounts}`, () => {
-      
-      financrooWelcomePage.reconnectGoBank()
-      acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
+    [Accounts.ids.UK.bills, Accounts.ids.UK.household],
+    [Accounts.ids.UK.bills],
+    [Accounts.ids.UK.household],
+  ].forEach((accountsIds) => {
+    it(`Happy path with accounts: ${accountsIds}`, () => {
+      financrooWelcomePage.reconnectGoBank();
+
+      acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
       if (environmentVariables.isMfaEnabled()) {
-        mfaPage.typePin()
+        mfaPage.typePin();
       }
-      consentPage.checkAccounts(accounts)
-      consentPage.expandPermissions()
-      consentPage.assertPermissions(7)
-      consentPage.clickConfirm()
 
-      financrooModalPage.assertThatModalIsDisplayed()
-      financrooModalPage.close()
+      accountConsentPage.checkAccounts(accountsIds);
+      accountConsentPage.expandPermissions();
+      accountConsentPage.assertPermissions(7);
+      accountConsentPage.clickAgree();
 
-      financrooAccountsPage.assertAccounts(accounts)
-      financrooAccountsPage.disconnectAccounts()
+      financrooModalPage.assertThatModalIsDisplayed();
+      financrooModalPage.close();
 
-      financrooWelcomePage.assertThatConnectBankPageIsDisplayed()
-    })
-  })
+      financrooAccountsPage.assertThatPageIsDisplayed();
+      financrooAccountsPage.assertAccountsSyncedNumber(accountsIds.length);
+      financrooAccountsPage.assertAccountsIds(accountsIds);
+      financrooAccountsPage.disconnectAccounts();
+
+      financrooWelcomePage.assertThatConnectBankPageIsDisplayed();
+    });
+  });
+
+  it(`Happy path with not selected account`, () => {
+    financrooWelcomePage.reconnectGoBank();
+
+    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    if (environmentVariables.isMfaEnabled()) {
+      mfaPage.typePin();
+    }
+
+    accountConsentPage.uncheckAllAccounts();
+    accountConsentPage.clickAgree();
+
+    financrooModalPage.assertThatModalIsDisplayed();
+    financrooModalPage.close();
+
+    financrooAccountsPage.assertThatPageIsDisplayed();
+    financrooAccountsPage.assertAccountsSyncedNumber(0);
+    financrooAccountsPage.disconnectAccounts();
+
+    financrooWelcomePage.assertThatConnectBankPageIsDisplayed();
+  });
 
   it(`Cancel on ACP login`, () => {
-    financrooWelcomePage.reconnectGoBank()
-    acpLoginPage.cancel()
+    financrooWelcomePage.reconnectGoBank();
+    acpLoginPage.cancel();
     // UI error page improvements AUT-5845
-    errorPage.assertError(`The user rejected the authentication`)
-  })
+    errorPage.assertError(`The user rejected the authentication`);
+  });
 
   it(`Cancel on consent`, () => {
-    financrooWelcomePage.reconnectGoBank()
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
+    financrooWelcomePage.reconnectGoBank();
+    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
     if (environmentVariables.isMfaEnabled()) {
-      mfaPage.typePin()
+      mfaPage.typePin();
     }
-    consentPage.clickCancel()
+    accountConsentPage.clickCancel();
     // UI error page improvements AUT-5845
-    errorPage.assertError(`rejected`)
-  })
-
-})
+    errorPage.assertError(`rejected`);
+  });
+});

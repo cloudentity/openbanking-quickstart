@@ -1,7 +1,8 @@
 import { AcpLoginPage } from "../../../pages/acp/AcpLoginPage";
-import { ConsentPage } from "../../../pages/consent/ConsentPage";
+import { AccountConsentPage } from "../../../pages/consent/AccountConsentPage";
 import { Credentials } from "../../../pages/Credentials";
 import { Urls } from "../../../pages/Urls";
+import { Accounts } from "../../../pages/Accounts";
 import { FdxTppLoginPage } from "../../../pages/fdx-tpp/FdxTppLoginPage";
 import { FdxTppIntentRegisteredPage } from "../../../pages/fdx-tpp/FdxTppIntentRegisteredPage";
 import { FdxTppAuthenticatedPage } from "../../../pages/fdx-tpp/FdxTppAuthenticatedPage";
@@ -15,13 +16,10 @@ describe(`FDX Tpp consent app`, () => {
   const fdxTppAuthenticatedPage: FdxTppAuthenticatedPage =
     new FdxTppAuthenticatedPage();
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
-  const consentPage: ConsentPage = new ConsentPage();
+  const accountConsentPage: AccountConsentPage = new AccountConsentPage();
   const mfaPage: MfaPage = new MfaPage();
   const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
 
-  const creditsAccountId: string = `96534987`;
-  const savingsAccountId: string = `1000002`;
-  const savings2AccountId: string = `1000001`;
 
   beforeEach(() => {
     fdxTppLoginPage.visit();
@@ -30,10 +28,10 @@ describe(`FDX Tpp consent app`, () => {
   });
 
   [
-    [creditsAccountId, savingsAccountId, savings2AccountId],
-    [creditsAccountId],
-    [savingsAccountId],
-    [savings2AccountId],
+    [Accounts.ids.FDX.checkingAcc, Accounts.ids.FDX.savings1, Accounts.ids.FDX.savings2],
+    [Accounts.ids.FDX.savings1],
+    [Accounts.ids.FDX.savings2],
+    [Accounts.ids.FDX.checkingAcc],
   ].forEach((accountsIds) => {
     it(`Happy path with selected accounts: ${accountsIds}`, () => {
       fdxTppLoginPage.assertThatPageIsDisplayed();
@@ -49,17 +47,15 @@ describe(`FDX Tpp consent app`, () => {
         mfaPage.typePin();
       }
 
-      consentPage.assertPermissions(4);
-      consentPage.clickContinue();
-      consentPage.checkAccounts(accountsIds);
-      consentPage.clickConfirm();
+      accountConsentPage.assertPermissions(4);
+      accountConsentPage.clickContinue();
+      accountConsentPage.checkAccounts(accountsIds);
+      accountConsentPage.clickAgree();
 
       fdxTppAuthenticatedPage.assertThatPageIsDisplayed();
       fdxTppAuthenticatedPage.assertThatTokenResponseFieldIsNotEmpty();
       fdxTppAuthenticatedPage.assertThatAccessTokenFieldIsNotEmpty();
-      fdxTppAuthenticatedPage.assertThatConsentResponseFieldContainsAccountsIds(
-        accountsIds
-      );
+      fdxTppAuthenticatedPage.assertThatConsentResponseFieldContainsAccountsIds(accountsIds);
 
       fdxTppAuthenticatedPage.clickTryNext();
       fdxTppLoginPage.assertThatPageIsDisplayed();
@@ -81,12 +77,12 @@ describe(`FDX Tpp consent app`, () => {
       mfaPage.typePin();
     }
 
-    consentPage.clickContinue();
-    consentPage.clickConfirm();
+    accountConsentPage.clickContinue();
+    accountConsentPage.clickAgree();
 
     fdxTppAuthenticatedPage.assertThatPageIsDisplayed();
     fdxTppAuthenticatedPage.assertThatConsentResponseFieldNotContainsAccountsIds(
-      [creditsAccountId, savingsAccountId]
+      [Accounts.ids.FDX.checkingAcc, Accounts.ids.FDX.savings1, Accounts.ids.FDX.savings1]
     );
   });
 

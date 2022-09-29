@@ -1,23 +1,25 @@
-import {AcpLoginPage} from '../../pages/acp/AcpLoginPage';
-import {ConsentPage} from '../../pages/consent/ConsentPage';
-import {ErrorPage} from '../../pages/ErrorPage';
-import {Credentials} from "../../pages/Credentials";
-import {ConsentSelfServicePage} from '../../pages/consent-self-service/ConsentSelfServicePage';
-import {Urls} from "../../pages/Urls";
-import {MfaPage} from "../../pages/mfa/MfaPage";
-import {FinancrooLoginPage} from "../../pages/financroo/FinancrooLoginPage";
-import {FinancrooWelcomePage} from "../../pages/financroo/FinancrooWelcomePage";
-import {FinancrooAccountsPage} from "../../pages/financroo/accounts/FinancrooAccountsPage";
-import {FinancrooInvestmentsPage} from "../../pages/financroo/investments/FinancrooInvestmentsPage";
-import {FinancrooContributePage} from "../../pages/financroo/investments/FinancrooContributePage";
-import {ConsentSelfServiceApplicationPage} from "../../pages/consent-self-service/ConsentSelfServiceApplicationPage";
-import {EnvironmentVariables} from "../../pages/EnvironmentVariables"
-import { FinancrooModalPage } from '../../pages/financroo/accounts/FinancrooModalPage';
-
+import { AcpLoginPage } from "../../pages/acp/AcpLoginPage";
+import { AccountConsentPage } from "../../pages/consent/AccountConsentPage";
+import { PaymentConsentPage } from "../../pages/consent/PaymentConsentPage";import { ErrorPage } from "../../pages/ErrorPage";
+import { Credentials } from "../../pages/Credentials";
+import { ConsentSelfServicePage } from "../../pages/consent-self-service/ConsentSelfServicePage";
+import { Urls } from "../../pages/Urls";
+import { Currencies } from "../../pages/Currencies";
+import { Accounts } from "../../pages/Accounts";
+import { MfaPage } from "../../pages/mfa/MfaPage";
+import { FinancrooLoginPage } from "../../pages/financroo/FinancrooLoginPage";
+import { FinancrooWelcomePage } from "../../pages/financroo/FinancrooWelcomePage";
+import { FinancrooAccountsPage } from "../../pages/financroo/accounts/FinancrooAccountsPage";
+import { FinancrooInvestmentsPage } from "../../pages/financroo/investments/FinancrooInvestmentsPage";
+import { FinancrooContributePage } from "../../pages/financroo/investments/FinancrooContributePage";
+import { ConsentSelfServiceApplicationPage } from "../../pages/consent-self-service/ConsentSelfServiceApplicationPage";
+import { EnvironmentVariables } from "../../pages/EnvironmentVariables";
+import { FinancrooModalPage } from "../../pages/financroo/accounts/FinancrooModalPage";
 
 describe(`Consent self service app`, () => {
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
-  const consentPage: ConsentPage = new ConsentPage();
+  const accountConsentPage: AccountConsentPage = new AccountConsentPage();
+  const paymentConsentPage: PaymentConsentPage = new PaymentConsentPage();
   const errorPage: ErrorPage = new ErrorPage();
   const consentSelfServicePage: ConsentSelfServicePage = new ConsentSelfServicePage();
   const consentSelfServiceApplicationPage: ConsentSelfServiceApplicationPage = new ConsentSelfServiceApplicationPage();
@@ -33,56 +35,75 @@ describe(`Consent self service app`, () => {
   const amount: number = Math.floor(Math.random() * 50) + 1;
 
   before(() => {
-    financrooLoginPage.visit()
-    Urls.clearLocalStorage()
-    financrooLoginPage.visit()
-    financrooLoginPage.login()
+    financrooLoginPage.visit();
+    Urls.clearLocalStorage();
+    financrooLoginPage.visit();
+    financrooLoginPage.login();
 
-    financrooWelcomePage.reconnectGoBank()
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
+    financrooWelcomePage.reconnectGoBank();
+    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
     if (environmentVariables.isMfaEnabled()) {
-      mfaPage.typePin()
+      mfaPage.typePin();
     }
-    consentPage.clickConfirm()
-    financrooModalPage.assertThatModalIsDisplayed()
 
-    financrooLoginPage.visit()
-    financrooAccountsPage.assertThatPageIsDisplayed()
-    financrooAccountsPage.goToInvestmentsTab()
-    financrooInvestmentsPage.invest()
-    financrooContributePage.contribute(amount)
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
+    accountConsentPage.checkAllAccounts();
+    accountConsentPage.clickAgree();
+
+    financrooModalPage.assertThatModalIsDisplayed();
+
+    financrooLoginPage.visit();
+
+    financrooAccountsPage.assertThatPageIsDisplayed();
+    financrooAccountsPage.goToInvestmentsTab();
+
+    financrooInvestmentsPage.assertThatDashboardIsVisible(Currencies.currency.UK.code);
+    financrooInvestmentsPage.clickInvest();
+
+    financrooContributePage.contributeAmmount(amount, Currencies.currency.UK.symbol);
+    financrooContributePage.contributePaymentMethod(amount, Currencies.currency.UK.symbol, Accounts.ids.UK.bills);
+    financrooContributePage.contributeInvestmentSummary(amount, Currencies.currency.UK.symbol, Accounts.ids.UK.bills);
+
+    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
     if (environmentVariables.isMfaEnabled()) {
-      mfaPage.typePin()
+      mfaPage.typePin();
     }
-    consentPage.clickConfirm()
-  })
+
+    paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.UK.code, Accounts.ids.UK.bills); 
+    paymentConsentPage.clickConfirm();
+
+    financrooInvestmentsPage.assertThatTransactionWasCompleted(amount, Currencies.currency.UK.symbol);
+  });
 
   beforeEach(() => {
-    consentSelfServicePage.visit(true)
-  })
+    consentSelfServicePage.visit(true);
+    Urls.clearLocalStorage();
+    consentSelfServicePage.visit(true);
+  });
 
   it(`Happy path with account consent`, () => {
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    consentSelfServicePage.clickOnApplicationCard()
-    consentSelfServiceApplicationPage.expandAccountsTab()
-    consentSelfServiceApplicationPage.checkAccount("22289")
-    consentSelfServiceApplicationPage.expandAccountConsentRow()
-  })
+
+    consentSelfServicePage.clickOnApplicationCard();
+
+    consentSelfServiceApplicationPage.expandAccountsTab();
+    consentSelfServiceApplicationPage.checkAccount(Accounts.ids.UK.bills);
+    consentSelfServiceApplicationPage.expandAccountConsentRow();
+  });
 
   it(`Happy path with payment consent`, () => {
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    consentSelfServicePage.clickOnApplicationCard()
-    consentSelfServiceApplicationPage.expandPaymentsTab()
-    consentSelfServiceApplicationPage.checkAccount("22289")
-    consentSelfServiceApplicationPage.expandPaymentConsentRow()
-    consentSelfServiceApplicationPage.assertAmount(amount)
-  })
+
+    consentSelfServicePage.clickOnApplicationCard();
+    
+    consentSelfServiceApplicationPage.expandPaymentsTab();
+    consentSelfServiceApplicationPage.checkAccount(Accounts.ids.UK.bills);
+    consentSelfServiceApplicationPage.expandPaymentConsentRow();
+    consentSelfServiceApplicationPage.assertAmount(Currencies.currency.UK.symbol, amount);
+  });
 
   it(`Cancel ACP login`, () => {
     acpLoginPage.cancel();
     // UI error page improvements AUT-5845
-    errorPage.assertError("The user rejected the authentication")
-  })
-
-})
+    errorPage.assertError("The user rejected the authentication");
+  });
+});

@@ -1,21 +1,20 @@
-import {AcpLoginPage} from '../../pages/acp/AcpLoginPage';
-import {ConsentPage} from '../../pages/consent/ConsentPage';
-import {ErrorPage} from '../../pages/ErrorPage';
-import {Credentials} from "../../pages/Credentials";
-import {ConsentSelfServicePage} from '../../pages/consent-self-service/ConsentSelfServicePage';
-import {Urls} from "../../pages/Urls";
-import {MfaPage} from "../../pages/mfa/MfaPage";
-import {FinancrooLoginPage} from "../../pages/financroo/FinancrooLoginPage";
-import {FinancrooWelcomePage} from "../../pages/financroo/FinancrooWelcomePage";
-import {FinancrooAccountsPage} from "../../pages/financroo/accounts/FinancrooAccountsPage";
-import {ConsentSelfServiceApplicationPage} from "../../pages/consent-self-service/ConsentSelfServiceApplicationPage";
-import {EnvironmentVariables} from "../../pages/EnvironmentVariables"
-import { FinancrooModalPage } from '../../pages/financroo/accounts/FinancrooModalPage';
-
+import { AcpLoginPage } from "../../pages/acp/AcpLoginPage";
+import { AccountConsentPage } from "../../pages/consent/AccountConsentPage";
+import { ErrorPage } from "../../pages/ErrorPage";
+import { Credentials } from "../../pages/Credentials";
+import { ConsentSelfServicePage } from "../../pages/consent-self-service/ConsentSelfServicePage";
+import { Urls } from "../../pages/Urls";
+import { MfaPage } from "../../pages/mfa/MfaPage";
+import { FinancrooLoginPage } from "../../pages/financroo/FinancrooLoginPage";
+import { FinancrooWelcomePage } from "../../pages/financroo/FinancrooWelcomePage";
+import { FinancrooAccountsPage } from "../../pages/financroo/accounts/FinancrooAccountsPage";
+import { ConsentSelfServiceApplicationPage } from "../../pages/consent-self-service/ConsentSelfServiceApplicationPage";
+import { EnvironmentVariables } from "../../pages/EnvironmentVariables";
+import { FinancrooModalPage } from "../../pages/financroo/accounts/FinancrooModalPage";
 
 describe(`Consent self service app`, () => {
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
-  const consentPage: ConsentPage = new ConsentPage();
+  const accountConsentPage: AccountConsentPage = new AccountConsentPage();
   const errorPage: ErrorPage = new ErrorPage();
   const consentSelfServicePage: ConsentSelfServicePage = new ConsentSelfServicePage();
   const consentSelfServiceApplicationPage: ConsentSelfServiceApplicationPage = new ConsentSelfServiceApplicationPage();
@@ -27,49 +26,48 @@ describe(`Consent self service app`, () => {
   const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
 
   before(() => {
-    financrooLoginPage.visit()
-    Urls.clearLocalStorage()
-    financrooLoginPage.visit()
-    financrooLoginPage.login()
+    financrooLoginPage.visit();
+    Urls.clearLocalStorage();
+    financrooLoginPage.visit();
+    financrooLoginPage.login();
 
-    financrooWelcomePage.reconnectGoBank()
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword)
+    financrooWelcomePage.reconnectGoBank();
+    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
     if (environmentVariables.isMfaEnabled()) {
-      mfaPage.typePin()
+      mfaPage.typePin();
     }
-    consentPage.clickConfirm()
-    financrooModalPage.assertThatModalIsDisplayed()
+    accountConsentPage.clickAgree();
+    financrooModalPage.assertThatModalIsDisplayed();
 
-    financrooLoginPage.visit()
-    financrooAccountsPage.assertThatPageIsDisplayed()
-  })
+    financrooLoginPage.visit();
+    financrooAccountsPage.assertThatPageIsDisplayed();
+  });
 
   beforeEach(() => {
-    consentSelfServicePage.visit(true)
-  })
+    consentSelfServicePage.visit(true);
+  });
 
   it(`Happy path with account consent`, () => {
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    consentSelfServicePage.clickOnApplicationCard()
-    consentSelfServiceApplicationPage.expandAccountsTab()
-    consentSelfServiceApplicationPage.checkAccount("94088392")
-    consentSelfServiceApplicationPage.expandAccountConsentRow()
-  })
+    consentSelfServicePage.clickOnApplicationCard();
+    consentSelfServiceApplicationPage.expandAccountsTab();
+    consentSelfServiceApplicationPage.checkAccount("94088392");
+    consentSelfServiceApplicationPage.expandAccountConsentRow();
+  });
 
   it(`Revoke consent`, () => {
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    consentSelfServicePage.clickOnApplicationCard()
-    consentSelfServiceApplicationPage.expandAccountsTab()
-    consentSelfServiceApplicationPage.assertNumberOfConsents(1)
-    consentSelfServiceApplicationPage.expandAccountConsentRow()
-    consentSelfServiceApplicationPage.clickRevokeAccessButton() 
-    consentSelfServiceApplicationPage.assertNumberOfConsents(0)
-  })
+    consentSelfServicePage.clickOnApplicationCard();
+    consentSelfServiceApplicationPage.expandAccountsTab();
+    consentSelfServiceApplicationPage.assertNumberOfConsents(1);
+    consentSelfServiceApplicationPage.expandAccountConsentRow();
+    consentSelfServiceApplicationPage.clickRevokeAccessButton();
+    consentSelfServiceApplicationPage.assertNumberOfConsents(0);
+  });
 
   it(`Cancel ACP login`, () => {
     acpLoginPage.cancel();
     // UI error page improvements AUT-5845
-    errorPage.assertError("The user rejected the authentication")
-  })
-
-})
+    errorPage.assertError("The user rejected the authentication");
+  });
+});
