@@ -67,11 +67,11 @@ export default function ContributionCard({
   return (
     <Card className={classes.card}>
       {title && (
-        <div className={classes.title} id="title">
+        <div className={classes.title} id="contribute-title">
           {title}
         </div>
       )}
-      <CardContent className={classes.content}>{children}</CardContent>
+      <CardContent id="contribution-content" className={classes.content}>{children}</CardContent>
       {backButton && nextButton && (
         <CardActions className={classes.buttons}>
           <Button

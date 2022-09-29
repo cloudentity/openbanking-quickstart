@@ -200,6 +200,7 @@ export default function InvestmentsContributeMethod({
         <div className={classes.titleContainer}>
           <div className={classes.heading}>PAYMENT TOTAL</div>
           <Chip
+            id="total-amount"
             label={`${getCurrency(currency)} ${parseFloat(amount).toFixed(2)}`}
             className={classes.chip}
           />
@@ -269,6 +270,7 @@ export default function InvestmentsContributeMethod({
             .map(({ AccountId, Amount }) => (
               <div
                 key={AccountId}
+                id={`account-id-${AccountId}`}
                 className={cx(
                   classes.accountSelectItem,
                   selectedAccountId === AccountId && classes.active

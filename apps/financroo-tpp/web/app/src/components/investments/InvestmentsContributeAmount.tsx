@@ -66,6 +66,7 @@ export default function InvestmentsContributeAmount({
         classes={{
           root: classes.input,
         }}
+        id="amount-to-contribute"
         variant="outlined"
         value={amount}
         onChange={v => {
@@ -83,6 +84,7 @@ export default function InvestmentsContributeAmount({
           startAdornment: (
             <InputAdornment
               position="start"
+              id="contribution-currency"
               style={{ position: "relative", top: 1 }}
             >
               {getCurrency(accountDetails?.currency)}

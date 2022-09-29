@@ -131,6 +131,7 @@ export default function InvestmentsContributeSummary({
           <div className={classes.heading}>PAYMENT TOTAL</div>
           <div>
             <Chip
+              id="total-amount"
               label={`${getCurrency(currency)} ${parseFloat(amount).toFixed(
                 2
               )}`}
@@ -143,7 +144,7 @@ export default function InvestmentsContributeSummary({
         To consent to this transaction, confirm the details below
       </Field>
       <Field label="Payee Information">
-        <div className={classes.information}>
+        <div className={classes.information} id={`account-id-${selectedBalance?.AccountId}`}>
           <div>Payee Account Name</div>
           <div>{selectedAccountInfo?.Account[0].Name}</div>
           <div>Sort code</div>
