@@ -40,8 +40,8 @@ export class ConsentSelfServiceApplicationPage {
     cy.get(this.purposeHeaderLocator).should(`contain.text`, `Purpose for sharing data`)
   }
 
-  public assertAmount(amount: number): void {
-    cy.get(this.transactionDetailsLocator).should(`contain.text`, "£ " + amount.toString())
+  public assertAmount(currency: string, amount: number): void {
+    cy.get(this.transactionDetailsLocator).should(`contain.text`, currency + " " + amount.toFixed(2))
   }
 
   public clickRevokeAccessButton(): void {

@@ -1,4 +1,4 @@
-export class ConsentPage {
+export class AccountConsentPage {
   private readonly confirmButtonLocator: string = `[value="confirm"]`;
   private readonly cancelButtonLocator: string = `[value="deny"]`;
   private readonly permissionNameLocator: string = `[data-desc-id="account_permissions"] .permission-name`;
@@ -15,6 +15,10 @@ export class ConsentPage {
 
   public uncheckAllAccounts(): void {
     cy.get(this.accountsIdsLocator).uncheck()
+  }
+
+  public checkAllAccounts(): void {
+    cy.get(this.accountsIdsLocator).check()
   }
 
   public expandPermissions(): void {
@@ -34,8 +38,12 @@ export class ConsentPage {
     this.clickButton(this.confirmButtonLocator, 'Continue');
   }
 
-  public clickConfirm(): void {
+  public clickAgree(): void {
     this.clickButton(this.confirmButtonLocator, 'I Agree');
+  }
+
+  public clickConfirm(): void {
+    this.clickButton(this.confirmButtonLocator, 'Confirm');
   }
 
   public clickCancel(): void {
