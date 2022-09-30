@@ -148,6 +148,7 @@ function ApplicationAccessPaymentDrawer({
       bottomBar={
         <>
           <Button
+            id="cancel-revoke-access-button"
             variant="outlined"
             className={classes.button}
             onClick={() => {
@@ -186,7 +187,7 @@ function ApplicationAccessPaymentDrawer({
       }
     >
       {revokeAccess ? (
-        <div>
+        <div id="account-revoke-info">
           <Alert
             variant="outlined"
             severity="warning"
@@ -202,6 +203,7 @@ function ApplicationAccessPaymentDrawer({
           </div>
           <div className={classes.revokeInfoCheckbox}>
             <Checkbox
+              id="account-revoke-checkbox"
               checked={revokeAccessAgree}
               onChange={e => setRevokeAccessAgree(e.target.checked)}
               color="primary"
@@ -211,7 +213,7 @@ function ApplicationAccessPaymentDrawer({
         </div>
       ) : (
         <>
-          <div>
+          <div id="account-permission-dates">
             <div className={classes.subHeader}>Permission dates</div>
             <div className={classes.cardsWrapperGrid}>
               {Object.entries(permissionDates).map(([key, value]: any) => (
@@ -223,7 +225,7 @@ function ApplicationAccessPaymentDrawer({
             </div>
           </div>
 
-          <div>
+          <div id="accounts-info">
             <div className={classes.subHeader}>Accounts</div>
             <div className={classes.cardsWrapperGrid}>
               {Object.entries(accountsDetails).map(([key, value]: any) => (
@@ -246,7 +248,7 @@ function ApplicationAccessPaymentDrawer({
             </div>
           </div>
 
-          <div>
+          <div id="account-details">
             <div className={classes.subHeader}>Details being shared</div>
             <div>
               {permissionItems.map(v => (
