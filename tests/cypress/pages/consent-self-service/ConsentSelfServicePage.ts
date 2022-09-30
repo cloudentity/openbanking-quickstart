@@ -36,13 +36,8 @@ export class ConsentSelfServicePage {
       );
   }
 
-  public assertThatFilterPermissionsButtonsAreDisplayed(): void {
-    cy.get(this.allTypesLocator, { timeout: 5000 }).should("be.visible");
-    cy.get(this.accountOnlyLocator, { timeout: 5000 }).should("be.visible");
-    cy.get(this.paymentOnlyLocator, { timeout: 5000 }).should("be.visible");
-  }
-
   public assertThatApplicationCardIsNotDisplayed(): void {
     cy.get(this.applicationCardLocator, { timeout: 30000 }).should("not.exist");
   }
+
 }

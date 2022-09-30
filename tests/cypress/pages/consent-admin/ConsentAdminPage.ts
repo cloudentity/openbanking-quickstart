@@ -41,6 +41,7 @@ export class ConsentAdminPage {
     cy.get(this.clientRevokeAccessAcceptCheckboxSelector).click();
     cy.get(this.revokeConfirmButtonSelector).click();
     cy.get(this.revokeConfirmDrawerSelector).should("not.exist");
+    cy.get(this.revokeButtonSelector).should("not.exist");
   }
 
   public searchAccount(accountNumber: string): void {

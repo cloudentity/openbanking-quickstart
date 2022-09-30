@@ -42,10 +42,6 @@ export class AccountConsentPage {
     this.clickButton(this.confirmButtonLocator, 'I Agree');
   }
 
-  public clickConfirm(): void {
-    this.clickButton(this.confirmButtonLocator, 'Confirm');
-  }
-
   public clickCancel(): void {
     this.clickButton(this.cancelButtonLocator, 'Cancel');
   }
