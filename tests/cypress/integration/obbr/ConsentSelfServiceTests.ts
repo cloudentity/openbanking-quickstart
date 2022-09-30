@@ -3,6 +3,7 @@ import { AccountConsentPage } from "../../pages/consent/AccountConsentPage";
 import { ErrorPage } from "../../pages/ErrorPage";
 import { Credentials } from "../../pages/Credentials";
 import { ConsentSelfServicePage } from "../../pages/consent-self-service/ConsentSelfServicePage";
+import { ConsentSelfServiceAccountDetailsPage } from "../../pages/consent-self-service/ConsentSelfServiceAccountDetailsPage";
 import { Urls } from "../../pages/Urls";
 import { Accounts } from "../../pages/Accounts";
 import { MfaPage } from "../../pages/mfa/MfaPage";
@@ -18,6 +19,7 @@ describe(`Consent self service app`, () => {
   const accountConsentPage: AccountConsentPage = new AccountConsentPage();
   const errorPage: ErrorPage = new ErrorPage();
   const consentSelfServicePage: ConsentSelfServicePage = new ConsentSelfServicePage();
+  const consentSelfServiceAccountDetailsPage: ConsentSelfServiceAccountDetailsPage = new ConsentSelfServiceAccountDetailsPage();
   const consentSelfServiceApplicationPage: ConsentSelfServiceApplicationPage = new ConsentSelfServiceApplicationPage();
   const mfaPage: MfaPage = new MfaPage();
   const financrooLoginPage: FinancrooLoginPage = new FinancrooLoginPage();
@@ -64,6 +66,9 @@ describe(`Consent self service app`, () => {
     consentSelfServiceApplicationPage.expandAccountsTab();
     consentSelfServiceApplicationPage.checkAccount(Accounts.ids.BR.account1);
     consentSelfServiceApplicationPage.expandAccountConsentRow();
+
+    consentSelfServiceAccountDetailsPage.assertThatAccountDetailsAreVisible()
+    consentSelfServiceAccountDetailsPage.assertAccount(Accounts.ids.BR.account1);
   });
 
   it(`Revoke consent`, () => {
@@ -75,7 +80,12 @@ describe(`Consent self service app`, () => {
     consentSelfServiceApplicationPage.expandAccountsTab();
     consentSelfServiceApplicationPage.assertNumberOfConsents(1);
     consentSelfServiceApplicationPage.expandAccountConsentRow();
-    consentSelfServiceApplicationPage.clickRevokeAccessButton();
+
+    consentSelfServiceAccountDetailsPage.assertThatAccountDetailsAreVisible();
+    consentSelfServiceAccountDetailsPage.clickRevokeAccessButton();
+    consentSelfServiceAccountDetailsPage.assertThatRevokeAccountDetailsAreVisible();
+    consentSelfServiceAccountDetailsPage.confirmRevokeAccessAction();
+    
     consentSelfServiceApplicationPage.assertNumberOfConsents(0);
   });
 

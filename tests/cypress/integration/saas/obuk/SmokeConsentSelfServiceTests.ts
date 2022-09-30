@@ -2,6 +2,8 @@ import { AcpLoginPage } from "../../../pages/acp/AcpLoginPage";
 import { AccountConsentPage } from "../../../pages/consent/AccountConsentPage";
 import { PaymentConsentPage } from "../../../pages/consent/PaymentConsentPage";import { Credentials } from "../../../pages/Credentials";
 import { ConsentSelfServicePage } from "../../../pages/consent-self-service/ConsentSelfServicePage";
+import { ConsentSelfServicePaymentDetailsPage } from "../../../pages/consent-self-service/ConsentSelfServicePaymentDetailsPage";
+import { ConsentSelfServiceAccountDetailsPage } from "../../../pages/consent-self-service/ConsentSelfServiceAccountDetailsPage";
 import { Urls } from "../../../pages/Urls";
 import { Currencies } from "../../../pages/Currencies";
 import { Accounts } from "../../../pages/Accounts";
@@ -20,6 +22,8 @@ describe(`Smoke Consent self service app`, () => {
   const accountConsentPage: AccountConsentPage = new AccountConsentPage();
   const paymentConsentPage: PaymentConsentPage = new PaymentConsentPage();
   const consentSelfServicePage: ConsentSelfServicePage = new ConsentSelfServicePage();
+  const consentSelfServicePaymentDetailsPage: ConsentSelfServicePaymentDetailsPage = new ConsentSelfServicePaymentDetailsPage();
+  const consentSelfServiceAccountDetailsPage: ConsentSelfServiceAccountDetailsPage = new ConsentSelfServiceAccountDetailsPage();
   const consentSelfServiceApplicationPage: ConsentSelfServiceApplicationPage = new ConsentSelfServiceApplicationPage();
   const mfaPage: MfaPage = new MfaPage();
   const financrooLoginPage: FinancrooLoginPage = new FinancrooLoginPage();
@@ -83,6 +87,26 @@ describe(`Smoke Consent self service app`, () => {
     consentSelfServiceApplicationPage.expandAccountsTab();
     consentSelfServiceApplicationPage.checkAccount(Accounts.ids.UK.bills);
     consentSelfServiceApplicationPage.expandAccountConsentRow();
+
+    consentSelfServiceAccountDetailsPage.assertThatAccountDetailsAreVisible()
+    consentSelfServiceAccountDetailsPage.assertAccount(Accounts.ids.UK.bills);
+  });
+
+  it(`Revoke consent`, () => {
+    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+
+    consentSelfServicePage.clickOnApplicationCard();
+
+    consentSelfServiceApplicationPage.expandAccountsTab();
+    consentSelfServiceApplicationPage.assertNumberOfConsents(1);
+    consentSelfServiceApplicationPage.expandAccountConsentRow();
+
+    consentSelfServiceAccountDetailsPage.assertThatAccountDetailsAreVisible();
+    consentSelfServiceAccountDetailsPage.clickRevokeAccessButton();
+    consentSelfServiceAccountDetailsPage.assertThatRevokeAccountDetailsAreVisible();
+    consentSelfServiceAccountDetailsPage.confirmRevokeAccessAction();
+
+    consentSelfServiceApplicationPage.assertNumberOfConsents(0);
   });
 
   it(`Happy path with payment consent`, () => {
@@ -93,6 +117,11 @@ describe(`Smoke Consent self service app`, () => {
     consentSelfServiceApplicationPage.expandPaymentsTab();
     consentSelfServiceApplicationPage.checkAccount(Accounts.ids.UK.bills);
     consentSelfServiceApplicationPage.expandPaymentConsentRow();
-    consentSelfServiceApplicationPage.assertAmount(Currencies.currency.UK.symbol, amount);
+    consentSelfServiceApplicationPage.checkAmount(Currencies.currency.UK.symbol, amount);
+    consentSelfServiceApplicationPage.expandPaymentConsentRow();
+
+    consentSelfServicePaymentDetailsPage.assertThatPaymentDetailsAreVisible();
+    consentSelfServicePaymentDetailsPage.assertAmount(Currencies.currency.UK.symbol, amount);
+    consentSelfServicePaymentDetailsPage.assertAccount(Accounts.ids.UK.bills);
   });
 });
