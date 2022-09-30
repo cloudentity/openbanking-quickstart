@@ -3,6 +3,7 @@ import { AccountConsentPage } from "../../../pages/consent/AccountConsentPage";
 import { Credentials } from "../../../pages/Credentials";
 import { ConsentSelfServicePage } from "../../../pages/consent-self-service/ConsentSelfServicePage";
 import { Urls } from "../../../pages/Urls";
+import { Accounts } from "../../../pages/Accounts";
 import { MfaPage } from "../../../pages/mfa/MfaPage";
 import { FinancrooLoginPage } from "../../../pages/financroo/FinancrooLoginPage";
 import { FinancrooWelcomePage } from "../../../pages/financroo/FinancrooWelcomePage";
@@ -23,6 +24,7 @@ describe(`Consent self service app`, () => {
   const financrooAccountsPage: FinancrooAccountsPage = new FinancrooAccountsPage();
   const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
 
+
   before(() => {
     financrooLoginPage.visit();
     Urls.clearLocalStorage();
@@ -34,10 +36,14 @@ describe(`Consent self service app`, () => {
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }
+    
+    accountConsentPage.checkAllAccounts();
     accountConsentPage.clickAgree();
+
     financrooModalPage.assertThatModalIsDisplayed();
 
     financrooLoginPage.visit();
+
     financrooAccountsPage.assertThatPageIsDisplayed();
   });
 
@@ -45,14 +51,16 @@ describe(`Consent self service app`, () => {
     consentSelfServicePage.visit(true);
     Urls.clearLocalStorage();
     consentSelfServicePage.visit(true);
+
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+
     consentSelfServicePage.clickOnAccountOnlyButton();
     consentSelfServicePage.clickOnApplicationCard();
   });
 
   it(`Happy path with account consent`, () => {
     consentSelfServiceApplicationPage.expandAccountsTab();
-    consentSelfServiceApplicationPage.checkAccount("94088392");
+    consentSelfServiceApplicationPage.checkAccount(Accounts.ids.BR.account1);
     consentSelfServiceApplicationPage.expandAccountConsentRow();
   });
 

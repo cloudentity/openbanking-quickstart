@@ -5,6 +5,7 @@ import { AccountConsentPage } from "../../../pages/consent/AccountConsentPage";
 import { Credentials } from "../../../pages/Credentials";
 import { ConsentAdminPage } from "../../../pages/consent-admin/ConsentAdminPage";
 import { Urls } from "../../../pages/Urls";
+import { Accounts } from "../../../pages/Accounts";
 import { MfaPage } from "../../../pages/mfa/MfaPage";
 import { EnvironmentVariables } from "../../../pages/EnvironmentVariables";
 
@@ -31,11 +32,14 @@ describe(`Consent admin app`, () => {
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }
+
+    accountConsentPage.checkAllAccounts();
     accountConsentPage.clickAgree();
+
     consentAdminPage.visit(true);
     consentAdminPage.login();
 
-    consentAdminPage.assertThatConsentManagementTabIsDisplayed()
+    consentAdminPage.assertThatConsentManagementTabIsDisplayed();
     consentAdminPage.revokeClientConsent();
   });
 
@@ -44,13 +48,16 @@ describe(`Consent admin app`, () => {
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }
+
+    accountConsentPage.checkAllAccounts();
     accountConsentPage.clickAgree();
+
     consentAdminPage.visit();
     consentAdminPage.login();
 
     consentAdminPage.assertThatConsentManagementTabIsDisplayed()
-    consentAdminPage.searchAccount("94088392");
-    consentAdminPage.assertAccountResult("94088392");
+    consentAdminPage.searchAccount(Accounts.ids.BR.account1);
+    consentAdminPage.assertAccountResult(Accounts.ids.BR.account1);
     consentAdminPage.assertClientAccountWithStatus("Developer", "Active");
     consentAdminPage.manageAccount("Developer");
     consentAdminPage.assertConsentsDetails();
