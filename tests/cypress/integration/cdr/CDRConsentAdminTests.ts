@@ -8,8 +8,9 @@ import { DynamicClientRegistrationPage } from "../../pages/mock-data-recipient/D
 import { ConsentAndAuthorisationPage } from "../../pages/mock-data-recipient/ConsentAndAuthorisationPage";
 import { ConsentAndAuthorisationCallbackPage } from "../../pages/mock-data-recipient/ConsentAndAuthorisationCallbackPage";
 import { Urls } from "../../pages/Urls";
+import { Accounts } from "../../pages/Accounts";
 
-describe(`Consent admin portal CDR`, () => {
+describe(`CDR Consent admin portal tests`, () => {
   const mockDataRecipientNavigationPage: MockDataRecipientNavigationPage = new MockDataRecipientNavigationPage();
   const discoverDataHoldersPage: DiscoverDataHoldersPage = new DiscoverDataHoldersPage();
   const dynamicClientRegistrationPage: DynamicClientRegistrationPage = new DynamicClientRegistrationPage();
@@ -19,23 +20,30 @@ describe(`Consent admin portal CDR`, () => {
   const accountConsentPage: AccountConsentPage = new AccountConsentPage();
   const consentAdminPage: ConsentAdminPage = new ConsentAdminPage();
 
-  before(() => {
+  before(`Dynamic Client Registration via CDR mock data recipient`, () => {
     mockDataRecipientNavigationPage.visit(true);
     Urls.clearLocalStorage();
     mockDataRecipientNavigationPage.visit(true);
-
     mockDataRecipientNavigationPage.clickDiscoverDataHoldersLink();
+
     discoverDataHoldersPage.assertThatPageIsDisplayed();
     discoverDataHoldersPage.clickRefreshDataHoldersButton();
     discoverDataHoldersPage.assertThatDataHolderBrandsLoaded();
 
     mockDataRecipientNavigationPage.clickDynamicClientRegistrationLink();
+
     dynamicClientRegistrationPage.assertThatPageIsDisplayed();
     dynamicClientRegistrationPage.assertThatBrandIdIsSelected();
     dynamicClientRegistrationPage.clickDCRRegisterButton();
     dynamicClientRegistrationPage.assertThatClientRegistered();
+  });
 
+  beforeEach(`Authorize via CDR mock data recipient`, () => {
+    mockDataRecipientNavigationPage.visit(true);
+    Urls.clearLocalStorage();
+    mockDataRecipientNavigationPage.visit(true);
     mockDataRecipientNavigationPage.clickConsentAndAuthorisationLink();
+
     consentAndAuthorisationPage.assertThatPageIsDisplayed();
     consentAndAuthorisationPage.selectClientRegistration(1);
     consentAndAuthorisationPage.setSharingDuration(1000000);
@@ -44,8 +52,11 @@ describe(`Consent admin portal CDR`, () => {
     consentAndAuthorisationPage.clickOnAuthorizationUriLink();
 
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+
+    accountConsentPage.checkAccounts([Accounts.ids.CDR.savings, Accounts.ids.CDR.loan]);
     accountConsentPage.clickAgree();
     accountConsentPage.assertThatPageIsNotVisible();
+
     consentAndAuthorisationCallbackPage.assertThatPageIsDisplayed();
   });
 
@@ -56,8 +67,8 @@ describe(`Consent admin portal CDR`, () => {
     consentAdminPage.login();
 
     consentAdminPage.assertThatConsentManagementTabIsDisplayed();
-    consentAdminPage.searchAccount("1000001");
-    consentAdminPage.assertAccountResult("1000001");
+    consentAdminPage.searchAccount(Accounts.ids.CDR.savings);
+    consentAdminPage.assertAccountResult(Accounts.ids.CDR.savings);
     consentAdminPage.assertClientAccountWithStatus("MyBudgetHelper", "Active");
     consentAdminPage.manageAccount("MyBudgetHelper");
     consentAdminPage.assertConsentsDetails();
@@ -66,34 +77,6 @@ describe(`Consent admin portal CDR`, () => {
   });
 
   it(`Happy path with revoking consent from Third party providers page`, () => {
-    mockDataRecipientNavigationPage.visit(true);
-    Urls.clearLocalStorage();
-    mockDataRecipientNavigationPage.visit(true);
-
-    mockDataRecipientNavigationPage.clickDiscoverDataHoldersLink();
-    discoverDataHoldersPage.assertThatPageIsDisplayed();
-    discoverDataHoldersPage.clickRefreshDataHoldersButton();
-    discoverDataHoldersPage.assertThatDataHolderBrandsLoaded();
-
-    mockDataRecipientNavigationPage.clickDynamicClientRegistrationLink();
-    dynamicClientRegistrationPage.assertThatPageIsDisplayed();
-    dynamicClientRegistrationPage.assertThatBrandIdIsSelected();
-    dynamicClientRegistrationPage.clickDCRRegisterButton();
-    dynamicClientRegistrationPage.assertThatClientRegistered();
-
-    mockDataRecipientNavigationPage.clickConsentAndAuthorisationLink();
-    consentAndAuthorisationPage.assertThatPageIsDisplayed();
-    consentAndAuthorisationPage.selectClientRegistration(1);
-    consentAndAuthorisationPage.setSharingDuration(1000000);
-    consentAndAuthorisationPage.clickConstructAuthorizationUriButton();
-    consentAndAuthorisationPage.assertThatAuthorizationUriIsGenerated();
-    consentAndAuthorisationPage.clickOnAuthorizationUriLink();
-
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    accountConsentPage.clickAgree();
-    accountConsentPage.assertThatPageIsNotVisible();
-    consentAndAuthorisationCallbackPage.assertThatPageIsDisplayed();
-
     consentAdminPage.visit(true);
     Urls.clearLocalStorage();
     consentAdminPage.visit(true);
