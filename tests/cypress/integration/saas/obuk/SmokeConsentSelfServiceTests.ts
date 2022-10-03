@@ -58,6 +58,9 @@ describe(`Smoke Consent self service app`, () => {
     financrooAccountsPage.assertThatPageIsDisplayed();
     financrooAccountsPage.goToInvestmentsTab();
 
+    financrooInvestmentsPage.assertThatDashboardIsVisible(Currencies.currency.UK.code);
+    financrooInvestmentsPage.clickInvest();
+
     financrooContributePage.contributeAmount(amount, Currencies.currency.UK.symbol);
     financrooContributePage.contributePaymentMethod(amount, Currencies.currency.UK.symbol, Accounts.ids.UK.bills);
     financrooContributePage.contributeInvestmentSummary(amount, Currencies.currency.UK.symbol, Accounts.ids.UK.bills);
@@ -116,7 +119,6 @@ describe(`Smoke Consent self service app`, () => {
 
     consentSelfServiceApplicationPage.expandPaymentsTab();
     consentSelfServiceApplicationPage.checkAccount(Accounts.ids.UK.bills);
-    consentSelfServiceApplicationPage.expandPaymentConsentRow();
     consentSelfServiceApplicationPage.checkAmount(Currencies.currency.UK.symbol, amount);
     consentSelfServiceApplicationPage.expandPaymentConsentRow();
 

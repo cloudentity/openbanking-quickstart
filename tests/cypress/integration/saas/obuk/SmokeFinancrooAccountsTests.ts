@@ -47,6 +47,9 @@ describe(`Smoke Financroo app`, () => {
       accountConsentPage.assertPermissions(7);
       accountConsentPage.clickAgree();
 
+      financrooModalPage.assertThatModalIsDisplayed();
+      financrooModalPage.close();
+
       financrooAccountsPage.assertThatPageIsDisplayed();
       financrooAccountsPage.assertAccountsSyncedNumber(accountsIds.length);
       financrooAccountsPage.assertAccountsIds(accountsIds);
