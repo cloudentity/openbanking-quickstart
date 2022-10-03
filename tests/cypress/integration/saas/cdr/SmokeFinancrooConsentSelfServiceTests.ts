@@ -92,10 +92,13 @@ describe(`Smoke Financroo Consent self service tests`, () => {
 
     consentSelfServicePage.assertThatNoAccountsPageIsDisplayed();
 
+    // Temporary ignored due to issue AUT-7237
+    /*
     financrooLoginPage.visit();
     financrooLoginPage.login();
 
     financrooAccountsPage.assertThatAccountsAreDisconnected();
+    */
   });
 
 });
