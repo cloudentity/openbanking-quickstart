@@ -61,16 +61,16 @@ function ApplicationAccessPaymentDrawer({
       }
       setDrawerData={setDrawerData}
     >
-      <div className={classes.purpose}>
+      <div id="payment-purpose" className={classes.purpose}>
         <div className={`${classes.purposeHeader} purpose-header`}>
           Purpose for sharing data:
         </div>
         <div>To enable payments to Financroo investments</div>
       </div>
 
-      <div>
+      <div id="payment-details">
         <div className={classes.subHeader}>TRANSACTION Details</div>
-        <div className={classes.cardsWrapper} id="transactions-details">
+        <div className={classes.cardsWrapper}>
           {Object.entries(transactionDetails).map(([key, value]: any) => (
             <div className={classes.card} key={key}>
               <div className={classes.cardTitle}>{key}</div>
@@ -89,7 +89,7 @@ function ApplicationAccessPaymentDrawer({
         </div>
       </div>
 
-      <div>
+      <div id="payment-permission-dates">
         <div className={classes.subHeader}>Permission dates</div>
         <div className={classes.cardsWrapper}>
           {Object.entries(permissionDates).map(([key, value]: any) => (
@@ -101,7 +101,7 @@ function ApplicationAccessPaymentDrawer({
         </div>
       </div>
 
-      <div>
+      <div id="payment-details-shared">
         <div className={classes.subHeader}>Details being shared</div>
         <div>
           <div className={classes.detailsTitle}>Your Regular Payments</div>

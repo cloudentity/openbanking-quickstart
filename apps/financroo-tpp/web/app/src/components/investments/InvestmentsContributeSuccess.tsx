@@ -121,7 +121,7 @@ export default function InvestmentsContributeSuccess() {
           alignItems: "center",
         }}
       >
-        <div className={classes.title}>
+        <div id="transaction-completed-title" className={classes.title}>
           <img src={checkIcon} alt="check icon" />
           <h2>Transaction completed</h2>
           <div>You have reached another level with your retirement goal</div>
@@ -144,6 +144,7 @@ export default function InvestmentsContributeSuccess() {
               </div>
               <div style={{ paddingBottom: 0 }}>
                 <Chip
+                  id="total-amount"
                   label={`${searchParsed.amount} ${getCurrency(
                     searchParsed.currency
                   )}`}

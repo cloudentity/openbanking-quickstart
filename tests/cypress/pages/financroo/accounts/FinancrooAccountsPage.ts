@@ -40,6 +40,16 @@ export class FinancrooAccountsPage {
     cy.get(this.accountsSyncedNumberLocator).should("be.visible");
   }
 
+  public assertThatAccountsAreDisconnected(): void {
+    cy.get(this.accountsTabLocator).should("have.text", "Accounts");
+    cy.get(this.disconnectAccountsButtonLocator).should(
+      "have.text",
+      "reconnect"
+    );
+    cy.get(this.accountsSyncedNumberLocator).should("be.visible");
+    this.assertAccountsSyncedNumber(0);
+  }
+
   public disconnectAccounts(): void {
     cy.get(this.disconnectAccountsButtonLocator).click();
   }

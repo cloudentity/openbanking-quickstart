@@ -1,11 +1,12 @@
 import { TppIntentPage } from "../../pages/tpp/TppIntentPage";
 import { TppLoginPage } from "../../pages/tpp/TppLoginPage";
 import { AcpLoginPage } from "../../pages/acp/AcpLoginPage";
-import { ConsentPage } from "../../pages/consent/ConsentPage";
+import { AccountConsentPage } from "../../pages/consent/AccountConsentPage";
 import { ErrorPage } from "../../pages/ErrorPage";
 import { Credentials } from "../../pages/Credentials";
 import { ConsentAdminPage } from "../../pages/consent-admin/ConsentAdminPage";
 import { Urls } from "../../pages/Urls";
+import { Accounts } from "../../pages/Accounts";
 import { MfaPage } from "../../pages/mfa/MfaPage";
 import { EnvironmentVariables } from "../../pages/EnvironmentVariables";
 
@@ -13,7 +14,7 @@ describe(`Consent admin app`, () => {
   const tppIntentPage: TppIntentPage = new TppIntentPage();
   const tppLoginPage: TppLoginPage = new TppLoginPage();
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
-  const consentPage: ConsentPage = new ConsentPage();
+  const accountConsentPage: AccountConsentPage = new AccountConsentPage();
   const errorPage: ErrorPage = new ErrorPage();
   const consentAdminPage: ConsentAdminPage = new ConsentAdminPage();
   const mfaPage: MfaPage = new MfaPage();
@@ -33,11 +34,14 @@ describe(`Consent admin app`, () => {
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }
-    consentPage.confirm();
+
+    accountConsentPage.checkAllAccounts();
+    accountConsentPage.clickAgree();
+
     consentAdminPage.visit(true);
     consentAdminPage.login();
 
-    consentAdminPage.assertThatConsentManagementTabIsDisplayed()
+    consentAdminPage.assertThatConsentManagementTabIsDisplayed();
     consentAdminPage.revokeClientConsent();
   });
 
@@ -46,13 +50,16 @@ describe(`Consent admin app`, () => {
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }
-    consentPage.confirm();
+
+    accountConsentPage.checkAllAccounts();
+    accountConsentPage.clickAgree();
+
     consentAdminPage.visit();
     consentAdminPage.login();
 
     consentAdminPage.assertThatConsentManagementTabIsDisplayed()
-    consentAdminPage.searchAccount("94088392");
-    consentAdminPage.assertAccountResult("94088392");
+    consentAdminPage.searchAccount(Accounts.ids.BR.account1);
+    consentAdminPage.assertAccountResult(Accounts.ids.BR.account1);
     consentAdminPage.assertClientAccountWithStatus("Developer", "Active");
     consentAdminPage.manageAccount("Developer");
     consentAdminPage.assertConsentsDetails();

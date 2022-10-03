@@ -1,7 +1,8 @@
 import { AcpLoginPage } from "../../pages/acp/AcpLoginPage";
-import { ConsentPage } from "../../pages/consent/ConsentPage";
+import { AccountConsentPage } from "../../pages/consent/AccountConsentPage";
 import { Credentials } from "../../pages/Credentials";
 import { Urls } from "../../pages/Urls";
+import { Accounts } from "../../pages/Accounts";
 import { MfaPage } from "../../pages/mfa/MfaPage";
 import { EnvironmentVariables } from "../../pages/EnvironmentVariables";
 import { FdxTppLoginPage } from "../../pages/fdx-tpp/FdxTppLoginPage";
@@ -11,19 +12,14 @@ import {ErrorPage} from '../../pages/ErrorPage';
 
 describe(`FDX Tpp consent app`, () => {
   const fdxTppLoginPage: FdxTppLoginPage = new FdxTppLoginPage();
-  const fdxTppIntentRegisteredPage: FdxTppIntentRegisteredPage =
-    new FdxTppIntentRegisteredPage();
-  const fdxTppAuthenticatedPage: FdxTppAuthenticatedPage =
-    new FdxTppAuthenticatedPage();
+  const fdxTppIntentRegisteredPage: FdxTppIntentRegisteredPage = new FdxTppIntentRegisteredPage();
+  const fdxTppAuthenticatedPage: FdxTppAuthenticatedPage = new FdxTppAuthenticatedPage();
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
-  const consentPage: ConsentPage = new ConsentPage();
+  const consentPage: AccountConsentPage = new AccountConsentPage();
   const mfaPage: MfaPage = new MfaPage();
   const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
   const errorPage: ErrorPage = new ErrorPage();
 
-  const digitalBankingAccountId: string = `96534987`;
-  const savingsAccountId: string = `1000001`;
-  const savings2AccountId: string = `1000002`;
 
   beforeEach(() => {
     fdxTppLoginPage.visit();
@@ -32,9 +28,9 @@ describe(`FDX Tpp consent app`, () => {
   });
 
   [
-    [digitalBankingAccountId, savings2AccountId],
-    [savingsAccountId],
-    [savings2AccountId],
+    [Accounts.ids.FDX.checkingAcc, Accounts.ids.FDX.savings2],
+    [Accounts.ids.FDX.savings1],
+    [Accounts.ids.FDX.savings2],
   ].forEach((accountsIds) => {
     it(`Happy path with selected accounts: ${accountsIds}`, () => {
       fdxTppLoginPage.assertThatPageIsDisplayed();
@@ -54,7 +50,7 @@ describe(`FDX Tpp consent app`, () => {
       consentPage.assertThatAccountsAreNotVisible(accountsIds);
       consentPage.clickContinue();
       consentPage.checkAccounts(accountsIds);
-      consentPage.confirm();
+      consentPage.clickAgree();
 
       fdxTppAuthenticatedPage.assertThatPageIsDisplayed();
       fdxTppAuthenticatedPage.assertThatTokenResponseFieldIsNotEmpty();
@@ -83,11 +79,11 @@ describe(`FDX Tpp consent app`, () => {
     }
 
     consentPage.clickContinue();
-    consentPage.confirm();
+    consentPage.clickAgree();
 
     fdxTppAuthenticatedPage.assertThatPageIsDisplayed();
     fdxTppAuthenticatedPage.assertThatConsentResponseFieldNotContainsAccountsIds(
-      [digitalBankingAccountId, savingsAccountId, savings2AccountId]
+      [Accounts.ids.FDX.checkingAcc, Accounts.ids.FDX.savings1, Accounts.ids.FDX.savings1]
     );
   });
 
@@ -106,7 +102,7 @@ describe(`FDX Tpp consent app`, () => {
     }
 
     consentPage.assertPermissions(4);
-    consentPage.cancel();
+    consentPage.clickCancel();
 
     // UI error page improvements AUT-5845
     errorPage.assertError(`acp returned an error: rejected: `);

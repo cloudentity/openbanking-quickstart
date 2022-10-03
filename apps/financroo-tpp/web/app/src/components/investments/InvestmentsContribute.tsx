@@ -150,7 +150,7 @@ export default function InvestmentsContribute() {
       <PageToolbar
         mode="onlySubheader"
         subHeaderTitle={
-          <div className={classes.title}>
+          <div id="contribute-header" className={classes.title}>
             <IconButton
               className={classes.toolbarButton}
               onClick={() => {

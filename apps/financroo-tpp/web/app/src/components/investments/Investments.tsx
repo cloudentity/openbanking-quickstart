@@ -64,6 +64,7 @@ export default function Investments() {
       >
         <img
           alt="financroo logo"
+          id={`dashboard-${window.currency}`}
           src={getDashboardImage(window.currency || "GBP")}
           className={classes.dashboardImage}
         />

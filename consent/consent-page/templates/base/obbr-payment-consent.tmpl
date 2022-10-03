@@ -51,7 +51,7 @@
         <div class="accounts-block" style="padding: 16px 32px">
           <div style="display: flex; align-items: center; justify-content: space-between">
             <div class="caption" style="margin-top: 12px">{{.trans.amount}}</div>
-            <div style="background: #1F2D48; border-radius: 12px; color: #fff; padding: 4px 8px; font-size: 12px">
+            <div id="total-amount" style="background: #1F2D48; border-radius: 12px; color: #fff; padding: 4px 8px; font-size: 12px">
               {{ .consent.Amount }} {{ .consent.Currency }}
             </div>
           </div>
@@ -65,7 +65,7 @@
               <div class="account-header">
                 <div>
                   <div class="account-header-title">{{ .Name}}</div>
-                  <div class="caption account-header-subtitle">**** **** **** {{ .ID }}</div>
+                  <div id="account-id-{{ .ID }}" class="caption account-header-subtitle">**** **** **** {{ .ID }}</div>
                 </div>
               </div>
             </div>
