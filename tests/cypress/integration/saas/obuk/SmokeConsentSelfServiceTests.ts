@@ -58,7 +58,7 @@ describe(`Smoke Consent self service app`, () => {
     financrooAccountsPage.assertThatPageIsDisplayed();
     financrooAccountsPage.goToInvestmentsTab();
 
-    financrooContributePage.contributeAmmount(amount, Currencies.currency.UK.symbol);
+    financrooContributePage.contributeAmount(amount, Currencies.currency.UK.symbol);
     financrooContributePage.contributePaymentMethod(amount, Currencies.currency.UK.symbol, Accounts.ids.UK.bills);
     financrooContributePage.contributeInvestmentSummary(amount, Currencies.currency.UK.symbol, Accounts.ids.UK.bills);
 

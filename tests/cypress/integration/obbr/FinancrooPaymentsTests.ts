@@ -59,7 +59,7 @@ describe(`Financroo payments app test`, () => {
     financrooInvestmentsPage.assertThatDashboardIsVisible(Currencies.currency.BR.code);
     financrooInvestmentsPage.clickInvest();
 
-    financrooContributePage.contributeAmmount(amount, Currencies.currency.BR.symbol);
+    financrooContributePage.contributeAmount(amount, Currencies.currency.BR.symbol);
     financrooContributePage.contributePaymentMethod(amount, Currencies.currency.BR.symbol, Accounts.ids.BR.account1);
     financrooContributePage.contributeInvestmentSummary(amount, Currencies.currency.BR.symbol, Accounts.ids.BR.account1);
 
@@ -86,7 +86,7 @@ describe(`Financroo payments app test`, () => {
     financrooInvestmentsPage.assertThatDashboardIsVisible(Currencies.currency.BR.code);
     financrooInvestmentsPage.clickInvest();
 
-    financrooContributePage.contributeAmmount(amount, Currencies.currency.BR.symbol);
+    financrooContributePage.contributeAmount(amount, Currencies.currency.BR.symbol);
     financrooContributePage.contributePaymentMethod(amount, Currencies.currency.BR.symbol, Accounts.ids.BR.account1);
     financrooContributePage.contributeInvestmentSummary(amount, Currencies.currency.BR.symbol, Accounts.ids.BR.account1);
 
@@ -111,7 +111,7 @@ describe(`Financroo payments app test`, () => {
 
     financrooInvestmentsPage.clickInvest();
     
-    financrooContributePage.contributeAmmount(amount, Currencies.currency.BR.symbol);
+    financrooContributePage.contributeAmount(amount, Currencies.currency.BR.symbol);
     financrooContributePage.contributePaymentMethod(amount, Currencies.currency.BR.symbol, Accounts.ids.BR.account1);
     financrooContributePage.contributeInvestmentSummary(amount, Currencies.currency.BR.symbol, Accounts.ids.BR.account1);
 
