@@ -27,7 +27,7 @@ func (o *CDRArrangementImpl) FetchConsents(c *gin.Context, accountIDs []string) 
 	if arrangementsResponse, err = o.Client.Openbanking.Cdr.ListCDRArrangements(
 		cdr.NewListCDRArrangementsParamsWithContext(c).
 			WithWid(o.Config.OpenbankingWorkspaceID).
-			WithConsentsRequest(&obModels.ConsentsRequest{
+			WithConsentsRequest(&obModels.CDRConsentsRequest{
 				Accounts: accountIDs,
 			}),
 		nil,

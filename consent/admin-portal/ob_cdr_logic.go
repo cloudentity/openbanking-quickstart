@@ -37,7 +37,7 @@ func (o *OBCDRConsentFetcher) Fetch(c *gin.Context) ([]ClientConsents, error) {
 		if consents, err = o.Client.Openbanking.Cdr.ListCDRArrangements(
 			cdr.NewListCDRArrangementsParamsWithContext(c).
 				WithWid(o.Config.OpenbankingWorkspaceID).
-				WithConsentsRequest(&obModels.ConsentsRequest{
+				WithConsentsRequest(&obModels.CDRConsentsRequest{
 					ClientID: oc.ClientID,
 				}),
 			nil,
