@@ -77,7 +77,7 @@ func (h *FDXGetAccountsHandler) Filter(c *gin.Context, data BankUserData) BankUs
 
 	var filteredData BankUserData
 	for _, a := range depositAccounts {
-		for _, c := range h.introspectionResponse.FdxConsent.Resources {
+		for _, c := range h.introspectionResponse.FdxConsent.GrantedResources {
 			if c.ID == a.DepositAccount.AccountID {
 				filteredData.FDXAccounts.Accounts = append(filteredData.FDXAccounts.Accounts, a)
 			}
