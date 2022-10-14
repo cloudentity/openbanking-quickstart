@@ -121,3 +121,22 @@ services:
       - --variables-file
       - /variables.yaml
       - --verbose
+
+  consent-admin-portal:
+    image: cloudentity/openbanking-quickstart-consent-admin-portal:${VERSION}
+    container_name: consent-admin-portal
+    restart: always
+    ports:
+      - "8086:8086"
+    volumes:
+      - ./data/ca.pem:/ca.pem
+      - ./data/bank_cert.pem:/bank_cert.pem
+      - ./data/bank_key.pem:/bank_key.pem
+    environment:
+      - SYSTEM_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
+      - OPENBANKING_WORKSPACE_ID=${SERVER}
+      - SPEC=fdx
+      - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/bank-admins
+    depends_on:
+      configuration:
+        condition: service_completed_successfully
