@@ -6,6 +6,7 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
+	"github.com/sirupsen/logrus"
 )
 
 type FDXGetAccountsInternalHandler struct {
@@ -27,6 +28,7 @@ func (h *FDXGetAccountsInternalHandler) MapError(c *gin.Context, err *Error) (co
 
 func (h *FDXGetAccountsInternalHandler) BuildResponse(c *gin.Context, data BankUserData) (interface{}, *Error) {
 	self := strfmt.URI(fmt.Sprintf("http://localhost:%s/internal/accounts", strconv.Itoa(h.Config.Port)))
+	logrus.Infof("TU JEEESTEM!!!!!!!!!!!")
 	return NewFDXAccountsResponse(data.FDXAccounts, self), nil
 }
 

@@ -20,6 +20,7 @@ const (
 	OBUK Spec = "obuk"
 	CDR  Spec = "cdr"
 	OBBR Spec = "obbr"
+	FDX  Spec = "fdx"
 )
 
 type Config struct {
@@ -99,9 +100,9 @@ type Server struct {
 
 func NewServer() (Server, error) {
 	var (
-		cdrBankClient BankClient
-		server        = Server{}
-		err           error
+		bankClient BankClient
+		server     = Server{}
+		err        error
 	)
 
 	if server.Config, err = LoadConfig(); err != nil {
@@ -111,9 +112,8 @@ func NewServer() (Server, error) {
 	if server.Client, err = acpclient.New(server.Config.SystemClientConfig()); err != nil {
 		return server, errors.Wrapf(err, "failed to init acp client")
 	}
-
 	if server.IntrospectClient, err = acpclient.New(server.Config.IntrospectClientConfig()); err != nil {
-		return server, errors.Wrapf(err, "failed to init introspect acp client")
+		return server, errors.Wrapf(err, fmt.Sprintf("TEST failed to init introspect client: %s", server.Config.IntrospectClientConfig().IssuerURL))
 	}
 
 	switch server.Config.Spec {
@@ -124,11 +124,17 @@ func NewServer() (Server, error) {
 		server.BankClient = NewOBBRBankClient(server.Config)
 		server.ConsentClient = NewOBBRConsentImpl(&server)
 	case CDR:
-		if cdrBankClient, err = NewCDRBankClient(server.Config); err != nil {
+		if bankClient, err = NewCDRBankClient(server.Config); err != nil {
 			return server, fmt.Errorf("failed to creating new CDR bank client %w", err)
 		}
-		server.BankClient = cdrBankClient
+		server.BankClient = bankClient
 		server.ConsentClient = NewCDRArrangementImpl(&server)
+	case FDX:
+		if bankClient, err = NewFDXBankClient(server.Config); err != nil {
+			return server, fmt.Errorf("failed to creating new FDX bank client %w", err)
+		}
+		server.BankClient = bankClient
+		server.ConsentClient = NewFDXConsentImpl(&server)
 	default:
 		return server, fmt.Errorf("unsupported spec %s", server.Config.Spec)
 	}
