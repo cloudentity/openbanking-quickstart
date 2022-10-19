@@ -89,7 +89,7 @@ func (c *FDXBankClient) GetInternalAccounts(ctx context.Context, id string) (Int
 
 	if request, err = http.NewRequestWithContext(ctx, http.MethodGet, accountsEndpointPath, strings.NewReader(
 		url.Values{
-			"customer_id": []string{id},
+			"user_id": []string{id},
 		}.Encode(),
 	)); err != nil {
 		return InternalAccounts{}, err
