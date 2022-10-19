@@ -48,7 +48,6 @@ func NewFDXBankClient(config Config) (BankClient, error) {
 		}
 		certs = append(certs, cert)
 	}
-
 	return &FDXBankClient{
 		bankClientConfig: config.BankClientConfig,
 		httpClient: &http.Client{
@@ -62,10 +61,9 @@ func NewFDXBankClient(config Config) (BankClient, error) {
 			},
 		},
 		cc: clientcredentials.Config{
-			ClientID:     config.BankClientConfig.ClientID,
-			ClientSecret: config.BankClientConfig.ClientSecret,
-			TokenURL:     config.BankClientConfig.TokenURL,
-			Scopes:       config.BankClientConfig.Scopes,
+			ClientID: config.BankClientConfig.ClientID,
+			TokenURL: config.BankClientConfig.TokenURL,
+			Scopes:   config.BankClientConfig.Scopes,
 		},
 	}, nil
 }
@@ -85,12 +83,11 @@ func (c *FDXBankClient) GetInternalAccounts(ctx context.Context, id string) (Int
 	} else {
 		accountsEndpointPath = c.bankClientConfig.URL.String() + "/internal/accounts"
 	}
-	
 	if token, err = c.cc.Token(context.WithValue(ctx, oauth2.HTTPClient, c.httpClient)); err != nil {
 		return InternalAccounts{}, errors.Wrapf(err, "failed to get client credentials token for internal bank api call")
 	}
 
-	if request, err = http.NewRequestWithContext(ctx, http.MethodPost, accountsEndpointPath, strings.NewReader(
+	if request, err = http.NewRequestWithContext(ctx, http.MethodGet, accountsEndpointPath, strings.NewReader(
 		url.Values{
 			"customer_id": []string{id},
 		}.Encode(),
@@ -100,7 +97,6 @@ func (c *FDXBankClient) GetInternalAccounts(ctx context.Context, id string) (Int
 
 	request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
 	request.Header.Set("Authorization", "Bearer "+token.AccessToken)
-
 	if response, err = c.httpClient.Do(request); err != nil {
 		return InternalAccounts{}, errors.Wrapf(err, "internal bank accounts api call failed")
 	}
@@ -125,10 +121,16 @@ func (c *FDXBankClient) accountsResponseToInternalAccounts(body []byte) (account
 	}
 
 	for _, acc := range accountListResponse.Accounts {
-		dacc := acc.(models.DepositAccountentity)
+		accMap := acc.(map[string]interface{})
+		var keys []string
+		for k := range accMap {
+			keys = append(keys, k)
+		}
+
+		accMapVals := (accMap[keys[0]]).(map[string]interface{})
 		accounts.Accounts = append(accounts.Accounts, InternalAccount{
-			ID:   dacc.AccountID,
-			Name: dacc.Nickname,
+			ID:   accMapVals["accountId"].(string),
+			Name: accMapVals["nickname"].(string),
 		})
 	}
 

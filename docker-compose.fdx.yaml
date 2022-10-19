@@ -169,6 +169,8 @@ services:
       - BANK_CLIENT_SECRET=8DPOMd3ZOvsjuUnU9goRMHTIUUXtSkgwQeo8v_S74aE
       - BANK_CLIENT_SCOPES=introspect_openbanking_tokens, introspect_tokens, revoke_tokens
       - BANK_ACCOUNTS_ENDPOINT=http://bank:8070/internal/accounts
+      - BANK_CLIENT_CERT_FILE=/bank_cert.pem
+      - BANK_CLIENT_KEY_FILE=/bank_key.pem
     depends_on:
       configuration:
         condition: service_completed_successfully
