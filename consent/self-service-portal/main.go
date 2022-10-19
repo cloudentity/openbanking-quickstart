@@ -113,7 +113,7 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to init acp client")
 	}
 	if server.IntrospectClient, err = acpclient.New(server.Config.IntrospectClientConfig()); err != nil {
-		return server, errors.Wrapf(err, fmt.Sprintf("failed to init introspect client: %s", server.Config.IntrospectClientConfig().IssuerURL))
+		return server, errors.Wrapf(err, "failed to init introspect acp client")
 	}
 
 	switch server.Config.Spec {
