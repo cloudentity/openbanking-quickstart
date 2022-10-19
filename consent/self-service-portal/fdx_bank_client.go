@@ -115,22 +115,43 @@ func (c *FDXBankClient) GetInternalAccounts(ctx context.Context, id string) (Int
 
 func (c *FDXBankClient) accountsResponseToInternalAccounts(body []byte) (accounts InternalAccounts, err error) {
 	var accountListResponse models.Accountsentity
-
 	if err = json.Unmarshal(body, &accountListResponse); err != nil {
 		return accounts, err
 	}
 
 	for _, acc := range accountListResponse.Accounts {
-		accMap := acc.(map[string]interface{})
-		var keys []string
+		var (
+			keys         []string
+			accMap       map[string]interface{}
+			accMapValues map[string]interface{}
+			ok           bool
+			id           string
+			name         string
+		)
+
+		if accMap, ok = acc.(map[string]interface{}); !ok {
+			return accounts, errors.New("could not decode accounts")
+		}
+
 		for k := range accMap {
 			keys = append(keys, k)
 		}
 
-		accMapVals := (accMap[keys[0]]).(map[string]interface{})
+		if accMapValues, ok = (accMap[keys[0]]).(map[string]interface{}); !ok {
+			return accounts, errors.New("could not decode accounts")
+		}
+
+		if id, ok = accMapValues["accountId"].(string); !ok {
+			return accounts, errors.New("could not decode accounts")
+		}
+
+		if name, ok = accMapValues["nickname"].(string); !ok {
+			return accounts, errors.New("could not decode accounts")
+		}
+
 		accounts.Accounts = append(accounts.Accounts, InternalAccount{
-			ID:   accMapVals["accountId"].(string),
-			Name: accMapVals["nickname"].(string),
+			ID:   id,
+			Name: name,
 		})
 	}
 
