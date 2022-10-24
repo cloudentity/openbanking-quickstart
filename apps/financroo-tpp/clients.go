@@ -14,8 +14,8 @@ import (
 	fdxBank "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client"
 	obbrAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/client"
 	obbrPayments "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/client"
-	obc "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client"
-	payments_client "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/client"
+	obukAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accounts/client"
+	payments_client "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/payments/client"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 
@@ -198,8 +198,8 @@ func NewAcpClient(cfg Config, redirect string) (acpclient.Client, error) {
 }
 
 type OBUKClient struct {
-	*obc.OpenbankingAccountsClient
-	*payments_client.OpenbankingPaymentsClient
+	*obukAccounts.Accounts
+	*payments_client.Payments
 }
 
 func NewOBUKClient(config Config) (BankClient, error) {
@@ -221,8 +221,8 @@ func NewOBUKClient(config Config) (BankClient, error) {
 		hc,
 	)
 
-	c.OpenbankingAccountsClient = obc.New(tr, nil)
-	c.OpenbankingPaymentsClient = payments_client.New(tr, nil)
+	c.Accounts = obukAccounts.New(tr, nil)
+	c.Payments = payments_client.New(tr, nil)
 
 	return c, nil
 }

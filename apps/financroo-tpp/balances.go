@@ -8,7 +8,7 @@ import (
 	fdxAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/account_information"
 	fdxModels "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/models"
 	obbrAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/client/accounts"
-	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client/balances"
+	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accounts/client/balances"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"

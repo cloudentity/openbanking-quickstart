@@ -7,7 +7,7 @@ import (
 	"strconv"
 	"strings"
 
-	paymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
+	paymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/payments/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 	"github.com/google/uuid"

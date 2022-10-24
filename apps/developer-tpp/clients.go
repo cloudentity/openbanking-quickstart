@@ -4,12 +4,12 @@ import (
 	"net/http"
 
 	obbr "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/client"
-	obuk "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client"
+	obuk "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accounts/client"
 	httptransport "github.com/go-openapi/runtime/client"
 )
 
 type OpenbankingClient struct {
-	OBUK *obuk.OpenbankingAccountsClient
+	OBUK *obuk.Accounts
 	OBBR *obbr.Accounts
 }
 

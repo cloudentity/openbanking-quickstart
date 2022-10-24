@@ -8,8 +8,8 @@ import (
 	fdxAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/account_information"
 	fdxModels "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/models"
 	obbrAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/client/accounts"
-	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client/accounts"
-	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
+	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accounts/client/accounts"
+	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accounts/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"
@@ -28,7 +28,7 @@ func (o *OBUKClient) GetAccounts(c *gin.Context, accessToken string, bank Connec
 		err          error
 	)
 
-	if resp, err = o.Accounts.GetAccounts(accounts.NewGetAccountsParamsWithContext(c).WithAuthorization(accessToken), nil); err != nil {
+	if resp, err = o.Accounts.Accounts.GetAccounts(accounts.NewGetAccountsParamsWithContext(c).WithAuthorization(accessToken), nil); err != nil {
 		return accountsData, err
 	}
 

@@ -3,7 +3,7 @@ package main
 import (
 	"strings"
 
-	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
+	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/payments/models"
 	"github.com/gin-gonic/gin"
 
 	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"

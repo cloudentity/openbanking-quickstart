@@ -120,6 +120,24 @@ generate-fdx-clients: start-runner
 		-A client \
 		-t ./openbanking/fdx"
 
+.PHONY: generate-obuk-clients
+generate-obuk-clients: start-runner
+	rm -rf ./openbanking/obuk/accounts/*
+	docker-compose -f docker-compose.acp.local.yaml exec runner sh -c \
+	"swagger generate client \
+		-f api/obuk/accounts.yaml \
+		-A accounts  \
+		-t ./openbanking/obuk/accounts"
+
+.PHONY: generate-obuk-clients2
+generate-obuk-clients2: start-runner
+	rm -rf ./openbanking/obuk/payments/*
+	docker-compose -f docker-compose.acp.local.yaml exec runner sh -c \
+	"swagger generate client \
+		-f api/obuk/payments.yaml \
+		-A payments  \
+		-t ./openbanking/obuk/payments"
+
 .PHONY: obbr-conformance-config
 obbr-conformance-config:
 	docker-compose -f docker-compose.acp.local.yaml -f conformance/docker-compose.obb.yaml -f conformance/docker-compose.fapi.yaml ${cmd}

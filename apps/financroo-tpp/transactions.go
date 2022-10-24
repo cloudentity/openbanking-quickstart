@@ -10,8 +10,8 @@ import (
 	"github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/account_transactions"
 	fdxModels "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/models"
 
-	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client/transactions"
-	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
+	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accounts/client/transactions"
+	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accounts/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/runtime"
 	httptransport "github.com/go-openapi/runtime/client"

@@ -1,6 +1,6 @@
 package main
 
-import paymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
+import paymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/payments/models"
 
 type RequestHeaders struct {
 	// in:header

@@ -3,7 +3,7 @@ package main
 import (
 	"time"
 
-	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client/accounts"
+	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accounts/client/accounts"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 
