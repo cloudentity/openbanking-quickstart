@@ -25,6 +25,7 @@ run-%-local:
 
 # obuk, obbr, cdr, fdx
 run-%-saas:
+	./scripts/set_saas_configuration.sh
 	./scripts/additional_configuration.sh $* "saas"
 	cp -f .env-saas .env
 	docker-compose -f docker-compose.$*.yaml up --no-build -d
@@ -55,7 +56,9 @@ ifeq (${DEBUG},true)
 	rm -fr mount/cdr/*
 endif
 
-clean-saas: start-runner
+clean-saas:
+	./scripts/set_saas_configuration.sh
+	start-runner 
 	docker exec quickstart-runner sh -c \
     "go run ./scripts/go/clean_saas.go \
         -tenant=${SAAS_TENANT_ID} \
@@ -88,12 +91,6 @@ lint: start-runner
 .PHONY: set-version
 set-version:
 	./scripts/override_env.sh VERSION $(shell ./scripts/version.sh)
-
-.PHONY: set-saas-configuration
-set-saas-configuration:
-	./scripts/override_env.sh TENANT ${SAAS_TENANT_ID}
-	./scripts/override_env.sh CONFIGURATION_CLIENT_ID ${SAAS_CLIENT_ID}
-	./scripts/override_env.sh CONFIGURATION_CLIENT_SECRET ${SAAS_CLIENT_SECRET}
 
 # br, uk
 generate-%-integration-spec: start-runner
