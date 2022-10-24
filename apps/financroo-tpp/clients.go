@@ -10,8 +10,8 @@ import (
 	"strings"
 	"time"
 
-	cdrBank "github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/client"
-	fdxBank "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/client"
+	cdrBank "github.com/cloudentity/openbanking-quickstart/openbanking/cdr/client"
+	fdxBank "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client"
 	obbrAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/client"
 	obbrPayments "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/client"
 	obc "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client"

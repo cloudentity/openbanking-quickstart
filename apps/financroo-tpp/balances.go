@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"fmt"
 
-	"github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/client/banking"
-	fdxAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/client/account_information"
-	fdxModels "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/models"
+	"github.com/cloudentity/openbanking-quickstart/openbanking/cdr/client/banking"
+	fdxAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/account_information"
+	fdxModels "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/models"
 	obbrAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/client/accounts"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client/balances"
 	"github.com/gin-gonic/gin"

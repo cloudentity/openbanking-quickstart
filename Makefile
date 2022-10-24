@@ -98,28 +98,27 @@ generate-obbr-clients: start-runner
 	rm -rf ./openbanking/obbr/accounts/*
 	docker-compose -f docker-compose.acp.local.yaml exec runner sh -c \
 	"swagger generate client \
-	    --include-tag=obuk
 		-f api/obbr/accounts.yaml \
 		-A accounts  \
 		-t ./openbanking/obbr/accounts"
 
 .PHONY: generate-cdr-clients
 generate-cdr-clients: start-runner
-	rm -rf ./openbanking/cdr/banking/*
+	rm -rf ./openbanking/cdr/*
 	docker-compose -f docker-compose.acp.local.yaml exec runner sh -c \
 	"swagger generate client \
-		-f api/cdr/cds_banking.yaml \
+		-f api/cdr/cdr.yaml \
 		-A banking \
-		-t ./openbanking/cdr/banking"
+		-t ./openbanking/cdr"
 
 .PHONY: generate-fdx-clients
 generate-fdx-clients: start-runner
-	rm -rf ./openbanking/fdx/client/*
+	rm -rf ./openbanking/fdx/*
 	docker-compose -f docker-compose.acp.local.yaml exec runner sh -c \
 	"swagger generate client \
-		-f api/fdx/fdx_core.yaml \
+		-f api/fdx/fdx.yaml \
 		-A client \
-		-t ./openbanking/fdx/client"
+		-t ./openbanking/fdx"
 
 .PHONY: obbr-conformance-config
 obbr-conformance-config:

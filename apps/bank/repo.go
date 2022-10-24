@@ -6,8 +6,8 @@ import (
 	"os"
 	"time"
 
-	cdrAccountModels "github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/models"
-	fdxAccountModels "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/models"
+	cdrAccountModels "github.com/cloudentity/openbanking-quickstart/openbanking/cdr/models"
+	fdxAccountModels "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/models"
 	obbrAccountModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/models"
 	obbrPaymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/models"
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
