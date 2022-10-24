@@ -24,8 +24,7 @@ run-%-local:
 	./scripts/wait.sh
 
 # obuk, obbr, cdr, fdx
-run-%-saas:
-	./scripts/set_saas_configuration.sh
+run-%-saas: set_saas_configuration
 	./scripts/additional_configuration.sh $* "saas"
 	cp -f .env-saas .env
 	docker-compose -f docker-compose.$*.yaml up --no-build -d
@@ -56,9 +55,7 @@ ifeq (${DEBUG},true)
 	rm -fr mount/cdr/*
 endif
 
-clean-saas:
-	./scripts/set_saas_configuration.sh
-	start-runner 
+clean-saas: set_saas_configuration start-runner 
 	docker exec quickstart-runner sh -c \
     "go run ./scripts/go/clean_saas.go \
         -tenant=${SAAS_TENANT_ID} \
@@ -141,3 +138,7 @@ start-runner:
 .PHONY: stop-runner
 stop-runner:
 	docker rm -f quickstart-runner
+
+.PHONY: set_saas_configuration
+set_saas_configuration:
+	./scripts/set_saas_configuration.sh
