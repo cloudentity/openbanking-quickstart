@@ -102,6 +102,24 @@ generate-obbr-clients: start-runner
 		-A accounts  \
 		-t ./openbanking/obbr/accounts"
 
+.PHONY: generate-obbr-clients2
+generate-obbr-clients2: start-runner
+	rm -rf ./openbanking/obbr/consents/*
+	docker-compose -f docker-compose.acp.local.yaml exec runner sh -c \
+	"swagger generate client \
+		-f api/obbr/consents.yaml \
+		-A consents  \
+		-t ./openbanking/obbr/consents"
+
+.PHONY: generate-obbr-clients3
+generate-obbr-clients3: start-runner
+	rm -rf ./openbanking/obbr/payments/*
+	docker-compose -f docker-compose.acp.local.yaml exec runner sh -c \
+	"swagger generate client \
+		-f api/obbr/payments.yaml \
+		-A payments  \
+		-t ./openbanking/obbr/payments"
+
 .PHONY: generate-cdr-clients
 generate-cdr-clients: start-runner
 	rm -rf ./openbanking/cdr/*
