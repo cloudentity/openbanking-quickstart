@@ -101,6 +101,7 @@ const consentTypesMapper = {
   consents: "Accounts",
   account_access: "Accounts",
   cdr_arrangement: "Accounts", // TODO what should this map to
+  fdx_consent: "Accounts", // TODO what should this map to
   domestic_payment: "Payments",
   domestic_scheduled_payment: "Payments",
   domestic_standing_order: null,
@@ -133,6 +134,7 @@ export default function AccountClientCard({
     return (
       v?.consent_type === "account_access" ||
       v?.consent_type === "cdr_arrangement" ||
+      v?.consent_type === "fdx_consent" ||
       v?.consent_type === "consents"
     );
   });

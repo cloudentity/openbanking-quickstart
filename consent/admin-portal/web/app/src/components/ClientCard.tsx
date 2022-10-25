@@ -60,6 +60,7 @@ function getAuthorisedDate(client) {
     return (
       v.consent_type === "account_access" ||
       v.consent_type === "cdr_arrangement" ||
+      v.consent_type === "fdx_consent" ||
       v.consent_type === "consents"
     );
   });
