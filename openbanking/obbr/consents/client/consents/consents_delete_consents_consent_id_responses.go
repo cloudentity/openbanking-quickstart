@@ -77,6 +77,18 @@ func (o *ConsentsDeleteConsentsConsentIDReader) ReadResponse(response runtime.Cl
 			return nil, err
 		}
 		return nil, result
+	case 504:
+		result := NewConsentsDeleteConsentsConsentIDGatewayTimeout()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 529:
+		result := NewConsentsDeleteConsentsConsentIDStatus529()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	default:
 		result := NewConsentsDeleteConsentsConsentIDDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -133,19 +145,19 @@ func NewConsentsDeleteConsentsConsentIDBadRequest() *ConsentsDeleteConsentsConse
 A requisio foi malformada, omitindo atributos obrigatrios, seja no payload ou atravs de atributos na URL.
 */
 type ConsentsDeleteConsentsConsentIDBadRequest struct {
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilConsentV2ResponseError
 }
 
 func (o *ConsentsDeleteConsentsConsentIDBadRequest) Error() string {
 	return fmt.Sprintf("[DELETE /consents/{consentId}][%d] consentsDeleteConsentsConsentIdBadRequest  %+v", 400, o.Payload)
 }
-func (o *ConsentsDeleteConsentsConsentIDBadRequest) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *ConsentsDeleteConsentsConsentIDBadRequest) GetPayload() *models.OpenbankingBrasilConsentV2ResponseError {
 	return o.Payload
 }
 
 func (o *ConsentsDeleteConsentsConsentIDBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilConsentV2ResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -165,19 +177,19 @@ func NewConsentsDeleteConsentsConsentIDUnauthorized() *ConsentsDeleteConsentsCon
 Cabealho de autenticao ausente/invlido ou token invlido
 */
 type ConsentsDeleteConsentsConsentIDUnauthorized struct {
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilConsentV2ResponseError
 }
 
 func (o *ConsentsDeleteConsentsConsentIDUnauthorized) Error() string {
 	return fmt.Sprintf("[DELETE /consents/{consentId}][%d] consentsDeleteConsentsConsentIdUnauthorized  %+v", 401, o.Payload)
 }
-func (o *ConsentsDeleteConsentsConsentIDUnauthorized) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *ConsentsDeleteConsentsConsentIDUnauthorized) GetPayload() *models.OpenbankingBrasilConsentV2ResponseError {
 	return o.Payload
 }
 
 func (o *ConsentsDeleteConsentsConsentIDUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilConsentV2ResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -197,19 +209,19 @@ func NewConsentsDeleteConsentsConsentIDForbidden() *ConsentsDeleteConsentsConsen
 O token tem escopo incorreto ou uma poltica de segurana foi violada
 */
 type ConsentsDeleteConsentsConsentIDForbidden struct {
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilConsentV2ResponseError
 }
 
 func (o *ConsentsDeleteConsentsConsentIDForbidden) Error() string {
 	return fmt.Sprintf("[DELETE /consents/{consentId}][%d] consentsDeleteConsentsConsentIdForbidden  %+v", 403, o.Payload)
 }
-func (o *ConsentsDeleteConsentsConsentIDForbidden) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *ConsentsDeleteConsentsConsentIDForbidden) GetPayload() *models.OpenbankingBrasilConsentV2ResponseError {
 	return o.Payload
 }
 
 func (o *ConsentsDeleteConsentsConsentIDForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilConsentV2ResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -229,19 +241,19 @@ func NewConsentsDeleteConsentsConsentIDNotFound() *ConsentsDeleteConsentsConsent
 O recurso solicitado no existe ou no foi implementado
 */
 type ConsentsDeleteConsentsConsentIDNotFound struct {
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilConsentV2ResponseError
 }
 
 func (o *ConsentsDeleteConsentsConsentIDNotFound) Error() string {
 	return fmt.Sprintf("[DELETE /consents/{consentId}][%d] consentsDeleteConsentsConsentIdNotFound  %+v", 404, o.Payload)
 }
-func (o *ConsentsDeleteConsentsConsentIDNotFound) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *ConsentsDeleteConsentsConsentIDNotFound) GetPayload() *models.OpenbankingBrasilConsentV2ResponseError {
 	return o.Payload
 }
 
 func (o *ConsentsDeleteConsentsConsentIDNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilConsentV2ResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -261,19 +273,19 @@ func NewConsentsDeleteConsentsConsentIDMethodNotAllowed() *ConsentsDeleteConsent
 O consumidor tentou acessar o recurso com um mtodo no suportado
 */
 type ConsentsDeleteConsentsConsentIDMethodNotAllowed struct {
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilConsentV2ResponseError
 }
 
 func (o *ConsentsDeleteConsentsConsentIDMethodNotAllowed) Error() string {
 	return fmt.Sprintf("[DELETE /consents/{consentId}][%d] consentsDeleteConsentsConsentIdMethodNotAllowed  %+v", 405, o.Payload)
 }
-func (o *ConsentsDeleteConsentsConsentIDMethodNotAllowed) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *ConsentsDeleteConsentsConsentIDMethodNotAllowed) GetPayload() *models.OpenbankingBrasilConsentV2ResponseError {
 	return o.Payload
 }
 
 func (o *ConsentsDeleteConsentsConsentIDMethodNotAllowed) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilConsentV2ResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -293,19 +305,19 @@ func NewConsentsDeleteConsentsConsentIDNotAcceptable() *ConsentsDeleteConsentsCo
 A solicitao continha um cabealho Accept diferente dos tipos de mdia permitidos ou um conjunto de caracteres diferente de UTF-8
 */
 type ConsentsDeleteConsentsConsentIDNotAcceptable struct {
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilConsentV2ResponseError
 }
 
 func (o *ConsentsDeleteConsentsConsentIDNotAcceptable) Error() string {
 	return fmt.Sprintf("[DELETE /consents/{consentId}][%d] consentsDeleteConsentsConsentIdNotAcceptable  %+v", 406, o.Payload)
 }
-func (o *ConsentsDeleteConsentsConsentIDNotAcceptable) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *ConsentsDeleteConsentsConsentIDNotAcceptable) GetPayload() *models.OpenbankingBrasilConsentV2ResponseError {
 	return o.Payload
 }
 
 func (o *ConsentsDeleteConsentsConsentIDNotAcceptable) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilConsentV2ResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -325,19 +337,19 @@ func NewConsentsDeleteConsentsConsentIDTooManyRequests() *ConsentsDeleteConsents
 A operao foi recusada, pois muitas solicitaes foram feitas dentro de um determinado perodo ou o limite global de requisies concorrentes foi atingido
 */
 type ConsentsDeleteConsentsConsentIDTooManyRequests struct {
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilConsentV2ResponseError
 }
 
 func (o *ConsentsDeleteConsentsConsentIDTooManyRequests) Error() string {
 	return fmt.Sprintf("[DELETE /consents/{consentId}][%d] consentsDeleteConsentsConsentIdTooManyRequests  %+v", 429, o.Payload)
 }
-func (o *ConsentsDeleteConsentsConsentIDTooManyRequests) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *ConsentsDeleteConsentsConsentIDTooManyRequests) GetPayload() *models.OpenbankingBrasilConsentV2ResponseError {
 	return o.Payload
 }
 
 func (o *ConsentsDeleteConsentsConsentIDTooManyRequests) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilConsentV2ResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -357,19 +369,83 @@ func NewConsentsDeleteConsentsConsentIDInternalServerError() *ConsentsDeleteCons
 Ocorreu um erro no gateway da API ou no microsservio
 */
 type ConsentsDeleteConsentsConsentIDInternalServerError struct {
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilConsentV2ResponseError
 }
 
 func (o *ConsentsDeleteConsentsConsentIDInternalServerError) Error() string {
 	return fmt.Sprintf("[DELETE /consents/{consentId}][%d] consentsDeleteConsentsConsentIdInternalServerError  %+v", 500, o.Payload)
 }
-func (o *ConsentsDeleteConsentsConsentIDInternalServerError) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *ConsentsDeleteConsentsConsentIDInternalServerError) GetPayload() *models.OpenbankingBrasilConsentV2ResponseError {
 	return o.Payload
 }
 
 func (o *ConsentsDeleteConsentsConsentIDInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilConsentV2ResponseError)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewConsentsDeleteConsentsConsentIDGatewayTimeout creates a ConsentsDeleteConsentsConsentIDGatewayTimeout with default headers values
+func NewConsentsDeleteConsentsConsentIDGatewayTimeout() *ConsentsDeleteConsentsConsentIDGatewayTimeout {
+	return &ConsentsDeleteConsentsConsentIDGatewayTimeout{}
+}
+
+/* ConsentsDeleteConsentsConsentIDGatewayTimeout describes a response with status code 504, with default header values.
+
+GATEWAY TIMEOUT - A requisio no foi atendida dentro do tempo limite estabelecido
+*/
+type ConsentsDeleteConsentsConsentIDGatewayTimeout struct {
+	Payload *models.OpenbankingBrasilConsentV2ResponseError
+}
+
+func (o *ConsentsDeleteConsentsConsentIDGatewayTimeout) Error() string {
+	return fmt.Sprintf("[DELETE /consents/{consentId}][%d] consentsDeleteConsentsConsentIdGatewayTimeout  %+v", 504, o.Payload)
+}
+func (o *ConsentsDeleteConsentsConsentIDGatewayTimeout) GetPayload() *models.OpenbankingBrasilConsentV2ResponseError {
+	return o.Payload
+}
+
+func (o *ConsentsDeleteConsentsConsentIDGatewayTimeout) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.OpenbankingBrasilConsentV2ResponseError)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewConsentsDeleteConsentsConsentIDStatus529 creates a ConsentsDeleteConsentsConsentIDStatus529 with default headers values
+func NewConsentsDeleteConsentsConsentIDStatus529() *ConsentsDeleteConsentsConsentIDStatus529 {
+	return &ConsentsDeleteConsentsConsentIDStatus529{}
+}
+
+/* ConsentsDeleteConsentsConsentIDStatus529 describes a response with status code 529, with default header values.
+
+O site est sobrecarregado e a operao foi recusada, pois foi atingido o limite mximo de TPS global, neste momento.
+*/
+type ConsentsDeleteConsentsConsentIDStatus529 struct {
+	Payload *models.OpenbankingBrasilConsentV2ResponseError
+}
+
+func (o *ConsentsDeleteConsentsConsentIDStatus529) Error() string {
+	return fmt.Sprintf("[DELETE /consents/{consentId}][%d] consentsDeleteConsentsConsentIdStatus529  %+v", 529, o.Payload)
+}
+func (o *ConsentsDeleteConsentsConsentIDStatus529) GetPayload() *models.OpenbankingBrasilConsentV2ResponseError {
+	return o.Payload
+}
+
+func (o *ConsentsDeleteConsentsConsentIDStatus529) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.OpenbankingBrasilConsentV2ResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -393,7 +469,7 @@ Erro inesperado.
 type ConsentsDeleteConsentsConsentIDDefault struct {
 	_statusCode int
 
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilConsentV2ResponseError
 }
 
 // Code gets the status code for the consents delete consents consent Id default response
@@ -404,13 +480,13 @@ func (o *ConsentsDeleteConsentsConsentIDDefault) Code() int {
 func (o *ConsentsDeleteConsentsConsentIDDefault) Error() string {
 	return fmt.Sprintf("[DELETE /consents/{consentId}][%d] consentsDeleteConsentsConsentId default  %+v", o._statusCode, o.Payload)
 }
-func (o *ConsentsDeleteConsentsConsentIDDefault) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *ConsentsDeleteConsentsConsentIDDefault) GetPayload() *models.OpenbankingBrasilConsentV2ResponseError {
 	return o.Payload
 }
 
 func (o *ConsentsDeleteConsentsConsentIDDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilConsentV2ResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

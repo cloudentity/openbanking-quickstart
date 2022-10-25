@@ -67,11 +67,14 @@ type ConsentsPostConsentsParams struct {
 	*/
 	Authorization string
 
+	// ContentType.
+	ContentType *string
+
 	/* Body.
 
 	   Payload para criao do consentimento.
 	*/
-	Body *models.OpenbankingBrasilCreateConsent
+	Body *models.OpenbankingBrasilConsentV2CreateConsent
 
 	/* XCustomerUserAgent.
 
@@ -161,14 +164,25 @@ func (o *ConsentsPostConsentsParams) SetAuthorization(authorization string) {
 	o.Authorization = authorization
 }
 
+// WithContentType adds the contentType to the consents post consents params
+func (o *ConsentsPostConsentsParams) WithContentType(contentType *string) *ConsentsPostConsentsParams {
+	o.SetContentType(contentType)
+	return o
+}
+
+// SetContentType adds the contentType to the consents post consents params
+func (o *ConsentsPostConsentsParams) SetContentType(contentType *string) {
+	o.ContentType = contentType
+}
+
 // WithBody adds the body to the consents post consents params
-func (o *ConsentsPostConsentsParams) WithBody(body *models.OpenbankingBrasilCreateConsent) *ConsentsPostConsentsParams {
+func (o *ConsentsPostConsentsParams) WithBody(body *models.OpenbankingBrasilConsentV2CreateConsent) *ConsentsPostConsentsParams {
 	o.SetBody(body)
 	return o
 }
 
 // SetBody adds the body to the consents post consents params
-func (o *ConsentsPostConsentsParams) SetBody(body *models.OpenbankingBrasilCreateConsent) {
+func (o *ConsentsPostConsentsParams) SetBody(body *models.OpenbankingBrasilConsentV2CreateConsent) {
 	o.Body = body
 }
 
@@ -227,6 +241,14 @@ func (o *ConsentsPostConsentsParams) WriteToRequest(r runtime.ClientRequest, reg
 	// header param Authorization
 	if err := r.SetHeaderParam("Authorization", o.Authorization); err != nil {
 		return err
+	}
+
+	if o.ContentType != nil {
+
+		// header param Content-Type
+		if err := r.SetHeaderParam("Content-Type", *o.ContentType); err != nil {
+			return err
+		}
 	}
 	if o.Body != nil {
 		if err := r.SetBodyParam(o.Body); err != nil {

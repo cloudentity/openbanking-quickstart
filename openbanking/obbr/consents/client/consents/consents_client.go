@@ -40,7 +40,7 @@ type ClientService interface {
 /*
   ConsentsDeleteConsentsConsentID consents delete consents consent Id
 
-  Mtodo para deletar/revogar o consentimento identificado por consentId.
+  Mtodo para deletar / revogar o consentimento identificado por consentId.
 */
 func (a *Client) ConsentsDeleteConsentsConsentID(params *ConsentsDeleteConsentsConsentIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*ConsentsDeleteConsentsConsentIDNoContent, error) {
 	// TODO: Validate the params before sending

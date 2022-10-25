@@ -71,6 +71,12 @@ func (o *ConsentsPostConsentsReader) ReadResponse(response runtime.ClientRespons
 			return nil, err
 		}
 		return nil, result
+	case 422:
+		result := NewConsentsPostConsentsUnprocessableEntity()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
 	case 429:
 		result := NewConsentsPostConsentsTooManyRequests()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
@@ -79,6 +85,18 @@ func (o *ConsentsPostConsentsReader) ReadResponse(response runtime.ClientRespons
 		return nil, result
 	case 500:
 		result := NewConsentsPostConsentsInternalServerError()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 504:
+		result := NewConsentsPostConsentsGatewayTimeout()
+		if err := result.readResponse(response, consumer, o.formats); err != nil {
+			return nil, err
+		}
+		return nil, result
+	case 529:
+		result := NewConsentsPostConsentsStatus529()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -112,13 +130,13 @@ type ConsentsPostConsentsCreated struct {
 	*/
 	XFapiInteractionID string
 
-	Payload *models.OpenbankingBrasilResponseConsent
+	Payload *models.OpenbankingBrasilConsentV2ResponseConsent
 }
 
 func (o *ConsentsPostConsentsCreated) Error() string {
 	return fmt.Sprintf("[POST /consents][%d] consentsPostConsentsCreated  %+v", 201, o.Payload)
 }
-func (o *ConsentsPostConsentsCreated) GetPayload() *models.OpenbankingBrasilResponseConsent {
+func (o *ConsentsPostConsentsCreated) GetPayload() *models.OpenbankingBrasilConsentV2ResponseConsent {
 	return o.Payload
 }
 
@@ -131,7 +149,7 @@ func (o *ConsentsPostConsentsCreated) readResponse(response runtime.ClientRespon
 		o.XFapiInteractionID = hdrXFapiInteractionID
 	}
 
-	o.Payload = new(models.OpenbankingBrasilResponseConsent)
+	o.Payload = new(models.OpenbankingBrasilConsentV2ResponseConsent)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -151,19 +169,19 @@ func NewConsentsPostConsentsBadRequest() *ConsentsPostConsentsBadRequest {
 A requisio foi malformada, omitindo atributos obrigatrios, seja no payload ou atravs de atributos na URL.
 */
 type ConsentsPostConsentsBadRequest struct {
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilConsentV2ResponseError
 }
 
 func (o *ConsentsPostConsentsBadRequest) Error() string {
 	return fmt.Sprintf("[POST /consents][%d] consentsPostConsentsBadRequest  %+v", 400, o.Payload)
 }
-func (o *ConsentsPostConsentsBadRequest) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *ConsentsPostConsentsBadRequest) GetPayload() *models.OpenbankingBrasilConsentV2ResponseError {
 	return o.Payload
 }
 
 func (o *ConsentsPostConsentsBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilConsentV2ResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -183,19 +201,19 @@ func NewConsentsPostConsentsUnauthorized() *ConsentsPostConsentsUnauthorized {
 Cabealho de autenticao ausente/invlido ou token invlido
 */
 type ConsentsPostConsentsUnauthorized struct {
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilConsentV2ResponseError
 }
 
 func (o *ConsentsPostConsentsUnauthorized) Error() string {
 	return fmt.Sprintf("[POST /consents][%d] consentsPostConsentsUnauthorized  %+v", 401, o.Payload)
 }
-func (o *ConsentsPostConsentsUnauthorized) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *ConsentsPostConsentsUnauthorized) GetPayload() *models.OpenbankingBrasilConsentV2ResponseError {
 	return o.Payload
 }
 
 func (o *ConsentsPostConsentsUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilConsentV2ResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -215,19 +233,19 @@ func NewConsentsPostConsentsForbidden() *ConsentsPostConsentsForbidden {
 O token tem escopo incorreto ou uma poltica de segurana foi violada
 */
 type ConsentsPostConsentsForbidden struct {
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilConsentV2ResponseError
 }
 
 func (o *ConsentsPostConsentsForbidden) Error() string {
 	return fmt.Sprintf("[POST /consents][%d] consentsPostConsentsForbidden  %+v", 403, o.Payload)
 }
-func (o *ConsentsPostConsentsForbidden) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *ConsentsPostConsentsForbidden) GetPayload() *models.OpenbankingBrasilConsentV2ResponseError {
 	return o.Payload
 }
 
 func (o *ConsentsPostConsentsForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilConsentV2ResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -247,19 +265,19 @@ func NewConsentsPostConsentsNotFound() *ConsentsPostConsentsNotFound {
 O recurso solicitado no existe ou no foi implementado
 */
 type ConsentsPostConsentsNotFound struct {
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilConsentV2ResponseError
 }
 
 func (o *ConsentsPostConsentsNotFound) Error() string {
 	return fmt.Sprintf("[POST /consents][%d] consentsPostConsentsNotFound  %+v", 404, o.Payload)
 }
-func (o *ConsentsPostConsentsNotFound) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *ConsentsPostConsentsNotFound) GetPayload() *models.OpenbankingBrasilConsentV2ResponseError {
 	return o.Payload
 }
 
 func (o *ConsentsPostConsentsNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilConsentV2ResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -279,19 +297,19 @@ func NewConsentsPostConsentsMethodNotAllowed() *ConsentsPostConsentsMethodNotAll
 O consumidor tentou acessar o recurso com um mtodo no suportado
 */
 type ConsentsPostConsentsMethodNotAllowed struct {
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilConsentV2ResponseError
 }
 
 func (o *ConsentsPostConsentsMethodNotAllowed) Error() string {
 	return fmt.Sprintf("[POST /consents][%d] consentsPostConsentsMethodNotAllowed  %+v", 405, o.Payload)
 }
-func (o *ConsentsPostConsentsMethodNotAllowed) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *ConsentsPostConsentsMethodNotAllowed) GetPayload() *models.OpenbankingBrasilConsentV2ResponseError {
 	return o.Payload
 }
 
 func (o *ConsentsPostConsentsMethodNotAllowed) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilConsentV2ResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -311,19 +329,19 @@ func NewConsentsPostConsentsNotAcceptable() *ConsentsPostConsentsNotAcceptable {
 A solicitao continha um cabealho Accept diferente dos tipos de mdia permitidos ou um conjunto de caracteres diferente de UTF-8
 */
 type ConsentsPostConsentsNotAcceptable struct {
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilConsentV2ResponseError
 }
 
 func (o *ConsentsPostConsentsNotAcceptable) Error() string {
 	return fmt.Sprintf("[POST /consents][%d] consentsPostConsentsNotAcceptable  %+v", 406, o.Payload)
 }
-func (o *ConsentsPostConsentsNotAcceptable) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *ConsentsPostConsentsNotAcceptable) GetPayload() *models.OpenbankingBrasilConsentV2ResponseError {
 	return o.Payload
 }
 
 func (o *ConsentsPostConsentsNotAcceptable) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilConsentV2ResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -343,19 +361,51 @@ func NewConsentsPostConsentsUnsupportedMediaType() *ConsentsPostConsentsUnsuppor
 O formato do payload no  um formato suportado.
 */
 type ConsentsPostConsentsUnsupportedMediaType struct {
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilConsentV2ResponseError
 }
 
 func (o *ConsentsPostConsentsUnsupportedMediaType) Error() string {
 	return fmt.Sprintf("[POST /consents][%d] consentsPostConsentsUnsupportedMediaType  %+v", 415, o.Payload)
 }
-func (o *ConsentsPostConsentsUnsupportedMediaType) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *ConsentsPostConsentsUnsupportedMediaType) GetPayload() *models.OpenbankingBrasilConsentV2ResponseError {
 	return o.Payload
 }
 
 func (o *ConsentsPostConsentsUnsupportedMediaType) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilConsentV2ResponseError)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewConsentsPostConsentsUnprocessableEntity creates a ConsentsPostConsentsUnprocessableEntity with default headers values
+func NewConsentsPostConsentsUnprocessableEntity() *ConsentsPostConsentsUnprocessableEntity {
+	return &ConsentsPostConsentsUnprocessableEntity{}
+}
+
+/* ConsentsPostConsentsUnprocessableEntity describes a response with status code 422, with default header values.
+
+A sintaxe da requisio esta correta, mas no foi possvel processar as instrues presentes.
+*/
+type ConsentsPostConsentsUnprocessableEntity struct {
+	Payload *models.OpenbankingBrasilConsentV2ResponseError
+}
+
+func (o *ConsentsPostConsentsUnprocessableEntity) Error() string {
+	return fmt.Sprintf("[POST /consents][%d] consentsPostConsentsUnprocessableEntity  %+v", 422, o.Payload)
+}
+func (o *ConsentsPostConsentsUnprocessableEntity) GetPayload() *models.OpenbankingBrasilConsentV2ResponseError {
+	return o.Payload
+}
+
+func (o *ConsentsPostConsentsUnprocessableEntity) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.OpenbankingBrasilConsentV2ResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -375,19 +425,19 @@ func NewConsentsPostConsentsTooManyRequests() *ConsentsPostConsentsTooManyReques
 A operao foi recusada, pois muitas solicitaes foram feitas dentro de um determinado perodo ou o limite global de requisies concorrentes foi atingido
 */
 type ConsentsPostConsentsTooManyRequests struct {
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilConsentV2ResponseError
 }
 
 func (o *ConsentsPostConsentsTooManyRequests) Error() string {
 	return fmt.Sprintf("[POST /consents][%d] consentsPostConsentsTooManyRequests  %+v", 429, o.Payload)
 }
-func (o *ConsentsPostConsentsTooManyRequests) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *ConsentsPostConsentsTooManyRequests) GetPayload() *models.OpenbankingBrasilConsentV2ResponseError {
 	return o.Payload
 }
 
 func (o *ConsentsPostConsentsTooManyRequests) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilConsentV2ResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -407,19 +457,83 @@ func NewConsentsPostConsentsInternalServerError() *ConsentsPostConsentsInternalS
 Ocorreu um erro no gateway da API ou no microsservio
 */
 type ConsentsPostConsentsInternalServerError struct {
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilConsentV2ResponseError
 }
 
 func (o *ConsentsPostConsentsInternalServerError) Error() string {
 	return fmt.Sprintf("[POST /consents][%d] consentsPostConsentsInternalServerError  %+v", 500, o.Payload)
 }
-func (o *ConsentsPostConsentsInternalServerError) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *ConsentsPostConsentsInternalServerError) GetPayload() *models.OpenbankingBrasilConsentV2ResponseError {
 	return o.Payload
 }
 
 func (o *ConsentsPostConsentsInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilConsentV2ResponseError)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewConsentsPostConsentsGatewayTimeout creates a ConsentsPostConsentsGatewayTimeout with default headers values
+func NewConsentsPostConsentsGatewayTimeout() *ConsentsPostConsentsGatewayTimeout {
+	return &ConsentsPostConsentsGatewayTimeout{}
+}
+
+/* ConsentsPostConsentsGatewayTimeout describes a response with status code 504, with default header values.
+
+GATEWAY TIMEOUT - A requisio no foi atendida dentro do tempo limite estabelecido
+*/
+type ConsentsPostConsentsGatewayTimeout struct {
+	Payload *models.OpenbankingBrasilConsentV2ResponseError
+}
+
+func (o *ConsentsPostConsentsGatewayTimeout) Error() string {
+	return fmt.Sprintf("[POST /consents][%d] consentsPostConsentsGatewayTimeout  %+v", 504, o.Payload)
+}
+func (o *ConsentsPostConsentsGatewayTimeout) GetPayload() *models.OpenbankingBrasilConsentV2ResponseError {
+	return o.Payload
+}
+
+func (o *ConsentsPostConsentsGatewayTimeout) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.OpenbankingBrasilConsentV2ResponseError)
+
+	// response payload
+	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+		return err
+	}
+
+	return nil
+}
+
+// NewConsentsPostConsentsStatus529 creates a ConsentsPostConsentsStatus529 with default headers values
+func NewConsentsPostConsentsStatus529() *ConsentsPostConsentsStatus529 {
+	return &ConsentsPostConsentsStatus529{}
+}
+
+/* ConsentsPostConsentsStatus529 describes a response with status code 529, with default header values.
+
+O site est sobrecarregado e a operao foi recusada, pois foi atingido o limite mximo de TPS global, neste momento.
+*/
+type ConsentsPostConsentsStatus529 struct {
+	Payload *models.OpenbankingBrasilConsentV2ResponseError
+}
+
+func (o *ConsentsPostConsentsStatus529) Error() string {
+	return fmt.Sprintf("[POST /consents][%d] consentsPostConsentsStatus529  %+v", 529, o.Payload)
+}
+func (o *ConsentsPostConsentsStatus529) GetPayload() *models.OpenbankingBrasilConsentV2ResponseError {
+	return o.Payload
+}
+
+func (o *ConsentsPostConsentsStatus529) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+
+	o.Payload = new(models.OpenbankingBrasilConsentV2ResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -443,7 +557,7 @@ Erro inesperado.
 type ConsentsPostConsentsDefault struct {
 	_statusCode int
 
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilConsentV2ResponseError
 }
 
 // Code gets the status code for the consents post consents default response
@@ -454,13 +568,13 @@ func (o *ConsentsPostConsentsDefault) Code() int {
 func (o *ConsentsPostConsentsDefault) Error() string {
 	return fmt.Sprintf("[POST /consents][%d] consentsPostConsents default  %+v", o._statusCode, o.Payload)
 }
-func (o *ConsentsPostConsentsDefault) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *ConsentsPostConsentsDefault) GetPayload() *models.OpenbankingBrasilConsentV2ResponseError {
 	return o.Payload
 }
 
 func (o *ConsentsPostConsentsDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilConsentV2ResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

@@ -67,7 +67,15 @@ type ConsentsDeleteConsentsConsentIDParams struct {
 
 	/* ConsentID.
 
-	   Identificador do consentimento.
+	     O consentId  o identificador nico do consentimento e dever ser um URN - Uniform Resource Name.
+	Um URN, conforme definido na [RFC8141](https://tools.ietf.org/html/rfc8141)  um Uniform Resource
+	Identifier - URI - que  atribudo sob o URI scheme "urn" e um namespace URN especfico, com a inteno de que o URN
+	seja um identificador de recurso persistente e independente da localizao.
+	Considerando a string urn:bancoex:C1DD33123 como exemplo para consentId temos:
+	- o namespace(urn)
+	- o identificador associado ao namespace da instituio transnmissora (bancoex)
+	- o identificador especfico dentro do namespace (C1DD33123).
+	Informaes mais detalhadas sobre a construo de namespaces devem ser consultadas na [RFC8141](https://tools.ietf.org/html/rfc8141).
 	*/
 	ConsentID string
 
