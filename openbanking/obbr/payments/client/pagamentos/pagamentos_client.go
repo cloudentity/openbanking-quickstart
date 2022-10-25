@@ -32,6 +32,8 @@ type ClientService interface {
 
 	PaymentsGetPixPaymentsPaymentID(params *PaymentsGetPixPaymentsPaymentIDParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PaymentsGetPixPaymentsPaymentIDOK, error)
 
+	PaymentsPatchPixPayments(params *PaymentsPatchPixPaymentsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PaymentsPatchPixPaymentsOK, error)
+
 	PaymentsPostConsents(params *PaymentsPostConsentsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PaymentsPostConsentsCreated, error)
 
 	PaymentsPostPixPayments(params *PaymentsPostPixPaymentsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PaymentsPostPixPaymentsCreated, error)
@@ -53,7 +55,7 @@ func (a *Client) PaymentsGetConsentsConsentID(params *PaymentsGetConsentsConsent
 		ID:                 "paymentsGetConsentsConsentId",
 		Method:             "GET",
 		PathPattern:        "/consents/{consentId}",
-		ProducesMediaTypes: []string{"application/json", "application/json; charset=utf-8"},
+		ProducesMediaTypes: []string{"application/json", "application/json; charset=utf-8", "application/jwt"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"https"},
 		Params:             params,
@@ -93,7 +95,7 @@ func (a *Client) PaymentsGetPixPaymentsPaymentID(params *PaymentsGetPixPaymentsP
 		ID:                 "paymentsGetPixPaymentsPaymentId",
 		Method:             "GET",
 		PathPattern:        "/pix/payments/{paymentId}",
-		ProducesMediaTypes: []string{"application/json", "application/json; charset=utf-8"},
+		ProducesMediaTypes: []string{"application/json", "application/json; charset=utf-8", "application/jwt"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"https"},
 		Params:             params,
@@ -120,6 +122,46 @@ func (a *Client) PaymentsGetPixPaymentsPaymentID(params *PaymentsGetPixPaymentsP
 }
 
 /*
+  PaymentsPatchPixPayments payments patch pix payments
+
+  Mtodo para revogao do consentimento.
+*/
+func (a *Client) PaymentsPatchPixPayments(params *PaymentsPatchPixPaymentsParams, authInfo runtime.ClientAuthInfoWriter, opts ...ClientOption) (*PaymentsPatchPixPaymentsOK, error) {
+	// TODO: Validate the params before sending
+	if params == nil {
+		params = NewPaymentsPatchPixPaymentsParams()
+	}
+	op := &runtime.ClientOperation{
+		ID:                 "paymentsPatchPixPayments",
+		Method:             "PATCH",
+		PathPattern:        "/consents/{consentId}",
+		ProducesMediaTypes: []string{"application/json", "application/json; charset=utf-8", "application/jwt"},
+		ConsumesMediaTypes: []string{"application/json"},
+		Schemes:            []string{"https"},
+		Params:             params,
+		Reader:             &PaymentsPatchPixPaymentsReader{formats: a.formats},
+		AuthInfo:           authInfo,
+		Context:            params.Context,
+		Client:             params.HTTPClient,
+	}
+	for _, opt := range opts {
+		opt(op)
+	}
+
+	result, err := a.transport.Submit(op)
+	if err != nil {
+		return nil, err
+	}
+	success, ok := result.(*PaymentsPatchPixPaymentsOK)
+	if ok {
+		return success, nil
+	}
+	// unexpected success response
+	unexpectedSuccess := result.(*PaymentsPatchPixPaymentsDefault)
+	return nil, runtime.NewAPIError("unexpected success response: content available as default response in error", unexpectedSuccess, unexpectedSuccess.Code())
+}
+
+/*
   PaymentsPostConsents payments post consents
 
   Mtodo de criao do consentimento para a iniciao de pagamento.
@@ -133,7 +175,7 @@ func (a *Client) PaymentsPostConsents(params *PaymentsPostConsentsParams, authIn
 		ID:                 "paymentsPostConsents",
 		Method:             "POST",
 		PathPattern:        "/consents",
-		ProducesMediaTypes: []string{"application/json", "application/json; charset=utf-8"},
+		ProducesMediaTypes: []string{"application/json", "application/json; charset=utf-8", "application/jwt"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"https"},
 		Params:             params,
@@ -173,7 +215,7 @@ func (a *Client) PaymentsPostPixPayments(params *PaymentsPostPixPaymentsParams, 
 		ID:                 "paymentsPostPixPayments",
 		Method:             "POST",
 		PathPattern:        "/pix/payments",
-		ProducesMediaTypes: []string{"application/json", "application/json; charset=utf-8"},
+		ProducesMediaTypes: []string{"application/json", "application/json; charset=utf-8", "application/jwt"},
 		ConsumesMediaTypes: []string{"application/json"},
 		Schemes:            []string{"https"},
 		Params:             params,

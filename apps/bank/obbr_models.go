@@ -10,7 +10,7 @@ type CreateOBBRPaymentRequest struct {
 	RequestHeaders
 
 	// in:body
-	Request *models.OpenbankingBrasilCreatePixPayment
+	Request *models.OpenbankingBrasilPaymentCreatePixPayment
 }
 
 // swagger:parameters getBalancesRequest

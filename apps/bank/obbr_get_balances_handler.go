@@ -75,7 +75,7 @@ func (h *OBBRGetBalanceHandler) Validate(c *gin.Context) *Error {
 		perms = append(perms, string(p))
 	}
 
-	if !has(perms, string(models.OpenbankingBrasilPermissionACCOUNTSBALANCESREAD)) {
+	if !has(perms, string(models.OpenbankingBrasilConsentV2PermissionACCOUNTSBALANCESREAD)) {
 		return ErrForbidden.WithMessage("ACCOUNTS_BALANCES_READ permission has not been granted")
 	}
 	return nil

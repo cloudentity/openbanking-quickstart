@@ -64,6 +64,7 @@ func (o *OBUKClient) CreatePayment(c *gin.Context, data interface{}, accessToken
 func (o *OBBRClient) CreatePayment(c *gin.Context, data interface{}, accessToken string) (PaymentCreated, error) {
 	var (
 		paymentCreatedResponse *pagamentos.PaymentsPostPixPaymentsCreated
+		payment                models.OpenbankingBrasilPaymentResponsePixPayment
 		consent                *obbr.GetPaymentConsentOK
 		ok                     bool
 		err                    error
@@ -73,18 +74,18 @@ func (o *OBBRClient) CreatePayment(c *gin.Context, data interface{}, accessToken
 		return PaymentCreated{}, nil
 	}
 
-	if paymentCreatedResponse, err = o.PaymentConsentsBrasil.Pagamentos.PaymentsPostPixPayments(
+	if paymentCreatedResponse, err = o.Payments.Pagamentos.PaymentsPostPixPayments(
 		pagamentos.NewPaymentsPostPixPaymentsParamsWithContext(c).
 			WithAuthorization(accessToken).
-			WithBody(&models.OpenbankingBrasilCreatePixPayment{
-				Data: &models.OpenbankingBrasilCreatePixPaymentData{
-					CreditorAccount: &models.OpenbankingBrasilCreditorAccount{
-						AccountType: (*models.OpenbankingBrasilEnumAccountPaymentsType)(consent.Payload.Data.Payment.Details.CreditorAccount.AccountType),
+			WithBody(&models.OpenbankingBrasilPaymentCreatePixPayment{
+				Data: &models.OpenbankingBrasilPaymentCreatePixPaymentData{
+					CreditorAccount: &models.OpenbankingBrasilPaymentCreditorAccount{
+						AccountType: (*models.OpenbankingBrasilPaymentEnumAccountPaymentsType)(consent.Payload.Data.Payment.Details.CreditorAccount.AccountType),
 						Ispb:        consent.Payload.Data.Payment.Details.CreditorAccount.Ispb,
 						Number:      consent.Payload.Data.Payment.Details.CreditorAccount.Number,
 					},
-					LocalInstrument: (*models.OpenbankingBrasilEnumLocalInstrument)(consent.Payload.Data.Payment.Details.LocalInstrument),
-					Payment: &models.OpenbankingBrasilPaymentPix{
+					LocalInstrument: (*models.OpenbankingBrasilPaymentEnumLocalInstrument)(consent.Payload.Data.Payment.Details.LocalInstrument),
+					Payment: &models.OpenbankingBrasilPaymentPaymentPix{
 						Amount:   consent.Payload.Data.Payment.Amount,
 						Currency: consent.Payload.Data.Payment.Currency,
 					},
@@ -95,10 +96,13 @@ func (o *OBBRClient) CreatePayment(c *gin.Context, data interface{}, accessToken
 		return PaymentCreated{}, errors.Wrapf(err, "failed to call pix payments endpoint")
 	}
 
+	if payment, ok = paymentCreatedResponse.Payload.(models.OpenbankingBrasilPaymentResponsePixPayment); !ok {
+		return PaymentCreated{}, errors.New("failed to decode pix payment response")
+	}
 	return PaymentCreated{
-		PaymentID: paymentCreatedResponse.Payload.Data.PaymentID,
-		Amount:    paymentCreatedResponse.Payload.Data.Payment.Amount,
-		Currency:  paymentCreatedResponse.Payload.Data.Payment.Currency,
+		PaymentID: payment.Data.PaymentID,
+		Amount:    payment.Data.Payment.Amount,
+		Currency:  payment.Data.Payment.Currency,
 	}, nil
 }
 

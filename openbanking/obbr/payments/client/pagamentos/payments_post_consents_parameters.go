@@ -14,8 +14,6 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
-
-	"github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/models"
 )
 
 // NewPaymentsPostConsentsParams creates a new PaymentsPostConsentsParams object,
@@ -71,7 +69,7 @@ type PaymentsPostConsentsParams struct {
 
 	   Payload para criao do consentimento para iniciao do pagamento.
 	*/
-	Body *models.OpenbankingBrasilCreatePaymentConsent
+	Body interface{}
 
 	/* XCustomerUserAgent.
 
@@ -168,13 +166,13 @@ func (o *PaymentsPostConsentsParams) SetAuthorization(authorization string) {
 }
 
 // WithBody adds the body to the payments post consents params
-func (o *PaymentsPostConsentsParams) WithBody(body *models.OpenbankingBrasilCreatePaymentConsent) *PaymentsPostConsentsParams {
+func (o *PaymentsPostConsentsParams) WithBody(body interface{}) *PaymentsPostConsentsParams {
 	o.SetBody(body)
 	return o
 }
 
 // SetBody adds the body to the payments post consents params
-func (o *PaymentsPostConsentsParams) SetBody(body *models.OpenbankingBrasilCreatePaymentConsent) {
+func (o *PaymentsPostConsentsParams) SetBody(body interface{}) {
 	o.Body = body
 }
 

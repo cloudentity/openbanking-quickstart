@@ -14,8 +14,6 @@ import (
 	"github.com/go-openapi/runtime"
 	cr "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
-
-	"github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/models"
 )
 
 // NewPaymentsPostPixPaymentsParams creates a new PaymentsPostPixPaymentsParams object,
@@ -71,7 +69,7 @@ type PaymentsPostPixPaymentsParams struct {
 
 	   Payload para criao da iniciao do pagamento Pix.
 	*/
-	Body *models.OpenbankingBrasilCreatePixPayment
+	Body interface{}
 
 	/* XCustomerUserAgent.
 
@@ -168,13 +166,13 @@ func (o *PaymentsPostPixPaymentsParams) SetAuthorization(authorization string) {
 }
 
 // WithBody adds the body to the payments post pix payments params
-func (o *PaymentsPostPixPaymentsParams) WithBody(body *models.OpenbankingBrasilCreatePixPayment) *PaymentsPostPixPaymentsParams {
+func (o *PaymentsPostPixPaymentsParams) WithBody(body interface{}) *PaymentsPostPixPaymentsParams {
 	o.SetBody(body)
 	return o
 }
 
 // SetBody adds the body to the payments post pix payments params
-func (o *PaymentsPostPixPaymentsParams) SetBody(body *models.OpenbankingBrasilCreatePixPayment) {
+func (o *PaymentsPostPixPaymentsParams) SetBody(body interface{}) {
 	o.Body = body
 }
 

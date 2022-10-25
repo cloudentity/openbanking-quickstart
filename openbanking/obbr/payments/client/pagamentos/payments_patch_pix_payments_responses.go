@@ -15,82 +15,82 @@ import (
 	"github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/models"
 )
 
-// PaymentsPostConsentsReader is a Reader for the PaymentsPostConsents structure.
-type PaymentsPostConsentsReader struct {
+// PaymentsPatchPixPaymentsReader is a Reader for the PaymentsPatchPixPayments structure.
+type PaymentsPatchPixPaymentsReader struct {
 	formats strfmt.Registry
 }
 
 // ReadResponse reads a server response into the received o.
-func (o *PaymentsPostConsentsReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
+func (o *PaymentsPatchPixPaymentsReader) ReadResponse(response runtime.ClientResponse, consumer runtime.Consumer) (interface{}, error) {
 	switch response.Code() {
-	case 201:
-		result := NewPaymentsPostConsentsCreated()
+	case 200:
+		result := NewPaymentsPatchPixPaymentsOK()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return result, nil
 	case 400:
-		result := NewPaymentsPostConsentsBadRequest()
+		result := NewPaymentsPatchPixPaymentsBadRequest()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return nil, result
 	case 401:
-		result := NewPaymentsPostConsentsUnauthorized()
+		result := NewPaymentsPatchPixPaymentsUnauthorized()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return nil, result
 	case 403:
-		result := NewPaymentsPostConsentsForbidden()
+		result := NewPaymentsPatchPixPaymentsForbidden()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return nil, result
 	case 404:
-		result := NewPaymentsPostConsentsNotFound()
+		result := NewPaymentsPatchPixPaymentsNotFound()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return nil, result
 	case 405:
-		result := NewPaymentsPostConsentsMethodNotAllowed()
+		result := NewPaymentsPatchPixPaymentsMethodNotAllowed()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return nil, result
 	case 406:
-		result := NewPaymentsPostConsentsNotAcceptable()
+		result := NewPaymentsPatchPixPaymentsNotAcceptable()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return nil, result
 	case 415:
-		result := NewPaymentsPostConsentsUnsupportedMediaType()
+		result := NewPaymentsPatchPixPaymentsUnsupportedMediaType()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return nil, result
 	case 422:
-		result := NewPaymentsPostConsentsUnprocessableEntity()
+		result := NewPaymentsPatchPixPaymentsUnprocessableEntity()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return nil, result
 	case 429:
-		result := NewPaymentsPostConsentsTooManyRequests()
+		result := NewPaymentsPatchPixPaymentsTooManyRequests()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return nil, result
 	case 500:
-		result := NewPaymentsPostConsentsInternalServerError()
+		result := NewPaymentsPatchPixPaymentsInternalServerError()
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
 		return nil, result
 	default:
-		result := NewPaymentsPostConsentsDefault(response.Code())
+		result := NewPaymentsPatchPixPaymentsDefault(response.Code())
 		if err := result.readResponse(response, consumer, o.formats); err != nil {
 			return nil, err
 		}
@@ -101,16 +101,16 @@ func (o *PaymentsPostConsentsReader) ReadResponse(response runtime.ClientRespons
 	}
 }
 
-// NewPaymentsPostConsentsCreated creates a PaymentsPostConsentsCreated with default headers values
-func NewPaymentsPostConsentsCreated() *PaymentsPostConsentsCreated {
-	return &PaymentsPostConsentsCreated{}
+// NewPaymentsPatchPixPaymentsOK creates a PaymentsPatchPixPaymentsOK with default headers values
+func NewPaymentsPatchPixPaymentsOK() *PaymentsPatchPixPaymentsOK {
+	return &PaymentsPatchPixPaymentsOK{}
 }
 
-/* PaymentsPostConsentsCreated describes a response with status code 201, with default header values.
+/* PaymentsPatchPixPaymentsOK describes a response with status code 200, with default header values.
 
-Consentimento de pagamento criado com sucesso.
+Revogao do Consentimento informado com sucesso.
 */
-type PaymentsPostConsentsCreated struct {
+type PaymentsPatchPixPaymentsOK struct {
 
 	/* Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
 
@@ -120,14 +120,14 @@ type PaymentsPostConsentsCreated struct {
 	Payload interface{}
 }
 
-func (o *PaymentsPostConsentsCreated) Error() string {
-	return fmt.Sprintf("[POST /consents][%d] paymentsPostConsentsCreated  %+v", 201, o.Payload)
+func (o *PaymentsPatchPixPaymentsOK) Error() string {
+	return fmt.Sprintf("[PATCH /consents/{consentId}][%d] paymentsPatchPixPaymentsOK  %+v", 200, o.Payload)
 }
-func (o *PaymentsPostConsentsCreated) GetPayload() interface{} {
+func (o *PaymentsPatchPixPaymentsOK) GetPayload() interface{} {
 	return o.Payload
 }
 
-func (o *PaymentsPostConsentsCreated) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+func (o *PaymentsPatchPixPaymentsOK) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	// hydrates response header x-fapi-interaction-id
 	hdrXFapiInteractionID := response.GetHeader("x-fapi-interaction-id")
@@ -144,16 +144,16 @@ func (o *PaymentsPostConsentsCreated) readResponse(response runtime.ClientRespon
 	return nil
 }
 
-// NewPaymentsPostConsentsBadRequest creates a PaymentsPostConsentsBadRequest with default headers values
-func NewPaymentsPostConsentsBadRequest() *PaymentsPostConsentsBadRequest {
-	return &PaymentsPostConsentsBadRequest{}
+// NewPaymentsPatchPixPaymentsBadRequest creates a PaymentsPatchPixPaymentsBadRequest with default headers values
+func NewPaymentsPatchPixPaymentsBadRequest() *PaymentsPatchPixPaymentsBadRequest {
+	return &PaymentsPatchPixPaymentsBadRequest{}
 }
 
-/* PaymentsPostConsentsBadRequest describes a response with status code 400, with default header values.
+/* PaymentsPatchPixPaymentsBadRequest describes a response with status code 400, with default header values.
 
 A requisio foi malformada, omitindo atributos obrigatrios, seja no payload ou atravs de atributos na URL.
 */
-type PaymentsPostConsentsBadRequest struct {
+type PaymentsPatchPixPaymentsBadRequest struct {
 
 	/* Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
 
@@ -163,14 +163,14 @@ type PaymentsPostConsentsBadRequest struct {
 	Payload *models.OpenbankingBrasilPaymentResponseError
 }
 
-func (o *PaymentsPostConsentsBadRequest) Error() string {
-	return fmt.Sprintf("[POST /consents][%d] paymentsPostConsentsBadRequest  %+v", 400, o.Payload)
+func (o *PaymentsPatchPixPaymentsBadRequest) Error() string {
+	return fmt.Sprintf("[PATCH /consents/{consentId}][%d] paymentsPatchPixPaymentsBadRequest  %+v", 400, o.Payload)
 }
-func (o *PaymentsPostConsentsBadRequest) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
+func (o *PaymentsPatchPixPaymentsBadRequest) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
 	return o.Payload
 }
 
-func (o *PaymentsPostConsentsBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+func (o *PaymentsPatchPixPaymentsBadRequest) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	// hydrates response header x-fapi-interaction-id
 	hdrXFapiInteractionID := response.GetHeader("x-fapi-interaction-id")
@@ -189,16 +189,16 @@ func (o *PaymentsPostConsentsBadRequest) readResponse(response runtime.ClientRes
 	return nil
 }
 
-// NewPaymentsPostConsentsUnauthorized creates a PaymentsPostConsentsUnauthorized with default headers values
-func NewPaymentsPostConsentsUnauthorized() *PaymentsPostConsentsUnauthorized {
-	return &PaymentsPostConsentsUnauthorized{}
+// NewPaymentsPatchPixPaymentsUnauthorized creates a PaymentsPatchPixPaymentsUnauthorized with default headers values
+func NewPaymentsPatchPixPaymentsUnauthorized() *PaymentsPatchPixPaymentsUnauthorized {
+	return &PaymentsPatchPixPaymentsUnauthorized{}
 }
 
-/* PaymentsPostConsentsUnauthorized describes a response with status code 401, with default header values.
+/* PaymentsPatchPixPaymentsUnauthorized describes a response with status code 401, with default header values.
 
 Cabealho de autenticao ausente/invlido ou token invlido
 */
-type PaymentsPostConsentsUnauthorized struct {
+type PaymentsPatchPixPaymentsUnauthorized struct {
 
 	/* Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
 
@@ -208,14 +208,14 @@ type PaymentsPostConsentsUnauthorized struct {
 	Payload *models.OpenbankingBrasilPaymentResponseError
 }
 
-func (o *PaymentsPostConsentsUnauthorized) Error() string {
-	return fmt.Sprintf("[POST /consents][%d] paymentsPostConsentsUnauthorized  %+v", 401, o.Payload)
+func (o *PaymentsPatchPixPaymentsUnauthorized) Error() string {
+	return fmt.Sprintf("[PATCH /consents/{consentId}][%d] paymentsPatchPixPaymentsUnauthorized  %+v", 401, o.Payload)
 }
-func (o *PaymentsPostConsentsUnauthorized) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
+func (o *PaymentsPatchPixPaymentsUnauthorized) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
 	return o.Payload
 }
 
-func (o *PaymentsPostConsentsUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+func (o *PaymentsPatchPixPaymentsUnauthorized) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	// hydrates response header x-fapi-interaction-id
 	hdrXFapiInteractionID := response.GetHeader("x-fapi-interaction-id")
@@ -234,16 +234,16 @@ func (o *PaymentsPostConsentsUnauthorized) readResponse(response runtime.ClientR
 	return nil
 }
 
-// NewPaymentsPostConsentsForbidden creates a PaymentsPostConsentsForbidden with default headers values
-func NewPaymentsPostConsentsForbidden() *PaymentsPostConsentsForbidden {
-	return &PaymentsPostConsentsForbidden{}
+// NewPaymentsPatchPixPaymentsForbidden creates a PaymentsPatchPixPaymentsForbidden with default headers values
+func NewPaymentsPatchPixPaymentsForbidden() *PaymentsPatchPixPaymentsForbidden {
+	return &PaymentsPatchPixPaymentsForbidden{}
 }
 
-/* PaymentsPostConsentsForbidden describes a response with status code 403, with default header values.
+/* PaymentsPatchPixPaymentsForbidden describes a response with status code 403, with default header values.
 
 O token tem escopo incorreto ou uma poltica de segurana foi violada
 */
-type PaymentsPostConsentsForbidden struct {
+type PaymentsPatchPixPaymentsForbidden struct {
 
 	/* Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
 
@@ -253,14 +253,14 @@ type PaymentsPostConsentsForbidden struct {
 	Payload *models.OpenbankingBrasilPaymentResponseError
 }
 
-func (o *PaymentsPostConsentsForbidden) Error() string {
-	return fmt.Sprintf("[POST /consents][%d] paymentsPostConsentsForbidden  %+v", 403, o.Payload)
+func (o *PaymentsPatchPixPaymentsForbidden) Error() string {
+	return fmt.Sprintf("[PATCH /consents/{consentId}][%d] paymentsPatchPixPaymentsForbidden  %+v", 403, o.Payload)
 }
-func (o *PaymentsPostConsentsForbidden) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
+func (o *PaymentsPatchPixPaymentsForbidden) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
 	return o.Payload
 }
 
-func (o *PaymentsPostConsentsForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+func (o *PaymentsPatchPixPaymentsForbidden) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	// hydrates response header x-fapi-interaction-id
 	hdrXFapiInteractionID := response.GetHeader("x-fapi-interaction-id")
@@ -279,16 +279,16 @@ func (o *PaymentsPostConsentsForbidden) readResponse(response runtime.ClientResp
 	return nil
 }
 
-// NewPaymentsPostConsentsNotFound creates a PaymentsPostConsentsNotFound with default headers values
-func NewPaymentsPostConsentsNotFound() *PaymentsPostConsentsNotFound {
-	return &PaymentsPostConsentsNotFound{}
+// NewPaymentsPatchPixPaymentsNotFound creates a PaymentsPatchPixPaymentsNotFound with default headers values
+func NewPaymentsPatchPixPaymentsNotFound() *PaymentsPatchPixPaymentsNotFound {
+	return &PaymentsPatchPixPaymentsNotFound{}
 }
 
-/* PaymentsPostConsentsNotFound describes a response with status code 404, with default header values.
+/* PaymentsPatchPixPaymentsNotFound describes a response with status code 404, with default header values.
 
 O recurso solicitado no existe ou no foi implementado
 */
-type PaymentsPostConsentsNotFound struct {
+type PaymentsPatchPixPaymentsNotFound struct {
 
 	/* Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
 
@@ -298,14 +298,14 @@ type PaymentsPostConsentsNotFound struct {
 	Payload *models.OpenbankingBrasilPaymentResponseError
 }
 
-func (o *PaymentsPostConsentsNotFound) Error() string {
-	return fmt.Sprintf("[POST /consents][%d] paymentsPostConsentsNotFound  %+v", 404, o.Payload)
+func (o *PaymentsPatchPixPaymentsNotFound) Error() string {
+	return fmt.Sprintf("[PATCH /consents/{consentId}][%d] paymentsPatchPixPaymentsNotFound  %+v", 404, o.Payload)
 }
-func (o *PaymentsPostConsentsNotFound) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
+func (o *PaymentsPatchPixPaymentsNotFound) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
 	return o.Payload
 }
 
-func (o *PaymentsPostConsentsNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+func (o *PaymentsPatchPixPaymentsNotFound) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	// hydrates response header x-fapi-interaction-id
 	hdrXFapiInteractionID := response.GetHeader("x-fapi-interaction-id")
@@ -324,16 +324,16 @@ func (o *PaymentsPostConsentsNotFound) readResponse(response runtime.ClientRespo
 	return nil
 }
 
-// NewPaymentsPostConsentsMethodNotAllowed creates a PaymentsPostConsentsMethodNotAllowed with default headers values
-func NewPaymentsPostConsentsMethodNotAllowed() *PaymentsPostConsentsMethodNotAllowed {
-	return &PaymentsPostConsentsMethodNotAllowed{}
+// NewPaymentsPatchPixPaymentsMethodNotAllowed creates a PaymentsPatchPixPaymentsMethodNotAllowed with default headers values
+func NewPaymentsPatchPixPaymentsMethodNotAllowed() *PaymentsPatchPixPaymentsMethodNotAllowed {
+	return &PaymentsPatchPixPaymentsMethodNotAllowed{}
 }
 
-/* PaymentsPostConsentsMethodNotAllowed describes a response with status code 405, with default header values.
+/* PaymentsPatchPixPaymentsMethodNotAllowed describes a response with status code 405, with default header values.
 
 O consumidor tentou acessar o recurso com um mtodo no suportado
 */
-type PaymentsPostConsentsMethodNotAllowed struct {
+type PaymentsPatchPixPaymentsMethodNotAllowed struct {
 
 	/* Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
 
@@ -343,14 +343,14 @@ type PaymentsPostConsentsMethodNotAllowed struct {
 	Payload *models.OpenbankingBrasilPaymentResponseError
 }
 
-func (o *PaymentsPostConsentsMethodNotAllowed) Error() string {
-	return fmt.Sprintf("[POST /consents][%d] paymentsPostConsentsMethodNotAllowed  %+v", 405, o.Payload)
+func (o *PaymentsPatchPixPaymentsMethodNotAllowed) Error() string {
+	return fmt.Sprintf("[PATCH /consents/{consentId}][%d] paymentsPatchPixPaymentsMethodNotAllowed  %+v", 405, o.Payload)
 }
-func (o *PaymentsPostConsentsMethodNotAllowed) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
+func (o *PaymentsPatchPixPaymentsMethodNotAllowed) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
 	return o.Payload
 }
 
-func (o *PaymentsPostConsentsMethodNotAllowed) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+func (o *PaymentsPatchPixPaymentsMethodNotAllowed) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	// hydrates response header x-fapi-interaction-id
 	hdrXFapiInteractionID := response.GetHeader("x-fapi-interaction-id")
@@ -369,16 +369,16 @@ func (o *PaymentsPostConsentsMethodNotAllowed) readResponse(response runtime.Cli
 	return nil
 }
 
-// NewPaymentsPostConsentsNotAcceptable creates a PaymentsPostConsentsNotAcceptable with default headers values
-func NewPaymentsPostConsentsNotAcceptable() *PaymentsPostConsentsNotAcceptable {
-	return &PaymentsPostConsentsNotAcceptable{}
+// NewPaymentsPatchPixPaymentsNotAcceptable creates a PaymentsPatchPixPaymentsNotAcceptable with default headers values
+func NewPaymentsPatchPixPaymentsNotAcceptable() *PaymentsPatchPixPaymentsNotAcceptable {
+	return &PaymentsPatchPixPaymentsNotAcceptable{}
 }
 
-/* PaymentsPostConsentsNotAcceptable describes a response with status code 406, with default header values.
+/* PaymentsPatchPixPaymentsNotAcceptable describes a response with status code 406, with default header values.
 
 A solicitao continha um cabealho Accept diferente dos tipos de mdia permitidos ou um conjunto de caracteres diferente de UTF-8
 */
-type PaymentsPostConsentsNotAcceptable struct {
+type PaymentsPatchPixPaymentsNotAcceptable struct {
 
 	/* Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
 
@@ -388,14 +388,14 @@ type PaymentsPostConsentsNotAcceptable struct {
 	Payload *models.OpenbankingBrasilPaymentResponseError
 }
 
-func (o *PaymentsPostConsentsNotAcceptable) Error() string {
-	return fmt.Sprintf("[POST /consents][%d] paymentsPostConsentsNotAcceptable  %+v", 406, o.Payload)
+func (o *PaymentsPatchPixPaymentsNotAcceptable) Error() string {
+	return fmt.Sprintf("[PATCH /consents/{consentId}][%d] paymentsPatchPixPaymentsNotAcceptable  %+v", 406, o.Payload)
 }
-func (o *PaymentsPostConsentsNotAcceptable) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
+func (o *PaymentsPatchPixPaymentsNotAcceptable) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
 	return o.Payload
 }
 
-func (o *PaymentsPostConsentsNotAcceptable) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+func (o *PaymentsPatchPixPaymentsNotAcceptable) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	// hydrates response header x-fapi-interaction-id
 	hdrXFapiInteractionID := response.GetHeader("x-fapi-interaction-id")
@@ -414,16 +414,16 @@ func (o *PaymentsPostConsentsNotAcceptable) readResponse(response runtime.Client
 	return nil
 }
 
-// NewPaymentsPostConsentsUnsupportedMediaType creates a PaymentsPostConsentsUnsupportedMediaType with default headers values
-func NewPaymentsPostConsentsUnsupportedMediaType() *PaymentsPostConsentsUnsupportedMediaType {
-	return &PaymentsPostConsentsUnsupportedMediaType{}
+// NewPaymentsPatchPixPaymentsUnsupportedMediaType creates a PaymentsPatchPixPaymentsUnsupportedMediaType with default headers values
+func NewPaymentsPatchPixPaymentsUnsupportedMediaType() *PaymentsPatchPixPaymentsUnsupportedMediaType {
+	return &PaymentsPatchPixPaymentsUnsupportedMediaType{}
 }
 
-/* PaymentsPostConsentsUnsupportedMediaType describes a response with status code 415, with default header values.
+/* PaymentsPatchPixPaymentsUnsupportedMediaType describes a response with status code 415, with default header values.
 
 O formato do payload no  um formato suportado.
 */
-type PaymentsPostConsentsUnsupportedMediaType struct {
+type PaymentsPatchPixPaymentsUnsupportedMediaType struct {
 
 	/* Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
 
@@ -433,14 +433,14 @@ type PaymentsPostConsentsUnsupportedMediaType struct {
 	Payload *models.OpenbankingBrasilPaymentResponseError
 }
 
-func (o *PaymentsPostConsentsUnsupportedMediaType) Error() string {
-	return fmt.Sprintf("[POST /consents][%d] paymentsPostConsentsUnsupportedMediaType  %+v", 415, o.Payload)
+func (o *PaymentsPatchPixPaymentsUnsupportedMediaType) Error() string {
+	return fmt.Sprintf("[PATCH /consents/{consentId}][%d] paymentsPatchPixPaymentsUnsupportedMediaType  %+v", 415, o.Payload)
 }
-func (o *PaymentsPostConsentsUnsupportedMediaType) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
+func (o *PaymentsPatchPixPaymentsUnsupportedMediaType) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
 	return o.Payload
 }
 
-func (o *PaymentsPostConsentsUnsupportedMediaType) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+func (o *PaymentsPatchPixPaymentsUnsupportedMediaType) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	// hydrates response header x-fapi-interaction-id
 	hdrXFapiInteractionID := response.GetHeader("x-fapi-interaction-id")
@@ -459,16 +459,16 @@ func (o *PaymentsPostConsentsUnsupportedMediaType) readResponse(response runtime
 	return nil
 }
 
-// NewPaymentsPostConsentsUnprocessableEntity creates a PaymentsPostConsentsUnprocessableEntity with default headers values
-func NewPaymentsPostConsentsUnprocessableEntity() *PaymentsPostConsentsUnprocessableEntity {
-	return &PaymentsPostConsentsUnprocessableEntity{}
+// NewPaymentsPatchPixPaymentsUnprocessableEntity creates a PaymentsPatchPixPaymentsUnprocessableEntity with default headers values
+func NewPaymentsPatchPixPaymentsUnprocessableEntity() *PaymentsPatchPixPaymentsUnprocessableEntity {
+	return &PaymentsPatchPixPaymentsUnprocessableEntity{}
 }
 
-/* PaymentsPostConsentsUnprocessableEntity describes a response with status code 422, with default header values.
+/* PaymentsPatchPixPaymentsUnprocessableEntity describes a response with status code 422, with default header values.
 
 A solicitao foi bem formada, mas no pde ser processada devido  lgica de negcios especfica da solicitao.
 */
-type PaymentsPostConsentsUnprocessableEntity struct {
+type PaymentsPatchPixPaymentsUnprocessableEntity struct {
 
 	/* Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
 
@@ -478,14 +478,14 @@ type PaymentsPostConsentsUnprocessableEntity struct {
 	Payload interface{}
 }
 
-func (o *PaymentsPostConsentsUnprocessableEntity) Error() string {
-	return fmt.Sprintf("[POST /consents][%d] paymentsPostConsentsUnprocessableEntity  %+v", 422, o.Payload)
+func (o *PaymentsPatchPixPaymentsUnprocessableEntity) Error() string {
+	return fmt.Sprintf("[PATCH /consents/{consentId}][%d] paymentsPatchPixPaymentsUnprocessableEntity  %+v", 422, o.Payload)
 }
-func (o *PaymentsPostConsentsUnprocessableEntity) GetPayload() interface{} {
+func (o *PaymentsPatchPixPaymentsUnprocessableEntity) GetPayload() interface{} {
 	return o.Payload
 }
 
-func (o *PaymentsPostConsentsUnprocessableEntity) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+func (o *PaymentsPatchPixPaymentsUnprocessableEntity) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	// hydrates response header x-fapi-interaction-id
 	hdrXFapiInteractionID := response.GetHeader("x-fapi-interaction-id")
@@ -502,16 +502,16 @@ func (o *PaymentsPostConsentsUnprocessableEntity) readResponse(response runtime.
 	return nil
 }
 
-// NewPaymentsPostConsentsTooManyRequests creates a PaymentsPostConsentsTooManyRequests with default headers values
-func NewPaymentsPostConsentsTooManyRequests() *PaymentsPostConsentsTooManyRequests {
-	return &PaymentsPostConsentsTooManyRequests{}
+// NewPaymentsPatchPixPaymentsTooManyRequests creates a PaymentsPatchPixPaymentsTooManyRequests with default headers values
+func NewPaymentsPatchPixPaymentsTooManyRequests() *PaymentsPatchPixPaymentsTooManyRequests {
+	return &PaymentsPatchPixPaymentsTooManyRequests{}
 }
 
-/* PaymentsPostConsentsTooManyRequests describes a response with status code 429, with default header values.
+/* PaymentsPatchPixPaymentsTooManyRequests describes a response with status code 429, with default header values.
 
 A operao foi recusada, pois muitas solicitaes foram feitas dentro de um determinado perodo ou o limite global de requisies concorrentes foi atingido
 */
-type PaymentsPostConsentsTooManyRequests struct {
+type PaymentsPatchPixPaymentsTooManyRequests struct {
 
 	/* Cabealho que indica o tempo (em segundos) que o cliente dever aguardar para realizar uma nova tentativa de chamada. Este cabealho dever estar presente quando o cdigo HTTP de retorno for 429 Too many requests.
 
@@ -526,14 +526,14 @@ type PaymentsPostConsentsTooManyRequests struct {
 	Payload *models.OpenbankingBrasilPaymentResponseError
 }
 
-func (o *PaymentsPostConsentsTooManyRequests) Error() string {
-	return fmt.Sprintf("[POST /consents][%d] paymentsPostConsentsTooManyRequests  %+v", 429, o.Payload)
+func (o *PaymentsPatchPixPaymentsTooManyRequests) Error() string {
+	return fmt.Sprintf("[PATCH /consents/{consentId}][%d] paymentsPatchPixPaymentsTooManyRequests  %+v", 429, o.Payload)
 }
-func (o *PaymentsPostConsentsTooManyRequests) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
+func (o *PaymentsPatchPixPaymentsTooManyRequests) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
 	return o.Payload
 }
 
-func (o *PaymentsPostConsentsTooManyRequests) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+func (o *PaymentsPatchPixPaymentsTooManyRequests) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	// hydrates response header Retry-After
 	hdrRetryAfter := response.GetHeader("Retry-After")
@@ -559,16 +559,16 @@ func (o *PaymentsPostConsentsTooManyRequests) readResponse(response runtime.Clie
 	return nil
 }
 
-// NewPaymentsPostConsentsInternalServerError creates a PaymentsPostConsentsInternalServerError with default headers values
-func NewPaymentsPostConsentsInternalServerError() *PaymentsPostConsentsInternalServerError {
-	return &PaymentsPostConsentsInternalServerError{}
+// NewPaymentsPatchPixPaymentsInternalServerError creates a PaymentsPatchPixPaymentsInternalServerError with default headers values
+func NewPaymentsPatchPixPaymentsInternalServerError() *PaymentsPatchPixPaymentsInternalServerError {
+	return &PaymentsPatchPixPaymentsInternalServerError{}
 }
 
-/* PaymentsPostConsentsInternalServerError describes a response with status code 500, with default header values.
+/* PaymentsPatchPixPaymentsInternalServerError describes a response with status code 500, with default header values.
 
 Ocorreu um erro no gateway da API ou no microsservio
 */
-type PaymentsPostConsentsInternalServerError struct {
+type PaymentsPatchPixPaymentsInternalServerError struct {
 
 	/* Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
 
@@ -578,14 +578,14 @@ type PaymentsPostConsentsInternalServerError struct {
 	Payload *models.OpenbankingBrasilPaymentResponseError
 }
 
-func (o *PaymentsPostConsentsInternalServerError) Error() string {
-	return fmt.Sprintf("[POST /consents][%d] paymentsPostConsentsInternalServerError  %+v", 500, o.Payload)
+func (o *PaymentsPatchPixPaymentsInternalServerError) Error() string {
+	return fmt.Sprintf("[PATCH /consents/{consentId}][%d] paymentsPatchPixPaymentsInternalServerError  %+v", 500, o.Payload)
 }
-func (o *PaymentsPostConsentsInternalServerError) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
+func (o *PaymentsPatchPixPaymentsInternalServerError) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
 	return o.Payload
 }
 
-func (o *PaymentsPostConsentsInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+func (o *PaymentsPatchPixPaymentsInternalServerError) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	// hydrates response header x-fapi-interaction-id
 	hdrXFapiInteractionID := response.GetHeader("x-fapi-interaction-id")
@@ -604,36 +604,36 @@ func (o *PaymentsPostConsentsInternalServerError) readResponse(response runtime.
 	return nil
 }
 
-// NewPaymentsPostConsentsDefault creates a PaymentsPostConsentsDefault with default headers values
-func NewPaymentsPostConsentsDefault(code int) *PaymentsPostConsentsDefault {
-	return &PaymentsPostConsentsDefault{
+// NewPaymentsPatchPixPaymentsDefault creates a PaymentsPatchPixPaymentsDefault with default headers values
+func NewPaymentsPatchPixPaymentsDefault(code int) *PaymentsPatchPixPaymentsDefault {
+	return &PaymentsPatchPixPaymentsDefault{
 		_statusCode: code,
 	}
 }
 
-/* PaymentsPostConsentsDefault describes a response with status code -1, with default header values.
+/* PaymentsPatchPixPaymentsDefault describes a response with status code -1, with default header values.
 
 Erro inesperado.
 */
-type PaymentsPostConsentsDefault struct {
+type PaymentsPatchPixPaymentsDefault struct {
 	_statusCode int
 
 	Payload *models.OpenbankingBrasilPaymentResponseError
 }
 
-// Code gets the status code for the payments post consents default response
-func (o *PaymentsPostConsentsDefault) Code() int {
+// Code gets the status code for the payments patch pix payments default response
+func (o *PaymentsPatchPixPaymentsDefault) Code() int {
 	return o._statusCode
 }
 
-func (o *PaymentsPostConsentsDefault) Error() string {
-	return fmt.Sprintf("[POST /consents][%d] paymentsPostConsents default  %+v", o._statusCode, o.Payload)
+func (o *PaymentsPatchPixPaymentsDefault) Error() string {
+	return fmt.Sprintf("[PATCH /consents/{consentId}][%d] paymentsPatchPixPayments default  %+v", o._statusCode, o.Payload)
 }
-func (o *PaymentsPostConsentsDefault) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
+func (o *PaymentsPatchPixPaymentsDefault) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
 	return o.Payload
 }
 
-func (o *PaymentsPostConsentsDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
+func (o *PaymentsPatchPixPaymentsDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
 	o.Payload = new(models.OpenbankingBrasilPaymentResponseError)
 

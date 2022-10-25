@@ -254,7 +254,7 @@ func NewCDRClient(config Config) (BankClient, error) {
 
 type OBBRClient struct {
 	*obbrAccounts.Accounts
-	*obbrPayments.PaymentConsentsBrasil
+	*obbrPayments.Payments
 }
 
 func NewOBBRClient(config Config) (BankClient, error) {
@@ -275,7 +275,7 @@ func NewOBBRClient(config Config) (BankClient, error) {
 		[]string{u.Scheme},
 		hc,
 	), nil)
-	c.PaymentConsentsBrasil = obbrPayments.New(NewHTTPRuntimeWithClient(
+	c.Payments = obbrPayments.New(NewHTTPRuntimeWithClient(
 		u.Host,
 		u.Path+"/payments/v1",
 		[]string{u.Scheme},

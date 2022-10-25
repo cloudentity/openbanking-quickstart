@@ -117,13 +117,13 @@ type PaymentsPostPixPaymentsCreated struct {
 	 */
 	XFapiInteractionID string
 
-	Payload *models.OpenbankingBrasilResponsePixPayment
+	Payload interface{}
 }
 
 func (o *PaymentsPostPixPaymentsCreated) Error() string {
 	return fmt.Sprintf("[POST /pix/payments][%d] paymentsPostPixPaymentsCreated  %+v", 201, o.Payload)
 }
-func (o *PaymentsPostPixPaymentsCreated) GetPayload() *models.OpenbankingBrasilResponsePixPayment {
+func (o *PaymentsPostPixPaymentsCreated) GetPayload() interface{} {
 	return o.Payload
 }
 
@@ -136,10 +136,8 @@ func (o *PaymentsPostPixPaymentsCreated) readResponse(response runtime.ClientRes
 		o.XFapiInteractionID = hdrXFapiInteractionID
 	}
 
-	o.Payload = new(models.OpenbankingBrasilResponsePixPayment)
-
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 
@@ -162,13 +160,13 @@ type PaymentsPostPixPaymentsBadRequest struct {
 	 */
 	XFapiInteractionID string
 
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilPaymentResponseError
 }
 
 func (o *PaymentsPostPixPaymentsBadRequest) Error() string {
 	return fmt.Sprintf("[POST /pix/payments][%d] paymentsPostPixPaymentsBadRequest  %+v", 400, o.Payload)
 }
-func (o *PaymentsPostPixPaymentsBadRequest) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *PaymentsPostPixPaymentsBadRequest) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
 	return o.Payload
 }
 
@@ -181,7 +179,7 @@ func (o *PaymentsPostPixPaymentsBadRequest) readResponse(response runtime.Client
 		o.XFapiInteractionID = hdrXFapiInteractionID
 	}
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilPaymentResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -207,13 +205,13 @@ type PaymentsPostPixPaymentsUnauthorized struct {
 	 */
 	XFapiInteractionID string
 
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilPaymentResponseError
 }
 
 func (o *PaymentsPostPixPaymentsUnauthorized) Error() string {
 	return fmt.Sprintf("[POST /pix/payments][%d] paymentsPostPixPaymentsUnauthorized  %+v", 401, o.Payload)
 }
-func (o *PaymentsPostPixPaymentsUnauthorized) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *PaymentsPostPixPaymentsUnauthorized) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
 	return o.Payload
 }
 
@@ -226,7 +224,7 @@ func (o *PaymentsPostPixPaymentsUnauthorized) readResponse(response runtime.Clie
 		o.XFapiInteractionID = hdrXFapiInteractionID
 	}
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilPaymentResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -252,13 +250,13 @@ type PaymentsPostPixPaymentsForbidden struct {
 	 */
 	XFapiInteractionID string
 
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilPaymentResponseError
 }
 
 func (o *PaymentsPostPixPaymentsForbidden) Error() string {
 	return fmt.Sprintf("[POST /pix/payments][%d] paymentsPostPixPaymentsForbidden  %+v", 403, o.Payload)
 }
-func (o *PaymentsPostPixPaymentsForbidden) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *PaymentsPostPixPaymentsForbidden) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
 	return o.Payload
 }
 
@@ -271,7 +269,7 @@ func (o *PaymentsPostPixPaymentsForbidden) readResponse(response runtime.ClientR
 		o.XFapiInteractionID = hdrXFapiInteractionID
 	}
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilPaymentResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -297,13 +295,13 @@ type PaymentsPostPixPaymentsNotFound struct {
 	 */
 	XFapiInteractionID string
 
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilPaymentResponseError
 }
 
 func (o *PaymentsPostPixPaymentsNotFound) Error() string {
 	return fmt.Sprintf("[POST /pix/payments][%d] paymentsPostPixPaymentsNotFound  %+v", 404, o.Payload)
 }
-func (o *PaymentsPostPixPaymentsNotFound) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *PaymentsPostPixPaymentsNotFound) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
 	return o.Payload
 }
 
@@ -316,7 +314,7 @@ func (o *PaymentsPostPixPaymentsNotFound) readResponse(response runtime.ClientRe
 		o.XFapiInteractionID = hdrXFapiInteractionID
 	}
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilPaymentResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -342,13 +340,13 @@ type PaymentsPostPixPaymentsMethodNotAllowed struct {
 	 */
 	XFapiInteractionID string
 
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilPaymentResponseError
 }
 
 func (o *PaymentsPostPixPaymentsMethodNotAllowed) Error() string {
 	return fmt.Sprintf("[POST /pix/payments][%d] paymentsPostPixPaymentsMethodNotAllowed  %+v", 405, o.Payload)
 }
-func (o *PaymentsPostPixPaymentsMethodNotAllowed) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *PaymentsPostPixPaymentsMethodNotAllowed) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
 	return o.Payload
 }
 
@@ -361,7 +359,7 @@ func (o *PaymentsPostPixPaymentsMethodNotAllowed) readResponse(response runtime.
 		o.XFapiInteractionID = hdrXFapiInteractionID
 	}
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilPaymentResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -387,13 +385,13 @@ type PaymentsPostPixPaymentsNotAcceptable struct {
 	 */
 	XFapiInteractionID string
 
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilPaymentResponseError
 }
 
 func (o *PaymentsPostPixPaymentsNotAcceptable) Error() string {
 	return fmt.Sprintf("[POST /pix/payments][%d] paymentsPostPixPaymentsNotAcceptable  %+v", 406, o.Payload)
 }
-func (o *PaymentsPostPixPaymentsNotAcceptable) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *PaymentsPostPixPaymentsNotAcceptable) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
 	return o.Payload
 }
 
@@ -406,7 +404,7 @@ func (o *PaymentsPostPixPaymentsNotAcceptable) readResponse(response runtime.Cli
 		o.XFapiInteractionID = hdrXFapiInteractionID
 	}
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilPaymentResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -432,13 +430,13 @@ type PaymentsPostPixPaymentsUnsupportedMediaType struct {
 	 */
 	XFapiInteractionID string
 
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilPaymentResponseError
 }
 
 func (o *PaymentsPostPixPaymentsUnsupportedMediaType) Error() string {
 	return fmt.Sprintf("[POST /pix/payments][%d] paymentsPostPixPaymentsUnsupportedMediaType  %+v", 415, o.Payload)
 }
-func (o *PaymentsPostPixPaymentsUnsupportedMediaType) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *PaymentsPostPixPaymentsUnsupportedMediaType) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
 	return o.Payload
 }
 
@@ -451,7 +449,7 @@ func (o *PaymentsPostPixPaymentsUnsupportedMediaType) readResponse(response runt
 		o.XFapiInteractionID = hdrXFapiInteractionID
 	}
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilPaymentResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -477,13 +475,13 @@ type PaymentsPostPixPaymentsUnprocessableEntity struct {
 	 */
 	XFapiInteractionID string
 
-	Payload *models.OpenbankingBrasilUnprocessableEntityPixPayments1
+	Payload interface{}
 }
 
 func (o *PaymentsPostPixPaymentsUnprocessableEntity) Error() string {
 	return fmt.Sprintf("[POST /pix/payments][%d] paymentsPostPixPaymentsUnprocessableEntity  %+v", 422, o.Payload)
 }
-func (o *PaymentsPostPixPaymentsUnprocessableEntity) GetPayload() *models.OpenbankingBrasilUnprocessableEntityPixPayments1 {
+func (o *PaymentsPostPixPaymentsUnprocessableEntity) GetPayload() interface{} {
 	return o.Payload
 }
 
@@ -496,10 +494,8 @@ func (o *PaymentsPostPixPaymentsUnprocessableEntity) readResponse(response runti
 		o.XFapiInteractionID = hdrXFapiInteractionID
 	}
 
-	o.Payload = new(models.OpenbankingBrasilUnprocessableEntityPixPayments1)
-
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 
@@ -527,13 +523,13 @@ type PaymentsPostPixPaymentsTooManyRequests struct {
 	 */
 	XFapiInteractionID string
 
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilPaymentResponseError
 }
 
 func (o *PaymentsPostPixPaymentsTooManyRequests) Error() string {
 	return fmt.Sprintf("[POST /pix/payments][%d] paymentsPostPixPaymentsTooManyRequests  %+v", 429, o.Payload)
 }
-func (o *PaymentsPostPixPaymentsTooManyRequests) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *PaymentsPostPixPaymentsTooManyRequests) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
 	return o.Payload
 }
 
@@ -553,7 +549,7 @@ func (o *PaymentsPostPixPaymentsTooManyRequests) readResponse(response runtime.C
 		o.XFapiInteractionID = hdrXFapiInteractionID
 	}
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilPaymentResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -579,13 +575,13 @@ type PaymentsPostPixPaymentsInternalServerError struct {
 	 */
 	XFapiInteractionID string
 
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilPaymentResponseError
 }
 
 func (o *PaymentsPostPixPaymentsInternalServerError) Error() string {
 	return fmt.Sprintf("[POST /pix/payments][%d] paymentsPostPixPaymentsInternalServerError  %+v", 500, o.Payload)
 }
-func (o *PaymentsPostPixPaymentsInternalServerError) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *PaymentsPostPixPaymentsInternalServerError) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
 	return o.Payload
 }
 
@@ -598,7 +594,7 @@ func (o *PaymentsPostPixPaymentsInternalServerError) readResponse(response runti
 		o.XFapiInteractionID = hdrXFapiInteractionID
 	}
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilPaymentResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -622,7 +618,7 @@ Erro inesperado.
 type PaymentsPostPixPaymentsDefault struct {
 	_statusCode int
 
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilPaymentResponseError
 }
 
 // Code gets the status code for the payments post pix payments default response
@@ -633,13 +629,13 @@ func (o *PaymentsPostPixPaymentsDefault) Code() int {
 func (o *PaymentsPostPixPaymentsDefault) Error() string {
 	return fmt.Sprintf("[POST /pix/payments][%d] paymentsPostPixPayments default  %+v", o._statusCode, o.Payload)
 }
-func (o *PaymentsPostPixPaymentsDefault) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *PaymentsPostPixPaymentsDefault) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
 	return o.Payload
 }
 
 func (o *PaymentsPostPixPaymentsDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilPaymentResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

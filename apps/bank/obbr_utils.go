@@ -13,8 +13,8 @@ import (
 )
 
 func OBBRMapError(c *gin.Context, err *Error) (code int, resp interface{}) {
-	code, resp = err.Code, models.OpenbankingBrasilResponseError{
-		Errors: []*models.OpenbankingBrasilError{
+	code, resp = err.Code, models.OpenbankingBrasilConsentV2ResponseError{
+		Errors: []*models.OpenbankingBrasilConsentV2Error{
 			{
 				Detail: err.Message,
 			},
@@ -43,28 +43,28 @@ func OBBRPermsToStringSlice(perms []obModels.OpenbankingBrasilConsentPermission1
 	return slice
 }
 
-func NewOBBRPayment(introspectionResponse *obModels.IntrospectOBBRPaymentConsentResponse, self strfmt.URI, id string) paymentModels.OpenbankingBrasilResponsePixPayment {
+func NewOBBRPayment(introspectionResponse *obModels.IntrospectOBBRPaymentConsentResponse, self strfmt.URI, id string) paymentModels.OpenbankingBrasilPaymentResponsePixPayment {
 	now := strfmt.DateTime(time.Now())
-	status := paymentModels.OpenbankingBrasilStatus1PDNG
-	localInstrument := paymentModels.OpenbankingBrasilEnumLocalInstrumentMANU
-	return paymentModels.OpenbankingBrasilResponsePixPayment{
-		Data: &paymentModels.OpenbankingBrasilResponsePixPaymentData{
+	status := paymentModels.OpenbankingBrasilPaymentEnumPaymentStatusTypePDNG
+	localInstrument := paymentModels.OpenbankingBrasilPaymentEnumLocalInstrumentMANU
+	return paymentModels.OpenbankingBrasilPaymentResponsePixPayment{
+		Data: &paymentModels.OpenbankingBrasilPaymentResponsePixPaymentData{
 			PaymentID:            id,
 			ConsentID:            *introspectionResponse.ConsentID,
 			CreationDateTime:     now,
 			StatusUpdateDateTime: now,
 			Status:               &status,
 			LocalInstrument:      &localInstrument,
-			Payment: &paymentModels.OpenbankingBrasilPaymentPix{
+			Payment: &paymentModels.OpenbankingBrasilPaymentPaymentPix{
 				Amount:   introspectionResponse.Payment.Amount,
 				Currency: introspectionResponse.Payment.Currency,
 			},
-			CreditorAccount: &paymentModels.OpenbankingBrasilCreditorAccount{},
+			CreditorAccount: &paymentModels.OpenbankingBrasilPaymentCreditorAccount{},
 		},
-		Links: &paymentModels.OpenbankingBrasilLinks{
+		Links: &paymentModels.OpenbankingBrasilPaymentLinks{
 			Self: string(self),
 		},
-		Meta: &paymentModels.OpenbankingBrasilMeta{},
+		Meta: &paymentModels.OpenbankingBrasilPaymentMeta{},
 	}
 }
 

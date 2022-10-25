@@ -105,13 +105,13 @@ type PaymentsGetConsentsConsentIDOK struct {
 	 */
 	XFapiInteractionID string
 
-	Payload *models.OpenbankingBrasilResponsePaymentConsent
+	Payload interface{}
 }
 
 func (o *PaymentsGetConsentsConsentIDOK) Error() string {
 	return fmt.Sprintf("[GET /consents/{consentId}][%d] paymentsGetConsentsConsentIdOK  %+v", 200, o.Payload)
 }
-func (o *PaymentsGetConsentsConsentIDOK) GetPayload() *models.OpenbankingBrasilResponsePaymentConsent {
+func (o *PaymentsGetConsentsConsentIDOK) GetPayload() interface{} {
 	return o.Payload
 }
 
@@ -124,10 +124,8 @@ func (o *PaymentsGetConsentsConsentIDOK) readResponse(response runtime.ClientRes
 		o.XFapiInteractionID = hdrXFapiInteractionID
 	}
 
-	o.Payload = new(models.OpenbankingBrasilResponsePaymentConsent)
-
 	// response payload
-	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
+	if err := consumer.Consume(response.Body(), &o.Payload); err != nil && err != io.EOF {
 		return err
 	}
 
@@ -150,13 +148,13 @@ type PaymentsGetConsentsConsentIDBadRequest struct {
 	 */
 	XFapiInteractionID string
 
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilPaymentResponseError
 }
 
 func (o *PaymentsGetConsentsConsentIDBadRequest) Error() string {
 	return fmt.Sprintf("[GET /consents/{consentId}][%d] paymentsGetConsentsConsentIdBadRequest  %+v", 400, o.Payload)
 }
-func (o *PaymentsGetConsentsConsentIDBadRequest) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *PaymentsGetConsentsConsentIDBadRequest) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
 	return o.Payload
 }
 
@@ -169,7 +167,7 @@ func (o *PaymentsGetConsentsConsentIDBadRequest) readResponse(response runtime.C
 		o.XFapiInteractionID = hdrXFapiInteractionID
 	}
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilPaymentResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -195,13 +193,13 @@ type PaymentsGetConsentsConsentIDUnauthorized struct {
 	 */
 	XFapiInteractionID string
 
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilPaymentResponseError
 }
 
 func (o *PaymentsGetConsentsConsentIDUnauthorized) Error() string {
 	return fmt.Sprintf("[GET /consents/{consentId}][%d] paymentsGetConsentsConsentIdUnauthorized  %+v", 401, o.Payload)
 }
-func (o *PaymentsGetConsentsConsentIDUnauthorized) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *PaymentsGetConsentsConsentIDUnauthorized) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
 	return o.Payload
 }
 
@@ -214,7 +212,7 @@ func (o *PaymentsGetConsentsConsentIDUnauthorized) readResponse(response runtime
 		o.XFapiInteractionID = hdrXFapiInteractionID
 	}
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilPaymentResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -240,13 +238,13 @@ type PaymentsGetConsentsConsentIDForbidden struct {
 	 */
 	XFapiInteractionID string
 
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilPaymentResponseError
 }
 
 func (o *PaymentsGetConsentsConsentIDForbidden) Error() string {
 	return fmt.Sprintf("[GET /consents/{consentId}][%d] paymentsGetConsentsConsentIdForbidden  %+v", 403, o.Payload)
 }
-func (o *PaymentsGetConsentsConsentIDForbidden) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *PaymentsGetConsentsConsentIDForbidden) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
 	return o.Payload
 }
 
@@ -259,7 +257,7 @@ func (o *PaymentsGetConsentsConsentIDForbidden) readResponse(response runtime.Cl
 		o.XFapiInteractionID = hdrXFapiInteractionID
 	}
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilPaymentResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -285,13 +283,13 @@ type PaymentsGetConsentsConsentIDNotFound struct {
 	 */
 	XFapiInteractionID string
 
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilPaymentResponseError
 }
 
 func (o *PaymentsGetConsentsConsentIDNotFound) Error() string {
 	return fmt.Sprintf("[GET /consents/{consentId}][%d] paymentsGetConsentsConsentIdNotFound  %+v", 404, o.Payload)
 }
-func (o *PaymentsGetConsentsConsentIDNotFound) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *PaymentsGetConsentsConsentIDNotFound) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
 	return o.Payload
 }
 
@@ -304,7 +302,7 @@ func (o *PaymentsGetConsentsConsentIDNotFound) readResponse(response runtime.Cli
 		o.XFapiInteractionID = hdrXFapiInteractionID
 	}
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilPaymentResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -330,13 +328,13 @@ type PaymentsGetConsentsConsentIDMethodNotAllowed struct {
 	 */
 	XFapiInteractionID string
 
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilPaymentResponseError
 }
 
 func (o *PaymentsGetConsentsConsentIDMethodNotAllowed) Error() string {
 	return fmt.Sprintf("[GET /consents/{consentId}][%d] paymentsGetConsentsConsentIdMethodNotAllowed  %+v", 405, o.Payload)
 }
-func (o *PaymentsGetConsentsConsentIDMethodNotAllowed) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *PaymentsGetConsentsConsentIDMethodNotAllowed) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
 	return o.Payload
 }
 
@@ -349,7 +347,7 @@ func (o *PaymentsGetConsentsConsentIDMethodNotAllowed) readResponse(response run
 		o.XFapiInteractionID = hdrXFapiInteractionID
 	}
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilPaymentResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -375,13 +373,13 @@ type PaymentsGetConsentsConsentIDNotAcceptable struct {
 	 */
 	XFapiInteractionID string
 
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilPaymentResponseError
 }
 
 func (o *PaymentsGetConsentsConsentIDNotAcceptable) Error() string {
 	return fmt.Sprintf("[GET /consents/{consentId}][%d] paymentsGetConsentsConsentIdNotAcceptable  %+v", 406, o.Payload)
 }
-func (o *PaymentsGetConsentsConsentIDNotAcceptable) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *PaymentsGetConsentsConsentIDNotAcceptable) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
 	return o.Payload
 }
 
@@ -394,7 +392,7 @@ func (o *PaymentsGetConsentsConsentIDNotAcceptable) readResponse(response runtim
 		o.XFapiInteractionID = hdrXFapiInteractionID
 	}
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilPaymentResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -425,13 +423,13 @@ type PaymentsGetConsentsConsentIDTooManyRequests struct {
 	 */
 	XFapiInteractionID string
 
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilPaymentResponseError
 }
 
 func (o *PaymentsGetConsentsConsentIDTooManyRequests) Error() string {
 	return fmt.Sprintf("[GET /consents/{consentId}][%d] paymentsGetConsentsConsentIdTooManyRequests  %+v", 429, o.Payload)
 }
-func (o *PaymentsGetConsentsConsentIDTooManyRequests) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *PaymentsGetConsentsConsentIDTooManyRequests) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
 	return o.Payload
 }
 
@@ -451,7 +449,7 @@ func (o *PaymentsGetConsentsConsentIDTooManyRequests) readResponse(response runt
 		o.XFapiInteractionID = hdrXFapiInteractionID
 	}
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilPaymentResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -477,13 +475,13 @@ type PaymentsGetConsentsConsentIDInternalServerError struct {
 	 */
 	XFapiInteractionID string
 
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilPaymentResponseError
 }
 
 func (o *PaymentsGetConsentsConsentIDInternalServerError) Error() string {
 	return fmt.Sprintf("[GET /consents/{consentId}][%d] paymentsGetConsentsConsentIdInternalServerError  %+v", 500, o.Payload)
 }
-func (o *PaymentsGetConsentsConsentIDInternalServerError) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *PaymentsGetConsentsConsentIDInternalServerError) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
 	return o.Payload
 }
 
@@ -496,7 +494,7 @@ func (o *PaymentsGetConsentsConsentIDInternalServerError) readResponse(response 
 		o.XFapiInteractionID = hdrXFapiInteractionID
 	}
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilPaymentResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {
@@ -520,7 +518,7 @@ Erro inesperado.
 type PaymentsGetConsentsConsentIDDefault struct {
 	_statusCode int
 
-	Payload *models.OpenbankingBrasilResponseError
+	Payload *models.OpenbankingBrasilPaymentResponseError
 }
 
 // Code gets the status code for the payments get consents consent Id default response
@@ -531,13 +529,13 @@ func (o *PaymentsGetConsentsConsentIDDefault) Code() int {
 func (o *PaymentsGetConsentsConsentIDDefault) Error() string {
 	return fmt.Sprintf("[GET /consents/{consentId}][%d] paymentsGetConsentsConsentId default  %+v", o._statusCode, o.Payload)
 }
-func (o *PaymentsGetConsentsConsentIDDefault) GetPayload() *models.OpenbankingBrasilResponseError {
+func (o *PaymentsGetConsentsConsentIDDefault) GetPayload() *models.OpenbankingBrasilPaymentResponseError {
 	return o.Payload
 }
 
 func (o *PaymentsGetConsentsConsentIDDefault) readResponse(response runtime.ClientResponse, consumer runtime.Consumer, formats strfmt.Registry) error {
 
-	o.Payload = new(models.OpenbankingBrasilResponseError)
+	o.Payload = new(models.OpenbankingBrasilPaymentResponseError)
 
 	// response payload
 	if err := consumer.Consume(response.Body(), o.Payload); err != nil && err != io.EOF {

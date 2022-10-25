@@ -17,14 +17,14 @@ import (
 )
 
 type BankUserData struct {
-	OBUKAccounts     []models.OBAccount6                      `json:"obuk_accounts"`
-	OBUKBalances     []models.OBReadBalance1DataBalanceItems0 `json:"obuk_balances"`
-	OBUKTransactions []models.OBTransaction6                  `json:"obuk_transactions"`
+	OBUKAccounts     []models.OBAccount6                          `json:"obuk_accounts"`
+	OBUKBalances     []models.OBReadBalance1DataBalanceItems0     `json:"obuk_balances"`
+	OBUKTransactions []models.OBTransaction6                      `json:"obuk_transactions"`
 	OBUKPayments     []obukPaymentModels.OBWriteDomesticResponse5 `json:"obuk_payments"`
 
-	OBBRAccounts []obbrAccountModels.AccountData                         `json:"obbr_accounts"`
-	OBBRBalances []OBBRBalance                                           `json:"obbr_balances"`
-	OBBRPayments []obbrPaymentModels.OpenbankingBrasilResponsePixPayment `json:"obbr_payments"`
+	OBBRAccounts []obbrAccountModels.AccountData                                `json:"obbr_accounts"`
+	OBBRBalances []OBBRBalance                                                  `json:"obbr_balances"`
+	OBBRPayments []obbrPaymentModels.OpenbankingBrasilPaymentResponsePixPayment `json:"obbr_payments"`
 
 	CDRAccounts     []cdrAccountModels.BankingAccount     `json:"cdr_accounts"`
 	CDRTransactions []cdrAccountModels.BankingTransaction `json:"cdr_transactions"`

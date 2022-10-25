@@ -36,7 +36,7 @@ import (
 type OBBRCreatePaymentHandler struct {
 	*Server
 	introspectionResponse *obModels.IntrospectOBBRPaymentConsentResponse
-	request               models.OpenbankingBrasilCreatePixPayment
+	request               models.OpenbankingBrasilPaymentCreatePixPayment
 }
 
 func NewOBBRCreatePaymentHandler(server *Server) CreateEndpointLogic {
@@ -100,7 +100,7 @@ func (h *OBBRCreatePaymentHandler) Validate(c *gin.Context) *Error {
 		return ErrForbidden.WithMessage("token has no " + consentDynamicScope + " scope granted")
 	}
 
-	if models.OpenbankingBrasilStatus(*h.introspectionResponse.Status) != models.OpenbankingBrasilStatusAUTHORISED {
+	if models.OpenbankingBrasilPaymentEnumAuthorisationStatusType(*h.introspectionResponse.Status) != models.OpenbankingBrasilPaymentEnumAuthorisationStatusTypeAUTHORISED {
 		return ErrUnprocessableEntity.WithMessage("payment consent does not have status authorised")
 	}
 
