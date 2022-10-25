@@ -2,7 +2,6 @@ package main
 
 import (
 	"github.com/gin-gonic/gin"
-
 	"github.com/cloudentity/acp-client-go/clients/openbanking/client/f_d_x"
 	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 	system "github.com/cloudentity/acp-client-go/clients/system/client/clients"
@@ -22,17 +21,24 @@ func (o *FDXConsentImpl) FetchConsents(c *gin.Context, accountIDs []string) ([]C
 		clientsResponse  *system.ListClientsSystemOK
 		err              error
 		cac              []ClientConsents
+		resource         *obModels.Resource
+		consentRequest   obModels.FDXConsentsRequest
 	)
+
+	if len(accountIDs) > 0 {
+		resource = &obModels.Resource{
+			ResourceType: "ACCOUNT",
+			Ids:          accountIDs,
+		}
+		consentRequest = obModels.FDXConsentsRequest{
+			Resource: resource,
+		}
+	}
 
 	if consentsResponse, err = o.Client.Openbanking.Fdx.ListFDXConsents(
 		f_d_x.NewListFDXConsentsParamsWithContext(c).
 			WithWid(o.Config.OpenbankingWorkspaceID).
-			WithFDXConsentsRequest(&obModels.FDXConsentsRequest{
-				Resource: &obModels.Resource{
-					ResourceType: "ACCOUNT",
-					Ids:          accountIDs,
-				},
-			}),
+			WithFDXConsentsRequest(&consentRequest),
 		nil,
 	); err != nil {
 		return cac, err
@@ -107,7 +113,6 @@ func (o *FDXConsentImpl) RevokeConsent(c *gin.Context, id string) (err error) {
 		f_d_x.NewRevokeFDXConsentParamsWithContext(c).
 			WithConsentID(id).
 			WithConsentRevocation(&revocation),
-		nil,
 	); err != nil {
 		return err
 	}
