@@ -124,6 +124,10 @@ func (o *OBFDXConsentFetcher) getConsents(response *f_d_x.ListFDXConsentsOK) []C
 			CreatedAt:  consent.CreatedTime,
 			ExpiresAt:  consent.ExpirationTime,
 			UpdatedAt:  consent.UpdatedTime,
+			Type:       "fdx_consent",
+			// permission language is dependent on authorisation scope: https://consumerdatastandardsaustralia.github.io/standards/#banking-language
+			// TODO: unmock this
+			Permissions: []string{"CommonCustomerBasicRead"},
 		})
 	}
 	return consents
