@@ -24,6 +24,14 @@ export class ConsentSelfServicePage {
       .click();
   }
 
+  public clickOnApplicationCardWithName(name: string): void {
+    cy.get(this.applicationCardLocator, { timeout: 30000 })
+      .filter(`:contains(${name})`)
+      .should("be.visible")
+      .should("have.length", 1)
+      .click();
+  }
+
   public assertThatNoAccountsPageIsDisplayed(): void {
     cy.get(this.noAccountTitleLabelLocator, { timeout: 5000 })
       .should("be.visible")
@@ -34,10 +42,6 @@ export class ConsentSelfServicePage {
         `contain.text`,
         `You haven't connected any accounts yet to manage access`
       );
-  }
-
-  public assertThatApplicationCardIsNotDisplayed(): void {
-    cy.get(this.applicationCardLocator, { timeout: 30000 }).should("not.exist");
   }
 
 }
