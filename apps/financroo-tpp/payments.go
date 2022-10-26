@@ -64,7 +64,12 @@ func (o *OBUKClient) CreatePayment(c *gin.Context, data interface{}, accessToken
 func (o *OBBRClient) CreatePayment(c *gin.Context, data interface{}, accessToken string) (PaymentCreated, error) {
 	var (
 		paymentCreatedResponse *pagamentos.PaymentsPostPixPaymentsCreated
-		payment                models.OpenbankingBrasilPaymentResponsePixPayment
+		payload                map[string]interface{}
+		payloadData            map[string]interface{}
+		payloadDataPayment     map[string]interface{}
+		paymentID              string
+		paymentAmount          string
+		paymentCurrency        string
 		consent                *obbr.GetPaymentConsentOK
 		ok                     bool
 		err                    error
@@ -96,13 +101,34 @@ func (o *OBBRClient) CreatePayment(c *gin.Context, data interface{}, accessToken
 		return PaymentCreated{}, errors.Wrapf(err, "failed to call pix payments endpoint")
 	}
 
-	if payment, ok = paymentCreatedResponse.Payload.(models.OpenbankingBrasilPaymentResponsePixPayment); !ok {
-		return PaymentCreated{}, errors.New("failed to decode pix payment response")
+	if payload, ok = paymentCreatedResponse.Payload.(map[string]interface{}); !ok {
+		return PaymentCreated{}, errors.New("failed to decode pix payment response payload")
 	}
+
+	if payloadData, ok = payload["data"].(map[string]interface{}); !ok {
+		return PaymentCreated{}, errors.New("failed to decode pix payment response payload data")
+	}
+
+	if paymentID, ok = payloadData["paymentId"].(string); !ok {
+		return PaymentCreated{}, errors.New("failed to decode pix payment response payload data paymentID")
+	}
+
+	if payloadDataPayment, ok = payloadData["payment"].(map[string]interface{}); !ok {
+		return PaymentCreated{}, errors.New("failed to decode pix payment response payload data payment")
+	}
+
+	if paymentAmount, ok = payloadDataPayment["amount"].(string); !ok {
+		return PaymentCreated{}, errors.New("failed to decode pix payment response payload data payment amount")
+	}
+
+	if paymentCurrency, ok = payloadDataPayment["currency"].(string); !ok {
+		return PaymentCreated{}, errors.New("failed to decode pix payment response payload data payment currency")
+	}
+
 	return PaymentCreated{
-		PaymentID: payment.Data.PaymentID,
-		Amount:    payment.Data.Payment.Amount,
-		Currency:  payment.Data.Payment.Currency,
+		PaymentID: paymentID,
+		Amount:    paymentAmount,
+		Currency:  paymentCurrency,
 	}, nil
 }
 
