@@ -3,8 +3,8 @@ package main
 import (
 	"net/http"
 
-	obbr "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/client"
-	obuk "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accounts/client"
+	obbr "github.com/cloudentity/openbanking-quickstart/generated/obbr/accounts/client"
+	obuk "github.com/cloudentity/openbanking-quickstart/generated/obuk/accounts/client"
 	httptransport "github.com/go-openapi/runtime/client"
 )
 

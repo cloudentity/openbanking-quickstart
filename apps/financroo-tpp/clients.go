@@ -10,12 +10,12 @@ import (
 	"strings"
 	"time"
 
-	cdrBank "github.com/cloudentity/openbanking-quickstart/openbanking/cdr/client"
-	fdxBank "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client"
-	obbrAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/client"
-	obbrPayments "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/client"
-	obukAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accounts/client"
-	payments_client "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/payments/client"
+	cdrBank "github.com/cloudentity/openbanking-quickstart/generated/cdr/client"
+	fdxBank "github.com/cloudentity/openbanking-quickstart/generated/fdx/client"
+	obbrAccounts "github.com/cloudentity/openbanking-quickstart/generated/obbr/accounts/client"
+	obbrPayments "github.com/cloudentity/openbanking-quickstart/generated/obbr/payments/client"
+	obukAccounts "github.com/cloudentity/openbanking-quickstart/generated/obuk/accounts/client"
+	payments_client "github.com/cloudentity/openbanking-quickstart/generated/obuk/payments/client"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 

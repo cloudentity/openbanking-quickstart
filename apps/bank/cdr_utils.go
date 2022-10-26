@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/cloudentity/openbanking-quickstart/openbanking/cdr/models"
+	"github.com/cloudentity/openbanking-quickstart/generated/cdr/models"
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 

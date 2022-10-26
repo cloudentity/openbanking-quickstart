@@ -6,7 +6,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/models"
+	"github.com/cloudentity/openbanking-quickstart/generated/obbr/payments/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 	"github.com/google/uuid"

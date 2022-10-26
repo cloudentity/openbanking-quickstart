@@ -5,7 +5,7 @@ import (
 	"strconv"
 	"strings"
 
-	"github.com/cloudentity/openbanking-quickstart/openbanking/obbr/consents/models"
+	"github.com/cloudentity/openbanking-quickstart/generated/obbr/consents/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 	"github.com/sirupsen/logrus"

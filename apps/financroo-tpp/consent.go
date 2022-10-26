@@ -7,8 +7,8 @@ import (
 	"strconv"
 	"time"
 
-	obbrModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/consents/models"
-	obModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/payments/models"
+	obbrModels "github.com/cloudentity/openbanking-quickstart/generated/obbr/consents/models"
+	obModels "github.com/cloudentity/openbanking-quickstart/generated/obuk/payments/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 	"github.com/google/uuid"

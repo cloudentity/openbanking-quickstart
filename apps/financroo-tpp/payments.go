@@ -1,11 +1,11 @@
 package main
 
 import (
-	"github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/client/pagamentos"
-	"github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/models"
-	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/payments/client/domestic_payments"
+	"github.com/cloudentity/openbanking-quickstart/generated/obbr/payments/client/pagamentos"
+	"github.com/cloudentity/openbanking-quickstart/generated/obbr/payments/models"
+	"github.com/cloudentity/openbanking-quickstart/generated/obuk/payments/client/domestic_payments"
 
-	obModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/payments/models"
+	obModels "github.com/cloudentity/openbanking-quickstart/generated/obuk/payments/models"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 

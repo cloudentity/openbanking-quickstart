@@ -6,12 +6,12 @@ import (
 	"os"
 	"time"
 
-	cdrAccountModels "github.com/cloudentity/openbanking-quickstart/openbanking/cdr/models"
-	fdxAccountModels "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/models"
-	obbrAccountModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/models"
-	obbrPaymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/models"
-	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accounts/models"
-	obukPaymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/payments/models"
+	cdrAccountModels "github.com/cloudentity/openbanking-quickstart/generated/cdr/models"
+	fdxAccountModels "github.com/cloudentity/openbanking-quickstart/generated/fdx/models"
+	obbrAccountModels "github.com/cloudentity/openbanking-quickstart/generated/obbr/accounts/models"
+	obbrPaymentModels "github.com/cloudentity/openbanking-quickstart/generated/obbr/payments/models"
+	"github.com/cloudentity/openbanking-quickstart/generated/obuk/accounts/models"
+	obukPaymentModels "github.com/cloudentity/openbanking-quickstart/generated/obuk/payments/models"
 	"github.com/pkg/errors"
 	bolt "go.etcd.io/bbolt"
 )

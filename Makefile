@@ -93,68 +93,9 @@ set-version:
 generate-%-integration-spec: start-runner
 	./scripts/generate_bank_spec.sh $*
 
-.PHONY: generate-obbr-clients
-generate-obbr-clients: start-runner
-	rm -rf ./openbanking/obbr/accounts/*
-	docker-compose -f docker-compose.acp.local.yaml exec runner sh -c \
-	"swagger generate client \
-		-f api/obbr/accounts.yaml \
-		-A accounts  \
-		-t ./openbanking/obbr/accounts"
-
-.PHONY: generate-obbr-clients2
-generate-obbr-clients2: start-runner
-	rm -rf ./openbanking/obbr/consents/*
-	docker-compose -f docker-compose.acp.local.yaml exec runner sh -c \
-	"swagger generate client \
-		-f api/obbr/consents.yaml \
-		-A consents  \
-		-t ./openbanking/obbr/consents"
-
-.PHONY: generate-obbr-clients3
-generate-obbr-clients3: start-runner
-	rm -rf ./openbanking/obbr/payments/*
-	docker-compose -f docker-compose.acp.local.yaml exec runner sh -c \
-	"swagger generate client \
-		-f api/obbr/payments.yaml \
-		-A payments  \
-		-t ./openbanking/obbr/payments"
-
-.PHONY: generate-cdr-clients
-generate-cdr-clients: start-runner
-	rm -rf ./openbanking/cdr/*
-	docker-compose -f docker-compose.acp.local.yaml exec runner sh -c \
-	"swagger generate client \
-		-f api/cdr/cdr.yaml \
-		-A banking \
-		-t ./openbanking/cdr"
-
-.PHONY: generate-fdx-clients
-generate-fdx-clients: start-runner
-	rm -rf ./openbanking/fdx/*
-	docker-compose -f docker-compose.acp.local.yaml exec runner sh -c \
-	"swagger generate client \
-		-f api/fdx/fdx.yaml \
-		-A client \
-		-t ./openbanking/fdx"
-
-.PHONY: generate-obuk-clients
-generate-obuk-clients: start-runner
-	rm -rf ./openbanking/obuk/accounts/*
-	docker-compose -f docker-compose.acp.local.yaml exec runner sh -c \
-	"swagger generate client \
-		-f api/obuk/accounts.yaml \
-		-A accounts  \
-		-t ./openbanking/obuk/accounts"
-
-.PHONY: generate-obuk-clients2
-generate-obuk-clients2: start-runner
-	rm -rf ./openbanking/obuk/payments/*
-	docker-compose -f docker-compose.acp.local.yaml exec runner sh -c \
-	"swagger generate client \
-		-f api/obuk/payments.yaml \
-		-A payments  \
-		-t ./openbanking/obuk/payments"
+# obuk, obbr, cdr, fdx
+generate-%-clients: start-runner
+	./scripts/generate_clients.sh $*
 
 .PHONY: obbr-conformance-config
 obbr-conformance-config:
