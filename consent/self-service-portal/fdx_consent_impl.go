@@ -109,10 +109,13 @@ func (o *FDXConsentImpl) RevokeConsent(c *gin.Context, id string) (err error) {
 		Initiator: "DATA_ACCESS_PLATFORM",
 		Reason:    "BUSINESS_RULE",
 	}
-	if _, err = o.Client.Openbanking.Fdx.RevokeFDXConsent(
-		f_d_x.NewRevokeFDXConsentParamsWithContext(c).
+
+	if _, err = o.Client.Openbanking.Fdx.RevokeFDXConsentByID(
+		f_d_x.NewRevokeFDXConsentByIDParamsWithContext(c).
+			WithWid(o.Config.OpenbankingWorkspaceID).
 			WithConsentID(id).
-			WithConsentRevocation(&revocation),
+			WithRevocationDetails(&revocation),
+		nil,
 	); err != nil {
 		return err
 	}

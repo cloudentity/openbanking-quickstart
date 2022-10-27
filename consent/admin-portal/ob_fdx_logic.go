@@ -84,9 +84,10 @@ func (o *OBFDXConsentFetcher) Revoke(c *gin.Context, revocationType RevocationTy
 			Reason:    "BUSINESS_RULE",
 		}
 
-		if _, err = o.Client.Openbanking.Fdx.RevokeFDXConsent(
-			f_d_x.NewRevokeFDXConsentParamsWithContext(c).
-				WithConsentRevocation(&revocation).
+		if _, err = o.Client.Openbanking.Fdx.RevokeFDXConsentByID(
+			f_d_x.NewRevokeFDXConsentByIDParamsWithContext(c).
+				WithRevocationDetails(&revocation).
+				WithWid(o.Config.OpenbankingWorkspaceID).
 				WithConsentID(id),
 			nil,
 		); err != nil {

@@ -64,7 +64,8 @@ func (o *OBCDRConsentFetcher) Revoke(c *gin.Context, revocationType RevocationTy
 	case ClientRevocation:
 		if _, err = o.Client.Openbanking.Cdr.RevokeCDRArrangements(
 			cdr.NewRevokeCDRArrangementsParamsWithContext(c).
-				WithClientID(&id).WithWid(o.Config.OpenbankingWorkspaceID),
+				WithClientID(&id).
+				WithWid(o.Config.OpenbankingWorkspaceID),
 			nil,
 		); err != nil {
 			return err
