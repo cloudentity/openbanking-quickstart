@@ -12,7 +12,7 @@ import (
 	"os"
 	"strings"
 
-	"github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/models"
+	"github.com/cloudentity/openbanking-quickstart/generated/fdx/models"
 	"github.com/pkg/errors"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/clientcredentials"
