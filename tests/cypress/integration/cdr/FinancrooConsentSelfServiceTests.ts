@@ -84,7 +84,6 @@ describe(`Financroo Consent self service tests`, () => {
     consentSelfServiceApplicationPage.expandAccountsTab();
     consentSelfServiceApplicationPage.assertAuthorisedAccountRowExists(accountsIDs[0]);
     consentSelfServiceApplicationPage.assertAuthorisedAccountRowExists(accountsIDs[1]);
-
     consentSelfServiceApplicationPage.expandAccountConsentRow();
 
     consentSelfServiceAccountDetailsPage.assertThatAccountDetailsAreVisible();
