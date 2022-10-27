@@ -148,7 +148,7 @@ pipeline {
                 script {
                     sh 'make clean-saas'
                     try {
-                        sh 'make disable-mfa set-saas-configuration run-fdx-saas'
+                        sh 'make disable-mfa run-fdx-saas'
                         sh 'make run-saas-fdx-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
@@ -162,7 +162,7 @@ pipeline {
                 script {
                     sh 'make clean-saas'
                     try {
-                        sh 'make disable-mfa set-saas-configuration run-obuk-saas'
+                        sh 'make disable-mfa run-obuk-saas'
                         sh 'make run-saas-obuk-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
@@ -176,7 +176,7 @@ pipeline {
                 script {
                     sh 'make clean-saas'
                     try {
-                        sh 'make disable-mfa set-saas-configuration run-obbr-saas'
+                        sh 'make disable-mfa run-obbr-saas'
                         sh 'make run-saas-obbr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
@@ -190,7 +190,7 @@ pipeline {
                 script {
                     sh 'make clean-saas'
                     try {
-                        sh 'make disable-mfa set-saas-configuration run-cdr-saas'
+                        sh 'make disable-mfa run-cdr-saas'
                         sh 'make run-saas-cdr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()

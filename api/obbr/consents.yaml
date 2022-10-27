@@ -1,0 +1,1087 @@
+basePath: /open-banking/consents/v2
+consumes:
+- application/json
+definitions:
+  OpenbankingBrasilConsentV2BusinessEntity:
+    description: Titular, pessoa jurdica a quem se referem os dados que so objeto
+      de compartilhamento.
+    properties:
+      document:
+        $ref: '#/definitions/OpenbankingBrasilConsentV2Document1'
+    required:
+    - document
+    title: BusinessEntity
+    type: object
+  OpenbankingBrasilConsentV2CreateConsent:
+    properties:
+      data:
+        $ref: '#/definitions/OpenbankingBrasilConsentV2Data'
+    required:
+    - data
+    title: CreateConsent
+    type: object
+  OpenbankingBrasilConsentV2Data:
+    properties:
+      businessEntity:
+        $ref: '#/definitions/OpenbankingBrasilConsentV2BusinessEntity'
+      expirationDateTime:
+        description: Data e hora de expirao da permisso. De preenchimento obrigatrio,
+          reflete a data limite de validade do consentimento. Uma string com data
+          e hora conforme especificao RFC-3339, sempre com a utilizao de timezone
+          UTC(UTC time format).
+        example: "2021-05-21T08:30:00Z"
+        format: date-time
+        type: string
+        x-nullable: false
+      loggedUser:
+        $ref: '#/definitions/OpenbankingBrasilConsentV2LoggedUser'
+      permissions:
+        example:
+        - ACCOUNTS_READ
+        - ACCOUNTS_OVERDRAFT_LIMITS_READ
+        - RESOURCES_READ
+        items:
+          $ref: '#/definitions/OpenbankingBrasilConsentV2Permission'
+        maxItems: 30
+        minItems: 1
+        type: array
+        x-nullable: false
+    required:
+    - loggedUser
+    - permissions
+    - expirationDateTime
+    title: Data
+    type: object
+  OpenbankingBrasilConsentV2Data1:
+    properties:
+      consentId:
+        description: "O consentId  o identificador nico do consentimento e dever ser
+          um URN - Uniform Resource Name.  \nUm URN, conforme definido na [RFC8141](https://tools.ietf.org/html/rfc8141)
+          \ um Uniform Resource \nIdentifier - URI - que  atribudo sob o URI scheme
+          \"urn\" e um namespace URN especfico, com a inteno de que o URN \nseja um
+          identificador de recurso persistente e independente da localizao.  \nConsiderando
+          a string urn:bancoex:C1DD33123 como exemplo para consentId temos:\n- o namespace(urn)\n-
+          o identificador associado ao namespace da instituio transnmissora (bancoex)
+          \n- o identificador especfico dentro do namespace (C1DD33123).  \nInformaes
+          mais detalhadas sobre a construo de namespaces devem ser consultadas na
+          [RFC8141](https://tools.ietf.org/html/rfc8141)."
+        example: urn:bancoex:C1DD33123
+        maxLength: 256
+        pattern: ^urn:[a-zA-Z0-9][a-zA-Z0-9-]{0,31}:[a-zA-Z0-9()+,\-.:=@;$_!*'%\/?#]+$
+        type: string
+        x-nullable: false
+      creationDateTime:
+        description: Data e hora em que o recurso foi criado. Uma string com data
+          e hora conforme especificao RFC-3339, sempre com a utilizao de timezone
+          UTC(UTC time format).
+        example: "2021-05-21T08:30:00Z"
+        format: date-time
+        type: string
+        x-nullable: false
+      expirationDateTime:
+        description: Data e hora de expirao da permisso. De preenchimento obrigatrio,
+          reflete a data limite de validade do consentimento. Uma string com data
+          e hora conforme especificao RFC-3339, sempre com a utilizao de timezone
+          UTC(UTC time format).
+        example: "2021-05-21T08:30:00Z"
+        format: date-time
+        type: string
+        x-nullable: false
+      permissions:
+        description: Especifica os tipos de permisses de acesso s APIs no escopo do
+          Open Banking Brasil - Fase 2, de acordo com os blocos de consentimento fornecidos
+          pelo usurio e necessrios ao acesso a cada endpoint das APIs.
+        example:
+        - ACCOUNTS_READ
+        - ACCOUNTS_OVERDRAFT_LIMITS_READ
+        - RESOURCES_READ
+        items:
+          $ref: '#/definitions/OpenbankingBrasilConsentV2Permission1'
+        maxItems: 30
+        minItems: 1
+        type: array
+        x-nullable: false
+      status:
+        $ref: '#/definitions/OpenbankingBrasilConsentV2Status'
+      statusUpdateDateTime:
+        description: Data e hora em que o recurso foi atualizado. Uma string com data
+          e hora conforme especificao RFC-3339, sempre com a utilizao de timezone
+          UTC(UTC time format).
+        example: "2021-05-21T08:30:00Z"
+        format: date-time
+        type: string
+        x-nullable: false
+    required:
+    - consentId
+    - creationDateTime
+    - status
+    - statusUpdateDateTime
+    - permissions
+    - expirationDateTime
+    title: Data1
+    type: object
+  OpenbankingBrasilConsentV2Data2:
+    properties:
+      consentId:
+        description: "O consentId  o identificador nico do consentimento e dever ser
+          um URN - Uniform Resource Name.  \nUm URN, conforme definido na [RFC8141](https://tools.ietf.org/html/rfc8141)
+          \ um Uniform Resource \nIdentifier - URI - que  atribudo sob o URI scheme
+          \"urn\" e um namespace URN especfico, com a inteno de que o URN \nseja um
+          identificador de recurso persistente e independente da localizao.  \nConsiderando
+          a string urn:bancoex:C1DD33123 como exemplo para consentId temos:\n- o namespace(urn)\n-
+          o identificador associado ao namespace da instituio transnmissora (bancoex)
+          \n- o identificador especfico dentro do namespace (C1DD33123).  \nInformaes
+          mais detalhadas sobre a construo de namespaces devem ser consultadas na
+          [RFC8141](https://tools.ietf.org/html/rfc8141)."
+        example: urn:bancoex:C1DD33123
+        maxLength: 256
+        pattern: ^urn:[a-zA-Z0-9][a-zA-Z0-9-]{0,31}:[a-zA-Z0-9()+,\-.:=@;$_!*'%\/?#]+$
+        type: string
+        x-nullable: false
+      creationDateTime:
+        description: Data e hora em que o recurso foi criado. Uma string com data
+          e hora conforme especificao RFC-3339, sempre com a utilizao de timezone
+          UTC(UTC time format).
+        example: "2021-05-21T08:30:00Z"
+        format: date-time
+        type: string
+        x-nullable: false
+      expirationDateTime:
+        description: Data e hora de expirao da permisso. De preenchimento obrigatrio,
+          reflete a data limite de validade do consentimento. Uma string com data
+          e hora conforme especificao RFC-3339, sempre com a utilizao de timezone
+          UTC(UTC time format).
+        example: "2021-05-21T08:30:00Z"
+        format: date-time
+        type: string
+        x-nullable: false
+      permissions:
+        description: Especifica os tipos de permisses de acesso s APIs no escopo do
+          Open Banking Brasil - Fase 2, de acordo com os blocos de consentimento fornecidos
+          pelo usurio e necessrios ao acesso a cada endpoint das APIs.
+        example:
+        - ACCOUNTS_READ
+        - ACCOUNTS_OVERDRAFT_LIMITS_READ
+        - RESOURCES_READ
+        items:
+          $ref: '#/definitions/OpenbankingBrasilConsentV2Permission1'
+        maxItems: 30
+        minItems: 1
+        type: array
+        x-nullable: false
+      rejection:
+        $ref: '#/definitions/OpenbankingBrasilConsentV2Rejection'
+      status:
+        $ref: '#/definitions/OpenbankingBrasilConsentV2Status'
+      statusUpdateDateTime:
+        description: Data e hora em que o recurso foi atualizado. Uma string com data
+          e hora conforme especificao RFC-3339, sempre com a utilizao de timezone
+          UTC(UTC time format).
+        example: "2021-05-21T08:30:00Z"
+        format: date-time
+        type: string
+        x-nullable: false
+    required:
+    - consentId
+    - creationDateTime
+    - status
+    - statusUpdateDateTime
+    - permissions
+    - expirationDateTime
+    title: Data2
+    type: object
+  OpenbankingBrasilConsentV2Document:
+    properties:
+      identification:
+        description: Nmero do documento de identificao oficial do usurio.
+        example: "11111111111"
+        maxLength: 11
+        pattern: ^\d{11}$
+        type: string
+        x-nullable: false
+      rel:
+        description: Tipo do documento de identificao oficial do usurio.
+        example: CPF
+        maxLength: 3
+        pattern: ^[A-Z]{3}$
+        type: string
+        x-nullable: false
+    required:
+    - identification
+    - rel
+    title: Document
+    type: object
+  OpenbankingBrasilConsentV2Document1:
+    properties:
+      identification:
+        description: Nmero do documento de identificao oficial do titular pessoa jurdica.
+        example: "11111111111111"
+        maxLength: 14
+        pattern: ^\d{14}$
+        type: string
+        x-nullable: false
+      rel:
+        description: Tipo do documento de identificao oficial do titular pessoa jurdica.
+        example: CNPJ
+        maxLength: 4
+        pattern: ^[A-Z]{4}$
+        type: string
+        x-nullable: false
+    required:
+    - identification
+    - rel
+    title: Document1
+    type: object
+  OpenbankingBrasilConsentV2EnumReasonCode:
+    description: "Define o cdigo da razo pela qual o consentimento foi rejeitado.\n\n-
+      CONSENT_EXPIRED  consentimento que ultrapassou o tempo limite para autorizao.
+      \  \n- CUSTOMER_MANUALLY_REJECTED  cliente efetuou a rejeio do consentimento
+      manualmente atravs de interao nas instituies participantes.   \n- CUSTOMER_MANUALLY_REVOKED
+      \ cliente efetuou a revogao aps a autorizao do consentimento.   \n- CONSENT_MAX_DATE_REACHED
+      \ consentimento que ultrapassou o tempo limite de compartilhamento.   \n- CONSENT_TECHNICAL_ISSUE
+      \ consentimento que foi rejeitado devido a um problema tcnico que impossibilita
+      seu uso pela instituio receptora, por exemplo: falha associada a troca do AuthCode
+      pelo AccessToken, durante o processo de Hybid Flow.   \n- INTERNAL_SECURITY_REASON
+      \ consentimento que foi rejeitado devido as polticas de segurana aplicada pela
+      instituio transmissora."
+    enum:
+    - CONSENT_EXPIRED
+    - CUSTOMER_MANUALLY_REJECTED
+    - CUSTOMER_MANUALLY_REVOKED
+    - CONSENT_MAX_DATE_REACHED
+    - CONSENT_TECHNICAL_ISSUE
+    - INTERNAL_SECURITY_REASON
+    example: CONSENT_EXPIRED
+    title: EnumReasonCode
+    type: string
+  OpenbankingBrasilConsentV2EnumRejectedBy:
+    description: "Informar usurio responsvel pela rejeio.   \n1. USER usurio   \n2.
+      ASPSP instituio transmissora   \n3. TPP instituio receptora"
+    enum:
+    - USER
+    - ASPSP
+    - TPP
+    example: USER
+    title: EnumRejectedBy
+    type: string
+  OpenbankingBrasilConsentV2Error:
+    properties:
+      code:
+        description: Cdigo de erro especfico do endpoint
+        maxLength: 255
+        pattern: '[\w\W\s]*'
+        type: string
+        x-nullable: false
+      detail:
+        description: Descrio legvel por humanos deste erro especfico
+        maxLength: 2048
+        pattern: '[\w\W\s]*'
+        type: string
+        x-nullable: false
+      title:
+        description: Ttulo legvel por humanos deste erro especfico
+        maxLength: 255
+        pattern: '[\w\W\s]*'
+        type: string
+        x-nullable: false
+    required:
+    - code
+    - title
+    - detail
+    title: Error
+    type: object
+  OpenbankingBrasilConsentV2Links:
+    description: Referncias para outros recusos da API requisitada.
+    properties:
+      first:
+        description: URI da primeira pgina que originou essa lista de resultados.
+          Restrio - Obrigatrio quando no for a primeira pgina da resposta
+        example: https://api.banco.com.br/open-banking/api/v1/resource
+        maxLength: 2000
+        pattern: ^(https:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)$
+        type: string
+        x-nullable: true
+      last:
+        description: URI da ltima pgina dessa lista de resultados. Restrio - Obrigatrio
+          quando no for a ltima pgina da resposta
+        example: https://api.banco.com.br/open-banking/api/v1/resource
+        maxLength: 2000
+        pattern: ^(https:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)$
+        type: string
+        x-nullable: true
+      next:
+        description: URI da prxima pgina dessa lista de resultados. Restrio - Obrigatrio
+          quando no for a ltima pgina da resposta
+        example: https://api.banco.com.br/open-banking/api/v1/resource
+        maxLength: 2000
+        pattern: ^(https:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)$
+        type: string
+        x-nullable: true
+      prev:
+        description: "URI da pgina anterior dessa lista de resultados. Restrio - \tObrigatrio
+          quando no for a primeira pgina da resposta"
+        example: https://api.banco.com.br/open-banking/api/v1/resource
+        maxLength: 2000
+        pattern: ^(https:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)$
+        type: string
+        x-nullable: true
+      self:
+        description: URI completo que gerou a resposta atual.
+        example: https://api.banco.com.br/open-banking/api/v1/resource
+        maxLength: 2000
+        pattern: ^(https:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)$
+        type: string
+        x-nullable: false
+    required:
+    - self
+    title: Links
+    type: object
+  OpenbankingBrasilConsentV2LoggedUser:
+    description: Usurio (pessoa natural) que encontra-se logado na instituio receptora
+      e que iniciar o processo de consentimento para compartilhamento de dados.
+    properties:
+      document:
+        $ref: '#/definitions/OpenbankingBrasilConsentV2Document'
+    required:
+    - document
+    title: LoggedUser
+    type: object
+  OpenbankingBrasilConsentV2Meta:
+    description: Meta informaes referente  API requisitada.
+    properties:
+      requestDateTime:
+        description: Data e hora da consulta, conforme especificao RFC-3339, formato
+          UTC.
+        example: "2021-05-21T08:30:00Z"
+        format: date-time
+        type: string
+        x-nullable: false
+      totalPages:
+        description: Nmero total de pginas no resultado
+        example: 1
+        format: int32
+        type: integer
+        x-nullable: false
+      totalRecords:
+        description: Nmero total de registros no resultado
+        example: 1
+        format: int32
+        type: integer
+        x-nullable: false
+    required:
+    - totalRecords
+    - totalPages
+    - requestDateTime
+    title: Meta
+    type: object
+  OpenbankingBrasilConsentV2Meta1:
+    description: Meta informaes referente  API requisitada.
+    properties:
+      requestDateTime:
+        description: Data e hora da consulta, conforme especificao RFC-3339, formato
+          UTC.
+        example: "2021-05-21T08:30:00Z"
+        format: date-time
+        type: string
+        x-nullable: false
+    required:
+    - requestDateTime
+    title: Meta1
+    type: object
+  OpenbankingBrasilConsentV2Permission:
+    description: Especifica os tipos de permisses de acesso s APIs no escopo do Open
+      Banking Brasil - Fase 2, de acordo com os blocos de consentimento fornecidos
+      pelo usurio e necessrios ao acesso a cada endpoint das APIs.
+    enum:
+    - ACCOUNTS_READ
+    - ACCOUNTS_BALANCES_READ
+    - ACCOUNTS_TRANSACTIONS_READ
+    - ACCOUNTS_OVERDRAFT_LIMITS_READ
+    - CREDIT_CARDS_ACCOUNTS_READ
+    - CREDIT_CARDS_ACCOUNTS_BILLS_READ
+    - CREDIT_CARDS_ACCOUNTS_BILLS_TRANSACTIONS_READ
+    - CREDIT_CARDS_ACCOUNTS_LIMITS_READ
+    - CREDIT_CARDS_ACCOUNTS_TRANSACTIONS_READ
+    - CUSTOMERS_PERSONAL_IDENTIFICATIONS_READ
+    - CUSTOMERS_PERSONAL_ADITTIONALINFO_READ
+    - CUSTOMERS_BUSINESS_IDENTIFICATIONS_READ
+    - CUSTOMERS_BUSINESS_ADITTIONALINFO_READ
+    - FINANCINGS_READ
+    - FINANCINGS_SCHEDULED_INSTALMENTS_READ
+    - FINANCINGS_PAYMENTS_READ
+    - FINANCINGS_WARRANTIES_READ
+    - INVOICE_FINANCINGS_READ
+    - INVOICE_FINANCINGS_SCHEDULED_INSTALMENTS_READ
+    - INVOICE_FINANCINGS_PAYMENTS_READ
+    - INVOICE_FINANCINGS_WARRANTIES_READ
+    - LOANS_READ
+    - LOANS_SCHEDULED_INSTALMENTS_READ
+    - LOANS_PAYMENTS_READ
+    - LOANS_WARRANTIES_READ
+    - UNARRANGED_ACCOUNTS_OVERDRAFT_READ
+    - UNARRANGED_ACCOUNTS_OVERDRAFT_SCHEDULED_INSTALMENTS_READ
+    - UNARRANGED_ACCOUNTS_OVERDRAFT_PAYMENTS_READ
+    - UNARRANGED_ACCOUNTS_OVERDRAFT_WARRANTIES_READ
+    - RESOURCES_READ
+    title: Permission
+    type: string
+  OpenbankingBrasilConsentV2Permission1:
+    enum:
+    - ACCOUNTS_READ
+    - ACCOUNTS_BALANCES_READ
+    - ACCOUNTS_TRANSACTIONS_READ
+    - ACCOUNTS_OVERDRAFT_LIMITS_READ
+    - CREDIT_CARDS_ACCOUNTS_READ
+    - CREDIT_CARDS_ACCOUNTS_BILLS_READ
+    - CREDIT_CARDS_ACCOUNTS_BILLS_TRANSACTIONS_READ
+    - CREDIT_CARDS_ACCOUNTS_LIMITS_READ
+    - CREDIT_CARDS_ACCOUNTS_TRANSACTIONS_READ
+    - CUSTOMERS_PERSONAL_IDENTIFICATIONS_READ
+    - CUSTOMERS_PERSONAL_ADITTIONALINFO_READ
+    - CUSTOMERS_BUSINESS_IDENTIFICATIONS_READ
+    - CUSTOMERS_BUSINESS_ADITTIONALINFO_READ
+    - FINANCINGS_READ
+    - FINANCINGS_SCHEDULED_INSTALMENTS_READ
+    - FINANCINGS_PAYMENTS_READ
+    - FINANCINGS_WARRANTIES_READ
+    - INVOICE_FINANCINGS_READ
+    - INVOICE_FINANCINGS_SCHEDULED_INSTALMENTS_READ
+    - INVOICE_FINANCINGS_PAYMENTS_READ
+    - INVOICE_FINANCINGS_WARRANTIES_READ
+    - LOANS_READ
+    - LOANS_SCHEDULED_INSTALMENTS_READ
+    - LOANS_PAYMENTS_READ
+    - LOANS_WARRANTIES_READ
+    - UNARRANGED_ACCOUNTS_OVERDRAFT_READ
+    - UNARRANGED_ACCOUNTS_OVERDRAFT_SCHEDULED_INSTALMENTS_READ
+    - UNARRANGED_ACCOUNTS_OVERDRAFT_PAYMENTS_READ
+    - UNARRANGED_ACCOUNTS_OVERDRAFT_WARRANTIES_READ
+    - RESOURCES_READ
+    title: Permission1
+    type: string
+  OpenbankingBrasilConsentV2RejectedReason:
+    description: Define a razo pela qual o consentimento foi rejeitado.
+    properties:
+      additionalInformation:
+        description: Contm informaes adicionais a critrio da transmissora.
+        example: Tempo de confirmao da mltipla alada excedido.
+        maxLength: 140
+        pattern: '[\w\W\s]*'
+        type: string
+        x-nullable: true
+      code:
+        $ref: '#/definitions/OpenbankingBrasilConsentV2EnumReasonCode'
+    required:
+    - code
+    title: RejectedReason
+    type: object
+  OpenbankingBrasilConsentV2Rejection:
+    description: Objeto a ser retornado caso o consentimento seja rejeitado.
+    properties:
+      reason:
+        $ref: '#/definitions/OpenbankingBrasilConsentV2RejectedReason'
+      rejectedBy:
+        $ref: '#/definitions/OpenbankingBrasilConsentV2EnumRejectedBy'
+    required:
+    - rejectedBy
+    - reason
+    title: Rejection
+    type: object
+  OpenbankingBrasilConsentV2ResponseConsent:
+    properties:
+      data:
+        $ref: '#/definitions/OpenbankingBrasilConsentV2Data1'
+      links:
+        $ref: '#/definitions/OpenbankingBrasilConsentV2Links'
+      meta:
+        $ref: '#/definitions/OpenbankingBrasilConsentV2Meta'
+    required:
+    - data
+    title: ResponseConsent
+    type: object
+  OpenbankingBrasilConsentV2ResponseConsentRead:
+    properties:
+      data:
+        $ref: '#/definitions/OpenbankingBrasilConsentV2Data2'
+      links:
+        $ref: '#/definitions/OpenbankingBrasilConsentV2Links'
+      meta:
+        $ref: '#/definitions/OpenbankingBrasilConsentV2Meta'
+    required:
+    - data
+    title: ResponseConsentRead
+    type: object
+  OpenbankingBrasilConsentV2ResponseError:
+    properties:
+      errors:
+        items:
+          $ref: '#/definitions/OpenbankingBrasilConsentV2Error'
+        maxItems: 13
+        minItems: 1
+        type: array
+        x-nullable: false
+      meta:
+        $ref: '#/definitions/OpenbankingBrasilConsentV2Meta'
+    required:
+    - errors
+    title: ResponseError
+    type: object
+  OpenbankingBrasilConsentV2ResponseErrorMetaSingle:
+    properties:
+      errors:
+        items:
+          $ref: '#/definitions/OpenbankingBrasilConsentV2Error'
+        maxItems: 13
+        minItems: 1
+        type: array
+        x-nullable: false
+      meta:
+        $ref: '#/definitions/OpenbankingBrasilConsentV2Meta1'
+    required:
+    - errors
+    title: ResponseErrorMetaSingle
+    type: object
+  OpenbankingBrasilConsentV2SiteIsOverloaded1:
+    properties:
+      errors:
+        items:
+          $ref: '#/definitions/OpenbankingBrasilConsentV2Error'
+        maxItems: 13
+        minItems: 1
+        type: array
+        x-nullable: false
+      meta:
+        $ref: '#/definitions/OpenbankingBrasilConsentV2Meta'
+    required:
+    - errors
+    title: SiteIsOverloaded1
+    type: object
+  OpenbankingBrasilConsentV2Status:
+    description: Estado atual do consentimento cadastrado.
+    enum:
+    - AUTHORISED
+    - AWAITING_AUTHORISATION
+    - REJECTED
+    example: AWAITING_AUTHORISATION
+    title: Status
+    type: string
+host: api.banco.com.br
+info:
+  contact:
+    email: gt-interfaces@openbankingbr.org
+    name: Governana do Open Banking Brasil - Especificaes
+    url: https://openbanking-brasil.github.io/areadesenvolvedor/
+  description: "API que trata da criao, consulta e revogao de consentimentos para
+    o Open Banking Brasil Fase 2 - customer-data.  \nNo possui segregao entre pessoa
+    natural e pessoa jurdica.    \n\n# Orientaes importantes\nA API Consents trata
+    dos consentimentos exclusivamente para a fase 2 do Open Banking Brasil.\n- As
+    informaes da instituio receptora no trafegam na API Consents  a autenticao da
+    receptora se d atravs do [DCR](https://openbanking-brasil.github.io/specs-seguranca/open-banking-brasil-dynamic-client-registration-1_ID1.html).
+    \  \n- Na chamada para a criao do consentimento deve-se utilizar um token gerado
+    via `client_credentials`.\n- Aps o `POST` de criao do consentimento, o `STATUS`
+    devolvido na resposta dever ser `AWAITING_AUTHORISATION`.\n- O `STATUS` ser alterado
+    para `AUTHORISED` somente aps autenticao e confirmao por parte do usurio na instituio
+    transmissora dos dados.\n- Alterao obrigatria do status `AWAITING_AUTHORISATION`
+    para `REVOKED` aps 60 minutos.\n- Todas as datas trafegadas nesta API seguem o
+    padro da [RFC3339](https://tools.ietf.org/html/rfc3339) e formato \"zulu\".\n-
+    A descrio do fluxo de consentimento encontra-se disponvel no [Portal do desenvolvedor](https://openbanking-brasil.github.io/areadesenvolvedor/#em-revisao-fluxo-de-consentimento).\n-
+    O arquivo com o mapeamento completo entre `Roles`, `scopes` e `permissions` est
+    disponibilizado no Portal do desenvolvedor, no mesmo item acima - descrio do fluxo
+    de consentimento.\n- A receptora deve enviar obrigatoriamente, no pedido de criao
+    de consentimento, todas as permissions dos agrupamentos de dados as quais ela
+    deseja consentimento, conforme tabela abaixo:\n  \n  ```\n  |----------------------|-------------------------------|----------------------------------------------------------|\n
+    \ | CATEGORIA DE DADOS   | AGRUPAMENTO                   | PERMISSIONS                                              |\n
+    \ |----------------------|-------------------------------|----------------------------------------------------------|\n
+    \ | Cadastro             | Dados Cadastrais PF           | CUSTOMERS_PERSONAL_IDENTIFICATIONS_READ
+    \                 |\n  |                      |                               |
+    RESOURCES_READ                                           |\n  |----------------------|-------------------------------|----------------------------------------------------------|\n
+    \ | Cadastro             | Informaes complementares PF | CUSTOMERS_PERSONAL_ADITTIONALINFO_READ
+    \                  |\n  |                      |                               |
+    RESOURCES_READ                                           |\n  |----------------------|-------------------------------|----------------------------------------------------------|\n
+    \ | Cadastro             | Dados Cadastrais PJ           | CUSTOMERS_BUSINESS_IDENTIFICATIONS_READ
+    \                 |\n  |                      |                               |
+    RESOURCES_READ                                           |\n  |----------------------|-------------------------------|----------------------------------------------------------|\n
+    \ | Cadastro             | Informaes complementares PJ | CUSTOMERS_BUSINESS_ADITTIONALINFO_READ
+    \                  |\n  |                      |                               |
+    RESOURCES_READ                                           |\n  |----------------------|-------------------------------|----------------------------------------------------------|\n
+    \ | Contas               | Saldos                        | ACCOUNTS_READ                                            |\n
+    \ |                      |                               | ACCOUNTS_BALANCES_READ
+    \                                  |\n  |                      |                               |
+    RESOURCES_READ                                           |\n  |----------------------|-------------------------------|----------------------------------------------------------|\n
+    \ | Contas               | Limites                       | ACCOUNTS_READ                                            |\n
+    \ |                      |                               | ACCOUNTS_OVERDRAFT_LIMITS_READ
+    \                          |\n  |                      |                               |
+    RESOURCES_READ                                           |\n  |----------------------|-------------------------------|----------------------------------------------------------|\n
+    \ | Contas               | Extratos                      | ACCOUNTS_READ                                            |\n
+    \ |                      |                               | ACCOUNTS_TRANSACTIONS_READ
+    \                              |\n  |                      |                               |
+    RESOURCES_READ                                           |\n  |----------------------|-------------------------------|----------------------------------------------------------|\n
+    \ | Carto de Crdito    | Limites                       | CREDIT_CARDS_ACCOUNTS_READ
+    \                              |\n  |                      |                               |
+    CREDIT_CARDS_ACCOUNTS_LIMITS_READ                        |\n  |                      |
+    \                              | RESOURCES_READ                                           |\n
+    \ |----------------------|-------------------------------|----------------------------------------------------------|\n
+    \ | Carto de Crdito    | Transaes                    | CREDIT_CARDS_ACCOUNTS_READ
+    \                              |\n  |                      |                               |
+    CREDIT_CARDS_ACCOUNTS_TRANSACTIONS_READ                  |\n  |                      |
+    \                              | RESOURCES_READ                                           |\n
+    \ |----------------------|-------------------------------|----------------------------------------------------------|\n
+    \ | Carto de Crdito    | Faturas                       | CREDIT_CARDS_ACCOUNTS_READ
+    \                              |\n  |                      |                               |
+    CREDIT_CARDS_ACCOUNTS_BILLS_READ                         |\n  |                      |
+    \                              | CREDIT_CARDS_ACCOUNTS_BILLS_TRANSACTIONS_READ
+    \           |\n  |                      |                               | RESOURCES_READ
+    \                                          |\n  |----------------------|-------------------------------|----------------------------------------------------------|\n
+    \ | Operaes de Crdito | Dados do Contrato             | LOANS_READ                                               |\n
+    \ |                      |                               | LOANS_WARRANTIES_READ
+    \                                   |\n  |                      |                               |
+    LOANS_SCHEDULED_INSTALMENTS_READ                         |\n  |                      |
+    \                              | LOANS_PAYMENTS_READ                                      |\n
+    \ |                      |                               | FINANCINGS_READ                                          |\n
+    \ |                      |                               | FINANCINGS_WARRANTIES_READ
+    \                              |\n  |                      |                               |
+    FINANCINGS_SCHEDULED_INSTALMENTS_READ                    |\n  |                      |
+    \                              | FINANCINGS_PAYMENTS_READ                                 |\n
+    \ |                      |                               | UNARRANGED_ACCOUNTS_OVERDRAFT_READ
+    \                      |\n  |                      |                               |
+    UNARRANGED_ACCOUNTS_OVERDRAFT_WARRANTIES_READ            |\n  |                      |
+    \                              | UNARRANGED_ACCOUNTS_OVERDRAFT_SCHEDULED_INSTALMENTS_READ
+    |\n  |                      |                               | UNARRANGED_ACCOUNTS_OVERDRAFT_PAYMENTS_READ
+    \             |\n  |                      |                               | INVOICE_FINANCINGS_READ
+    \                                 |\n  |                      |                               |
+    INVOICE_FINANCINGS_WARRANTIES_READ                       |\n  |                      |
+    \                              | INVOICE_FINANCINGS_SCHEDULED_INSTALMENTS_READ
+    \           |\n  |                      |                               | INVOICE_FINANCINGS_PAYMENTS_READ
+    \                        |\n  |                      |                               |
+    RESOURCES_READ                                           |\n  |----------------------|-------------------------------|----------------------------------------------------------|\n
+    \ ```\n- A instituio transmissora deve validar o preenchimento correto desses
+    agrupamentos no momento da gerao do consentimento.\n- Caso a instiuio receptora
+    envie permisses divergentes ao agrupamento especificado na tabela, a transmissora
+    deve rejeitar o pedido da receptora dando retorno HTTP Status Code 400.\n- A transmissora
+    deve retornar, da lista de permissions requisitadas, apenas o subconjunto de permissions
+    por ela suportada, removendo da lista as permissions de produtos no suportados
+    e retornando HTTP Status Code 201. Caso no restem permisses funcionais, a instituio
+    transmissora deve retornar o erro HTTP Code \"422 Unprocessable Entity\".\n"
+  title: API Consents - Open Banking Brasil
+  version: 2.0.1
+paths:
+  /consents:
+    post:
+      consumes:
+      - application/json
+      deprecated: false
+      description: Mtodo para a criao de um novo consentimento.
+      operationId: consentsPostConsents
+      parameters:
+      - description: Cabealho HTTP padro. Permite que as credenciais sejam fornecidas
+          dependendo do tipo de recurso solicitado
+        in: header
+        maxLength: 2048
+        name: Authorization
+        pattern: '[\w\W\s]*'
+        required: true
+        type: string
+      - description: 'Data em que o usurio logou pela ltima vez com o receptor. Representada
+          de acordo com a [RFC7231](https://tools.ietf.org/html/rfc7231).Exemplo:
+          Sun, 10 Sep 2017 19:43:31 UTC'
+        in: header
+        maxLength: 29
+        minLength: 29
+        name: x-fapi-auth-date
+        pattern: ^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)
+          \d{4} \d{2}:\d{2}:\d{2} (GMT|UTC)$
+        type: string
+      - description: O endereo IP do usurio se estiver atualmente logado com o receptor.
+        in: header
+        maxLength: 100
+        minLength: 1
+        name: x-fapi-customer-ip-address
+        pattern: '[\w\W\s]*'
+        type: string
+      - description: Um UID [RFC4122](https://tools.ietf.org/html/rfc4122) usado como
+          um ID de correlao. Se fornecido, o transmissor deve "reproduzir" esse valor
+          no cabealho de resposta.
+        in: header
+        maxLength: 100
+        minLength: 1
+        name: x-fapi-interaction-id
+        pattern: ^[a-zA-Z0-9][a-zA-Z0-9\-]{0,99}$
+        type: string
+      - description: Indica o user-agent que o usurio utiliza.
+        in: header
+        maxLength: 100
+        minLength: 1
+        name: x-customer-user-agent
+        pattern: '[\w\W\s]*'
+        type: string
+      - enum:
+        - application/json
+        in: header
+        name: Content-Type
+        type: string
+      - description: Payload para criao do consentimento.
+        in: body
+        name: body
+        required: true
+        schema:
+          $ref: '#/definitions/OpenbankingBrasilConsentV2CreateConsent'
+      produces:
+      - application/json
+      - application/json; charset=utf-8
+      responses:
+        "201":
+          description: Consentimento criado com sucesso.
+          headers:
+            x-fapi-interaction-id:
+              description: "Um UID [RFC4122](https://tools.ietf.org/html/rfc4122)
+                usado como um ID de correlao.  \nSe fornecido, o transmissor deve
+                \"reproduzir\" esse valor no cabealho de resposta.          \n"
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseConsent'
+        "400":
+          description: A requisio foi malformada, omitindo atributos obrigatrios,
+            seja no payload ou atravs de atributos na URL.
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        "401":
+          description: Cabealho de autenticao ausente/invlido ou token invlido
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        "403":
+          description: O token tem escopo incorreto ou uma poltica de segurana foi
+            violada
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        "404":
+          description: O recurso solicitado no existe ou no foi implementado
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        "405":
+          description: O consumidor tentou acessar o recurso com um mtodo no suportado
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        "406":
+          description: A solicitao continha um cabealho Accept diferente dos tipos
+            de mdia permitidos ou um conjunto de caracteres diferente de UTF-8
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        "415":
+          description: O formato do payload no  um formato suportado.
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        "422":
+          description: A sintaxe da requisio esta correta, mas no foi possvel processar
+            as instrues presentes.
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        "429":
+          description: A operao foi recusada, pois muitas solicitaes foram feitas
+            dentro de um determinado perodo ou o limite global de requisies concorrentes
+            foi atingido
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        "500":
+          description: Ocorreu um erro no gateway da API ou no microsservio
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        "504":
+          description: GATEWAY TIMEOUT - A requisio no foi atendida dentro do tempo
+            limite estabelecido
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        "529":
+          description: O site est sobrecarregado e a operao foi recusada, pois foi
+            atingido o limite mximo de TPS global, neste momento.
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        default:
+          description: Erro inesperado.
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+      security:
+      - OAuth2Security:
+        - consents
+      summary: consentsPostConsents
+      tags:
+      - Consents
+  /consents/{consentId}:
+    delete:
+      deprecated: false
+      description: Mtodo para deletar / revogar o consentimento identificado por consentId.
+      operationId: consentsDeleteConsentsConsentId
+      parameters:
+      - description: "O consentId  o identificador nico do consentimento e dever ser
+          um URN - Uniform Resource Name.  \nUm URN, conforme definido na [RFC8141](https://tools.ietf.org/html/rfc8141)
+          \ um Uniform Resource \nIdentifier - URI - que  atribudo sob o URI scheme
+          \"urn\" e um namespace URN especfico, com a inteno de que o URN \nseja um
+          identificador de recurso persistente e independente da localizao.  \nConsiderando
+          a string urn:bancoex:C1DD33123 como exemplo para consentId temos:\n- o namespace(urn)\n-
+          o identificador associado ao namespace da instituio transnmissora (bancoex)
+          \n- o identificador especfico dentro do namespace (C1DD33123).  \nInformaes
+          mais detalhadas sobre a construo de namespaces devem ser consultadas na
+          [RFC8141](https://tools.ietf.org/html/rfc8141)."
+        in: path
+        maxLength: 256
+        name: consentId
+        pattern: ^urn:[a-zA-Z0-9][a-zA-Z0-9-]{0,31}:[a-zA-Z0-9()+,\-.:=@;$_!*'%\/?#]+$
+        required: true
+        type: string
+      - description: Cabealho HTTP padro. Permite que as credenciais sejam fornecidas
+          dependendo do tipo de recurso solicitado
+        in: header
+        maxLength: 2048
+        name: Authorization
+        pattern: '[\w\W\s]*'
+        required: true
+        type: string
+      - description: 'Data em que o usurio logou pela ltima vez com o receptor. Representada
+          de acordo com a [RFC7231](https://tools.ietf.org/html/rfc7231).Exemplo:
+          Sun, 10 Sep 2017 19:43:31 UTC'
+        in: header
+        maxLength: 29
+        minLength: 29
+        name: x-fapi-auth-date
+        pattern: ^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)
+          \d{4} \d{2}:\d{2}:\d{2} (GMT|UTC)$
+        type: string
+      - description: O endereo IP do usurio se estiver atualmente logado com o receptor.
+        in: header
+        maxLength: 100
+        minLength: 1
+        name: x-fapi-customer-ip-address
+        pattern: '[\w\W\s]*'
+        type: string
+      - description: Um UID [RFC4122](https://tools.ietf.org/html/rfc4122) usado como
+          um ID de correlao. Se fornecido, o transmissor deve "reproduzir" esse valor
+          no cabealho de resposta.
+        in: header
+        maxLength: 100
+        minLength: 1
+        name: x-fapi-interaction-id
+        pattern: ^[a-zA-Z0-9][a-zA-Z0-9\-]{0,99}$
+        type: string
+      - description: Indica o user-agent que o usurio utiliza.
+        in: header
+        maxLength: 100
+        minLength: 1
+        name: x-customer-user-agent
+        pattern: '[\w\W\s]*'
+        type: string
+      produces:
+      - application/json; charset=utf-8
+      - application/json
+      responses:
+        "204":
+          description: Consentimento revogado com sucesso.
+          headers:
+            x-fapi-interaction-id:
+              description: "Um UID [RFC4122](https://tools.ietf.org/html/rfc4122)
+                usado como um ID de correlao.  \nSe fornecido, o transmissor deve
+                \"reproduzir\" esse valor no cabealho de resposta.          \n"
+              type: string
+        "400":
+          description: A requisio foi malformada, omitindo atributos obrigatrios,
+            seja no payload ou atravs de atributos na URL.
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        "401":
+          description: Cabealho de autenticao ausente/invlido ou token invlido
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        "403":
+          description: O token tem escopo incorreto ou uma poltica de segurana foi
+            violada
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        "404":
+          description: O recurso solicitado no existe ou no foi implementado
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        "405":
+          description: O consumidor tentou acessar o recurso com um mtodo no suportado
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        "406":
+          description: A solicitao continha um cabealho Accept diferente dos tipos
+            de mdia permitidos ou um conjunto de caracteres diferente de UTF-8
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        "429":
+          description: A operao foi recusada, pois muitas solicitaes foram feitas
+            dentro de um determinado perodo ou o limite global de requisies concorrentes
+            foi atingido
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        "500":
+          description: Ocorreu um erro no gateway da API ou no microsservio
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        "504":
+          description: GATEWAY TIMEOUT - A requisio no foi atendida dentro do tempo
+            limite estabelecido
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        "529":
+          description: O site est sobrecarregado e a operao foi recusada, pois foi
+            atingido o limite mximo de TPS global, neste momento.
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        default:
+          description: Erro inesperado.
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+      security:
+      - OAuth2Security:
+        - consents
+      summary: consentsDeleteConsentsConsentId
+      tags:
+      - Consents
+    get:
+      deprecated: false
+      description: Mtodo para obter detalhes do consentimento identificado por consentId.
+      operationId: consentsGetConsentsConsentId
+      parameters:
+      - description: "O consentId  o identificador nico do consentimento e dever ser
+          um URN - Uniform Resource Name.  \nUm URN, conforme definido na [RFC8141](https://tools.ietf.org/html/rfc8141)
+          \ um Uniform Resource \nIdentifier - URI - que  atribudo sob o URI scheme
+          \"urn\" e um namespace URN especfico, com a inteno de que o URN \nseja um
+          identificador de recurso persistente e independente da localizao.  \nConsiderando
+          a string urn:bancoex:C1DD33123 como exemplo para consentId temos:\n- o namespace(urn)\n-
+          o identificador associado ao namespace da instituio transnmissora (bancoex)
+          \n- o identificador especfico dentro do namespace (C1DD33123).  \nInformaes
+          mais detalhadas sobre a construo de namespaces devem ser consultadas na
+          [RFC8141](https://tools.ietf.org/html/rfc8141)."
+        in: path
+        maxLength: 256
+        name: consentId
+        pattern: ^urn:[a-zA-Z0-9][a-zA-Z0-9-]{0,31}:[a-zA-Z0-9()+,\-.:=@;$_!*'%\/?#]+$
+        required: true
+        type: string
+      - description: Cabealho HTTP padro. Permite que as credenciais sejam fornecidas
+          dependendo do tipo de recurso solicitado
+        in: header
+        maxLength: 2048
+        name: Authorization
+        pattern: '[\w\W\s]*'
+        required: true
+        type: string
+      - description: 'Data em que o usurio logou pela ltima vez com o receptor. Representada
+          de acordo com a [RFC7231](https://tools.ietf.org/html/rfc7231).Exemplo:
+          Sun, 10 Sep 2017 19:43:31 UTC'
+        in: header
+        maxLength: 29
+        minLength: 29
+        name: x-fapi-auth-date
+        pattern: ^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)
+          \d{4} \d{2}:\d{2}:\d{2} (GMT|UTC)$
+        type: string
+      - description: O endereo IP do usurio se estiver atualmente logado com o receptor.
+        in: header
+        maxLength: 100
+        minLength: 1
+        name: x-fapi-customer-ip-address
+        pattern: '[\w\W\s]*'
+        type: string
+      - description: Um UID [RFC4122](https://tools.ietf.org/html/rfc4122) usado como
+          um ID de correlao. Se fornecido, o transmissor deve "reproduzir" esse valor
+          no cabealho de resposta.
+        in: header
+        maxLength: 100
+        minLength: 1
+        name: x-fapi-interaction-id
+        pattern: ^[a-zA-Z0-9][a-zA-Z0-9\-]{0,99}$
+        type: string
+      - description: Indica o user-agent que o usurio utiliza.
+        in: header
+        maxLength: 100
+        minLength: 1
+        name: x-customer-user-agent
+        pattern: '[\w\W\s]*'
+        type: string
+      produces:
+      - application/json
+      - application/json; charset=utf-8
+      responses:
+        "200":
+          description: Consentimento consultado com sucesso.
+          headers:
+            x-fapi-interaction-id:
+              description: "Um UID [RFC4122](https://tools.ietf.org/html/rfc4122)
+                usado como um ID de correlao.  \nSe fornecido, o transmissor deve
+                \"reproduzir\" esse valor no cabealho de resposta.          \n"
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseConsentRead'
+        "400":
+          description: A requisio foi malformada, omitindo atributos obrigatrios,
+            seja no payload ou atravs de atributos na URL.
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        "401":
+          description: Cabealho de autenticao ausente/invlido ou token invlido
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        "403":
+          description: O token tem escopo incorreto ou uma poltica de segurana foi
+            violada
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        "404":
+          description: O recurso solicitado no existe ou no foi implementado
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        "405":
+          description: O consumidor tentou acessar o recurso com um mtodo no suportado
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        "406":
+          description: A solicitao continha um cabealho Accept diferente dos tipos
+            de mdia permitidos ou um conjunto de caracteres diferente de UTF-8
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        "429":
+          description: A operao foi recusada, pois muitas solicitaes foram feitas
+            dentro de um determinado perodo ou o limite global de requisies concorrentes
+            foi atingido
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        "500":
+          description: Ocorreu um erro no gateway da API ou no microsservio
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        "504":
+          description: GATEWAY TIMEOUT - A requisio no foi atendida dentro do tempo
+            limite estabelecido
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        "529":
+          description: O site est sobrecarregado e a operao foi recusada, pois foi
+            atingido o limite mximo de TPS global, neste momento.
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+        default:
+          description: Erro inesperado.
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilConsentV2ResponseError'
+      security:
+      - OAuth2Security:
+        - consents
+      summary: consentsGetConsentsConsentId
+      tags:
+      - Consents
+produces:
+- application/json
+schemes:
+- https
+securityDefinitions:
+  OAuth2Security:
+    flow: application
+    scopes:
+      consents: Criao do consentimento.
+    tokenUrl: https://authserver.example/token
+    type: oauth2
+swagger: "2.0"
+tags:
+- description: Operaes para criao, consulta e revogao do consentimento dado pelo cliente.
+  name: Consents

@@ -3,9 +3,9 @@ package main
 import (
 	"time"
 
-	obbrAccountModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/models"
-	"github.com/cloudentity/openbanking-quickstart/openbanking/obbr/consents/models"
-	paymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/models"
+	obbrAccountModels "github.com/cloudentity/openbanking-quickstart/generated/obbr/accounts/models"
+	"github.com/cloudentity/openbanking-quickstart/generated/obbr/consents/models"
+	paymentModels "github.com/cloudentity/openbanking-quickstart/generated/obbr/payments/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 
@@ -13,8 +13,8 @@ import (
 )
 
 func OBBRMapError(c *gin.Context, err *Error) (code int, resp interface{}) {
-	code, resp = err.Code, models.OpenbankingBrasilResponseError{
-		Errors: []*models.OpenbankingBrasilError{
+	code, resp = err.Code, models.OpenbankingBrasilConsentV2ResponseError{
+		Errors: []*models.OpenbankingBrasilConsentV2Error{
 			{
 				Detail: err.Message,
 			},
@@ -43,28 +43,28 @@ func OBBRPermsToStringSlice(perms []obModels.OpenbankingBrasilConsentPermission1
 	return slice
 }
 
-func NewOBBRPayment(introspectionResponse *obModels.IntrospectOBBRPaymentConsentResponse, self strfmt.URI, id string) paymentModels.OpenbankingBrasilResponsePixPayment {
+func NewOBBRPayment(introspectionResponse *obModels.IntrospectOBBRPaymentConsentResponse, self strfmt.URI, id string) paymentModels.OpenbankingBrasilPaymentResponsePixPayment {
 	now := strfmt.DateTime(time.Now())
-	status := paymentModels.OpenbankingBrasilStatus1PDNG
-	localInstrument := paymentModels.OpenbankingBrasilEnumLocalInstrumentMANU
-	return paymentModels.OpenbankingBrasilResponsePixPayment{
-		Data: &paymentModels.OpenbankingBrasilResponsePixPaymentData{
+	status := paymentModels.OpenbankingBrasilPaymentEnumPaymentStatusTypePDNG
+	localInstrument := paymentModels.OpenbankingBrasilPaymentEnumLocalInstrumentMANU
+	return paymentModels.OpenbankingBrasilPaymentResponsePixPayment{
+		Data: &paymentModels.OpenbankingBrasilPaymentResponsePixPaymentData{
 			PaymentID:            id,
 			ConsentID:            *introspectionResponse.ConsentID,
 			CreationDateTime:     now,
 			StatusUpdateDateTime: now,
 			Status:               &status,
 			LocalInstrument:      &localInstrument,
-			Payment: &paymentModels.OpenbankingBrasilPaymentPix{
+			Payment: &paymentModels.OpenbankingBrasilPaymentPaymentPix{
 				Amount:   introspectionResponse.Payment.Amount,
 				Currency: introspectionResponse.Payment.Currency,
 			},
-			CreditorAccount: &paymentModels.OpenbankingBrasilCreditorAccount{},
+			CreditorAccount: &paymentModels.OpenbankingBrasilPaymentCreditorAccount{},
 		},
-		Links: &paymentModels.OpenbankingBrasilLinks{
+		Links: &paymentModels.OpenbankingBrasilPaymentLinks{
 			Self: string(self),
 		},
-		Meta: &paymentModels.OpenbankingBrasilMeta{},
+		Meta: &paymentModels.OpenbankingBrasilPaymentMeta{},
 	}
 }
 

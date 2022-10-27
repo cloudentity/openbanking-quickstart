@@ -5,8 +5,8 @@ import (
 	"encoding/json"
 	"time"
 
-	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
-	paymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
+	"github.com/cloudentity/openbanking-quickstart/generated/obuk/accounts/models"
+	paymentModels "github.com/cloudentity/openbanking-quickstart/generated/obuk/payments/models"
 	"github.com/go-openapi/strfmt"
 
 	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
