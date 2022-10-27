@@ -3,7 +3,7 @@ package main
 import (
 	"strings"
 
-	obbrAccountModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/models"
+	obbrAccountModels "github.com/cloudentity/openbanking-quickstart/generated/obbr/accounts/models"
 	"github.com/gin-gonic/gin"
 
 	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"

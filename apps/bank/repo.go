@@ -6,25 +6,25 @@ import (
 	"os"
 	"time"
 
-	cdrAccountModels "github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/models"
-	fdxAccountModels "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/models"
-	obbrAccountModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/models"
-	obbrPaymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/models"
-	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
-	paymentModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
+	cdrAccountModels "github.com/cloudentity/openbanking-quickstart/generated/cdr/models"
+	fdxAccountModels "github.com/cloudentity/openbanking-quickstart/generated/fdx/models"
+	obbrAccountModels "github.com/cloudentity/openbanking-quickstart/generated/obbr/accounts/models"
+	obbrPaymentModels "github.com/cloudentity/openbanking-quickstart/generated/obbr/payments/models"
+	"github.com/cloudentity/openbanking-quickstart/generated/obuk/accounts/models"
+	obukPaymentModels "github.com/cloudentity/openbanking-quickstart/generated/obuk/payments/models"
 	"github.com/pkg/errors"
 	bolt "go.etcd.io/bbolt"
 )
 
 type BankUserData struct {
-	OBUKAccounts     []models.OBAccount6                      `json:"obuk_accounts"`
-	OBUKBalances     []models.OBReadBalance1DataBalanceItems0 `json:"obuk_balances"`
-	OBUKTransactions []models.OBTransaction6                  `json:"obuk_transactions"`
-	OBUKPayments     []paymentModels.OBWriteDomesticResponse5 `json:"obuk_payments"`
+	OBUKAccounts     []models.OBAccount6                          `json:"obuk_accounts"`
+	OBUKBalances     []models.OBReadBalance1DataBalanceItems0     `json:"obuk_balances"`
+	OBUKTransactions []models.OBTransaction6                      `json:"obuk_transactions"`
+	OBUKPayments     []obukPaymentModels.OBWriteDomesticResponse5 `json:"obuk_payments"`
 
-	OBBRAccounts []obbrAccountModels.AccountData                         `json:"obbr_accounts"`
-	OBBRBalances []OBBRBalance                                           `json:"obbr_balances"`
-	OBBRPayments []obbrPaymentModels.OpenbankingBrasilResponsePixPayment `json:"obbr_payments"`
+	OBBRAccounts []obbrAccountModels.AccountData                                `json:"obbr_accounts"`
+	OBBRBalances []OBBRBalance                                                  `json:"obbr_balances"`
+	OBBRPayments []obbrPaymentModels.OpenbankingBrasilPaymentResponsePixPayment `json:"obbr_payments"`
 
 	CDRAccounts     []cdrAccountModels.BankingAccount     `json:"cdr_accounts"`
 	CDRTransactions []cdrAccountModels.BankingTransaction `json:"cdr_transactions"`

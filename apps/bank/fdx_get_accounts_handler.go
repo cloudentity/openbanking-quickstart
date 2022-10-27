@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 
-	"github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/models"
+	"github.com/cloudentity/openbanking-quickstart/generated/fdx/models"
 
 	fdxModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/f_d_x"
 )

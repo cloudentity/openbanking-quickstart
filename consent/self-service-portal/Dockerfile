@@ -20,7 +20,7 @@ WORKDIR /app
 
 COPY go.mod .
 COPY go.sum .
-COPY openbanking openbanking
+COPY generated generated
 RUN go mod download
 
 COPY consent/self-service-portal .

@@ -10,12 +10,12 @@ import (
 	"strings"
 	"time"
 
-	cdrBank "github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/client"
-	fdxBank "github.com/cloudentity/openbanking-quickstart/openbanking/fdx/client/client"
-	obbrAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/client"
-	obbrPayments "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/client"
-	obc "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client"
-	payments_client "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/client"
+	cdrBank "github.com/cloudentity/openbanking-quickstart/generated/cdr/client"
+	fdxBank "github.com/cloudentity/openbanking-quickstart/generated/fdx/client"
+	obbrAccounts "github.com/cloudentity/openbanking-quickstart/generated/obbr/accounts/client"
+	obbrPayments "github.com/cloudentity/openbanking-quickstart/generated/obbr/payments/client"
+	obukAccounts "github.com/cloudentity/openbanking-quickstart/generated/obuk/accounts/client"
+	payments_client "github.com/cloudentity/openbanking-quickstart/generated/obuk/payments/client"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 
@@ -198,8 +198,8 @@ func NewAcpClient(cfg Config, redirect string) (acpclient.Client, error) {
 }
 
 type OBUKClient struct {
-	*obc.OpenbankingAccountsClient
-	*payments_client.OpenbankingPaymentsClient
+	*obukAccounts.Accounts
+	*payments_client.Payments
 }
 
 func NewOBUKClient(config Config) (BankClient, error) {
@@ -221,8 +221,8 @@ func NewOBUKClient(config Config) (BankClient, error) {
 		hc,
 	)
 
-	c.OpenbankingAccountsClient = obc.New(tr, nil)
-	c.OpenbankingPaymentsClient = payments_client.New(tr, nil)
+	c.Accounts = obukAccounts.New(tr, nil)
+	c.Payments = payments_client.New(tr, nil)
 
 	return c, nil
 }
@@ -254,7 +254,7 @@ func NewCDRClient(config Config) (BankClient, error) {
 
 type OBBRClient struct {
 	*obbrAccounts.Accounts
-	*obbrPayments.PaymentConsentsBrasil
+	*obbrPayments.Payments
 }
 
 func NewOBBRClient(config Config) (BankClient, error) {
@@ -275,7 +275,7 @@ func NewOBBRClient(config Config) (BankClient, error) {
 		[]string{u.Scheme},
 		hc,
 	), nil)
-	c.PaymentConsentsBrasil = obbrPayments.New(NewHTTPRuntimeWithClient(
+	c.Payments = obbrPayments.New(NewHTTPRuntimeWithClient(
 		u.Host,
 		u.Path+"/payments/v1",
 		[]string{u.Scheme},
