@@ -60,7 +60,7 @@ func (s *CDRAccountAccessConsentHandler) ConfirmConsent(c *gin.Context, loginReq
 	if accept, err = s.Client.Openbanking.Cdr.AcceptCDRArrangementSystem(
 		cdr.NewAcceptCDRArrangementSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID).
-			WithAcceptConsent(&models.AcceptConsentRequest{
+			WithAcceptConsent(&models.AcceptCDRConsentRequest{
 				GrantedScopes: s.GrantScopes(consent.Payload.RequestedScopes),
 				AccountIds:    c.PostFormArray("account_ids"),
 				LoginState:    loginRequest.State,
@@ -82,8 +82,7 @@ func (s *CDRAccountAccessConsentHandler) DenyConsent(c *gin.Context, loginReques
 	if reject, err = s.Client.Openbanking.Cdr.RejectCDRArrangementSystem(
 		cdr.NewRejectCDRArrangementSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID).
-			WithRejectConsent(&models.RejectConsentRequest{
-				ID:         loginRequest.ID,
+			WithRejectConsent(&models.RejectCDRConsentRequest{
 				LoginState: loginRequest.State,
 				Error:      "rejected",
 				StatusCode: 403,

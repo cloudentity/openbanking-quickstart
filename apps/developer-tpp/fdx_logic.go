@@ -85,6 +85,7 @@ func (h *FDXLogic) CreateConsent(c *gin.Context) (interface{}, error) {
 			WithRedirectURI(h.ACPClient.Config.RedirectURL.String()).
 			WithResponseType(responseType).
 			WithAuthorizationDetails(&authorizationDetails),
+		nil,
 	); err != nil {
 		return nil, errors.Wrapf(err, "failed to register par request")
 	}

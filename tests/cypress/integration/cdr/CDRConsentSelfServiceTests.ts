@@ -7,7 +7,7 @@ import { ConsentSelfServiceAccountDetailsPage } from "../../pages/consent-self-s
 import { MockDataRecipientNavigationPage } from "../../pages/mock-data-recipient/MockDataRecipientNavigationPage";
 import { DiscoverDataHoldersPage } from "../../pages/mock-data-recipient/DiscoverDataHoldersPage";
 import { DynamicClientRegistrationPage } from "../../pages/mock-data-recipient/DynamicClientRegistrationPage";
-import { ConsentAndAuthorisationPage } from "../../pages/mock-data-recipient/ConsentAndAuthorisationPage";
+import { PushedAuthorisationRequestPage } from "../../pages/mock-data-recipient/PushedAuthorisationRequestPage";
 import { ConsentAndAuthorisationCallbackPage } from "../../pages/mock-data-recipient/ConsentAndAuthorisationCallbackPage";
 import { Urls } from "../../pages/Urls";
 import { Accounts } from "../../pages/Accounts";
@@ -16,7 +16,7 @@ describe(`CDR Consent self service tests`, () => {
   const mockDataRecipientNavigationPage: MockDataRecipientNavigationPage = new MockDataRecipientNavigationPage();
   const discoverDataHoldersPage: DiscoverDataHoldersPage = new DiscoverDataHoldersPage();
   const dynamicClientRegistrationPage: DynamicClientRegistrationPage = new DynamicClientRegistrationPage();
-  const consentAndAuthorisationPage: ConsentAndAuthorisationPage = new ConsentAndAuthorisationPage();
+  const pushedAuthorisationRequestPage: PushedAuthorisationRequestPage = new PushedAuthorisationRequestPage();
   const consentAndAuthorisationCallbackPage: ConsentAndAuthorisationCallbackPage = new ConsentAndAuthorisationCallbackPage();
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
   const accountConsentPage: AccountConsentPage = new AccountConsentPage();
@@ -25,7 +25,7 @@ describe(`CDR Consent self service tests`, () => {
   const consentSelfServiceAccountDetailsPage: ConsentSelfServiceAccountDetailsPage = new ConsentSelfServiceAccountDetailsPage();
 
 
-  before(`Dynamic Client Registration and Authorization via CDR mock data recipient`, () => {
+  beforeEach(`Dynamic Client Registration via CDR mock data recipient`, () => {
     mockDataRecipientNavigationPage.visit(true);
     Urls.clearLocalStorage();
     mockDataRecipientNavigationPage.visit(true);
@@ -41,15 +41,17 @@ describe(`CDR Consent self service tests`, () => {
     dynamicClientRegistrationPage.assertThatBrandIdIsSelected();
     dynamicClientRegistrationPage.clickDCRRegisterButton();
     dynamicClientRegistrationPage.assertThatClientRegistered();
+  });
 
-    mockDataRecipientNavigationPage.clickConsentAndAuthorisationLink();
+  beforeEach(`Authorize via CDR mock data recipient`, () => {
+    mockDataRecipientNavigationPage.clickParLink();
 
-    consentAndAuthorisationPage.assertThatPageIsDisplayed();
-    consentAndAuthorisationPage.selectClientRegistration(1);
-    consentAndAuthorisationPage.setSharingDuration(1000000);
-    consentAndAuthorisationPage.clickConstructAuthorizationUriButton();
-    consentAndAuthorisationPage.assertThatAuthorizationUriIsGenerated();
-    consentAndAuthorisationPage.clickOnAuthorizationUriLink();
+    pushedAuthorisationRequestPage.assertThatPageIsDisplayed();
+    pushedAuthorisationRequestPage.selectClientRegistration(1);
+    pushedAuthorisationRequestPage.setSharingDuration(1000000);
+    pushedAuthorisationRequestPage.clickInitiateParButton();
+    pushedAuthorisationRequestPage.assertThatAuthorizationUriIsGenerated();
+    pushedAuthorisationRequestPage.clickOnAuthorizationUriLink();
 
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
 
@@ -60,7 +62,7 @@ describe(`CDR Consent self service tests`, () => {
     consentAndAuthorisationCallbackPage.assertThatPageIsDisplayed();
   });
 
-  beforeEach(() => {
+  beforeEach(`Go to Consent Self Service Page`, () => {
     consentSelfServicePage.visit(true);
     Urls.clearLocalStorage();
     consentSelfServicePage.visit(true);
@@ -95,6 +97,18 @@ describe(`CDR Consent self service tests`, () => {
     consentSelfServicePage.clickOnApplicationCardWithName("MyBudgetHelper");
     consentSelfServiceApplicationPage.assertAuthorisedAccountRowDoesNotExist(Accounts.ids.CDR.savings);
     consentSelfServiceApplicationPage.assertAuthorisedAccountRowDoesNotExist(Accounts.ids.CDR.checking);
+  });
+
+  afterEach(`Remove DCR client from CDR mock data recipient`, () => {
+    mockDataRecipientNavigationPage.visit(true);
+    Urls.clearLocalStorage();
+    mockDataRecipientNavigationPage.visit(true);
+
+    mockDataRecipientNavigationPage.clickDynamicClientRegistrationLink();
+
+    dynamicClientRegistrationPage.assertThatPageIsDisplayed();
+    dynamicClientRegistrationPage.clickDeleteClientButton();
+    dynamicClientRegistrationPage.assertThatRegisteredClientWasRemoved();
   });
 
 });

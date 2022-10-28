@@ -80,6 +80,7 @@ function ApplicationAccessTabs({
               v =>
                 v.type === "account_access" ||
                 v.type === "cdr_arrangement" ||
+                v.type === "fdx_consent" ||
                 v.type === "consents"
             )}
             type="account"

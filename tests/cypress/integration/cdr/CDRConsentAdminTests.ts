@@ -5,7 +5,7 @@ import { ConsentAdminPage } from "../../pages/consent-admin/ConsentAdminPage";
 import { MockDataRecipientNavigationPage } from "../../pages/mock-data-recipient/MockDataRecipientNavigationPage";
 import { DiscoverDataHoldersPage } from "../../pages/mock-data-recipient/DiscoverDataHoldersPage";
 import { DynamicClientRegistrationPage } from "../../pages/mock-data-recipient/DynamicClientRegistrationPage";
-import { ConsentAndAuthorisationPage } from "../../pages/mock-data-recipient/ConsentAndAuthorisationPage";
+import { PushedAuthorisationRequestPage } from "../../pages/mock-data-recipient/PushedAuthorisationRequestPage";
 import { ConsentAndAuthorisationCallbackPage } from "../../pages/mock-data-recipient/ConsentAndAuthorisationCallbackPage";
 import { Urls } from "../../pages/Urls";
 import { Accounts } from "../../pages/Accounts";
@@ -14,13 +14,13 @@ describe(`CDR Consent admin portal tests`, () => {
   const mockDataRecipientNavigationPage: MockDataRecipientNavigationPage = new MockDataRecipientNavigationPage();
   const discoverDataHoldersPage: DiscoverDataHoldersPage = new DiscoverDataHoldersPage();
   const dynamicClientRegistrationPage: DynamicClientRegistrationPage = new DynamicClientRegistrationPage();
-  const consentAndAuthorisationPage: ConsentAndAuthorisationPage = new ConsentAndAuthorisationPage();
+  const pushedAuthorisationRequestPage: PushedAuthorisationRequestPage = new PushedAuthorisationRequestPage();
   const consentAndAuthorisationCallbackPage: ConsentAndAuthorisationCallbackPage = new ConsentAndAuthorisationCallbackPage();
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
   const accountConsentPage: AccountConsentPage = new AccountConsentPage();
   const consentAdminPage: ConsentAdminPage = new ConsentAdminPage();
 
-  before(`Dynamic Client Registration via CDR mock data recipient`, () => {
+  beforeEach(`Dynamic Client Registration via CDR mock data recipient`, () => {
     mockDataRecipientNavigationPage.visit(true);
     Urls.clearLocalStorage();
     mockDataRecipientNavigationPage.visit(true);
@@ -39,17 +39,14 @@ describe(`CDR Consent admin portal tests`, () => {
   });
 
   beforeEach(`Authorize via CDR mock data recipient`, () => {
-    mockDataRecipientNavigationPage.visit(true);
-    Urls.clearLocalStorage();
-    mockDataRecipientNavigationPage.visit(true);
-    mockDataRecipientNavigationPage.clickConsentAndAuthorisationLink();
+    mockDataRecipientNavigationPage.clickParLink();
 
-    consentAndAuthorisationPage.assertThatPageIsDisplayed();
-    consentAndAuthorisationPage.selectClientRegistration(1);
-    consentAndAuthorisationPage.setSharingDuration(1000000);
-    consentAndAuthorisationPage.clickConstructAuthorizationUriButton();
-    consentAndAuthorisationPage.assertThatAuthorizationUriIsGenerated();
-    consentAndAuthorisationPage.clickOnAuthorizationUriLink();
+    pushedAuthorisationRequestPage.assertThatPageIsDisplayed();
+    pushedAuthorisationRequestPage.selectClientRegistration(1);
+    pushedAuthorisationRequestPage.setSharingDuration(1000000);
+    pushedAuthorisationRequestPage.clickInitiateParButton();
+    pushedAuthorisationRequestPage.assertThatAuthorizationUriIsGenerated();
+    pushedAuthorisationRequestPage.clickOnAuthorizationUriLink();
 
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
 
@@ -85,4 +82,17 @@ describe(`CDR Consent admin portal tests`, () => {
     consentAdminPage.assertThatConsentManagementTabIsDisplayed();
     consentAdminPage.revokeClientConsent();
   });
+
+  afterEach(`Remove DCR client from CDR mock data recipient`, () => {
+    mockDataRecipientNavigationPage.visit(true);
+    Urls.clearLocalStorage();
+    mockDataRecipientNavigationPage.visit(true);
+
+    mockDataRecipientNavigationPage.clickDynamicClientRegistrationLink();
+
+    dynamicClientRegistrationPage.assertThatPageIsDisplayed();
+    dynamicClientRegistrationPage.clickDeleteClientButton();
+    dynamicClientRegistrationPage.assertThatRegisteredClientWasRemoved();
+  });
+
 });

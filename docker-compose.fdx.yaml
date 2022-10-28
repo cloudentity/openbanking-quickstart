@@ -106,6 +106,8 @@ services:
       - ./data/imports/system.tmpl:/app/imports-fdx/system.tmpl
       - ./data/imports/fdx.tmpl:/app/imports-fdx/fdx.tmpl
       - ./data/imports/tenant.tmpl:/app/imports-fdx/tenant.tmpl
+      - ./data/imports/bank-customers.tmpl:/app/imports-fdx/bank-customers.tmpl
+
     command:
       - /app/main
       - --tenant-url
@@ -121,3 +123,54 @@ services:
       - --variables-file
       - /variables.yaml
       - --verbose
+
+  consent-admin-portal:
+    image: cloudentity/openbanking-quickstart-consent-admin-portal:${VERSION}
+    container_name: consent-admin-portal
+    restart: always
+    ports:
+      - "8086:8086"
+    volumes:
+      - ./data/ca.pem:/ca.pem
+      - ./data/bank_cert.pem:/bank_cert.pem
+      - ./data/bank_key.pem:/bank_key.pem
+    environment:
+      - SYSTEM_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
+      - OPENBANKING_WORKSPACE_ID=${SERVER}
+      - SPEC=fdx
+      - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/bank-admins
+    depends_on:
+      configuration:
+        condition: service_completed_successfully
+
+  consent-self-service-portal:
+    image: cloudentity/openbanking-quickstart-consent-self-service-portal:${VERSION}
+    container_name: consent-self-service-portal
+    restart: always
+    ports:
+      - "8085:8085"
+    env_file:
+      - .env
+    volumes:
+      - ./data/ca.pem:/ca.pem
+      - ./data/bank_cert.pem:/bank_cert.pem
+      - ./data/bank_key.pem:/bank_key.pem
+    environment:
+      - SYSTEM_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
+      - BANK_URL=http://bank:8070
+      - LOGIN_AUTHORIZATION_SERVER_URL=${ACP_URL}
+      - LOGIN_AUTHORIZATION_SERVER_ID=bank-customers
+      - LOGIN_TENANT_ID=${TENANT}
+      - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/bank-customers
+      - OPENBANKING_SERVER_ID=${SERVER}
+      - SPEC=fdx
+      - BANK_CLIENT_TOKEN_URL=${ACP_URL}/${TENANT}/${SERVER}/oauth2/token
+      - BANK_CLIENT_ID=bukj5p6k7qdmm5ppbi4g
+      - BANK_CLIENT_SECRET=8DPOMd3ZOvsjuUnU9goRMHTIUUXtSkgwQeo8v_S74aE
+      - BANK_CLIENT_SCOPES=introspect_openbanking_tokens, introspect_tokens, revoke_tokens
+      - BANK_ACCOUNTS_ENDPOINT=http://bank:8070/internal/accounts
+      - BANK_CLIENT_CERT_FILE=/bank_cert.pem
+      - BANK_CLIENT_KEY_FILE=/bank_key.pem
+    depends_on:
+      configuration:
+        condition: service_completed_successfully

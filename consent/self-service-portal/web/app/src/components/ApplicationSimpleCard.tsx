@@ -107,6 +107,7 @@ function ApplicationSimpleCard({ client, clickable = true }: Props) {
           (v.type === "domestic_payment" && "Payments") ||
           (v.type === "consents" && "Accounts") ||
           (v.type === "cdr_arrangement" && "Accounts") ||
+          (v.type === "fdx_consent" && "Accounts") ||
           null
       )
       .filter(v => v)
