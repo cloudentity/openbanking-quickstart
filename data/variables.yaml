@@ -6,23 +6,25 @@ consent_self_service_portal_url: https://localhost:8085
 consent_admin_portal_url: https://localhost:8086
 
 consent_page_url: https://localhost:7080
-consent_page_client_id: bv0ocudfotn6edhsiu7g
+consent_page_client_id: cdr-consent-page
 consent_page_client_secret: pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0
-consent_page_bank_client_id: cw1ocudfotn6edhsiv8h
-consent_page_bank_client_secret: pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0
+
+internal_bank_client_id: cdr-internal-bank-client
+internal_bank_client_secret: pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0
 
 developer_tpp_url: https://localhost:8090
-developer_tpp_client_id: bukj5p6k7qdmm5fdJjJvhG
+developer_tpp_client_id: cdr-developer-tpp
 developer_tpp_client_secret: -TlfoycUiE0qNi-XUBFDfTxMlhHTCjVxOF6pLrWZbQA
 
 
 financroo_tpp_url: https://localhost:8091
-financroo_tpp_client_id: bugkgm23g9kregtu051g
+financroo_tpp_client_id: cdr-financroo-tpp
 financroo_tpp_client_secret: -TlfoycUiE0qNi-XUBFDfTxMlhHTCjVxOF6pLrWZbQA
 financroo_tls_client_auth_subject_dn: CN=cid1.authorization.cloudentity.com,OU=Authorization,O=Cloudentity,L=Seattle,ST=Washinghton,C=US
 financroo_pem_file: /certs/tpp_cert.pem
 
-bank_client_id: bukj5p6k7qdmm5ppbi4g
+bank_client_id: cdr-bank
+bank_client_secret: 8DPOMd3ZOvsjuUnU9goRMHTIUUXtSkgwQeo8v_S74aE
 bank_tls_client_auth_subject_dn: CN=cid2.authorization.cloudentity.com,OU=Authorization,O=Cloudentity,L=Seattle,ST=Washinghton,C=US
 
 conf_ca_pem_file: /certs/brasil/ca.pem
