@@ -85,7 +85,8 @@ describe(`CDR Consent self service tests`, () => {
 
   it(`Revoke CDR Arrangement`, () => {
     consentSelfServiceApplicationPage.expandAccountsTab();
-    consentSelfServiceApplicationPage.assertNumberOfConsents(1);
+    consentSelfServiceApplicationPage.assertAuthorisedAccountRowExists(Accounts.ids.CDR.savings);
+    consentSelfServiceApplicationPage.assertAuthorisedAccountRowExists(Accounts.ids.CDR.checking);
     consentSelfServiceApplicationPage.expandAccountConsentRow();
 
     consentSelfServiceAccountDetailsPage.assertThatAccountDetailsAreVisible();
@@ -93,7 +94,9 @@ describe(`CDR Consent self service tests`, () => {
     consentSelfServiceAccountDetailsPage.assertThatRevokeAccountDetailsAreVisible();
     consentSelfServiceAccountDetailsPage.confirmRevokeAccessAction();
 
-    consentSelfServicePage.assertThatNoAccountsPageIsDisplayed();
+    consentSelfServicePage.clickOnApplicationCardWithName("MyBudgetHelper");
+    consentSelfServiceApplicationPage.assertAuthorisedAccountRowDoesNotExist(Accounts.ids.CDR.savings);
+    consentSelfServiceApplicationPage.assertAuthorisedAccountRowDoesNotExist(Accounts.ids.CDR.checking);
   });
 
   afterEach(`Remove DCR client from CDR mock data recipient`, () => {

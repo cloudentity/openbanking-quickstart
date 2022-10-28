@@ -82,7 +82,8 @@ describe(`Smoke Financroo Consent self service tests`, () => {
 
   it(`Revoke account consent`, () => {
     consentSelfServiceApplicationPage.expandAccountsTab();
-    consentSelfServiceApplicationPage.assertNumberOfConsents(1);
+    consentSelfServiceApplicationPage.assertAuthorisedAccountRowExists(accountsIDs[0]);
+    consentSelfServiceApplicationPage.assertAuthorisedAccountRowExists(accountsIDs[1]);
     consentSelfServiceApplicationPage.expandAccountConsentRow();
 
     consentSelfServiceAccountDetailsPage.assertThatAccountDetailsAreVisible();
@@ -90,7 +91,9 @@ describe(`Smoke Financroo Consent self service tests`, () => {
     consentSelfServiceAccountDetailsPage.assertThatRevokeAccountDetailsAreVisible();
     consentSelfServiceAccountDetailsPage.confirmRevokeAccessAction();
 
-    consentSelfServicePage.assertThatNoAccountsPageIsDisplayed();
+    consentSelfServicePage.clickOnApplicationCardWithName("Financroo");
+    consentSelfServiceApplicationPage.assertAuthorisedAccountRowDoesNotExist(accountsIDs[0]);
+    consentSelfServiceApplicationPage.assertAuthorisedAccountRowDoesNotExist(accountsIDs[1]);
 
     // Temporary ignored due to issue AUT-7237
     /*
