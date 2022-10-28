@@ -19,6 +19,7 @@ services:
       - REDIRECT_URL=https://${APP_HOST}:8090/callback
       - BANK_URL=http://bank:8070
       - SPEC=fdx
+      - CLIENT_ID=${DEVELOPER_TPP_CLIENT_ID}
     depends_on:
       configuration:
         condition: service_completed_successfully
@@ -43,6 +44,7 @@ services:
         - OPENBANKING_SERVER_ID=${SERVER}
         - ENABLE_TLS_SERVER=true
         - REDIRECT_URL=https://${APP_HOST}:8091/api/callback
+        - CLIENT_ID=${FINANCROO_TPP_CLIENT_ID}
       depends_on:
         configuration:
           condition: service_completed_successfully
@@ -69,6 +71,7 @@ services:
       - GIN_MODE=debug # change to release to disable gin debug
       - OTP_MODE=mock # change to custom to enable custom OTP handling
       - MFA_CLAIM=sub # for mobile use mobile_verified
+      - CLIENT_ID=${CONSENT_PAGE_CLIENT_ID}
     depends_on:
       configuration:
         condition: service_completed_successfully
@@ -91,6 +94,7 @@ services:
       - GIN_MODE=debug
       - USER_IDENTIFIER_CLAIM=customer_id
       - CLIENT_SECRET=8DPOMd3ZOvsjuUnU9goRMHTIUUXtSkgwQeo8v_S74aE
+      - CLIENT_ID=${BANK_CLIENT_ID}
     depends_on:
       configuration:
         condition: service_completed_successfully
