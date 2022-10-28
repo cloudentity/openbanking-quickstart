@@ -1,16 +1,30 @@
 tenant_id: default
-server_id: openbanking
+server_id: cdr
+ca_pem_file: /certs/ca.pem
+
 consent_self_service_portal_url: https://localhost:8085
 consent_admin_portal_url: https://localhost:8086
+
 consent_page_url: https://localhost:7080
-developer_tpp_url: https://localhost:8090
-financroo_tpp_url: https://localhost:8091
-financroo_tls_client_auth_subject_dn: CN=cid1.authorization.cloudentity.com,OU=Authorization,O=Cloudentity,L=Seattle,ST=Washinghton,C=US
-bank_tls_client_auth_subject_dn: CN=cid2.authorization.cloudentity.com,OU=Authorization,O=Cloudentity,L=Seattle,ST=Washinghton,C=US
-financroo_pem_file: /certs/tpp_cert.pem
-ca_pem_file: /certs/ca.pem
 consent_page_client_id: bv0ocudfotn6edhsiu7g
 consent_page_client_secret: pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0
+consent_page_bank_client_id: cw1ocudfotn6edhsiv8h
+consent_page_bank_client_secret: pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0
+
+developer_tpp_url: https://localhost:8090
+developer_tpp_client_id: bukj5p6k7qdmm5fdJjJvhG
+developer_tpp_client_secret: -TlfoycUiE0qNi-XUBFDfTxMlhHTCjVxOF6pLrWZbQA
+
+
+financroo_tpp_url: https://localhost:8091
+financroo_tpp_client_id: bugkgm23g9kregtu051g
+financroo_tpp_client_secret: -TlfoycUiE0qNi-XUBFDfTxMlhHTCjVxOF6pLrWZbQA
+financroo_tls_client_auth_subject_dn: CN=cid1.authorization.cloudentity.com,OU=Authorization,O=Cloudentity,L=Seattle,ST=Washinghton,C=US
+financroo_pem_file: /certs/tpp_cert.pem
+
+bank_client_id: bukj5p6k7qdmm5ppbi4g
+bank_tls_client_auth_subject_dn: CN=cid2.authorization.cloudentity.com,OU=Authorization,O=Cloudentity,L=Seattle,ST=Washinghton,C=US
+
 conf_ca_pem_file: /certs/brasil/ca.pem
 conf_tpp_1_id: conformance-tpp-1
 conf_tpp_1_url: https://fapi-test
@@ -22,4 +36,5 @@ conf_tpp_2_url: https://fapi-test
 conf_tpp_2_public_jwks: /certs/brasil/cid2/jwks-public.json
 conf_tpp_2_pem_file: /certs/brasil/cid2/cert.pem
 conf_tpp_2_sub_dn: C = BR, ST = RS, L = BOTAFOGO, O = Open Banking Brasil, OU = 74e929d9-33b6-4d85-8ba7-c146c867a817, CN = mock-tpp-1.raidiam.com, serialNumber = 1335323600189, UID = 9e357995-a191-4860-9db7-ceda3692a8c9, businessCategory = Private Organization, jurisdictionC = BR
+
 cdr_adr_validation_enabled: true
