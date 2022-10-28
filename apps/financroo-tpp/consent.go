@@ -288,7 +288,7 @@ func (o *OBBRConsentClient) CreateAccountConsent(c *gin.Context) (string, error)
 
 	if registerResponse, err = o.Accounts.Openbanking.Openbankingbr.CreateDataAccessConsent(
 		obbrClientModels.NewCreateDataAccessConsentParamsWithContext(c).
-			WithRequest(&ob.BrazilCustomerDataAccessConsentRequest{
+			WithRequest(&ob.BrazilCustomerDataAccessConsentRequestV1{
 				Data: &ob.OpenbankingBrasilConsentData{
 					ExpirationDateTime: strfmt.DateTime(time.Now().Add(time.Hour * 24)),
 					LoggedUser: &ob.OpenbankingBrasilConsentLoggedUser{

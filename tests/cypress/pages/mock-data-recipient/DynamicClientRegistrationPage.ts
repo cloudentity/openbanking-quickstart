@@ -22,6 +22,8 @@ export class DynamicClientRegistrationPage {
   private readonly registerMessageSelector: string = '#dcr-create-message';
   private readonly noRegistrationMessage: string = '#dcr-current-noDataMessage';
   private readonly registrationsCountMessageSelector = (node: string) => `#dcr-current-count ${node}`;
+  private readonly deleteClientButtonSelector: string = `[id*='dcr-current-btnDelete']`;
+
 
   public visit(force: boolean = false): void {
     Urls.visit(Cypress.env(`mock_data_recipient_url`) + '/dcr', false);
@@ -104,12 +106,23 @@ export class DynamicClientRegistrationPage {
     cy.get(this.registerButtonSelector).click();
   }
 
+  public clickDeleteClientButton(): void {
+    cy.get(this.deleteClientButtonSelector).click();
+  }
+
   public assertThatClientRegistered(): void {
     cy.get(this.registerMessageSelector, {timeout: 30000,})
       .should('contain.text', 'Created - Registered');
     cy.get(this.noRegistrationMessage)
       .should('not.exist');
     cy.get(this.registrationsCountMessageSelector('strong'))
-      .should('not.have.text', '0');
+      .should('have.text', '1');
+  }
+
+  public assertThatRegisteredClientWasRemoved(): void {
+    cy.get(this.noRegistrationMessage, {timeout: 30000,})
+      .should('have.text', 'No existing registrations found.');
+    cy.get(this.registrationsCountMessageSelector('strong'))
+      .should('have.text', '0');
   }
 }

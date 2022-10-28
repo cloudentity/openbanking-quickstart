@@ -10,6 +10,8 @@ func ConsentFetcherFactory(spec Spec, server *Server) (ConsentFetchRevoker, erro
 		return NewOBUKConsentFetcher(server), nil
 	case OBBR:
 		return NewOBBRConsentFetcher(server), nil
+	case FDX:
+		return NewOBFDXConsentFetcher(server), nil
 	default:
 		return nil, fmt.Errorf("unsupported spec %s", spec)
 	}

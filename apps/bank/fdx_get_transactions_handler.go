@@ -21,14 +21,14 @@ func NewFDXGetTransactionsHandler(server *Server) GetEndpointLogic {
 func (h *FDXGetTransactionsHandler) SetIntrospectionResponse(c *gin.Context) *Error {
 	var err error
 	if h.introspectionResponse, err = h.FDXIntrospectAccountsToken(c); err != nil {
-		logrus.Errorf("introspect cdr token for transactions failed with %+v", err)
+		logrus.Errorf("introspect fdx token for transactions failed with %+v", err)
 		return ErrBadRequest.WithMessage("failed to introspect token")
 	}
 	return nil
 }
 
 func (h *FDXGetTransactionsHandler) MapError(c *gin.Context, err *Error) (code int, resp interface{}) {
-	code, resp = CDRMapError(c, err)
+	code, resp = FDXMapError(err)
 	return
 }
 

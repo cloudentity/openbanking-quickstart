@@ -209,6 +209,7 @@ const availableConstentTypes = [
   "account_access",
   "domestic_payment",
   "cdr_arrangement",
+  "fdx_consent",
   "domestic_scheduled_payment",
   "domestic_standing_order",
   "file_payment",
@@ -320,7 +321,7 @@ export const getCurrency = (currency: any) => {
 };
 
 export function getStatus(client: ClientType) {
-  const accountConsents = ["account_access", "consents", "cdr_arrangement"];
+  const accountConsents = ["account_access", "consents", "cdr_arrangement", "fdx_consent"];
   const found = client?.consents?.find(
     consent =>
       consent &&
