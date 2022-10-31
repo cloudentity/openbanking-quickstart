@@ -1,0 +1,2329 @@
+basePath: /open-banking/payments/v1
+consumes:
+- application/json
+definitions:
+  OpenbankingBrasilPayment422ResponseErrorCreateConsent:
+    properties:
+      errors:
+        items:
+          $ref: '#/definitions/OpenbankingBrasilPaymentError'
+        maxItems: 3
+        minItems: 1
+        type: array
+        x-nullable: false
+      meta:
+        $ref: '#/definitions/OpenbankingBrasilPaymentMeta'
+    required:
+    - errors
+    title: 422ResponseErrorCreateConsent
+    type: object
+  OpenbankingBrasilPayment422ResponseErrorCreatePixPayment:
+    properties:
+      errors:
+        items:
+          $ref: '#/definitions/OpenbankingBrasilPaymentError1'
+        maxItems: 9
+        minItems: 1
+        type: array
+        x-nullable: false
+      meta:
+        $ref: '#/definitions/OpenbankingBrasilPaymentMeta'
+    required:
+    - errors
+    title: 422ResponseErrorCreatePixPayment
+    type: object
+  OpenbankingBrasilPayment422ResponseErrorPatchConsent:
+    properties:
+      errors:
+        items:
+          $ref: '#/definitions/OpenbankingBrasilPaymentError3'
+        maxItems: 9
+        minItems: 1
+        type: array
+        x-nullable: false
+      meta:
+        $ref: '#/definitions/OpenbankingBrasilPaymentMeta'
+    required:
+    - errors
+    title: 422ResponseErrorPatchConsent
+    type: object
+  OpenbankingBrasilPaymentBusinessEntity:
+    description: Usurio (pessoa jurdica) que encontra-se logado na instituio Iniciadora
+      de Pagamento. [Restrio] Preenchimento obrigatrio se usurio logado na instituio
+      Iniciadora de Pagamento for um CNPJ (pessoa jurdica).
+    properties:
+      document:
+        $ref: '#/definitions/OpenbankingBrasilPaymentDocument'
+    required:
+    - document
+    title: BusinessEntity
+    type: object
+  OpenbankingBrasilPaymentCode:
+    description: "Cdigos de erros previstos na criao de consentimento para a iniciao
+      de pagamentos:  \n FORMA_PGTO_INVALIDA: Forma de pagamento invlida.  \n DATA_PGTO_INVALIDA:
+      Data de pagamento invlida.  \n DETALHE_PGTO_INVALIDO: Detalhe do pagamento invlido.
+      \ \n NAO_INFORMADO: No informado."
+    enum:
+    - FORMA_PGTO_INVALIDA
+    - DATA_PGTO_INVALIDA
+    - DETALHE_PGTO_INVALIDO
+    - NAO_INFORMADO
+    example: FORMA_PGTO_INVALIDA
+    title: Code
+    type: string
+  OpenbankingBrasilPaymentCreatePaymentConsent:
+    properties:
+      data:
+        $ref: '#/definitions/OpenbankingBrasilPaymentData'
+    required:
+    - data
+    title: CreatePaymentConsent
+    type: object
+  OpenbankingBrasilPaymentCreatePixPayment:
+    properties:
+      data:
+        $ref: '#/definitions/OpenbankingBrasilPaymentCreatePixPaymentData'
+    required:
+    - data
+    title: CreatePixPayment
+    type: object
+  OpenbankingBrasilPaymentCreatePixPaymentData:
+    description: Objeto contendo dados do pagamento e do recebedor (creditor).
+    properties:
+      cnpjInitiator:
+        description: CNPJ do Iniciador de Pagamento devidamente habilitado para a
+          prestao de Servio de Iniciao no Pix.
+        example: "50685362000135"
+        maxLength: 14
+        pattern: ^\d{14}$
+        type: string
+        x-nullable: false
+      creditorAccount:
+        $ref: '#/definitions/OpenbankingBrasilPaymentCreditorAccount'
+      ibgeTownCode:
+        description: |-
+          Traz o cdigo da cidade segundo o IBGE (Instituto Brasileiro de Geografia e Estatstica).
+          Para o preenchimento deste campo, o Iniciador de Pagamentos deve seguir a orientao do arranjo da forma de pagamento.
+          O preenchimento do campo tanto em pix/payments quanto /consents deve ser igual. Caso haja divergncia dos valores, a instituio deve retornar HTTP 422 com o cdigo de erro PAGAMENTO_DIVERGENTE_DO_CONSENTIMENTO.
+          Este campo faz referncia ao campo CodMun do arranjo Pix.
+        example: "5300108"
+        maxLength: 7
+        minLength: 7
+        pattern: ^\d{7}$
+        type: string
+        x-nullable: true
+      localInstrument:
+        $ref: '#/definitions/OpenbankingBrasilPaymentEnumLocalInstrument'
+      payment:
+        $ref: '#/definitions/OpenbankingBrasilPaymentPaymentPix'
+      proxy:
+        description: |-
+          Chave cadastrada no DICT pertencente ao recebedor. Os tipos de chaves podem ser: telefone, e-mail, cpf/cnpj ou chave aleatria.
+          No caso de telefone celular deve ser informado no padro E.1641.
+          Para e-mail deve ter o formato xxxxxxxx@xxxxxxx.xxx(.xx) e no mximo 77 caracteres.
+          No caso de CPF dever ser informado com 11 nmeros, sem pontos ou traos.
+          Para o caso de CNPJ dever ser informado com 14 nmeros, sem pontos ou traos.
+          No caso de chave aleatria deve ser informado o UUID gerado pelo DICT, conforme formato especificado na RFC41223.
+          Se informado, a detentora da conta deve validar o proxy no DICT quando localInstrument for igual a DICT, QRDN ou QRES e validar o campo creditorAccount.
+          Esta validao  opcional caso o localInstrument for igual a INIC.
+          [Restrio] Se localInstrument for igual a MANU, o campo proxy no deve ser preenchido. Se localInstrument for igual INIC, DICT, QRDN ou QRES, o campo proxy deve ser sempre preenchido com a chave Pix.
+        example: "12345678901"
+        maxLength: 77
+        pattern: '[\w\W\s]*'
+        type: string
+        x-nullable: true
+      qrCode:
+        description: |-
+          Sequncia de caracteres que corresponde ao QR Code disponibilizado para o pagador.
+
+           a sequncia de caracteres que seria lida pelo leitor de QR Code, e deve propiciar o retorno dos dados do pagador aps consulta na DICT.
+
+          Essa funcionalidade  possvel tanto para QR Code esttico quanto para QR Code dinmico.
+          No arranjo do Pix esta  a mesma sequncia gerada e/ou lida pela funcionalidade Pix Copia e Cola.
+          Este campo dever ser no formato UTF-8.
+          [Restrio] Preenchimento obrigatrio para pagamentos por QR Code, observado o tamanho mximo de 512 bytes.
+        example: |
+          00020104141234567890123426660014BR.GOV.BCB.PIX014466756C616E6F32303139406578616D706C652E636F6D27300012
+          BR.COM.OUTRO011001234567895204000053039865406123.455802BR5915NOMEDORECEBEDOR6008BRASILIA61087007490062
+          530515RP12345678-201950300017BR.GOV.BCB.BRCODE01051.0.080450014BR.GOV.BCB.PIX0123PADRAO.URL.PIX/0123AB
+          CD81390012BR.COM.OUTRO01190123.ABCD.3456.WXYZ6304EB76
+        maxLength: 512
+        pattern: '[\w\W\s]*'
+        type: string
+        x-nullable: true
+      remittanceInformation:
+        description: Deve ser preenchido sempre que o usurio pagador inserir alguma
+          informao adicional em um pagamento, a ser enviada ao recebedor.
+        example: Pagamento da nota XPTO035-002.
+        maxLength: 140
+        pattern: '[\w\W\s]*'
+        type: string
+        x-nullable: true
+      transactionIdentification:
+        description: |-
+          Trata-se de um identificador de transao que deve ser retransmitido intacto pelo PSP do pagador ao gerar a ordem de pagamento. Essa informao permitir ao recebedor identificar e correlacionar a transferncia, quando recebida, com a apresentao das instrues ao pagador.
+          Os caracteres permitidos no contexto do Pix para o campo txid (EMV 62-05) so:
+          - Letras minsculas, de a a z
+          - Letras maisculas, de A a z
+          - Dgitos decimais, de 0 a 9
+
+          [Restrio] Se localInstrument for igual a INIC, o campo transactionIdentification deve ser preenchido obrigatoriamente.
+          Se localInstrument for igual a MANU ou DICT, o campo transactionIdentification no deve ser preenchido.
+          A detentora de conta deve validar se a condicionalidade do campo foi atendida pela iniciadora de pagamento.
+        example: E00038166201907261559y6j6
+        maxLength: 25
+        pattern: ^[a-zA-Z0-9][a-zA-Z0-9]{0,24}$
+        type: string
+        x-nullable: true
+    required:
+    - localInstrument
+    - payment
+    - creditorAccount
+    - cnpjInitiator
+    title: CreatePixPaymentData
+    type: object
+  OpenbankingBrasilPaymentCreditorAccount:
+    description: Objeto que contm a identificao da conta de destino do beneficirio/recebedor.
+    properties:
+      accountType:
+        $ref: '#/definitions/OpenbankingBrasilPaymentEnumAccountPaymentsType'
+      ispb:
+        description: Deve ser preenchido com o ISPB (Identificador do Sistema de Pagamentos
+          Brasileiros) do participante do SPI (Sistema de pagamentos instantneos)
+          somente com nmeros.
+        example: "12345678"
+        maxLength: 8
+        minLength: 8
+        pattern: ^[0-9]{8}$
+        type: string
+        x-nullable: false
+      issuer:
+        description: "Cdigo da Agncia emissora da conta sem dgito.  \n(Agncia  a dependncia
+          destinada ao atendimento aos clientes, ao pblico em geral e aos associados
+          de cooperativas de crdito,  \nno exerccio de atividades da instituio, no
+          podendo ser mvel ou transitria).  \n[Restrio] Preenchimento obrigatrio para
+          os seguintes tipos de conta: CACC (CONTA_DEPOSITO_A_VISTA), SVGS (CONTA_POUPANCA)
+          e SLRY (CONTA_SALARIO)."
+        example: "1774"
+        maxLength: 4
+        pattern: ^\d{4}$
+        type: string
+        x-nullable: true
+      number:
+        description: "Deve ser preenchido com o nmero da conta do usurio recebedor,
+          com dgito verificador (se este existir),  \nse houver valor alfanumrico,
+          este deve ser convertido para 0."
+        example: "1234567890"
+        maxLength: 20
+        minLength: 3
+        pattern: ^\d{3,20}$
+        type: string
+        x-nullable: false
+    required:
+    - ispb
+    - number
+    - accountType
+    title: CreditorAccount
+    type: object
+  OpenbankingBrasilPaymentData:
+    description: Objeto contendo as informaes de consentimento para a iniciao de pagamento
+      individual.
+    properties:
+      businessEntity:
+        $ref: '#/definitions/OpenbankingBrasilPaymentBusinessEntity'
+      creditor:
+        $ref: '#/definitions/OpenbankingBrasilPaymentIdentification'
+      debtorAccount:
+        $ref: '#/definitions/OpenbankingBrasilPaymentDebtorAccount'
+      loggedUser:
+        $ref: '#/definitions/OpenbankingBrasilPaymentLoggedUser'
+      payment:
+        $ref: '#/definitions/OpenbankingBrasilPaymentPaymentConsent'
+    required:
+    - loggedUser
+    - creditor
+    - payment
+    title: Data
+    type: object
+  OpenbankingBrasilPaymentData1:
+    description: Objeto contendo as informaes de resposta do consentimento para a
+      iniciao de pagamento individual.
+    properties:
+      businessEntity:
+        $ref: '#/definitions/OpenbankingBrasilPaymentBusinessEntity'
+      consentId:
+        description: |-
+          Identificador nico do consentimento criado para a iniciao de pagamento solicitada. Dever ser um URN - Uniform Resource Name.
+          Um URN, conforme definido na [RFC8141](https://tools.ietf.org/html/rfc8141)  um Uniform Resource
+          Identifier - URI - que  atribudo sob o URI scheme "urn" e um namespace URN especfico, com a inteno de que o URN
+          seja um identificador de recurso persistente e independente da localizao.
+          Considerando a string urn:bancoex:C1DD33123 como exemplo para consentId temos:
+          - o namespace(urn)
+          - o identificador associado ao namespace da instituio transnmissora (bancoex)
+          - o identificador especfico dentro do namespace (C1DD33123).
+          Informaes mais detalhadas sobre a construo de namespaces devem ser consultadas na [RFC8141](https://tools.ietf.org/html/rfc8141).
+        example: urn:bancoex:C1DD33123
+        maxLength: 256
+        pattern: ^urn:[a-zA-Z0-9][a-zA-Z0-9-]{0,31}:[a-zA-Z0-9()+,\-.:=@;$_!*'%\/?#]+$
+        type: string
+        x-nullable: false
+      creationDateTime:
+        description: Data e hora em que o consentimento foi criado. Uma string com
+          data e hora conforme especificao RFC-3339, sempre com a utilizao de timezone
+          UTC(UTC time format).
+        example: "2021-05-21T08:30:00Z"
+        format: date-time
+        type: string
+        x-nullable: false
+      creditor:
+        $ref: '#/definitions/OpenbankingBrasilPaymentIdentification'
+      debtorAccount:
+        $ref: '#/definitions/OpenbankingBrasilPaymentDebtorAccount'
+      expirationDateTime:
+        description: |-
+          Data e hora em que o consentimento da iniciao de pagamento expira, devendo ser sempre o creationDateTime mais 5 minutos. Uma string com data e hora conforme especificao RFC-3339, sempre com a utilizao de timezone UTC (UTC time format).
+          O consentimento  criado com o status AWAITING_AUTHORISATION, e deve assumir o status AUTHORIZED ou REJECTED antes do tempo de expirao - 5 minutos. Caso o tempo seja expirado, o status deve assumir REJECTED.
+          Para o cenrio em que o status assumiu AUTHORISED, o tempo mximo do expirationDateTime do consentimento deve assumir "now + 60 minutos". Este  o tempo para consumir o consentimento autorizado, mudando seu status para CONSUMED. No  possvel prorrogar este tempo e a criao de um novo consentimento ser necessria para os cenrios de insucesso.
+          O tempo do expirationDateTime  garantido com os 15 minutos do access token, sendo possvel utilizar mais trs refresh tokens at totalizar 60 minutos.
+        example: "2021-05-21T08:30:00Z"
+        format: date-time
+        type: string
+        x-nullable: false
+      loggedUser:
+        $ref: '#/definitions/OpenbankingBrasilPaymentLoggedUser'
+      payment:
+        $ref: '#/definitions/OpenbankingBrasilPaymentPaymentConsent'
+      revocation:
+        $ref: '#/definitions/OpenbankingBrasilPaymentRevocation'
+      status:
+        $ref: '#/definitions/OpenbankingBrasilPaymentEnumAuthorisationStatusType'
+      statusUpdateDateTime:
+        description: Data e hora em que o recurso foi atualizado. Uma string com data
+          e hora conforme especificao RFC-3339, sempre com a utilizao de timezone
+          UTC(UTC time format).
+        example: "2021-05-21T08:30:00Z"
+        format: date-time
+        type: string
+        x-nullable: false
+    required:
+    - consentId
+    - creationDateTime
+    - expirationDateTime
+    - statusUpdateDateTime
+    - status
+    - loggedUser
+    - creditor
+    - payment
+    title: Data1
+    type: object
+  OpenbankingBrasilPaymentDebtorAccount:
+    description: "Objeto que contm a identificao da conta de origem do pagador.  \nAs
+      informaes quanto  conta de origem do pagador podero ser trazidas no consentimento
+      para a detentora, caso a iniciadora tenha coletado essas informaes do cliente.
+      Do contrrio, ser coletada na detentora e trazida para a iniciadora como resposta
+      \ criao do pagamento."
+    properties:
+      accountType:
+        $ref: '#/definitions/OpenbankingBrasilPaymentEnumAccountPaymentsType'
+      ispb:
+        description: Deve ser preenchido com o ISPB (Identificador do Sistema de Pagamentos
+          Brasileiros) do participante do SPI (Sistema de pagamentos instantneos)
+          somente com nmeros.
+        example: "12345678"
+        maxLength: 8
+        minLength: 8
+        pattern: ^[0-9]{8}$
+        type: string
+        x-nullable: false
+      issuer:
+        description: "Cdigo da Agncia emissora da conta sem dgito.  \n(Agncia  a dependncia
+          destinada ao atendimento aos clientes, ao pblico em geral e aos associados
+          de cooperativas de crdito,  \nno exerccio de atividades da instituio, no
+          podendo ser mvel ou transitria).  \n[Restrio] Preenchimento obrigatrio para
+          os seguintes tipos de conta: CACC (CONTA_DEPOSITO_A_VISTA), SVGS (CONTA_POUPANCA)
+          e SLRY (CONTA_SALARIO)."
+        example: "1774"
+        maxLength: 4
+        pattern: ^\d{4}$
+        type: string
+        x-nullable: true
+      number:
+        description: "Deve ser preenchido com o nmero da conta transacional do usurio
+          pagador, com dgito verificador (se este existir),  \nse houver valor alfanumrico,
+          este deve ser convertido para 0."
+        example: "1234567890"
+        maxLength: 20
+        minLength: 3
+        pattern: ^\d{3,20}$
+        type: string
+        x-nullable: false
+    required:
+    - ispb
+    - number
+    - accountType
+    title: DebtorAccount
+    type: object
+  OpenbankingBrasilPaymentDetails:
+    description: Objeto contendo os detalhes do pagamento.
+    properties:
+      creditorAccount:
+        $ref: '#/definitions/OpenbankingBrasilPaymentCreditorAccount'
+      localInstrument:
+        $ref: '#/definitions/OpenbankingBrasilPaymentEnumLocalInstrument'
+      proxy:
+        description: |-
+          Chave cadastrada no DICT pertencente ao recebedor. Os tipos de chaves podem ser: telefone, e-mail, cpf/cnpj ou chave aleatria.
+          No caso de telefone celular deve ser informado no padro E.1641.
+          Para e-mail deve ter o formato xxxxxxxx@xxxxxxx.xxx(.xx) e no mximo 77 caracteres.
+          No caso de CPF dever ser informado com 11 nmeros, sem pontos ou traos.
+          Para o caso de CNPJ dever ser informado com 14 nmeros, sem pontos ou traos.
+          No caso de chave aleatria deve ser informado o UUID gerado pelo DICT, conforme formato especificado na RFC41223.
+          Se informado, a detentora da conta deve validar o proxy no DICT quando localInstrument for igual a DICT, QRDN ou QRES e validar o campo creditorAccount.
+          Esta validao  opcional caso o localInstrument for igual a INIC.
+          [Restrio]
+          Se localInstrument for igual a MANU, o campo proxy no deve ser preenchido.
+          Se localInstrument for igual INIC, DICT, QRDN ou QRES, o campo proxy deve ser sempre preenchido com a chave Pix.
+        example: "12345678901"
+        maxLength: 77
+        pattern: '[\w\W\s]*'
+        type: string
+        x-nullable: true
+      qrCode:
+        description: |-
+          Sequncia de caracteres que corresponde ao QR Code disponibilizado para o pagador.
+
+           a sequncia de caracteres que seria lida pelo leitor de QR Code, e deve propiciar o retorno dos dados do pagador aps consulta na DICT.
+
+          Essa funcionalidade  possvel tanto para QR Code esttico quanto para QR Code dinmico.
+          No arranjo do Pix esta  a mesma sequncia gerada e/ou lida pela funcionalidade Pix Copia e Cola.
+          Este campo dever ser no formato UTF-8.
+          [Restrio] Preenchimento obrigatrio para pagamentos por QR Code, observado o tamanho mximo de 512 bytes.
+        example: |
+          00020104141234567890123426660014BR.GOV.BCB.PIX014466756C616E6F32303139406578616D706C652E636F6D27300012
+          BR.COM.OUTRO011001234567895204000053039865406123.455802BR5915NOMEDORECEBEDOR6008BRASILIA61087007490062
+          530515RP12345678-201950300017BR.GOV.BCB.BRCODE01051.0.080450014BR.GOV.BCB.PIX0123PADRAO.URL.PIX/0123AB
+          CD81390012BR.COM.OUTRO01190123.ABCD.3456.WXYZ6304EB76
+        maxLength: 512
+        pattern: '[\w\W\s]*'
+        type: string
+        x-nullable: true
+    required:
+    - localInstrument
+    - creditorAccount
+    title: Details
+    type: object
+  OpenbankingBrasilPaymentDocument:
+    properties:
+      identification:
+        description: Nmero do documento de identificao oficial do titular pessoa jurdica.
+        example: "11111111111111"
+        maxLength: 14
+        pattern: ^\d{14}$
+        type: string
+        x-nullable: false
+      rel:
+        description: Tipo do documento de identificao oficial do titular pessoa jurdica.
+        example: CNPJ
+        maxLength: 4
+        pattern: ^[A-Z]{4}$
+        type: string
+        x-nullable: false
+    required:
+    - identification
+    - rel
+    title: Document
+    type: object
+  OpenbankingBrasilPaymentDocument1:
+    description: Objeto que contm os dados de identificao do usurio.
+    properties:
+      identification:
+        description: Nmero do documento de identificao oficial do usurio.
+        example: "11111111111"
+        maxLength: 11
+        pattern: ^\d{11}$
+        type: string
+        x-nullable: false
+      rel:
+        description: Tipo do documento de identificao oficial do usurio.
+        example: CPF
+        maxLength: 3
+        pattern: ^[A-Z]{3}$
+        type: string
+        x-nullable: false
+    required:
+    - identification
+    - rel
+    title: Document1
+    type: object
+  OpenbankingBrasilPaymentEnumAccountPaymentsType:
+    description: "Tipos de contas usadas para pagamento via Pix.  \nModalidades tradicionais
+      previstas pela Resoluo 4.753, no contemplando contas vinculadas,  \nconta de
+      domiciliados no exterior, contas em moedas estrangeiras e conta correspondente
+      moeda eletrnica.  \nSegue descrio de cada valor do ENUM para o escopo do Pix.
+      \ \nCACC - Current - Conta Corrente.  \nSLRY - Salary - Conta-Salrio.  \nSVGS
+      - Savings - Conta de Poupana.  \nTRAN - TransactingAccount - Conta de Pagamento
+      pr-paga."
+    enum:
+    - CACC
+    - SLRY
+    - SVGS
+    - TRAN
+    example: CACC
+    title: EnumAccountPaymentsType
+    type: string
+  OpenbankingBrasilPaymentEnumAuthorisationPatchStatusType:
+    description: |-
+      Estado para o qual deve ir.
+
+      [Restrio] O nico valor vlido  REVOKED. (caso contrrio a detentora deve retornar erro HTTP 400)
+    enum:
+    - REVOKED
+    example: REVOKED
+    title: EnumAuthorisationPatchStatusType
+    type: string
+  OpenbankingBrasilPaymentEnumAuthorisationStatusType:
+    description: |-
+      Retorna o estado do consentimento, o qual no momento de sua criao ser AWAITING_AUTHORISATION.
+      Este estado ser alterado depois da autorizao do consentimento na detentora da conta do pagador (Debtor) para AUTHORISED, REJECTED ou REVOKED.
+      O consentimento fica no estado CONSUMED aps ocorrer a iniciao do pagamento referente ao consentimento.
+      Em caso de consentimento expirado a detentora dever retornar o status REJECTED.
+      Em caso de revogao do consentimento a detentora dever retornar o status REVOKED.
+      Estados possveis:
+      AWAITING_AUTHORISATION - Aguardando autorizao
+      AUTHORISED - Autorizado
+      REJECTED - Rejeitado
+      CONSUMED - Consumido
+      REVOKED - Revogado
+    enum:
+    - AWAITING_AUTHORISATION
+    - AUTHORISED
+    - REJECTED
+    - CONSUMED
+    - REVOKED
+    example: REVOKED
+    title: EnumAuthorisationStatusType
+    type: string
+  OpenbankingBrasilPaymentEnumErrorsCreatePayment:
+    description: |-
+      Cdigos de erros previstos na criao da iniciao de pagamento:
+
+       SALDO_INSUFICIENTE  Esta conta no possui saldo suficiente para realizar o pagamento.
+
+       BENEFICIARIO_INCOMPATIVEL  O beneficirio informado no consentimento no  o mesmo do esperado pelo DICT.
+
+       VALOR_INCOMPATIVEL  O valor informado no consentimento no  o mesmo valor do informado no payload de pagamento.
+
+       VALOR_ACIMA_LIMITE  O valor (ou quantidade de transaes) ultrapassa a faixa de limite parametrizada na detentora para permitir a realizao de transaes pelo cliente.
+
+       VALOR_INVALIDO  O valor enviado no  vlido para o QR Code informado.
+
+       COBRANCA_INVALIDA  Validao de expirao, validao de vencimento, Status Vlido.
+
+       CONSENTIMENTO_INVALIDO  Consentimento invlido (status no  "authorised" ou est expirado).
+
+       JANELA_OPER_INVALIDA  Requisio est fora da janela de funcionamento.
+
+       NAO_INFORMADO  No informada pela detentora de conta.
+
+       PAGAMENTO_DIVERGENTE_DO_CONSENTIMENTO: Dados do pagamento divergentes dos dados do consentimento.
+    enum:
+    - SALDO_INSUFICIENTE
+    - BENEFICIARIO_INCOMPATIVEL
+    - VALOR_INCOMPATIVEL
+    - VALOR_ACIMA_LIMITE
+    - VALOR_INVALIDO
+    - COBRANCA_INVALIDA
+    - CONSENTIMENTO_INVALIDO
+    - JANELA_OPER_INVALIDA
+    - NAO_INFORMADO
+    - PAGAMENTO_DIVERGENTE_DO_CONSENTIMENTO
+    example: SALDO_INSUFICIENTE
+    title: EnumErrorsCreatePayment
+    type: string
+  OpenbankingBrasilPaymentEnumErrorsPatchConsent:
+    description: "Cdigos de erros previstos na revogao do consentimento de pagamento:
+      \ \n INFORMACAO_USUARIO_REQUERIDA - O campo data.revocation.loggedUser deve
+      ser preenchido quando a revogao for feita pelo usurio final, ou seja, se o campo
+      data.revocation.revokedBy estiver com o valor USER.  \n OPERACAO_NAO_PERMITIDA_STATUS:
+      O consentimento s pode ser revogado nos status CONSUMED.  \n OPERACAO_NAO_SUPORTADA_TIPO_CONSENTIMENTO:
+      Somente consentimentos para pagamentos agendados podem ser revogados, ou seja,
+      que possuam o campo data.payment.schedule preenchido.  \n TEMPO_LIMITE_REVOGACAO_EXCEDIDO:
+      O consentimento s pode ser revogado at o dia anterior, ou seja, a meia noite
+      no fuso horrio de Braslia do dia imediatamente anterior a data alvo da liquidao
+      do pagamento.  \n MOTIVO_REVOGACAO_NAO_PERMITIDO: Os motivos de revogao do consentimento:
+      FRAUD e ACCOUNT_CLOSURE s podem ser usados caso o campo: data.revocation.revokedBy
+      tenha o valor TPP ou ASPSP, ou seja, somente no caso de revogao unilateral pela
+      iniciadora ou detentora.  \n INFORMACAO_ADICIONAL_REVOGACAO_REQUERIDA: O campo
+      data.revocation.reason.additionalInformation  obrigatrio quando a revogao for
+      feita pela iniciadora ou pela detentora unilateralmente, ou seja, o campo revokedBy
+      igual a TPP ou ASPSP e o motivo de revogao for OTHER."
+    enum:
+    - INFORMACAO_USUARIO_REQUERIDA
+    - OPERACAO_NAO_PERMITIDA_STATUS
+    - OPERACAO_NAO_SUPORTADA_TIPO_CONSENTIMENTO
+    - TEMPO_LIMITE_REVOGACAO_EXCEDIDO
+    - MOTIVO_REVOGACAO_NAO_PERMITIDO
+    - INFORMACAO_ADICIONAL_REVOGACAO_REQUERIDA
+    example: OPERACAO_NAO_PERMITIDA_STATUS
+    title: EnumErrorsPatchConsent
+    type: string
+  OpenbankingBrasilPaymentEnumLocalInstrument:
+    description: |-
+      Especifica a forma de iniciao do pagamento:
+      - MANU - Insero manual de dados da conta transacional
+      - DICT - Insero manual de chave Pix
+      - QRDN - QR code dinmico
+      - QRES - QR code esttico
+      - INIC - Indica que o recebedor (creditor) contratou o Iniciador de Pagamentos especificamente para realizar iniciaes de pagamento em que o beneficirio  previamente conhecido.
+    enum:
+    - MANU
+    - DICT
+    - QRDN
+    - QRES
+    - INIC
+    example: DICT
+    title: EnumLocalInstrument
+    type: string
+  OpenbankingBrasilPaymentEnumPaymentPersonType:
+    description: Titular, pessoa natural ou juridica a quem se referem os dados de
+      recebedor (creditor).
+    enum:
+    - PESSOA_NATURAL
+    - PESSOA_JURIDICA
+    example: PESSOA_NATURAL
+    title: EnumPaymentPersonType
+    type: string
+  OpenbankingBrasilPaymentEnumPaymentStatusType:
+    description: "Estado atual da iniciao de pagamento. O estado evolui na seguinte
+      ordem:  \n1. PDNG (PENDING) - Iniciao de pagamento ou transao de pagamento est
+      pendente. Checagens adicionais em realizao.  \n2. SASP (SCHEDULE_ACCEPTED_SETTLEMENT_IN_PROCESS)
+      - Indica que o processo de agendamento est em processamento.  \n3. SASC (SCHEDULE_ACCEPTED_SETTLEMENT_COMPLETED)
+      - Indica que o processo de agendamento foi realizado.  \n4. PART (PARTIALLY
+      ACCEPTED) - Aguardando autorizao mltipla alada.  \n5. ACSP (ACCEPTED_SETTLEMENT_IN_PROCESS)
+      - Iniciao de pagamento aceita e processamento do pagamento foi iniciado.  \n6.
+      ACSC (ACCEPTED_SETTLEMENT_COMPLETED_DEBITOR_ACCOUNT) - Dbito realizado na conta
+      do pagador.  \n7. ACCC (ACCEPTED_SETTLEMENT_COMPLETED) - Crdito realizado na
+      instituio de destino.  \n\nEm caso insucesso:  \nRJCT (REJECTED) - Instruo de
+      pagamento rejeitada."
+    enum:
+    - PDNG
+    - SASP
+    - SASC
+    - PART
+    - ACSP
+    - ACSC
+    - ACCC
+    - RJCT
+    example: PDNG
+    title: EnumPaymentStatusType
+    type: string
+  OpenbankingBrasilPaymentEnumPaymentType:
+    description: Este campo define o tipo de pagamento que ser iniciado aps a autorizao
+      do consentimento.
+    enum:
+    - PIX
+    example: PIX
+    title: EnumPaymentType
+    type: string
+  OpenbankingBrasilPaymentEnumRejectionReasonType:
+    description: "Motivo da rejeio do pagamento. Informaes complementares sobre o
+      motivo do status.  \nABORTED_SETTLEMENT_TIMEOUT - Liquidao da transao interrompida
+      devido a timeout no SPI (AB03).  \nERROR_CREDITOR_AGENT - Transao interrompida
+      devido a erro no participante do usurio recebedor (AB09).  \nTIMEOUT_DEBTOR_AGENT
+      - Timeout do participante emissor da ordem de pagamento (AB11).  \nINVALID_CREDITOR_ACCOUNT_NUMBER
+      - Nmero da conta transacional do usurio recebedor inexistente ou invlido (AC03).
+      \ \nBLOCKED_ACCOUNT - Conta transacional do usurio recebedor encontra-se bloqueada
+      (AC06).  \nCLOSED_CREDITOR_ACCOUNT_NUMBER - Nmero da conta transacional do usurio
+      recebedor encerrada (AC07).  \nINVALID_CREDITOR_ACCOUNTTYPE - Tipo incorreto
+      para a conta transacional do usurio recebedor (AC14).  \nTRANSACTION_NOT_SUPPORTED
+      - Tipo de transao no  suportado/autorizado na conta transacional do usurio recebedor
+      (AG03). Exemplo: transferncia para conta salrio.  \nNOT_ALLOWED_BOOK_TRANSFER
+      - No  permitida ordem de pagamento/devoluo no SPI cujos recursos sejam transferidos
+      de uma conta transacional para outra em uma mesma instituio participante ou
+      entre participantes que utilizem o servio de liquidao de um mesmo participante
+      liquidante no SPI (booktransfer) (AG12).  \nFORBIDDEN_RETURN_PAYMENT - No  permitido
+      devolver a devoluo de um pagamento instantneo (AG13).  \nINCORRECT_AGENT - Participante
+      direto no  liquidante do participante do usurio pagador / participante do usurio
+      recebedor (AGNT).  \nZERO_AMOUNT - Ordem de pagamento instantneo com valor zero
+      (AM01).  \nNOT_ALLOWED_AMOUNT - Ordem de pagamento/devoluo em valor que faz
+      superar o limite permitido para o tipo de conta transacional creditada (AM02).
+      \ \nINSUFFICIENT_FUNDS - Saldo insuficiente na conta PI do participante do usurio
+      pagador (AM04).  \nWRONG_AMOUNT - Devoluo de pagamento em valor que faz superar
+      o valor da ordem de pagamento instantneo correspondente (AM09).  \nINVALID_AMOUNT
+      - Divergncia entre a somatria dos valores do bloco valorDoDinheiroOuCompra e
+      o campo valor (AM12).  \nINVALID_NUMBER_OF_TRANSACTIONS - Quantidade de transaes
+      invlida (AM18).  \nINCONSISTENT_WITH_END_CUSTOMER - CPF/CNPJ do usurio recebedor
+      no  consistente com o titular da conta transacional especificada (BE01).  \nINVALID_IDENTIFICATION_CODE
+      - Cdigo de situao de pagamento ou de erro invlido (BE15).  \nINVALID_CREDITOR_IDENTIFICATION_CODE
+      - QR Code rejeitado pelo participante do usurio recebedor (BE17).  \nCREDITOR_IDENTIFIER_INCORRECT
+      - CPF/CNPJ do usurio recebedor incorreto (CH11).  \nELEMENT_CONTENT_FORMALLY_INCORRECT
+      - Elemento da mensagem incorreto (CH16).  \nORDER_REJECTED - Ordem rejeitada
+      pelo participante do usurio recebedor (DS04).  \nNOT_ALLOWED_PAYMENT - Participante
+      que assinou a mensagem no  autorizado a realizar a operao na conta PI debitada.
+      No caso em que o participante que assinou a mensagem no  o titular da conta
+      PI debitada nem  o liquidante no SPI do participante do usurio pagador (DS0G).
+      \ \nNOT_ALLOWED_ACCOUNT - ISPB do participante que submeteu a resposta  ordem
+      de pagamento/devoluo diferente do ISPB do participante creditado pela ordem
+      (DS0H).  \nUSER_NOT_YET_ACTIVATED - Participante no se encontra cadastrado ou
+      ainda no iniciou a operao no SPI (DS27).  \nINVALID_CREATION_DATE - Data e Hora
+      do envio da mensagem invlida (DT02).  \nINVALID_CUT_OFF_DATE - Transao extrapola
+      o prazo mximo para devoluo de pagamento instantneo regulamentado pelo Arranjo
+      PIX (DT05).  \nSETTLEMENT_FAILED - Erro no processamento do pagamento instantneo
+      (ED05).  \nINVALID_PURPOSE - Inconsistncia entre a finalidade da transao e o
+      preenchimento do bloco elementos Structured (FF07).  \nINVALID_END_TO_END_ID
+      - Identificador da operao mal formatado (FF08).  \nINVALID_DEBTOR_CLEARING_SYSTEM_MEMBER_IDENTIFIER
+      - ISPB do participante do usurio pagador invlido ou inexistente (RC09).  \nINVALID_CREDITOR_CLEARING_SYSTEM_MEMBER_IDENTIFIER
+      - ISPB do participante do usurio recebedor invlido ou inexistente (RC10).  \nREGULATORY_REASON
+      - Ordem de pagamento em que o usurio pagador  sancionado por resoluo do Conselho
+      de Segurana das Naes Unidas (CSNU). Nos casos em que o usurio recebedor for
+      o sancionado, a ordem de pagamento no deve ser rejeitada (RR4).  \nSPECIFIC_SERVICE_OFFERED_BY_CREDITOR_AGENT
+      - A transao original no est relacionada ao servio de Saque Pix (SL02).  \nINVALID_BILL
+      - Validao de expirao, validao de vencimento, Status Vlido (INDT).  \nOPERATION_WINDOW
+      - Requisio est fora da janela de funcionamento (IDEA).  \nINCOMPATIBLE_DATE
+      - Data do pagamento divergente da data consentida ou divergente da data atual
+      do QR Code (TERM).  \nMISMATCH_AMOUNT - O valor informado no consentimento no
+      \ o mesmo valor do informado no payload de pagamento (OB01).  \nOVER_LIMIT -
+      O valor (ou quantidade de transaes) ultrapassa a faixa de limite parametrizada
+      na detentora para permitir a realizao de transaes pelo cliente (OB02).   \nINVALID_CONSENT
+      - Consentimento invlido (status no  \"authorised\" ou est expirado) (OB03).
+      \ \nDENIED_MULTIPLE_AUTHORISATIONS - Um (ou mais) aprovadores na detentora recusaram
+      a operao (OB04).  \nEXPIRED_MULTIPLE_AUTHORISATIONS - Um (ou mais) aprovadores
+      na detentora no tomaram ao para aprovar a operao (OB05).  \nEXPIRED_BILL - O
+      QR Code no  mais vlido (OB06).   \nCONSENT_REVOKED - Pagamento cancelado devido
+      \ revogao do consentimento.   \n[Restrio] Esse motivo dever ser enviado quando
+      o campo /data/status for igual a RJCT (REJECTED)."
+    enum:
+    - ABORTED_SETTLEMENT_TIMEOUT
+    - ERROR_CREDITOR_AGENT
+    - TIMEOUT_DEBTOR_AGENT
+    - INVALID_CREDITOR_ACCOUNT_NUMBER
+    - BLOCKED_ACCOUNT
+    - CLOSED_CREDITOR_ACCOUNT_NUMBER
+    - INVALID_CREDITOR_ACCOUNTTYPE
+    - TRANSACTION_NOT_SUPPORTED
+    - NOT_ALLOWED_BOOK_TRANSFER
+    - FORBIDDEN_RETURN_PAYMENT
+    - INCORRECT_AGENT
+    - ZERO_AMOUNT
+    - NOT_ALLOWED_AMOUNT
+    - INSUFFICIENT_FUNDS
+    - WRONG_AMOUNT
+    - INVALID_AMOUNT
+    - INVALID_NUMBER_OF_TRANSACTIONS
+    - INCONSISTENT_WITH_END_CUSTOMER
+    - INVALID_IDENTIFICATION_CODE
+    - INVALID_CREDITOR_IDENTIFICATION_CODE
+    - CREDITOR_IDENTIFIER_INCORRECT
+    - ELEMENT_CONTENT_FORMALLY_INCORRECT
+    - ORDER_REJECTED
+    - NOT_ALLOWED_PAYMENT
+    - NOT_ALLOWED_ACCOUNT
+    - USER_NOT_YET_ACTIVATED
+    - INVALID_CREATION_DATE
+    - INVALID_CUT_OFF_DATE
+    - SETTLEMENT_FAILED
+    - INVALID_PURPOSE
+    - INVALID_END_TO_END_ID
+    - INVALID_DEBTOR_CLEARING_SYSTEM_MEMBER_IDENTIFIER
+    - INVALID_CREDITOR_CLEARING_SYSTEM_MEMBER_IDENTIFIER
+    - REGULATORY_REASON
+    - SPECIFIC_SERVICE_OFFERED_BY_CREDITOR_AGENT
+    - INVALID_BILL
+    - OPERATION_WINDOW
+    - INCOMPATIBLE_DATE
+    - MISMATCH_AMOUNT
+    - OVER_LIMIT
+    - INVALID_CONSENT
+    - DENIED_MULTIPLE_AUTHORISATIONS
+    - EXPIRED_MULTIPLE_AUTHORISATIONS
+    - EXPIRED_BILL
+    - CONSENT_REVOKED
+    example: USER_NOT_YET_ACTIVATED
+    title: EnumRejectionReasonType
+    type: string
+  OpenbankingBrasilPaymentEnumRevocationReason:
+    description: "Define o cdigo da razo pela qual o consentimento foi revogado. \nValores
+      possveis:\nFRAUD- Indica suspeita de fraude\nACCOUNT_CLOSURE - Indica que a
+      conta do usurio foi encerrada\nOTHER- Indica que motivo do cancelamento est
+      fora dos motivos pr-estabelecidos."
+    enum:
+    - FRAUD
+    - ACCOUNT_CLOSURE
+    - OTHER
+    example: OTHER
+    title: EnumRevocationReason
+    type: string
+  OpenbankingBrasilPaymentEnumRevokedBy:
+    description: |-
+      Define qual das partes envolvidas na transao est realizando a revogao. Valores possveis:
+      - USER (Revogado pelo usurio)
+      - ASPSP (Provedor de servios de pagamento para servios de conta - Detentora de conta)
+      - TPP (Instituies Provedoras - iniciadora de pagamentos)
+    enum:
+    - USER
+    - ASPSP
+    - TPP
+    example: USER
+    title: EnumRevokedBy
+    type: string
+  OpenbankingBrasilPaymentError:
+    properties:
+      code:
+        $ref: '#/definitions/OpenbankingBrasilPaymentCode'
+      detail:
+        description: "Descrio especfica do erro de acordo com o cdigo reportado:  \n
+          FORMA_PGTO_INVALIDA  Meio de pagamento invlido.  \n DATA_PGTO_INVALIDA  Data
+          de pagamento invlida no contexto, por exemplo, data no passado. Para pagamentos
+          nicos deve ser informada a data atual, do dia corrente.  \n DETALHE_PGTO_INVALIDO:
+          O campo [nome_campo] no atende os requisitos de preenchimento.  \n NAO_INFORMADO
+          \ No reportado/identificado pela instituio detentora de conta."
+        example: Meio de pagamento invlido.
+        maxLength: 2048
+        pattern: \w*\W*
+        type: string
+        x-nullable: false
+      title:
+        description: "Ttulo especfico do erro reportado, de acordo com o cdigo enviado:
+          \ \n FORMA_PGTO_INVALIDA: Forma de pagamento invlida.  \n DATA_PGTO_INVALIDA:
+          Data de pagamento invlida. \n DETALHE_PGTO_INVALIDO: Detalhe do pagamento
+          invlido.\n NAO_INFORMADO: No informado."
+        example: Forma de pagamento invlida.
+        maxLength: 255
+        pattern: \w*\W*
+        type: string
+        x-nullable: false
+    required:
+    - code
+    - title
+    - detail
+    title: Error
+    type: object
+  OpenbankingBrasilPaymentError1:
+    properties:
+      code:
+        $ref: '#/definitions/OpenbankingBrasilPaymentEnumErrorsCreatePayment'
+      detail:
+        description: |-
+          Descrio especfica do erro de acordo com o cdigo reportado:
+
+           SALDO_INSUFICIENTE: A conta selecionada no possui saldo suficiente para realizar o pagamento.
+
+           BENEFICIARIO_INCOMPATIVEL: O beneficirio informado no consentimento no  o mesmo do esperado pelo DICT.
+
+           VALOR_INCOMPATIVEL: O valor informado no consentimento no  o mesmo valor do informado no payload de pagamento.
+
+           VALOR_ACIMA_LIMITE: O valor (ou quantidade de transaes) ultrapassa a faixa de limite parametrizada na detentora para permitir a realizao de transaes pelo cliente.
+
+           VALOR_INVALIDO: O valor enviado no  vlido para o QR Code informado.
+
+           COBRANCA_INVALIDA: Validao de expirao, validao de vencimento ou Status Vlido.
+
+           CONSENTIMENTO_INVALIDO: Consentimento invlido (status diferente de "AUTHORISED" ou est expirado).
+
+           JANELA_OPER_INVALIDA: Requisio est fora da janela de funcionamento.
+
+           NAO_INFORMADO: No reportado/identificado pela instituio detentora de conta.
+
+           PAGAMENTO_DIVERGENTE_DO_CONSENTIMENTO: Dados do pagamento divergentes dos dados do consentimento.
+        example: A conta selecionada no possui saldo suficiente para realizar o pagamento.
+        maxLength: 2048
+        pattern: \w*\W*
+        type: string
+        x-nullable: false
+      title:
+        description: |-
+          Ttulo especfico do erro reportado, de acordo com o cdigo enviado:
+
+           SALDO_INSUFICIENTE: Saldo insuficiente.
+
+           BENEFICIARIO_INCOMPATIVEL: Beneficirio incompatvel.
+
+           VALOR_INCOMPATIVEL: Valor da transao incompatvel.
+
+           VALOR_ACIMA_LIMITE: Acima do limite estabelecido.
+
+           VALOR_INVALIDO: Valor invlido.
+
+           COBRANCA_INVALIDA: Cobrana invlida.
+
+           CONSENTIMENTO_INVALIDO: Consentimento invlido.
+
+           JANELA_OPER_INVALIDA: Janela de operao invlida.
+
+           NAO_INFORMADO: No informado.
+
+           PAGAMENTO_DIVERGENTE_DO_CONSENTIMENTO: divergncia entre pagamento e consentimento.
+        example: Saldo insuficiente.
+        maxLength: 255
+        pattern: \w*\W*
+        type: string
+        x-nullable: false
+    required:
+    - code
+    - title
+    - detail
+    title: Error1
+    type: object
+  OpenbankingBrasilPaymentError2:
+    properties:
+      code:
+        description: Cdigo de erro especfico do endpoint
+        maxLength: 255
+        pattern: '[\w\W\s]*'
+        type: string
+        x-nullable: false
+      detail:
+        description: Descrio legvel por humanos deste erro especfico
+        maxLength: 2048
+        pattern: '[\w\W\s]*'
+        type: string
+        x-nullable: false
+      title:
+        description: Ttulo legvel por humanos deste erro especfico
+        maxLength: 255
+        pattern: '[\w\W\s]*'
+        type: string
+        x-nullable: false
+    required:
+    - code
+    - title
+    - detail
+    title: Error2
+    type: object
+  OpenbankingBrasilPaymentError3:
+    properties:
+      code:
+        $ref: '#/definitions/OpenbankingBrasilPaymentEnumErrorsPatchConsent'
+      detail:
+        description: "Descrio especfica do erro de acordo com o cdigo reportado:  \n
+          INFORMACAO_USUARIO_REQUERIDA: Informao do usurio requerida.  \n OPERACAO_NAO_PERMITIDA_STATUS:
+          Operao no permitida devido ao status atual do consentimento.  \n OPERACAO_NAO_SUPORTADA_TIPO_CONSENTIMENTO:
+          Operao no suportada pelo tipo de consentimento.  \n TEMPO_LIMITE_REVOGACAO_EXCEDIDO:
+          Prazo limite para revogao excedido.  \n MOTIVO_REVOGACAO_NAO_PERMITIDO:
+          Motivo de revogao no permitido.  \n INFORMACAO_ADICIONAL_REVOGACAO_REQUERIDA:
+          Informao adicional requerida."
+        example: Operao no suportada pelo tipo de consentimento.
+        maxLength: 2048
+        pattern: \w*\W*
+        type: string
+        x-nullable: false
+      title:
+        description: "Ttulo especfico do erro reportado, de acordo com o cdigo enviado:
+          \ \n INFORMACAO_USUARIO_REQUERIDA: Informao do usurio requerida.  \n OPERACAO_NAO_PERMITIDA_STATUS:
+          Operao no permitida.  \n OPERACAO_NAO_SUPORTADA_TIPO_CONSENTIMENTO: Operao
+          no permitida.  \n TEMPO_LIMITE_REVOGACAO_EXCEDIDO: Prazo limite para revogao
+          excedido.  \n MOTIVO_REVOGACAO_NAO_PERMITIDO: Motivo de revogao no permitido.
+          \ \n INFORMACAO_ADICIONAL_REVOGACAO_REQUERIDA: Informao adicional requerida."
+        example: Motivo de revogao no permitido.
+        maxLength: 255
+        pattern: \w*\W*
+        type: string
+        x-nullable: false
+    required:
+    - code
+    - title
+    - detail
+    title: Error3
+    type: object
+  OpenbankingBrasilPaymentIdentification:
+    description: Objeto contendo os dados do recebedor (creditor).
+    properties:
+      cpfCnpj:
+        description: "Identificao da pessoa envolvida na transao.  \nPreencher com
+          o CPF ou CNPJ, de acordo com o valor escolhido no campo type.  \nO CPF ser
+          utilizado com 11 nmeros e dever ser informado sem pontos ou traos.  \nO
+          CNPJ ser utilizado com 14 nmeros e dever ser informado sem pontos ou traos."
+        example: "58764789000137"
+        maxLength: 14
+        minLength: 11
+        pattern: ^\d{11}$|^\d{14}$
+        type: string
+        x-nullable: false
+      name:
+        description: "Em caso de pessoa natural deve ser informado o nome completo
+          do titular da conta do recebedor.  \nEm caso de pessoa jurdica deve ser
+          informada a razo social ou o nome fantasia da conta do recebedor."
+        example: Marco Antonio de Brito
+        maxLength: 140
+        pattern: '[\w\W\s]*'
+        type: string
+        x-nullable: false
+      personType:
+        $ref: '#/definitions/OpenbankingBrasilPaymentEnumPaymentPersonType'
+    required:
+    - personType
+    - cpfCnpj
+    - name
+    title: Identification
+    type: object
+  OpenbankingBrasilPaymentLinks:
+    description: Referncias para outros recusos da API requisitada.
+    properties:
+      self:
+        description: URI completo que gerou a resposta atual.
+        example: https://api.banco.com.br/open-banking/api/v1/resource
+        maxLength: 2000
+        pattern: ^(https?:\/\/)?(www\.)?[-a-zA-Z0-9@:%._\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&\/\/=]*)$
+        type: string
+        x-nullable: false
+    required:
+    - self
+    title: Links
+    type: object
+  OpenbankingBrasilPaymentLoggedUser:
+    description: |-
+      Usurio (pessoa natural) que encontra-se logado na instituio Iniciadora de Pagamento.
+      [Restrio] Deve obrigatoriamente ser enviado quando a revogao for feita pelo usurio final, ou seja, se o campo revokedBy estiver com o valor 'USER'.
+    properties:
+      document:
+        $ref: '#/definitions/OpenbankingBrasilPaymentDocument1'
+    required:
+    - document
+    title: LoggedUser
+    type: object
+  OpenbankingBrasilPaymentMeta:
+    description: Meta informaes referente  API requisitada.
+    properties:
+      requestDateTime:
+        description: Data e hora da consulta, conforme especificao RFC-3339, formato
+          UTC.
+        example: "2021-05-21T08:30:00Z"
+        format: date-time
+        type: string
+        x-nullable: false
+      totalPages:
+        description: Nmero total de pginas no resultado
+        example: 1
+        format: int32
+        type: integer
+        x-nullable: false
+      totalRecords:
+        description: Nmero total de registros no resultado
+        example: 1
+        format: int32
+        type: integer
+        x-nullable: false
+    required:
+    - totalRecords
+    - totalPages
+    - requestDateTime
+    title: Meta
+    type: object
+  OpenbankingBrasilPaymentPatchPaymentsConsent:
+    properties:
+      data:
+        $ref: '#/definitions/OpenbankingBrasilPaymentPatchPaymentsConsentData'
+    required:
+    - data
+    title: PatchPaymentsConsent
+    type: object
+  OpenbankingBrasilPaymentPatchPaymentsConsentData:
+    description: Objeto contendo dados do pagamento e do recebedor (creditor).
+    properties:
+      revocation:
+        $ref: '#/definitions/OpenbankingBrasilPaymentRevocation'
+      status:
+        default: REVOKED
+        description: |-
+          Estado para o qual deve ir.
+
+          [Restrio] O nico valor vlido  REVOKED. (caso contrrio a detentora deve retornar erro HTTP 400)
+        example: REVOKED
+        type: string
+        x-nullable: false
+    required:
+    - status
+    - revocation
+    title: PatchPaymentsConsentData
+    type: object
+  OpenbankingBrasilPaymentPaymentConsent:
+    description: Objeto contendo dados de pagamento para consentimento.
+    properties:
+      amount:
+        description: Valor da transao com 2 casas decimais.
+        example: "100000.12"
+        maxLength: 19
+        minLength: 4
+        pattern: ^((\d{1,16}\.\d{2}))$
+        type: string
+        x-nullable: false
+      currency:
+        description: |-
+          Cdigo da moeda nacional segundo modelo ISO-4217, ou seja, 'BRL'.
+          Todos os valores monetrios informados esto representados com a moeda vigente do Brasil.
+        example: BRL
+        maxLength: 3
+        pattern: ^([A-Z]{3})$
+        type: string
+        x-nullable: false
+      date:
+        description: Mutuamente exclusivo com o objeto schedule. Este campo  obrigatrio
+          no caso de pagamento nico. Neste caso, o objeto schedule no deve ser informado.
+        example: "2021-01-01"
+        format: date
+        type: string
+        x-nullable: true
+      details:
+        $ref: '#/definitions/OpenbankingBrasilPaymentDetails'
+      ibgeTownCode:
+        description: |-
+          Traz o cdigo da cidade segundo o IBGE (Instituto Brasileiro de Geografia e Estatstica).
+          Para o preenchimento deste campo, o Iniciador de Pagamentos deve seguir a orientao do arranjo da forma de pagamento.
+          O preenchimento do campo tanto em pix/payments quanto /consents deve ser igual. Caso haja divergncia dos valores, a instituio deve retornar HTTP 422 com o cdigo de erro PAGAMENTO_DIVERGENTE_DO_CONSENTIMENTO.
+          Este campo faz referncia ao campo CodMun do arranjo Pix.
+        example: "5300108"
+        maxLength: 7
+        minLength: 7
+        pattern: ^\d{7}$
+        type: string
+        x-nullable: true
+      schedule:
+        $ref: '#/definitions/OpenbankingBrasilPaymentSchedule'
+      type:
+        default: PIX
+        description: Este campo define o tipo de pagamento que ser iniciado aps a
+          autorizao do consentimento.
+        example: PIX
+        type: string
+        x-nullable: false
+    required:
+    - type
+    - currency
+    - amount
+    - details
+    title: PaymentConsent
+    type: object
+  OpenbankingBrasilPaymentPaymentPix:
+    description: Objeto contendo dados do pagameto como moeda e valor.
+    properties:
+      amount:
+        description: Valor da transao com 2 casas decimais.
+        example: "100000.12"
+        maxLength: 19
+        minLength: 4
+        pattern: ^((\d{1,16}\.\d{2}))$
+        type: string
+        x-nullable: false
+      currency:
+        description: "Cdigo da moeda nacional segundo modelo ISO-4217, ou seja, 'BRL'.
+          \ \nTodos os valores monetrios informados esto representados com a moeda
+          vigente do Brasil."
+        example: BRL
+        maxLength: 3
+        pattern: ^([A-Z]{3})$
+        type: string
+        x-nullable: false
+    required:
+    - amount
+    - currency
+    title: PaymentPix
+    type: object
+  OpenbankingBrasilPaymentReason:
+    description: Define a razo pela qual o consentimento foi revogado.
+    properties:
+      additionalInformation:
+        description: |-
+          Contm informaes adicionais definidas pelo requisitante da revogao.
+
+          [Restrio] Dever ser obrigatoriamente preenchido quando a revogao for feita pela iniciadora ou pela detentora unilateralmente, ou seja, quando o campo revokedBy for igual a TPP ou ASPSP e o motivo de revogao for OTHER.
+        example: No quero mais o servio
+        maxLength: 140
+        pattern: '[\w\W\s]*'
+        type: string
+        x-nullable: true
+      code:
+        $ref: '#/definitions/OpenbankingBrasilPaymentEnumRevocationReason'
+    required:
+    - code
+    title: Reason
+    type: object
+  OpenbankingBrasilPaymentResponseError:
+    properties:
+      errors:
+        items:
+          $ref: '#/definitions/OpenbankingBrasilPaymentError2'
+        maxItems: 13
+        minItems: 1
+        type: array
+        x-nullable: false
+      meta:
+        $ref: '#/definitions/OpenbankingBrasilPaymentMeta'
+    required:
+    - errors
+    title: ResponseError
+    type: object
+  OpenbankingBrasilPaymentResponsePaymentConsent:
+    properties:
+      data:
+        $ref: '#/definitions/OpenbankingBrasilPaymentData1'
+      links:
+        $ref: '#/definitions/OpenbankingBrasilPaymentLinks'
+      meta:
+        $ref: '#/definitions/OpenbankingBrasilPaymentMeta'
+    required:
+    - data
+    - links
+    - meta
+    title: ResponsePaymentConsent
+    type: object
+  OpenbankingBrasilPaymentResponsePixPayment:
+    properties:
+      data:
+        $ref: '#/definitions/OpenbankingBrasilPaymentResponsePixPaymentData'
+      links:
+        $ref: '#/definitions/OpenbankingBrasilPaymentLinks'
+      meta:
+        $ref: '#/definitions/OpenbankingBrasilPaymentMeta'
+    required:
+    - data
+    - links
+    - meta
+    title: ResponsePixPayment
+    type: object
+  OpenbankingBrasilPaymentResponsePixPaymentData:
+    description: Objeto contendo dados do pagamento e da conta do recebedor (creditor).
+    properties:
+      cnpjInitiator:
+        description: CNPJ do Iniciador de Pagamento devidamente habilitado para a
+          prestao de Servio de Iniciao no Pix.
+        example: "50685362000135"
+        maxLength: 14
+        pattern: ^\d{14}$
+        type: string
+        x-nullable: false
+      consentId:
+        description: |-
+          Identificador nico do consentimento criado para a iniciao de pagamento solicitada. Dever ser um URN - Uniform Resource Name.
+          Um URN, conforme definido na [RFC8141](https://tools.ietf.org/html/rfc8141)  um Uniform Resource
+          Identifier - URI - que  atribudo sob o URI scheme "urn" e um namespace URN especfico, com a inteno de que o URN
+          seja um identificador de recurso persistente e independente da localizao.
+          Considerando a string urn:bancoex:C1DD33123 como exemplo para consentId temos:
+          - o namespace(urn)
+          - o identificador associado ao namespace da instituio transnmissora (bancoex)
+          - o identificador especfico dentro do namespace (C1DD33123).
+          Informaes mais detalhadas sobre a construo de namespaces devem ser consultadas na [RFC8141](https://tools.ietf.org/html/rfc8141).
+        example: urn:bancoex:C1DD33123
+        maxLength: 256
+        pattern: ^urn:[a-zA-Z0-9][a-zA-Z0-9-]{0,31}:[a-zA-Z0-9()+,\-.:=@;$_!*'%\/?#]+$
+        type: string
+        x-nullable: false
+      creationDateTime:
+        description: |-
+          Data e hora em que o recurso foi criado.
+          Uma string com data e hora conforme especificao RFC-3339,
+          sempre com a utilizao de timezone UTC(UTC time format).
+        example: "2020-07-21T08:30:00Z"
+        format: date-time
+        type: string
+        x-nullable: false
+      creditorAccount:
+        $ref: '#/definitions/OpenbankingBrasilPaymentCreditorAccount'
+      endToEndId:
+        description: "Deve ser preenchido no formato padro ExxxxxxxxyyyyMMddHHmmkkkkkkkkkkk
+          (32 caracteres; case sensitive, isso , diferencia letras maisculas e minsculas),
+          sendo:\n E  fixo (1 caractere);  \n xxxxxxxx  identificao do agente que
+          gerou o EndToEndId, podendo ser: o ISPB do participante direto ou o ISPB
+          do participante indireto (8 caracteres numricos [0-9]);  \n yyyyMMddHHmm
+          \ data, hora e minuto (12 caracteres), seguindo o horrio UTC, da submisso
+          da ordem de pagamento, caso a liquidao seja prioritria, ou prevista para
+          o envio da ordem ao sistema de liquidao, caso seja realizado um agendamento.
+          Para ordens prioritrias e no prioritrias, aceita-se o preenchimento, pelo
+          agente que gerou o EndToEndId, com uma tolerncia mxima de 12 horas, para
+          o futuro e para o passado, em relao ao horrio efetivo de processamento da
+          ordem pelo SPI;  \n kkkkkkkkkkk  sequencial criado pelo agente que gerou
+          o EndToEndId (11 caracteres alfanumricos [a-z/A-Z/0-9]). Deve ser nico dentro
+          de cada yyyyMMddHHmm.  \nAdmite-se que o EndToEndId seja gerado pelo participante
+          direto, pelo participante indireto ou pelo iniciador de pagamento.  \nEle
+          deve ser nico, no podendo ser repetido em qualquer outra operao enviada
+          ao SPI.  \n[Restrio] O EndToEndId deve ser informado obrigatoriamente caso
+          o status do pagamento seja ACCEPTED_SETTLEMENT_COMPLETED."
+        example: E9040088820210128000800123873170
+        maxLength: 32
+        minLength: 32
+        pattern: ^([E])([0-9]{8})([0-9]{4})(0[1-9]|1[0-2])(0[1-9]|[1-2][0-9]|3[0-1])(2[0-3]|[01][0-9])([0-5][0-9])([a-zA-Z0-9]{11})$
+        type: string
+        x-nullable: true
+      ibgeTownCode:
+        description: |-
+          Traz o cdigo da cidade segundo o IBGE (Instituto Brasileiro de Geografia e Estatstica).
+          Para o preenchimento deste campo, o Iniciador de Pagamentos deve seguir a orientao do arranjo da forma de pagamento.
+          O preenchimento do campo tanto em pix/payments quanto /consents deve ser igual. Caso haja divergncia dos valores, a instituio deve retornar HTTP 422 com o cdigo de erro PAGAMENTO_DIVERGENTE_DO_CONSENTIMENTO.
+          Este campo faz referncia ao campo CodMun do arranjo Pix.
+        example: "5300108"
+        maxLength: 7
+        minLength: 7
+        pattern: ^\d{7}$
+        type: string
+        x-nullable: true
+      localInstrument:
+        $ref: '#/definitions/OpenbankingBrasilPaymentEnumLocalInstrument'
+      payment:
+        $ref: '#/definitions/OpenbankingBrasilPaymentPaymentPix'
+      paymentId:
+        description: |-
+          Cdigo ou identificador nico informado pela instituio detentora da conta para representar
+          a iniciao de pagamento individual. O `paymentId` deve ser diferente do `endToEndId`.
+          Este  o identificador que dever ser utilizado na consulta ao status da iniciao de pagamento efetuada.
+        example: TXpRMU9UQTROMWhZV2xSU1FUazJSMDl
+        maxLength: 100
+        minLength: 1
+        pattern: ^[a-zA-Z0-9][a-zA-Z0-9\-]{0,99}$
+        type: string
+        x-nullable: false
+      proxy:
+        description: |-
+          Chave cadastrada no DICT pertencente ao recebedor. Os tipos de chaves podem ser: telefone, e-mail, cpf/cnpj ou chave aleatria.
+          No caso de telefone celular deve ser informado no padro E.1641.
+          Para e-mail deve ter o formato xxxxxxxx@xxxxxxx.xxx(.xx) e no mximo 77 caracteres.
+          No caso de CPF dever ser informado com 11 nmeros, sem pontos ou traos.
+          Para o caso de CNPJ dever ser informado com 14 nmeros, sem pontos ou traos.
+          No caso de chave aleatria deve ser informado o UUID gerado pelo DICT, conforme formato especificado na RFC41223.
+          Se informado, a detentora da conta deve validar o proxy no DICT quando localInstrument for igual a DICT, QRDN ou QRES e validar o campo creditorAccount.
+          Esta validao  opcional caso o localInstrument for igual a INIC.
+          [Restrio] Se localInstrument for igual a MANU, o campo proxy no deve ser preenchido. Se localInstrument for igual INIC, DICT, QRDN ou QRES, o campo proxy deve ser sempre preenchido com a chave Pix.
+        example: "12345678901"
+        maxLength: 77
+        pattern: '[\w\W\s]*'
+        type: string
+        x-nullable: true
+      rejectionReason:
+        $ref: '#/definitions/OpenbankingBrasilPaymentEnumRejectionReasonType'
+      remittanceInformation:
+        description: Deve ser preenchido sempre que o usurio pagador inserir alguma
+          informao adicional em um pagamento, a ser enviada ao recebedor.
+        example: Pagamento da nota RSTO035-002.
+        maxLength: 140
+        pattern: '[\w\W\s]*'
+        type: string
+        x-nullable: true
+      status:
+        $ref: '#/definitions/OpenbankingBrasilPaymentEnumPaymentStatusType'
+      statusUpdateDateTime:
+        description: |-
+          Data e hora da ltima atualizao da iniciao de pagamento.
+          Uma string com data e hora conforme especificao RFC-3339,
+          sempre com a utilizao de timezone UTC(UTC time format).
+        example: "2020-07-21T08:30:00Z"
+        format: date-time
+        type: string
+        x-nullable: false
+      transactionIdentification:
+        description: |-
+          Trata-se de um identificador de transao que deve ser retransmitido intacto pelo PSP do pagador ao gerar a ordem de pagamento. Essa informao permitir ao recebedor identificar e correlacionar a transferncia, quando recebida, com a apresentao das instrues ao pagador.
+          Os caracteres permitidos no contexto do Pix para o campo txid (EMV 62-05) so:
+          - Letras minsculas, de a a z
+          - Letras maisculas, de A a z
+          - Dgitos decimais, de 0 a 9
+
+          [Restrio] Se localInstrument for igual a INIC, o campo transactionIdentification deve ser preenchido obrigatoriamente.
+          Se localInstrument for igual a MANU ou DICT, o campo transactionIdentification no deve ser preenchido.
+          A detentora de conta deve validar se a condicionalidade do campo foi atendida pela iniciadora de pagamento.
+        example: E00038166201907261559y6j6
+        maxLength: 25
+        pattern: ^[a-zA-Z0-9][a-zA-Z0-9]{0,24}$
+        type: string
+        x-nullable: true
+    required:
+    - paymentId
+    - consentId
+    - creationDateTime
+    - statusUpdateDateTime
+    - status
+    - localInstrument
+    - cnpjInitiator
+    - payment
+    - creditorAccount
+    title: ResponsePixPaymentData
+    type: object
+  OpenbankingBrasilPaymentRevocation:
+    description: "Objeto que contm as informaes das circunstncia da revogao.   \n\n[Restrio]
+      O campo loggedUser deve ser preenchido quando a revogao for feita pelo usurio
+      final, ou seja, se o campo data.revocation.revokedBy estiver com o valor 'USER'."
+    properties:
+      loggedUser:
+        $ref: '#/definitions/OpenbankingBrasilPaymentLoggedUser'
+      reason:
+        $ref: '#/definitions/OpenbankingBrasilPaymentReason'
+      revokedBy:
+        $ref: '#/definitions/OpenbankingBrasilPaymentEnumRevokedBy'
+    required:
+    - revokedBy
+    - reason
+    title: Revocation
+    type: object
+  OpenbankingBrasilPaymentSchedule:
+    description: Mutuamente exclusivo com o campo date. Este campo  obrigatrio no
+      caso de agendamento. Neste caso, o campo date no deve ser informado.
+    properties:
+      single:
+        $ref: '#/definitions/OpenbankingBrasilPaymentSingle'
+    required:
+    - single
+    title: Schedule
+    type: object
+  OpenbankingBrasilPaymentSingle:
+    description: Define a poltica de agendamento nico.
+    properties:
+      date:
+        description: "Define a data alvo da liquidao do pagamento. O fuso horrio de
+          Brasilia deve ser utilizado para criao e racionalizao sobre os dados deste
+          campo.  \nOBS:Esse campo dever sempre ser no mnimo D+1 corrido, ou seja,
+          a data imediatamente posterior em relao a data do consentimento considerando
+          o fuso horrio de Braslia e dever ser no mximo um ano corrido a partir da
+          data do consentimento considerando o fuso horrio de Braslia."
+        example: "2021-01-01"
+        format: date
+        type: string
+        x-nullable: false
+    required:
+    - date
+    title: Single
+    type: object
+host: api.banco.com.br
+info:
+  contact:
+    email: gt-interfaces@openbankingbr.org
+    name: Governana do Open Banking Brasil  Especificaes
+    url: https://openbanking-brasil.github.io/areadesenvolvedor/
+  description: |
+    API de Iniciao de Pagamentos, responsvel por viabilizar as operaes de iniciao de pagamentos para o Open Banking Brasil.
+    Para cada uma das formas de pagamento previstas  necessrio obter prvio consentimento do cliente atravs dos `endpoints` dedicados ao consentimento nesta API.
+
+    # Orientaes
+    No diretrio de participantes duas `Roles` esto relacionadas  presente API:
+    - `CONTA`, referente s instituies detentoras de conta participantes do Open Banking Brasil;
+    - `PAGTO`, referente s instituies iniciadoras de transao de pagamento de conta participantes do Open Banking Brasil.
+    Os tokens utilizados para consumo dos `endpoints` desta API devem possuir os `scopes` `openid` e `payments`.
+    Esta API no requer a implementao de `permissions` para sua utilizao.
+    Todas as requisies e respostas devem ser assinadas seguindo o protocolo estabelecido na sesso <a href="https://openbanking-brasil.github.io/areadesenvolvedor/#assinaturas" target="_blank">Assinaturas</a> do guia de segurana.
+
+    ## Assinatura de payloads
+
+    No contexto da API Payment Initiation, os `payloads` de mensagem que trafegam tanto por parte da instituio iniciadora de transao de pagamento quanto por parte da instituio detentora
+    de conta devem estar assinados. Para o processo de assinatura destes `payloads` as instituies devem seguir as especificaes de segurana publicadas no Portal do desenvolvedor:
+
+    - Certificados exigidos para assinatura de mensagens:
+    [Padres de certificados digitais Open Banking Brasil](https://github.com/OpenBanking-Brasil/specs-seguranca/blob/main/open-banking-brasil-certificate-standards-1_ID1.md#certificado-de-assinatura-certificadoassinatura)
+
+    - Como assinar o payload JWS: [https://openbanking-brasil.github.io/areadesenvolvedor/#como-assinar-o-payload](https://openbanking-brasil.github.io/areadesenvolvedor/#como-assinar-o-payload)
+
+    ## Controle de acesso
+
+    O endpoint de consulta de pagamento GET /pix/payments/{paymentId} deve suportar acesso a partir de access_token emitido por meio de um grant_type do tipo `client credentials`, como opo do uso do token vinculado ao consentimento (hybrid flow).
+
+    Para evitar vazamento de informao, a detentora deve validar que o pagamento consultado pertence ao ClientId que o criou e, caso haja divergncias, retorne um erro HTTP 400.
+  title: API Payment Initiation - Open Banking Brasil
+  version: 1.1.0-rc1.0
+paths:
+  /consents:
+    post:
+      deprecated: false
+      description: Mtodo de criao do consentimento para a iniciao de pagamento.
+      operationId: paymentsPostConsents
+      parameters:
+      - description: Cabealho HTTP padro. Permite que as credenciais sejam fornecidas
+          dependendo do tipo de recurso solicitado
+        in: header
+        maxLength: 2048
+        name: Authorization
+        pattern: '[\w\W\s]*'
+        required: true
+        type: string
+      - description: 'Data em que o usurio logou pela ltima vez com o receptor. Representada
+          de acordo com a [RFC7231](https://tools.ietf.org/html/rfc7231).Exemplo:
+          Sun, 10 Sep 2017 19:43:31 UTC'
+        in: header
+        maxLength: 29
+        minLength: 29
+        name: x-fapi-auth-date
+        pattern: ^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)
+          \d{4} \d{2}:\d{2}:\d{2} (GMT|UTC)$
+        type: string
+      - description: O endereo IP do usurio se estiver atualmente logado com o receptor.
+        in: header
+        maxLength: 100
+        minLength: 1
+        name: x-fapi-customer-ip-address
+        pattern: '[\w\W\s]*'
+        type: string
+      - description: Um UID [RFC4122](https://tools.ietf.org/html/rfc4122) usado como
+          um ID de correlao. Se fornecido, o transmissor deve "reproduzir" esse valor
+          no cabealho de resposta.
+        in: header
+        maxLength: 100
+        minLength: 1
+        name: x-fapi-interaction-id
+        pattern: ^[a-zA-Z0-9][a-zA-Z0-9\-]{0,99}$
+        type: string
+      - description: Indica o user-agent que o usurio utiliza.
+        in: header
+        maxLength: 100
+        minLength: 1
+        name: x-customer-user-agent
+        pattern: '[\w\W\s]*'
+        type: string
+      - description: Cabealho HTTP personalizado. Identificador de solicitao exclusivo
+          para suportar a idempotncia.
+        in: header
+        maxLength: 40
+        name: x-idempotency-key
+        pattern: ^([^s]+)(.*)(\S)$
+        required: true
+        type: string
+      - description: Payload para criao do consentimento para iniciao do pagamento.
+        in: body
+        name: body
+        required: true
+        schema: {}
+      produces:
+      - application/jwt
+      - application/json; charset=utf-8
+      - application/json
+      responses:
+        "201":
+          description: Consentimento de pagamento criado com sucesso.
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            default: ""
+        "400":
+          description: A requisio foi malformada, omitindo atributos obrigatrios,
+            seja no payload ou atravs de atributos na URL.
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "401":
+          description: Cabealho de autenticao ausente/invlido ou token invlido
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "403":
+          description: O token tem escopo incorreto ou uma poltica de segurana foi
+            violada
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "404":
+          description: O recurso solicitado no existe ou no foi implementado
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "405":
+          description: O consumidor tentou acessar o recurso com um mtodo no suportado
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "406":
+          description: A solicitao continha um cabealho Accept diferente dos tipos
+            de mdia permitidos ou um conjunto de caracteres diferente de UTF-8
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "415":
+          description: O formato do payload no  um formato suportado.
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "422":
+          description: A solicitao foi bem formada, mas no pde ser processada devido  lgica
+            de negcios especfica da solicitao.
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            default: ""
+        "429":
+          description: A operao foi recusada, pois muitas solicitaes foram feitas
+            dentro de um determinado perodo ou o limite global de requisies concorrentes
+            foi atingido
+          headers:
+            Retry-After:
+              description: |
+                Cabealho que indica o tempo (em segundos) que o cliente dever aguardar para realizar uma nova tentativa de chamada. Este cabealho dever estar presente quando o cdigo HTTP de retorno for 429 Too many requests.
+              type: string
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "500":
+          description: Ocorreu um erro no gateway da API ou no microsservio
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        default:
+          description: Erro inesperado.
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+      security:
+      - OAuth2ClientCredentials:
+        - payments
+        OpenId:
+        - openid
+      summary: paymentsPostConsents
+      tags:
+      - Pagamentos
+  /consents/{consentId}:
+    get:
+      deprecated: false
+      description: Mtodo para consulta do consentimento para a iniciao de pagamento.
+      operationId: paymentsGetConsentsConsentId
+      parameters:
+      - description: O consentId  o identificador nico do consentimento a ser revogado
+          e dever ser um URN - Uniform Resource Name.
+        in: path
+        maxLength: 256
+        name: consentId
+        pattern: ^urn:[a-zA-Z0-9][a-zA-Z0-9-]{0,31}:[a-zA-Z0-9()+,\-.:=@;$_!*'%\/?#]+$
+        required: true
+        type: string
+      - description: Cabealho HTTP padro. Permite que as credenciais sejam fornecidas
+          dependendo do tipo de recurso solicitado
+        in: header
+        maxLength: 2048
+        name: Authorization
+        pattern: '[\w\W\s]*'
+        required: true
+        type: string
+      - description: 'Data em que o usurio logou pela ltima vez com o receptor. Representada
+          de acordo com a [RFC7231](https://tools.ietf.org/html/rfc7231).Exemplo:
+          Sun, 10 Sep 2017 19:43:31 UTC'
+        in: header
+        maxLength: 29
+        minLength: 29
+        name: x-fapi-auth-date
+        pattern: ^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)
+          \d{4} \d{2}:\d{2}:\d{2} (GMT|UTC)$
+        type: string
+      - description: O endereo IP do usurio se estiver atualmente logado com o receptor.
+        in: header
+        maxLength: 100
+        minLength: 1
+        name: x-fapi-customer-ip-address
+        pattern: '[\w\W\s]*'
+        type: string
+      - description: Um UID [RFC4122](https://tools.ietf.org/html/rfc4122) usado como
+          um ID de correlao. Se fornecido, o transmissor deve "reproduzir" esse valor
+          no cabealho de resposta.
+        in: header
+        maxLength: 100
+        minLength: 1
+        name: x-fapi-interaction-id
+        pattern: ^[a-zA-Z0-9][a-zA-Z0-9\-]{0,99}$
+        type: string
+      - description: Indica o user-agent que o usurio utiliza.
+        in: header
+        maxLength: 100
+        minLength: 1
+        name: x-customer-user-agent
+        pattern: '[\w\W\s]*'
+        type: string
+      produces:
+      - application/jwt
+      - application/json; charset=utf-8
+      - application/json
+      responses:
+        "200":
+          description: Dados do consentimento de pagamento obtidos com sucesso.
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            default: ""
+        "400":
+          description: A requisio foi malformada, omitindo atributos obrigatrios,
+            seja no payload ou atravs de atributos na URL.
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "401":
+          description: Cabealho de autenticao ausente/invlido ou token invlido
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "403":
+          description: O token tem escopo incorreto ou uma poltica de segurana foi
+            violada
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "404":
+          description: O recurso solicitado no existe ou no foi implementado
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "405":
+          description: O consumidor tentou acessar o recurso com um mtodo no suportado
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "406":
+          description: A solicitao continha um cabealho Accept diferente dos tipos
+            de mdia permitidos ou um conjunto de caracteres diferente de UTF-8
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "429":
+          description: A operao foi recusada, pois muitas solicitaes foram feitas
+            dentro de um determinado perodo ou o limite global de requisies concorrentes
+            foi atingido
+          headers:
+            Retry-After:
+              description: |
+                Cabealho que indica o tempo (em segundos) que o cliente dever aguardar para realizar uma nova tentativa de chamada. Este cabealho dever estar presente quando o cdigo HTTP de retorno for 429 Too many requests.
+              type: string
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "500":
+          description: Ocorreu um erro no gateway da API ou no microsservio
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        default:
+          description: Erro inesperado.
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+      security:
+      - OAuth2ClientCredentials:
+        - payments
+      summary: paymentsGetConsentsConsentId
+      tags:
+      - Pagamentos
+    patch:
+      deprecated: false
+      description: Mtodo para revogao do consentimento.
+      operationId: paymentsPatchPixPayments
+      parameters:
+      - description: O consentId  o identificador nico do consentimento a ser revogado
+          e dever ser um URN - Uniform Resource Name.
+        in: path
+        maxLength: 256
+        name: consentId
+        pattern: ^urn:[a-zA-Z0-9][a-zA-Z0-9-]{0,31}:[a-zA-Z0-9()+,\-.:=@;$_!*'%\/?#]+$
+        required: true
+        type: string
+      - description: Cabealho HTTP padro. Permite que as credenciais sejam fornecidas
+          dependendo do tipo de recurso solicitado
+        in: header
+        maxLength: 2048
+        name: Authorization
+        pattern: '[\w\W\s]*'
+        required: true
+        type: string
+      - description: 'Data em que o usurio logou pela ltima vez com o receptor. Representada
+          de acordo com a [RFC7231](https://tools.ietf.org/html/rfc7231).Exemplo:
+          Sun, 10 Sep 2017 19:43:31 UTC'
+        in: header
+        maxLength: 29
+        minLength: 29
+        name: x-fapi-auth-date
+        pattern: ^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)
+          \d{4} \d{2}:\d{2}:\d{2} (GMT|UTC)$
+        type: string
+      - description: O endereo IP do usurio se estiver atualmente logado com o receptor.
+        in: header
+        maxLength: 100
+        minLength: 1
+        name: x-fapi-customer-ip-address
+        pattern: '[\w\W\s]*'
+        type: string
+      - description: Um UID [RFC4122](https://tools.ietf.org/html/rfc4122) usado como
+          um ID de correlao. Se fornecido, o transmissor deve "reproduzir" esse valor
+          no cabealho de resposta.
+        in: header
+        maxLength: 100
+        minLength: 1
+        name: x-fapi-interaction-id
+        pattern: ^[a-zA-Z0-9][a-zA-Z0-9\-]{0,99}$
+        type: string
+      - description: Indica o user-agent que o usurio utiliza.
+        in: header
+        maxLength: 100
+        minLength: 1
+        name: x-customer-user-agent
+        pattern: '[\w\W\s]*'
+        type: string
+      - description: Cabealho HTTP personalizado. Identificador de solicitao exclusivo
+          para suportar a idempotncia.
+        in: header
+        maxLength: 40
+        name: x-idempotency-key
+        pattern: ^([^s]+)(.*)(\S)$
+        required: true
+        type: string
+      - description: Payload para revogao do consentimento.
+        in: body
+        name: body
+        required: true
+        schema: {}
+      produces:
+      - application/jwt
+      - application/json; charset=utf-8
+      - application/json
+      responses:
+        "200":
+          description: Revogao do Consentimento informado com sucesso.
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            default: ""
+        "400":
+          description: A requisio foi malformada, omitindo atributos obrigatrios,
+            seja no payload ou atravs de atributos na URL.
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "401":
+          description: Cabealho de autenticao ausente/invlido ou token invlido
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "403":
+          description: O token tem escopo incorreto ou uma poltica de segurana foi
+            violada
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "404":
+          description: O recurso solicitado no existe ou no foi implementado
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "405":
+          description: O consumidor tentou acessar o recurso com um mtodo no suportado
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "406":
+          description: A solicitao continha um cabealho Accept diferente dos tipos
+            de mdia permitidos ou um conjunto de caracteres diferente de UTF-8
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "415":
+          description: O formato do payload no  um formato suportado.
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "422":
+          description: A solicitao foi bem formada, mas no pde ser processada devido  lgica
+            de negcios especfica da solicitao.
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            default: ""
+        "429":
+          description: A operao foi recusada, pois muitas solicitaes foram feitas
+            dentro de um determinado perodo ou o limite global de requisies concorrentes
+            foi atingido
+          headers:
+            Retry-After:
+              description: |
+                Cabealho que indica o tempo (em segundos) que o cliente dever aguardar para realizar uma nova tentativa de chamada. Este cabealho dever estar presente quando o cdigo HTTP de retorno for 429 Too many requests.
+              type: string
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "500":
+          description: Ocorreu um erro no gateway da API ou no microsservio
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        default:
+          description: Erro inesperado.
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+      security:
+      - OAuth2AuthorizationCode:
+        - consent:consentId
+        - payments
+      - OAuth2ClientCredentials:
+        - payments
+      summary: paymentsPatchPixPayments
+      tags:
+      - Pagamentos
+  /pix/payments:
+    post:
+      deprecated: false
+      description: Mtodo para criar uma iniciao de pagamento.
+      operationId: paymentsPostPixPayments
+      parameters:
+      - description: Cabealho HTTP padro. Permite que as credenciais sejam fornecidas
+          dependendo do tipo de recurso solicitado
+        in: header
+        maxLength: 2048
+        name: Authorization
+        pattern: '[\w\W\s]*'
+        required: true
+        type: string
+      - description: 'Data em que o usurio logou pela ltima vez com o receptor. Representada
+          de acordo com a [RFC7231](https://tools.ietf.org/html/rfc7231).Exemplo:
+          Sun, 10 Sep 2017 19:43:31 UTC'
+        in: header
+        maxLength: 29
+        minLength: 29
+        name: x-fapi-auth-date
+        pattern: ^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)
+          \d{4} \d{2}:\d{2}:\d{2} (GMT|UTC)$
+        type: string
+      - description: O endereo IP do usurio se estiver atualmente logado com o receptor.
+        in: header
+        maxLength: 100
+        minLength: 1
+        name: x-fapi-customer-ip-address
+        pattern: '[\w\W\s]*'
+        type: string
+      - description: Um UID [RFC4122](https://tools.ietf.org/html/rfc4122) usado como
+          um ID de correlao. Se fornecido, o transmissor deve "reproduzir" esse valor
+          no cabealho de resposta.
+        in: header
+        maxLength: 100
+        minLength: 1
+        name: x-fapi-interaction-id
+        pattern: ^[a-zA-Z0-9][a-zA-Z0-9\-]{0,99}$
+        type: string
+      - description: Indica o user-agent que o usurio utiliza.
+        in: header
+        maxLength: 100
+        minLength: 1
+        name: x-customer-user-agent
+        pattern: '[\w\W\s]*'
+        type: string
+      - description: Cabealho HTTP personalizado. Identificador de solicitao exclusivo
+          para suportar a idempotncia.
+        in: header
+        maxLength: 40
+        name: x-idempotency-key
+        pattern: ^([^s]+)(.*)(\S)$
+        required: true
+        type: string
+      - description: Payload para criao da iniciao do pagamento Pix.
+        in: body
+        name: body
+        required: true
+        schema: {}
+      produces:
+      - application/jwt
+      - application/json; charset=utf-8
+      - application/json
+      responses:
+        "201":
+          description: Iniciao de pagamento Pix criada com sucesso.
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            default: ""
+        "400":
+          description: A requisio foi malformada, omitindo atributos obrigatrios,
+            seja no payload ou atravs de atributos na URL.
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "401":
+          description: Cabealho de autenticao ausente/invlido ou token invlido
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "403":
+          description: O token tem escopo incorreto ou uma poltica de segurana foi
+            violada
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "404":
+          description: O recurso solicitado no existe ou no foi implementado
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "405":
+          description: O consumidor tentou acessar o recurso com um mtodo no suportado
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "406":
+          description: A solicitao continha um cabealho Accept diferente dos tipos
+            de mdia permitidos ou um conjunto de caracteres diferente de UTF-8
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "415":
+          description: O formato do payload no  um formato suportado.
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "422":
+          description: A solicitao foi bem formada, mas no pde ser processada devido  lgica
+            de negcios especfica da solicitao.
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            default: ""
+        "429":
+          description: A operao foi recusada, pois muitas solicitaes foram feitas
+            dentro de um determinado perodo ou o limite global de requisies concorrentes
+            foi atingido
+          headers:
+            Retry-After:
+              description: |
+                Cabealho que indica o tempo (em segundos) que o cliente dever aguardar para realizar uma nova tentativa de chamada. Este cabealho dever estar presente quando o cdigo HTTP de retorno for 429 Too many requests.
+              type: string
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "500":
+          description: Ocorreu um erro no gateway da API ou no microsservio
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        default:
+          description: Erro inesperado.
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+      security:
+      - OAuth2AuthorizationCode:
+        - consent:consentId
+        - payments
+      summary: paymentsPostPixPayments
+      tags:
+      - Pagamentos
+  /pix/payments/{paymentId}:
+    get:
+      deprecated: false
+      description: Mtodo para consultar uma iniciao de pagamento.
+      operationId: paymentsGetPixPaymentsPaymentId
+      parameters:
+      - description: Identificador da operao de pagamento.
+        in: path
+        maxLength: 100
+        name: paymentId
+        pattern: ^[a-zA-Z0-9][a-zA-Z0-9\-]{0,99}$
+        required: true
+        type: string
+      - description: Cabealho HTTP padro. Permite que as credenciais sejam fornecidas
+          dependendo do tipo de recurso solicitado
+        in: header
+        maxLength: 2048
+        name: Authorization
+        pattern: '[\w\W\s]*'
+        required: true
+        type: string
+      - description: 'Data em que o usurio logou pela ltima vez com o receptor. Representada
+          de acordo com a [RFC7231](https://tools.ietf.org/html/rfc7231).Exemplo:
+          Sun, 10 Sep 2017 19:43:31 UTC'
+        in: header
+        maxLength: 29
+        minLength: 29
+        name: x-fapi-auth-date
+        pattern: ^(Mon|Tue|Wed|Thu|Fri|Sat|Sun), \d{2} (Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)
+          \d{4} \d{2}:\d{2}:\d{2} (GMT|UTC)$
+        type: string
+      - description: O endereo IP do usurio se estiver atualmente logado com o receptor.
+        in: header
+        maxLength: 100
+        minLength: 1
+        name: x-fapi-customer-ip-address
+        pattern: '[\w\W\s]*'
+        type: string
+      - description: Um UID [RFC4122](https://tools.ietf.org/html/rfc4122) usado como
+          um ID de correlao. Se fornecido, o transmissor deve "reproduzir" esse valor
+          no cabealho de resposta.
+        in: header
+        maxLength: 100
+        minLength: 1
+        name: x-fapi-interaction-id
+        pattern: ^[a-zA-Z0-9][a-zA-Z0-9\-]{0,99}$
+        type: string
+      - description: Indica o user-agent que o usurio utiliza.
+        in: header
+        maxLength: 100
+        minLength: 1
+        name: x-customer-user-agent
+        pattern: '[\w\W\s]*'
+        type: string
+      produces:
+      - application/jwt
+      - application/json; charset=utf-8
+      - application/json
+      responses:
+        "200":
+          description: Dados de iniciao de pagamento Pix obtidos com sucesso.
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            default: ""
+        "400":
+          description: A requisio foi malformada, omitindo atributos obrigatrios,
+            seja no payload ou atravs de atributos na URL.
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "401":
+          description: Cabealho de autenticao ausente/invlido ou token invlido
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "403":
+          description: O token tem escopo incorreto ou uma poltica de segurana foi
+            violada
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "404":
+          description: O recurso solicitado no existe ou no foi implementado
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "405":
+          description: O consumidor tentou acessar o recurso com um mtodo no suportado
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "406":
+          description: A solicitao continha um cabealho Accept diferente dos tipos
+            de mdia permitidos ou um conjunto de caracteres diferente de UTF-8
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "429":
+          description: A operao foi recusada, pois muitas solicitaes foram feitas
+            dentro de um determinado perodo ou o limite global de requisies concorrentes
+            foi atingido
+          headers:
+            Retry-After:
+              description: |
+                Cabealho que indica o tempo (em segundos) que o cliente dever aguardar para realizar uma nova tentativa de chamada. Este cabealho dever estar presente quando o cdigo HTTP de retorno for 429 Too many requests.
+              type: string
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        "500":
+          description: Ocorreu um erro no gateway da API ou no microsservio
+          headers:
+            x-fapi-interaction-id:
+              description: |
+                Um UUID RFC4122 usado como um ID de correlao. O transmissor deve usar o mesmo valor recebido na requisio para o cabealho de resposta recebido na requisio, caso no tenha sido fornecido, deve se usar um UUID RFC4122.
+              type: string
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+        default:
+          description: Erro inesperado.
+          schema:
+            $ref: '#/definitions/OpenbankingBrasilPaymentResponseError'
+      security:
+      - OAuth2AuthorizationCode:
+        - payments
+      - OAuth2ClientCredentials:
+        - payments
+      summary: paymentsGetPixPaymentsPaymentId
+      tags:
+      - Pagamentos
+produces:
+- application/json
+schemes:
+- https
+securityDefinitions:
+  OAuth2AuthorizationCode:
+    authorizationUrl: https://authserver.example/token
+    description: Fluxo OAuth necessrio para que a iniciadora possa iniciar pagamentos.
+      Requer o processo de redirecionamento e autenticao do usurio.
+    flow: accessCode
+    scopes:
+      consent:consentId: ""
+      payments: Escopo necessrio para acesso  API Payment Initiation.
+    tokenUrl: https://authserver.example/token
+    type: oauth2
+  OAuth2ClientCredentials:
+    description: Fluxo OAuth necessrio para que a iniciadora possa iniciar pagamentos.
+      Requer o processo de redirecionamento e autenticao do usurio.
+    flow: application
+    scopes:
+      payments: Escopo necessrio para acesso  API Payment Initiation.
+    tokenUrl: https://authserver.example/token
+    type: oauth2
+swagger: "2.0"
+tags:
+- name: Pagamentos

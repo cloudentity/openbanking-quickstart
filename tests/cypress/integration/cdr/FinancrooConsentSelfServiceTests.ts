@@ -66,13 +66,13 @@ describe(`Financroo Consent self service tests`, () => {
 
     acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
 
-    consentSelfServicePage.clickOnApplicationCard();
+    consentSelfServicePage.clickOnApplicationCardWithName("Financroo");
   });
 
   it(`Happy path with account consent`, () => {
     consentSelfServiceApplicationPage.expandAccountsTab();
-    consentSelfServiceApplicationPage.checkAccount(accountsIDs[0]);
-    consentSelfServiceApplicationPage.checkAccount(accountsIDs[1]);
+    consentSelfServiceApplicationPage.checkAccountHasStatus(accountsIDs[0], "Authorised");
+    consentSelfServiceApplicationPage.checkAccountHasStatus(accountsIDs[1], "Authorised");
     consentSelfServiceApplicationPage.expandAccountConsentRow();
 
     consentSelfServiceAccountDetailsPage.assertThatAccountDetailsAreVisible()
@@ -82,7 +82,8 @@ describe(`Financroo Consent self service tests`, () => {
 
   it(`Revoke account consent`, () => {
     consentSelfServiceApplicationPage.expandAccountsTab();
-    consentSelfServiceApplicationPage.assertNumberOfConsents(1);
+    consentSelfServiceApplicationPage.assertAuthorisedAccountRowExists(accountsIDs[0]);
+    consentSelfServiceApplicationPage.assertAuthorisedAccountRowExists(accountsIDs[1]);
     consentSelfServiceApplicationPage.expandAccountConsentRow();
 
     consentSelfServiceAccountDetailsPage.assertThatAccountDetailsAreVisible();
@@ -90,7 +91,9 @@ describe(`Financroo Consent self service tests`, () => {
     consentSelfServiceAccountDetailsPage.assertThatRevokeAccountDetailsAreVisible();
     consentSelfServiceAccountDetailsPage.confirmRevokeAccessAction();
 
-    consentSelfServicePage.assertThatNoAccountsPageIsDisplayed();
+    consentSelfServicePage.clickOnApplicationCardWithName("Financroo");
+    consentSelfServiceApplicationPage.assertAuthorisedAccountRowDoesNotExist(accountsIDs[0]);
+    consentSelfServiceApplicationPage.assertAuthorisedAccountRowDoesNotExist(accountsIDs[1]);
 
     financrooLoginPage.visit();
     financrooLoginPage.login();

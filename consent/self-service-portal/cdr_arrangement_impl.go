@@ -27,7 +27,7 @@ func (o *CDRArrangementImpl) FetchConsents(c *gin.Context, accountIDs []string) 
 	if arrangementsResponse, err = o.Client.Openbanking.Cdr.ListCDRArrangements(
 		cdr.NewListCDRArrangementsParamsWithContext(c).
 			WithWid(o.Config.OpenbankingWorkspaceID).
-			WithConsentsRequest(&obModels.ConsentsRequest{
+			WithConsentsRequest(&obModels.CDRConsentsRequest{
 				Accounts: accountIDs,
 			}),
 		nil,
@@ -64,7 +64,7 @@ func (o *CDRArrangementImpl) getConsents(response *cdr.ListCDRArrangementsOK) []
 	var consents []Consent
 
 	for _, arrangement := range response.Payload.Arrangements {
-		if arrangement.Status == "Rejected" || arrangement.Status == "Revoked" {
+		if arrangement.Status == "AwaitingAuthorisation" {
 			continue
 		}
 		consents = append(consents, Consent{
