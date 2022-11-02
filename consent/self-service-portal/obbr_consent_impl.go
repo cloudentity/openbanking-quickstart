@@ -91,7 +91,14 @@ func (o *OBBRConsentImpl) getConsents(resp *obbrModels.ListOBBRConsentsOK) []Con
 			c.UpdatedAt = consent.CustomerDataAccessConsent.StatusUpdateDateTime
 			c.Permissions = obbrPermissionsToStringSlice(consent.CustomerDataAccessConsent.Permissions)
 		case "payments":
-			// TODO:
+			c.UpdatedAt = consent.CustomerPaymentConsent.StatusUpdateDateTime
+			c.DebtorAccountIdentification = consent.CustomerPaymentConsent.DebtorAccount.Ispb
+			c.DebtorAccountName = consent.CustomerPaymentConsent.DebtorAccount.Number
+			c.CreditorAccountIdentification = consent.CustomerPaymentConsent.Creditor.CpfCnpj
+			c.CreditorAccountName = consent.CustomerPaymentConsent.Creditor.Name
+			c.Currency = consent.CustomerPaymentConsent.Payment.Currency
+			c.Amount = consent.CustomerPaymentConsent.Payment.Amount
+			c.CompletionDateTime = consent.CustomerPaymentConsent.StatusUpdateDateTime
 		}
 
 		consents = append(consents, c)
