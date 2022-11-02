@@ -122,7 +122,7 @@ export default function InvestmentsContribute() {
         .domesticPaymentConsent({
           amount: amount,
           bank_id: selectedBankId,
-          account_id: accountId,
+          account_id: selectedAccountId || accountId,
           payee_account_name: "financroo-investment",
           payee_account_number: "12345678",
           payee_account_sort_code: "123456",
