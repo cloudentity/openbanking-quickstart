@@ -18,13 +18,13 @@ export class ConsentAdminPage {
     "#revoke-access-accept-checkbox";
   private readonly revokeConfirmButtonSelector: string =
     "#revoke-access-button";
-  private getClientSelector = (name: string) => `#client-${name}`;
+  private getClientSelector = (name: string) => `[id='client-${name}']`;
   private getClientStatusSelector = (name: string) =>
-    `#client-${name} [id*='status-']`;
+    `[id='client-${name}'] [id*='status-']`;
   private getMangeClientButtonSelector = (name: string) =>
-    `#client-${name} #manage-account`;
+    `[id='client-${name}'] #manage-account`;
   private getRevokeAccessButtonSelector = (name: string) =>
-    `#client-${name} #revoke-access`;
+    `[id='client-${name}'] #revoke-access`;
 
   public visit(force: boolean = false): void {
     Urls.visit(Cypress.env("consent_admin_url"), force);
