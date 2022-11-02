@@ -91,7 +91,7 @@ function ApplicationAccessTabs({
         )}
         {tab === "payment" && (
           <ApplicationAccessTable
-            data={data.consents.filter(v => v.type === "domestic_payment")}
+            data={data.consents.filter(v => v.type === "domestic_payment" || v.type === "payments")}
             type="payment"
             handleRevoke={handleRevoke}
             accounts={accounts}
