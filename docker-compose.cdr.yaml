@@ -82,10 +82,11 @@ services:
       - BANK_ID_CLAIM=customer_id
       - BANK_URL=http://bank:8070
       - BANK_CLIENT_TOKEN_URL=${ACP_URL}/${TENANT}/${SERVER}/oauth2/token
-      - BANK_CLIENT_ID=cw1ocudfotn6edhsiv8h
+      - BANK_CLIENT_ID=${INTERNAL_BANK_CLIENT_ID}
       - BANK_CLIENT_SECRET=pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0
       - BANK_CLIENT_SCOPES=bank:accounts.basic:read,bank:accounts.detail:read
       - BANK_ACCOUNTS_ENDPOINT=http://bank:8070/internal/accounts
+      - CLIENT_ID=${CONSENT_PAGE_CLIENT_ID}
 
     depends_on:
       configuration:
@@ -113,7 +114,7 @@ services:
       - OPENBANKING_SERVER_ID=${SERVER}
       - SPEC=cdr
       - BANK_CLIENT_TOKEN_URL=${ACP_URL}/${TENANT}/${SERVER}/oauth2/token
-      - BANK_CLIENT_ID=cw1ocudfotn6edhsiv8h
+      - BANK_CLIENT_ID=${INTERNAL_BANK_CLIENT_ID}
       - BANK_CLIENT_SECRET=pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0
       - BANK_CLIENT_SCOPES=bank:accounts.basic:read,bank:accounts.detail:read
       - BANK_ACCOUNTS_ENDPOINT=http://bank:8070/internal/accounts
@@ -159,6 +160,7 @@ services:
       - OPENBANKING_SERVER_ID=${SERVER}
       - BANK_URL=http://bank:8070
       - ENABLE_TLS_SERVER=true
+      - CLIENT_ID=${FINANCROO_TPP_CLIENT_ID}
     depends_on:
       configuration:
         condition: service_completed_successfully
@@ -179,6 +181,7 @@ services:
       - SPEC=cdr
       - GIN_MODE=debug
       - USER_IDENTIFIER_CLAIM=customer_id
+      - CLIENT_ID=${BANK_CLIENT_ID}
     depends_on:
       configuration:
         condition: service_completed_successfully
