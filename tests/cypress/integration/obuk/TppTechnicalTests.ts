@@ -48,7 +48,7 @@ describe(`Tpp technical app`, () => {
       } else {
         tppIntentPage.login();
         acpLoginPage.login(
-          Credentials.tppUsername,
+          Credentials.defaultUsername,
           Credentials.defaultPassword
         );
         if (environmentVariables.isMfaEnabled()) {
@@ -73,7 +73,7 @@ describe(`Tpp technical app`, () => {
   it(`Cancel on ACP login`, () => {
     tppLoginPage.next();
     tppIntentPage.login();
-    acpLoginPage.cancel();
+    acpLoginPage.cancelLogin();
     // UI error page improvements AUT-5845
     errorPage.assertError(`The user rejected the authentication`);
   });
@@ -81,7 +81,7 @@ describe(`Tpp technical app`, () => {
   it(`Cancel on consent`, () => {
     tppLoginPage.next();
     tppIntentPage.login();
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }

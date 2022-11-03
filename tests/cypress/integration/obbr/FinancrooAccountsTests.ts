@@ -38,7 +38,7 @@ describe(`Financroo app`, () => {
     it(`Happy path with accounts: ${accountsIds}`, () => {
       financrooWelcomePage.reconnectGoBank();
 
-      acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+      acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
       if (environmentVariables.isMfaEnabled()) {
         mfaPage.typePin();
       }
@@ -66,7 +66,7 @@ describe(`Financroo app`, () => {
   it(`Happy path with not selected account`, () => {
     financrooWelcomePage.reconnectGoBank();
 
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }
@@ -86,14 +86,14 @@ describe(`Financroo app`, () => {
 
   it(`Cancel on ACP login`, () => {
     financrooWelcomePage.reconnectGoBank();
-    acpLoginPage.cancel();
+    acpLoginPage.cancelLogin();
     // UI error page improvements AUT-5845
     errorPage.assertError(`The user rejected the authentication`);
   });
 
   it(`Cancel on consent`, () => {
     financrooWelcomePage.reconnectGoBank();
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }

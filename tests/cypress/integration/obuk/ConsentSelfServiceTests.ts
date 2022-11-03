@@ -45,7 +45,7 @@ describe(`Consent self service app`, () => {
     financrooLoginPage.login();
 
     financrooWelcomePage.reconnectGoBank();
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }
@@ -67,7 +67,7 @@ describe(`Consent self service app`, () => {
     financrooContributePage.contributePaymentMethod(amount, Currencies.currency.UK.symbol, Accounts.ids.UK.bills);
     financrooContributePage.contributeInvestmentSummary(amount, Currencies.currency.UK.symbol, Accounts.ids.UK.bills);
 
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }
@@ -85,7 +85,7 @@ describe(`Consent self service app`, () => {
   });
 
   it(`Happy path with account consent`, () => {
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
 
     consentSelfServicePage.clickOnApplicationCard();
 
@@ -98,7 +98,7 @@ describe(`Consent self service app`, () => {
   });
 
   it(`Revoke consent`, () => {
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
 
     consentSelfServicePage.clickOnApplicationCard();
 
@@ -115,7 +115,7 @@ describe(`Consent self service app`, () => {
   });
 
   it(`Happy path with payment consent`, () => {
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
 
     consentSelfServicePage.clickOnApplicationCard();
     
@@ -130,7 +130,7 @@ describe(`Consent self service app`, () => {
   });
 
   it(`Cancel ACP login`, () => {
-    acpLoginPage.cancel();
+    acpLoginPage.cancelLogin();
     // UI error page improvements AUT-5845
     errorPage.assertError("The user rejected the authentication");
   });

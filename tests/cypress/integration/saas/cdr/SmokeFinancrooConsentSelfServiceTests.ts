@@ -38,7 +38,7 @@ describe(`Smoke Financroo Consent self service tests`, () => {
 
     financrooWelcomePage.reconnectGoBank();
 
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }
@@ -64,7 +64,7 @@ describe(`Smoke Financroo Consent self service tests`, () => {
     Urls.clearLocalStorage();
     consentSelfServicePage.visit(true);
 
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
 
     consentSelfServicePage.clickOnApplicationCard();
   });

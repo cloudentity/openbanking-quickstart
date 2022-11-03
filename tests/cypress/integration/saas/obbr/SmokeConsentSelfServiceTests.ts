@@ -34,7 +34,7 @@ describe(`Consent self service app`, () => {
     financrooLoginPage.login();
 
     financrooWelcomePage.reconnectGoBank();
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }
@@ -54,7 +54,7 @@ describe(`Consent self service app`, () => {
     Urls.clearLocalStorage();
     consentSelfServicePage.visit(true);
 
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
 
     consentSelfServicePage.clickOnAccountOnlyButton();
     consentSelfServicePage.clickOnApplicationCard();

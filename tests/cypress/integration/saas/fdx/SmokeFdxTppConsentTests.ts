@@ -3,14 +3,14 @@ import { AccountConsentPage } from "../../../pages/consent/AccountConsentPage";
 import { Credentials } from "../../../pages/Credentials";
 import { Urls } from "../../../pages/Urls";
 import { Accounts } from "../../../pages/Accounts";
-import { FdxTppLoginPage } from "../../../pages/fdx-tpp/FdxTppLoginPage";
+import { FdxTppLandingPage } from "../../../pages/fdx-tpp/FdxTppLandingPage";
 import { FdxTppIntentRegisteredPage } from "../../../pages/fdx-tpp/FdxTppIntentRegisteredPage";
 import { FdxTppAuthenticatedPage } from "../../../pages/fdx-tpp/FdxTppAuthenticatedPage";
 import { MfaPage } from "../../../pages/mfa/MfaPage";
 import { EnvironmentVariables } from "../../../pages/EnvironmentVariables";
 
 describe(`FDX Tpp consent app`, () => {
-  const fdxTppLoginPage: FdxTppLoginPage = new FdxTppLoginPage();
+  const fdxTppLoginPage: FdxTppLandingPage = new FdxTppLandingPage();
   const fdxTppIntentRegisteredPage: FdxTppIntentRegisteredPage =
     new FdxTppIntentRegisteredPage();
   const fdxTppAuthenticatedPage: FdxTppAuthenticatedPage =
@@ -35,14 +35,12 @@ describe(`FDX Tpp consent app`, () => {
   ].forEach((accountsIds) => {
     it(`Happy path with selected accounts: ${accountsIds}`, () => {
       fdxTppLoginPage.assertThatPageIsDisplayed();
-      fdxTppLoginPage.assertThatAuthorizationDetailsAreDisplayed();
       fdxTppLoginPage.clickNext();
 
       fdxTppIntentRegisteredPage.assertThatPageIsDisplayed();
-      fdxTppIntentRegisteredPage.assertThatRequestUriFieldsAreNotEmpty();
       fdxTppIntentRegisteredPage.clickLogin();
 
-      acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+      acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
       if (environmentVariables.isMfaEnabled()) {
         mfaPage.typePin();
       }
@@ -65,14 +63,12 @@ describe(`FDX Tpp consent app`, () => {
 
   it(`Happy path with not selected account`, () => {
     fdxTppLoginPage.assertThatPageIsDisplayed();
-    fdxTppLoginPage.assertThatAuthorizationDetailsAreDisplayed();
     fdxTppLoginPage.clickNext();
 
     fdxTppIntentRegisteredPage.assertThatPageIsDisplayed();
-    fdxTppIntentRegisteredPage.assertThatRequestUriFieldsAreNotEmpty();
     fdxTppIntentRegisteredPage.clickLogin();
 
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }

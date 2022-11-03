@@ -28,7 +28,7 @@ describe(`Consent admin app`, () => {
   });
 
   it(`Happy path with revoking consent from Third party providers page`, () => {
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }
@@ -44,7 +44,7 @@ describe(`Consent admin app`, () => {
   });
 
   it(`Happy path with revoking consent from Consent management page`, () => {
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }

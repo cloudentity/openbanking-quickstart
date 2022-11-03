@@ -5,13 +5,13 @@ import { Urls } from "../../pages/Urls";
 import { Accounts } from "../../pages/Accounts";
 import { MfaPage } from "../../pages/mfa/MfaPage";
 import { EnvironmentVariables } from "../../pages/EnvironmentVariables";
-import { FdxTppLoginPage } from "../../pages/fdx-tpp/FdxTppLoginPage";
+import { FdxTppLandingPage } from "../../pages/fdx-tpp/FdxTppLandingPage";
 import { FdxTppIntentRegisteredPage } from "../../pages/fdx-tpp/FdxTppIntentRegisteredPage";
 import { FdxTppAuthenticatedPage } from "../../pages/fdx-tpp/FdxTppAuthenticatedPage";
 import {ErrorPage} from '../../pages/ErrorPage';
 
 describe(`FDX Tpp consent app`, () => {
-  const fdxTppLoginPage: FdxTppLoginPage = new FdxTppLoginPage();
+  const fdxTppLoginPage: FdxTppLandingPage = new FdxTppLandingPage();
   const fdxTppIntentRegisteredPage: FdxTppIntentRegisteredPage = new FdxTppIntentRegisteredPage();
   const fdxTppAuthenticatedPage: FdxTppAuthenticatedPage = new FdxTppAuthenticatedPage();
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
@@ -34,14 +34,12 @@ describe(`FDX Tpp consent app`, () => {
   ].forEach((accountsIds) => {
     it(`Happy path with selected accounts: ${accountsIds}`, () => {
       fdxTppLoginPage.assertThatPageIsDisplayed();
-      fdxTppLoginPage.assertThatAuthorizationDetailsAreDisplayed();
       fdxTppLoginPage.clickNext();
 
       fdxTppIntentRegisteredPage.assertThatPageIsDisplayed();
-      fdxTppIntentRegisteredPage.assertThatRequestUriFieldsAreNotEmpty();
       fdxTppIntentRegisteredPage.clickLogin();
 
-      acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+      acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
       if (environmentVariables.isMfaEnabled()) {
         mfaPage.typePin();
       }
@@ -66,14 +64,12 @@ describe(`FDX Tpp consent app`, () => {
 
   it(`Happy path with not selected account`, () => {
     fdxTppLoginPage.assertThatPageIsDisplayed();
-    fdxTppLoginPage.assertThatAuthorizationDetailsAreDisplayed();
     fdxTppLoginPage.clickNext();
 
     fdxTppIntentRegisteredPage.assertThatPageIsDisplayed();
-    fdxTppIntentRegisteredPage.assertThatRequestUriFieldsAreNotEmpty();
     fdxTppIntentRegisteredPage.clickLogin();
 
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }
@@ -89,14 +85,12 @@ describe(`FDX Tpp consent app`, () => {
 
   it('Cancel on consent page', () => {
     fdxTppLoginPage.assertThatPageIsDisplayed();
-    fdxTppLoginPage.assertThatAuthorizationDetailsAreDisplayed();
     fdxTppLoginPage.clickNext();
 
     fdxTppIntentRegisteredPage.assertThatPageIsDisplayed();
-    fdxTppIntentRegisteredPage.assertThatRequestUriFieldsAreNotEmpty();
     fdxTppIntentRegisteredPage.clickLogin();
 
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }
@@ -110,14 +104,12 @@ describe(`FDX Tpp consent app`, () => {
 
   it('Cancel on ACP login', () => {
     fdxTppLoginPage.assertThatPageIsDisplayed();
-    fdxTppLoginPage.assertThatAuthorizationDetailsAreDisplayed();
     fdxTppLoginPage.clickNext();
 
     fdxTppIntentRegisteredPage.assertThatPageIsDisplayed();
-    fdxTppIntentRegisteredPage.assertThatRequestUriFieldsAreNotEmpty();
     fdxTppIntentRegisteredPage.clickLogin();
 
-    acpLoginPage.cancel();
+    acpLoginPage.cancelLogin();
     // UI error page improvements AUT-5845
     errorPage.assertError(`The user rejected the authentication`);
   })

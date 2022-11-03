@@ -32,7 +32,7 @@ describe(`Smoke Financroo Consent admin portal tests`, () => {
 
     financrooWelcomePage.reconnectGoBank();
 
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }

@@ -53,7 +53,7 @@ describe(`CDR Consent self service tests`, () => {
     pushedAuthorisationRequestPage.assertThatAuthorizationUriIsGenerated();
     pushedAuthorisationRequestPage.clickOnAuthorizationUriLink();
 
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
 
     accountConsentPage.checkAccounts([Accounts.ids.CDR.savings, Accounts.ids.CDR.checking]);
     accountConsentPage.clickAgree();
@@ -67,7 +67,7 @@ describe(`CDR Consent self service tests`, () => {
     Urls.clearLocalStorage();
     consentSelfServicePage.visit(true);
 
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
 
     consentSelfServicePage.clickOnApplicationCard();
   });

@@ -48,7 +48,7 @@ describe(`Smoke Tpp technical app`, () => {
       } else {
         tppIntentPage.login();
         acpLoginPage.login(
-          Credentials.tppUsername,
+          Credentials.defaultUsername,
           Credentials.defaultPassword
         );
         if (environmentVariables.isMfaEnabled()) {
