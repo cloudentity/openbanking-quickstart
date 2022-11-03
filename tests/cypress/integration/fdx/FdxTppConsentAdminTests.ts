@@ -15,7 +15,6 @@ describe(`FDX Tpp Consent admin portal tests`, () => {
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
   const consentPage: AccountConsentPage = new AccountConsentPage();
   const consentAdminPage: ConsentAdminPage = new ConsentAdminPage();
-
   const errorPage: ErrorPage = new ErrorPage();
 
   beforeEach(() => {
