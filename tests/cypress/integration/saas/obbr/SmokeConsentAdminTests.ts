@@ -2,12 +2,8 @@ import { TppIntentPage } from "../../../pages/tpp/TppIntentPage";
 import { TppLoginPage } from "../../../pages/tpp/TppLoginPage";
 import { AcpLoginPage } from "../../../pages/acp/AcpLoginPage";
 import { AccountConsentPage } from "../../../pages/consent/AccountConsentPage";
-import { Credentials } from "../../../pages/Credentials";
 import { ConsentAdminPage } from "../../../pages/consent-admin/ConsentAdminPage";
-import { Urls } from "../../../pages/Urls";
 import { Accounts } from "../../../pages/Accounts";
-import { MfaPage } from "../../../pages/mfa/MfaPage";
-import { EnvironmentVariables } from "../../../pages/EnvironmentVariables";
 
 describe(`Consent admin app`, () => {
   const tppIntentPage: TppIntentPage = new TppIntentPage();
@@ -15,8 +11,6 @@ describe(`Consent admin app`, () => {
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
   const accountConsentPage: AccountConsentPage = new AccountConsentPage();
   const consentAdminPage: ConsentAdminPage = new ConsentAdminPage();
-  const mfaPage: MfaPage = new MfaPage();
-  const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
 
   beforeEach(() => {
     consentAdminPage.visit();
@@ -27,10 +21,7 @@ describe(`Consent admin app`, () => {
   });
 
   it(`Happy path with revoking consent from Third party providers page`, () => {
-    acpLoginPage.login();
-    if (environmentVariables.isMfaEnabled()) {
-      mfaPage.typePin();
-    }
+    acpLoginPage.loginWithMfaOption();
 
     accountConsentPage.checkAllAccounts();
     accountConsentPage.clickAgree();
@@ -43,10 +34,7 @@ describe(`Consent admin app`, () => {
   });
 
   it(`Happy path with revoking consent from Consent management page`, () => {
-    acpLoginPage.login();
-    if (environmentVariables.isMfaEnabled()) {
-      mfaPage.typePin();
-    }
+    acpLoginPage.loginWithMfaOption();
 
     accountConsentPage.checkAllAccounts();
     accountConsentPage.clickAgree();

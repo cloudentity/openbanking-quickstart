@@ -1,6 +1,5 @@
 import { AcpLoginPage } from "../../pages/acp/AcpLoginPage";
 import { AccountConsentPage } from "../../pages/consent/AccountConsentPage";
-import { Credentials } from "../../pages/Credentials";
 import { ConsentSelfServicePage } from "../../pages/consent-self-service/ConsentSelfServicePage";
 import { ConsentSelfServiceApplicationPage } from "../../pages/consent-self-service/ConsentSelfServiceApplicationPage";
 import { ConsentSelfServiceAccountDetailsPage } from "../../pages/consent-self-service/ConsentSelfServiceAccountDetailsPage";

@@ -4,10 +4,7 @@ import { TppLoginPage } from "../../pages/tpp/TppLoginPage";
 import { AcpLoginPage } from "../../pages/acp/AcpLoginPage";
 import { AccountConsentPage } from "../../pages/consent/AccountConsentPage";
 import { ErrorPage } from "../../pages/ErrorPage";
-import { Credentials } from "../../pages/Credentials";
 import { Urls } from "../../pages/Urls";
-import { MfaPage } from "../../pages/mfa/MfaPage";
-import { EnvironmentVariables } from "../../pages/EnvironmentVariables";
 
 describe(`Tpp technical app`, () => {
   const tppAuthenticatedPage: TppAuthenticatedPage = new TppAuthenticatedPage();
@@ -16,8 +13,6 @@ describe(`Tpp technical app`, () => {
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
   const accountConsentPage: AccountConsentPage = new AccountConsentPage();
   const errorPage: ErrorPage = new ErrorPage();
-  const mfaPage: MfaPage = new MfaPage();
-  const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
 
   const accountsReadPermission: string = `ACCOUNTS_READ`;
   const accountsOverdraftLimitsReadPermission: string = `ACCOUNTS_OVERDRAFT_LIMITS_READ`;
@@ -58,10 +53,9 @@ describe(`Tpp technical app`, () => {
         return;
       }
       tppIntentPage.login();
-      acpLoginPage.login();
-      if (environmentVariables.isMfaEnabled()) {
-        mfaPage.typePin();
-      }
+
+      acpLoginPage.loginWithMfaOption();
+
       accountConsentPage.expandPermissions();
       accountConsentPage.assertPermissionsDetails(
         "Purpose for sharing data",
@@ -83,10 +77,9 @@ describe(`Tpp technical app`, () => {
   it(`Cancel on consent`, () => {
     tppLoginPage.next();
     tppIntentPage.login();
-    acpLoginPage.login();
-    if (environmentVariables.isMfaEnabled()) {
-      mfaPage.typePin();
-    }
+
+    acpLoginPage.loginWithMfaOption();
+
     accountConsentPage.clickCancel();
     // UI error page improvements AUT-5845
     errorPage.assertError(`rejected`);

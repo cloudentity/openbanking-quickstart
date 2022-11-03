@@ -1,6 +1,5 @@
 import { AcpLoginPage } from "../../pages/acp/AcpLoginPage";
 import { AccountConsentPage } from "../../pages/consent/AccountConsentPage";
-import { Credentials } from "../../pages/Credentials";
 import { ConsentAdminPage } from "../../pages/consent-admin/ConsentAdminPage";
 import { MockDataRecipientNavigationPage } from "../../pages/mock-data-recipient/MockDataRecipientNavigationPage";
 import { DiscoverDataHoldersPage } from "../../pages/mock-data-recipient/DiscoverDataHoldersPage";

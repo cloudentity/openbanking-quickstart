@@ -4,14 +4,11 @@ import { AccountConsentPage } from "../../../pages/consent/AccountConsentPage";
 import { PaymentConsentPage } from "../../../pages/consent/PaymentConsentPage";
 import { FinancrooWelcomePage } from "../../../pages/financroo/FinancrooWelcomePage";
 import { FinancrooAccountsPage } from "../../../pages/financroo/accounts/FinancrooAccountsPage";
-import { Credentials } from "../../../pages/Credentials";
 import { Currencies } from "../../../pages/Currencies";
 import { Accounts } from "../../../pages/Accounts";
 import { Urls } from "../../../pages/Urls";
-import { MfaPage } from "../../../pages/mfa/MfaPage";
 import { FinancrooInvestmentsPage } from "../../../pages/financroo/investments/FinancrooInvestmentsPage";
 import { FinancrooContributePage } from "../../../pages/financroo/investments/FinancrooContributePage";
-import { EnvironmentVariables } from "../../../pages/EnvironmentVariables";
 import { FinancrooModalPage } from "../../../pages/financroo/accounts/FinancrooModalPage";
 
 describe(`Smoke Financroo payments app test`, () => {
@@ -24,8 +21,6 @@ describe(`Smoke Financroo payments app test`, () => {
   const financrooAccountsPage: FinancrooAccountsPage = new FinancrooAccountsPage();
   const financrooInvestmentsPage: FinancrooInvestmentsPage = new FinancrooInvestmentsPage();
   const financrooContributePage: FinancrooContributePage = new FinancrooContributePage();
-  const mfaPage: MfaPage = new MfaPage();
-  const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
 
   const amount: number = Math.floor(Math.random() * 50) + 1;
 
@@ -37,10 +32,7 @@ describe(`Smoke Financroo payments app test`, () => {
 
     financrooWelcomePage.reconnectGoBank();
 
-    acpLoginPage.login();
-    if (environmentVariables.isMfaEnabled()) {
-      mfaPage.typePin();
-    }
+    acpLoginPage.loginWithMfaOption();
 
     accountConsentPage.checkAllAccounts();
     accountConsentPage.clickAgree();
@@ -60,10 +52,7 @@ describe(`Smoke Financroo payments app test`, () => {
     financrooContributePage.contributePaymentMethod(amount, Currencies.currency.UK.symbol, Accounts.ids.UK.bills);
     financrooContributePage.contributeInvestmentSummary(amount, Currencies.currency.UK.symbol, Accounts.ids.UK.bills);
 
-    acpLoginPage.login();
-    if (environmentVariables.isMfaEnabled()) {
-      mfaPage.typePin();
-    }
+    acpLoginPage.loginWithMfaOption();
     
     paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.UK.code, Accounts.ids.UK.bills);  
     paymentConsentPage.clickConfirm();

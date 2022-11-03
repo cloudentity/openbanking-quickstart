@@ -2,12 +2,9 @@ import { FinancrooLoginPage } from "../../../pages/financroo/FinancrooLoginPage"
 import { Urls } from "../../../pages/Urls";
 import { FinancrooWelcomePage } from "../../../pages/financroo/FinancrooWelcomePage";
 import { AcpLoginPage } from "../../../pages/acp/AcpLoginPage";
-import { EnvironmentVariables } from "../../../pages/EnvironmentVariables";
-import { MfaPage } from "../../../pages/mfa/MfaPage";
 import { AccountConsentPage } from "../../../pages/consent/AccountConsentPage";
 import { FinancrooModalPage } from "../../../pages/financroo/accounts/FinancrooModalPage";
 import { FinancrooAccountsPage } from "../../../pages/financroo/accounts/FinancrooAccountsPage";
-import { Credentials } from "../../../pages/Credentials";
 import { Accounts } from "../../../pages/Accounts";
 import { ConsentAdminPage } from "../../../pages/consent-admin/ConsentAdminPage";
 
@@ -16,8 +13,6 @@ describe(`Smoke Financroo Consent admin portal tests`, () => {
   const financrooLoginPage: FinancrooLoginPage = new FinancrooLoginPage();
   const financrooWelcomePage: FinancrooWelcomePage = new FinancrooWelcomePage();
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
-  const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
-  const mfaPage: MfaPage = new MfaPage();
   const accountConsentPage: AccountConsentPage = new AccountConsentPage();
   const financrooModalPage: FinancrooModalPage = new FinancrooModalPage();
   const financrooAccountsPage: FinancrooAccountsPage = new FinancrooAccountsPage();
@@ -32,10 +27,7 @@ describe(`Smoke Financroo Consent admin portal tests`, () => {
 
     financrooWelcomePage.reconnectGoBank();
 
-    acpLoginPage.login();
-    if (environmentVariables.isMfaEnabled()) {
-      mfaPage.typePin();
-    }
+    acpLoginPage.loginWithMfaOption();
   });
 
   it(`Happy path with revoking consent from Consent management page`, () => {

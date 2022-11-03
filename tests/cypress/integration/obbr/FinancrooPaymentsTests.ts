@@ -5,14 +5,11 @@ import { PaymentConsentPage } from "../../pages/consent/PaymentConsentPage";
 import { ErrorPage } from "../../pages/ErrorPage";
 import { FinancrooWelcomePage } from "../../pages/financroo/FinancrooWelcomePage";
 import { FinancrooAccountsPage } from "../../pages/financroo/accounts/FinancrooAccountsPage";
-import { Credentials } from "../../pages/Credentials";
 import { Currencies } from "../../pages/Currencies";
 import { Accounts } from "../../pages/Accounts";
 import { Urls } from "../../pages/Urls";
-import { MfaPage } from "../../pages/mfa/MfaPage";
 import { FinancrooInvestmentsPage } from "../../pages/financroo/investments/FinancrooInvestmentsPage";
 import { FinancrooContributePage } from "../../pages/financroo/investments/FinancrooContributePage";
-import { EnvironmentVariables } from "../../pages/EnvironmentVariables"
 import { FinancrooModalPage } from '../../pages/financroo/accounts/FinancrooModalPage';
 
 describe(`Financroo payments app test`, () => {
@@ -26,8 +23,6 @@ describe(`Financroo payments app test`, () => {
   const financrooAccountsPage: FinancrooAccountsPage = new FinancrooAccountsPage();
   const financrooInvestmentsPage: FinancrooInvestmentsPage = new FinancrooInvestmentsPage();
   const financrooContributePage: FinancrooContributePage = new FinancrooContributePage();
-  const mfaPage: MfaPage = new MfaPage();
-  const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
 
   
   beforeEach(() => {
@@ -38,10 +33,7 @@ describe(`Financroo payments app test`, () => {
 
     financrooWelcomePage.reconnectGoBank();
 
-    acpLoginPage.login();
-    if (environmentVariables.isMfaEnabled()) {
-      mfaPage.typePin();
-    }
+    acpLoginPage.loginWithMfaOption();
     
     accountConsentPage.checkAllAccounts();
     accountConsentPage.clickAgree();
@@ -63,10 +55,7 @@ describe(`Financroo payments app test`, () => {
     financrooContributePage.contributePaymentMethod(amount, Currencies.currency.BR.symbol, Accounts.ids.BR.account1);
     financrooContributePage.contributeInvestmentSummary(amount, Currencies.currency.BR.symbol, Accounts.ids.BR.account1);
 
-    acpLoginPage.login()
-    if (environmentVariables.isMfaEnabled()) {
-      mfaPage.typePin();
-    }
+    acpLoginPage.loginWithMfaOption();
 
     paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.BR.code, Accounts.ids.BR.account1);  
     paymentConsentPage.clickConfirm();
@@ -90,10 +79,7 @@ describe(`Financroo payments app test`, () => {
     financrooContributePage.contributePaymentMethod(amount, Currencies.currency.BR.symbol, Accounts.ids.BR.account1);
     financrooContributePage.contributeInvestmentSummary(amount, Currencies.currency.BR.symbol, Accounts.ids.BR.account1);
 
-    acpLoginPage.login()
-    if (environmentVariables.isMfaEnabled()) {
-      mfaPage.typePin();
-    }
+    acpLoginPage.loginWithMfaOption();
 
     paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.BR.code, Accounts.ids.BR.account1); 
     paymentConsentPage.clickCancel();
