@@ -1,30 +1,29 @@
+import { FinancrooLoginPage } from "../../pages/financroo/FinancrooLoginPage";
+import { Accounts } from "../../pages/Accounts";
+import { FinancrooWelcomePage } from "../../pages/financroo/FinancrooWelcomePage";
 import { AcpLoginPage } from "../../pages/acp/AcpLoginPage";
 import { AccountConsentPage } from "../../pages/consent/AccountConsentPage";
-import { Accounts } from "../../pages/Accounts";
-import { FdxTppLandingPage } from "../../pages/fdx-tpp/FdxTppLandingPage";
-import { FdxTppIntentRegisteredPage } from "../../pages/fdx-tpp/FdxTppIntentRegisteredPage";
-import { FdxTppAuthenticatedPage } from "../../pages/fdx-tpp/FdxTppAuthenticatedPage";
 import { ConsentAdminPage } from "../../pages/consent-admin/ConsentAdminPage";
-
+import { FinancrooModalPage } from "../../pages/financroo/accounts/FinancrooModalPage";
+import { FinancrooAccountsPage } from "../../pages/financroo/accounts/FinancrooAccountsPage";
 import { ErrorPage } from "../../pages/ErrorPage";
 
-describe(`FDX Tpp Consent admin portal tests`, () => {
-  const fdxTppLandingPage: FdxTppLandingPage = new FdxTppLandingPage();
-  const fdxTppIntentRegisteredPage: FdxTppIntentRegisteredPage = new FdxTppIntentRegisteredPage();
-  const fdxTppAuthenticatedPage: FdxTppAuthenticatedPage = new FdxTppAuthenticatedPage();
+describe(`FDX Financroo app`, () => {
+  const financrooLoginPage: FinancrooLoginPage = new FinancrooLoginPage();
+  const financrooWelcomePage: FinancrooWelcomePage = new FinancrooWelcomePage();
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
   const accountConsentPage: AccountConsentPage = new AccountConsentPage();
   const consentAdminPage: ConsentAdminPage = new ConsentAdminPage();
+  const financrooModalPage: FinancrooModalPage = new FinancrooModalPage();
+  const financrooAccountsPage: FinancrooAccountsPage = new FinancrooAccountsPage();
   const errorPage: ErrorPage = new ErrorPage();
 
+
   beforeEach(() => {
-    fdxTppLandingPage.visit();
+    financrooLoginPage.visit();
+    financrooLoginPage.login();
 
-    fdxTppLandingPage.assertThatPageIsDisplayed();
-    fdxTppLandingPage.clickNext();
-
-    fdxTppIntentRegisteredPage.assertThatPageIsDisplayed();
-    fdxTppIntentRegisteredPage.clickLogin();
+    financrooWelcomePage.reconnectGoBank();
 
     acpLoginPage.assertThatModalIsDisplayed("FDX");
     acpLoginPage.loginWithMfaOption();
@@ -39,14 +38,14 @@ describe(`FDX Tpp Consent admin portal tests`, () => {
 
   it(`Happy path with revoking consent from Consent management page`, () => {
     const accountsIDs = [
-      Accounts.ids.FDX.checkingAcc,
+      Accounts.ids.FDX.savings1,
       Accounts.ids.FDX.savings2,
     ];
 
     acceptConsentWithIds(
       accountConsentPage,
-      fdxTppAuthenticatedPage,
-      fdxTppLandingPage,
+      financrooModalPage,
+      financrooAccountsPage,
       accountsIDs
     );
 
@@ -56,23 +55,23 @@ describe(`FDX Tpp Consent admin portal tests`, () => {
     consentAdminPage.assertThatConsentManagementTabIsDisplayed();
     consentAdminPage.searchAccount(accountsIDs[0]);
     consentAdminPage.assertAccountResult(accountsIDs[0]);
-    consentAdminPage.assertClientAccountWithStatus("Developer TPP", "Active");
-    consentAdminPage.manageAccount("Developer TPP");
+    consentAdminPage.assertClientAccountWithStatus("Financroo", "Active");
+    consentAdminPage.manageAccount("Financroo");
     consentAdminPage.assertConsentsDetails();
-    consentAdminPage.revokeClientConsentByAccountName("Developer TPP");
-    consentAdminPage.assertClientAccountWithStatus("Developer TPP", "Inactive");
+    consentAdminPage.revokeClientConsentByAccountName("Financroo");
+    consentAdminPage.assertClientAccountWithStatus("Financroo", "Inactive");
   });
 
   it(`Happy path with revoking consent from Third party providers page`, () => {
     const accountsIDs = [
-      Accounts.ids.FDX.savings1,
-      Accounts.ids.FDX.savings2
+      Accounts.ids.FDX.savings2,
+      Accounts.ids.FDX.checkingAcc,
     ];
 
     acceptConsentWithIds(
       accountConsentPage,
-      fdxTppAuthenticatedPage,
-      fdxTppLandingPage,
+      financrooModalPage,
+      financrooAccountsPage,
       accountsIDs
     );
 
@@ -87,14 +86,11 @@ describe(`FDX Tpp Consent admin portal tests`, () => {
     accountConsentPage.clickContinue();
     accountConsentPage.clickAgree();
 
-    fdxTppAuthenticatedPage.assertThatPageIsDisplayed();
-    fdxTppAuthenticatedPage.assertThatConsentResponseFieldNotContainsAccountsIds(
-      [
-        Accounts.ids.FDX.checkingAcc,
-        Accounts.ids.FDX.savings1,
-        Accounts.ids.FDX.savings1,
-      ]
-    );
+    financrooModalPage.assertThatModalIsDisplayed();
+    financrooModalPage.close();
+
+    financrooAccountsPage.assertThatPageIsDisplayed();
+    financrooAccountsPage.assertAccountsSyncedNumber(0);
 
     consentAdminPage.visit(true);
     consentAdminPage.login();
@@ -111,24 +107,28 @@ describe(`FDX Tpp Consent admin portal tests`, () => {
     errorPage.assertError(`acp returned an error: rejected:`);
   });
 
+  afterEach(() => {
+    financrooLoginPage.visit();
+    financrooLoginPage.login();
+
+    financrooAccountsPage.assertThatAccountsAreDisconnected();
+  });
+
   async function acceptConsentWithIds(
     accountConsentPage: AccountConsentPage,
-    fdxTppAuthenticatedPage: FdxTppAuthenticatedPage,
-    fdxTppLandingPage: FdxTppLandingPage,
+    financrooModalPage: FinancrooModalPage,
+    financrooAccountsPage: FinancrooAccountsPage,
     accountsIDs: string[]
   ) {
     accountConsentPage.clickContinue();
     accountConsentPage.checkAccounts(accountsIDs);
     accountConsentPage.clickAgree();
 
-    fdxTppAuthenticatedPage.assertThatPageIsDisplayed();
-    fdxTppAuthenticatedPage.assertThatTokenResponseFieldIsNotEmpty();
-    fdxTppAuthenticatedPage.assertThatAccessTokenFieldIsNotEmpty();
-    fdxTppAuthenticatedPage.assertThatConsentResponseFieldContainsAccountsIds(
-      accountsIDs
-    );
+    financrooModalPage.assertThatModalIsDisplayed();
+    financrooModalPage.close();
 
-    fdxTppAuthenticatedPage.clickTryNext();
-    fdxTppLandingPage.assertThatPageIsDisplayed();
+    financrooAccountsPage.assertThatPageIsDisplayed();
+    financrooAccountsPage.assertAccountsSyncedNumber(accountsIDs.length);
+    financrooAccountsPage.assertAccountsIds(accountsIDs);
   }
 });
