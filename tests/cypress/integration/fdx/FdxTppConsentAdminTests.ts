@@ -8,7 +8,7 @@ import { ConsentAdminPage } from "../../pages/consent-admin/ConsentAdminPage";
 
 import { ErrorPage } from "../../pages/ErrorPage";
 
-describe(`FDX Tpp Consent admin portal tests`, () => {
+describe(`FDX TPP Consent admin portal tests`, () => {
   const fdxTppLandingPage: FdxTppLandingPage = new FdxTppLandingPage();
   const fdxTppIntentRegisteredPage: FdxTppIntentRegisteredPage = new FdxTppIntentRegisteredPage();
   const fdxTppAuthenticatedPage: FdxTppAuthenticatedPage = new FdxTppAuthenticatedPage();
@@ -92,7 +92,7 @@ describe(`FDX Tpp Consent admin portal tests`, () => {
       [
         Accounts.ids.FDX.checkingAcc,
         Accounts.ids.FDX.savings1,
-        Accounts.ids.FDX.savings1,
+        Accounts.ids.FDX.savings2,
       ]
     );
 

@@ -1,33 +1,33 @@
+import { FinancrooLoginPage } from "../../pages/financroo/FinancrooLoginPage";
+import { Accounts } from "../../pages/Accounts";
+import { FinancrooWelcomePage } from "../../pages/financroo/FinancrooWelcomePage";
 import { AcpLoginPage } from "../../pages/acp/AcpLoginPage";
 import { AccountConsentPage } from "../../pages/consent/AccountConsentPage";
 import { ConsentSelfServicePage } from "../../pages/consent-self-service/ConsentSelfServicePage";
+import { FinancrooModalPage } from "../../pages/financroo/accounts/FinancrooModalPage";
+import { FinancrooAccountsPage } from "../../pages/financroo/accounts/FinancrooAccountsPage";
 import { ConsentSelfServiceApplicationPage } from "../../pages/consent-self-service/ConsentSelfServiceApplicationPage";
 import { ConsentSelfServiceAccountDetailsPage } from "../../pages/consent-self-service/ConsentSelfServiceAccountDetailsPage";
-import { Accounts } from "../../pages/Accounts";
-import { FdxTppLandingPage } from "../../pages/fdx-tpp/FdxTppLandingPage";
-import { FdxTppIntentRegisteredPage } from "../../pages/fdx-tpp/FdxTppIntentRegisteredPage";
-import { FdxTppAuthenticatedPage } from "../../pages/fdx-tpp/FdxTppAuthenticatedPage";
 
-describe(`FDX TPP Consent admin portal tests`, () => {
-  const fdxTppLandingPage: FdxTppLandingPage = new FdxTppLandingPage();
-  const fdxTppIntentRegisteredPage: FdxTppIntentRegisteredPage = new FdxTppIntentRegisteredPage();
-  const fdxTppAuthenticatedPage: FdxTppAuthenticatedPage = new FdxTppAuthenticatedPage();
+describe(`FDX Financroo Consent self service tests`, () => {
+  const financrooLoginPage: FinancrooLoginPage = new FinancrooLoginPage();
+  const financrooWelcomePage: FinancrooWelcomePage = new FinancrooWelcomePage();
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
   const accountConsentPage: AccountConsentPage = new AccountConsentPage();
+  const financrooModalPage: FinancrooModalPage = new FinancrooModalPage();
+  const financrooAccountsPage: FinancrooAccountsPage = new FinancrooAccountsPage();
   const consentSelfServicePage: ConsentSelfServicePage = new ConsentSelfServicePage();
   const consentSelfServiceApplicationPage: ConsentSelfServiceApplicationPage = new ConsentSelfServiceApplicationPage();
   const consentSelfServiceAccountDetailsPage: ConsentSelfServiceAccountDetailsPage = new ConsentSelfServiceAccountDetailsPage();
 
+
   const accountsIDs = [Accounts.ids.FDX.checkingAcc, Accounts.ids.FDX.savings1];
 
   before(() => {
-    fdxTppLandingPage.visit();
+    financrooLoginPage.visit();
+    financrooLoginPage.login();
 
-    fdxTppLandingPage.assertThatPageIsDisplayed();
-    fdxTppLandingPage.clickNext();
-
-    fdxTppIntentRegisteredPage.assertThatPageIsDisplayed();
-    fdxTppIntentRegisteredPage.clickLogin();
+    financrooWelcomePage.reconnectGoBank();
 
     acpLoginPage.assertThatModalIsDisplayed("FDX");
     acpLoginPage.loginWithMfaOption();
@@ -43,13 +43,12 @@ describe(`FDX TPP Consent admin portal tests`, () => {
     accountConsentPage.checkAccounts(accountsIDs);
     accountConsentPage.clickAgree();
 
-    fdxTppAuthenticatedPage.assertThatPageIsDisplayed();
-    fdxTppAuthenticatedPage.assertThatTokenResponseFieldIsNotEmpty();
-    fdxTppAuthenticatedPage.assertThatAccessTokenFieldIsNotEmpty();
-    fdxTppAuthenticatedPage.assertThatConsentResponseFieldContainsAccountsIds(accountsIDs);
+    financrooModalPage.assertThatModalIsDisplayed();
+    financrooModalPage.close();
 
-    fdxTppAuthenticatedPage.clickTryNext();
-    fdxTppLandingPage.assertThatPageIsDisplayed();
+    financrooAccountsPage.assertThatPageIsDisplayed();
+    financrooAccountsPage.assertAccountsSyncedNumber(accountsIDs.length);
+    financrooAccountsPage.assertAccountsIds(accountsIDs);
   });
 
   beforeEach(() => {
@@ -58,7 +57,7 @@ describe(`FDX TPP Consent admin portal tests`, () => {
     acpLoginPage.assertThatModalIsDisplayed("Bank customers");
     acpLoginPage.login();
 
-    consentSelfServicePage.clickOnApplicationCardWithName("Developer TPP");
+    consentSelfServicePage.clickOnApplicationCardWithName("Financroo");
   });
 
   it(`Happy path with account consent`, () => {

@@ -8,7 +8,7 @@ import { FinancrooModalPage } from "../../pages/financroo/accounts/FinancrooModa
 import { FinancrooAccountsPage } from "../../pages/financroo/accounts/FinancrooAccountsPage";
 import { ErrorPage } from "../../pages/ErrorPage";
 
-describe(`FDX Financroo app`, () => {
+describe(`FDX Financroo Consent admin portal tests`, () => {
   const financrooLoginPage: FinancrooLoginPage = new FinancrooLoginPage();
   const financrooWelcomePage: FinancrooWelcomePage = new FinancrooWelcomePage();
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
@@ -32,7 +32,7 @@ describe(`FDX Financroo app`, () => {
     accountConsentPage.assertThatAccountsAreNotVisible([
       Accounts.ids.FDX.checkingAcc,
       Accounts.ids.FDX.savings1,
-      Accounts.ids.FDX.savings1,
+      Accounts.ids.FDX.savings2,
     ]);
   });
 
