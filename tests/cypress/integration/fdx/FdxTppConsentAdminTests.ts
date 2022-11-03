@@ -1,11 +1,7 @@
 import { AcpLoginPage } from "../../pages/acp/AcpLoginPage";
 import { AccountConsentPage } from "../../pages/consent/AccountConsentPage";
-import { Credentials } from "../../pages/Credentials";
-import { Urls } from "../../pages/Urls";
 import { Accounts } from "../../pages/Accounts";
-import { MfaPage } from "../../pages/mfa/MfaPage";
-import { EnvironmentVariables } from "../../pages/EnvironmentVariables";
-import { FdxTppLoginPage } from "../../pages/fdx-tpp/FdxTppLoginPage";
+import { FdxTppLandingPage } from "../../pages/fdx-tpp/FdxTppLandingPage";
 import { FdxTppIntentRegisteredPage } from "../../pages/fdx-tpp/FdxTppIntentRegisteredPage";
 import { FdxTppAuthenticatedPage } from "../../pages/fdx-tpp/FdxTppAuthenticatedPage";
 import { ConsentAdminPage } from "../../pages/consent-admin/ConsentAdminPage";
@@ -13,34 +9,26 @@ import { ConsentAdminPage } from "../../pages/consent-admin/ConsentAdminPage";
 import { ErrorPage } from "../../pages/ErrorPage";
 
 describe(`FDX Tpp Consent admin portal tests`, () => {
-  const fdxTppLoginPage: FdxTppLoginPage = new FdxTppLoginPage();
+  const fdxTppLoginPage: FdxTppLandingPage = new FdxTppLandingPage();
   const fdxTppIntentRegisteredPage: FdxTppIntentRegisteredPage = new FdxTppIntentRegisteredPage();
   const fdxTppAuthenticatedPage: FdxTppAuthenticatedPage = new FdxTppAuthenticatedPage();
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
   const consentPage: AccountConsentPage = new AccountConsentPage();
-  const mfaPage: MfaPage = new MfaPage();
-  const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
   const consentAdminPage: ConsentAdminPage = new ConsentAdminPage();
 
   const errorPage: ErrorPage = new ErrorPage();
 
   beforeEach(() => {
     fdxTppLoginPage.visit();
-    Urls.clearLocalStorage();
-    fdxTppLoginPage.visit();
 
     fdxTppLoginPage.assertThatPageIsDisplayed();
-    fdxTppLoginPage.assertThatAuthorizationDetailsAreDisplayed();
     fdxTppLoginPage.clickNext();
 
     fdxTppIntentRegisteredPage.assertThatPageIsDisplayed();
-    fdxTppIntentRegisteredPage.assertThatRequestUriFieldsAreNotEmpty();
     fdxTppIntentRegisteredPage.clickLogin();
 
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    if (environmentVariables.isMfaEnabled()) {
-      mfaPage.typePin();
-    }
+    acpLoginPage.assertThatModalIsDisplayed("FDX");
+    acpLoginPage.confirmLogin();
 
     consentPage.assertPermissions(4);
     consentPage.assertThatAccountsAreNotVisible([
@@ -63,8 +51,6 @@ describe(`FDX Tpp Consent admin portal tests`, () => {
       accountsIDs
     );
 
-    consentAdminPage.visit(true);
-    Urls.clearLocalStorage();
     consentAdminPage.visit(true);
     consentAdminPage.login();
 
@@ -92,8 +78,6 @@ describe(`FDX Tpp Consent admin portal tests`, () => {
     );
 
     consentAdminPage.visit(true);
-    Urls.clearLocalStorage();
-    consentAdminPage.visit(true);
     consentAdminPage.login();
 
     consentAdminPage.assertThatConsentManagementTabIsDisplayed();
@@ -114,8 +98,6 @@ describe(`FDX Tpp Consent admin portal tests`, () => {
     );
 
     consentAdminPage.visit(true);
-    Urls.clearLocalStorage();
-    consentAdminPage.visit(true);
     consentAdminPage.login();
 
     consentAdminPage.assertThatConsentManagementTabIsDisplayed();
@@ -129,25 +111,11 @@ describe(`FDX Tpp Consent admin portal tests`, () => {
     // UI error page improvements AUT-5845
     errorPage.assertError(`acp returned an error: rejected: `);
   });
-/*
-  it("Cancel on ACP login", () => {
-    fdxTppLoginPage.assertThatPageIsDisplayed();
-    fdxTppLoginPage.assertThatAuthorizationDetailsAreDisplayed();
-    fdxTppLoginPage.clickNext();
 
-    fdxTppIntentRegisteredPage.assertThatPageIsDisplayed();
-    fdxTppIntentRegisteredPage.assertThatRequestUriFieldsAreNotEmpty();
-    fdxTppIntentRegisteredPage.clickLogin();
-
-    acpLoginPage.cancel();
-    // UI error page improvements AUT-5845
-    errorPage.assertError(`The user rejected the authentication`);
-  });
-*/
   async function acceptConsentWithIds(
     consentPage: AccountConsentPage,
     fdxTppAuthenticatedPage: FdxTppAuthenticatedPage,
-    fdxTppLoginPage: FdxTppLoginPage,
+    fdxTppLoginPage: FdxTppLandingPage,
     accountsIDs: string[]
   ) {
     consentPage.clickContinue();

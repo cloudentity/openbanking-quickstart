@@ -28,6 +28,8 @@ export class ConsentAdminPage {
 
   public visit(force: boolean = false): void {
     Urls.visit(Cypress.env("consent_admin_url"), force);
+    Urls.clearLocalStorage();
+    Urls.visit(Cypress.env("consent_admin_url"), force);
   }
 
   public login(): void {

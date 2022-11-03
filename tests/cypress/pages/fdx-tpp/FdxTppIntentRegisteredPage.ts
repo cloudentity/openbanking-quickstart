@@ -10,9 +10,10 @@ export class FdxTppIntentRegisteredPage {
       'PAR request has been sent. Below you can find the response from POST /par endpoint.'
     );
     cy.get(this.loginButtonLocator, { timeout: 3000 }).should('be.visible');
+    this.assertThatRequestUriFieldsAreNotEmpty();
   }
 
-  public assertThatRequestUriFieldsAreNotEmpty(): void {
+  private assertThatRequestUriFieldsAreNotEmpty(): void {
     cy.get(this.uriJsonLocator).then((element) => {
       let text: string = element.text();
       cy.log(text);
