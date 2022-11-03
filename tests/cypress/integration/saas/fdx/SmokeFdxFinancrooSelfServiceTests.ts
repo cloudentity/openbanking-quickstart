@@ -1,13 +1,13 @@
-import { FinancrooLoginPage } from "../../pages/financroo/FinancrooLoginPage";
-import { Accounts } from "../../pages/Accounts";
-import { FinancrooWelcomePage } from "../../pages/financroo/FinancrooWelcomePage";
-import { AcpLoginPage } from "../../pages/acp/AcpLoginPage";
-import { AccountConsentPage } from "../../pages/consent/AccountConsentPage";
-import { ConsentSelfServicePage } from "../../pages/consent-self-service/ConsentSelfServicePage";
-import { FinancrooModalPage } from "../../pages/financroo/accounts/FinancrooModalPage";
-import { FinancrooAccountsPage } from "../../pages/financroo/accounts/FinancrooAccountsPage";
-import { ConsentSelfServiceApplicationPage } from "../../pages/consent-self-service/ConsentSelfServiceApplicationPage";
-import { ConsentSelfServiceAccountDetailsPage } from "../../pages/consent-self-service/ConsentSelfServiceAccountDetailsPage";
+import { FinancrooLoginPage } from "../../../pages/financroo/FinancrooLoginPage";
+import { Accounts } from "../../../pages/Accounts";
+import { FinancrooWelcomePage } from "../../../pages/financroo/FinancrooWelcomePage";
+import { AcpLoginPage } from "../../../pages/acp/AcpLoginPage";
+import { AccountConsentPage } from "../../../pages/consent/AccountConsentPage";
+import { ConsentSelfServicePage } from "../../../pages/consent-self-service/ConsentSelfServicePage";
+import { FinancrooModalPage } from "../../../pages/financroo/accounts/FinancrooModalPage";
+import { FinancrooAccountsPage } from "../../../pages/financroo/accounts/FinancrooAccountsPage";
+import { ConsentSelfServiceApplicationPage } from "../../../pages/consent-self-service/ConsentSelfServiceApplicationPage";
+import { ConsentSelfServiceAccountDetailsPage } from "../../../pages/consent-self-service/ConsentSelfServiceAccountDetailsPage";
 
 describe(`FDX Financroo Consent self service tests`, () => {
   const financrooLoginPage: FinancrooLoginPage = new FinancrooLoginPage();

@@ -1,11 +1,11 @@
-import { AcpLoginPage } from "../../pages/acp/AcpLoginPage";
-import { AccountConsentPage } from "../../pages/consent/AccountConsentPage";
-import { Accounts } from "../../pages/Accounts";
-import { FdxTppLandingPage } from "../../pages/fdx-tpp/FdxTppLandingPage";
-import { FdxTppIntentRegisteredPage } from "../../pages/fdx-tpp/FdxTppIntentRegisteredPage";
-import { FdxTppAuthenticatedPage } from "../../pages/fdx-tpp/FdxTppAuthenticatedPage";
-import { ConsentAdminPage } from "../../pages/consent-admin/ConsentAdminPage";
-import { ErrorPage } from "../../pages/ErrorPage";
+import { AcpLoginPage } from "../../../pages/acp/AcpLoginPage";
+import { AccountConsentPage } from "../../../pages/consent/AccountConsentPage";
+import { Accounts } from "../../../pages/Accounts";
+import { FdxTppLandingPage } from "../../../pages/fdx-tpp/FdxTppLandingPage";
+import { FdxTppIntentRegisteredPage } from "../../../pages/fdx-tpp/FdxTppIntentRegisteredPage";
+import { FdxTppAuthenticatedPage } from "../../../pages/fdx-tpp/FdxTppAuthenticatedPage";
+import { ConsentAdminPage } from "../../../pages/consent-admin/ConsentAdminPage";
+import { ErrorPage } from "../../../pages/ErrorPage";
 
 describe(`FDX TPP Consent admin portal tests`, () => {
   const fdxTppLandingPage: FdxTppLandingPage = new FdxTppLandingPage();
