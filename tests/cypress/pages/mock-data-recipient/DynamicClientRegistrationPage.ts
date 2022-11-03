@@ -26,7 +26,7 @@ export class DynamicClientRegistrationPage {
 
 
   public visit(force: boolean = false): void {
-    Urls.visit(Cypress.env(`mock_data_recipient_url`) + '/dcr', false);
+    Urls.visit(Cypress.env(`mock_data_recipient_url`) + '/dcr', force);
     this.assertThatPageIsDisplayed();
   }
 

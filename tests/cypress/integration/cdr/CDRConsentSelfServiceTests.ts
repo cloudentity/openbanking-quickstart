@@ -62,7 +62,7 @@ describe(`CDR Consent self service tests`, () => {
   beforeEach(`Go to Consent Self Service Page`, () => {
     consentSelfServicePage.visit(true);
 
-    acpLoginPage.assertThatModalIsDisplayed("CDR");
+    acpLoginPage.assertThatModalIsDisplayed("Bank customers");
     acpLoginPage.login();
 
     consentSelfServicePage.clickOnApplicationCard();
