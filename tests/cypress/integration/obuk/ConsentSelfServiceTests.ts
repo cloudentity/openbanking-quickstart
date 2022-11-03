@@ -4,7 +4,6 @@ import { PaymentConsentPage } from "../../pages/consent/PaymentConsentPage";impo
 import { ConsentSelfServicePage } from "../../pages/consent-self-service/ConsentSelfServicePage";
 import { ConsentSelfServicePaymentDetailsPage } from "../../pages/consent-self-service/ConsentSelfServicePaymentDetailsPage";
 import { ConsentSelfServiceAccountDetailsPage } from "../../pages/consent-self-service/ConsentSelfServiceAccountDetailsPage";
-import { Urls } from "../../pages/Urls";
 import { Currencies } from "../../pages/Currencies";
 import { Accounts } from "../../pages/Accounts";
 import { FinancrooLoginPage } from "../../pages/financroo/FinancrooLoginPage";
@@ -34,8 +33,6 @@ describe(`Consent self service app`, () => {
   const amount: number = Math.floor(Math.random() * 50) + 1;
 
   before(() => {
-    financrooLoginPage.visit();
-    Urls.clearLocalStorage();
     financrooLoginPage.visit();
     financrooLoginPage.login();
 
@@ -69,8 +66,6 @@ describe(`Consent self service app`, () => {
   });
 
   beforeEach(() => {
-    consentSelfServicePage.visit(true);
-    Urls.clearLocalStorage();
     consentSelfServicePage.visit(true);
   });
 

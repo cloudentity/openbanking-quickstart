@@ -13,7 +13,6 @@ describe(`Consent admin app`, () => {
   const consentAdminPage: ConsentAdminPage = new ConsentAdminPage();
 
   beforeEach(() => {
-    consentAdminPage.visit();
     tppLoginPage.visit(true);
     tppLoginPage.next();
     tppIntentPage.saveIntentId();

@@ -3,7 +3,6 @@ import { AccountConsentPage } from "../../../pages/consent/AccountConsentPage";
 import { ConsentSelfServicePage } from "../../../pages/consent-self-service/ConsentSelfServicePage";
 import { ConsentSelfServiceApplicationPage } from "../../../pages/consent-self-service/ConsentSelfServiceApplicationPage";
 import { ConsentSelfServiceAccountDetailsPage } from "../../../pages/consent-self-service/ConsentSelfServiceAccountDetailsPage";
-import { Urls } from "../../../pages/Urls";
 import { Accounts } from "../../../pages/Accounts";
 import { FinancrooLoginPage } from "../../../pages/financroo/FinancrooLoginPage";
 import { FinancrooWelcomePage } from "../../../pages/financroo/FinancrooWelcomePage";
@@ -26,8 +25,6 @@ describe(`Smoke Financroo Consent self service tests`, () => {
 
 
   before(() => {
-    financrooLoginPage.visit();
-    Urls.clearLocalStorage();
     financrooLoginPage.visit();
     financrooLoginPage.login();
 
@@ -52,8 +49,6 @@ describe(`Smoke Financroo Consent self service tests`, () => {
   });
 
   beforeEach(() => {
-    consentSelfServicePage.visit(true);
-    Urls.clearLocalStorage();
     consentSelfServicePage.visit(true);
 
     acpLoginPage.login();

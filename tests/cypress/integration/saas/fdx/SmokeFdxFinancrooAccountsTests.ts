@@ -1,5 +1,4 @@
 import { FinancrooLoginPage } from "../../../pages/financroo/FinancrooLoginPage";
-import { Urls } from "../../../pages/Urls";
 import { Accounts } from "../../../pages/Accounts";
 import { FinancrooWelcomePage } from "../../../pages/financroo/FinancrooWelcomePage";
 import { AcpLoginPage } from "../../../pages/acp/AcpLoginPage";
@@ -17,8 +16,6 @@ describe(`FDX Financroo app`, () => {
 
 
   beforeEach(() => {
-    financrooLoginPage.visit();
-    Urls.clearLocalStorage();
     financrooLoginPage.visit();
     financrooLoginPage.login();
   });

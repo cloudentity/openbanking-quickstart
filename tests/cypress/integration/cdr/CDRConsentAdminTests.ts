@@ -6,7 +6,6 @@ import { DiscoverDataHoldersPage } from "../../pages/mock-data-recipient/Discove
 import { DynamicClientRegistrationPage } from "../../pages/mock-data-recipient/DynamicClientRegistrationPage";
 import { PushedAuthorisationRequestPage } from "../../pages/mock-data-recipient/PushedAuthorisationRequestPage";
 import { ConsentAndAuthorisationCallbackPage } from "../../pages/mock-data-recipient/ConsentAndAuthorisationCallbackPage";
-import { Urls } from "../../pages/Urls";
 import { Accounts } from "../../pages/Accounts";
 
 describe(`CDR Consent admin portal tests`, () => {
@@ -20,8 +19,6 @@ describe(`CDR Consent admin portal tests`, () => {
   const consentAdminPage: ConsentAdminPage = new ConsentAdminPage();
 
   beforeEach(`Dynamic Client Registration via CDR mock data recipient`, () => {
-    mockDataRecipientNavigationPage.visit(true);
-    Urls.clearLocalStorage();
     mockDataRecipientNavigationPage.visit(true);
     mockDataRecipientNavigationPage.clickDiscoverDataHoldersLink();
 
@@ -80,9 +77,6 @@ describe(`CDR Consent admin portal tests`, () => {
 
   afterEach(`Remove DCR client from CDR mock data recipient`, () => {
     mockDataRecipientNavigationPage.visit(true);
-    Urls.clearLocalStorage();
-    mockDataRecipientNavigationPage.visit(true);
-
     mockDataRecipientNavigationPage.clickDynamicClientRegistrationLink();
 
     dynamicClientRegistrationPage.assertThatPageIsDisplayed();

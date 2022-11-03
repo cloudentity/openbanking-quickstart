@@ -4,7 +4,6 @@ import { AccountConsentPage } from "../../pages/consent/AccountConsentPage";
 import { ErrorPage } from "../../pages/ErrorPage";
 import { FinancrooWelcomePage } from "../../pages/financroo/FinancrooWelcomePage";
 import { FinancrooAccountsPage } from "../../pages/financroo/accounts/FinancrooAccountsPage";
-import { Urls } from "../../pages/Urls";
 import { Accounts } from "../../pages/Accounts";
 import { FinancrooModalPage } from "../../pages/financroo/accounts/FinancrooModalPage";
 
@@ -19,8 +18,6 @@ describe(`Financroo app`, () => {
 
 
   beforeEach(() => {
-    financrooLoginPage.visit();
-    Urls.clearLocalStorage();
     financrooLoginPage.visit();
     financrooLoginPage.login();
   });

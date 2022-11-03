@@ -6,7 +6,6 @@ import { FinancrooWelcomePage } from "../../../pages/financroo/FinancrooWelcomeP
 import { FinancrooAccountsPage } from "../../../pages/financroo/accounts/FinancrooAccountsPage";
 import { Currencies } from "../../../pages/Currencies";
 import { Accounts } from "../../../pages/Accounts";
-import { Urls } from "../../../pages/Urls";
 import { FinancrooInvestmentsPage } from "../../../pages/financroo/investments/FinancrooInvestmentsPage";
 import { FinancrooContributePage } from "../../../pages/financroo/investments/FinancrooContributePage";
 import { FinancrooModalPage } from "../../../pages/financroo/accounts/FinancrooModalPage";
@@ -25,8 +24,6 @@ describe(`Smoke Financroo payments app test`, () => {
   const amount: number = Math.floor(Math.random() * 50) + 1;
 
   before(() => {
-    financrooLoginPage.visit();
-    Urls.clearLocalStorage();
     financrooLoginPage.visit();
     financrooLoginPage.login();
 

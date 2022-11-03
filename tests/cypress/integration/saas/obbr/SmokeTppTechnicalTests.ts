@@ -4,7 +4,6 @@ import { TppLoginPage } from "../../../pages/tpp/TppLoginPage";
 import { AcpLoginPage } from "../../../pages/acp/AcpLoginPage";
 import { AccountConsentPage } from "../../../pages/consent/AccountConsentPage";
 import { ErrorPage } from "../../../pages/ErrorPage";
-import { Urls } from "../../../pages/Urls";
 
 describe(`Tpp technical app`, () => {
   const tppAuthenticatedPage: TppAuthenticatedPage = new TppAuthenticatedPage();
@@ -19,8 +18,6 @@ describe(`Tpp technical app`, () => {
   const resourcesReadPermission: string = `RESOURCES_READ`;
 
   beforeEach(() => {
-    tppLoginPage.visit();
-    Urls.clearLocalStorage();
     tppLoginPage.visit();
   });
 

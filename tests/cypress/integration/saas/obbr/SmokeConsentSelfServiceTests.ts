@@ -2,7 +2,6 @@ import { AcpLoginPage } from "../../../pages/acp/AcpLoginPage";
 import { AccountConsentPage } from "../../../pages/consent/AccountConsentPage";
 import { ConsentSelfServicePage } from "../../../pages/consent-self-service/ConsentSelfServicePage";
 import { ConsentSelfServiceAccountDetailsPage } from "../../../pages/consent-self-service/ConsentSelfServiceAccountDetailsPage";
-import { Urls } from "../../../pages/Urls";
 import { Accounts } from "../../../pages/Accounts";
 import { FinancrooLoginPage } from "../../../pages/financroo/FinancrooLoginPage";
 import { FinancrooWelcomePage } from "../../../pages/financroo/FinancrooWelcomePage";
@@ -24,8 +23,6 @@ describe(`Consent self service app`, () => {
 
   before(() => {
     financrooLoginPage.visit();
-    Urls.clearLocalStorage();
-    financrooLoginPage.visit();
     financrooLoginPage.login();
 
     financrooWelcomePage.reconnectGoBank();
@@ -42,8 +39,6 @@ describe(`Consent self service app`, () => {
   });
 
   beforeEach(() => {
-    consentSelfServicePage.visit(true);
-    Urls.clearLocalStorage();
     consentSelfServicePage.visit(true);
 
     acpLoginPage.login();

@@ -8,7 +8,6 @@ import { DiscoverDataHoldersPage } from "../../pages/mock-data-recipient/Discove
 import { DynamicClientRegistrationPage } from "../../pages/mock-data-recipient/DynamicClientRegistrationPage";
 import { PushedAuthorisationRequestPage } from "../../pages/mock-data-recipient/PushedAuthorisationRequestPage";
 import { ConsentAndAuthorisationCallbackPage } from "../../pages/mock-data-recipient/ConsentAndAuthorisationCallbackPage";
-import { Urls } from "../../pages/Urls";
 import { Accounts } from "../../pages/Accounts";
 
 describe(`CDR Consent self service tests`, () => {
@@ -25,8 +24,6 @@ describe(`CDR Consent self service tests`, () => {
 
 
   beforeEach(`Dynamic Client Registration via CDR mock data recipient`, () => {
-    mockDataRecipientNavigationPage.visit(true);
-    Urls.clearLocalStorage();
     mockDataRecipientNavigationPage.visit(true);
     mockDataRecipientNavigationPage.clickDiscoverDataHoldersLink();
 
@@ -63,8 +60,6 @@ describe(`CDR Consent self service tests`, () => {
 
   beforeEach(`Go to Consent Self Service Page`, () => {
     consentSelfServicePage.visit(true);
-    Urls.clearLocalStorage();
-    consentSelfServicePage.visit(true);
 
     acpLoginPage.login();
 
@@ -100,9 +95,6 @@ describe(`CDR Consent self service tests`, () => {
 
   afterEach(`Remove DCR client from CDR mock data recipient`, () => {
     mockDataRecipientNavigationPage.visit(true);
-    Urls.clearLocalStorage();
-    mockDataRecipientNavigationPage.visit(true);
-
     mockDataRecipientNavigationPage.clickDynamicClientRegistrationLink();
 
     dynamicClientRegistrationPage.assertThatPageIsDisplayed();

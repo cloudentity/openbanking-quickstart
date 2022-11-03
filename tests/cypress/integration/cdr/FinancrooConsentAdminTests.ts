@@ -1,5 +1,4 @@
 import { FinancrooLoginPage } from "../../pages/financroo/FinancrooLoginPage";
-import { Urls } from "../../pages/Urls";
 import { FinancrooWelcomePage } from "../../pages/financroo/FinancrooWelcomePage";
 import { AcpLoginPage } from "../../pages/acp/AcpLoginPage";
 import { AccountConsentPage } from "../../pages/consent/AccountConsentPage";
@@ -19,8 +18,6 @@ describe(`Financroo Consent admin portal tests`, () => {
   const consentAdminPage: ConsentAdminPage = new ConsentAdminPage();
 
   beforeEach(() => {
-    financrooLoginPage.visit();
-    Urls.clearLocalStorage();
     financrooLoginPage.visit();
     financrooLoginPage.login();
 

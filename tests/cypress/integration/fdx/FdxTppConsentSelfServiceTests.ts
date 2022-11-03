@@ -7,7 +7,6 @@ import { Accounts } from "../../pages/Accounts";
 import { FdxTppLandingPage } from "../../pages/fdx-tpp/FdxTppLandingPage";
 import { FdxTppIntentRegisteredPage } from "../../pages/fdx-tpp/FdxTppIntentRegisteredPage";
 import { FdxTppAuthenticatedPage } from "../../pages/fdx-tpp/FdxTppAuthenticatedPage";
-import { Urls } from "../../pages/Urls";
 
 describe(`FDX Tpp Consent admin portal tests`, () => {
   const fdxTppLandingPage: FdxTppLandingPage = new FdxTppLandingPage();
@@ -54,8 +53,6 @@ describe(`FDX Tpp Consent admin portal tests`, () => {
   });
 
   beforeEach(() => {
-    consentSelfServicePage.visit(true);
-    Urls.clearLocalStorage();
     consentSelfServicePage.visit(true);
 
     acpLoginPage.assertThatModalIsDisplayed("Bank customers");

@@ -5,6 +5,8 @@ export class FinancrooLoginPage {
 
   public visit(force: boolean = false): void {
     Urls.visit(Cypress.env('financroo_url'), force);
+    Urls.clearLocalStorage();
+    Urls.visit(Cypress.env("financroo_url"), force);
   }
 
   public login(): void {
