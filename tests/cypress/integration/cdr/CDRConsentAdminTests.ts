@@ -48,7 +48,7 @@ describe(`CDR Consent admin portal tests`, () => {
     pushedAuthorisationRequestPage.assertThatAuthorizationUriIsGenerated();
     pushedAuthorisationRequestPage.clickOnAuthorizationUriLink();
 
-    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
+    acpLoginPage.login();
 
     accountConsentPage.checkAccounts([Accounts.ids.CDR.savings, Accounts.ids.CDR.loan]);
     accountConsentPage.clickAgree();

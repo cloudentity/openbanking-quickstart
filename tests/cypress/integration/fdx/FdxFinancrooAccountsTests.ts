@@ -38,7 +38,7 @@ describe(`FDX Financroo app`, () => {
     it(`Happy path with selected accounts: ${accountsIds}`, () => {
       financrooWelcomePage.reconnectGoBank();
 
-      acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
+      acpLoginPage.login();
       if (environmentVariables.isMfaEnabled()) {
         mfaPage.typePin();
       }
@@ -63,7 +63,7 @@ describe(`FDX Financroo app`, () => {
   it(`Happy path with not selected account`, () => {
     financrooWelcomePage.reconnectGoBank();
 
-    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
+    acpLoginPage.login();
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }
@@ -84,7 +84,7 @@ describe(`FDX Financroo app`, () => {
   it("Cancel on consent page", () => {
     financrooWelcomePage.reconnectGoBank();
 
-    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
+    acpLoginPage.login();
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }

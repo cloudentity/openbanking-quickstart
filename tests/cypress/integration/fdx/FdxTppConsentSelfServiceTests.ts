@@ -60,7 +60,7 @@ describe(`FDX Tpp Consent admin portal tests`, () => {
     consentSelfServicePage.visit(true);
 
     acpLoginPage.assertThatModalIsDisplayed("Bank customers");
-    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
+    acpLoginPage.login();
 
     consentSelfServicePage.clickOnApplicationCardWithName("Developer TPP");
   });

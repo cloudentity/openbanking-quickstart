@@ -38,7 +38,7 @@ describe(`Financroo Consent self service tests`, () => {
 
     financrooWelcomePage.reconnectGoBank();
 
-    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
+    acpLoginPage.login();
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }
@@ -64,7 +64,7 @@ describe(`Financroo Consent self service tests`, () => {
     Urls.clearLocalStorage();
     consentSelfServicePage.visit(true);
 
-    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
+    acpLoginPage.login();
 
     consentSelfServicePage.clickOnApplicationCardWithName("Financroo");
   });

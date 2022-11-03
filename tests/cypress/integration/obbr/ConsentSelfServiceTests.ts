@@ -36,7 +36,7 @@ describe(`Consent self service app`, () => {
     financrooLoginPage.login();
 
     financrooWelcomePage.reconnectGoBank();
-    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
+    acpLoginPage.login();
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }
@@ -58,7 +58,7 @@ describe(`Consent self service app`, () => {
   });
 
   it(`Happy path with account consent`, () => {
-    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
+    acpLoginPage.login();
 
     consentSelfServicePage.clickOnAccountOnlyButton();
     consentSelfServicePage.clickOnApplicationCard();
@@ -72,7 +72,7 @@ describe(`Consent self service app`, () => {
   });
 
   it(`Revoke consent`, () => {
-    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
+    acpLoginPage.login();
 
     consentSelfServicePage.clickOnAccountOnlyButton();
     consentSelfServicePage.clickOnApplicationCard();
