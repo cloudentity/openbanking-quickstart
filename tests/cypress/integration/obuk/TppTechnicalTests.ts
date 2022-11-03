@@ -39,6 +39,8 @@ describe(`Tpp technical app`, () => {
         errorPage.assertError(`Invalid consent request`);
       } else {
         tppIntentPage.login();
+
+        acpLoginPage.assertThatModalIsDisplayed("XXX");
         acpLoginPage.loginWithMfaOption();
 
         accountConsentPage.expandPermissions();
@@ -60,6 +62,8 @@ describe(`Tpp technical app`, () => {
   it(`Cancel on ACP login`, () => {
     tppLoginPage.next();
     tppIntentPage.login();
+
+    acpLoginPage.assertThatModalIsDisplayed("XXX");
     acpLoginPage.cancelLogin();
     // UI error page improvements AUT-5845
     errorPage.assertError(`The user rejected the authentication`);
@@ -68,7 +72,10 @@ describe(`Tpp technical app`, () => {
   it(`Cancel on consent`, () => {
     tppLoginPage.next();
     tppIntentPage.login();
+
+    acpLoginPage.assertThatModalIsDisplayed("XXX");
     acpLoginPage.loginWithMfaOption();
+    
     accountConsentPage.clickCancel();
     // UI error page improvements AUT-5845
     errorPage.assertError(`rejected`);

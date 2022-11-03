@@ -30,6 +30,7 @@ describe(`Financroo payments app test`, () => {
 
     financrooWelcomePage.reconnectGoBank();
 
+    acpLoginPage.assertThatModalIsDisplayed("XXX");
     acpLoginPage.loginWithMfaOption();
     
     accountConsentPage.checkAllAccounts();
@@ -52,6 +53,7 @@ describe(`Financroo payments app test`, () => {
     financrooContributePage.contributePaymentMethod(amount, Currencies.currency.BR.symbol, Accounts.ids.BR.account1);
     financrooContributePage.contributeInvestmentSummary(amount, Currencies.currency.BR.symbol, Accounts.ids.BR.account1);
 
+    acpLoginPage.assertThatModalIsDisplayed("XXX");
     acpLoginPage.loginWithMfaOption();
 
     paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.BR.code, Accounts.ids.BR.account1);  
@@ -76,6 +78,7 @@ describe(`Financroo payments app test`, () => {
     financrooContributePage.contributePaymentMethod(amount, Currencies.currency.BR.symbol, Accounts.ids.BR.account1);
     financrooContributePage.contributeInvestmentSummary(amount, Currencies.currency.BR.symbol, Accounts.ids.BR.account1);
 
+    acpLoginPage.assertThatModalIsDisplayed("XXX");
     acpLoginPage.loginWithMfaOption();
 
     paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.BR.code, Accounts.ids.BR.account1); 
@@ -98,6 +101,7 @@ describe(`Financroo payments app test`, () => {
     financrooContributePage.contributePaymentMethod(amount, Currencies.currency.BR.symbol, Accounts.ids.BR.account1);
     financrooContributePage.contributeInvestmentSummary(amount, Currencies.currency.BR.symbol, Accounts.ids.BR.account1);
 
+    acpLoginPage.assertThatModalIsDisplayed("XXX");
     acpLoginPage.cancelLogin();
 
     // UI error page improvements AUT-5845

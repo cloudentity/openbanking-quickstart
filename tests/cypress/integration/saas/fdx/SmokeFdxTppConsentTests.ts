@@ -32,6 +32,7 @@ describe(`FDX Tpp consent app`, () => {
       fdxTppIntentRegisteredPage.assertThatPageIsDisplayed();
       fdxTppIntentRegisteredPage.clickLogin();
 
+      acpLoginPage.assertThatModalIsDisplayed("XXX");
       acpLoginPage.loginWithMfaOption();
 
       accountConsentPage.assertPermissions(4);
@@ -57,6 +58,7 @@ describe(`FDX Tpp consent app`, () => {
     fdxTppIntentRegisteredPage.assertThatPageIsDisplayed();
     fdxTppIntentRegisteredPage.clickLogin();
 
+    acpLoginPage.assertThatModalIsDisplayed("XXX");
     acpLoginPage.loginWithMfaOption();
 
     accountConsentPage.clickContinue();

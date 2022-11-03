@@ -28,6 +28,7 @@ describe(`Financroo app`, () => {
     it(`Happy path with accounts: ${accountsIds}`, () => {
       financrooWelcomePage.reconnectGoBank();
 
+      acpLoginPage.assertThatModalIsDisplayed("XXX");
       acpLoginPage.loginWithMfaOption();
 
       accountConsentPage.checkAccounts(accountsIds);
@@ -53,6 +54,7 @@ describe(`Financroo app`, () => {
   it(`Happy path with not selected account`, () => {
     financrooWelcomePage.reconnectGoBank();
 
+    acpLoginPage.assertThatModalIsDisplayed("XXX");
     acpLoginPage.loginWithMfaOption();
 
     accountConsentPage.uncheckAllAccounts();

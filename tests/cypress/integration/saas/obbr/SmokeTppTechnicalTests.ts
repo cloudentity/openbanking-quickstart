@@ -50,13 +50,17 @@ describe(`Tpp technical app`, () => {
         return;
       }
       tppIntentPage.login();
+
+      acpLoginPage.assertThatModalIsDisplayed("XXX");
       acpLoginPage.loginWithMfaOption();
+
       accountConsentPage.expandPermissions();
       accountConsentPage.assertPermissionsDetails(
         "Purpose for sharing data",
         "To uncover insights that can improve your financial well being."
       );
       accountConsentPage.clickAgree();
+      
       tppAuthenticatedPage.assertSuccess();
     });
   });

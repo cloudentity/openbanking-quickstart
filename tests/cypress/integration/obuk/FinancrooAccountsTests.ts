@@ -30,6 +30,7 @@ describe(`Financroo app`, () => {
     it(`Happy path with accounts: ${accountsIds}`, () => {
       financrooWelcomePage.reconnectGoBank();
 
+      acpLoginPage.assertThatModalIsDisplayed("XXX");
       acpLoginPage.loginWithMfaOption();
 
       accountConsentPage.checkAccounts(accountsIds);
@@ -52,6 +53,7 @@ describe(`Financroo app`, () => {
   it(`Happy path with not selected account`, () => {
     financrooWelcomePage.reconnectGoBank();
 
+    acpLoginPage.assertThatModalIsDisplayed("XXX");
     acpLoginPage.loginWithMfaOption();
 
     accountConsentPage.uncheckAllAccounts();
@@ -69,6 +71,8 @@ describe(`Financroo app`, () => {
 
   it(`Cancel on ACP login`, () => {
     financrooWelcomePage.reconnectGoBank();
+
+    acpLoginPage.assertThatModalIsDisplayed("XXX");
     acpLoginPage.cancelLogin();
     // UI error page improvements AUT-5845
     errorPage.assertError(`The user rejected the authentication`);
@@ -77,6 +81,7 @@ describe(`Financroo app`, () => {
   it(`Cancel on consent`, () => {
     financrooWelcomePage.reconnectGoBank();
 
+    acpLoginPage.assertThatModalIsDisplayed("XXX");
     acpLoginPage.loginWithMfaOption();
     
     accountConsentPage.clickCancel();

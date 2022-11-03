@@ -30,6 +30,7 @@ describe(`Financroo Consent self service tests`, () => {
 
     financrooWelcomePage.reconnectGoBank();
 
+    acpLoginPage.assertThatModalIsDisplayed("CDR");
     acpLoginPage.loginWithMfaOption();
 
     accountConsentPage.checkAccounts(accountsIDs);
@@ -51,6 +52,7 @@ describe(`Financroo Consent self service tests`, () => {
   beforeEach(() => {
     consentSelfServicePage.visit(true);
 
+    acpLoginPage.assertThatModalIsDisplayed("Bank customers");
     acpLoginPage.login();
 
     consentSelfServicePage.clickOnApplicationCardWithName("Financroo");

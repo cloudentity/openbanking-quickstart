@@ -23,6 +23,7 @@ describe(`Financroo Consent admin portal tests`, () => {
 
     financrooWelcomePage.reconnectGoBank();
 
+    acpLoginPage.assertThatModalIsDisplayed("CDR");
     acpLoginPage.loginWithMfaOption();
   });
 

@@ -20,6 +20,7 @@ describe(`Consent admin app`, () => {
   });
 
   it(`Happy path with revoking consent from Third party providers page`, () => {
+    acpLoginPage.assertThatModalIsDisplayed("XXX");
     acpLoginPage.loginWithMfaOption();
 
     accountConsentPage.checkAllAccounts();
@@ -33,6 +34,7 @@ describe(`Consent admin app`, () => {
   });
 
   it(`Happy path with revoking consent from Consent management page`, () => {
+    acpLoginPage.assertThatModalIsDisplayed("XXX");
     acpLoginPage.loginWithMfaOption();
 
     accountConsentPage.checkAllAccounts();

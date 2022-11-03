@@ -39,7 +39,10 @@ describe(`Smoke Tpp technical app`, () => {
         errorPage.assertError(`Invalid consent request`);
       } else {
         tppIntentPage.login();
+
+        acpLoginPage.assertThatModalIsDisplayed("XXX");
         acpLoginPage.loginWithMfaOption();
+        
         accountconsentPage.expandPermissions();
         accountconsentPage.assertPermissions(permissions.length);
         accountconsentPage.clickAgree();

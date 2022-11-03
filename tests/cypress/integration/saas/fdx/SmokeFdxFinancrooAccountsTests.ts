@@ -29,6 +29,7 @@ describe(`FDX Financroo app`, () => {
     it(`Happy path with selected accounts: ${accountsIds}`, () => {
       financrooWelcomePage.reconnectGoBank();
 
+      acpLoginPage.assertThatModalIsDisplayed("XXX");
       acpLoginPage.loginWithMfaOption();
 
       accountConsentPage.assertPermissions(4);
@@ -53,6 +54,7 @@ describe(`FDX Financroo app`, () => {
   it(`Happy path with not selected account`, () => {
     financrooWelcomePage.reconnectGoBank();
 
+    acpLoginPage.assertThatModalIsDisplayed("XXX");
     acpLoginPage.loginWithMfaOption();
     
     accountConsentPage.assertPermissions(4);

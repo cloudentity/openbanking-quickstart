@@ -27,6 +27,7 @@ describe(`Smoke Financroo app`, () => {
     [Accounts.ids.UK.household]
   ].forEach((accountsIds) => {
     it(`Happy path with accounts: ${accountsIds}`, () => {
+      acpLoginPage.assertThatModalIsDisplayed("XXX");
       financrooWelcomePage.reconnectGoBank();
 
       acpLoginPage.loginWithMfaOption();
@@ -51,6 +52,7 @@ describe(`Smoke Financroo app`, () => {
   it(`Happy path with not selected account`, () => {
     financrooWelcomePage.reconnectGoBank();
 
+    acpLoginPage.assertThatModalIsDisplayed("XXX");
     acpLoginPage.loginWithMfaOption();
 
     accountConsentPage.uncheckAllAccounts();

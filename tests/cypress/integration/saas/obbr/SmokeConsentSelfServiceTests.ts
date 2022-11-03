@@ -26,6 +26,8 @@ describe(`Consent self service app`, () => {
     financrooLoginPage.login();
 
     financrooWelcomePage.reconnectGoBank();
+
+    acpLoginPage.assertThatModalIsDisplayed("XXX");
     acpLoginPage.loginWithMfaOption();
     
     accountConsentPage.checkAllAccounts();
@@ -41,6 +43,7 @@ describe(`Consent self service app`, () => {
   beforeEach(() => {
     consentSelfServicePage.visit(true);
 
+    acpLoginPage.assertThatModalIsDisplayed("XXX");
     acpLoginPage.login();
 
     consentSelfServicePage.clickOnAccountOnlyButton();

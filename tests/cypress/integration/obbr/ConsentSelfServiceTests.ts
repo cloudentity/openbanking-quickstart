@@ -29,6 +29,7 @@ describe(`Consent self service app`, () => {
 
     financrooWelcomePage.reconnectGoBank();
 
+    acpLoginPage.assertThatModalIsDisplayed("XXX");
     acpLoginPage.loginWithMfaOption();
     
     accountConsentPage.checkAllAccounts();
@@ -46,6 +47,7 @@ describe(`Consent self service app`, () => {
   });
 
   it(`Happy path with account consent`, () => {
+    acpLoginPage.assertThatModalIsDisplayed("XXX");
     acpLoginPage.login();
 
     consentSelfServicePage.clickOnAccountOnlyButton();
@@ -60,6 +62,7 @@ describe(`Consent self service app`, () => {
   });
 
   it(`Revoke consent`, () => {
+    acpLoginPage.assertThatModalIsDisplayed("XXX");
     acpLoginPage.login();
 
     consentSelfServicePage.clickOnAccountOnlyButton();
@@ -78,6 +81,7 @@ describe(`Consent self service app`, () => {
   });
 
   it(`Cancel ACP login`, () => {
+    acpLoginPage.assertThatModalIsDisplayed("XXX");
     acpLoginPage.cancelLogin();
     // UI error page improvements AUT-5845
     errorPage.assertError("The user rejected the authentication");
