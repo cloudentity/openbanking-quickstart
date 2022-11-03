@@ -58,7 +58,7 @@ describe(`Tpp technical app`, () => {
         return;
       }
       tppIntentPage.login();
-      acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
+      acpLoginPage.login();
       if (environmentVariables.isMfaEnabled()) {
         mfaPage.typePin();
       }

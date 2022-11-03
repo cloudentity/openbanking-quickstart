@@ -38,7 +38,7 @@ describe(`Financroo payments app test`, () => {
 
     financrooWelcomePage.reconnectGoBank();
 
-    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
+    acpLoginPage.login();
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }
@@ -63,7 +63,7 @@ describe(`Financroo payments app test`, () => {
     financrooContributePage.contributePaymentMethod(amount, Currencies.currency.BR.symbol, Accounts.ids.BR.account1);
     financrooContributePage.contributeInvestmentSummary(amount, Currencies.currency.BR.symbol, Accounts.ids.BR.account1);
 
-    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
+    acpLoginPage.login();
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }
@@ -90,7 +90,7 @@ describe(`Financroo payments app test`, () => {
     financrooContributePage.contributePaymentMethod(amount, Currencies.currency.BR.symbol, Accounts.ids.BR.account1);
     financrooContributePage.contributeInvestmentSummary(amount, Currencies.currency.BR.symbol, Accounts.ids.BR.account1);
 
-    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
+    acpLoginPage.login();
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }

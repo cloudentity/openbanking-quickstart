@@ -27,7 +27,7 @@ describe(`FDX Tpp Consent admin portal tests`, () => {
     fdxTppIntentRegisteredPage.clickLogin();
 
     acpLoginPage.assertThatModalIsDisplayed("FDX");
-    acpLoginPage.confirmLogin();
+    acpLoginPage.loginWithMfaOption();
 
     consentPage.assertPermissions(4);
     consentPage.assertThatAccountsAreNotVisible([

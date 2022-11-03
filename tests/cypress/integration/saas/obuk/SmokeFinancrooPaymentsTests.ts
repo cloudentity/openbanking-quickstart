@@ -37,7 +37,7 @@ describe(`Smoke Financroo payments app test`, () => {
 
     financrooWelcomePage.reconnectGoBank();
 
-    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
+    acpLoginPage.login();
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }
@@ -60,7 +60,7 @@ describe(`Smoke Financroo payments app test`, () => {
     financrooContributePage.contributePaymentMethod(amount, Currencies.currency.UK.symbol, Accounts.ids.UK.bills);
     financrooContributePage.contributeInvestmentSummary(amount, Currencies.currency.UK.symbol, Accounts.ids.UK.bills);
 
-    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
+    acpLoginPage.login();
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }

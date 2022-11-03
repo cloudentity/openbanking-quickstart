@@ -37,7 +37,7 @@ describe(`Smoke Financroo app`, () => {
     it(`Happy path with accounts: ${accountsIds}`, () => {
       financrooWelcomePage.reconnectGoBank();
 
-      acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
+      acpLoginPage.login();
       if (environmentVariables.isMfaEnabled()) {
         mfaPage.typePin();
       }
@@ -62,7 +62,7 @@ describe(`Smoke Financroo app`, () => {
   it(`Happy path with not selected account`, () => {
     financrooWelcomePage.reconnectGoBank();
 
-    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
+    acpLoginPage.login();
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }

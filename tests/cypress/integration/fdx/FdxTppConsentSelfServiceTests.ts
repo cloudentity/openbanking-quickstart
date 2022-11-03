@@ -32,9 +32,9 @@ describe(`FDX Tpp Consent admin portal tests`, () => {
     fdxTppIntentRegisteredPage.clickLogin();
 
     acpLoginPage.assertThatModalIsDisplayed("FDX");
-    acpLoginPage.confirmLogin();
-    consentPage.assertPermissions(4);
+    acpLoginPage.loginWithMfaOption();
 
+    consentPage.assertPermissions(4);
     consentPage.assertThatAccountsAreNotVisible([
       Accounts.ids.FDX.checkingAcc,
       Accounts.ids.FDX.savings1,
@@ -59,6 +59,7 @@ describe(`FDX Tpp Consent admin portal tests`, () => {
     Urls.clearLocalStorage();
     consentSelfServicePage.visit(true);
 
+    acpLoginPage.assertThatModalIsDisplayed("Bank customers");
     acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
 
     consentSelfServicePage.clickOnApplicationCardWithName("Developer TPP");

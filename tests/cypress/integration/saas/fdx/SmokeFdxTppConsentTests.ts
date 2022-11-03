@@ -38,7 +38,7 @@ describe(`FDX Tpp consent app`, () => {
       fdxTppIntentRegisteredPage.assertThatPageIsDisplayed();
       fdxTppIntentRegisteredPage.clickLogin();
 
-      acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
+      acpLoginPage.login();
       if (environmentVariables.isMfaEnabled()) {
         mfaPage.typePin();
       }
@@ -66,7 +66,7 @@ describe(`FDX Tpp consent app`, () => {
     fdxTppIntentRegisteredPage.assertThatPageIsDisplayed();
     fdxTppIntentRegisteredPage.clickLogin();
 
-    acpLoginPage.login(Credentials.defaultUsername, Credentials.defaultPassword);
+    acpLoginPage.login();
     if (environmentVariables.isMfaEnabled()) {
       mfaPage.typePin();
     }

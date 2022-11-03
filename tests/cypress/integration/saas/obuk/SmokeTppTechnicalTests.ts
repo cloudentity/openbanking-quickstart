@@ -47,10 +47,7 @@ describe(`Smoke Tpp technical app`, () => {
         errorPage.assertError(`Invalid consent request`);
       } else {
         tppIntentPage.login();
-        acpLoginPage.login(
-          Credentials.defaultUsername,
-          Credentials.defaultPassword
-        );
+        acpLoginPage.login();
         if (environmentVariables.isMfaEnabled()) {
           mfaPage.typePin();
         }

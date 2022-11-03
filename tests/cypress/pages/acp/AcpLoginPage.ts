@@ -12,13 +12,13 @@ export class AcpLoginPage {
   private readonly loginButtonLocator: string = `button[type='submit']`;
   private readonly cancelButtonLocator: string = `#cancel`;
 
-  public login(username: string, password: string): void {
-    cy.get(this.usernameLocator).type(username);
-    cy.get(this.passwordLocator).type(password);
+  public login(): void {
+    cy.get(this.usernameLocator).type(Credentials.defaultUsername);
+    cy.get(this.passwordLocator).type(Credentials.defaultPassword);
     cy.get(this.loginButtonLocator).click();
   }
 
-  public confirmLogin(): void {
+  public loginWithMfaOption(): void {
     cy.get(this.usernameLocator).type(Credentials.defaultUsername);
     cy.get(this.passwordLocator).type(Credentials.defaultPassword);
     cy.get(this.loginButtonLocator).click();
