@@ -22,7 +22,6 @@ describe(`Consent admin app`, () => {
 
   beforeEach(() => {
     consentAdminPage.visit();
-    Urls.clearLocalStorage();
     tppLoginPage.visit(true);
     tppLoginPage.next();
     tppIntentPage.saveIntentId();

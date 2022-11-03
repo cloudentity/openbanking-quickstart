@@ -59,8 +59,6 @@ describe(`CDR Consent admin portal tests`, () => {
 
   it(`Happy path with revoking consent from Consent management page`, () => {
     consentAdminPage.visit(true);
-    Urls.clearLocalStorage();
-    consentAdminPage.visit(true);
     consentAdminPage.login();
 
     consentAdminPage.assertThatConsentManagementTabIsDisplayed();
@@ -74,8 +72,6 @@ describe(`CDR Consent admin portal tests`, () => {
   });
 
   it(`Happy path with revoking consent from Third party providers page`, () => {
-    consentAdminPage.visit(true);
-    Urls.clearLocalStorage();
     consentAdminPage.visit(true);
     consentAdminPage.login();
 

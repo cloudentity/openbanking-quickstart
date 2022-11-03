@@ -9,7 +9,7 @@ import { ConsentAdminPage } from "../../pages/consent-admin/ConsentAdminPage";
 import { ErrorPage } from "../../pages/ErrorPage";
 
 describe(`FDX Tpp Consent admin portal tests`, () => {
-  const fdxTppLoginPage: FdxTppLandingPage = new FdxTppLandingPage();
+  const fdxTppLandingPage: FdxTppLandingPage = new FdxTppLandingPage();
   const fdxTppIntentRegisteredPage: FdxTppIntentRegisteredPage = new FdxTppIntentRegisteredPage();
   const fdxTppAuthenticatedPage: FdxTppAuthenticatedPage = new FdxTppAuthenticatedPage();
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
@@ -19,10 +19,10 @@ describe(`FDX Tpp Consent admin portal tests`, () => {
   const errorPage: ErrorPage = new ErrorPage();
 
   beforeEach(() => {
-    fdxTppLoginPage.visit();
+    fdxTppLandingPage.visit();
 
-    fdxTppLoginPage.assertThatPageIsDisplayed();
-    fdxTppLoginPage.clickNext();
+    fdxTppLandingPage.assertThatPageIsDisplayed();
+    fdxTppLandingPage.clickNext();
 
     fdxTppIntentRegisteredPage.assertThatPageIsDisplayed();
     fdxTppIntentRegisteredPage.clickLogin();
@@ -47,7 +47,7 @@ describe(`FDX Tpp Consent admin portal tests`, () => {
     acceptConsentWithIds(
       consentPage,
       fdxTppAuthenticatedPage,
-      fdxTppLoginPage,
+      fdxTppLandingPage,
       accountsIDs
     );
 
@@ -73,7 +73,7 @@ describe(`FDX Tpp Consent admin portal tests`, () => {
     acceptConsentWithIds(
       consentPage,
       fdxTppAuthenticatedPage,
-      fdxTppLoginPage,
+      fdxTppLandingPage,
       accountsIDs
     );
 
@@ -115,7 +115,7 @@ describe(`FDX Tpp Consent admin portal tests`, () => {
   async function acceptConsentWithIds(
     consentPage: AccountConsentPage,
     fdxTppAuthenticatedPage: FdxTppAuthenticatedPage,
-    fdxTppLoginPage: FdxTppLandingPage,
+    fdxTppLandingPage: FdxTppLandingPage,
     accountsIDs: string[]
   ) {
     consentPage.clickContinue();
@@ -130,6 +130,6 @@ describe(`FDX Tpp Consent admin portal tests`, () => {
     );
 
     fdxTppAuthenticatedPage.clickTryNext();
-    fdxTppLoginPage.assertThatPageIsDisplayed();
+    fdxTppLandingPage.assertThatPageIsDisplayed();
   }
 });

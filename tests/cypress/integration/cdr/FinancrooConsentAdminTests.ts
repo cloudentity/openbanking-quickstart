@@ -56,8 +56,6 @@ describe(`Financroo Consent admin portal tests`, () => {
     financrooAccountsPage.assertAccountsIds(accountsIDs);
 
     consentAdminPage.visit(true);
-    Urls.clearLocalStorage();
-    consentAdminPage.visit(true);
     consentAdminPage.login();
 
     consentAdminPage.assertThatConsentManagementTabIsDisplayed();
@@ -88,8 +86,6 @@ describe(`Financroo Consent admin portal tests`, () => {
     financrooAccountsPage.assertAccountsSyncedNumber(accountsIDs.length);
     financrooAccountsPage.assertAccountsIds(accountsIDs);
 
-    consentAdminPage.visit(true);
-    Urls.clearLocalStorage();
     consentAdminPage.visit(true);
     consentAdminPage.login();
 

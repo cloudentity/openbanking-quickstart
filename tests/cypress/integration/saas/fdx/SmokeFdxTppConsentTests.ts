@@ -10,7 +10,7 @@ import { MfaPage } from "../../../pages/mfa/MfaPage";
 import { EnvironmentVariables } from "../../../pages/EnvironmentVariables";
 
 describe(`FDX Tpp consent app`, () => {
-  const fdxTppLoginPage: FdxTppLandingPage = new FdxTppLandingPage();
+  const fdxTppLandingPage: FdxTppLandingPage = new FdxTppLandingPage();
   const fdxTppIntentRegisteredPage: FdxTppIntentRegisteredPage =
     new FdxTppIntentRegisteredPage();
   const fdxTppAuthenticatedPage: FdxTppAuthenticatedPage =
@@ -22,9 +22,7 @@ describe(`FDX Tpp consent app`, () => {
 
 
   beforeEach(() => {
-    fdxTppLoginPage.visit();
-    Urls.clearLocalStorage();
-    fdxTppLoginPage.visit();
+    fdxTppLandingPage.visit();
   });
 
   [
@@ -34,8 +32,8 @@ describe(`FDX Tpp consent app`, () => {
     [Accounts.ids.FDX.checkingAcc],
   ].forEach((accountsIds) => {
     it(`Happy path with selected accounts: ${accountsIds}`, () => {
-      fdxTppLoginPage.assertThatPageIsDisplayed();
-      fdxTppLoginPage.clickNext();
+      fdxTppLandingPage.assertThatPageIsDisplayed();
+      fdxTppLandingPage.clickNext();
 
       fdxTppIntentRegisteredPage.assertThatPageIsDisplayed();
       fdxTppIntentRegisteredPage.clickLogin();
@@ -56,14 +54,14 @@ describe(`FDX Tpp consent app`, () => {
       fdxTppAuthenticatedPage.assertThatConsentResponseFieldContainsAccountsIds(accountsIds);
 
       fdxTppAuthenticatedPage.clickTryNext();
-      fdxTppLoginPage.assertThatPageIsDisplayed();
+      fdxTppLandingPage.assertThatPageIsDisplayed();
       cy.wait(3000) // Workaround due to pipeline issues >>> AUT-6292
     });
   });
 
   it(`Happy path with not selected account`, () => {
-    fdxTppLoginPage.assertThatPageIsDisplayed();
-    fdxTppLoginPage.clickNext();
+    fdxTppLandingPage.assertThatPageIsDisplayed();
+    fdxTppLandingPage.clickNext();
 
     fdxTppIntentRegisteredPage.assertThatPageIsDisplayed();
     fdxTppIntentRegisteredPage.clickLogin();
