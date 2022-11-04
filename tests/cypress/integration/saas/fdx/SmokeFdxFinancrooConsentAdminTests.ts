@@ -106,13 +106,15 @@ describe(`FDX Financroo Consent admin portal tests`, () => {
     errorPage.assertError(`acp returned an error: rejected:`);
   });
 
+  // Ignored due to BUG - AUT-7237
+  /*
   afterEach(() => {
     financrooLoginPage.visit();
     financrooLoginPage.login();
 
     financrooAccountsPage.assertThatAccountsAreDisconnected();
   });
-
+  */
   async function acceptConsentWithIds(
     accountConsentPage: AccountConsentPage,
     financrooModalPage: FinancrooModalPage,
