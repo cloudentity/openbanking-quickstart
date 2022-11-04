@@ -36,6 +36,7 @@ describe(`Consent self service app`, () => {
     financrooModalPage.assertThatModalIsDisplayed();
 
     financrooLoginPage.visit();
+    financrooLoginPage.login();
 
     financrooAccountsPage.assertThatPageIsDisplayed();
   });
