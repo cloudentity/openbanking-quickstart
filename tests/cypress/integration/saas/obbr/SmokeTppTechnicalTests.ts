@@ -51,7 +51,7 @@ describe(`Tpp technical app`, () => {
       }
       tppIntentPage.login();
 
-      acpLoginPage.assertThatModalIsDisplayed("XXX");
+      acpLoginPage.assertThatModalIsDisplayed("Open Finance Brazil");
       acpLoginPage.loginWithMfaOption();
 
       accountConsentPage.expandPermissions();

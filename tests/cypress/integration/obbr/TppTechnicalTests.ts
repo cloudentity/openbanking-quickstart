@@ -4,7 +4,6 @@ import { TppLoginPage } from "../../pages/tpp/TppLoginPage";
 import { AcpLoginPage } from "../../pages/acp/AcpLoginPage";
 import { AccountConsentPage } from "../../pages/consent/AccountConsentPage";
 import { ErrorPage } from "../../pages/ErrorPage";
-import { Urls } from "../../pages/Urls";
 
 describe(`Tpp technical app`, () => {
   const tppAuthenticatedPage: TppAuthenticatedPage = new TppAuthenticatedPage();
@@ -52,7 +51,7 @@ describe(`Tpp technical app`, () => {
       }
       tppIntentPage.login();
 
-      acpLoginPage.assertThatModalIsDisplayed("XXX");
+      acpLoginPage.assertThatModalIsDisplayed("Open Finance Brazil");
       acpLoginPage.loginWithMfaOption();
 
       accountConsentPage.expandPermissions();
@@ -69,7 +68,7 @@ describe(`Tpp technical app`, () => {
     tppLoginPage.next();
     tppIntentPage.login();
 
-    acpLoginPage.assertThatModalIsDisplayed("XXX");
+    acpLoginPage.assertThatModalIsDisplayed("Open Finance Brazil");
     acpLoginPage.cancelLogin();
     // UI error page improvements AUT-5845
     errorPage.assertError(`The user rejected the authentication`);
@@ -79,7 +78,7 @@ describe(`Tpp technical app`, () => {
     tppLoginPage.next();
     tppIntentPage.login();
 
-    acpLoginPage.assertThatModalIsDisplayed("XXX");
+    acpLoginPage.assertThatModalIsDisplayed("Open Finance Brazil");
     acpLoginPage.loginWithMfaOption();
 
     accountConsentPage.clickCancel();

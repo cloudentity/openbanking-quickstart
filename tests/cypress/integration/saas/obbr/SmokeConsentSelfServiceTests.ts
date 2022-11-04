@@ -27,7 +27,7 @@ describe(`Consent self service app`, () => {
 
     financrooWelcomePage.reconnectGoBank();
 
-    acpLoginPage.assertThatModalIsDisplayed("Open Banking UK");
+    acpLoginPage.assertThatModalIsDisplayed("Open Finance Brazil");
     acpLoginPage.loginWithMfaOption();
     
     accountConsentPage.checkAllAccounts();
@@ -43,7 +43,7 @@ describe(`Consent self service app`, () => {
   beforeEach(() => {
     consentSelfServicePage.visit(true);
 
-    acpLoginPage.assertThatModalIsDisplayed("XXX");
+    acpLoginPage.assertThatModalIsDisplayed("Bank customers");
     acpLoginPage.login();
 
     consentSelfServicePage.clickOnAccountOnlyButton();

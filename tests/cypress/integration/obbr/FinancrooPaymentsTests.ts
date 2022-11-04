@@ -30,21 +30,23 @@ describe(`Financroo payments app test`, () => {
 
     financrooWelcomePage.reconnectGoBank();
 
-    acpLoginPage.assertThatModalIsDisplayed("XXX");
+    acpLoginPage.assertThatModalIsDisplayed("Open Finance Brazil");
     acpLoginPage.loginWithMfaOption();
     
     accountConsentPage.checkAllAccounts();
     accountConsentPage.clickAgree();
 
-    financrooModalPage.assertThatModalIsDisplayed()
+    financrooModalPage.assertThatModalIsDisplayed();
   });
 
   it(`Happy path with confirm consent to add new amount for account ${Accounts.ids.BR.account1}`, () => {
     const amount: number = (Math.floor(Math.random() * 50) + 1);
 
-    financrooLoginPage.visit()
-    financrooAccountsPage.assertThatPageIsDisplayed()
-    financrooAccountsPage.goToInvestmentsTab()
+    financrooLoginPage.visit();
+    financrooLoginPage.login();
+
+    financrooAccountsPage.assertThatPageIsDisplayed();
+    financrooAccountsPage.goToInvestmentsTab();
 
     financrooInvestmentsPage.assertThatDashboardIsVisible(Currencies.currency.BR.code);
     financrooInvestmentsPage.clickInvest();
@@ -53,7 +55,7 @@ describe(`Financroo payments app test`, () => {
     financrooContributePage.contributePaymentMethod(amount, Currencies.currency.BR.symbol, Accounts.ids.BR.account1);
     financrooContributePage.contributeInvestmentSummary(amount, Currencies.currency.BR.symbol, Accounts.ids.BR.account1);
 
-    acpLoginPage.assertThatModalIsDisplayed("XXX");
+    acpLoginPage.assertThatModalIsDisplayed("Open Finance Brazil");
     acpLoginPage.loginWithMfaOption();
 
     paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.BR.code, Accounts.ids.BR.account1);  
@@ -68,6 +70,8 @@ describe(`Financroo payments app test`, () => {
     const amount: number = Math.floor(Math.random() * 50) + 1;
 
     financrooLoginPage.visit();
+    financrooLoginPage.login();
+
     financrooAccountsPage.assertThatPageIsDisplayed();
     financrooAccountsPage.goToInvestmentsTab();
 
@@ -78,7 +82,7 @@ describe(`Financroo payments app test`, () => {
     financrooContributePage.contributePaymentMethod(amount, Currencies.currency.BR.symbol, Accounts.ids.BR.account1);
     financrooContributePage.contributeInvestmentSummary(amount, Currencies.currency.BR.symbol, Accounts.ids.BR.account1);
 
-    acpLoginPage.assertThatModalIsDisplayed("XXX");
+    acpLoginPage.assertThatModalIsDisplayed("Open Finance Brazil");
     acpLoginPage.loginWithMfaOption();
 
     paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.BR.code, Accounts.ids.BR.account1); 
@@ -92,6 +96,8 @@ describe(`Financroo payments app test`, () => {
     const amount: number = Math.floor(Math.random() * 50) + 1;
 
     financrooLoginPage.visit();
+    financrooLoginPage.login();
+
     financrooAccountsPage.assertThatPageIsDisplayed();
     financrooAccountsPage.goToInvestmentsTab();
 
@@ -101,7 +107,7 @@ describe(`Financroo payments app test`, () => {
     financrooContributePage.contributePaymentMethod(amount, Currencies.currency.BR.symbol, Accounts.ids.BR.account1);
     financrooContributePage.contributeInvestmentSummary(amount, Currencies.currency.BR.symbol, Accounts.ids.BR.account1);
 
-    acpLoginPage.assertThatModalIsDisplayed("XXX");
+    acpLoginPage.assertThatModalIsDisplayed("Open Finance Brazil");
     acpLoginPage.cancelLogin();
 
     // UI error page improvements AUT-5845
