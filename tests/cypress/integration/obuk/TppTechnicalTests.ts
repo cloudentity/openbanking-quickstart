@@ -40,7 +40,7 @@ describe(`Tpp technical app`, () => {
       } else {
         tppIntentPage.login();
 
-        acpLoginPage.assertThatModalIsDisplayed("XXX");
+        acpLoginPage.assertThatModalIsDisplayed("Open Banking UK");
         acpLoginPage.loginWithMfaOption();
 
         accountConsentPage.expandPermissions();
@@ -63,7 +63,7 @@ describe(`Tpp technical app`, () => {
     tppLoginPage.next();
     tppIntentPage.login();
 
-    acpLoginPage.assertThatModalIsDisplayed("XXX");
+    acpLoginPage.assertThatModalIsDisplayed("Open Banking UK");
     acpLoginPage.cancelLogin();
     // UI error page improvements AUT-5845
     errorPage.assertError(`The user rejected the authentication`);
@@ -73,7 +73,7 @@ describe(`Tpp technical app`, () => {
     tppLoginPage.next();
     tppIntentPage.login();
 
-    acpLoginPage.assertThatModalIsDisplayed("XXX");
+    acpLoginPage.assertThatModalIsDisplayed("Open Banking UK");
     acpLoginPage.loginWithMfaOption();
     
     accountConsentPage.clickCancel();

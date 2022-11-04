@@ -38,7 +38,7 @@ describe(`Consent self service app`, () => {
 
     financrooWelcomePage.reconnectGoBank();
 
-    acpLoginPage.assertThatModalIsDisplayed("XXX");
+    acpLoginPage.assertThatModalIsDisplayed("Open Banking UK");
     acpLoginPage.loginWithMfaOption();
 
     accountConsentPage.checkAllAccounts();
@@ -47,6 +47,7 @@ describe(`Consent self service app`, () => {
     financrooModalPage.assertThatModalIsDisplayed();
 
     financrooLoginPage.visit();
+    financrooLoginPage.login();
 
     financrooAccountsPage.assertThatPageIsDisplayed();
     financrooAccountsPage.goToInvestmentsTab();
@@ -58,7 +59,7 @@ describe(`Consent self service app`, () => {
     financrooContributePage.contributePaymentMethod(amount, Currencies.currency.UK.symbol, Accounts.ids.UK.bills);
     financrooContributePage.contributeInvestmentSummary(amount, Currencies.currency.UK.symbol, Accounts.ids.UK.bills);
 
-    acpLoginPage.assertThatModalIsDisplayed("XXX");
+    acpLoginPage.assertThatModalIsDisplayed("Open Banking UK");
     acpLoginPage.loginWithMfaOption();
 
     paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.UK.code, Accounts.ids.UK.bills); 
@@ -72,7 +73,7 @@ describe(`Consent self service app`, () => {
   });
 
   it(`Happy path with account consent`, () => {
-    acpLoginPage.assertThatModalIsDisplayed("XXX");
+    acpLoginPage.assertThatModalIsDisplayed("Bank customers");
     acpLoginPage.login();
 
     consentSelfServicePage.clickOnApplicationCard();
@@ -86,7 +87,7 @@ describe(`Consent self service app`, () => {
   });
 
   it(`Revoke consent`, () => {
-    acpLoginPage.assertThatModalIsDisplayed("XXX");
+    acpLoginPage.assertThatModalIsDisplayed("Bank customers");
     acpLoginPage.login();
 
     consentSelfServicePage.clickOnApplicationCard();
@@ -104,7 +105,7 @@ describe(`Consent self service app`, () => {
   });
 
   it(`Happy path with payment consent`, () => {
-    acpLoginPage.assertThatModalIsDisplayed("XXX");
+    acpLoginPage.assertThatModalIsDisplayed("Bank customers");
     acpLoginPage.login();
 
     consentSelfServicePage.clickOnApplicationCard();
@@ -120,7 +121,7 @@ describe(`Consent self service app`, () => {
   });
 
   it(`Cancel ACP login`, () => {
-    acpLoginPage.assertThatModalIsDisplayed("XXX");
+    acpLoginPage.assertThatModalIsDisplayed("Bank customers");
     acpLoginPage.cancelLogin();
     // UI error page improvements AUT-5845
     errorPage.assertError("The user rejected the authentication");

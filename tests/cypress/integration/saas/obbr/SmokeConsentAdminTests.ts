@@ -15,12 +15,13 @@ describe(`Consent admin app`, () => {
   beforeEach(() => {
     tppLoginPage.visit(true);
     tppLoginPage.next();
+
     tppIntentPage.saveIntentId();
     tppIntentPage.login();
   });
 
   it(`Happy path with revoking consent from Third party providers page`, () => {
-    acpLoginPage.assertThatModalIsDisplayed("XXX");
+    acpLoginPage.assertThatModalIsDisplayed("Open Banking UK");
     acpLoginPage.loginWithMfaOption();
 
     accountConsentPage.checkAllAccounts();
@@ -34,7 +35,7 @@ describe(`Consent admin app`, () => {
   });
 
   it(`Happy path with revoking consent from Consent management page`, () => {
-    acpLoginPage.assertThatModalIsDisplayed("XXX");
+    acpLoginPage.assertThatModalIsDisplayed("Open Banking UK");
     acpLoginPage.loginWithMfaOption();
 
     accountConsentPage.checkAllAccounts();
@@ -46,11 +47,11 @@ describe(`Consent admin app`, () => {
     consentAdminPage.assertThatConsentManagementTabIsDisplayed()
     consentAdminPage.searchAccount(Accounts.ids.BR.account1);
     consentAdminPage.assertAccountResult(Accounts.ids.BR.account1);
-    consentAdminPage.assertClientAccountWithStatus("Developer", "Active");
-    consentAdminPage.manageAccount("Developer");
+    consentAdminPage.assertClientAccountWithStatus("Developer TPP", "Active");
+    consentAdminPage.manageAccount("Developer TPP");
     consentAdminPage.assertConsentsDetails();
-    consentAdminPage.revokeClientConsentByAccountName("Developer");
-    consentAdminPage.assertClientAccountWithStatus("Developer", "Inactive");
+    consentAdminPage.revokeClientConsentByAccountName("Developer TPP");
+    consentAdminPage.assertClientAccountWithStatus("Developer TPP", "Inactive");
   })
 
 });

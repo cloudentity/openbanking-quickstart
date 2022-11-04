@@ -40,7 +40,7 @@ describe(`Smoke Tpp technical app`, () => {
       } else {
         tppIntentPage.login();
 
-        acpLoginPage.assertThatModalIsDisplayed("XXX");
+        acpLoginPage.assertThatModalIsDisplayed("Open Banking UK");
         acpLoginPage.loginWithMfaOption();
         
         accountconsentPage.expandPermissions();

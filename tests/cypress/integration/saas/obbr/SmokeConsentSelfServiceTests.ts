@@ -27,7 +27,7 @@ describe(`Consent self service app`, () => {
 
     financrooWelcomePage.reconnectGoBank();
 
-    acpLoginPage.assertThatModalIsDisplayed("XXX");
+    acpLoginPage.assertThatModalIsDisplayed("Open Banking UK");
     acpLoginPage.loginWithMfaOption();
     
     accountConsentPage.checkAllAccounts();

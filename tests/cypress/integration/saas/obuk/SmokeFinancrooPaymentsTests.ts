@@ -21,7 +21,6 @@ describe(`Smoke Financroo payments app test`, () => {
   const financrooInvestmentsPage: FinancrooInvestmentsPage = new FinancrooInvestmentsPage();
   const financrooContributePage: FinancrooContributePage = new FinancrooContributePage();
 
-  const amount: number = Math.floor(Math.random() * 50) + 1;
 
   before(() => {
     financrooLoginPage.visit();
@@ -29,7 +28,7 @@ describe(`Smoke Financroo payments app test`, () => {
 
     financrooWelcomePage.reconnectGoBank();
 
-    acpLoginPage.assertThatModalIsDisplayed("XXX");
+    acpLoginPage.assertThatModalIsDisplayed("Open Banking UK");
     acpLoginPage.loginWithMfaOption();
 
     accountConsentPage.checkAllAccounts();
@@ -39,7 +38,11 @@ describe(`Smoke Financroo payments app test`, () => {
   });
 
   it(`Happy path with confirm consent to add new amount for account ${Accounts.ids.UK.bills}`, () => {
+    const amount: number = Math.floor(Math.random() * 50) + 1;
+
     financrooLoginPage.visit();
+    financrooLoginPage.login();
+
     financrooAccountsPage.assertThatPageIsDisplayed();
     financrooAccountsPage.goToInvestmentsTab();
     
@@ -50,7 +53,7 @@ describe(`Smoke Financroo payments app test`, () => {
     financrooContributePage.contributePaymentMethod(amount, Currencies.currency.UK.symbol, Accounts.ids.UK.bills);
     financrooContributePage.contributeInvestmentSummary(amount, Currencies.currency.UK.symbol, Accounts.ids.UK.bills);
 
-    acpLoginPage.assertThatModalIsDisplayed("XXX");
+    acpLoginPage.assertThatModalIsDisplayed("Open Banking UK");
     acpLoginPage.loginWithMfaOption();
     
     paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.UK.code, Accounts.ids.UK.bills);  
