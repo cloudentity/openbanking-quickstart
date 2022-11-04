@@ -27,9 +27,9 @@ describe(`Smoke Financroo app`, () => {
     [Accounts.ids.UK.household]
   ].forEach((accountsIds) => {
     it(`Happy path with accounts: ${accountsIds}`, () => {
-      acpLoginPage.assertThatModalIsDisplayed("Open Banking UK");
       financrooWelcomePage.reconnectGoBank();
 
+      acpLoginPage.assertThatModalIsDisplayed("Open Banking UK");
       acpLoginPage.loginWithMfaOption();
 
       accountConsentPage.checkAccounts(accountsIds);
