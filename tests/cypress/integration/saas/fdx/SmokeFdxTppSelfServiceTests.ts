@@ -20,7 +20,7 @@ describe(`FDX TPP Consent admin portal tests`, () => {
 
   const accountsIDs = [Accounts.ids.FDX.checkingAcc, Accounts.ids.FDX.savings1];
 
-   //  Ignored due to BUG - AUT-7531
+  //  Ignored due to BUG - AUT-7531
 
   // before(() => {
   //   fdxTppLandingPage.visit();
