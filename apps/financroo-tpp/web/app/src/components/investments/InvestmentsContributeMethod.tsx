@@ -267,34 +267,40 @@ export default function InvestmentsContributeMethod({
         <div id="accounts-list" className={classes.accountSelect}>
           {balances
             .filter(b => b.BankId === selectedBankId)
-            .map(({ AccountId, Amount }) => (
-              <div
-                key={AccountId}
-                id={`account-id-${AccountId}`}
-                className={cx(
-                  classes.accountSelectItem,
-                  selectedAccountId === AccountId && classes.active
-                )}
-              >
-                <Radio
-                  checked={selectedAccountId === AccountId}
-                  color="primary"
-                  onChange={e => {
-                    if (e.target.checked) {
-                      setSelectedAccountId(AccountId);
-                    }
-                  }}
-                />
-                <img src={walletIcon} alt="wallet icon" />
-                <div className={classes.accountSelectItemLabel}>
-                  <div>Checking account</div>
-                  <div>**** ***** **** {AccountId} </div>
+            .map(({ AccountId, Amount }) => {
+              const account = accounts.find(
+                account => account.AccountId === AccountId
+              );
+              const name = account?.Nickname || "Checking account";
+              return (
+                <div
+                  key={AccountId}
+                  id={`account-id-${AccountId}`}
+                  className={cx(
+                    classes.accountSelectItem,
+                    selectedAccountId === AccountId && classes.active
+                  )}
+                >
+                  <Radio
+                    checked={selectedAccountId === AccountId}
+                    color="primary"
+                    onChange={e => {
+                      if (e.target.checked) {
+                        setSelectedAccountId(AccountId);
+                      }
+                    }}
+                  />
+                  <img src={walletIcon} alt="wallet icon" />
+                  <div className={classes.accountSelectItemLabel}>
+                    <div>{name}</div>
+                    <div>**** ***** **** {AccountId} </div>
+                  </div>
+                  <div style={{ flex: 1, textAlign: "right" }}>
+                    {getCurrency(currency)} <>{parseFloat(Amount).toFixed(2)}</>
+                  </div>
                 </div>
-                <div style={{ flex: 1, textAlign: "right" }}>
-                  {getCurrency(currency)} <>{parseFloat(Amount).toFixed(2)}</>
-                </div>
-              </div>
-            ))}
+              );
+            })}
         </div>
       </Field>
       <Field label="Payee Information" style={alert ? {} : { marginBottom: 0 }}>

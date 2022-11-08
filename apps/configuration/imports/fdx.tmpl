@@ -36,7 +36,7 @@ idps:
 
 server_consents:
 - tenant_id: {{ .tenant_id }}
-  client_id: {{ default "ab0ocudfotn6edhsiu7g" .fdx_consent_page_client }}
+  client_id: {{ .consent_page_client_id }}
   custom:
     server_consent_url: {{ .fdx_consent_page_url }}
   server_id: fdx
@@ -46,8 +46,8 @@ clients:
 # consent page
 - tenant_id: {{ .tenant_id }}
   authorization_server_id: system
-  client_id: {{ default "ab0ocudfotn6edhsiu7g" .fdx_consent_page_client_id }}
-  client_secret: {{ default "pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0" .fdx_consent_page_client_secret }}
+  client_id: {{ .consent_page_client_id }}
+  client_secret: {{ .consent_page_client_secret }}
   client_name: custom server consent
   grant_types:
   - client_credentials
@@ -57,10 +57,10 @@ clients:
 # developer tpp
 - tenant_id: {{ .tenant_id }}
   authorization_server_id: fdx
-  client_id: developer-tpp
+  client_id: {{ .developer_tpp_client_id }}
   client_name: Developer TPP
   client_uri: https://localhost:8090
-  client_secret: -TlfoycUiE0qNi-XUBFDfTxMlhHTCjVxOF6pLrWZbQA
+  client_secret: {{ .developer_tpp_client_secret }}
   token_endpoint_auth_method: client_secret_post
   redirect_uris:
   - {{ .developer_tpp_url }}/callback
