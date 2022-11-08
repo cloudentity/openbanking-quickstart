@@ -15,6 +15,8 @@ export class MockDataRecipientNavigationPage {
 
   public visit(force: boolean = false): void {
     Urls.visit(Cypress.env('mock_data_recipient_url'), force);
+    Urls.clearLocalStorage();
+    Urls.visit(Cypress.env('mock_data_recipient_url'), force);
     this.assertThatNavigationPageIsDisplayed();
   }
 

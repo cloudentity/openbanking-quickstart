@@ -1,13 +1,11 @@
 import { AcpLoginPage } from "../../pages/acp/AcpLoginPage";
 import { AccountConsentPage } from "../../pages/consent/AccountConsentPage";
-import { Credentials } from "../../pages/Credentials";
 import { ConsentAdminPage } from "../../pages/consent-admin/ConsentAdminPage";
 import { MockDataRecipientNavigationPage } from "../../pages/mock-data-recipient/MockDataRecipientNavigationPage";
 import { DiscoverDataHoldersPage } from "../../pages/mock-data-recipient/DiscoverDataHoldersPage";
 import { DynamicClientRegistrationPage } from "../../pages/mock-data-recipient/DynamicClientRegistrationPage";
 import { PushedAuthorisationRequestPage } from "../../pages/mock-data-recipient/PushedAuthorisationRequestPage";
 import { ConsentAndAuthorisationCallbackPage } from "../../pages/mock-data-recipient/ConsentAndAuthorisationCallbackPage";
-import { Urls } from "../../pages/Urls";
 import { Accounts } from "../../pages/Accounts";
 
 describe(`CDR Consent admin portal tests`, () => {
@@ -21,8 +19,6 @@ describe(`CDR Consent admin portal tests`, () => {
   const consentAdminPage: ConsentAdminPage = new ConsentAdminPage();
 
   beforeEach(`Dynamic Client Registration via CDR mock data recipient`, () => {
-    mockDataRecipientNavigationPage.visit(true);
-    Urls.clearLocalStorage();
     mockDataRecipientNavigationPage.visit(true);
     mockDataRecipientNavigationPage.clickDiscoverDataHoldersLink();
 
@@ -48,7 +44,8 @@ describe(`CDR Consent admin portal tests`, () => {
     pushedAuthorisationRequestPage.assertThatAuthorizationUriIsGenerated();
     pushedAuthorisationRequestPage.clickOnAuthorizationUriLink();
 
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    acpLoginPage.assertThatModalIsDisplayed("CDR");
+    acpLoginPage.login();
 
     accountConsentPage.checkAccounts([Accounts.ids.CDR.savings, Accounts.ids.CDR.loan]);
     accountConsentPage.clickAgree();
@@ -58,8 +55,6 @@ describe(`CDR Consent admin portal tests`, () => {
   });
 
   it(`Happy path with revoking consent from Consent management page`, () => {
-    consentAdminPage.visit(true);
-    Urls.clearLocalStorage();
     consentAdminPage.visit(true);
     consentAdminPage.login();
 
@@ -75,8 +70,6 @@ describe(`CDR Consent admin portal tests`, () => {
 
   it(`Happy path with revoking consent from Third party providers page`, () => {
     consentAdminPage.visit(true);
-    Urls.clearLocalStorage();
-    consentAdminPage.visit(true);
     consentAdminPage.login();
 
     consentAdminPage.assertThatConsentManagementTabIsDisplayed();
@@ -85,9 +78,6 @@ describe(`CDR Consent admin portal tests`, () => {
 
   afterEach(`Remove DCR client from CDR mock data recipient`, () => {
     mockDataRecipientNavigationPage.visit(true);
-    Urls.clearLocalStorage();
-    mockDataRecipientNavigationPage.visit(true);
-
     mockDataRecipientNavigationPage.clickDynamicClientRegistrationLink();
 
     dynamicClientRegistrationPage.assertThatPageIsDisplayed();

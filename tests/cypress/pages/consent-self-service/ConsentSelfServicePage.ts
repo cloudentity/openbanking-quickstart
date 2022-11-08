@@ -11,6 +11,8 @@ export class ConsentSelfServicePage {
 
   public visit(force: boolean = false): void {
     Urls.visit(Cypress.env("consent_self_service_url"), force);
+    Urls.clearLocalStorage();
+    Urls.visit(Cypress.env("consent_self_service_url"), force);
   }
 
   public clickOnAccountOnlyButton(): void {

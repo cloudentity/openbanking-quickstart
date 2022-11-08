@@ -4,10 +4,6 @@ import { TppLoginPage } from "../../../pages/tpp/TppLoginPage";
 import { AcpLoginPage } from "../../../pages/acp/AcpLoginPage";
 import { AccountConsentPage } from "../../../pages/consent/AccountConsentPage";
 import { ErrorPage } from "../../../pages/ErrorPage";
-import { Credentials } from "../../../pages/Credentials";
-import { Urls } from "../../../pages/Urls";
-import { MfaPage } from "../../../pages/mfa/MfaPage";
-import { EnvironmentVariables } from "../../../pages/EnvironmentVariables";
 
 describe(`Smoke Tpp technical app`, () => {
   const tppAuthenticatedPage: TppAuthenticatedPage = new TppAuthenticatedPage();
@@ -16,15 +12,11 @@ describe(`Smoke Tpp technical app`, () => {
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
   const accountconsentPage: AccountConsentPage = new AccountConsentPage();
   const errorPage: ErrorPage = new ErrorPage();
-  const mfaPage: MfaPage = new MfaPage();
-  const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
 
   const basicPermission: string = `ReadAccountsBasic`;
   const detailPermission: string = `ReadAccountsDetail`;
 
   beforeEach(() => {
-    tppLoginPage.visit();
-    Urls.clearLocalStorage();
     tppLoginPage.visit();
   });
 
@@ -47,13 +39,10 @@ describe(`Smoke Tpp technical app`, () => {
         errorPage.assertError(`Invalid consent request`);
       } else {
         tppIntentPage.login();
-        acpLoginPage.login(
-          Credentials.tppUsername,
-          Credentials.defaultPassword
-        );
-        if (environmentVariables.isMfaEnabled()) {
-          mfaPage.typePin();
-        }
+
+        acpLoginPage.assertThatModalIsDisplayed("Open Banking UK");
+        acpLoginPage.loginWithMfaOption();
+        
         accountconsentPage.expandPermissions();
         accountconsentPage.assertPermissions(permissions.length);
         accountconsentPage.clickAgree();

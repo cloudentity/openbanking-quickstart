@@ -3,11 +3,7 @@ import { FinancrooLoginPage } from "../../../pages/financroo/FinancrooLoginPage"
 import { AccountConsentPage } from "../../../pages/consent/AccountConsentPage";
 import { FinancrooWelcomePage } from "../../../pages/financroo/FinancrooWelcomePage";
 import { FinancrooAccountsPage } from "../../../pages/financroo/accounts/FinancrooAccountsPage";
-import { Credentials } from "../../../pages/Credentials";
-import { Urls } from "../../../pages/Urls";
 import { Accounts } from "../../../pages/Accounts";
-import { MfaPage } from "../../../pages/mfa/MfaPage";
-import { EnvironmentVariables } from "../../../pages/EnvironmentVariables";
 import { FinancrooModalPage } from "../../../pages/financroo/accounts/FinancrooModalPage";
 
 describe(`Financroo app`, () => {
@@ -16,14 +12,10 @@ describe(`Financroo app`, () => {
   const financrooLoginPage: FinancrooLoginPage = new FinancrooLoginPage();
   const financrooWelcomePage: FinancrooWelcomePage = new FinancrooWelcomePage();
   const financrooAccountsPage: FinancrooAccountsPage = new FinancrooAccountsPage();
-  const mfaPage: MfaPage = new MfaPage();
-  const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
   const financrooModalPage: FinancrooModalPage = new FinancrooModalPage();
 
 
   beforeEach(() => {
-    financrooLoginPage.visit();
-    Urls.clearLocalStorage();
     financrooLoginPage.visit();
     financrooLoginPage.login();
   });
@@ -36,10 +28,8 @@ describe(`Financroo app`, () => {
     it(`Happy path with accounts: ${accountsIds}`, () => {
       financrooWelcomePage.reconnectGoBank();
 
-      acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-      if (environmentVariables.isMfaEnabled()) {
-        mfaPage.typePin();
-      }
+      acpLoginPage.assertThatModalIsDisplayed("Open Finance Brazil");
+      acpLoginPage.loginWithMfaOption();
 
       accountConsentPage.checkAccounts(accountsIds);
       accountConsentPage.expandPermissions();
@@ -64,10 +54,8 @@ describe(`Financroo app`, () => {
   it(`Happy path with not selected account`, () => {
     financrooWelcomePage.reconnectGoBank();
 
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    if (environmentVariables.isMfaEnabled()) {
-      mfaPage.typePin();
-    }
+    acpLoginPage.assertThatModalIsDisplayed("Open Finance Brazil");
+    acpLoginPage.loginWithMfaOption();
 
     accountConsentPage.uncheckAllAccounts();
     accountConsentPage.clickAgree();

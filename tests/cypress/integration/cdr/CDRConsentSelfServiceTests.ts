@@ -1,6 +1,5 @@
 import { AcpLoginPage } from "../../pages/acp/AcpLoginPage";
 import { AccountConsentPage } from "../../pages/consent/AccountConsentPage";
-import { Credentials } from "../../pages/Credentials";
 import { ConsentSelfServicePage } from "../../pages/consent-self-service/ConsentSelfServicePage";
 import { ConsentSelfServiceApplicationPage } from "../../pages/consent-self-service/ConsentSelfServiceApplicationPage";
 import { ConsentSelfServiceAccountDetailsPage } from "../../pages/consent-self-service/ConsentSelfServiceAccountDetailsPage";
@@ -9,7 +8,6 @@ import { DiscoverDataHoldersPage } from "../../pages/mock-data-recipient/Discove
 import { DynamicClientRegistrationPage } from "../../pages/mock-data-recipient/DynamicClientRegistrationPage";
 import { PushedAuthorisationRequestPage } from "../../pages/mock-data-recipient/PushedAuthorisationRequestPage";
 import { ConsentAndAuthorisationCallbackPage } from "../../pages/mock-data-recipient/ConsentAndAuthorisationCallbackPage";
-import { Urls } from "../../pages/Urls";
 import { Accounts } from "../../pages/Accounts";
 
 describe(`CDR Consent self service tests`, () => {
@@ -26,8 +24,6 @@ describe(`CDR Consent self service tests`, () => {
 
 
   beforeEach(`Dynamic Client Registration via CDR mock data recipient`, () => {
-    mockDataRecipientNavigationPage.visit(true);
-    Urls.clearLocalStorage();
     mockDataRecipientNavigationPage.visit(true);
     mockDataRecipientNavigationPage.clickDiscoverDataHoldersLink();
 
@@ -53,7 +49,8 @@ describe(`CDR Consent self service tests`, () => {
     pushedAuthorisationRequestPage.assertThatAuthorizationUriIsGenerated();
     pushedAuthorisationRequestPage.clickOnAuthorizationUriLink();
 
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    acpLoginPage.assertThatModalIsDisplayed("CDR");
+    acpLoginPage.login();
 
     accountConsentPage.checkAccounts([Accounts.ids.CDR.savings, Accounts.ids.CDR.checking]);
     accountConsentPage.clickAgree();
@@ -64,10 +61,9 @@ describe(`CDR Consent self service tests`, () => {
 
   beforeEach(`Go to Consent Self Service Page`, () => {
     consentSelfServicePage.visit(true);
-    Urls.clearLocalStorage();
-    consentSelfServicePage.visit(true);
 
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
+    acpLoginPage.assertThatModalIsDisplayed("Bank customers");
+    acpLoginPage.login();
 
     consentSelfServicePage.clickOnApplicationCard();
   });
@@ -101,9 +97,6 @@ describe(`CDR Consent self service tests`, () => {
 
   afterEach(`Remove DCR client from CDR mock data recipient`, () => {
     mockDataRecipientNavigationPage.visit(true);
-    Urls.clearLocalStorage();
-    mockDataRecipientNavigationPage.visit(true);
-
     mockDataRecipientNavigationPage.clickDynamicClientRegistrationLink();
 
     dynamicClientRegistrationPage.assertThatPageIsDisplayed();

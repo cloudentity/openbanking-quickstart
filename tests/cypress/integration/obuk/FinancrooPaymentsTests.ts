@@ -5,14 +5,10 @@ import { PaymentConsentPage } from "../../pages/consent/PaymentConsentPage";
 import { ErrorPage } from "../../pages/ErrorPage";
 import { FinancrooWelcomePage } from "../../pages/financroo/FinancrooWelcomePage";
 import { FinancrooAccountsPage } from "../../pages/financroo/accounts/FinancrooAccountsPage";
-import { Credentials } from "../../pages/Credentials";
 import { Currencies } from "../../pages/Currencies";
 import { Accounts } from "../../pages/Accounts";
-import { Urls } from "../../pages/Urls";
-import { MfaPage } from "../../pages/mfa/MfaPage";
 import { FinancrooInvestmentsPage } from "../../pages/financroo/investments/FinancrooInvestmentsPage";
 import { FinancrooContributePage } from "../../pages/financroo/investments/FinancrooContributePage";
-import { EnvironmentVariables } from "../../pages/EnvironmentVariables";
 import { FinancrooModalPage } from "../../pages/financroo/accounts/FinancrooModalPage";
 
 describe(`Financroo payments app test`, () => {
@@ -26,22 +22,16 @@ describe(`Financroo payments app test`, () => {
   const financrooAccountsPage: FinancrooAccountsPage = new FinancrooAccountsPage();
   const financrooInvestmentsPage: FinancrooInvestmentsPage = new FinancrooInvestmentsPage();
   const financrooContributePage: FinancrooContributePage = new FinancrooContributePage();
-  const mfaPage: MfaPage = new MfaPage();
-  const environmentVariables: EnvironmentVariables = new EnvironmentVariables();
 
 
   beforeEach(() => {
-    financrooLoginPage.visit();
-    Urls.clearLocalStorage();
     financrooLoginPage.visit();
     financrooLoginPage.login();
 
     financrooWelcomePage.reconnectGoBank();
 
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    if (environmentVariables.isMfaEnabled()) {
-      mfaPage.typePin();
-    }
+    acpLoginPage.assertThatModalIsDisplayed("Open Banking UK");
+    acpLoginPage.loginWithMfaOption();
 
     accountConsentPage.checkAllAccounts();
     accountConsentPage.clickAgree();
@@ -53,6 +43,8 @@ describe(`Financroo payments app test`, () => {
     const amount: number = Math.floor(Math.random() * 50) + 1;
 
     financrooLoginPage.visit();
+    financrooLoginPage.login();
+
     financrooAccountsPage.assertThatPageIsDisplayed();
     financrooAccountsPage.goToInvestmentsTab();
 
@@ -63,10 +55,8 @@ describe(`Financroo payments app test`, () => {
     financrooContributePage.contributePaymentMethod(amount, Currencies.currency.UK.symbol, Accounts.ids.UK.bills);
     financrooContributePage.contributeInvestmentSummary(amount, Currencies.currency.UK.symbol, Accounts.ids.UK.bills);
 
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    if (environmentVariables.isMfaEnabled()) {
-      mfaPage.typePin();
-    }
+    acpLoginPage.assertThatModalIsDisplayed("Open Banking UK");
+    acpLoginPage.loginWithMfaOption();
 
     paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.UK.code, Accounts.ids.UK.bills);  
     paymentConsentPage.clickConfirm();
@@ -81,6 +71,8 @@ describe(`Financroo payments app test`, () => {
     const amount: number = Math.floor(Math.random() * 50) + 1;
 
     financrooLoginPage.visit();
+    financrooLoginPage.login();
+
     financrooAccountsPage.assertThatPageIsDisplayed();
     financrooAccountsPage.goToInvestmentsTab();
 
@@ -91,10 +83,8 @@ describe(`Financroo payments app test`, () => {
     financrooContributePage.contributePaymentMethod(amount, Currencies.currency.UK.symbol, Accounts.ids.UK.bills);
     financrooContributePage.contributeInvestmentSummary(amount, Currencies.currency.UK.symbol, Accounts.ids.UK.bills);
 
-    acpLoginPage.login(Credentials.tppUsername, Credentials.defaultPassword);
-    if (environmentVariables.isMfaEnabled()) {
-      mfaPage.typePin();
-    }
+    acpLoginPage.assertThatModalIsDisplayed("Open Banking UK");
+    acpLoginPage.loginWithMfaOption();
 
     paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.UK.code, Accounts.ids.UK.bills); 
     paymentConsentPage.clickCancel();
@@ -107,6 +97,8 @@ describe(`Financroo payments app test`, () => {
     const amount: number = Math.floor(Math.random() * 50) + 1;
 
     financrooLoginPage.visit();
+    financrooLoginPage.login();
+    
     financrooAccountsPage.assertThatPageIsDisplayed();
     financrooAccountsPage.goToInvestmentsTab();
 
@@ -116,7 +108,8 @@ describe(`Financroo payments app test`, () => {
     financrooContributePage.contributePaymentMethod(amount, Currencies.currency.UK.symbol, Accounts.ids.UK.household);
     financrooContributePage.contributeInvestmentSummary(amount, Currencies.currency.UK.symbol, Accounts.ids.UK.household);
 
-    acpLoginPage.cancel();
+    acpLoginPage.assertThatModalIsDisplayed("Open Banking UK");
+    acpLoginPage.cancelLogin();
 
     // UI error page improvements AUT-5845
     errorPage.assertError(`The user rejected the authentication`);
