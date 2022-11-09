@@ -169,8 +169,8 @@ services:
       - OPENBANKING_SERVER_ID=${SERVER}
       - SPEC=fdx
       - BANK_CLIENT_TOKEN_URL=${ACP_URL}/${TENANT}/${SERVER}/oauth2/token
-      - BANK_CLIENT_ID=bukj5p6k7qdmm5ppbi4g
-      - BANK_CLIENT_SECRET=8DPOMd3ZOvsjuUnU9goRMHTIUUXtSkgwQeo8v_S74aE
+      - BANK_CLIENT_ID=${INTERNAL_BANK_CLIENT_ID}
+      - BANK_CLIENT_SECRET=pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0
       - BANK_CLIENT_SCOPES=introspect_openbanking_tokens, introspect_tokens, revoke_tokens
       - BANK_ACCOUNTS_ENDPOINT=http://bank:8070/internal/accounts
       - BANK_CLIENT_CERT_FILE=/bank_cert.pem

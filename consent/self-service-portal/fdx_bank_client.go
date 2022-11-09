@@ -61,9 +61,10 @@ func NewFDXBankClient(config Config) (BankClient, error) {
 			},
 		},
 		cc: clientcredentials.Config{
-			ClientID: config.BankClientConfig.ClientID,
-			TokenURL: config.BankClientConfig.TokenURL,
-			Scopes:   config.BankClientConfig.Scopes,
+			ClientID:     config.BankClientConfig.ClientID,
+			ClientSecret: config.BankClientConfig.ClientSecret,
+			TokenURL:     config.BankClientConfig.TokenURL,
+			Scopes:       config.BankClientConfig.Scopes,
 		},
 	}, nil
 }
