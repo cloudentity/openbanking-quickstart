@@ -347,6 +347,35 @@ h6 {
   background: rgba(4, 123, 209, 0.05);
 }
 
+.aut-reject-demo {
+  display: block;
+  margin: 20px 0;
+  border-radius: 4px;
+  text-align: center;
+  background: rgba(185 , 185, 185, 0.2);
+}
+
+.aut-reject-icon-demo {
+  margin: 10px 10px;
+  padding: 5px 5px 5px 5px;
+  font-size: 48px;
+  color: rgba(0, 0, 0, 0.7);
+}
+
+.aut-reject-title-demo {
+  text-transform: capitalize;
+  font-size: 24px;
+  font-weight: 600;
+  line-height: 36px;
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.aut-reject-subtitle-demo {
+  padding: 10px 0;
+  font-size: 14px;
+  color: rgba(0, 0, 0, 0.5);
+}
+
 .aut-demo-info {
   display: flex;
   margin: 10px 0;
