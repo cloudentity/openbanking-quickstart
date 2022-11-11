@@ -12,7 +12,9 @@ type ResponseData struct {
 	State            string `json:"state"`
 	Code             string `json:"code"`
 	Error            string `json:"error"`
+	ErrorCause       string `json:"error_cause"`
 	ErrorDescription string `json:"error_description"`
+	TraceId			 string `json:"trace_id"`
 }
 
 func (r *ResponseData) Valid() error {
@@ -38,7 +40,9 @@ func GetResponseDataFromQuery(r *http.Request) (ResponseData, error) {
 		Code:             r.URL.Query().Get("code"),
 		State:            r.URL.Query().Get("state"),
 		Error:            r.URL.Query().Get("error"),
+		ErrorCause:       r.URL.Query().Get("error_cause"),
 		ErrorDescription: r.URL.Query().Get("error_description"),
+		TraceId:          r.URL.Query().Get("trace_id"),
 	}, nil
 }
 
