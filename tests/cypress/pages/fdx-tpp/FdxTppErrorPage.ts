@@ -14,8 +14,7 @@ export class FdxTppErrorPage {
     cy.get(this.traceIdLocator).then((element) => {
       let text: string = element.text();
       expect(text).to.match(/ID\: [a-zA-Z0-9]+/);
-    })
-    
+    });
   }
 
   public clickTryNext(): void {

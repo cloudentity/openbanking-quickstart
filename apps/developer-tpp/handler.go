@@ -134,10 +134,10 @@ func (s *Server) Callback() func(*gin.Context) {
 		}
 
 		if responseClaims.Error == "rejected" {
-			data["error"] = string(responseClaims.Error)
-			data["error_cause"] = string(responseClaims.ErrorCause)
-			data["error_description"] = string(responseClaims.ErrorDescription)
-			data["trace_id"] = string(responseClaims.TraceId)
+			data["error"] = responseClaims.Error
+			data["error_cause"] = responseClaims.ErrorCause
+			data["error_description"] = responseClaims.ErrorDescription
+			data["trace_id"] = responseClaims.TraceID
 			c.HTML(http.StatusBadRequest, s.GetTemplate("consent-rejected.tmpl"), data)
 			return
 		}

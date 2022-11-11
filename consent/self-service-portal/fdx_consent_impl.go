@@ -1,10 +1,10 @@
 package main
 
 import (
-	"github.com/gin-gonic/gin"
 	"github.com/cloudentity/acp-client-go/clients/openbanking/client/f_d_x"
 	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 	system "github.com/cloudentity/acp-client-go/clients/system/client/clients"
+	"github.com/gin-gonic/gin"
 )
 
 type FDXConsentImpl struct {
