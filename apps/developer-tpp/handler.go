@@ -133,6 +133,15 @@ func (s *Server) Callback() func(*gin.Context) {
 			return
 		}
 
+		if responseClaims.Error == "rejected" {
+			data["error"] = string(responseClaims.Error)
+			data["error_cause"] = string(responseClaims.ErrorCause)
+			data["error_description"] = string(responseClaims.ErrorDescription)
+			data["trace_id"] = string(responseClaims.TraceId)
+			c.HTML(http.StatusBadRequest, s.GetTemplate("consent-rejected.tmpl"), data)
+			return
+		}
+
 		if responseClaims.Error != "" {
 			c.String(http.StatusBadRequest, fmt.Sprintf("acp returned an error: %s: %s", responseClaims.Error, responseClaims.ErrorDescription))
 			return
