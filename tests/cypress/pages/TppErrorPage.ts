@@ -1,4 +1,4 @@
-export class FdxTppErrorPage {
+export class TppErrorPage {
   private readonly errorTitleLocator: string = `#fdx-consent-error`;
   private readonly errorDescriptionLocator: string = `#fdx-consent-error-description`;
   private readonly errorCauseLocator: string = `#fdx-consent-error-cause`;

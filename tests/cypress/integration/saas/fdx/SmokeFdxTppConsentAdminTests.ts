@@ -5,7 +5,7 @@ import { FdxTppLandingPage } from "../../../pages/fdx-tpp/FdxTppLandingPage";
 import { FdxTppIntentRegisteredPage } from "../../../pages/fdx-tpp/FdxTppIntentRegisteredPage";
 import { FdxTppAuthenticatedPage } from "../../../pages/fdx-tpp/FdxTppAuthenticatedPage";
 import { ConsentAdminPage } from "../../../pages/consent-admin/ConsentAdminPage";
-import { FdxTppErrorPage } from "../../../pages/fdx-tpp/FdxTppErrorPage";
+import { TppErrorPage } from "../../../pages/TppErrorPage";
 
 describe(`FDX TPP Consent admin portal tests`, () => {
   const fdxTppLandingPage: FdxTppLandingPage = new FdxTppLandingPage();
@@ -14,7 +14,7 @@ describe(`FDX TPP Consent admin portal tests`, () => {
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
   const accountConsentPage: AccountConsentPage = new AccountConsentPage();
   const consentAdminPage: ConsentAdminPage = new ConsentAdminPage();
-  const fdxTppErrorPage: FdxTppErrorPage = new FdxTppErrorPage();
+  const tppErrorPage: TppErrorPage = new TppErrorPage();
 
   beforeEach(() => {
     fdxTppLandingPage.visit();
@@ -106,7 +106,7 @@ describe(`FDX TPP Consent admin portal tests`, () => {
     accountConsentPage.assertPermissions(4);
     accountConsentPage.clickCancel();
 
-    fdxTppErrorPage.assertThatErrorPageIsDisplayed(
+    tppErrorPage.assertThatErrorPageIsDisplayed(
       `rejected`,
       `The user rejected the authentication.`,
       `consent_rejected`
