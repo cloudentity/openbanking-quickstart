@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/cloudentity/openbanking-quickstart/utils"
 	"github.com/dgrijalva/jwt-go"
@@ -133,8 +134,8 @@ func (s *Server) Callback() func(*gin.Context) {
 			return
 		}
 
-		if responseClaims.Error == "rejected" {
-			data["error"] = responseClaims.Error
+		if responseClaims.Error == "rejected" || responseClaims.Error == "access_denied" {
+			data["error"] = strings.ReplaceAll(responseClaims.Error, "_", " ")
 			data["error_cause"] = responseClaims.ErrorCause
 			data["error_description"] = responseClaims.ErrorDescription
 			data["trace_id"] = responseClaims.TraceID
