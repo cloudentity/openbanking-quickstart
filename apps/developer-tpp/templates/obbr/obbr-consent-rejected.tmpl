@@ -17,7 +17,7 @@
     <span>TPP sample app</span>
   </div>
   <div class="aut-banner-contact">
-    <button class="mdc-button mdc-button--raised" onclick="onRetry()" id="fdx-consent-error-try-again-button">
+    <button class="mdc-button mdc-button--raised" onclick="onRetry()" id="tpp-consent-error-try-again-button">
       <div class="mdc-button__ripple"></div>
       <span class="mdc-button__label">Try again</span>
     </button>
@@ -27,11 +27,13 @@
 <div class="aut-container" style="padding: 5px; width: 1024px;">
   <div class="aut-reject-demo">
     <div class="material-icons aut-reject-icon-demo">error_outline</div>
-    <div class="aut-reject-title-demo" id="fdx-consent-error">{{ .error }}</div>
-    <div class="aut-reject-subtitle-demo" id="fdx-consent-error-details">
-      <p id="fdx-consent-error-description"><b>description: </b>{{ .error_description }}</p>
-      <p id="fdx-consent-error-cause"><b>cause: </b>{{ .error_cause }}</p>
-      <p id="fdx-consent-trace-id"><b>ID: </b>{{ .trace_id }}</p>
+    <div class="aut-reject-title-demo" id="tpp-consent-error">{{ .error }}</div>
+    <div class="aut-reject-subtitle-demo" id="tpp-consent-error-details">
+      <p id="tpp-consent-error-description"><b>description: </b>{{ .error_description }}</p>
+      {{ if .error_cause }}
+      <p id="tpp-consent-error-cause"><b>cause: </b>{{ .error_cause }}</p>
+      {{ end }}
+      <p id="tpp-consent-trace-id"><b>ID: </b>{{ .trace_id }}</p>
     </div>
   </div>
 </div>
