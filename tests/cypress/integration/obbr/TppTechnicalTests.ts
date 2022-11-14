@@ -3,6 +3,7 @@ import { TppIntentPage } from "../../pages/tpp/TppIntentPage";
 import { TppLoginPage } from "../../pages/tpp/TppLoginPage";
 import { AcpLoginPage } from "../../pages/acp/AcpLoginPage";
 import { AccountConsentPage } from "../../pages/consent/AccountConsentPage";
+import { TppErrorPage } from "../../pages/TppErrorPage";
 import { ErrorPage } from "../../pages/ErrorPage";
 
 describe(`Tpp technical app`, () => {
@@ -11,6 +12,7 @@ describe(`Tpp technical app`, () => {
   const tppLoginPage: TppLoginPage = new TppLoginPage();
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
   const accountConsentPage: AccountConsentPage = new AccountConsentPage();
+  const tppErrorPage: TppErrorPage = new TppErrorPage();
   const errorPage: ErrorPage = new ErrorPage();
 
   const accountsReadPermission: string = `ACCOUNTS_READ`;
@@ -82,7 +84,11 @@ describe(`Tpp technical app`, () => {
     acpLoginPage.loginWithMfaOption();
 
     accountConsentPage.clickCancel();
-    // UI error page improvements AUT-5845
-    errorPage.assertError(`rejected`);
+
+    tppErrorPage.assertThatErrorPageIsDisplayed(
+      `rejected`,
+      `The user rejected the authentication.`,
+      `consent_rejected`
+    );
   });
 });
