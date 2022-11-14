@@ -72,8 +72,11 @@ describe(`Tpp technical app`, () => {
 
     acpLoginPage.assertThatModalIsDisplayed("Open Finance Brazil");
     acpLoginPage.cancelLogin();
-    // UI error page improvements AUT-5845
-    errorPage.assertError(`The user rejected the authentication`);
+    
+    tppErrorPage.assertThatCancelLoginErrorPageIsDisplayed(
+      `Access Denied`,
+      `The user rejected the authentication`
+    );
   });
 
   it(`Cancel on consent`, () => {
@@ -85,8 +88,8 @@ describe(`Tpp technical app`, () => {
 
     accountConsentPage.clickCancel();
 
-    tppErrorPage.assertThatErrorPageIsDisplayed(
-      `rejected`,
+    tppErrorPage.assertThatRejectConsentErrorPageIsDisplayed(
+      `Rejected`,
       `The user rejected the authentication.`,
       `consent_rejected`
     );

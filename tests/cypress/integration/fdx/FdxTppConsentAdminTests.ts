@@ -106,8 +106,8 @@ describe(`FDX TPP Consent admin portal tests`, () => {
     accountConsentPage.assertPermissions(4);
     accountConsentPage.clickCancel();
 
-    tppErrorPage.assertThatErrorPageIsDisplayed(
-      `rejected`,
+    tppErrorPage.assertThatRejectConsentErrorPageIsDisplayed(
+      `Rejected`,
       `The user rejected the authentication.`,
       `consent_rejected`
     );
