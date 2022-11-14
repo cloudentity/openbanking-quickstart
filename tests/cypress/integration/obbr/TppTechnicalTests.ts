@@ -74,7 +74,7 @@ describe(`Tpp technical app`, () => {
     acpLoginPage.cancelLogin();
     
     tppErrorPage.assertThatCancelLoginErrorPageIsDisplayed(
-      `Access Denied`,
+      `access denied`,
       `The user rejected the authentication`
     );
   });
@@ -89,7 +89,7 @@ describe(`Tpp technical app`, () => {
     accountConsentPage.clickCancel();
 
     tppErrorPage.assertThatRejectConsentErrorPageIsDisplayed(
-      `Rejected`,
+      `rejected`,
       `The user rejected the authentication.`,
       `consent_rejected`
     );
