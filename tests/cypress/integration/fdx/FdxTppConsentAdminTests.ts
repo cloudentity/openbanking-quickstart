@@ -5,7 +5,7 @@ import { FdxTppLandingPage } from "../../pages/fdx-tpp/FdxTppLandingPage";
 import { FdxTppIntentRegisteredPage } from "../../pages/fdx-tpp/FdxTppIntentRegisteredPage";
 import { FdxTppAuthenticatedPage } from "../../pages/fdx-tpp/FdxTppAuthenticatedPage";
 import { ConsentAdminPage } from "../../pages/consent-admin/ConsentAdminPage";
-import { ErrorPage } from "../../pages/ErrorPage";
+import { TppErrorPage } from "../../pages/TppErrorPage";
 
 describe(`FDX TPP Consent admin portal tests`, () => {
   const fdxTppLandingPage: FdxTppLandingPage = new FdxTppLandingPage();
@@ -14,7 +14,7 @@ describe(`FDX TPP Consent admin portal tests`, () => {
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
   const accountConsentPage: AccountConsentPage = new AccountConsentPage();
   const consentAdminPage: ConsentAdminPage = new ConsentAdminPage();
-  const errorPage: ErrorPage = new ErrorPage();
+  const tppErrorPage: TppErrorPage = new TppErrorPage();
 
   beforeEach(() => {
     fdxTppLandingPage.visit();
@@ -106,8 +106,11 @@ describe(`FDX TPP Consent admin portal tests`, () => {
     accountConsentPage.assertPermissions(4);
     accountConsentPage.clickCancel();
 
-    // UI error page improvements AUT-5845
-    errorPage.assertError(`acp returned an error: rejected:`);
+    tppErrorPage.assertThatRejectConsentErrorPageIsDisplayed(
+      `rejected`,
+      `The user rejected the authentication.`,
+      `consent_rejected`
+    );
   });
 
   async function acceptConsentWithIds(

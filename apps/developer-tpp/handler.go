@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/http"
 	"net/url"
+	"strings"
 
 	"github.com/cloudentity/openbanking-quickstart/utils"
 	"github.com/dgrijalva/jwt-go"
@@ -130,6 +131,15 @@ func (s *Server) Callback() func(*gin.Context) {
 
 		if responseClaims, err = utils.HandleAuthResponseMode(c.Request, s.SignatureVerificationKey); err != nil {
 			c.String(http.StatusBadRequest, fmt.Sprintf("failed to decode response jwt token %v", err))
+			return
+		}
+
+		if responseClaims.Error == "rejected" || responseClaims.Error == "access_denied" {
+			data["error"] = strings.ReplaceAll(responseClaims.Error, "_", " ")
+			data["error_cause"] = responseClaims.ErrorCause
+			data["error_description"] = responseClaims.ErrorDescription
+			data["trace_id"] = responseClaims.TraceID
+			c.HTML(http.StatusBadRequest, s.GetTemplate("consent-rejected.tmpl"), data)
 			return
 		}
 

@@ -3,6 +3,7 @@ import { TppIntentPage } from "../../pages/tpp/TppIntentPage";
 import { TppLoginPage } from "../../pages/tpp/TppLoginPage";
 import { AcpLoginPage } from "../../pages/acp/AcpLoginPage";
 import { AccountConsentPage } from "../../pages/consent/AccountConsentPage";
+import { TppErrorPage } from "../../pages/TppErrorPage";
 import { ErrorPage } from "../../pages/ErrorPage";
 
 describe(`Tpp technical app`, () => {
@@ -11,6 +12,7 @@ describe(`Tpp technical app`, () => {
   const tppLoginPage: TppLoginPage = new TppLoginPage();
   const acpLoginPage: AcpLoginPage = new AcpLoginPage();
   const accountConsentPage: AccountConsentPage = new AccountConsentPage();
+  const tppErrorPage: TppErrorPage = new TppErrorPage();
   const errorPage: ErrorPage = new ErrorPage();
 
   const basicPermission: string = `ReadAccountsBasic`;
@@ -65,8 +67,11 @@ describe(`Tpp technical app`, () => {
 
     acpLoginPage.assertThatModalIsDisplayed("Open Banking UK");
     acpLoginPage.cancelLogin();
-    // UI error page improvements AUT-5845
-    errorPage.assertError(`The user rejected the authentication`);
+    
+    tppErrorPage.assertThatCancelLoginErrorPageIsDisplayed(
+      `access denied`,
+      `The user rejected the authentication`
+    );
   });
 
   it(`Cancel on consent`, () => {
@@ -77,7 +82,11 @@ describe(`Tpp technical app`, () => {
     acpLoginPage.loginWithMfaOption();
     
     accountConsentPage.clickCancel();
-    // UI error page improvements AUT-5845
-    errorPage.assertError(`rejected`);
+
+    tppErrorPage.assertThatRejectConsentErrorPageIsDisplayed(
+      `rejected`,
+      `The user rejected the authentication.`,
+      `consent_rejected`
+    );
   });
 });
