@@ -89,7 +89,7 @@ The current types of runtimes are currently supported:
 > 2. Run `make disable-mfa` to turn MFA off.
 
 To cleanup the environment execute: `make clean`.
-This step is also necessary if you want to switch between different specs.
+This step is also necessary if you want to switch between different specs. 
 
 >### Using Hypr
 >To run using Hypr Passwordless see [Hypr Passwordless Setup](docs/how_to_use_hypr.md)
