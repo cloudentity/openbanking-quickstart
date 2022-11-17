@@ -13,7 +13,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-
+        with:
+          fetch-depth: 0
       - name: Update ACP version
         run: ./scripts/override_env.sh ACP_VERSION test2
      
