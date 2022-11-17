@@ -1,0 +1,26 @@
+name: bump acp image
+on:
+  push:
+    tags-ignore:
+      - "*"
+    branches:
+      - 'feature/AUT-7420 '
+
+jobs:
+  update_repo:
+    name: Update ACP version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Update ACP version
+        run: ./scripts/override_env.sh ACP_VERSION test 
+     
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: Github automation
+          author_email: mail@example.com
+          message: 'Bump ACP image'
+          add: '.env-local'
