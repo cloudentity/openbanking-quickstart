@@ -15,7 +15,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Update ACP version
-        run: ./scripts/override_env.sh ACP_VERSION test 
+        run: ./scripts/override_env.sh ACP_VERSION test2
      
       - name: Commit changes
         uses: EndBug/add-and-commit@v9
@@ -24,3 +24,12 @@ jobs:
           author_email: mail@example.com
           message: 'Bump ACP image'
           add: '.env-local'
+      - name: Create PR
+        uses: devops-infra/action-pull-request@v0.5.3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          title: MBump ACP version
+          template: .github/PULL_REQUEST_TEMPLATE.md
+          body: "**Automated pull request**"
+          draft: true
+          allow_no_diff: false
