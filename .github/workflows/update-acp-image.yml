@@ -4,7 +4,7 @@ on:
     tags-ignore:
       - "*"
     branches:
-      - 'feature/AUT-7420 '
+      - 'feature/AUT-7420'
 
 jobs:
   update_repo:
