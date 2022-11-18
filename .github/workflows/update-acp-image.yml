@@ -11,7 +11,10 @@ jobs:
     name: Update ACP version
     runs-on: ubuntu-latest
     steps:
-      
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+
       - name: Checkout repo
         uses: actions/checkout@v3
         with:
@@ -28,14 +31,15 @@ jobs:
           author_email: mail@example.com
           message: 'Bump ACP image'
           add: '.env-local'
-          new_branch: bump-acp-version
+          new_branch: bump-acp-version-${{ steps.date.outputs.date }}
 
-      # - name: Create PR
-      #   uses: devops-infra/action-pull-request@v0.5.3
-      #   with:
-      #     github_token: ${{ secrets.GITHUB_TOKEN }}
-      #     title: Bump ACP version
-      #     template: .github/PULL_REQUEST_TEMPLATE.md
-      #     body: "**Automated pull request**"
-      #     draft: true
-      #     allow_no_diff: false
+      - name: Create PR
+        uses: devops-infra/action-pull-request@v0.5.3
+        with:
+          source_branch: bump-acp-version-${{ steps.date.outputs.date }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          title: Bump ACP version
+          template: .github/PULL_REQUEST_TEMPLATE.md
+          body: "**Automated pull request**"
+          draft: true
+          allow_no_diff: false
