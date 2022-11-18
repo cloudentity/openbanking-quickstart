@@ -1,15 +1,11 @@
 name: bump acp image
 on:
-  workflow_dispatch:
-    inputs:
-      acp-version:
-        description: 'Version of ACP. I.e. 2.7.0-b9842f9'
-        required: true 
-        type: string
+  repository_dispatch:
+    types: [bump-acp-image]
 
 jobs:
   update_repo:
-    name: Update ACP version
+    name: Update ACP image
     runs-on: ubuntu-latest
     steps:
       - name: Get current date
@@ -22,8 +18,8 @@ jobs:
           ref: master
           fetch-depth: 0
 
-      - name: Update ACP version
-        run: ./scripts/override_env.sh ACP_VERSION ${{ inputs.acp-version }} 
+      - name: Update ACP image
+        run: ./scripts/override_env.sh ACP_VERSION ${{ github.event.client_payload.acp-version }} 
 
       - name: Commit changes
         uses: EndBug/add-and-commit@v9
@@ -32,14 +28,14 @@ jobs:
           author_email: mail@example.com
           message: 'Bump ACP image'
           add: '.env-local'
-          new_branch: bump-acp-version-${{ steps.date.outputs.date }}
+          new_branch: bump-acp-image-${{ steps.date.outputs.date }}
 
       - name: Create PR
         uses: devops-infra/action-pull-request@v0.5.3
         with:
-          source_branch: bump-acp-version-${{ steps.date.outputs.date }}
+          source_branch: bump-acp-image-${{ steps.date.outputs.date }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          title: Bump ACP version
+          title: Bump ACP image
           template: .github/PULL_REQUEST_TEMPLATE.md
           body: "**Automated pull request**"
           draft: false
