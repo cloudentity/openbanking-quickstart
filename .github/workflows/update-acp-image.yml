@@ -27,6 +27,15 @@ jobs:
           branch: 'bump-acp-image'
           sha: '${{ github.event.pull_request.head.sha }}'
 
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          ref: bump-acp-image
+          fetch-depth: 0
+          
+      - name: Update ACP version
+        run: ./scripts/override_env.sh ACP_VERSION test2
+
       - name: Commit changes
         uses: EndBug/add-and-commit@v9
         with:
@@ -34,6 +43,7 @@ jobs:
           author_email: mail@example.com
           message: 'Bump ACP image'
           add: '.env-local'
+
       # - name: Create PR
       #   uses: devops-infra/action-pull-request@v0.5.3
       #   with:
