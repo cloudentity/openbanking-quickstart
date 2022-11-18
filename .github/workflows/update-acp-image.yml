@@ -1,10 +1,11 @@
 name: bump acp image
 on:
-  push:
-    tags-ignore:
-      - "*"
-    branches:
-      - 'feature/AUT-7420'
+  workflow_dispatch:
+    inputs:
+      acp-version:
+        description: 'Version of ACP. I.e. 2.7.0-b9842f9'
+        required: true 
+        type: string
 
 jobs:
   update_repo:
@@ -22,7 +23,7 @@ jobs:
           fetch-depth: 0
 
       - name: Update ACP version
-        run: ./scripts/override_env.sh ACP_VERSION test2
+        run: ./scripts/override_env.sh ACP_VERSION ${{ inputs.acp-version }} 
 
       - name: Commit changes
         uses: EndBug/add-and-commit@v9
@@ -41,5 +42,5 @@ jobs:
           title: Bump ACP version
           template: .github/PULL_REQUEST_TEMPLATE.md
           body: "**Automated pull request**"
-          draft: true
+          draft: false
           allow_no_diff: false
