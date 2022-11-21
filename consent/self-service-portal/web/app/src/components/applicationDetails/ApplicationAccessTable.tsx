@@ -5,6 +5,7 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import uniq from "lodash/uniq"
 
 import ApplicationAccessPaymentDrawer from "./ApplicationAccessPaymentDrawer";
 import ApplicationAccessAccountDrawer from "./ApplicationAccessAccountDrawer";
@@ -231,7 +232,7 @@ function ApplicationAccessTable({
           }) =>
             createDataAccount(
               getDate(CreationDateTime),
-              getAccountNames(AccountIDs ?? [], accounts),
+              getAccountNames(uniq(AccountIDs ?? []), accounts),
               Status,
               getDate(ExpirationDateTime),
               ConsentID
