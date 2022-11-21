@@ -36,7 +36,6 @@ jobs:
           source_branch: bump-acp-image-${{ steps.date.outputs.date }}
           github_token: ${{ secrets.GITHUB_TOKEN }}
           title: Bump ACP image
-          template: .github/PULL_REQUEST_TEMPLATE.md
           body: "**Automated pull request**"
           draft: false
           allow_no_diff: false
