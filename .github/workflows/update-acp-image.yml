@@ -1,0 +1,41 @@
+name: bump acp image
+on:
+  repository_dispatch:
+    types: [bump-acp-image]
+
+jobs:
+  update_repo:
+    name: Update ACP image
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get current date
+        id: date
+        run: echo "::set-output name=date::$(date +'%Y-%m-%d')"
+
+      - name: Checkout repo
+        uses: actions/checkout@v3
+        with:
+          ref: master
+          fetch-depth: 0
+
+      - name: Update ACP image
+        run: ./scripts/override_env.sh ACP_VERSION ${{ github.event.client_payload.acp-version }} 
+
+      - name: Commit changes
+        uses: EndBug/add-and-commit@v9
+        with:
+          author_name: Github automation
+          author_email: mail@example.com
+          message: 'Bump ACP image'
+          add: '.env-local'
+          new_branch: bump-acp-image-${{ steps.date.outputs.date }}
+
+      - name: Create PR
+        uses: devops-infra/action-pull-request@v0.5.3
+        with:
+          source_branch: bump-acp-image-${{ steps.date.outputs.date }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          title: Bump ACP image
+          body: "**Automated pull request**"
+          draft: false
+          allow_no_diff: false
