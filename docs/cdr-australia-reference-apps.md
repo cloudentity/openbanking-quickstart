@@ -253,7 +253,7 @@ Sample curl:
 ```
 
 curl -kv -X  'GET' \
-  'https://datarecipient.mock:9001/data-sharing/proxy/cds-au/v1/banking/accounts?open-status=ALL&page=1&page-size=2' \
+  'https://mock-data-recipient:9001/data-sharing/proxy/cds-au/v1/banking/accounts?open-status=ALL&page=1&page-size=2' \
   -H 'accept: application/json' \
   -H 'x-v: 1' \
   -H 'x-inject-cdr-arrangement-id: c7mf3n75ajjjteq461ig' \

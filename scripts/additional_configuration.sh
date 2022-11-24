@@ -6,7 +6,7 @@ export ACP_URL=https://authorization.cloudentity.com:8443
 export ACP_MTLS_URL=https://authorization.cloudentity.com:8443
 export TENANT=default
 export SERVER=cdr
-export DATA_RECIPIENT_URL=https://datarecipient.mock:9001
+export DATA_RECIPIENT_URL=https://mock-data-recipient:9001
 export MOCK_REGISTER_URL=https://mock-register:7000
 export MOCK_REGISTER_MTLS_URL=https://mock-register:7001
 
