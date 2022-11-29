@@ -24,12 +24,14 @@ describe(`CDR Consent admin portal tests`, () => {
 
     discoverDataHoldersPage.assertThatPageIsDisplayed();
     discoverDataHoldersPage.clickRefreshDataHoldersButton();
+    discoverDataHoldersPage.clickResetDataHoldersButton();
+    discoverDataHoldersPage.clickRefreshDataHoldersButton();
     discoverDataHoldersPage.assertThatDataHolderBrandsLoaded();
 
     mockDataRecipientNavigationPage.clickDynamicClientRegistrationLink();
 
-    dynamicClientRegistrationPage.assertThatPageIsDisplayed();
-    dynamicClientRegistrationPage.assertThatBrandIdIsSelected();
+    dynamicClientRegistrationPage.clickMockDataHolderBankingBrand();
+    dynamicClientRegistrationPage.assertThatDynamicClientRegistrationFormIsDisplayed();
     dynamicClientRegistrationPage.clickDCRRegisterButton();
     dynamicClientRegistrationPage.assertThatClientRegistered();
   });
@@ -40,6 +42,10 @@ describe(`CDR Consent admin portal tests`, () => {
     pushedAuthorisationRequestPage.assertThatPageIsDisplayed();
     pushedAuthorisationRequestPage.selectClientRegistration(1);
     pushedAuthorisationRequestPage.setSharingDuration(1000000);
+    pushedAuthorisationRequestPage.setScopes([
+      'openid', 'profile', 'bank:accounts.basic:read',
+      'bank:accounts.detail:read', 'bank:transactions:read',
+      'common:customer.basic:read', 'introspect_tokens', 'revoke_tokens', 'offline_access']);
     pushedAuthorisationRequestPage.clickInitiateParButton();
     pushedAuthorisationRequestPage.assertThatAuthorizationUriIsGenerated();
     pushedAuthorisationRequestPage.clickOnAuthorizationUriLink();
@@ -67,6 +73,7 @@ describe(`CDR Consent admin portal tests`, () => {
     consentAdminPage.revokeClientConsentByAccountName("MyBudgetHelper");
     consentAdminPage.assertClientAccountWithStatus("MyBudgetHelper", "Inactive");
   });
+
 
   it(`Happy path with revoking consent from Third party providers page`, () => {
     consentAdminPage.visit(true);
