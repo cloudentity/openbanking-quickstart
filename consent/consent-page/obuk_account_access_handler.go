@@ -81,12 +81,12 @@ func (s *OBUKAccountAccessConsentHandler) DenyConsent(c *gin.Context, loginReque
 		obukModels.NewRejectAccountAccessConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID).
 			WithRejectConsent(&obModels.RejectConsentRequest{
-				ID:         loginRequest.ID,
-				LoginState: loginRequest.State,
-				Error:      "rejected",
+				ID:               loginRequest.ID,
+				LoginState:       loginRequest.State,
+				Error:            "rejected",
 				ErrorCause:       "consent_rejected",
 				ErrorDescription: "The user rejected the authentication.",
-				StatusCode: 403,
+				StatusCode:       403,
 			}),
 		nil,
 	); err != nil {

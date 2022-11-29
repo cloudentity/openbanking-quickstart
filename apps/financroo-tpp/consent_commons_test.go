@@ -8,10 +8,11 @@ import (
 	"net/http/httptest"
 	"testing"
 
-	acpclient "github.com/cloudentity/acp-client-go"
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/securecookie"
 	"github.com/stretchr/testify/assert"
+
+	acpclient "github.com/cloudentity/acp-client-go"
 )
 
 type testCase struct {
@@ -118,6 +119,7 @@ func TestCreateConsentResponse(t *testing.T) {
 	}
 
 	for _, tc := range tcs {
+		tc := tc
 		t.Run(tc.name, func(tt *testing.T) {
 			recorder := httptest.NewRecorder()
 			ctx, _ = gin.CreateTestContext(recorder)
@@ -134,12 +136,12 @@ func TestCreateConsentResponse(t *testing.T) {
 			assert.Equal(tt, tc.expectedLoginBuilderCount, tc.fakeLoginBuilder.BuildLoginURLCount)
 			assert.Equal(tt, tc.expectedStatusCode, response.StatusCode)
 
-			assertBody(tt, &tc, response)
+			assertBody(tt, tc, response)
 		})
 	}
 }
 
-func assertBody(t *testing.T, tc *testCase, response *http.Response) {
+func assertBody(t *testing.T, tc testCase, response *http.Response) {
 	var (
 		body    []byte
 		err     error
@@ -185,7 +187,7 @@ func (f *FakeConsentClient) CreatePaymentConsent(c *gin.Context, req CreatePayme
 }
 
 func (f *FakeConsentClient) GetPaymentConsent(c *gin.Context, consentID string) (interface{}, error) {
-	return nil, nil
+	return interface{}(""), nil
 }
 
 func (f *FakeConsentClient) UsePAR() bool {

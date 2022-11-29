@@ -31,8 +31,8 @@ run-%-saas: set_saas_configuration
 	./scripts/wait.sh
 
 .PHONY: test
-test:
-	sh -c "go test -failfast -p=4 -parallel=8 ./..."  
+test: start-runner
+	docker exec quickstart-runner sh -c "go test -failfast -p=4 -parallel=8 ./..."  
 
 .PHONY: run-tests
 run-tests:

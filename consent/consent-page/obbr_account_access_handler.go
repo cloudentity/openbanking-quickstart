@@ -84,7 +84,7 @@ func (s *OBBRAccountAccessConsentHandler) DenyConsent(c *gin.Context, loginReque
 			WithRejectConsent(&obModels.RejectConsentRequest{
 				ID:               loginRequest.ID,
 				LoginState:       loginRequest.State,
-				Error:      	  "rejected",
+				Error:            "rejected",
 				ErrorCause:       "consent_rejected",
 				ErrorDescription: "The user rejected the authentication.",
 				StatusCode:       403,
