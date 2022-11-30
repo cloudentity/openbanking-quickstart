@@ -29,12 +29,14 @@ describe(`CDR Consent self service tests`, () => {
 
     discoverDataHoldersPage.assertThatPageIsDisplayed();
     discoverDataHoldersPage.clickRefreshDataHoldersButton();
+    discoverDataHoldersPage.clickResetDataHoldersButton();
+    discoverDataHoldersPage.clickRefreshDataHoldersButton();
     discoverDataHoldersPage.assertThatDataHolderBrandsLoaded();
 
     mockDataRecipientNavigationPage.clickDynamicClientRegistrationLink();
 
-    dynamicClientRegistrationPage.assertThatPageIsDisplayed();
-    dynamicClientRegistrationPage.assertThatBrandIdIsSelected();
+    dynamicClientRegistrationPage.clickMockDataHolderBankingBrand();
+    dynamicClientRegistrationPage.assertThatDynamicClientRegistrationFormIsDisplayed();
     dynamicClientRegistrationPage.clickDCRRegisterButton();
     dynamicClientRegistrationPage.assertThatClientRegistered();
   });
@@ -45,6 +47,10 @@ describe(`CDR Consent self service tests`, () => {
     pushedAuthorisationRequestPage.assertThatPageIsDisplayed();
     pushedAuthorisationRequestPage.selectClientRegistration(1);
     pushedAuthorisationRequestPage.setSharingDuration(1000000);
+    pushedAuthorisationRequestPage.setScopes([
+      'openid', 'profile', 'bank:accounts.basic:read',
+      'bank:accounts.detail:read', 'bank:transactions:read',
+      'common:customer.basic:read', 'introspect_tokens', 'revoke_tokens', 'offline_access']);
     pushedAuthorisationRequestPage.clickInitiateParButton();
     pushedAuthorisationRequestPage.assertThatAuthorizationUriIsGenerated();
     pushedAuthorisationRequestPage.clickOnAuthorizationUriLink();
