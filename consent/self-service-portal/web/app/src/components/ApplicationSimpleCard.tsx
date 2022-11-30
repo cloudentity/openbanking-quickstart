@@ -113,12 +113,6 @@ function ApplicationSimpleCard({ client, clickable = true }: Props) {
       .filter(v => v)
   ).join(", ");
 
-  const expirationDateTime = new Date(newestConsent?.ExpirationDateTime);
-
-  const status =
-    (expirationDateTime.getFullYear() !== 1 &&
-      (expirationDateTime < new Date() ? "Expired" : "Active")) ||
-    "Active";
 
   return (
     <div
@@ -143,8 +137,6 @@ function ApplicationSimpleCard({ client, clickable = true }: Props) {
           </Avatar>
         )}
         <h3 className={classes.name}>{client.name}</h3>
-        <div style={{ flex: 1 }} />
-        <Chip type="active">{status}</Chip>
       </div>
       <div className={classes.content}>
         <div>

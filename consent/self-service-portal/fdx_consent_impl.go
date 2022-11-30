@@ -70,11 +70,10 @@ func (o *FDXConsentImpl) getClients(response *system.ListClientsSystemOK) []Clie
 }
 
 func (o *FDXConsentImpl) getConsents(response *f_d_x.ListFDXConsentsOK) []Consent {
-	var (
-		consents   []Consent
-		accountIDs []string
-	)
+	var consents []Consent
+
 	for _, consent := range response.Payload.Consents {
+		var accountIDs []string
 		if consent.Status == "Rejected" || consent.Status == "Revoked" {
 			continue
 		}
