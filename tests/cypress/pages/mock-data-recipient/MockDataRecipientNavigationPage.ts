@@ -8,7 +8,6 @@ export class MockDataRecipientNavigationPage {
   private readonly navDynamicClientRegistrationSelector: string = `#nav-sidebar [href='/dcr']`;
   private readonly navConsentAndAuthorisationSelector: string = `#nav-sidebar [href='/consent']`;
   private readonly navConsentsSelector: string = `#nav-sidebar [href='/consent/consents']`;
-  private readonly navDataSharingSelector: string = `#nav-sidebar [href='/data-sharing']`;
   private readonly navParSelector: string = `#nav-sidebar [href='/par']`;
   private readonly navIdTokenHelperSelector: string = `#nav-sidebar [href='/utilities/id-token']`;
   private readonly navPrivateKeyJwtGeneratorSelector: string = `#nav-sidebar [href='/utilities/private-key-jwt']`;
@@ -35,8 +34,6 @@ export class MockDataRecipientNavigationPage {
       .should('contain.text', 'Consent and Authorisation');
     cy.get(this.navConsentsSelector)
       .should('contain.text', 'Consents');
-    cy.get(this.navDataSharingSelector)
-      .should('contain.text', 'Consumer Data Sharing');
     cy.get(this.navParSelector)
       .should('contain.text', 'PAR');
     cy.get(this.navIdTokenHelperSelector)
@@ -67,10 +64,6 @@ export class MockDataRecipientNavigationPage {
 
   public clickConsentsLink(): void {
     cy.get(this.navConsentsSelector).click();
-  }
-
-  public clickDataSharingLink(): void {
-    cy.get(this.navDataSharingSelector).click();
   }
 
   public clickParLink(): void {
