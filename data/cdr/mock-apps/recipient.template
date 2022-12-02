@@ -1,6 +1,9 @@
 {
   "ConnectionStrings": {
-    "DefaultConnection": "Data Source=/tmp/mdr.db"
+  "DataRecipient_DB": "Server=mssql;Database=cdr-mdr;User Id='SA';Password='Pa{}w0rd2019';MultipleActiveResultSets=True",
+        "DataRecipient_Logging_DB": "Server=mssql;Database=cdr-mdr;User Id='SA';Password='Pa{}w0rd2019';MultipleActiveResultSets=True",
+        "DataRecipient_Migrations_DBO": "Server=mssql;Database=cdr-mdr;User Id='SA';Password='Pa{}w0rd2019';MultipleActiveResultSets=True",
+        "DataRecipient_RequestResponse_Logging_DB": "Server=mssql;Database=cdr-mdr;User Id='SA';Password='Pa{}w0rd2019';MultipleActiveResultSets=True"
   },
   "Logging": {
     "LogLevel": {

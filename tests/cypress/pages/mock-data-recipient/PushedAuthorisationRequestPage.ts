@@ -14,8 +14,6 @@ export class PushedAuthorisationRequestPage {
   private readonly expiresInLabelSelector: string = '#par-expiresIn';
   private readonly expiresInOutputSelector: string = '#par-expiresIn + dd';
 
-
-
   public visit(force: boolean = false): void {
     Urls.visit(Cypress.env(`mock_data_recipient_url`) + '/par', false);
     this.assertThatPageIsDisplayed();
@@ -28,14 +26,14 @@ export class PushedAuthorisationRequestPage {
       .should('have.text', 'Initiate PAR with the selected Data Holder');
     cy.get(this.registrationSelector('label'))
       .should('have.text', 'Registration');
-    cy.get(this.registrationSelector('#ClientId'))
+    cy.get(this.registrationSelector('#RegistrationId'))
       .should('be.visible');
     cy.get(this.cdrArrangementSelector('label'))
       .should('have.text', 'CDR Arrangement');
     cy.get(this.cdrArrangementSelector('#CdrArrangementId'))
       .should('be.visible');
     cy.get(this.sharingDurationSelector('label'))
-      .should('have.text', 'Sharing Duration');
+      .should('have.text', 'SharingDuration (in Seconds)');
     cy.get(this.sharingDurationSelector('#SharingDuration'))
       .should('be.visible');
     cy.get(this.scopeSelector('label'))
@@ -47,14 +45,19 @@ export class PushedAuthorisationRequestPage {
   }
 
   public selectClientRegistration(index: number = 0): void {
-    cy.get(this.registrationSelector('#ClientId > option'))
+    cy.get(this.registrationSelector('#RegistrationId > option'))
       .eq(index)
-      .then((element) => cy.get('#ClientId').select(element.val().toString()));
+      .then((element) => cy.get('#RegistrationId').select(element.val().toString()));
   }
 
   public setSharingDuration(duration: number): void {
     cy.get(this.sharingDurationSelector('#SharingDuration'))
     .type(duration.toString());
+  }
+
+  public setScopes(scopes: string[]): void {
+    cy.get(this.scopeSelector('#Scope'))
+    .type(scopes.join(' ').toString());
   }
 
   public clickInitiateParButton(): void {
@@ -73,8 +76,7 @@ export class PushedAuthorisationRequestPage {
     cy.get(this.expiresInOutputSelector, {timeout: 30000,})
       .should('have.text', '60');
 
-    cy.get(this.registrationSelector(`[selected='selected']`))
-      .should('be.visible')
+    cy.get(this.registrationSelector(`#RegistrationId > option`)).eq(0)
       .then(($registrationId) => {
         const clientId = $registrationId.val().toString();
         cy.get(this.consentAuthorizationUriSelector)
