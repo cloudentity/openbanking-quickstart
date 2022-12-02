@@ -30,6 +30,10 @@ run-%-saas: set_saas_configuration
 	docker-compose -f docker-compose.$*.yaml up --no-build -d
 	./scripts/wait.sh
 
+.PHONY: test
+test: start-runner
+	docker exec quickstart-runner sh -c "go test -failfast -p=4 -parallel=8 ./..."  
+
 .PHONY: run-tests
 run-tests:
 	yarn --cwd tests run cypress open

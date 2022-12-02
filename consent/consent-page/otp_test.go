@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -8,7 +9,8 @@ import (
 
 func TestOTP(t *testing.T) {
 	mobile := "+48987654321"
-	db, err := InitDB(Config{DBFile: "./data/test.db"})
+	dir := t.TempDir()
+	db, err := InitDB(Config{DBFile: fmt.Sprintf("%s/test.db", dir)})
 	require.NoError(t, err)
 
 	otpRepo, err := NewOTPRepo(db)

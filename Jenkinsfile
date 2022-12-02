@@ -45,6 +45,11 @@ pipeline {
                 sh 'make build'
             }
         }
+        stage('Unit tests') {
+            steps {
+                sh 'make test'
+            }
+        }
         stage('CDR Tests') {
             steps {
                 script {

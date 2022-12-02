@@ -88,7 +88,6 @@ func (s *Server) CreateConsentResponse(
 	bankID BankID,
 	user User,
 	client acpclient.Client,
-	loginURLBuilder LoginURLBuilder,
 	consentID string,
 ) {
 	var (
@@ -110,12 +109,12 @@ func (s *Server) CreateConsentResponse(
 			return
 		}
 
-		if loginURL, _, err = loginURLBuilder.BuildLoginURL(parRequestURI, client); err != nil {
+		if loginURL, _, err = s.LoginURLBuilder.BuildLoginURL(parRequestURI, client); err != nil {
 			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to build authorize url: %+v", err))
 			return
 		}
 	} else {
-		if loginURL, app.CSRF, err = loginURLBuilder.BuildLoginURL(consentID, client); err != nil {
+		if loginURL, app.CSRF, err = s.LoginURLBuilder.BuildLoginURL(consentID, client); err != nil {
 			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to build authorize url: %+v", err))
 			return
 		}
