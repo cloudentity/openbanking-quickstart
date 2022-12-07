@@ -84,13 +84,10 @@ describe(`Smoke Financroo Consent self service tests`, () => {
     consentSelfServiceApplicationPage.assertAuthorisedAccountRowDoesNotExist(accountsIDs[0]);
     consentSelfServiceApplicationPage.assertAuthorisedAccountRowDoesNotExist(accountsIDs[1]);
 
-    // Temporary ignored due to issue AUT-7237
-    /*
     financrooLoginPage.visit();
     financrooLoginPage.login();
 
     financrooAccountsPage.assertThatAccountsAreDisconnected();
-    */
   });
 
 });

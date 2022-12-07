@@ -84,13 +84,12 @@ describe(`Smoke Financroo Consent admin portal tests`, () => {
     consentAdminPage.revokeClientConsent();
   });
 
-  // Temporary ignored due to issue AUT-7237
-  /*
+
   afterEach(() => {
     financrooLoginPage.visit();
     financrooLoginPage.login();
 
     financrooAccountsPage.assertThatAccountsAreDisconnected();
   });
-  */
+
 });
