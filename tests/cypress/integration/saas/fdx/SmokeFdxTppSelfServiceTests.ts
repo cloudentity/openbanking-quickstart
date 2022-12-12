@@ -30,7 +30,7 @@ describe(`FDX TPP Consent admin portal tests`, () => {
     fdxTppIntentRegisteredPage.assertThatPageIsDisplayed();
     fdxTppIntentRegisteredPage.clickLogin();
 
-    acpLoginPage.assertThatModalIsDisplayed("FDX");
+    acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.loginWithMfaOption();
 
     accountConsentPage.assertPermissions(4);
@@ -56,7 +56,7 @@ describe(`FDX TPP Consent admin portal tests`, () => {
   beforeEach(() => {
     consentSelfServicePage.visit(true);
 
-    acpLoginPage.assertThatModalIsDisplayed("Bank customers");
+    acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.login();
 
     consentSelfServicePage.clickOnApplicationCardWithName("Developer TPP");
