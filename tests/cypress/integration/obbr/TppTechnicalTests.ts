@@ -53,7 +53,7 @@ describe(`Tpp technical app`, () => {
       }
       tppIntentPage.login();
 
-      acpLoginPage.assertThatModalIsDisplayed("Open Finance Brazil");
+      acpLoginPage.assertThatModalIsDisplayed();
       acpLoginPage.loginWithMfaOption();
 
       accountConsentPage.expandPermissions();
@@ -70,7 +70,7 @@ describe(`Tpp technical app`, () => {
     tppLoginPage.next();
     tppIntentPage.login();
 
-    acpLoginPage.assertThatModalIsDisplayed("Open Finance Brazil");
+    acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.cancelLogin();
     
     tppErrorPage.assertThatCancelLoginErrorPageIsDisplayed(
@@ -83,7 +83,7 @@ describe(`Tpp technical app`, () => {
     tppLoginPage.next();
     tppIntentPage.login();
 
-    acpLoginPage.assertThatModalIsDisplayed("Open Finance Brazil");
+    acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.loginWithMfaOption();
 
     accountConsentPage.clickCancel();

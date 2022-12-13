@@ -6,7 +6,6 @@ export class AcpLoginPage {
   mfaPage: MfaPage = new MfaPage();
   environmentVariables: EnvironmentVariables = new EnvironmentVariables();
 
-  private readonly signInHeaderLocator: string = `#sign-in h3`;
   private readonly usernameLocator: string = `#text-field-username-input`;
   private readonly passwordLocator: string = `#text-field-password-input`;
   private readonly loginButtonLocator: string = `button[type='submit']`;
@@ -33,8 +32,7 @@ export class AcpLoginPage {
     cy.get(this.cancelButtonLocator).click();
   }
   
-  public assertThatModalIsDisplayed(headerName: string): void {
-    cy.get(this.signInHeaderLocator).should("have.text", headerName);
+  public assertThatModalIsDisplayed(): void {
     cy.get(this.usernameLocator).should("be.visible");
     cy.get(this.passwordLocator).should("be.visible");
     cy.get(this.loginButtonLocator).should("be.visible");

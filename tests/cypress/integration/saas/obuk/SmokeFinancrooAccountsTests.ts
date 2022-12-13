@@ -29,7 +29,7 @@ describe(`Smoke Financroo app`, () => {
     it(`Happy path with accounts: ${accountsIds}`, () => {
       financrooWelcomePage.reconnectGoBank();
 
-      acpLoginPage.assertThatModalIsDisplayed("Open Banking UK");
+      acpLoginPage.assertThatModalIsDisplayed();
       acpLoginPage.loginWithMfaOption();
 
       accountConsentPage.checkAccounts(accountsIds);
@@ -53,7 +53,7 @@ describe(`Smoke Financroo app`, () => {
   it(`Happy path with not selected account`, () => {
     financrooWelcomePage.reconnectGoBank();
 
-    acpLoginPage.assertThatModalIsDisplayed("Open Banking UK");
+    acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.loginWithMfaOption();
 
     accountConsentPage.uncheckAllAccounts();

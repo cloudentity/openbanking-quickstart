@@ -42,7 +42,7 @@ describe(`Tpp technical app`, () => {
       } else {
         tppIntentPage.login();
 
-        acpLoginPage.assertThatModalIsDisplayed("Open Banking UK");
+        acpLoginPage.assertThatModalIsDisplayed();
         acpLoginPage.loginWithMfaOption();
 
         accountConsentPage.expandPermissions();
@@ -65,7 +65,7 @@ describe(`Tpp technical app`, () => {
     tppLoginPage.next();
     tppIntentPage.login();
 
-    acpLoginPage.assertThatModalIsDisplayed("Open Banking UK");
+    acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.cancelLogin();
     
     tppErrorPage.assertThatCancelLoginErrorPageIsDisplayed(
@@ -78,7 +78,7 @@ describe(`Tpp technical app`, () => {
     tppLoginPage.next();
     tppIntentPage.login();
 
-    acpLoginPage.assertThatModalIsDisplayed("Open Banking UK");
+    acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.loginWithMfaOption();
     
     accountConsentPage.clickCancel();

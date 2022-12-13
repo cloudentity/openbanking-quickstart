@@ -37,7 +37,7 @@ describe(`Smoke Consent self service app`, () => {
 
     financrooWelcomePage.reconnectGoBank();
 
-    acpLoginPage.assertThatModalIsDisplayed("Open Banking UK");
+    acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.loginWithMfaOption();
     
     accountConsentPage.checkAllAccounts();
@@ -58,7 +58,7 @@ describe(`Smoke Consent self service app`, () => {
     financrooContributePage.contributePaymentMethod(amount, Currencies.currency.UK.symbol, Accounts.ids.UK.bills);
     financrooContributePage.contributeInvestmentSummary(amount, Currencies.currency.UK.symbol, Accounts.ids.UK.bills);
 
-    acpLoginPage.assertThatModalIsDisplayed("Open Banking UK");
+    acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.loginWithMfaOption();
 
     paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.UK.code, Accounts.ids.UK.bills); 
@@ -72,7 +72,7 @@ describe(`Smoke Consent self service app`, () => {
   });
 
   it(`Happy path with account consent`, () => {
-    acpLoginPage.assertThatModalIsDisplayed("Bank customers");
+    acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.login();
 
     consentSelfServicePage.clickOnApplicationCard();
@@ -86,7 +86,7 @@ describe(`Smoke Consent self service app`, () => {
   });
 
   it(`Revoke consent`, () => {
-    acpLoginPage.assertThatModalIsDisplayed("Bank customers");
+    acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.login();
 
     consentSelfServicePage.clickOnApplicationCard();
@@ -104,7 +104,7 @@ describe(`Smoke Consent self service app`, () => {
   });
 
   it(`Happy path with payment consent`, () => {
-    acpLoginPage.assertThatModalIsDisplayed("Bank customers");
+    acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.login();
 
     consentSelfServicePage.clickOnApplicationCard();

@@ -30,7 +30,7 @@ describe(`Smoke Financroo Consent self service tests`, () => {
 
     financrooWelcomePage.reconnectGoBank();
 
-    acpLoginPage.assertThatModalIsDisplayed("CDR");
+    acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.loginWithMfaOption();
 
     accountConsentPage.checkAccounts(accountsIDs);
@@ -52,7 +52,7 @@ describe(`Smoke Financroo Consent self service tests`, () => {
   beforeEach(() => {
     consentSelfServicePage.visit(true);
 
-    acpLoginPage.assertThatModalIsDisplayed("Bank customers");
+    acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.login();
 
     consentSelfServicePage.clickOnApplicationCard();
