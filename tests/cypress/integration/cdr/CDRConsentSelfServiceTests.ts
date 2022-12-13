@@ -55,7 +55,7 @@ describe(`CDR Consent self service tests`, () => {
     pushedAuthorisationRequestPage.assertThatAuthorizationUriIsGenerated();
     pushedAuthorisationRequestPage.clickOnAuthorizationUriLink();
 
-    acpLoginPage.assertThatModalIsDisplayed("CDR");
+    acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.login();
 
     accountConsentPage.checkAccounts([Accounts.ids.CDR.savings, Accounts.ids.CDR.checking]);
@@ -68,7 +68,7 @@ describe(`CDR Consent self service tests`, () => {
   beforeEach(`Go to Consent Self Service Page`, () => {
     consentSelfServicePage.visit(true);
 
-    acpLoginPage.assertThatModalIsDisplayed("Bank customers");
+    acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.login();
 
     consentSelfServicePage.clickOnApplicationCard();

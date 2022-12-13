@@ -50,7 +50,7 @@ describe(`CDR Consent admin portal tests`, () => {
     pushedAuthorisationRequestPage.assertThatAuthorizationUriIsGenerated();
     pushedAuthorisationRequestPage.clickOnAuthorizationUriLink();
 
-    acpLoginPage.assertThatModalIsDisplayed("CDR");
+    acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.login();
 
     accountConsentPage.checkAccounts([Accounts.ids.CDR.savings, Accounts.ids.CDR.loan]);

@@ -24,7 +24,7 @@ describe(`Smoke Financroo Consent admin portal tests`, () => {
 
     financrooWelcomePage.reconnectGoBank();
 
-    acpLoginPage.assertThatModalIsDisplayed("CDR");
+    acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.loginWithMfaOption();
   });
 

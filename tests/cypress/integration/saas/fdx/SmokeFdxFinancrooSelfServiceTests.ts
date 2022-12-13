@@ -29,7 +29,7 @@ describe(`FDX Financroo Consent self service tests`, () => {
 
     financrooWelcomePage.reconnectGoBank();
 
-    acpLoginPage.assertThatModalIsDisplayed("FDX");
+    acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.loginWithMfaOption();
 
     accountConsentPage.assertPermissions(4);
@@ -54,7 +54,7 @@ describe(`FDX Financroo Consent self service tests`, () => {
   beforeEach(() => {
     consentSelfServicePage.visit(true);
 
-    acpLoginPage.assertThatModalIsDisplayed("Bank customers");
+    acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.login();
 
     consentSelfServicePage.clickOnApplicationCardWithName("Financroo");

@@ -21,7 +21,7 @@ describe(`Consent admin app`, () => {
   });
 
   it(`Happy path with revoking consent from Third party providers page`, () => {
-    acpLoginPage.assertThatModalIsDisplayed("Open Banking UK");
+    acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.loginWithMfaOption();
 
     accountConsentPage.checkAllAccounts();
@@ -35,7 +35,7 @@ describe(`Consent admin app`, () => {
   });
 
   it(`Happy path with revoking consent from Consent management page`, () => {
-    acpLoginPage.assertThatModalIsDisplayed("Open Banking UK");
+    acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.loginWithMfaOption();
 
     accountConsentPage.checkAllAccounts();

@@ -27,7 +27,7 @@ describe(`Consent self service app`, () => {
 
     financrooWelcomePage.reconnectGoBank();
 
-    acpLoginPage.assertThatModalIsDisplayed("Open Finance Brazil");
+    acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.loginWithMfaOption();
     
     accountConsentPage.checkAllAccounts();
@@ -44,7 +44,7 @@ describe(`Consent self service app`, () => {
   beforeEach(() => {
     consentSelfServicePage.visit(true);
 
-    acpLoginPage.assertThatModalIsDisplayed("Bank customers");
+    acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.login();
 
     consentSelfServicePage.clickOnAccountOnlyButton();
