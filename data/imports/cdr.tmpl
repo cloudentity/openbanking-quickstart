@@ -330,7 +330,7 @@ clients:
   - bank:accounts.detail:read
   token_endpoint_auth_method: client_secret_post
 policies:
-- id: block_cdr_dcr
+- id: block_{{ .server_id }}_dcr
   language: cloudentity
   policy_name: Unlock DCR
   server_id: {{ .server_id }}

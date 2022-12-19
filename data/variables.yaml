@@ -1,5 +1,6 @@
 tenant_id: default
 server_id: cdr
+bank_customers_server_id: bank-customers
 ca_pem_file: /certs/ca.pem
 
 consent_self_service_portal_url: https://localhost:8085
@@ -26,6 +27,18 @@ financroo_pem_file: /certs/tpp_cert.pem
 bank_client_id: cdr-bank
 bank_client_secret: 8DPOMd3ZOvsjuUnU9goRMHTIUUXtSkgwQeo8v_S74aE
 bank_tls_client_auth_subject_dn: CN=cid2.authorization.cloudentity.com,OU=Authorization,O=Cloudentity,L=Seattle,ST=Washinghton,C=US
+
+consent_self_service_client_id: bv0nab0mekk67nekvq7g
+consent_self_service_client_secret: 5j1RFwfeLQRci7jaouPr-O5qejBWql7waFkfR_x7H6A
+
+consent_self_service_backend_client_id: bv2dkff8mll9cf6pvd6g
+consent_self_service_backend_client_secret: KThGH68f-gMC4cscGLFeOpIU4EYriYhKspOV9IwHbnw
+
+system_bank_client_id: buc3b1hhuc714r78env0
+system_bank_client_secret: PBV7q0akoP603rZbU0EFdxbhZ-djxF7FIVwyKaLnBYU
+
+system_admin_consent_client_id: bv2fe0tpfc67lmeti340
+system_admin_consent_client_secret: v6yYaApda9juR_DrlI5mpdsdm9u2-D0rQIG9ynakyDE
 
 conf_ca_pem_file: /certs/brasil/ca.pem
 conf_tpp_1_id: conformance-tpp-1
