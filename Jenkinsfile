@@ -17,7 +17,7 @@ pipeline {
         SAAS_CLEANUP_CLIENT_ID = credentials('OPENBANKING_CLEANUP_CLIENT_ID')
         SAAS_CLEANUP_CLIENT_SECRET = credentials('OPENBANKING_CLEANUP_CLIENT_SECRET')
         NOTIFICATION_CHANNEL = credentials('OPENBANKING_NOTIFICATION_CHANNEL')
-        STAGE_PREFIX = env.BRANCH_NAME
+        STAGE_PREFIX = credentials('env.BRANCH_NAME')
         DEBUG = 'true'
     }
     stages {
