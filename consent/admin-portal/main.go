@@ -24,7 +24,7 @@ const (
 )
 
 type Config struct {
-	SystemClientID         string        `env:"SYSTEM_CLIENT_ID" envDefault:"bv2fe0tpfc67lmeti340"`
+	SystemClientID         string        `env:"SYSTEM_CLIENT_ID,required"`
 	SystemClientSecret     string        `env:"SYSTEM_CLIENT_SECRET" envDefault:"v6yYaApda9juR_DrlI5mpdsdm9u2-D0rQIG9ynakyDE"`
 	SystemIssuerURL        *url.URL      `env:"SYSTEM_ISSUER_URL,required"`
 	OpenbankingWorkspaceID string        `env:"OPENBANKING_WORKSPACE_ID,required"`
