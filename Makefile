@@ -16,7 +16,7 @@ build-%:
 
 # obuk, obbr, cdr, fdx
 run-%-local:
-	./scripts/additional_configuration.sh $* "local"
+	./scripts/additional_configuration.sh $* "local" ${STAGE_PREFIX}
 	cp -f .env-local .env
 	docker-compose -f docker-compose.acp.local.yaml up -d --no-build ${ACP_LOCAL_APPS}
 	./scripts/wait.sh
@@ -25,7 +25,7 @@ run-%-local:
 
 # obuk, obbr, cdr, fdx
 run-%-saas: set_saas_configuration
-	./scripts/additional_configuration.sh $* "saas"
+	./scripts/additional_configuration.sh $* "saas" ${STAGE_PREFIX}
 	cp -f .env-saas .env
 	docker-compose -f docker-compose.$*.yaml up --no-build -d
 	./scripts/wait.sh
@@ -64,7 +64,8 @@ clean-saas: set_saas_configuration start-runner
     "go run ./scripts/go/clean_saas.go \
         -tenant=${SAAS_TENANT_ID} \
         -cid=${SAAS_CLEANUP_CLIENT_ID} \
-        -csec=${SAAS_CLEANUP_CLIENT_SECRET}"
+        -csec=${SAAS_CLEANUP_CLIENT_SECRET} \
+        -spref=${STAGE_PREFIX}"
 	make stop-runner
 	make clean
 
