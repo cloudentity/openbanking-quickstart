@@ -1,7 +1,7 @@
 servers:
 - tenant_id: {{ .tenant_id }}
   id: {{ .bank_customers_server_id }}
-  name: Bank customers
+  name: {{ .bank_customers_server_id|upper }}
   initialize: true
   subject_format: legacy
 idps:

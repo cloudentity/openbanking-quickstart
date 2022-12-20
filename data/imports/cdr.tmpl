@@ -1,7 +1,7 @@
 servers:
 - tenant_id: {{ .tenant_id }}
   id: {{ .server_id }}
-  name: CDR
+  name: {{ .server_id|upper }}
   profile: cdr_australia_fapi_rw
   color: "#fabc3e"
   subject_format: legacy
