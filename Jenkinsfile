@@ -212,6 +212,10 @@ pipeline {
     }
 
     post {
+        always {
+            sh "make clean-saas"
+        }
+        
         failure {
             script {
                 captureCypressArtifacts()
