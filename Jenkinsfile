@@ -22,17 +22,22 @@ pipeline {
     stages {
         stage('Prepare') {
             steps {
-                 sh '''#!/bin/bash
+                script{
+                    if (env.BRANCH_NAME.startsWith('PR-')) {
+                        abortPreviousRunningBuilds()
+                    }
+                }
+                sh '''#!/bin/bash
                         echo "127.0.0.1       authorization.cloudentity.com test-docker" | sudo tee -a /etc/hosts
                         echo "127.0.0.1       mock-data-recipient" | sudo tee -a /etc/hosts
                         cd tests && yarn install
-                 '''
-                 sh 'docker-compose version'
-                 sh "docker rm -f \$(docker ps -aq) || true"
+                '''
+                sh 'docker-compose version'
+                sh "docker rm -f \$(docker ps -aq) || true"
                  
-                 retry(3) {
-                   sh "make run-tests-verify"
-                 }
+                retry(3) {
+                    sh "make run-tests-verify"
+                }
             }
         }
 
