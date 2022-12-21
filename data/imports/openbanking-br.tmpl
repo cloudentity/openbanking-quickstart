@@ -244,10 +244,10 @@ clients:
   jwks:
 {{ readFile .financroo_pem_file | pemToPublicJwks | indent 4 }}
 
-- tenant_id: default
+- tenant_id: {{ .tenant_id }}
   authorization_server_id: {{ .server_id }}
   organisation_id: 74e929d9-33b6-4d85-8ba7-c146c867a817
-  client_id: cid-1
+  client_id: {{ .server_id }}-cid-1
   client_name: client-with-jwks
   client_uri: {{ .conf_tpp_1_url }}
   tls_client_auth_subject_dn: {{ .conf_tpp_1_sub_dn }}
@@ -280,7 +280,7 @@ clients:
     - refresh_token
   jwks:
         {{ readFile .conf_tpp_1_public_jwks | indent 4 }}
-- tenant_id: default
+- tenant_id: {{ .tenant_id }}
   authorization_server_id: {{ .server_id }}
   organisation_id: 74e929d9-33b6-4d85-8ba7-c146c867a817
   client_id: {{ .conf_tpp_1_id }}
@@ -316,7 +316,7 @@ clients:
     - refresh_token
   jwks:
     {{ readFile .conf_tpp_1_public_jwks | indent 4 }}
-- tenant_id: default
+- tenant_id: {{ .tenant_id }}
   authorization_server_id: {{ .server_id }}
   organisation_id: 74e929d9-33b6-4d85-8ba7-c146c867a817
   client_id: {{ .conf_tpp_2_id }}
@@ -367,11 +367,11 @@ policies:
     - name: "true"
 services:
 - id: directory
-  tenant_id: default
-  name: directory
+  tenant_id: {{ .tenant_id }}
+  name: {{ .server_id }}-directory
   authorization_server_id: {{ .server_id }}
   scopes:
-  - tenant_id: default
+  - tenant_id: {{ .tenant_id }}
     authorization_server_id: {{ .server_id }}
     name: directory:software
     id: directory-software
