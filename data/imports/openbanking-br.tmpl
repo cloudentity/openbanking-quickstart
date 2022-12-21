@@ -374,4 +374,4 @@ services:
   - tenant_id: {{ .tenant_id }}
     authorization_server_id: {{ .server_id }}
     name: directory:software
-    id: directory-software
+    id: {{ .server_id }}-directory-software
