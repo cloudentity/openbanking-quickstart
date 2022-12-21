@@ -56,100 +56,100 @@ pipeline {
             }
         }
 
-        stage('SaaS OBUK Tests 1') {
+        stage('SaaS OBBR Tests 1') {
             steps {
                 script {
                     sh 'make clean-saas'
                     try {
-                        sh 'make disable-mfa run-obuk-saas'
-                        sh 'make run-saas-obuk-tests-headless'
+                        sh 'make disable-mfa run-obbr-saas'
+                        sh 'make run-saas-obbr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        unstable('SaaS OBUK Tests failed')
+                        unstable('SaaS OBBR Tests failed')
                     }
                 }
             }
         }
-        stage('SaaS OBUK Tests 2') {
+        stage('SaaS OBBR Tests 2') {
             steps {
                 script {
                     sh 'make clean-saas'
                     try {
-                        sh 'make disable-mfa run-obuk-saas'
-                        sh 'make run-saas-obuk-tests-headless'
+                        sh 'make disable-mfa run-obbr-saas'
+                        sh 'make run-saas-obbr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        unstable('SaaS OBUK Tests failed')
+                        unstable('SaaS OBBR Tests failed')
                     }
                 }
             }
         }
-        stage('SaaS OBUK Tests 3') {
+        stage('SaaS OBBR Tests 3') {
             steps {
                 script {
                     sh 'make clean-saas'
                     try {
-                        sh 'make disable-mfa run-obuk-saas'
-                        sh 'make run-saas-obuk-tests-headless'
+                        sh 'make disable-mfa run-obbr-saas'
+                        sh 'make run-saas-obbr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        unstable('SaaS OBUK Tests failed')
+                        unstable('SaaS OBBR Tests failed')
                     }
                 }
             }
         }
-        stage('SaaS OBUK Tests 4') {
+        stage('SaaS OBBR Tests 4') {
             steps {
                 script {
                     sh 'make clean-saas'
                     try {
-                        sh 'make disable-mfa run-obuk-saas'
-                        sh 'make run-saas-obuk-tests-headless'
+                        sh 'make disable-mfa run-obbr-saas'
+                        sh 'make run-saas-obbr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        unstable('SaaS OBUK Tests failed')
+                        unstable('SaaS OBBR Tests failed')
                     }
                 }
             }
         }
-        stage('SaaS OBUK Tests 5') {
+        stage('SaaS OBBR Tests 5') {
             steps {
                 script {
                     sh 'make clean-saas'
                     try {
-                        sh 'make disable-mfa run-obuk-saas'
-                        sh 'make run-saas-obuk-tests-headless'
+                        sh 'make disable-mfa run-obbr-saas'
+                        sh 'make run-saas-obbr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        unstable('SaaS OBUK Tests failed')
+                        unstable('SaaS OBBR Tests failed')
                     }
                 }
             }
         }
-        stage('SaaS OBUK Tests 6') {
+        stage('SaaS OBBR Tests 6') {
             steps {
                 script {
                     sh 'make clean-saas'
                     try {
-                        sh 'make disable-mfa run-obuk-saas'
-                        sh 'make run-saas-obuk-tests-headless'
+                        sh 'make disable-mfa run-obbr-saas'
+                        sh 'make run-saas-obbr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        unstable('SaaS OBUK Tests failed')
+                        unstable('SaaS OBBR Tests failed')
                     }
                 }
             }
         }
-        stage('SaaS OBUK Tests 8') {
+        stage('SaaS OBBR Tests 7') {
             steps {
                 script {
                     sh 'make clean-saas'
                     try {
-                        sh 'make disable-mfa run-obuk-saas'
-                        sh 'make run-saas-obuk-tests-headless'
+                        sh 'make disable-mfa run-obbr-saas'
+                        sh 'make run-saas-obbr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        unstable('SaaS OBUK Tests failed')
+                        unstable('SaaS OBBR Tests failed')
                     }
                 }
             }
