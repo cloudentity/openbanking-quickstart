@@ -4,7 +4,6 @@ export COMPOSE_DOCKER_CLI_BUILD=1
 .EXPORT_ALL_VARIABLES: ;
 ACP_LOCAL_APPS=acp crdb redis jaeger
 ALL_DOCKER_COMPOSES=-f docker-compose.obuk.yaml -f docker-compose.obbr.yaml -f docker-compose.cdr.yaml -f docker-compose.build.yaml
-BRANCH_NAME=
 
 .PHONY: build
 build:
