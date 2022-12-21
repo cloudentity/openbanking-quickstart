@@ -212,9 +212,9 @@ pipeline {
     }
 
     post {
-        always {
-            sh "make clean-saas"
-        }
+        // always {
+        //     sh "make clean-saas"
+        // }
         
         failure {
             script {
