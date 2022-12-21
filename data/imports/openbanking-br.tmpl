@@ -366,9 +366,9 @@ policies:
   validators:
     - name: "true"
 services:
-- id: directory
+- id: {{ .server_id }}-directory
   tenant_id: {{ .tenant_id }}
-  name: {{ .server_id }}-directory
+  name: directory
   authorization_server_id: {{ .server_id }}
   scopes:
   - tenant_id: {{ .tenant_id }}

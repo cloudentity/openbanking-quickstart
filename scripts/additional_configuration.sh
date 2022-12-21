@@ -73,6 +73,16 @@ override_client_ids() {
 
     ./scripts/override_env.sh SYSTEM_ADMIN_CONSENT_CLIENT_ID $9
     ./scripts/override_variables.sh system_admin_consent_client_id $9
+
+    if [ ! -z "${10}" ]
+      then
+        ./scripts/override_variables.sh conf_tpp_1_id ${10}
+    fi
+
+    if [ ! -z "${11}" ]
+      then
+        ./scripts/override_variables.sh conf_tpp_2_id ${11}
+    fi
 }
 
 for ACTION in "$@"
@@ -86,7 +96,7 @@ do
     ;;
   obbr)
     override_server "$prf"openbanking_brasil "$prf"bank-customers 
-    override_client_ids "$prf"obbr-developer-tpp "$prf"obbr-financroo-tpp "$prf"obbr-bank "$prf"obbr-consent-page "$prf"obbr-internal-bank-client "$prf"bv0nab0mekk67nekvq7g "$prf"bv2dkff8mll9cf6pvd6g "$prf"buc3b1hhuc714r78env0 "$prf"bv2fe0tpfc67lmeti340
+    override_client_ids "$prf"obbr-developer-tpp "$prf"obbr-financroo-tpp "$prf"obbr-bank "$prf"obbr-consent-page "$prf"obbr-internal-bank-client "$prf"bv0nab0mekk67nekvq7g "$prf"bv2dkff8mll9cf6pvd6g "$prf"buc3b1hhuc714r78env0 "$prf"bv2fe0tpfc67lmeti340 "$prf"conformance-tpp-1 "$prf"conformance-tpp-2
     ;;
   cdr)
     override_server "$prf"cdr "$prf"bank-customers
