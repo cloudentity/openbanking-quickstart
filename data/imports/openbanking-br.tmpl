@@ -357,7 +357,7 @@ clients:
   jwks:
     {{ readFile .conf_tpp_2_public_jwks | indent 4 }}
 policies:
-- id: block_openbanking_brasil_dcr
+- id: block_{{ .server_id }}_dcr
   language: cloudentity
   policy_name: Unlock DCR
   server_id: {{ .server_id }}
