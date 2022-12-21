@@ -153,34 +153,34 @@ pipeline {
         //         }
         //     }
         // }
-        stage('SaaS FDX Tests') {
-            steps {
-                script {
-                    sh 'make clean-saas'
-                    try {
-                        sh 'make disable-mfa run-fdx-saas'
-                        sh 'make run-saas-fdx-tests-headless'
-                    } catch(exc) {
-                        captureDockerLogs()
-                        unstable('SaaS FDX Tests failed')
-                    }
-                }
-            }
-        }
-        stage('SaaS OBUK Tests') {
-            steps {
-                script {
-                    sh 'make clean-saas'
-                    try {
-                        sh 'make disable-mfa run-obuk-saas'
-                        sh 'make run-saas-obuk-tests-headless'
-                    } catch(exc) {
-                        captureDockerLogs()
-                        unstable('SaaS OBUK Tests failed')
-                    }
-                }
-            }
-        }
+        // stage('SaaS FDX Tests') {
+        //     steps {
+        //         script {
+        //             sh 'make clean-saas'
+        //             try {
+        //                 sh 'make disable-mfa run-fdx-saas'
+        //                 sh 'make run-saas-fdx-tests-headless'
+        //             } catch(exc) {
+        //                 captureDockerLogs()
+        //                 unstable('SaaS FDX Tests failed')
+        //             }
+        //         }
+        //     }
+        // }
+        // stage('SaaS OBUK Tests') {
+        //     steps {
+        //         script {
+        //             sh 'make clean-saas'
+        //             try {
+        //                 sh 'make disable-mfa run-obuk-saas'
+        //                 sh 'make run-saas-obuk-tests-headless'
+        //             } catch(exc) {
+        //                 captureDockerLogs()
+        //                 unstable('SaaS OBUK Tests failed')
+        //             }
+        //         }
+        //     }
+        // }
         stage('SaaS OBBR Tests') {
             steps {
                 script {
@@ -195,20 +195,20 @@ pipeline {
                 }
             }
         }
-        stage('SaaS CDR Tests') {
-            steps {
-                script {
-                    sh 'make clean-saas'
-                    try {
-                        sh 'make disable-mfa run-cdr-saas'
-                        sh 'make run-saas-cdr-tests-headless'
-                    } catch(exc) {
-                        captureDockerLogs()
-                        unstable('SaaS CDR Tests failed')
-                    }
-                }
-            }
-        }
+        // stage('SaaS CDR Tests') {
+        //     steps {
+        //         script {
+        //             sh 'make clean-saas'
+        //             try {
+        //                 sh 'make disable-mfa run-cdr-saas'
+        //                 sh 'make run-saas-cdr-tests-headless'
+        //             } catch(exc) {
+        //                 captureDockerLogs()
+        //                 unstable('SaaS CDR Tests failed')
+        //             }
+        //         }
+        //     }
+        // }
     }
 
     post {
