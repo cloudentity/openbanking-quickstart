@@ -182,33 +182,33 @@ pipeline {
         //     }
         // }
         stage('SaaS OBBR Tests') {
-            steps {
-                script {
-                    sh 'make clean-saas'
-                    try {
-                        sh 'make disable-mfa run-obbr-saas'
-                        sh 'make run-saas-obbr-tests-headless'
-                    } catch(exc) {
-                        captureDockerLogs()
-                        unstable('SaaS OBBR Tests failed')
-                    }
-                }
-            }
-        }
-        // stage('SaaS CDR Tests') {
         //     steps {
         //         script {
         //             sh 'make clean-saas'
         //             try {
-        //                 sh 'make disable-mfa run-cdr-saas'
-        //                 sh 'make run-saas-cdr-tests-headless'
+        //                 sh 'make disable-mfa run-obbr-saas'
+        //                 sh 'make run-saas-obbr-tests-headless'
         //             } catch(exc) {
         //                 captureDockerLogs()
-        //                 unstable('SaaS CDR Tests failed')
+        //                 unstable('SaaS OBBR Tests failed')
         //             }
         //         }
         //     }
         // }
+        stage('SaaS CDR Tests') {
+            steps {
+                script {
+                    sh 'make clean-saas'
+                    try {
+                        sh 'make disable-mfa run-cdr-saas'
+                        sh 'make run-saas-cdr-tests-headless'
+                    } catch(exc) {
+                        captureDockerLogs()
+                        unstable('SaaS CDR Tests failed')
+                    }
+                }
+            }
+        }
     }
 
     post {
