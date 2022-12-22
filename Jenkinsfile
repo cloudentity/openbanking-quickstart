@@ -56,100 +56,100 @@ pipeline {
             }
         }
 
-        stage('SaaS OBBR Tests 1') {
+        stage('SaaS CDR Tests 1') {
             steps {
                 script {
                     sh 'make clean-saas'
                     try {
-                        sh 'make disable-mfa run-obbr-saas'
-                        sh 'make run-saas-obbr-tests-headless'
+                        sh 'make disable-mfa run-cdr-saas'
+                        sh 'make run-saas-cdr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        unstable('SaaS OBBR Tests failed')
+                        unstable('SaaS CDR Tests failed')
                     }
                 }
             }
         }
-        stage('SaaS OBBR Tests 2') {
+        stage('SaaS CDR Tests 2') {
             steps {
                 script {
                     sh 'make clean-saas'
                     try {
-                        sh 'make disable-mfa run-obbr-saas'
-                        sh 'make run-saas-obbr-tests-headless'
+                        sh 'make disable-mfa run-cdr-saas'
+                        sh 'make run-saas-cdr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        unstable('SaaS OBBR Tests failed')
+                        unstable('SaaS CDR Tests failed')
                     }
                 }
             }
         }
-        stage('SaaS OBBR Tests 3') {
+        stage('SaaS CDR Tests 3') {
             steps {
                 script {
                     sh 'make clean-saas'
                     try {
-                        sh 'make disable-mfa run-obbr-saas'
-                        sh 'make run-saas-obbr-tests-headless'
+                        sh 'make disable-mfa run-cdr-saas'
+                        sh 'make run-saas-cdr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        unstable('SaaS OBBR Tests failed')
+                        unstable('SaaS CDR Tests failed')
                     }
                 }
             }
         }
-        stage('SaaS OBBR Tests 4') {
+        stage('SaaS CDR Tests 4') {
             steps {
                 script {
                     sh 'make clean-saas'
                     try {
-                        sh 'make disable-mfa run-obbr-saas'
-                        sh 'make run-saas-obbr-tests-headless'
+                        sh 'make disable-mfa run-cdr-saas'
+                        sh 'make run-saas-cdr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        unstable('SaaS OBBR Tests failed')
+                        unstable('SaaS CDR Tests failed')
                     }
                 }
             }
         }
-        stage('SaaS OBBR Tests 5') {
+        stage('SaaS CDR Tests 5') {
             steps {
                 script {
                     sh 'make clean-saas'
                     try {
-                        sh 'make disable-mfa run-obbr-saas'
-                        sh 'make run-saas-obbr-tests-headless'
+                        sh 'make disable-mfa run-cdr-saas'
+                        sh 'make run-saas-cdr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        unstable('SaaS OBBR Tests failed')
+                        unstable('SaaS CDR Tests failed')
                     }
                 }
             }
         }
-        stage('SaaS OBBR Tests 6') {
+        stage('SaaS CDR Tests 6') {
             steps {
                 script {
                     sh 'make clean-saas'
                     try {
-                        sh 'make disable-mfa run-obbr-saas'
-                        sh 'make run-saas-obbr-tests-headless'
+                        sh 'make disable-mfa run-cdr-saas'
+                        sh 'make run-saas-cdr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        unstable('SaaS OBBR Tests failed')
+                        unstable('SaaS CDR Tests failed')
                     }
                 }
             }
         }
-        stage('SaaS OBBR Tests 7') {
+        stage('SaaS CDR Tests 7') {
             steps {
                 script {
                     sh 'make clean-saas'
                     try {
-                        sh 'make disable-mfa run-obbr-saas'
-                        sh 'make run-saas-obbr-tests-headless'
+                        sh 'make disable-mfa run-cdr-saas'
+                        sh 'make run-saas-cdr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
-                        unstable('SaaS OBBR Tests failed')
+                        unstable('SaaS CDR Tests failed')
                     }
                 }
             }
