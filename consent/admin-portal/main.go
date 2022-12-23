@@ -33,9 +33,6 @@ type Config struct {
 	CertFile               string        `env:"CERT_FILE" envDefault:"/bank_cert.pem"`
 	KeyFile                string        `env:"KEY_FILE" envDefault:"/bank_key.pem"`
 	Port                   int           `env:"PORT" envDefault:"8086"`
-	IntrospectClientID     string        `env:"INTROSPECT_CLIENT_ID" envDefault:"bv2fddlpfc67lmeti32g"`
-	IntrospectClientSecret string        `env:"INTROSPECT_CLIENT_SECRET" envDefault:"RkAIOVRlP6ZLhDvYixT1wBb8DG3bVkXAouoIrX7cwzA"`
-	IntrospectIssuerURL    *url.URL      `env:"INTROSPECT_ISSUER_URL,required"`
 	Spec                   Spec          `env:"SPEC,required"`
 }
 
@@ -45,19 +42,6 @@ func (c *Config) SystemClientConfig() acpclient.Config {
 		ClientSecret: c.SystemClientSecret,
 		IssuerURL:    c.SystemIssuerURL,
 		Scopes:       []string{"manage_openbanking_consents", "view_clients"},
-		Timeout:      c.Timeout,
-		CertFile:     c.CertFile,
-		KeyFile:      c.KeyFile,
-		RootCA:       c.RootCA,
-	}
-}
-
-func (c *Config) IntrospectClientConfig() acpclient.Config {
-	return acpclient.Config{
-		ClientID:     c.IntrospectClientID,
-		ClientSecret: c.IntrospectClientSecret,
-		IssuerURL:    c.IntrospectIssuerURL,
-		Scopes:       []string{"introspect_tokens"},
 		Timeout:      c.Timeout,
 		CertFile:     c.CertFile,
 		KeyFile:      c.KeyFile,
