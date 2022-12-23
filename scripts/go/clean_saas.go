@@ -19,7 +19,7 @@ var (
 	tenantID          = flag.String("tenant", "none", "Openbanking SaaS tenant ID")
 	adminClientID     = flag.String("cid", "none", "Openbanking SaaS admin client ID")
 	adminClientSecret = flag.String("csec", "none", "Openbanking SaaS admin client secret")
-	stagePrefix		  = flag.String("spref", "none", "Openbanking SaaS stage prefix")
+	prefix            = flag.String("spref", "none", "Openbanking SaaS branch name prefix")
 
 	openbankingClientsIDs = []string{"buc3b1hhuc714r78env0", "bv2fe0tpfc67lmeti340", "cdr-consent-page", "fdx-consent-page", "obuk-consent-page", "obbr-consent-page"}
 	openbankingServersIDs = []string{"cdr", "fdx", "openbanking", "openbanking_brasil", "bank-customers"}
@@ -60,8 +60,8 @@ func main() {
 	client := cc.Client(context.WithValue(context.Background(), oauth2.HTTPClient, httpClient))
 
 	for _, sid := range openbankingServersIDs {
-		if *stagePrefix != "" {
-			sid = fmt.Sprintf("%s-%s", strings.ToLower(*stagePrefix), sid)
+		if *prefix != "" {
+			sid = fmt.Sprintf("%s-%s", strings.ToLower(*prefix), sid)
 		}
 		fmt.Printf("INFO: Trying to delete server with ID: '%s'\n", sid)
 		if request, err = http.NewRequest("DELETE", fmt.Sprintf("%s/api/admin/%s/servers/%s", tURL.String(), *tenantID, sid), http.NoBody); err != nil {
@@ -76,8 +76,8 @@ func main() {
 	}
 
 	for _, cid := range openbankingClientsIDs {
-		if *stagePrefix != "" {
-			cid = fmt.Sprintf("%s-%s", strings.ToLower(*stagePrefix), cid)
+		if *prefix != "" {
+			cid = fmt.Sprintf("%s-%s", strings.ToLower(*prefix), cid)
 		}
 		fmt.Printf("INFO: Trying to delete client with ID: '%s'\n", cid)
 		if request, err = http.NewRequest("DELETE", fmt.Sprintf("%s/api/admin/%s/clients/%s", tURL.String(), *tenantID, cid), http.NoBody); err != nil {
