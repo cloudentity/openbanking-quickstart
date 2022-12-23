@@ -40,16 +40,4 @@ system_bank_client_secret: PBV7q0akoP603rZbU0EFdxbhZ-djxF7FIVwyKaLnBYU
 system_admin_consent_client_id: bv2fe0tpfc67lmeti340
 system_admin_consent_client_secret: v6yYaApda9juR_DrlI5mpdsdm9u2-D0rQIG9ynakyDE
 
-conf_ca_pem_file: /certs/brasil/ca.pem
-conf_tpp_1_id: conformance-tpp-1
-conf_tpp_1_url: https://fapi-test
-conf_tpp_1_public_jwks: /certs/brasil/cid1/jwks-public.json
-conf_tpp_1_pem_file: /certs/brasil/cid1/cert.pem
-conf_tpp_1_sub_dn: 1.3.6.1.4.1.311.60.2.1.3=#13024252,2.5.4.15=#131450726976617465204f7267616e697a6174696f6e,UID=10120340-3318-4baf-99e2-0b56729c4ab2,2.5.4.5=#130d31333335333233363030313839,CN=mock-tpp-1.raidiam.com,OU=74e929d9-33b6-4d85-8ba7-c146c867a817,O=Open Banking Brasil,L=BOTAFOGO,ST=RS,C=BR
-conf_tpp_2_id: conformance-tpp-2
-conf_tpp_2_url: https://fapi-test
-conf_tpp_2_public_jwks: /certs/brasil/cid2/jwks-public.json
-conf_tpp_2_pem_file: /certs/brasil/cid2/cert.pem
-conf_tpp_2_sub_dn: C = BR, ST = RS, L = BOTAFOGO, O = Open Banking Brasil, OU = 74e929d9-33b6-4d85-8ba7-c146c867a817, CN = mock-tpp-1.raidiam.com, serialNumber = 1335323600189, UID = 9e357995-a191-4860-9db7-ceda3692a8c9, businessCategory = Private Organization, jurisdictionC = BR
-
 cdr_adr_validation_enabled: true
