@@ -1,7 +1,7 @@
 servers:
 - tenant_id: {{ .tenant_id }}
   id: {{ .server_id }}
-  name: {{ .server_id|upper }}
+  name: CDR
   profile: cdr_australia_fapi_rw
   color: "#fabc3e"
   subject_format: legacy
@@ -329,16 +329,7 @@ clients:
   - bank:accounts.basic:read
   - bank:accounts.detail:read
   token_endpoint_auth_method: client_secret_post
-policies:
-- id: block_{{ .server_id }}_dcr
-  language: cloudentity
-  policy_name: Unlock DCR
-  server_id: {{ .server_id }}
-  tenant_id: {{ .tenant_id }}
-  type: dcr
-  validators:
-    - name: 'true'
-      conf: {}
+
 claims:
 - authorization_server_id: {{ .server_id }}
   id: {{ .server_id }}_arrangement_id
