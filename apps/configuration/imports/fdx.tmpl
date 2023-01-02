@@ -17,7 +17,6 @@ servers:
   {{ end }}
   root_cas: |
 {{ readFile .ca_pem_file | indent 4 }}
-{{ readFile .conf_ca_pem_file | indent 4 }}
 
 idps:
 - tenant_id: {{ .tenant_id }}

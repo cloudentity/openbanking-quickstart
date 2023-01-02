@@ -45,7 +45,7 @@ export class ConsentAndAuthorisationCallbackPage {
     cy.get(this.scopeSelector)
     .should('have.text', 'openid profile bank:accounts.basic:read '
       + 'bank:accounts.detail:read bank:transactions:read '
-      + 'common:customer.basic:read introspect_tokens revoke_tokens offline_access');
+      + 'common:customer.basic:read offline_access');
 
     cy.get(this.tokenTypeSelector)
     .should('have.text', 'bearer');
