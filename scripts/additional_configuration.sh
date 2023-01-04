@@ -2,7 +2,7 @@
 set -ex
 
 # prefix
-export PREFIX=${3,,}
+export PREFIX=$(echo $3 | tr [:upper:] [:lower:])
 
 configure_prefix() {
     local id=$1
