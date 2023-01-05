@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -146,10 +147,11 @@ func getEncryptionKey(client acpclient.Client) (jose.JSONWebKey, error) {
 		err          error
 	)
 
-	ctx := gin.Context{}
+	ctx, cancel := context.WithTimeout(context.Background(), client.Config.Timeout)
+	defer cancel()
 
 	if jwksResponse, err = client.Oauth2.Oauth2.Jwks(
-		oauth2.NewJwksParamsWithContext(&ctx),
+		oauth2.NewJwksParamsWithContext(ctx),
 	); err != nil {
 		return encKey, errors.Wrapf(err, "failed to get jwks from acp server")
 	}
