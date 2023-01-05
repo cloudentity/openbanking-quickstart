@@ -139,6 +139,7 @@ services:
       - ./data/bank_cert.pem:/bank_cert.pem
       - ./data/bank_key.pem:/bank_key.pem
     environment:
+      - SYSTEM_CLIENT_ID=${SYSTEM_ADMIN_CONSENT_CLIENT_ID}
       - SYSTEM_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
       - OPENBANKING_WORKSPACE_ID=${SERVER}
       - SPEC=fdx
@@ -160,12 +161,15 @@ services:
       - ./data/bank_cert.pem:/bank_cert.pem
       - ./data/bank_key.pem:/bank_key.pem
     environment:
+      - SYSTEM_CLIENT_ID=${SYSTEM_BANK_CLIENT_ID}
+      - LOGIN_CLIENT_ID=${CONSENT_SELF_SERVICE_CLIENT_ID}
+      - INTROSPECT_CLIENT_ID=${CONSENT_SELF_SERVICE_BACKEND_CLIENT_ID}
       - SYSTEM_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
       - BANK_URL=http://bank:8070
       - LOGIN_AUTHORIZATION_SERVER_URL=${ACP_URL}
-      - LOGIN_AUTHORIZATION_SERVER_ID=bank-customers
+      - LOGIN_AUTHORIZATION_SERVER_ID=${BANK_CUSTOMERS_SERVER}
       - LOGIN_TENANT_ID=${TENANT}
-      - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/bank-customers
+      - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/${BANK_CUSTOMERS_SERVER}
       - OPENBANKING_SERVER_ID=${SERVER}
       - SPEC=fdx
       - BANK_CLIENT_TOKEN_URL=${ACP_URL}/${TENANT}/${SERVER}/oauth2/token

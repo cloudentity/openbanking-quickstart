@@ -34,7 +34,7 @@ const (
 
 type Config struct {
 	Port             int           `env:"PORT" envDefault:"8080"`
-	ClientID         string        `env:"CLIENT_ID" envDefault:"bv0ocudfotn6edhsiu7g"`
+	ClientID         string        `env:"CLIENT_ID,required"`
 	ClientSecret     string        `env:"CLIENT_SECRET" envDefault:"pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0"`
 	IssuerURL        *url.URL      `env:"ISSUER_URL,required"`
 	Timeout          time.Duration `env:"TIMEOUT" envDefault:"5s"`
