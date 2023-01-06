@@ -35,7 +35,7 @@ const (
 type Version string
 
 const (
-	V1 Version = "v1"
+	V1 Version = "v1" //nolint
 	V2 Version = "v2"
 )
 

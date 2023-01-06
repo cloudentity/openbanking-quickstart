@@ -16,11 +16,11 @@ type OBBRPaymentConsentHandler struct {
 }
 
 func (s *OBBRPaymentConsentHandler) GetConsent(c *gin.Context, loginRequest LoginRequest) {
-	if s.version == V1 {
-		s.getConsentV1(c, loginRequest)
+	if s.version == V2 {
+		s.getConsentV2(c, loginRequest)
 		return
 	}
-	s.getConsentV2(c, loginRequest)
+	s.getConsentV1(c, loginRequest)
 }
 
 func (s *OBBRPaymentConsentHandler) getConsentV1(c *gin.Context, loginRequest LoginRequest) {
@@ -90,10 +90,10 @@ func (s *OBBRPaymentConsentHandler) getConsentV2(c *gin.Context, loginRequest Lo
 }
 
 func (s *OBBRPaymentConsentHandler) ConfirmConsent(c *gin.Context, loginRequest LoginRequest) (string, error) {
-	if s.version == V1 {
-		return s.confirmConsentV1(c, loginRequest)
+	if s.version == V2 {
+		return s.confirmConsentV2(c, loginRequest)
 	}
-	return s.confirmConsentV2(c, loginRequest)
+	return s.confirmConsentV1(c, loginRequest)
 }
 
 func (s *OBBRPaymentConsentHandler) confirmConsentV1(c *gin.Context, loginRequest LoginRequest) (string, error) {
