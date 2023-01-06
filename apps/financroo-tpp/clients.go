@@ -178,6 +178,7 @@ func NewAcpClient(cfg Config, redirect string) (acpclient.Client, error) {
 		KeyFile:                       cfg.KeyFile,
 		RootCA:                        cfg.RootCA,
 		ClientAssertionSigningKeyFile: cfg.KeyFile,
+		ClientAssertionSigningAlg:     "ES256", // check if this is ok for other specs
 	}
 
 	if cfg.Spec == CDR {
