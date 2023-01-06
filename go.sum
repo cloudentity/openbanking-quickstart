@@ -66,6 +66,8 @@ github.com/cloudentity/acp-client-go v0.0.0-20221027165840-62b1fe09daff h1:azlM5
 github.com/cloudentity/acp-client-go v0.0.0-20221027165840-62b1fe09daff/go.mod h1:BYCcX7njJMq5h5EhcRtet50uMM57WZhzbEaAKfz+Ohs=
 github.com/cloudentity/acp-client-go v0.0.0-20230106020125-345eebe04794 h1:Nsi4oyZ9G42IfDQGBER6ztSAhZOfawN4PlitlmvJvlY=
 github.com/cloudentity/acp-client-go v0.0.0-20230106020125-345eebe04794/go.mod h1:lIXuY+V5jBPelZqvPUxdY62SoeBu7aQShf1ISq/H8sw=
+github.com/cloudentity/acp-client-go v0.0.0-20230106145751-d9bd82621f84 h1:WLyTelBVfZSAM39K0jQkevFbWqfU2Ka65yTmvFNo42M=
+github.com/cloudentity/acp-client-go v0.0.0-20230106145751-d9bd82621f84/go.mod h1:lIXuY+V5jBPelZqvPUxdY62SoeBu7aQShf1ISq/H8sw=
 github.com/cncf/udpa/go v0.0.0-20191209042840-269d4d468f6f/go.mod h1:M8M6+tZqaGXZJjfX53e64911xZQV5JYwmTeXPW+k8Sc=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
