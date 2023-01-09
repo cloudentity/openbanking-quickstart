@@ -112,11 +112,13 @@ func (s *OBBRPaymentConsentHandler) confirmConsentV1(c *gin.Context, loginReques
 		return "", err
 	}
 
+	wrapper := OBBRConsentWrapper{v1: consent.Payload.CustomerPaymentConsent}
+
 	if accept, err = s.Client.Openbanking.Openbankingbr.AcceptOBBRCustomerPaymentConsentSystem(
 		obbrModels.NewAcceptOBBRCustomerPaymentConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID).
 			WithAcceptConsent(&obModels.AcceptConsentRequest{
-				AccountIds:    []string{consent.Payload.CustomerPaymentConsent.DebtorAccount.Number},
+				AccountIds:    []string{wrapper.GetDebtorAccountNumber()},
 				GrantedScopes: s.GrantScopes(consent.Payload.RequestedScopes),
 				LoginState:    loginRequest.State,
 			}),
@@ -148,11 +150,13 @@ func (s *OBBRPaymentConsentHandler) confirmConsentV2(c *gin.Context, loginReques
 		return "", err
 	}
 
+	wrapper := OBBRConsentWrapper{v2: consent.Payload.CustomerPaymentConsentV2}
+
 	if accept, err = s.Client.Openbanking.Openbankingbr.AcceptOBBRCustomerPaymentConsentSystem(
 		obbrModels.NewAcceptOBBRCustomerPaymentConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID).
 			WithAcceptConsent(&obModels.AcceptConsentRequest{
-				AccountIds:    []string{consent.Payload.CustomerPaymentConsentV2.DebtorAccount.Number},
+				AccountIds:    []string{wrapper.GetDebtorAccountNumber()},
 				GrantedScopes: s.GrantScopes(consent.Payload.RequestedScopes),
 				LoginState:    loginRequest.State,
 			}),
@@ -190,6 +194,23 @@ func (s *OBBRPaymentConsentHandler) DenyConsent(c *gin.Context, loginRequest Log
 	}
 
 	return reject.Payload.RedirectTo, nil
+}
+
+type OBBRConsentWrapper struct {
+	v1 *obModels.BrazilCustomerPaymentConsent
+	v2 *obModels.BrazilCustomerPaymentConsentV2
+}
+
+func (w *OBBRConsentWrapper) GetDebtorAccountNumber() string {
+	if w.v1 != nil && w.v1.DebtorAccount != nil {
+		return w.v1.DebtorAccount.Number
+	}
+
+	if w.v2 != nil && w.v2.DebtorAccount != nil {
+		return w.v2.DebtorAccount.Number
+	}
+
+	return "N/A"
 }
 
 var _ ConsentHandler = &OBBRPaymentConsentHandler{}
