@@ -187,6 +187,7 @@ func (c *ConsentTools) GetOBBRPaymentConsentTemplateData(
 	balances BalanceData,
 ) map[string]interface{} {
 	clientName := c.GetClientName(nil)
+	wrapper := OBBRConsentWrapper{v1: consent.CustomerPaymentConsent}
 	return map[string]interface{}{
 		"trans": map[string]interface{}{
 			"headTitle":        c.Trans.T("br.payment.headTitle"),
@@ -205,9 +206,9 @@ func (c *ConsentTools) GetOBBRPaymentConsentTemplateData(
 			"confirm": c.Trans.T("br.payment.confirm"),
 		},
 		"login_request": loginRequest,
-		"accounts":      c.GetAccountsWithBalance(accounts, balances, consent.CustomerPaymentConsent.DebtorAccount.Number),
+		"accounts":      c.GetAccountsWithBalance(accounts, balances, wrapper.GetDebtorAccountNumber()),
 		"client_name":   clientName,
-		"consent":       OBBRPaymentConsentTemplateData(consent.CustomerPaymentConsent, c.Config.Currency),
+		"consent":       OBBRPaymentConsentTemplateData(consent.CustomerPaymentConsent, c.Config.Currency, wrapper.GetDebtorAccountNumber()),
 		"ctx":           consent.AuthenticationContext,
 	}
 }
@@ -219,6 +220,7 @@ func (c *ConsentTools) GetOBBRPaymentConsentTemplateDataV2(
 	balances BalanceData,
 ) map[string]interface{} {
 	clientName := c.GetClientName(nil)
+	wrapper := OBBRConsentWrapper{v2: consent.CustomerPaymentConsentV2}
 	return map[string]interface{}{
 		"trans": map[string]interface{}{
 			"headTitle":        c.Trans.T("br.payment.headTitle"),
@@ -237,9 +239,9 @@ func (c *ConsentTools) GetOBBRPaymentConsentTemplateDataV2(
 			"confirm": c.Trans.T("br.payment.confirm"),
 		},
 		"login_request": loginRequest,
-		"accounts":      c.GetAccountsWithBalance(accounts, balances, consent.CustomerPaymentConsentV2.DebtorAccount.Number),
+		"accounts":      c.GetAccountsWithBalance(accounts, balances, wrapper.GetDebtorAccountNumber()),
 		"client_name":   clientName,
-		"consent":       OBBRPaymentConsentTemplateDataV2(consent.CustomerPaymentConsentV2, c.Config.Currency),
+		"consent":       OBBRPaymentConsentTemplateDataV2(consent.CustomerPaymentConsentV2, c.Config.Currency, wrapper.GetDebtorAccountNumber()),
 		"ctx":           consent.AuthenticationContext,
 	}
 }
@@ -378,10 +380,10 @@ func OBUKPaymentConsentTemplateData(consent *obModels.DomesticPaymentConsent, cu
 	return data
 }
 
-func OBBRPaymentConsentTemplateData(consent *obModels.BrazilCustomerPaymentConsent, customCurrency Currency) PaymentConsentTemplateData {
+func OBBRPaymentConsentTemplateData(consent *obModels.BrazilCustomerPaymentConsent, customCurrency Currency, debtorAccountNumber string) PaymentConsentTemplateData {
 	data := PaymentConsentTemplateData{
 		AccountName:    consent.Creditor.Name,
-		Identification: consent.DebtorAccount.Number,
+		Identification: debtorAccountNumber,
 		Currency:       consent.Payment.Currency,
 		Amount:         consent.Payment.Amount,
 	}
@@ -393,10 +395,10 @@ func OBBRPaymentConsentTemplateData(consent *obModels.BrazilCustomerPaymentConse
 	return data
 }
 
-func OBBRPaymentConsentTemplateDataV2(consent *obModels.BrazilCustomerPaymentConsentV2, customCurrency Currency) PaymentConsentTemplateData {
+func OBBRPaymentConsentTemplateDataV2(consent *obModels.BrazilCustomerPaymentConsentV2, customCurrency Currency, debtorAccountNumber string) PaymentConsentTemplateData {
 	data := PaymentConsentTemplateData{
 		AccountName:    consent.Creditor.Name,
-		Identification: consent.DebtorAccount.Number,
+		Identification: debtorAccountNumber,
 		Currency:       consent.Payment.Currency,
 		Amount:         consent.Payment.Amount,
 	}
