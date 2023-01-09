@@ -141,6 +141,11 @@ servers:
     - private_key_jwt
     - client_secret_post
     - tls_client_auth
+  token_endpoint_auth_signing_alg_value:
+    # temporary solution, RS key should not be used
+    - RS256
+    - ES256
+    - PS256
   initialize: true
   cdr:
     brand_id:
