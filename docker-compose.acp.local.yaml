@@ -59,7 +59,7 @@ services:
 
   crdb:
     container_name: quickstart-crdb
-    image: cockroachdb/cockroach:v21.2.3
+    image: docker.cloudentity.io/cockroachdb/cockroach:v22.2.0
     restart: always
     ports:
       - 26258:26257
