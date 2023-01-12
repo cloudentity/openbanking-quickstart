@@ -210,7 +210,7 @@
                   "RevocationUri": "${DATA_RECIPIENT_URL}/revocation",
                   "RedirectUris": "${DATA_RECIPIENT_URL}/consent/callback ${DATA_RECIPIENT_URL}/consent/callback2",
                   "JwksUri": "${DATA_RECIPIENT_URL}/jwks",
-                  "Scope": "openid profile common:customer.basic:read common:customer.detail:read bank:accounts.basic:read bank:accounts.detail:read bank:transactions:read bank:regular_payments:read bank:payees:read energy:accounts.basic:read energy:accounts.detail:read energy:accounts.concessions:read energy:accounts.paymentschedule:read energy:billing:read energy:electricity.servicepoints.basic:read energy:electricity.servicepoints.detail:read energy:electricity.der:read energy:electricity.usage:read cdr:registration introspect_tokens revoke_tokens",
+                  "Scope": "openid profile common:customer.basic:read common:customer.detail:read bank:accounts.basic:read bank:accounts.detail:read bank:transactions:read bank:regular_payments:read bank:payees:read energy:accounts.basic:read energy:accounts.detail:read energy:accounts.concessions:read energy:accounts.paymentschedule:read energy:billing:read energy:electricity.servicepoints.basic:read energy:electricity.servicepoints.detail:read energy:electricity.der:read energy:electricity.usage:read cdr:registration",
                   "StatusId": 1,
                   "Certificates": [
                     {

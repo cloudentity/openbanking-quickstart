@@ -8,6 +8,7 @@ import (
 	"log"
 	"net/http"
 	"net/url"
+	"strings"
 	"time"
 
 	"golang.org/x/oauth2"
@@ -18,8 +19,9 @@ var (
 	tenantID          = flag.String("tenant", "none", "Openbanking SaaS tenant ID")
 	adminClientID     = flag.String("cid", "none", "Openbanking SaaS admin client ID")
 	adminClientSecret = flag.String("csec", "none", "Openbanking SaaS admin client secret")
+	prefix            = flag.String("spref", "none", "Openbanking SaaS branch name prefix")
 
-	openbankingClientsIDs = []string{"buc3b1hhuc714r78env0", "bv2fe0tpfc67lmeti340", "bv0ocudfotn6edhsiu7g"}
+	openbankingClientsIDs = []string{"buc3b1hhuc714r78env0", "bv2fe0tpfc67lmeti340", "cdr-consent-page", "fdx-consent-page", "obuk-consent-page", "obbr-consent-page"}
 	openbankingServersIDs = []string{"cdr", "fdx", "openbanking", "openbanking_brasil", "bank-customers"}
 )
 
@@ -58,6 +60,9 @@ func main() {
 	client := cc.Client(context.WithValue(context.Background(), oauth2.HTTPClient, httpClient))
 
 	for _, sid := range openbankingServersIDs {
+		if *prefix != "" {
+			sid = fmt.Sprintf("%s-%s", strings.ToLower(*prefix), sid)
+		}
 		fmt.Printf("INFO: Trying to delete server with ID: '%s'\n", sid)
 		if request, err = http.NewRequest("DELETE", fmt.Sprintf("%s/api/admin/%s/servers/%s", tURL.String(), *tenantID, sid), http.NoBody); err != nil {
 			log.Fatalf("ERROR: Failed to setup delete server '%s' request: %v", sid, err)
@@ -71,6 +76,9 @@ func main() {
 	}
 
 	for _, cid := range openbankingClientsIDs {
+		if *prefix != "" {
+			cid = fmt.Sprintf("%s-%s", strings.ToLower(*prefix), cid)
+		}
 		fmt.Printf("INFO: Trying to delete client with ID: '%s'\n", cid)
 		if request, err = http.NewRequest("DELETE", fmt.Sprintf("%s/api/admin/%s/clients/%s", tURL.String(), *tenantID, cid), http.NoBody); err != nil {
 			log.Fatalf("ERROR: Failed to setup delete client '%s' request: %v", cid, err)

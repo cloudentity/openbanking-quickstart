@@ -1,11 +1,11 @@
 {
-    "AcpCDRWorkspace": "cdr",
-    "AcpManagementBaseURI": "https://authorization.cloudentity.com:8443/default/system",
-    "AcpManagementClientID": "buc3b1hhuc714r78env0",
+    "AcpCDRWorkspace": "${SERVER}",
+    "AcpManagementBaseURI": "${ACP_URL}/${TENANT}/system",
+    "AcpManagementClientID": "${SYSTEM_BANK_CLIENT_ID}",
     "AcpManagementClientSecret": "PBV7q0akoP603rZbU0EFdxbhZ-djxF7FIVwyKaLnBYU",
-	"IdentityServerIssuerUri": "https://authorization.cloudentity.com:8443/default/cdr",
-	"IdentityServerUrl": "https://authorization.cloudentity.com:8443/default/cdr",
-    "AccessTokenIntrospectionEndpoint": "https://authorization.cloudentity.com:8443/default/cdr/oauth2/introspect",
+	"IdentityServerIssuerUri": "${URL}",
+	"IdentityServerUrl": "${URL}",
+    "AccessTokenIntrospectionEndpoint": "${URL}/oauth2/introspect",
     "ConnectionStrings": {
         "DefaultConnection": "Data Source=/tmp/mdh.db"
     },

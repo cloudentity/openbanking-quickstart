@@ -29,6 +29,8 @@ func (s *OBBRPaymentMFAConsentProvider) GetMFAData(c *gin.Context, loginRequest 
 		return data, err
 	}
 
+	wrapper := OBBRConsentWrapper{v1: response.Payload.CustomerPaymentConsent}
+
 	data.ConsentID = response.Payload.ConsentID
 	data.AuthenticationContext = response.Payload.AuthenticationContext
 	data.ClientName = s.GetClientName(response.Payload.ClientInfo)
@@ -37,7 +39,7 @@ func (s *OBBRPaymentMFAConsentProvider) GetMFAData(c *gin.Context, loginRequest 
 		response.Payload.CustomerPaymentConsent.Payment.Amount,
 		response.Payload.CustomerPaymentConsent.Payment.Currency,
 	)
-	data.Account = response.Payload.CustomerPaymentConsent.DebtorAccount.Number
+	data.Account = wrapper.GetDebtorAccountNumber()
 
 	return data, nil
 }
