@@ -170,7 +170,10 @@ function ApplicationAccessPaymentDrawer({
               backgroundColor: "#BD271E",
               border: "none",
             }}
-            disabled={(revokeAccess && !revokeAccessAgree) || drawerData?.Status != "Authorised"}
+            disabled={
+              (revokeAccess && !revokeAccessAgree) ||
+              drawerData?.Status !== "Authorised"
+            }
             onClick={() => {
               if (revokeAccess) {
                 handleRevoke(drawerData?.ConsentID, drawerData?.type);
