@@ -126,4 +126,5 @@ export const theme = createTheme({
       },
     },
   },
+  unstable_sx: {} as any,
 });
