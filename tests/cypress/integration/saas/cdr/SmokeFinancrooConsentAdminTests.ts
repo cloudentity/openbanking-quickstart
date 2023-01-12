@@ -7,7 +7,6 @@ import { FinancrooAccountsPage } from "../../../pages/financroo/accounts/Financr
 import { Accounts } from "../../../pages/Accounts";
 import { ConsentAdminPage } from "../../../pages/consent-admin/ConsentAdminPage";
 
-
 describe(`Smoke Financroo Consent admin portal tests`, () => {
   const financrooLoginPage: FinancrooLoginPage = new FinancrooLoginPage();
   const financrooWelcomePage: FinancrooWelcomePage = new FinancrooWelcomePage();
