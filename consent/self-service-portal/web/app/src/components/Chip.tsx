@@ -1,8 +1,7 @@
 import React, { ReactNode } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Theme } from "@material-ui/core";
+import { makeStyles } from "tss-react/mui";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()(() => ({
   container: {
     border: "1px solid #4CAF50",
     boxSizing: "border-box",
@@ -21,13 +20,13 @@ const colorMapper = {
   consumed: "#626576",
 };
 
-type Props = {
+interface Props {
   children: ReactNode;
   type: keyof typeof colorMapper;
-};
+}
 
 function Chip({ children, type }: Props) {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <div

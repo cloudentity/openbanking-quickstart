@@ -1,12 +1,13 @@
 import React from "react";
-import TextField from "@material-ui/core/TextField";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import { makeStyles } from "@material-ui/core/styles";
+import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
+import { makeStyles } from "tss-react/mui";
 
 import CardIcon from "../../assets/icon-card.svg";
 import ContributionCard from "./ContributionCard";
+import { getCurrency } from "../utils";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()(theme => ({
   input: {
     marginTop: 30,
     "& label.Mui-focused": {
@@ -29,15 +30,26 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+interface Props {
+  amount: string;
+  setAmount: (amount: string) => void;
+  handleBack: () => void;
+  handleNext: () => void;
+  accountDetails:
+    | { amount: string | undefined; currency: string | undefined }
+    | undefined;
+  setAlert: (message: string) => void;
+}
+
 export default function InvestmentsContributeAmount({
   amount,
   setAmount,
   handleBack,
   handleNext,
-  account,
+  accountDetails,
   setAlert,
-}) {
-  const classes = useStyles();
+}: Props) {
+  const { classes } = useStyles();
 
   return (
     <ContributionCard
@@ -54,14 +66,15 @@ export default function InvestmentsContributeAmount({
         classes={{
           root: classes.input,
         }}
+        id="amount-to-contribute"
         variant="outlined"
         value={amount}
-        onChange={(v) => {
+        onChange={v => {
           setAmount(v.target.value);
           if (
-            account &&
-            account.Amount?.Amount &&
-            Number(v.target.value) <= Number(account.Amount?.Amount)
+            accountDetails &&
+            accountDetails.amount &&
+            Number(v.target.value) <= Number(accountDetails.amount)
           ) {
             setAlert("");
           }
@@ -71,9 +84,10 @@ export default function InvestmentsContributeAmount({
           startAdornment: (
             <InputAdornment
               position="start"
+              id="contribution-currency"
               style={{ position: "relative", top: 1 }}
             >
-              £
+              {getCurrency(accountDetails?.currency)}
             </InputAdornment>
           ),
           inputProps: {

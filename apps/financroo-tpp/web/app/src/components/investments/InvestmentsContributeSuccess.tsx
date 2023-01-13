@@ -1,8 +1,8 @@
 import React from "react";
-import { useHistory, useParams } from "react-router";
-import Button from "@material-ui/core/Button";
-import Chip from "@material-ui/core/Chip";
-import { makeStyles } from "@material-ui/core/styles";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import Button from "@mui/material/Button";
+import Chip from "@mui/material/Chip";
+import { makeStyles } from "tss-react/mui";
 
 import PageContainer from "../common/PageContainer";
 import PageToolbar from "../common/PageToolbar";
@@ -12,8 +12,9 @@ import Confetti from "./Confetti";
 import bankIcon from "../../assets/banks/gobank-icon.svg";
 import checkIcon from "../../assets/icon-check.svg";
 import qs from "query-string";
+import { getCurrency } from "../utils";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()(theme => ({
   title: {
     marginBottom: 68,
     display: "flex",
@@ -103,11 +104,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function InvestmentsContributeSuccess() {
-  const history = useHistory();
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { id } = useParams<{ id: string }>();
-  const search = history.location.search;
-  const searchParsed = qs.parse(search);
+  const location = useLocation();
+  const navigate = useNavigate();
+  const searchParsed = qs.parse(location.search);
 
   return (
     <div style={{ position: "relative" }}>
@@ -120,7 +121,7 @@ export default function InvestmentsContributeSuccess() {
           alignItems: "center",
         }}
       >
-        <div className={classes.title}>
+        <div id="transaction-completed-title" className={classes.title}>
           <img src={checkIcon} alt="check icon" />
           <h2>Transaction completed</h2>
           <div>You have reached another level with your retirement goal</div>
@@ -143,7 +144,10 @@ export default function InvestmentsContributeSuccess() {
               </div>
               <div style={{ paddingBottom: 0 }}>
                 <Chip
-                  label={`${searchParsed.amount} ${searchParsed.currency}`}
+                  id="total-amount"
+                  label={`${searchParsed.amount} ${getCurrency(
+                    searchParsed.currency
+                  )}`}
                   className={classes.chip}
                 />
               </div>
@@ -175,7 +179,7 @@ export default function InvestmentsContributeSuccess() {
           </Field>
         </ContributionCard>
         <Button
-          onClick={() => history.push("/investments")}
+          onClick={() => navigate("/investments")}
           id="back-to-portfolio"
           variant="contained"
           color="primary"

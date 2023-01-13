@@ -1,7 +1,9 @@
 package main
 
+import "context"
+
 type BankClient interface {
-	GetInternalAccounts(subject string) (InternalAccounts, error)
+	GetInternalAccounts(ctx context.Context, subject string) (InternalAccounts, error)
 }
 
 type InternalAccounts struct {

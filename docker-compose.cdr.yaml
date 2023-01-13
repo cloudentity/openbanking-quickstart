@@ -13,16 +13,33 @@ version: '3.0'
 services:
   mock-register:
     container_name: mock-register
-    image: docker.cloudentity.io/cdr-mock-register:0.4.2
+    image: docker.cloudentity.io/cdr-mock-register:0.5.0
     volumes:
-      - ./mount/cdr/registry-seed.json:/app/admin/Data/seed-data.json
+      - ./mount/cdr/registry-seed.json:/app/admin/Data/seed-data.Release.json
     ports:
       - "7000:7000"
       - "7001:7001"
       - "7005:7005"
       - "7006:7006"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_ENVIRONMENT=Release
+    depends_on:
+      mssql:
+        condition: service_healthy
+
+  mssql:
+    container_name: sql1
+    image: 'mcr.microsoft.com/mssql/server:2019-latest'
+    ports:
+      - '1433:1433'
+    environment:
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Pa{}w0rd2019
+    healthcheck:
+      test: /opt/mssql-tools/bin/sqlcmd -S . -U sa -P "Pa{}w0rd2019" -Q "SELECT 1" || exit 1 
+      timeout: 10s
+      interval: 10s
+      retries: 10   
 
   mock-data-holder:
     container_name: mock-data-holder
@@ -43,19 +60,20 @@ services:
 
   mock-data-recipient:
     container_name: mock-data-recipient
-    image: docker.cloudentity.io/cdr-mock-data-recipient:0.0.11
+    image: docker.cloudentity.io/cdr-mock-data-recipient:0.0.14
     networks:
       default:
         aliases:
-          - datarecipient.mock
+          - mock-data-recipient
     volumes:
       - ./mount/cdr/recipient.json:/app/web/appsettings.Production.json
-      - ./data/cdr/certs/client.pfx:/app/web/Certificates/client.pfx
-      - ./data/cdr/certs/mock-data-recipient.pfx:/app/web/Certificates/mock-data-recipient.pfx
     ports:
       - "9001:9001"
     environment:
-      - ASPNETCORE_ENVIRONMENT=Production
+      - ASPNETCORE_ENVIRONMENT=Release
+    depends_on:
+      mssql:
+        condition: service_healthy
 
   consent-page:
     image: cloudentity/openbanking-quickstart-consent-page:${VERSION}
@@ -68,7 +86,7 @@ services:
       - ./data/ca.pem:/ca.pem
       - ./data/bank_cert.pem:/bank_cert.pem
       - ./data/bank_key.pem:/bank_key.pem
-      - ./data/tpp_cert.pem:/tpp_cert.pem 
+      - ./data/tpp_cert.pem:/tpp_cert.pem
       - ./data/tpp_key.pem:/tpp_key.pem
     env_file:
       - .env
@@ -82,10 +100,11 @@ services:
       - BANK_ID_CLAIM=customer_id
       - BANK_URL=http://bank:8070
       - BANK_CLIENT_TOKEN_URL=${ACP_URL}/${TENANT}/${SERVER}/oauth2/token
-      - BANK_CLIENT_ID=cw1ocudfotn6edhsiv8h 
-      - BANK_CLIENT_SECRET=pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0 
+      - BANK_CLIENT_ID=${INTERNAL_BANK_CLIENT_ID}
+      - BANK_CLIENT_SECRET=pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0
       - BANK_CLIENT_SCOPES=bank:accounts.basic:read,bank:accounts.detail:read
       - BANK_ACCOUNTS_ENDPOINT=http://bank:8070/internal/accounts
+      - CLIENT_ID=${CONSENT_PAGE_CLIENT_ID}
 
     depends_on:
       configuration:
@@ -104,14 +123,22 @@ services:
       - ./data/bank_cert.pem:/bank_cert.pem
       - ./data/bank_key.pem:/bank_key.pem
     environment:
+      - SYSTEM_CLIENT_ID=${SYSTEM_BANK_CLIENT_ID}
+      - LOGIN_CLIENT_ID=${CONSENT_SELF_SERVICE_CLIENT_ID}
+      - INTROSPECT_CLIENT_ID=${CONSENT_SELF_SERVICE_BACKEND_CLIENT_ID}
       - SYSTEM_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
       - BANK_URL=http://bank:8070
       - LOGIN_AUTHORIZATION_SERVER_URL=${ACP_URL}
-      - LOGIN_AUTHORIZATION_SERVER_ID=bank-customers
+      - LOGIN_AUTHORIZATION_SERVER_ID=${BANK_CUSTOMERS_SERVER}
       - LOGIN_TENANT_ID=${TENANT}
-      - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/bank-customers
+      - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/${BANK_CUSTOMERS_SERVER}
       - OPENBANKING_SERVER_ID=${SERVER}
       - SPEC=cdr
+      - BANK_CLIENT_TOKEN_URL=${ACP_URL}/${TENANT}/${SERVER}/oauth2/token
+      - BANK_CLIENT_ID=${INTERNAL_BANK_CLIENT_ID}
+      - BANK_CLIENT_SECRET=pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0
+      - BANK_CLIENT_SCOPES=bank:accounts.basic:read,bank:accounts.detail:read
+      - BANK_ACCOUNTS_ENDPOINT=http://bank:8070/internal/accounts
     depends_on:
       configuration:
         condition: service_completed_successfully
@@ -127,6 +154,7 @@ services:
       - ./data/bank_cert.pem:/bank_cert.pem
       - ./data/bank_key.pem:/bank_key.pem
     environment:
+      - SYSTEM_CLIENT_ID=${SYSTEM_ADMIN_CONSENT_CLIENT_ID}
       - SYSTEM_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
       - OPENBANKING_WORKSPACE_ID=${SERVER}
       - SPEC=cdr
@@ -154,8 +182,9 @@ services:
       - OPENBANKING_SERVER_ID=${SERVER}
       - BANK_URL=http://bank:8070
       - ENABLE_TLS_SERVER=true
-    depends_on: 
-      configuration: 
+      - CLIENT_ID=${FINANCROO_TPP_CLIENT_ID}
+    depends_on:
+      configuration:
         condition: service_completed_successfully
 
   bank:
@@ -174,6 +203,7 @@ services:
       - SPEC=cdr
       - GIN_MODE=debug
       - USER_IDENTIFIER_CLAIM=customer_id
+      - CLIENT_ID=${BANK_CLIENT_ID}
     depends_on:
       configuration:
         condition: service_completed_successfully
@@ -203,6 +233,6 @@ services:
       - /app/imports-cdr
       - --variables-file
       - /variables.yaml
-      - --verbose  
+      - --verbose
 
-  
+

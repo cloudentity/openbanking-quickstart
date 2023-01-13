@@ -19,6 +19,7 @@ services:
       - REDIRECT_URL=https://${APP_HOST}:8090/callback
       - BANK_URL=http://bank:8070
       - SPEC=obbr
+      - CLIENT_ID=${DEVELOPER_TPP_CLIENT_ID}
     depends_on:
       configuration:
         condition: service_completed_successfully
@@ -42,6 +43,7 @@ services:
       - BANK_URL=http://bank:8070
       - OPENBANKING_SERVER_ID=${SERVER}
       - ENABLE_TLS_SERVER=true
+      - CLIENT_ID=${FINANCROO_TPP_CLIENT_ID}
     depends_on:
       configuration:
         condition: service_completed_successfully
@@ -68,6 +70,7 @@ services:
       - GIN_MODE=debug # change to release to disable gin debug
       - OTP_MODE=mock # change to custom to enable custom OTP handling
       - MFA_CLAIM=sub # for mobile use mobile_verified
+      - CLIENT_ID=${CONSENT_PAGE_CLIENT_ID}
     depends_on:
       configuration:
         condition: service_completed_successfully
@@ -86,13 +89,16 @@ services:
       - ./data/bank_cert.pem:/bank_cert.pem
       - ./data/bank_key.pem:/bank_key.pem
     environment:
+      - SYSTEM_CLIENT_ID=${SYSTEM_BANK_CLIENT_ID}
+      - LOGIN_CLIENT_ID=${CONSENT_SELF_SERVICE_CLIENT_ID}
+      - INTROSPECT_CLIENT_ID=${CONSENT_SELF_SERVICE_BACKEND_CLIENT_ID}
       - SYSTEM_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
       - BANK_URL=http://bank:8070
       - SPEC=obbr
       - LOGIN_AUTHORIZATION_SERVER_URL=${ACP_URL}
-      - LOGIN_AUTHORIZATION_SERVER_ID=bank-customers
+      - LOGIN_AUTHORIZATION_SERVER_ID=${BANK_CUSTOMERS_SERVER}
       - LOGIN_TENANT_ID=${TENANT}
-      - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/bank-customers
+      - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/${BANK_CUSTOMERS_SERVER}
       - OPENBANKING_SERVER_ID=${SERVER}
     depends_on:
       configuration:
@@ -109,6 +115,7 @@ services:
       - ./data/bank_cert.pem:/bank_cert.pem
       - ./data/bank_key.pem:/bank_key.pem
     environment:
+      - SYSTEM_CLIENT_ID=${SYSTEM_ADMIN_CONSENT_CLIENT_ID}
       - SYSTEM_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
       - OPENBANKING_WORKSPACE_ID=${SERVER}
       - SPEC=obbr
@@ -132,6 +139,7 @@ services:
       - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/${SERVER}
       - SPEC=obbr
       - GIN_MODE=debug
+      - CLIENT_ID=${BANK_CLIENT_ID}
     depends_on:
       configuration:
         condition: service_completed_successfully

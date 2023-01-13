@@ -22,16 +22,22 @@ pipeline {
     stages {
         stage('Prepare') {
             steps {
-                 sh '''#!/bin/bash
+                script{
+                    if (env.BRANCH_NAME.startsWith('PR-')) {
+                        abortPreviousRunningBuilds()
+                    }
+                }
+                sh '''#!/bin/bash
                         echo "127.0.0.1       authorization.cloudentity.com test-docker" | sudo tee -a /etc/hosts
-                        echo "127.0.0.1       datarecipient.mock" | sudo tee -a /etc/hosts
+                        echo "127.0.0.1       mock-data-recipient" | sudo tee -a /etc/hosts
                         cd tests && yarn install
-                 '''
-                 sh 'docker-compose version'
-
-                 retry(3) {
-                   sh "make run-tests-verify"
-                 }
+                '''
+                sh 'docker-compose version'
+                sh "docker rm -f \$(docker ps -aq) || true"
+                 
+                retry(3) {
+                    sh "make run-tests-verify"
+                }
             }
         }
 
@@ -42,6 +48,11 @@ pipeline {
                 sh 'make lint'
                 sh 'make stop-runner'
                 sh 'make build'
+            }
+        }
+        stage('Unit tests') {
+            steps {
+                sh 'make test'
             }
         }
         stage('CDR Tests') {
@@ -147,7 +158,7 @@ pipeline {
                 script {
                     sh 'make clean-saas'
                     try {
-                        sh 'make disable-mfa set-saas-configuration run-fdx-saas'
+                        sh 'make disable-mfa run-fdx-saas'
                         sh 'make run-saas-fdx-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
@@ -161,7 +172,7 @@ pipeline {
                 script {
                     sh 'make clean-saas'
                     try {
-                        sh 'make disable-mfa set-saas-configuration run-obuk-saas'
+                        sh 'make disable-mfa run-obuk-saas'
                         sh 'make run-saas-obuk-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
@@ -175,7 +186,7 @@ pipeline {
                 script {
                     sh 'make clean-saas'
                     try {
-                        sh 'make disable-mfa set-saas-configuration run-obbr-saas'
+                        sh 'make disable-mfa run-obbr-saas'
                         sh 'make run-saas-obbr-tests-headless'
                     } catch(exc) {
                         captureDockerLogs()
@@ -184,23 +195,27 @@ pipeline {
                 }
             }
         }
-        // stage('SaaS CDR Tests') {
-        //     steps {
-        //         script {
-        //             sh 'make clean-saas'
-        //             try {
-        //                 sh 'make disable-mfa set-saas-configuration run-cdr-saas'
-        //                 sh 'make run-saas-cdr-tests-headless'
-        //             } catch(exc) {
-        //                 captureDockerLogs()
-        //                 unstable('SaaS CDR Tests failed')
-        //             }
-        //         }
-        //     }
-        // }
+        stage('SaaS CDR Tests') {
+            steps {
+                script {
+                    sh 'make clean-saas'
+                    try {
+                        sh 'make disable-mfa run-cdr-saas'
+                        sh 'make run-saas-cdr-tests-headless'
+                    } catch(exc) {
+                        captureDockerLogs()
+                        unstable('SaaS CDR Tests failed')
+                    }
+                }
+            }
+        }
     }
 
     post {
+        always {
+            sh "make clean-saas"
+        }
+        
         failure {
             script {
                 captureCypressArtifacts()

@@ -1,19 +1,13 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Theme } from "@material-ui/core";
-import Avatar from "@material-ui/core/Avatar";
+import { makeStyles } from "tss-react/mui";
+import Avatar from "@mui/material/Avatar";
 import { uniq } from "ramda";
 
 import CustomDrawer from "./CustomDrawer";
-import {
-  drawerStyles,
-  permissionsDict,
-  getDate,
-  ClientType,
-} from "../../utils";
+import { drawerStyles, permissionsDict, getDate, Consent } from "../../utils";
 import Chip from "../../Chip";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()(theme => ({
   ...drawerStyles,
   cardsWrapperGrid: {
     display: "grid",
@@ -57,13 +51,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type Props = {
-  drawerData: ClientType["consents"][0];
-  setDrawerData: (data: string | null) => void;
-};
+interface Props {
+  drawerData: Consent;
+  setDrawerData: (data: Consent | undefined) => void;
+}
 
 function AccountAccessDrawer({ drawerData, setDrawerData }: Props) {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   const permissionDates = {
     Authorised: getDate(drawerData?.created_at),
@@ -72,14 +66,14 @@ function AccountAccessDrawer({ drawerData, setDrawerData }: Props) {
   };
 
   const clusters = uniq(
-    drawerData?.permissions?.map((v) => permissionsDict[v].Cluster) ?? []
+    drawerData?.permissions?.map(v => permissionsDict[v].Cluster) ?? []
   );
 
-  const permissionItems = clusters.map((cluster) => ({
+  const permissionItems = clusters.map(cluster => ({
     title: cluster,
     items: Object.values(permissionsDict)
-      .filter((p) => p.Cluster === cluster)
-      .map((v) => v.Language),
+      .filter(p => p.Cluster === cluster)
+      .map(v => v.Language),
   }));
 
   const status = drawerData?.status as any;
@@ -93,9 +87,13 @@ function AccountAccessDrawer({ drawerData, setDrawerData }: Props) {
             className={classes.logo}
             style={{ backgroundColor: "white", color: "#626576" }}
           >
-            {drawerData?.Client?.name[0]?.toUpperCase()}
+            {drawerData.CreditorAccountName
+              ? drawerData.CreditorAccountName[0].toUpperCase()
+              : ""}
           </Avatar>
-          <h3 className={classes.name}>{drawerData?.Client?.name}</h3>
+          <h3 className={classes.name}>
+            {drawerData.CreditorAccountName ?? ""}
+          </h3>
           <div style={{ flex: 1 }} />
           <Chip type={status && status.toLowerCase()}>{status}</Chip>
         </div>
@@ -117,7 +115,7 @@ function AccountAccessDrawer({ drawerData, setDrawerData }: Props) {
       <div>
         <div className={classes.subHeader}>Accounts</div>
         <div className={classes.cardsWrapperGrid}>
-          {drawerData?.account_ids?.map((id) => (
+          {drawerData?.account_ids?.map(id => (
             <div className={classes.card} key={id}>
               <div className={classes.cardContent}>{id}</div>
             </div>
@@ -128,11 +126,11 @@ function AccountAccessDrawer({ drawerData, setDrawerData }: Props) {
       <div>
         <div className={classes.subHeader}>Details being shared</div>
         <div>
-          {permissionItems.map((v) => (
+          {permissionItems.map(v => (
             <div key={v.title}>
               <div className={classes.detailsTitle}>{v.title}</div>
               <ul className={classes.ulList}>
-                {v.items.map((item) => (
+                {v.items.map(item => (
                   <li key={item}>{item}</li>
                 ))}
               </ul>

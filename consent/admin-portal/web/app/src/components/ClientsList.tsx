@@ -1,16 +1,16 @@
 import React, { useCallback, useEffect, useState } from "react";
-import { makeStyles, Theme } from "@material-ui/core";
-import OutlinedInput from "@material-ui/core/OutlinedInput";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import IconButton from "@material-ui/core/IconButton";
-import CancelOutlined from "@material-ui/icons/CancelOutlined";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputAdornment from "@mui/material/InputAdornment";
+import IconButton from "@mui/material/IconButton";
+import CancelOutlined from "@mui/icons-material/CancelOutlined";
 import debounce from "lodash/debounce";
+import Search from "@mui/icons-material/Search";
 
 import ClientCard from "./ClientCard";
-import { Search } from "react-feather";
 import { ConsentStatus, getStatus } from "./utils";
+import { makeStyles } from "tss-react/mui";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()(theme => ({
   container: {
     maxWidth: 850,
     margin: "32px auto",
@@ -50,17 +50,17 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 export default function ClientsList({ clients, onRevokeClient }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [searchText, setSearchText] = useState("");
   const [debouncedSearchText, setDebouncedSearchText] = useState("");
   const [clientsWithStatus] = useState(
-    clients.map((v) => ({ ...v, mainStatus: getStatus(v) }))
+    clients.map(v => ({ ...v, mainStatus: getStatus(v) }))
   );
   const [filteredClients, setFilteredClients] = useState(clientsWithStatus);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
   const handleSearch = useCallback(
-    debounce((value) => {
+    debounce(value => {
       setDebouncedSearchText(value);
     }, 250),
     []
@@ -69,7 +69,7 @@ export default function ClientsList({ clients, onRevokeClient }) {
   useEffect(() => {
     const clientsSearched =
       (debouncedSearchText &&
-        clientsWithStatus.filter((v) =>
+        clientsWithStatus.filter(v =>
           v?.client_name
             ?.toLowerCase()
             ?.includes(debouncedSearchText.toLowerCase())
@@ -85,7 +85,7 @@ export default function ClientsList({ clients, onRevokeClient }) {
           <OutlinedInput
             type="text"
             value={searchText}
-            onChange={(e) => {
+            onChange={e => {
               setSearchText(e.target.value);
               handleSearch(e.target.value);
             }}
@@ -110,6 +110,7 @@ export default function ClientsList({ clients, onRevokeClient }) {
                       setSearchText("");
                       setDebouncedSearchText("");
                     }}
+                    size="large"
                   >
                     <CancelOutlined
                       fontSize="small"
@@ -118,13 +119,11 @@ export default function ClientsList({ clients, onRevokeClient }) {
                   </IconButton>
                 ) : (
                   <Search
-                    size="16"
-                    style={{ color: "#A0A3B5", marginRight: 6 }}
+                    style={{ color: "#A0A3B5", marginRight: 6, fontSize: 16 }}
                   />
                 )}
               </InputAdornment>
             }
-            labelWidth={0}
           />
         </div>
       </div>
@@ -147,7 +146,7 @@ export default function ClientsList({ clients, onRevokeClient }) {
             b?.client_name ?? ""
           );
         })
-        .map((client) => (
+        .map(client => (
           <ClientCard
             key={client?.client_id}
             client={client}

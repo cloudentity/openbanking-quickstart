@@ -1,8 +1,7 @@
 import React, { ReactNode } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Theme } from "@material-ui/core";
+import { makeStyles } from "tss-react/mui";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()(theme => ({
   container: {
     background: "#FFFFFF",
     boxShadow:
@@ -32,16 +31,16 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type Props = {
+interface Props {
   tabs: {
     key: string;
     label: string;
     content: ReactNode;
   }[];
-};
+}
 
 function CustomTabs({ tabs }: Props) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const curentTab = tabs[0];
 
   return (

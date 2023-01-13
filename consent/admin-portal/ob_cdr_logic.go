@@ -37,7 +37,7 @@ func (o *OBCDRConsentFetcher) Fetch(c *gin.Context) ([]ClientConsents, error) {
 		if consents, err = o.Client.Openbanking.Cdr.ListCDRArrangements(
 			cdr.NewListCDRArrangementsParamsWithContext(c).
 				WithWid(o.Config.OpenbankingWorkspaceID).
-				WithConsentsRequest(&obModels.ConsentsRequest{
+				WithConsentsRequest(&obModels.CDRConsentsRequest{
 					ClientID: oc.ClientID,
 				}),
 			nil,
@@ -64,7 +64,8 @@ func (o *OBCDRConsentFetcher) Revoke(c *gin.Context, revocationType RevocationTy
 	case ClientRevocation:
 		if _, err = o.Client.Openbanking.Cdr.RevokeCDRArrangements(
 			cdr.NewRevokeCDRArrangementsParamsWithContext(c).
-				WithClientID(&id).WithWid(o.Config.OpenbankingWorkspaceID),
+				WithClientID(&id).
+				WithWid(o.Config.OpenbankingWorkspaceID),
 			nil,
 		); err != nil {
 			return err

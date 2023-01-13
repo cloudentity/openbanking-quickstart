@@ -1,18 +1,17 @@
 import React from "react";
-import { useHistory, useLocation } from "react-router";
-import Toolbar from "@material-ui/core/Toolbar";
-import AppBar from "@material-ui/core/AppBar";
-import Button from "@material-ui/core/Button";
-import { Theme } from "@material-ui/core";
-import ExitToAppIcon from "@material-ui/icons/ExitToApp";
-import { makeStyles } from "@material-ui/core/styles";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
+import { useLocation, useNavigate } from "react-router-dom";
+import Toolbar from "@mui/material/Toolbar";
+import AppBar from "@mui/material/AppBar";
+import Button from "@mui/material/Button";
+import ExitToAppIcon from "@mui/icons-material/ExitToApp";
+import { makeStyles } from "tss-react/mui";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
 
 import logo from "../assets/gobank-logo.svg";
 import { logout } from "./AuthPage";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()(theme => ({
   indicator: {
     backgroundColor: "#fff",
   },
@@ -29,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
     backgroundColor: "white",
     minHeight: 64,
     padding: "0 80px",
-    [theme.breakpoints.down("sm")]: {
+    [theme.breakpoints.down("md")]: {
       padding: 0,
     },
   },
@@ -67,9 +66,9 @@ export default function PageToolbar({
   authorizationServerId,
   tenantId,
 }) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const { pathname } = useLocation();
-  const history = useHistory();
+  const navigate = useNavigate();
   const activeTab =
     ((pathname === "/" || pathname.includes("/accounts/")) && "/") ||
     (pathname === "/providers" && "/providers") ||
@@ -79,9 +78,8 @@ export default function PageToolbar({
     <AppBar
       position="fixed"
       variant="outlined"
-      classes={{
-        root: classes.appBar,
-      }}
+      className={classes.appBar}
+      elevation={0}
     >
       <Toolbar>
         <img src={logo} alt="logo" style={{ width: 160 }} />
@@ -89,7 +87,7 @@ export default function PageToolbar({
         <div className={classes.tabsContainer}>
           <Tabs
             value={activeTab}
-            onChange={(_, newValue) => history.push(newValue)}
+            onChange={(_, newValue) => navigate(newValue)}
             classes={{
               root: classes.tabsRoot,
               indicator: classes.tabsIndicator,

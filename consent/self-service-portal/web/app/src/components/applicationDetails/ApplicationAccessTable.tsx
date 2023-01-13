@@ -1,18 +1,19 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Theme } from "@material-ui/core";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
+import { makeStyles } from "tss-react/mui";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 
 import ApplicationAccessPaymentDrawer from "./ApplicationAccessPaymentDrawer";
 import ApplicationAccessAccountDrawer from "./ApplicationAccessAccountDrawer";
 import Chip from "../Chip";
 import { getDate } from "../ApplicationSimpleCard";
+import { Consent, ConsentAccount } from "../types";
+import { getCurrency } from "./utils";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()(() => ({
   table: {
     "& tr": {
       borderBottom: "solid 1px #ECECEC",
@@ -71,16 +72,21 @@ function getTableHead(type: "account" | "payment") {
   return null;
 }
 
-function getTableBody(type: "account" | "payment", rows, setDrawerData, data) {
+function getTableBody(
+  type: "account" | "payment",
+  rows: Row[],
+  setDrawerData: (consent: Consent | undefined) => void,
+  data: Consent[]
+) {
   if (type === "account") {
     return (
       <TableBody>
-        {rows.map((row) => (
+        {rows.map(row => (
           <TableRow
             key={row.id}
-            className={`consent-row`}
+            className="consent-row"
             onClick={() => {
-              setDrawerData(data.find((v) => row.id === v.ConsentID));
+              setDrawerData(data.find(v => row.id === v.ConsentID));
             }}
           >
             <TableCell>{row.authorised}</TableCell>
@@ -104,7 +110,7 @@ function getTableBody(type: "account" | "payment", rows, setDrawerData, data) {
               )}
             </TableCell>
             <TableCell>
-              <Chip type={row.status && row.status.toLowerCase()}>
+              <Chip type={row.status && (row.status.toLowerCase() as any)}>
                 {row.status}
               </Chip>
             </TableCell>
@@ -117,23 +123,25 @@ function getTableBody(type: "account" | "payment", rows, setDrawerData, data) {
   if (type === "payment") {
     return (
       <TableBody>
-        {rows.map((row) => (
+        {rows.map(row => (
           <TableRow
             key={row.id}
-            className={`consent-row`}
+            className="consent-row"
             onClick={() => {
-              setDrawerData(data.find((v) => row.id === v.ConsentID));
+              setDrawerData(data.find(v => row.id === v.ConsentID));
             }}
           >
             <TableCell>{row.authorised}</TableCell>
             <TableCell>{row.account.data}</TableCell>
             <TableCell>{row.creditor}</TableCell>
             <TableCell>
-              <Chip type={row.status && row.status.toLowerCase()}>
+              <Chip type={row.status && (row.status.toLowerCase() as any)}>
                 {row.status}
               </Chip>
             </TableCell>
-            <TableCell align="right">£ {row.amount}</TableCell>
+            <TableCell align="right">
+              {getCurrency(row.currency)} {row.amount}
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
@@ -142,16 +150,16 @@ function getTableBody(type: "account" | "payment", rows, setDrawerData, data) {
   return null;
 }
 
-function getAccountNames(accountIds, accounts) {
+function getAccountNames(accountIds: string[], accounts: ConsentAccount[]) {
   const names = accountIds
-    .map((id) => {
-      const found = accounts.find((v) => v.id === id);
+    .map(id => {
+      const found = accounts.find(v => v.id === id);
       if (found) {
         return `${found.name} *${found.id}`;
       }
       return null;
     })
-    .filter((v) => v);
+    .filter(v => v);
 
   return {
     data: names.slice(0, 2).join(", "),
@@ -159,13 +167,24 @@ function getAccountNames(accountIds, accounts) {
   };
 }
 
-type Props = {
-  data: any;
-  accounts: any;
+type Row = {
+  authorised: string;
+  account: { data: string; more: number | null };
+  status: string;
+  activeUntil?: string;
+  id: string;
+  creditor?: string;
+  amount?: string;
+  currency?: string;
+};
+
+interface Props {
+  data: Consent[];
+  accounts: ConsentAccount[];
   type: "account" | "payment";
   handleRevoke: (id: string, consent_type: string) => void;
   status: string;
-};
+}
 
 function ApplicationAccessTable({
   data,
@@ -174,52 +193,73 @@ function ApplicationAccessTable({
   accounts,
   status,
 }: Props) {
-  const classes = useStyles();
-  const [drawerPaymentData, setDrawerPaymentData] = useState<any>(null); //FIXME any
-  const [drawerAccountData, setDrawerAccountData] = useState<any>(null); //FIXME any
+  const { classes } = useStyles();
+  const [drawerPaymentData, setDrawerPaymentData] = useState<Consent>();
+  const [drawerAccountData, setDrawerAccountData] = useState<Consent>();
 
-  function createDataAccount(authorised, account, status, activeUntil, id) {
+  function createDataAccount(
+    authorised: string,
+    account: { data: string; more: number | null },
+    status: string,
+    activeUntil: string,
+    id: string
+  ) {
     return { authorised, account, status, activeUntil, id };
   }
 
   function createDataPayment(
-    authorised,
-    account,
-    creditor,
-    status,
-    amount,
-    id
+    authorised: string,
+    account: { data: string; more: number | null },
+    creditor: string,
+    status: string,
+    amount: string,
+    id: string,
+    currency: string
   ) {
-    return { authorised, account, creditor, status, amount, id };
+    return { authorised, account, creditor, status, amount, id, currency };
   }
 
   const rowsAccount =
     type === "account"
-      ? data.map(({ AccountIDs, CreationDateTime, ExpirationDateTime, ConsentID, Status }) =>
-          createDataAccount(
-            getDate(CreationDateTime),
-            getAccountNames(AccountIDs ?? [], accounts),
+      ? data.map(
+          ({
+            AccountIDs,
+            CreationDateTime,
+            ExpirationDateTime,
+            ConsentID,
             Status,
-            getDate(ExpirationDateTime),
-            ConsentID
-          )
+          }) =>
+            createDataAccount(
+              getDate(CreationDateTime),
+              getAccountNames(AccountIDs ?? [], accounts),
+              Status,
+              getDate(ExpirationDateTime),
+              ConsentID
+            )
         )
       : [];
 
   const rowsPayment =
     type === "payment"
-      ? data.map(({ AccountIDs, CreationDateTime, Status, ConsentID, Amount, CreditorAccountName }) =>
-          createDataPayment(
-            getDate(CreationDateTime),
-            getAccountNames(
-              AccountIDs ?? [],
-              accounts
-            ),
-            CreditorAccountName,
+      ? data.map(
+          ({
+            AccountIDs,
+            CreationDateTime,
             Status,
+            ConsentID,
             Amount,
-            ConsentID
-          )
+            CreditorAccountName,
+            Currency,
+          }) =>
+            createDataPayment(
+              getDate(CreationDateTime),
+              getAccountNames(AccountIDs ?? [], accounts),
+              CreditorAccountName,
+              Status,
+              Amount,
+              ConsentID,
+              Currency
+            )
         )
       : [];
 

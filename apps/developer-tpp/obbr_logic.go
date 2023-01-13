@@ -3,7 +3,7 @@ package main
 import (
 	"time"
 
-	"github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/client/accounts"
+	"github.com/cloudentity/openbanking-quickstart/generated/obbr/accounts/client/accounts"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 	"github.com/pkg/errors"
@@ -47,7 +47,7 @@ func (h *OBBRLogic) CreateConsent(c *gin.Context) (interface{}, error) {
 
 	if registerResponse, err = h.Client.Openbanking.Openbankingbr.CreateDataAccessConsent(
 		obbrModels.NewCreateDataAccessConsentParamsWithContext(c).
-			WithRequest(&obModels.BrazilCustomerDataAccessConsentRequest{
+			WithRequest(&obModels.BrazilCustomerDataAccessConsentRequestV1{
 				Data: &obModels.OpenbankingBrasilConsentData{
 					ExpirationDateTime: strfmt.DateTime(time.Now().Add(time.Hour * 24)),
 					BusinessEntity: &obModels.OpenbankingBrasilConsentBusinessEntity{
@@ -107,6 +107,7 @@ func (h *OBBRLogic) BuildLoginURL(c *gin.Context, consentID string, doRequestObj
 
 	if doRequestObjectEncryption {
 		return client.AuthorizeURL(
+			acpclient.WithResponseType("code"),
 			acpclient.WithOpenbankingIntentID(consentID, []string{"urn:brasil:openbanking:loa2"}),
 			acpclient.WithRequestObjectEncryption(key),
 			acpclient.WithPKCE(),
@@ -115,6 +116,7 @@ func (h *OBBRLogic) BuildLoginURL(c *gin.Context, consentID string, doRequestObj
 	}
 
 	return client.AuthorizeURL(
+		acpclient.WithResponseType("code"),
 		acpclient.WithOpenbankingIntentID(consentID, []string{"urn:brasil:openbanking:loa2"}),
 		acpclient.WithPKCE(),
 		acpclient.WithResponseMode("jwt"),

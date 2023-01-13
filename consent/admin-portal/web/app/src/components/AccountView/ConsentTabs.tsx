@@ -1,12 +1,11 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Theme } from "@material-ui/core";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
+import { makeStyles } from "tss-react/mui";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
 import ConsentTable from "./ConsentTable";
 import { ClientType } from "../utils";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()(theme => ({
   container: {
     background: "#FFFFFF",
     boxShadow:
@@ -39,13 +38,13 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type Props = {
+interface Props {
   consents: ClientType["consents"];
   id?: string;
-};
+}
 
 function ConsentTabs({ consents, id }: Props) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [tab, setTab] = useState<"account" | "payment">("account");
 
   return (
@@ -76,15 +75,20 @@ function ConsentTabs({ consents, id }: Props) {
       <div>
         {tab === "account" && (
           <ConsentTable
-            data={consents.filter((v) => {
-              return v.consent_type === "account_access" || v.consent_type === "cdr_arrangement" || v.consent_type === "consents"
+            data={consents.filter(v => {
+              return (
+                v.consent_type === "account_access" ||
+                v.consent_type === "cdr_arrangement" ||
+                v.consent_type === "fdx_consent" ||
+                v.consent_type === "consents"
+              );
             })}
             type="account"
           />
         )}
         {tab === "payment" && (
           <ConsentTable
-            data={consents.filter((v) => v.consent_type === "domestic_payment")}
+            data={consents.filter(v => v.consent_type === "domestic_payment")}
             type="payment"
           />
         )}

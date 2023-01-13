@@ -128,7 +128,7 @@ func (s *Server) ListConsents() func(*gin.Context) {
 			return
 		}
 
-		if accounts, err = s.BankClient.GetInternalAccounts(sub); err != nil {
+		if accounts, err = s.BankClient.GetInternalAccounts(c, sub); err != nil {
 			Error(c, ToAPIError(err))
 			return
 		}

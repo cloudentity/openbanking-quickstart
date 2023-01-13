@@ -1,10 +1,11 @@
 package main
 
 import (
-	"github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/client/pagamentos"
-	"github.com/cloudentity/openbanking-quickstart/openbanking/obbr/payments/models"
-	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/client/domestic_payments"
-	obModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
+	"github.com/cloudentity/openbanking-quickstart/generated/obbr/payments/client/pagamentos"
+	"github.com/cloudentity/openbanking-quickstart/generated/obbr/payments/models"
+	"github.com/cloudentity/openbanking-quickstart/generated/obuk/payments/client/domestic_payments"
+
+	obModels "github.com/cloudentity/openbanking-quickstart/generated/obuk/payments/models"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 
@@ -63,6 +64,12 @@ func (o *OBUKClient) CreatePayment(c *gin.Context, data interface{}, accessToken
 func (o *OBBRClient) CreatePayment(c *gin.Context, data interface{}, accessToken string) (PaymentCreated, error) {
 	var (
 		paymentCreatedResponse *pagamentos.PaymentsPostPixPaymentsCreated
+		payload                map[string]interface{}
+		payloadData            map[string]interface{}
+		payloadDataPayment     map[string]interface{}
+		paymentID              string
+		paymentAmount          string
+		paymentCurrency        string
 		consent                *obbr.GetPaymentConsentOK
 		ok                     bool
 		err                    error
@@ -72,18 +79,18 @@ func (o *OBBRClient) CreatePayment(c *gin.Context, data interface{}, accessToken
 		return PaymentCreated{}, nil
 	}
 
-	if paymentCreatedResponse, err = o.PaymentConsentsBrasil.Pagamentos.PaymentsPostPixPayments(
+	if paymentCreatedResponse, err = o.Payments.Pagamentos.PaymentsPostPixPayments(
 		pagamentos.NewPaymentsPostPixPaymentsParamsWithContext(c).
 			WithAuthorization(accessToken).
-			WithBody(&models.OpenbankingBrasilCreatePixPayment{
-				Data: &models.OpenbankingBrasilCreatePixPaymentData{
-					CreditorAccount: &models.OpenbankingBrasilCreditorAccount{
-						AccountType: (*models.OpenbankingBrasilEnumAccountPaymentsType)(consent.Payload.Data.Payment.Details.CreditorAccount.AccountType),
+			WithBody(&models.OpenbankingBrasilPaymentCreatePixPayment{
+				Data: &models.OpenbankingBrasilPaymentCreatePixPaymentData{
+					CreditorAccount: &models.OpenbankingBrasilPaymentCreditorAccount{
+						AccountType: (*models.OpenbankingBrasilPaymentEnumAccountPaymentsType)(consent.Payload.Data.Payment.Details.CreditorAccount.AccountType),
 						Ispb:        consent.Payload.Data.Payment.Details.CreditorAccount.Ispb,
 						Number:      consent.Payload.Data.Payment.Details.CreditorAccount.Number,
 					},
-					LocalInstrument: (*models.OpenbankingBrasilEnumLocalInstrument)(consent.Payload.Data.Payment.Details.LocalInstrument),
-					Payment: &models.OpenbankingBrasilPaymentPix{
+					LocalInstrument: (*models.OpenbankingBrasilPaymentEnumLocalInstrument)(consent.Payload.Data.Payment.Details.LocalInstrument),
+					Payment: &models.OpenbankingBrasilPaymentPaymentPix{
 						Amount:   consent.Payload.Data.Payment.Amount,
 						Currency: consent.Payload.Data.Payment.Currency,
 					},
@@ -94,13 +101,41 @@ func (o *OBBRClient) CreatePayment(c *gin.Context, data interface{}, accessToken
 		return PaymentCreated{}, errors.Wrapf(err, "failed to call pix payments endpoint")
 	}
 
+	if payload, ok = paymentCreatedResponse.Payload.(map[string]interface{}); !ok {
+		return PaymentCreated{}, errors.New("failed to decode pix payment response payload")
+	}
+
+	if payloadData, ok = payload["data"].(map[string]interface{}); !ok {
+		return PaymentCreated{}, errors.New("failed to decode pix payment response payload data")
+	}
+
+	if paymentID, ok = payloadData["paymentId"].(string); !ok {
+		return PaymentCreated{}, errors.New("failed to decode pix payment response payload data paymentID")
+	}
+
+	if payloadDataPayment, ok = payloadData["payment"].(map[string]interface{}); !ok {
+		return PaymentCreated{}, errors.New("failed to decode pix payment response payload data payment")
+	}
+
+	if paymentAmount, ok = payloadDataPayment["amount"].(string); !ok {
+		return PaymentCreated{}, errors.New("failed to decode pix payment response payload data payment amount")
+	}
+
+	if paymentCurrency, ok = payloadDataPayment["currency"].(string); !ok {
+		return PaymentCreated{}, errors.New("failed to decode pix payment response payload data payment currency")
+	}
+
 	return PaymentCreated{
-		PaymentID: paymentCreatedResponse.Payload.Data.PaymentID,
-		Amount:    paymentCreatedResponse.Payload.Data.Payment.Amount,
-		Currency:  paymentCreatedResponse.Payload.Data.Payment.Currency,
+		PaymentID: paymentID,
+		Amount:    paymentAmount,
+		Currency:  paymentCurrency,
 	}, nil
 }
 
 func (o *CDRClient) CreatePayment(c *gin.Context, data interface{}, accessToken string) (PaymentCreated, error) {
+	return PaymentCreated{}, nil
+}
+
+func (o *FDXBankClient) CreatePayment(c *gin.Context, data interface{}, accessToken string) (PaymentCreated, error) {
 	return PaymentCreated{}, nil
 }

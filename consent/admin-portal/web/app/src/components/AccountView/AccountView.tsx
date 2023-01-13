@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { makeStyles, Theme } from "@material-ui/core";
-import { useHistory, useLocation, useParams } from "react-router";
-import ArrowBack from "@material-ui/icons/ArrowBack";
-import IconButton from "@material-ui/core/IconButton";
+import { makeStyles } from "tss-react/mui";
+import { useNavigate, useLocation, useParams } from "react-router-dom";
+import ArrowBack from "@mui/icons-material/ArrowBack";
+import IconButton from "@mui/material/IconButton";
 
 import CustomTabs from "../CustomTabs";
 import PageToolbar from "../PageToolbar";
@@ -12,7 +12,7 @@ import { api } from "../../api/api";
 import { ClientType, handleSearch, searchTabs } from "../utils";
 import AccountClientsList from "./AccountClientsList";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()(theme => ({
   subtitle: {
     ...theme.custom.body1,
   },
@@ -51,7 +51,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface PropTypes {
+interface Props {
   authorizationServerURL?: string;
   authorizationServerId?: string;
   tenantId?: string;
@@ -66,12 +66,13 @@ export default function AccountView({
   authorizationServerURL,
   authorizationServerId,
   tenantId,
-}: PropTypes) {
+}: Props) {
   const { id } = useParams<Record<string, string | undefined>>();
-  const history = useHistory();
-  const { state } = useLocation<LocationState>();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const state = location.state as LocationState | undefined;
   const [isProgress, setProgress] = useState(true);
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [clients, setClients] = useState<ClientType[] | []>([]);
 
   useEffect(() => {
@@ -79,14 +80,14 @@ export default function AccountView({
     api
       .getClients()
       .then(({ clients }: { clients: ClientType[] }) => {
-        const found = clients.filter((v) =>
+        const found = clients.filter(v =>
           state?.clientIds?.includes(v.client_id)
         );
         if (found.length) {
           setClients(found);
         }
       })
-      .catch((err) => console.log(err))
+      .catch(err => console.log(err))
       .finally(() => setProgress(false));
   }, [state?.clientIds]);
 
@@ -114,8 +115,9 @@ export default function AccountView({
                 <div className={classes.subHeaderToolbar}>
                   <IconButton
                     style={{ padding: 4 }}
-                    onClick={() => history.push("/")}
-                    onMouseDown={() => history.push("/")}
+                    onClick={() => navigate("/")}
+                    onMouseDown={() => navigate("/")}
+                    size="large"
                   >
                     <ArrowBack fontSize="small" style={{ color: "white" }} />
                     <div className={classes.back}>Back</div>
@@ -131,8 +133,8 @@ export default function AccountView({
                 }}
               >
                 <CustomTabs
-                  tabs={searchTabs((searchText) => {
-                    handleSearch(searchText)(history, state?.accounts);
+                  tabs={searchTabs(searchText => {
+                    handleSearch(searchText)(navigate, state?.accounts);
                   }, id)}
                 />
               </div>

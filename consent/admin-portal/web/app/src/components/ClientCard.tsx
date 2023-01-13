@@ -1,13 +1,12 @@
 import React, { useState } from "react";
-import { makeStyles, Theme } from "@material-ui/core/styles";
-import Avatar from "@material-ui/core/Avatar";
-import Button from "@material-ui/core/Button";
-import clsx from "clsx";
+import { makeStyles } from "tss-react/mui";
+import Avatar from "@mui/material/Avatar";
+import Button from "@mui/material/Button";
 
 import { ClientType, ConsentStatus, getDate } from "./utils";
 import RevokeDrawer from "./ThirdPartyProvidersView/RevokeDrawer";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()(theme => ({
   card: {
     background: "#FFFFFF",
     padding: "12px 24px",
@@ -57,10 +56,11 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 
 function getAuthorisedDate(client) {
-  const accountAccessConsent = client?.consents?.find((v) => {
+  const accountAccessConsent = client?.consents?.find(v => {
     return (
       v.consent_type === "account_access" ||
       v.consent_type === "cdr_arrangement" ||
+      v.consent_type === "fdx_consent" ||
       v.consent_type === "consents"
     );
   });
@@ -71,19 +71,19 @@ function getAuthorisedDate(client) {
   return "N/A";
 }
 
-interface PropTypes {
+interface Props {
   client: ClientType;
   onRevokeClient: (id: string, provider_type: string) => void;
 }
 
-export default function ClientCard({ client, onRevokeClient }: PropTypes) {
-  const classes = useStyles();
+export default function ClientCard({ client, onRevokeClient }: Props) {
+  const { cx, classes } = useStyles();
   const date = getAuthorisedDate(client);
   const [openDrawer, setOpenDrawer] = useState(false);
   const status = client?.mainStatus;
   return (
     <div
-      className={clsx(
+      className={cx(
         classes.card,
         status === ConsentStatus.Inactive && classes.cardDisabled
       )}
@@ -104,13 +104,14 @@ export default function ClientCard({ client, onRevokeClient }: PropTypes) {
           variant="outlined"
           classes={{ root: classes.buttonRoot }}
           onClick={() => setOpenDrawer(true)}
+          id="revoke-access"
         >
           Revoke
         </Button>
       ) : (
         <Button
           classes={{
-            root: clsx(classes.buttonRoot, classes.buttonRootDisabled),
+            root: cx(classes.buttonRoot, classes.buttonRootDisabled),
           }}
           disabled
         >

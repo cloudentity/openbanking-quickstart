@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/stretchr/testify/require"
@@ -8,7 +9,8 @@ import (
 
 func TestUsersRepo(t *testing.T) {
 	t.Parallel()
-	db, err := InitDB(Config{DBFile: "./test.db"})
+	dir := t.TempDir()
+	db, err := InitDB(Config{DBFile: fmt.Sprintf("%s/test.db", dir)})
 	require.NoError(t, err)
 	defer db.Close()
 

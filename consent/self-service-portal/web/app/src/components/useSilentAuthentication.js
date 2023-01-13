@@ -1,12 +1,12 @@
-import {useEffect} from 'react';
-import {getExpiresInFromStore, getIATInFromStore, getIdTokenFromStore, getTokenFromStore} from './auth.utils';
-import throttle from 'lodash.throttle';
-import {silentAuthentication} from './AuthPage';
+import { useEffect } from 'react';
+import { getExpiresInFromStore, getIATInFromStore, getIdTokenFromStore, getTokenFromStore } from './auth.utils';
+import throttle from 'lodash/throttle';
+import { silentAuthentication } from './AuthPage';
 
 const TIMEOUT_RATIO_FACTOR = 0.75;
 const TOKEN_EXPIRATION_RATIO_CHECK_INTERVAL = 5000;
 
-const silentAuthenticationThrottled = throttle(silentAuthentication, 30000, {trailing: false});
+const silentAuthenticationThrottled = throttle(silentAuthentication, 30000, { trailing: false });
 
 export const useSilentAuthentication = (authorizationServerURL, authorizationServerId, tenantId, clientId, scopes) =>
   useEffect(() => {

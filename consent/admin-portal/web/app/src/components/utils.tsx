@@ -3,6 +3,7 @@ import React from "react";
 import Chip from "./Chip";
 import SearchInput from "./SearchInput";
 import { theme } from "../theme";
+import { NavigateFunction } from "react-router";
 
 export const drawerStyles = {
   name: {
@@ -208,6 +209,7 @@ const availableConstentTypes = [
   "account_access",
   "domestic_payment",
   "cdr_arrangement",
+  "fdx_consent",
   "domestic_scheduled_payment",
   "domestic_standing_order",
   "file_payment",
@@ -220,8 +222,8 @@ export const availableConstentTypesJoined = availableConstentTypes.join(",");
 
 export function getRawConsents(consents) {
   return consents
-    .filter((c) => availableConstentTypes.includes(c.consent_type))
-    .map((c) => {
+    .filter(c => availableConstentTypes.includes(c.consent_type))
+    .map(c => {
       return {
         consent_type: c.consent_type,
         consent: c,
@@ -257,58 +259,71 @@ export function getChipForStatus(client?: ClientType) {
   );
 }
 
+export type Consent = {
+  Amount: string;
+  CreditorAccountIdentification: string;
+  CreditorAccountName: string;
+  DebtorAccountIdentification: string;
+  DebtorAccountName: string;
+  account_ids: string[];
+  consent_id: string;
+  client_id: string;
+  tenant_id: string;
+  server_id: string;
+  status: string;
+  consent_type: string;
+  created_at: string;
+  expires_at?: string;
+  updated_at?: string;
+  completed_at?: string | null;
+  permissions?: string[];
+  currency: string;
+};
+
 export type ClientType = {
   client_id: string;
   client_name: string;
   client_uri: string;
   provider_type: string;
-  consents: {
-    Client: {
-      client_uri: string;
-      id: string;
-      name: string;
-    };
-    account_ids: string[];
-    consent_id: string;
-    client_id: string;
-    tenant_id: string;
-    server_id: string;
-    status: string;
-    consent_type: string;
-    created_at: string;
-    expires_at?: string;
-    updated_at?: string;
-    completed_at?: string | null;
-    permissions?: string[];
-
-    currency: string;
-    amount: string;
-  }[];
   mainStatus?: ConsentStatus;
+  consents: Consent[];
 };
 
 export const handleSearch =
   (searchText: string) =>
-  (history: any, accounts?: { [accountId: string]: string[] }) => {
+  (
+    navigate: NavigateFunction,
+    accounts?: { [accountId: string]: string[] }
+  ) => {
     if (accounts) {
       const foundAccount = accounts[searchText];
-      history.push({
-        pathname: `/accounts/${searchText}`,
+      navigate(`/accounts/${searchText}`, {
         state: { clientIds: foundAccount || null, accounts },
       });
     }
   };
 
-export const currencyDict = {
-  USD: "$",
-  GBP: "£",
-  EUR: "€",
+export const getCurrency = (currency: any) => {
+  switch (currency) {
+    case "USD":
+      return "$";
+    case "GBP":
+      return "£";
+    case "AUD":
+      return "$";
+    case "EUR":
+      return "€";
+    case "BRL":
+      return "R$";
+    default:
+      return currency;
+  }
 };
 
 export function getStatus(client: ClientType) {
-  const accountConsents = ["account_access", "consents", "cdr_arrangement"];
+  const accountConsents = ["account_access", "consents", "cdr_arrangement", "fdx_consent"];
   const found = client?.consents?.find(
-    (consent) =>
+    consent =>
       consent &&
       accountConsents.includes(consent.consent_type) &&
       consent.status === "Authorised"

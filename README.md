@@ -120,4 +120,4 @@ Once you can run the quickstart, you can visit our sample apps:
 - [Configuration app](apps/configuration/LICENSE) - Apache 2.0
 - [Consent self service portal](consent/self-service-portal/LICENSE) - Apache 2.0
 - [Consent admin portal](consent/admin-portal/LICENSE) - Apache 2.0
-- [Consent page](consent/consent-page/LICENSE) - Apache 2.0
+- [Consent page](consent/consent-page/LICENSE) - Apache 2.0 

@@ -22,9 +22,12 @@ export class DynamicClientRegistrationPage {
   private readonly registerMessageSelector: string = '#dcr-create-message';
   private readonly noRegistrationMessage: string = '#dcr-current-noDataMessage';
   private readonly registrationsCountMessageSelector = (node: string) => `#dcr-current-count ${node}`;
+  private readonly deleteClientButtonSelector: string = `[id*='dcr-current-btnDelete']`;
+  private readonly dhBrandNameFormSelector: string = `#DataHolderBrandId`;
+
 
   public visit(force: boolean = false): void {
-    Urls.visit(Cypress.env(`mock_data_recipient_url`) + '/dcr', false);
+    Urls.visit(Cypress.env(`mock_data_recipient_url`) + '/dcr', force);
     this.assertThatPageIsDisplayed();
   }
 
@@ -35,8 +38,19 @@ export class DynamicClientRegistrationPage {
       .should('have.text', 'Create Client Registration');
     cy.get(this.currentRegistrationsHeaderSelector)
       .should('have.text', 'Current Registrations');
-    cy.get(this.brandIdSelector('label'))
-      .should('have.text', 'DH Brand ID');
+    cy.get(this.brandIdSelector('#DataHolderBrandId'))
+      .should('be.visible');
+    cy.get(this.registerMessageSelector)
+      .should('contain.text', 'Waiting...');
+  }
+
+  public assertThatDynamicClientRegistrationFormIsDisplayed() :void {
+    cy.get(this.mainHeaderSelector)
+      .should('have.text', 'Dynamic Client Registration');
+    cy.get(this.createClientRegistrationHeaderSelector)
+      .should('have.text', 'Create Client Registration');
+    cy.get(this.currentRegistrationsHeaderSelector)
+      .should('have.text', 'Current Registrations');
     cy.get(this.brandIdSelector('#DataHolderBrandId'))
       .should('be.visible');
     cy.get(this.clientIdSelector('label'))
@@ -95,6 +109,10 @@ export class DynamicClientRegistrationPage {
       .should('contain.text', 'Waiting...');
   }
 
+  public clickMockDataHolderBankingBrand(): void {
+    cy.get(this.dhBrandNameFormSelector).select("804fc2fb-18a7-4235-9a49-2af393d18bc7");
+  }
+
   public assertThatBrandIdIsSelected(): void {
     cy.get(this.brandIdSelector(`option[selected='selected']`))
       .should('not.have.text', 'Select Data Holder Brand...');
@@ -104,12 +122,23 @@ export class DynamicClientRegistrationPage {
     cy.get(this.registerButtonSelector).click();
   }
 
+  public clickDeleteClientButton(): void {
+    cy.get(this.deleteClientButtonSelector).click();
+  }
+
   public assertThatClientRegistered(): void {
     cy.get(this.registerMessageSelector, {timeout: 30000,})
       .should('contain.text', 'Created - Registered');
     cy.get(this.noRegistrationMessage)
       .should('not.exist');
     cy.get(this.registrationsCountMessageSelector('strong'))
-      .should('not.have.text', '0');
+      .should('have.text', '1');
+  }
+
+  public assertThatRegisteredClientWasRemoved(): void {
+    cy.get(this.noRegistrationMessage, {timeout: 30000,})
+      .should('have.text', 'No existing registrations found.');
+    cy.get(this.registrationsCountMessageSelector('strong'))
+      .should('have.text', '0');
   }
 }

@@ -26,6 +26,7 @@ func (s *Server) Index() func(*gin.Context) {
 		c.HTML(http.StatusOK, "index.html", gin.H{
 			"featureFlags": s.Config.FeatureFlags,
 			"spec":         s.Config.Spec,
+			"currency":     s.Config.Currency,
 		})
 	}
 }
@@ -38,9 +39,9 @@ func (s *Server) ConnectBank() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
 			bankID    = BankID(c.Param("bankId"))
-			consentID string
 			user      User
 			err       error
+			consentID string
 		)
 
 		if user, _, err = s.WithUser(c); err != nil {
@@ -48,14 +49,13 @@ func (s *Server) ConnectBank() func(*gin.Context) {
 			return
 		}
 
-		if s.Clients.ConsentClient != nil {
+		if s.Clients.ConsentClient.CreateConsentExplicitly() {
 			if consentID, err = s.Clients.ConsentClient.CreateAccountConsent(c); err != nil {
 				c.String(http.StatusBadRequest, fmt.Sprintf("failed to register account access consent: %+v", err))
 				return
 			}
 		}
-
-		s.CreateConsentResponse(c, bankID, consentID, user, s.Clients.AcpAccountsClient, s.LoginURLBuilder)
+		s.CreateConsentResponse(c, bankID, user, s.Clients.AcpAccountsClient, consentID)
 	}
 }
 

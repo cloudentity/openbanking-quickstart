@@ -1,0 +1,48 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+
+<html>
+<head>
+  <link rel="stylesheet" href="/assets/material-components-web.min.css">
+  <script src="/assets/material-components-web.min.js"></script>
+  <link href="/assets/fonts.css" rel="stylesheet">
+  <link href="/assets/material-icons.css" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/style.css">
+  <title>TPP sample app</title>
+</head>
+
+<body>
+<div class="aut-banner">
+  <div class="aut-banner-logo">
+    <img src="/assets/images/cloudentity-logo-short.png" alt="Cloudentity ACP">
+    <span>TPP sample app</span>
+  </div>
+  <div class="aut-banner-contact">
+    <button class="mdc-button mdc-button--raised" onclick="onRetry()" id="tpp-consent-error-try-again-button">
+      <div class="mdc-button__ripple"></div>
+      <span class="mdc-button__label">Try again</span>
+    </button>
+  </div>
+</div>
+
+<div class="aut-container" style="padding: 5px; width: 1024px;">
+  <div class="aut-reject-demo">
+    <div class="material-icons aut-reject-icon-demo">error_outline</div>
+    <div class="aut-reject-title-demo" id="tpp-consent-error">{{ .error }}</div>
+    <div class="aut-reject-subtitle-demo" id="tpp-consent-error-details">
+      <p id="tpp-consent-error-description"><b>description: </b>{{ .error_description }}</p>
+      {{ if .error_cause }}
+      <p id="tpp-consent-error-cause"><b>cause: </b>{{ .error_cause }}</p>
+      {{ end }}
+      <p id="tpp-consent-trace-id"><b>ID: </b>{{ .trace_id }}</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function onRetry () {
+    window.location.href = "/";
+  }
+</script>
+
+</body>
+</html>

@@ -1,7 +1,7 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "tss-react/mui";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()(() => ({
   container: {
     width: "100%",
     marginBottom: 24,
@@ -34,7 +34,7 @@ export default function Field({
   children,
   style = {},
 }: Props) {
-  const classes = useStyles();
+  const { classes } = useStyles();
 
   return (
     <div className={classes.container} style={style}>

@@ -27,13 +27,13 @@ func TestConfig(t *testing.T) {
 	require.NoError(t, err)
 
 	require.Equal(t, 8091, config.Port)
-	require.Equal(t, "./data/my.db", config.DBFile)
+	require.Equal(t, "/app/data/my.db", config.DBFile)
 	require.Equal(t, "https://localhost:8443", config.ACPURL)
 	require.Equal(t, "https://acp:8443", config.ACPInternalURL)
 	require.Equal(t, "localhost", config.AppHost)
 	require.Equal(t, "https://localhost:8091", config.UIURL)
 	require.Equal(t, "cert.pem", config.CertFile)
 	require.Equal(t, "key.pem", config.KeyFile)
-	require.Equal(t, "obbr", config.Spec)
+	require.Equal(t, Spec("obbr"), config.Spec)
 	require.Equal(t, "http://bank-br:8070", config.BankURL)
 }

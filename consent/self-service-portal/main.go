@@ -20,10 +20,11 @@ const (
 	OBUK Spec = "obuk"
 	CDR  Spec = "cdr"
 	OBBR Spec = "obbr"
+	FDX  Spec = "fdx"
 )
 
 type Config struct {
-	SystemClientID              string        `env:"SYSTEM_CLIENT_ID" envDefault:"buc3b1hhuc714r78env0"`
+	SystemClientID              string        `env:"SYSTEM_CLIENT_ID,required"`
 	SystemClientSecret          string        `env:"SYSTEM_CLIENT_SECRET" envDefault:"PBV7q0akoP603rZbU0EFdxbhZ-djxF7FIVwyKaLnBYU"`
 	SystemIssuerURL             *url.URL      `env:"SYSTEM_ISSUER_URL,required"`
 	Timeout                     time.Duration `env:"TIMEOUT" envDefault:"5s"`
@@ -35,13 +36,25 @@ type Config struct {
 	KeyFile                     string        `env:"KEY_FILE" envDefault:"/bank_key.pem"`
 	Port                        int           `env:"PORT" envDefault:"8085"`
 	LoginAuthorizationServerURL string        `env:"LOGIN_AUTHORIZATION_SERVER_URL,required"`
-	LoginClientID               string        `env:"LOGIN_CLIENT_ID" envDefault:"bv0nab0mekk67nekvq7g"`
+	LoginClientID               string        `env:"LOGIN_CLIENT_ID,required"`
 	LoginAuthorizationServerID  string        `env:"LOGIN_AUTHORIZATION_SERVER_ID,required"`
 	LoginTenantID               string        `env:"LOGIN_TENANT_ID,required"`
-	IntrospectClientID          string        `env:"INTROSPECT_CLIENT_ID" envDefault:"bv2dkff8mll9cf6pvd6g"`
+	IntrospectClientID          string        `env:"INTROSPECT_CLIENT_ID,required"`
 	IntrospectClientSecret      string        `env:"INTROSPECT_CLIENT_SECRET" envDefault:"KThGH68f-gMC4cscGLFeOpIU4EYriYhKspOV9IwHbnw"`
 	IntrospectIssuerURL         *url.URL      `env:"INTROSPECT_ISSUER_URL,required"`
-	EnableTLSServer  			bool 		  `env:"ENABLE_TLS_SERVER" envDefault:"true"`
+	EnableTLSServer  			      bool 		      `env:"ENABLE_TLS_SERVER" envDefault:"true"`
+	BankClientConfig            BankClientConfig
+}
+
+type BankClientConfig struct {
+	URL          *url.URL `env:"BANK_URL,required"`
+	AccountsURL  *url.URL `env:"BANK_ACCOUNTS_ENDPOINT"`
+	TokenURL     string   `env:"BANK_CLIENT_TOKEN_URL"`
+	ClientID     string   `env:"BANK_CLIENT_ID"`
+	ClientSecret string   `env:"BANK_CLIENT_SECRET"`
+	Scopes       []string `env:"BANK_CLIENT_SCOPES"`
+	CertFile     string   `env:"BANK_CLIENT_CERT_FILE"`
+	KeyFile      string   `env:"BANK_CLIENT_KEY_FILE"`
 }
 
 func (c *Config) SystemClientConfig() acpclient.Config {
@@ -88,8 +101,9 @@ type Server struct {
 
 func NewServer() (Server, error) {
 	var (
-		server = Server{}
-		err    error
+		bankClient BankClient
+		server     = Server{}
+		err        error
 	)
 
 	if server.Config, err = LoadConfig(); err != nil {
@@ -99,7 +113,6 @@ func NewServer() (Server, error) {
 	if server.Client, err = acpclient.New(server.Config.SystemClientConfig()); err != nil {
 		return server, errors.Wrapf(err, "failed to init acp client")
 	}
-
 	if server.IntrospectClient, err = acpclient.New(server.Config.IntrospectClientConfig()); err != nil {
 		return server, errors.Wrapf(err, "failed to init introspect acp client")
 	}
@@ -112,8 +125,17 @@ func NewServer() (Server, error) {
 		server.BankClient = NewOBBRBankClient(server.Config)
 		server.ConsentClient = NewOBBRConsentImpl(&server)
 	case CDR:
-		server.BankClient = &CDRBankClient{}
+		if bankClient, err = NewCDRBankClient(server.Config); err != nil {
+			return server, fmt.Errorf("failed to creating new CDR bank client %w", err)
+		}
+		server.BankClient = bankClient
 		server.ConsentClient = NewCDRArrangementImpl(&server)
+	case FDX:
+		if bankClient, err = NewFDXBankClient(server.Config); err != nil {
+			return server, fmt.Errorf("failed to creating new FDX bank client %w", err)
+		}
+		server.BankClient = bankClient
+		server.ConsentClient = NewFDXConsentImpl(&server)
 	default:
 		return server, fmt.Errorf("unsupported spec %s", server.Config.Spec)
 	}
@@ -149,9 +171,9 @@ func (s *Server) Start() error {
 		logrus.Debugf("running consent self service server tls")
 		return r.RunTLS(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)), s.Config.CertFile, s.Config.KeyFile)
 	}
+
 	logrus.Debugf("running consent self service server non-tls")
 	return r.Run(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)))
-
 }
 
 func main() {

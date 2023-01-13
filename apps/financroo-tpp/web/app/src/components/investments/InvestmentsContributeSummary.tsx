@@ -1,15 +1,15 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Chip from "@material-ui/core/Chip";
-import clsx from "clsx";
+import { makeStyles } from "tss-react/mui";
+import Chip from "@mui/material/Chip";
 
 import ContributionCard from "./ContributionCard";
 import Field from "./Field";
 import { theme } from "../../theme";
-import { BalanceType, AccountType } from "./InvestmentsContribute";
 import { banks } from "../banks";
+import { Account, Balance } from "../types";
+import { getCurrency } from "../utils";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()(theme => ({
   title: {
     ...theme.custom.heading6,
   },
@@ -88,30 +88,34 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type Props = {
+interface Props {
   amount: string;
-  bank: string;
-  account: string;
-  balances: BalanceType[];
+  currency: string | undefined;
+  selectedBankId: string;
+  selectedAccountId: string;
+  balances: Balance[];
+  accounts: Account[];
   handleBack: () => void;
   handleNext: () => void;
-  accounts: AccountType[];
-};
+}
 
 export default function InvestmentsContributeSummary({
   amount,
-  bank,
-  account,
+  currency,
+  selectedBankId,
+  selectedAccountId,
   balances,
   handleBack,
   handleNext,
   accounts,
 }: Props) {
-  const classes = useStyles();
+  const { cx, classes } = useStyles();
 
-  const selectedBalance = balances.find((a) => a.AccountId === account);
-  const selectedBank = banks.find((a) => a.value === bank);
-  const selectedAccountInfo = accounts.find((a) => a.AccountId === account);
+  const selectedBalance = balances.find(a => a.AccountId === selectedAccountId);
+  const selectedBank = banks.find(a => a.value === selectedBankId);
+  const selectedAccountInfo = accounts.find(
+    a => a.AccountId === selectedAccountId
+  );
 
   return (
     <ContributionCard
@@ -121,20 +125,26 @@ export default function InvestmentsContributeSummary({
     >
       <Field>
         <div
-          className={clsx([classes.information, classes.informationOneRow])}
+          className={cx(classes.information, classes.informationOneRow)}
           style={{ alignItems: "center", paddingBottom: 20 }}
         >
           <div className={classes.heading}>PAYMENT TOTAL</div>
           <div>
-            <Chip label={`£ ${amount}`} className={classes.chip} />
+            <Chip
+              id="total-amount"
+              label={`${getCurrency(currency)} ${parseFloat(amount).toFixed(
+                2
+              )}`}
+              className={classes.chip}
+            />
           </div>
         </div>
       </Field>
-      <Field style={{ ...theme.custom.caption } as any}>
+      <Field style={theme.custom.caption}>
         To consent to this transaction, confirm the details below
       </Field>
       <Field label="Payee Information">
-        <div className={classes.information}>
+        <div className={classes.information} id={`account-id-${selectedBalance?.AccountId}`}>
           <div>Payee Account Name</div>
           <div>{selectedAccountInfo?.Account[0].Name}</div>
           <div>Sort code</div>
@@ -146,7 +156,7 @@ export default function InvestmentsContributeSummary({
         </div>
       </Field>
       <Field label="Payment Information">
-        <div className={clsx([classes.information, classes.informationOneRow])}>
+        <div className={cx(classes.information, classes.informationOneRow)}>
           <div className={classes.heading}>Bank Name</div>
           <div className={classes.bankRow}>
             {selectedBank?.name}
@@ -158,7 +168,7 @@ export default function InvestmentsContributeSummary({
           </div>
         </div>
       </Field>
-      <Field style={{ ...theme.custom.caption, marginBottom: 0 } as any}>
+      <Field style={{ ...theme.custom.caption, marginBottom: 0 }}>
         You will be securely transferred to <strong>Go Bank</strong> to
         authorize the payment
       </Field>

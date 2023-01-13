@@ -1,15 +1,8 @@
-import React, { Suspense } from "react";
 import "./App.css";
-import { BrowserRouter as Router, Redirect, Route } from "react-router-dom";
-import { Switch } from "react-router";
-import { ThemeProvider } from "@material-ui/core";
-import { StylesProvider } from "@material-ui/core/styles";
-import Progress from "./components/Progress";
-import { ReactQueryDevtools } from "react-query-devtools";
-import { QueryCache, ReactQueryCacheProvider } from "react-query";
-import PrivateRoute from "./components/PrivateRoute";
 import AuthPage from "./components/AuthPage";
 import AuthenticatedAppBase from "./components/AuthenticatedAppBase";
+import PrivateRoute from "./components/PrivateRoute";
+import Progress from "./components/Progress";
 import {
   putExpiresInInStore,
   putIATInInStore,
@@ -17,20 +10,28 @@ import {
   putTokenInStore,
 } from "./components/auth.utils";
 import { theme } from "./theme";
+import { ThemeProvider, StyledEngineProvider } from "@mui/material/styles";
+
+import React, { Suspense } from "react";
+import { QueryClient, QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 
 declare global {
   interface Window {
     featureFlags: any;
     spec: any;
+    currency: any;
   }
 }
 
 window.featureFlags = window.featureFlags || {};
 window.spec = window.spec || {};
+window.currency = window.currency || null;
 
-const queryCache = new QueryCache();
+const queryClient = new QueryClient();
 
-const login = (data) => {
+const login = data => {
   if (data.token) {
     putTokenInStore(data.token);
     data.expires_in && putExpiresInInStore(data.expires_in);
@@ -41,28 +42,23 @@ const login = (data) => {
 
 function App() {
   return (
-    <ThemeProvider theme={theme}>
-      <StylesProvider injectFirst>
-        <ReactQueryCacheProvider queryCache={queryCache}>
+    <QueryClientProvider client={queryClient}>
+      <StyledEngineProvider injectFirst>
+        <ThemeProvider theme={theme}>
           <ReactQueryDevtools />
           <Router>
             <Suspense fallback={<Progress />}>
-              <Switch>
-                <Route
-                  path={"/auth"}
-                  render={() => <AuthPage loginFn={login} />}
-                />
-                <PrivateRoute
-                  path="/"
-                  component={() => <AuthenticatedAppBase />}
-                />
-                <Route component={() => <Redirect to={"/auth"} />} />
-              </Switch>
+              <Routes>
+                <Route path="/auth" element={<AuthPage loginFn={login} />} />
+                <Route path="*" element={<PrivateRoute />}>
+                  <Route path="*" element={<AuthenticatedAppBase />} />
+                </Route>
+              </Routes>
             </Suspense>
           </Router>
-        </ReactQueryCacheProvider>
-      </StylesProvider>
-    </ThemeProvider>
+        </ThemeProvider>
+      </StyledEngineProvider>
+    </QueryClientProvider>
   );
 }
 

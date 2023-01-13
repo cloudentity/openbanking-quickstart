@@ -1,11 +1,10 @@
 import React, { useEffect } from "react";
-import Chip from "@material-ui/core/Chip";
-import Select from "@material-ui/core/Select";
-import MenuItem from "@material-ui/core/MenuItem";
-import Radio from "@material-ui/core/Radio";
-import Alert from "@material-ui/lab/Alert";
-import { makeStyles } from "@material-ui/core/styles";
-import clsx from "clsx";
+import Chip from "@mui/material/Chip";
+import Select from "@mui/material/Select";
+import MenuItem from "@mui/material/MenuItem";
+import Radio from "@mui/material/Radio";
+import Alert from "@mui/material/Alert";
+import { makeStyles } from "tss-react/mui";
 
 import ContributionCard from "./ContributionCard";
 import Field from "./Field";
@@ -14,9 +13,10 @@ import cardIcon from "../../assets/icon-credit-card.svg";
 import paypalIcon from "../../assets/icon-paypal.svg";
 import walletIcon from "../../assets/icon-wallet.svg";
 import { Bank } from "../banks";
-import { BalanceType, AccountType } from "./InvestmentsContribute";
+import { Account, Balance } from "../types";
+import { getCurrency } from "../utils";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()(theme => ({
   titleContainer: {
     display: "flex",
     alignItems: "center",
@@ -143,38 +143,46 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-type Props = {
+interface Props {
   amount: string;
+  currency: string | undefined;
   handleBack: () => void;
   handleNext: () => void;
-  bank: string;
-  setBank: (bank: string) => void;
-  account: string;
-  setAcccount: (account: string) => void;
+  selectedBankId: string;
+  setSelectedBankId: (bankId: string) => void;
+  selectedAccountId: string;
+  setSelectedAccountId: (accountId: string) => void;
   banks: Bank[];
-  balances: BalanceType[];
   alert: string;
   setAlert: (message: string) => void;
-  accounts: AccountType[];
-};
+  balances: Balance[];
+  accounts: Account[];
+}
 
 export default function InvestmentsContributeMethod({
   amount,
+  currency,
   handleBack,
   handleNext,
-  bank,
-  setBank,
-  account,
-  setAcccount,
-  banks,
-  balances,
+  selectedBankId,
+  setSelectedBankId,
+  selectedAccountId,
+  setSelectedAccountId,
   alert,
   setAlert,
+  balances,
   accounts,
+  banks,
 }: Props) {
-  const classes = useStyles();
-  const selectedAccount = balances.find((a) => a.AccountId === account);
-  const selectedAccountInfo = accounts.find((a) => a.AccountId === account);
+  const { cx, classes } = useStyles();
+
+  const selectedAccount = balances.find(
+    balance => balance.AccountId === selectedAccountId
+  );
+
+  const selectedAccountInfo = accounts.find(
+    account => account.AccountId === selectedAccountId
+  );
 
   useEffect(() => {
     if (selectedAccount) {
@@ -184,14 +192,18 @@ export default function InvestmentsContributeMethod({
         setAlert("Payment amount exceeds account balance");
       }
     }
-  }, [account, amount, selectedAccount, setAlert]);
+  }, [amount, selectedAccount, setAlert]);
 
   return (
     <ContributionCard
       title={
         <div className={classes.titleContainer}>
           <div className={classes.heading}>PAYMENT TOTAL</div>
-          <Chip label={`£ ${amount}`} className={classes.chip} />
+          <Chip
+            id="total-amount"
+            label={`${getCurrency(currency)} ${parseFloat(amount).toFixed(2)}`}
+            className={classes.chip}
+          />
         </div>
       }
       backButton={{ title: "Back", onClick: handleBack }}
@@ -202,6 +214,7 @@ export default function InvestmentsContributeMethod({
             handleNext();
           }
         },
+        disabled: !!alert,
       }}
     >
       <Field label="Select payment method">
@@ -210,11 +223,11 @@ export default function InvestmentsContributeMethod({
             <img src={bankIcon} alt="bank icon" />
             <span>Bank Transfer</span>
           </div>
-          <div className={clsx([classes.card, classes.disabled])}>
+          <div className={cx(classes.card, classes.disabled)}>
             <img src={cardIcon} alt="card icon" />
             <span>Credit / Debit card</span>
           </div>
-          <div className={clsx([classes.card, classes.disabled])}>
+          <div className={cx(classes.card, classes.disabled)}>
             <img src={paypalIcon} alt="bank icon" />
             <span>Paypal Transfer</span>
           </div>
@@ -225,8 +238,8 @@ export default function InvestmentsContributeMethod({
         helperText="Paying with your bank is completely safe and secure with Open Banking"
       >
         <Select
-          value={bank}
-          onChange={(v) => setBank(v.target.value as any)}
+          value={selectedBankId}
+          onChange={v => setSelectedBankId(v.target.value)}
           style={{ width: "100%" }}
           variant="outlined"
         >
@@ -253,32 +266,41 @@ export default function InvestmentsContributeMethod({
       <Field>
         <div id="accounts-list" className={classes.accountSelect}>
           {balances
-            .filter((b) => b.BankId === bank)
-            .map(({ AccountId, Amount }) => (
-              <div
-                key={AccountId}
-                className={clsx([
-                  classes.accountSelectItem,
-                  account === AccountId && classes.active,
-                ])}
-              >
-                <Radio
-                  checked={account === AccountId}
-                  color="primary"
-                  onChange={(e) => {
-                    if (e.target.checked) {
-                      setAcccount(AccountId);
-                    }
-                  }}
-                />
-                <img src={walletIcon} alt="wallet icon" />
-                <div className={classes.accountSelectItemLabel}>
-                  <div>Checking account</div>
-                  <div>**** ***** **** {AccountId} </div>
+            .filter(b => b.BankId === selectedBankId)
+            .map(({ AccountId, Amount }) => {
+              const account = accounts.find(
+                account => account.AccountId === AccountId
+              );
+              const name = account?.Nickname || "Checking account";
+              return (
+                <div
+                  key={AccountId}
+                  id={`account-id-${AccountId}`}
+                  className={cx(
+                    classes.accountSelectItem,
+                    selectedAccountId === AccountId && classes.active
+                  )}
+                >
+                  <Radio
+                    checked={selectedAccountId === AccountId}
+                    color="primary"
+                    onChange={e => {
+                      if (e.target.checked) {
+                        setSelectedAccountId(AccountId);
+                      }
+                    }}
+                  />
+                  <img src={walletIcon} alt="wallet icon" />
+                  <div className={classes.accountSelectItemLabel}>
+                    <div>{name}</div>
+                    <div>**** ***** **** {AccountId} </div>
+                  </div>
+                  <div style={{ flex: 1, textAlign: "right" }}>
+                    {getCurrency(currency)} <>{parseFloat(Amount).toFixed(2)}</>
+                  </div>
                 </div>
-                <div style={{ flex: 1, textAlign: "right" }}>£ {Amount}</div>
-              </div>
-            ))}
+              );
+            })}
         </div>
       </Field>
       <Field label="Payee Information" style={alert ? {} : { marginBottom: 0 }}>

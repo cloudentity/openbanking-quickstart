@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { makeStyles, Theme } from "@material-ui/core";
-import { useHistory, useLocation, useParams } from "react-router";
-import ArrowBack from "@material-ui/icons/ArrowBack";
-import IconButton from "@material-ui/core/IconButton";
+import { makeStyles } from "tss-react/mui";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import ArrowBack from "@mui/icons-material/ArrowBack";
+import IconButton from "@mui/material/IconButton";
 
 import CustomTabs from "../CustomTabs";
 import PageToolbar from "../PageToolbar";
@@ -13,7 +13,7 @@ import AccountClientCard from "./AccountClientCard";
 import { api } from "../../api/api";
 import ConsentTabs from "./ConsentTabs";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()(theme => ({
   subtitle: {
     ...theme.custom.body1,
   },
@@ -47,7 +47,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-interface PropTypes {
+interface Props {
   authorizationServerURL?: string;
   authorizationServerId?: string;
   tenantId?: string;
@@ -61,15 +61,16 @@ export default function AccountViewDetails({
   authorizationServerURL,
   authorizationServerId,
   tenantId,
-}: PropTypes) {
+}: Props) {
   const { id, clientId } = useParams<Record<string, string | undefined>>();
-  const history = useHistory();
-  const { state } = useLocation<LocationState>();
-  const classes = useStyles();
+  const navigate = useNavigate();
+  const location = useLocation();
+  const state = location.state as LocationState | undefined;
+  const { classes } = useStyles();
   const [isProgress, setProgress] = useState(true);
   const [clients, setClients] = useState<ClientType[]>();
   const [client, setClient] = useState<ClientType>();
-  const [consents, setConsents] = useState<any>();
+  const [consents, setConsents] = useState<ClientType["consents"]>([]);
 
   useEffect(() => {
     fetchClients();
@@ -82,16 +83,16 @@ export default function AccountViewDetails({
       .then(({ clients }: { clients: ClientType[] }) => {
         setClients(clients);
       })
-      .catch((err) => console.log(err))
+      .catch(err => console.log(err))
       .finally(() => setProgress(false));
   };
 
   useEffect(() => {
     if (clients && clientId && id) {
-      const found = clients.find((v) => v.client_id === clientId);
+      const found = clients.find(v => v.client_id === clientId);
       if (found) {
         setClient(found);
-        const consents = found.consents?.filter((v) =>
+        const consents = found.consents?.filter(v =>
           v.account_ids?.includes(id)
         );
         setConsents(consents ?? []);
@@ -104,10 +105,10 @@ export default function AccountViewDetails({
     api
       .deleteClient({ id, provider_type })
       .then(fetchClients)
-      .then((res) => {
+      .then(res => {
         setClients(res?.clients || []);
       })
-      .catch((err) => console.log(err))
+      .catch(err => console.log(err))
       .finally(() => setProgress(false));
   };
 
@@ -137,9 +138,10 @@ export default function AccountViewDetails({
                     style={{ padding: 4 }}
                     onClick={() => {
                       if (id) {
-                        handleSearch(id)(history, state?.accounts);
+                        handleSearch(id)(navigate, state?.accounts);
                       }
                     }}
+                    size="large"
                   >
                     <ArrowBack fontSize="small" style={{ color: "white" }} />
                     <div className={classes.back}>Back</div>
@@ -156,8 +158,8 @@ export default function AccountViewDetails({
               >
                 <CustomTabs
                   tabs={searchTabs(
-                    (searchText) =>
-                      handleSearch(searchText)(history, state?.accounts),
+                    searchText =>
+                      handleSearch(searchText)(navigate, state?.accounts),
                     id
                   )}
                 />

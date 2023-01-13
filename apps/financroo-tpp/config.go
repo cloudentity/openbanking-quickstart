@@ -16,6 +16,7 @@ const (
 	OBUK Spec = "obuk"
 	OBBR Spec = "obbr"
 	CDR  Spec = "cdr"
+	FDX  Spec = "fdx"
 )
 
 type Config struct {
@@ -35,9 +36,26 @@ type Config struct {
 	BankURL         string       `env:"BANK_URL" validate:"required"`
 	RootCA          string       `env:"ROOT_CA" envDefault:"/certs/ca.pem"`
 	ClientID        string       `env:"CLIENT_ID" envDefault:"bugkgm23g9kregtu051g"`
+	ClientSecret    string       `env:"CLIENT_SECRET" envDefault:"-TlfoycUiE0qNi-XUBFDfTxMlhHTCjVxOF6pLrWZbQA"` // only required for fdx
 	ServerID        string       `env:"OPENBANKING_SERVER_ID" validate:"required"`
 	EnableTLSServer bool         `env:"ENABLE_TLS_SERVER" envDefault:"true"`
+	Currency        string       `env:"CURRENCY"` // optional custom currency, one of=USD AUD GBP BRL EUR
 	ClientScopes    []string
+}
+
+func (c *Config) SetImplicitValues() {
+	if c.Currency == "" {
+		switch c.Spec {
+		case FDX:
+			c.Currency = "USD"
+		case CDR:
+			c.Currency = "AUD"
+		case OBBR:
+			c.Currency = "BRL"
+		case OBUK:
+			c.Currency = "GBP"
+		}
+	}
 }
 
 func LoadConfig() (Config, error) {
@@ -49,6 +67,8 @@ func LoadConfig() (Config, error) {
 	if err = env.Parse(&config); err != nil {
 		return config, err
 	}
+
+	config.SetImplicitValues()
 
 	return config, nil
 }

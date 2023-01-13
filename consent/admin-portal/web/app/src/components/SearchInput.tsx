@@ -1,42 +1,40 @@
 import React, { useState } from "react";
-import { makeStyles, Theme, createStyles } from "@material-ui/core/styles";
-import IconButton from "@material-ui/core/IconButton";
-import OutlinedInput from "@material-ui/core/OutlinedInput";
-import InputAdornment from "@material-ui/core/InputAdornment";
-import CancelOutlined from "@material-ui/icons/CancelOutlined";
-import { Search } from "react-feather";
+import { makeStyles } from "tss-react/mui";
+import IconButton from "@mui/material/IconButton";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import InputAdornment from "@mui/material/InputAdornment";
+import CancelOutlined from "@mui/icons-material/CancelOutlined";
+import Search from "@mui/icons-material/Search";
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    root: {
-      padding: "16px 0 24px 0",
-      width: "100%",
-      boxSizing: "border-box",
-    },
-    margin: {
-      margin: theme.spacing(1),
-    },
-    withoutLabel: {
-      marginTop: theme.spacing(3),
-    },
-    textField: {
-      width: "25ch",
-    },
-    searchIconContainer: {
-      backgroundColor: "#DC1B37",
-      height: 48,
-      borderRadius: "0 4px 4px 0",
-      display: "flex",
-      marginLeft: 2,
-    },
-    input: {
-      height: 48,
-      boxSizing: "border-box",
-    },
-  })
-);
+const useStyles = makeStyles()(theme => ({
+  root: {
+    padding: "16px 0 24px 0",
+    width: "100%",
+    boxSizing: "border-box",
+  },
+  margin: {
+    margin: theme.spacing(1),
+  },
+  withoutLabel: {
+    marginTop: theme.spacing(3),
+  },
+  textField: {
+    width: "25ch",
+  },
+  searchIconContainer: {
+    backgroundColor: "#DC1B37",
+    height: 48,
+    borderRadius: "0 4px 4px 0",
+    display: "flex",
+    marginLeft: 2,
+  },
+  input: {
+    height: 48,
+    boxSizing: "border-box",
+  },
+}));
 
-interface PropTypes {
+interface Props {
   placeholder: string;
   onSearch: (text: string) => void;
   inputValue?: string;
@@ -46,8 +44,8 @@ export default function SearchInput({
   placeholder,
   onSearch,
   inputValue,
-}: PropTypes) {
-  const classes = useStyles();
+}: Props) {
+  const { classes } = useStyles();
   const [value, setValue] = useState(inputValue || "");
 
   return (
@@ -57,12 +55,12 @@ export default function SearchInput({
           id="outlined-adornment-password"
           type="text"
           value={value}
-          onKeyDown={(e) => {
+          onKeyDown={e => {
             if (e.key === "Enter" && value !== "") {
               onSearch(value);
             }
           }}
-          onChange={(e) => {
+          onChange={e => {
             setValue(e.target.value);
           }}
           placeholder={placeholder}
@@ -82,6 +80,7 @@ export default function SearchInput({
                   style={{ padding: 4 }}
                   onClick={() => setValue("")}
                   onMouseDown={() => setValue("")}
+                  size="large"
                 >
                   <CancelOutlined
                     fontSize="small"
@@ -95,13 +94,13 @@ export default function SearchInput({
                 <IconButton
                   id="search-account"
                   onClick={() => value !== "" && onSearch(value)}
+                  size="large"
                 >
-                  <Search style={{ color: "white" }} />
+                  <Search style={{ color: "white", fontSize: 24 }} />
                 </IconButton>
               </div>
             </InputAdornment>
           }
-          labelWidth={0}
         />
       </div>
     </div>

@@ -8,16 +8,16 @@ import { api } from "../api/api";
 import Progress from "./Progress";
 import PageContent from "./common/PageContent";
 import PageContainer from "./common/PageContainer";
-import { pathOr } from "ramda";
-import { useLocation, useHistory } from "react-router";
-import Snackbar from "@material-ui/core/Snackbar";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
-import Alert from "@material-ui/lab/Alert";
-import { makeStyles } from "@material-ui/core/styles";
+import { useLocation, useNavigate } from "react-router-dom";
+import Snackbar from "@mui/material/Snackbar";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import Alert from "@mui/material/Alert";
+import { makeStyles } from "tss-react/mui";
 import AcccountsAddedDialog from "./AccountsAddedDialog";
+import { BanksResponse } from "./types";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   alert: {
     width: "100%",
     "& > div:last-of-type": {
@@ -28,28 +28,26 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-function useQueryParams() {
-  return new URLSearchParams(useLocation().search);
-}
-
 export default function Dashboard() {
+  const { classes } = useStyles();
+
   const [connectAccountOpen, setConnectAccountOpen] = useState(false);
   const [isProgress, setProgress] = useState(false);
   const [snackbar, setSnackbar] = useState("");
-  const classes = useStyles();
-  const history = useHistory();
-  const queryParams = useQueryParams();
-  const [accountAddedDialog, setAccountAddedDialog] = useState<boolean | null>(
-    null
-  );
-  const {
-    state,
-  }: { state: undefined | { bankNeedsReconnect: boolean } } = useLocation();
+  const [accountAddedDialog, setAccountAddedDialog] = useState(false);
+
+  const navigate = useNavigate();
+  const location = useLocation();
+  const queryParams = new URLSearchParams(useLocation().search);
+  const state = location.state as { bankNeedsReconnect: boolean } | undefined;
 
   useEffect(() => {
     if (state?.bankNeedsReconnect) {
       setSnackbar("Error: unauthorized. Bank needs reconnect");
-      history.replace({ state: { bankNeedsReconnect: false } });
+      navigate(location, {
+        state: { bankNeedsReconnect: false },
+        replace: true,
+      });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [state]);
@@ -58,14 +56,12 @@ export default function Dashboard() {
     isLoading: fetchBanksProgress,
     data: banksRes,
     refetch: refetchBanks,
-  } = useQuery("fetchBanks", api.fetchBanks, {
+  } = useQuery<BanksResponse>("fetchBanks", api.fetchBanks, {
     refetchOnWindowFocus: false,
     retry: false,
   });
 
-  const banks = useMemo(() => {
-    return banksRes ? pathOr([], ["connected_banks"], banksRes) : [];
-  }, [banksRes]);
+  const banks = useMemo(() => banksRes?.connected_banks ?? [], [banksRes]);
 
   useEffect(() => {
     if (queryParams.get("connected") === "yes") {
@@ -77,24 +73,28 @@ export default function Dashboard() {
   useEffect(() => {
     if (accountAddedDialog === false) {
       queryParams.delete("connected");
-      history.replace({
-        search: queryParams.toString(),
-      });
+      navigate(
+        { pathname: location.pathname, search: queryParams.toString() },
+        { replace: true }
+      );
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [accountAddedDialog]);
 
-  const handleAllowAccess = ({ bankId, permissions }) => {
+  const handleAllowAccess = (
+    bankId: string,
+    permissions: string[] | undefined
+  ) => {
     setProgress(true);
     api
       .connectBank(bankId, { permissions })
-      .then((res) => {
+      .then(res => {
         window.location.href = res.login_url;
       })
       .catch(() => setProgress(false));
   };
 
-  const handleDisconnectBank = (bankId) => () => {
+  const handleDisconnectBank = (bankId: string) => () => {
     setProgress(true);
     api
       .disconnectBank(bankId)
@@ -102,15 +102,16 @@ export default function Dashboard() {
       .finally(() => setProgress(false));
   };
 
-  const handleReconnectBank = (bankId, permissions) => () => {
-    setProgress(true);
-    api
-      .connectBank(bankId, { permissions })
-      .then((res) => {
-        window.location.href = res.login_url;
-      })
-      .catch(() => setProgress(false));
-  };
+  const handleReconnectBank =
+    (bankId: string, permissions: string[] | undefined) => () => {
+      setProgress(true);
+      api
+        .connectBank(bankId, { permissions })
+        .then(res => {
+          window.location.href = res.login_url;
+        })
+        .catch(() => setProgress(false));
+    };
 
   const showProgress = isProgress || fetchBanksProgress;
 

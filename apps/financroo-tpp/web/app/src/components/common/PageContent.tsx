@@ -1,6 +1,5 @@
 import React from "react";
-import { Theme } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
+import { makeStyles } from "tss-react/mui";
 import brandingMask from "../../assets/branding-mask.png";
 import { subHeaderHeight } from "./PageToolbar";
 
@@ -14,7 +13,7 @@ const useStyles = (
     (withOnlySubheader && subHeaderHeight) ||
     64;
 
-  return makeStyles((theme: Theme) => ({
+  return makeStyles()(theme => ({
     root: {
       marginTop: 56,
       height: `calc(100vh - 56px)`,
@@ -46,7 +45,11 @@ export default function PageContent({
   withOnlySubheader = false,
   style = {},
 }) {
-  const classes = useStyles(withBackground, withSubheader, withOnlySubheader)();
+  const { classes } = useStyles(
+    withBackground,
+    withSubheader,
+    withOnlySubheader
+  )();
 
   return (
     <div className={classes.root} style={style}>

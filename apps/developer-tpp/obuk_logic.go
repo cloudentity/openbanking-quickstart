@@ -3,7 +3,7 @@ package main
 import (
 	"time"
 
-	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client/accounts"
+	"github.com/cloudentity/openbanking-quickstart/generated/obuk/accounts/client/accounts"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 
@@ -70,6 +70,7 @@ func (h *OBUKLogic) GetConsentID(data interface{}) string {
 
 func (h *OBUKLogic) BuildLoginURL(c *gin.Context, consentID string, doRequestObjectEncryption bool) (string, acpclient.CSRF, error) {
 	return h.Client.AuthorizeURL(
+		acpclient.WithResponseType("code"),
 		acpclient.WithOpenbankingIntentID(consentID, []string{"urn:openbanking:psd2:sca"}),
 		acpclient.WithPKCE(),
 		acpclient.WithResponseMode("jwt"),

@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"strings"
 
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
@@ -12,10 +13,9 @@ import (
 )
 
 type FDXLogic struct {
-	ClientID                string
-	ClientSecret            string
-	PublicClient            acpclient.Client
-	ClientCredentialsClient acpclient.Client
+	ClientID     string
+	ClientSecret string
+	ACPClient    acpclient.Client
 }
 
 func NewFDXLogic(serverConfig Config) (*FDXLogic, error) {
@@ -28,19 +28,11 @@ func NewFDXLogic(serverConfig Config) (*FDXLogic, error) {
 	)
 
 	publicConfig := serverConfig.ClientConfig()
-	publicConfig.SkipClientCredentialsAuthn = true
+	publicConfig.AuthMethod = acpclient.TLSClientAuthnMethod
+	publicConfig.Scopes = serverConfig.ClientScopes
 
-	if logic.PublicClient, err = acpclient.New(publicConfig); err != nil {
+	if logic.ACPClient, err = acpclient.New(publicConfig); err != nil {
 		return logic, errors.Wrapf(err, "failed to create public acp client")
-	}
-
-	ccConfig := serverConfig.ClientConfig()
-	ccConfig.ClientSecret = serverConfig.ClientSecret
-	ccConfig.Scopes = []string{"READ_CONSENTS"}
-	ccConfig.AuthMethod = acpclient.ClientSecretPostAuthnMethod
-
-	if logic.ClientCredentialsClient, err = acpclient.New(ccConfig); err != nil {
-		return logic, errors.Wrapf(err, "failed to create client credentials acp client")
 	}
 
 	return logic, nil
@@ -52,8 +44,9 @@ func (h *FDXLogic) GetAccounts(c *gin.Context, token string) (interface{}, error
 
 func (h *FDXLogic) CreateConsent(c *gin.Context) (interface{}, error) {
 	var (
-		resp *a2.PushedAuthorizationRequestCreated
-		err  error
+		resp   *a2.PushedAuthorizationRequestCreated
+		err    error
+		scopes string
 	)
 
 	responseType := "code"
@@ -83,13 +76,16 @@ func (h *FDXLogic) CreateConsent(c *gin.Context) (interface{}, error) {
       }
    ]`
 
-	if resp, err = h.PublicClient.Oauth2.Oauth2.PushedAuthorizationRequest(
+	scopes = strings.Join(h.ACPClient.Config.Scopes, " ")
+	if resp, err = h.ACPClient.Oauth2.Oauth2.PushedAuthorizationRequest(
 		a2.NewPushedAuthorizationRequestParams().
+			WithScope(&scopes).
 			WithContext(c.Request.Context()).
 			WithClientID(h.ClientID).
-			WithClientSecret(&h.ClientSecret).
+			WithRedirectURI(h.ACPClient.Config.RedirectURL.String()).
 			WithResponseType(responseType).
 			WithAuthorizationDetails(&authorizationDetails),
+		nil,
 	); err != nil {
 		return nil, errors.Wrapf(err, "failed to register par request")
 	}
@@ -118,7 +114,7 @@ func (h *FDXLogic) BuildLoginURL(c *gin.Context, consentID string, _ bool) (stri
 		err error
 	)
 
-	if u, err = h.PublicClient.AuthorizeURLWithPAR(consentID); err != nil {
+	if u, err = h.ACPClient.AuthorizeURLWithPAR(consentID); err != nil {
 		return "", acpclient.CSRF{}, errors.Wrapf(err, "failed to create authorize url with par")
 	}
 
@@ -138,7 +134,7 @@ func (h *FDXLogic) PostAuthenticationAction(c *gin.Context, data map[string]inte
 		return nil, errors.New("grant_id is missing")
 	}
 
-	if resp, err = h.ClientCredentialsClient.GetFDXConsent(
+	if resp, err = h.ACPClient.GetFDXConsent(
 		f_d_x.NewGetFDXConsentParams().
 			WithContext(c.Request.Context()).
 			WithConsentID(grantID),

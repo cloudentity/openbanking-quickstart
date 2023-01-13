@@ -10,6 +10,8 @@ export class TppLoginPage {
 
   public visit(force: boolean = false): void {
     Urls.visit(Cypress.env('tpp_url'), force);
+    Urls.clearLocalStorage();
+    Urls.visit(Cypress.env('tpp_url'), force);
   }
 
   public checkBasicPermission(check: boolean): void {

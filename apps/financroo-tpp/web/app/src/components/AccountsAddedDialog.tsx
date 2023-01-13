@@ -1,14 +1,14 @@
 import React from "react";
-import IconButton from "@material-ui/core/IconButton";
-import CloseIcon from "@material-ui/icons/Close";
-import { makeStyles } from "@material-ui/core/styles";
-import Dialog from "@material-ui/core/Dialog";
+import IconButton from "@mui/material/IconButton";
+import CloseIcon from "@mui/icons-material/Close";
+import { makeStyles } from "tss-react/mui";
+import Dialog from "@mui/material/Dialog";
 import financrooLogo from "../assets/financroo-logo.svg";
 import icon from "../assets/icon-check.svg";
-import { Button } from "@material-ui/core";
-import { useHistory } from "react-router";
+import Button from "@mui/material/Button";
+import { useNavigate } from "react-router-dom";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()(theme => ({
   dialog: {
     width: 454,
     borderRadius: 0,
@@ -63,15 +63,24 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function AcccountsAddedDialog({ open, setOpen }) {
-  const classes = useStyles();
-  const history = useHistory();
+interface Props {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+}
+
+export default function AcccountsAddedDialog({ open, setOpen }: Props) {
+  const { classes } = useStyles();
+  const navigate = useNavigate();
 
   return (
     <Dialog onClose={() => setOpen(false)} open={open}>
       <div className={classes.dialogHeader}>
         <div className={classes.closeButton}>
-          <IconButton id="close-icon" onClick={() => setOpen(false)}>
+          <IconButton
+            id="close-icon"
+            onClick={() => setOpen(false)}
+            size="large"
+          >
             <CloseIcon />
           </IconButton>
         </div>
@@ -91,7 +100,7 @@ export default function AcccountsAddedDialog({ open, setOpen }) {
       <div className={classes.dialogButtons}>
         <Button
           variant="outlined"
-          id={"cancel-button"}
+          id="cancel-button"
           style={{ marginRight: 16 }}
           onClick={() => setOpen(false)}
         >
@@ -99,9 +108,9 @@ export default function AcccountsAddedDialog({ open, setOpen }) {
         </Button>
         <Button
           variant="outlined"
-          id={"start-investing-button"}
+          id="start-investing-button"
           onClick={() => {
-            history.push("/investments");
+            navigate("/investments");
           }}
         >
           Start investing

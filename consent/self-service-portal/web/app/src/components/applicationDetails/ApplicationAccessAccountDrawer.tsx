@@ -1,18 +1,18 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Theme } from "@material-ui/core";
-import Button from "@material-ui/core/Button";
-import Checkbox from "@material-ui/core/Checkbox";
-import Avatar from "@material-ui/core/Avatar";
-import Alert from "@material-ui/lab/Alert";
+import { makeStyles } from "tss-react/mui";
+import Button from "@mui/material/Button";
+import Checkbox from "@mui/material/Checkbox";
+import Avatar from "@mui/material/Avatar";
+import Alert from "@mui/material/Alert";
 
 import Chip from "../Chip";
 import ApplicationAccessDrawer from "./ApplicationAccessDrawer";
 import { getDate } from "../ApplicationSimpleCard";
 import { drawerStyles, permissionsDict } from "./utils";
-import { uniq } from "ramda";
+import uniq from "lodash/uniq";
+import { Consent, ConsentAccount } from "../types";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()(() => ({
   ...drawerStyles,
   cardsWrapperGrid: {
     display: "grid",
@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme: Theme) => ({
       marginRight: 16,
     },
     textTransform: "none",
-  //  ...theme.custom.button,
+    //  ...theme.custom.button,
     color: "#626576",
     "&:disabled": {
       backgroundColor: "#626576 !important",
@@ -37,7 +37,7 @@ const useStyles = makeStyles((theme: Theme) => ({
   alertRoot: {
     backgroundColor: "#FFE3E6",
     border: "1px solid rgba(189, 39, 30, 0.3)",
- //   ...theme.custom.body2,
+    //   ...theme.custom.body2,
   },
   alertIcon: {
     position: "relative",
@@ -78,19 +78,17 @@ function getRevokeHeader() {
   );
 }
 
-function getAccounts(accountIds, accounts) {
-  return accountIds
-    .map((id) => accounts.find((v) => v.id === id))
-    .filter((v) => v);
+function getAccounts(accountIds: string[], accounts: ConsentAccount[]) {
+  return accountIds.map(id => accounts.find(v => v.id === id)).filter(v => v);
 }
 
-type Props = {
-  drawerData: any;
-  accounts: any;
-  setDrawerData: (data: string | null) => void;
+interface Props {
+  drawerData: Consent;
+  accounts: ConsentAccount[];
+  setDrawerData: (data: Consent | undefined) => void;
   handleRevoke: (id: string, consent_type: string) => void;
   status: string;
-};
+}
 
 function ApplicationAccessPaymentDrawer({
   drawerData,
@@ -99,36 +97,30 @@ function ApplicationAccessPaymentDrawer({
   accounts,
   status,
 }: Props) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [revokeAccess, setRevokeAccess] = useState(false);
   const [revokeAccessAgree, setRevokeAccessAgree] = useState(false);
 
   const accountsDetails = getAccounts(
     drawerData?.AccountIDs ?? [],
     accounts
-  ).reduce((acc, curr) => ({ ...acc, [curr.name]: "*" + curr.id }), {});
+  ).reduce((acc, curr) => ({ ...acc, [curr?.name ?? ""]: "*" + curr?.id }), {});
 
   const permissionDates = {
     Authorised: getDate(drawerData?.CreationDateTime),
-    "Last updated": getDate(
-      drawerData?.StatusUpdateDateTime
-    ),
-    "Active until": getDate(
-      drawerData?.ExpirationDateTime
-    ),
+    "Last updated": getDate(drawerData?.StatusUpdateDateTime),
+    "Active until": getDate(drawerData?.ExpirationDateTime),
   };
 
   const clusters = uniq(
-    drawerData?.Permissions.map(
-      (v) => permissionsDict[v].Cluster
-    )
-  ) as any;
+    drawerData.Permissions?.map(v => permissionsDict[v].Cluster)
+  );
 
-  const permissionItems = clusters.map((cluster) => ({
+  const permissionItems = clusters.map(cluster => ({
     title: cluster,
     items: Object.values(permissionsDict)
-      .filter((p) => p.Cluster === cluster)
-      .map((v) => v.Language),
+      .filter(p => p.Cluster === cluster)
+      .map(v => v.Language),
   }));
 
   return (
@@ -143,10 +135,10 @@ function ApplicationAccessPaymentDrawer({
               className={classes.logo}
               style={{ backgroundColor: "white", color: "#626576" }}
             >
-              {drawerData?.Client?.name[0]?.toUpperCase()}
+              {drawerData.CreditorAccountName?.toUpperCase()}
             </Avatar>
 
-            <h3 className={classes.name}>{drawerData?.Client?.name}</h3>
+            <h3 className={classes.name}>{drawerData.CreditorAccountName}</h3>
             <div style={{ flex: 1 }} />
             <Chip type="active">{status}</Chip>
           </div>
@@ -156,20 +148,21 @@ function ApplicationAccessPaymentDrawer({
       bottomBar={
         <>
           <Button
+            id="cancel-revoke-access-button"
             variant="outlined"
             className={classes.button}
             onClick={() => {
               if (revokeAccess) {
                 setRevokeAccess(false);
               } else {
-                setDrawerData(null);
+                setDrawerData(undefined);
               }
             }}
           >
             Cancel
           </Button>
           <Button
-            id={'revoke-access-button'}
+            id="revoke-access-button"
             variant="outlined"
             className={classes.button}
             style={{
@@ -177,12 +170,15 @@ function ApplicationAccessPaymentDrawer({
               backgroundColor: "#BD271E",
               border: "none",
             }}
-            disabled={revokeAccess && !revokeAccessAgree}
+            disabled={
+              (revokeAccess && !revokeAccessAgree) ||
+              drawerData?.Status !== "Authorised"
+            }
             onClick={() => {
               if (revokeAccess) {
                 handleRevoke(drawerData?.ConsentID, drawerData?.type);
                 setRevokeAccess(false);
-                setDrawerData(null);
+                setDrawerData(undefined);
               } else {
                 setRevokeAccess(true);
               }
@@ -194,7 +190,7 @@ function ApplicationAccessPaymentDrawer({
       }
     >
       {revokeAccess ? (
-        <div>
+        <div id="account-revoke-info">
           <Alert
             variant="outlined"
             severity="warning"
@@ -210,8 +206,9 @@ function ApplicationAccessPaymentDrawer({
           </div>
           <div className={classes.revokeInfoCheckbox}>
             <Checkbox
+              id="account-revoke-checkbox"
               checked={revokeAccessAgree}
-              onChange={(e) => setRevokeAccessAgree(e.target.checked)}
+              onChange={e => setRevokeAccessAgree(e.target.checked)}
               color="primary"
             />{" "}
             I agree
@@ -219,7 +216,7 @@ function ApplicationAccessPaymentDrawer({
         </div>
       ) : (
         <>
-          <div>
+          <div id="account-permission-dates">
             <div className={classes.subHeader}>Permission dates</div>
             <div className={classes.cardsWrapperGrid}>
               {Object.entries(permissionDates).map(([key, value]: any) => (
@@ -231,7 +228,7 @@ function ApplicationAccessPaymentDrawer({
             </div>
           </div>
 
-          <div>
+          <div id="accounts-info">
             <div className={classes.subHeader}>Accounts</div>
             <div className={classes.cardsWrapperGrid}>
               {Object.entries(accountsDetails).map(([key, value]: any) => (
@@ -254,14 +251,14 @@ function ApplicationAccessPaymentDrawer({
             </div>
           </div>
 
-          <div>
+          <div id="account-details">
             <div className={classes.subHeader}>Details being shared</div>
             <div>
-              {permissionItems.map((v) => (
+              {permissionItems.map(v => (
                 <div key={v.title}>
                   <div className={classes.detailsTitle}>{v.title}</div>
                   <ul className={classes.ulList}>
-                    {v.items.map((item) => (
+                    {v.items.map(item => (
                       <li key={item}>{item}</li>
                     ))}
                   </ul>

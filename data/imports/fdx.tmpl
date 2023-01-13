@@ -11,6 +11,11 @@ servers:
     - refresh_token
     - client_credentials
   initialize: true
+  token_endpoint_auth_methods: 
+    - private_key_jwt
+    - client_secret_post
+    - tls_client_auth
+    - self_signed_tls_client_auth
   legal_entity:
     party:
       name: "Midwest Primary Bank, NA"
@@ -19,6 +24,12 @@ servers:
       registry_name: "GLEIF"
       registered_entity_name: "Midwest Primary Bank, NA"
       registered_entity_identifier: "549300ATG070THRDJ595"
+  {{ if .read_client_certificate_from_header }}
+  read_client_certificate_from_header: {{ .read_client_certificate_from_header }}
+  client_certificate_header: {{ .client_certificate_header }}
+  {{ end }}
+  root_cas: |
+{{ readFile .ca_pem_file | indent 4 }}
 
 idps:
 - tenant_id: {{ .tenant_id }}
@@ -40,7 +51,7 @@ idps:
 
 server_consents:
 - tenant_id: {{ .tenant_id }}
-  client_id: {{ default "bv0ocudfotn6edhsiu7g" .fdx_consent_page_client }}
+  client_id: {{ .consent_page_client_id }}
   custom:
     server_consent_url: {{ .consent_page_url }}
   server_id: {{ .server_id }}
@@ -50,22 +61,54 @@ clients:
 # consent page
 - tenant_id: {{ .tenant_id }}
   authorization_server_id: system
-  client_id: {{ default "bv0ocudfotn6edhsiu7g" .fdx_consent_page_client }}
-  client_secret: {{ default "pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0" .fdx_consent_page_client_secret }}
+  client_id: {{ .consent_page_client_id }}
+  client_secret: {{ .consent_page_client_secret }}
   client_name: custom server consent
   grant_types:
   - client_credentials
   scopes:
   - manage_openbanking_consents
   token_endpoint_auth_method: client_secret_basic
-# developer tpp
+
+# financroo
 - tenant_id: {{ .tenant_id }}
   authorization_server_id: {{ .server_id }}
-  client_id: bugkgm23g9kregtu051g
+  client_id: {{ .financroo_tpp_client_id }}
+  client_name: Financroo
+  client_uri: https://localhost:8090
+  client_secret: {{ .financroo_tpp_client_secret }}
+  tls_client_auth_subject_dn: {{ .financroo_tls_client_auth_subject_dn }}
+  tls_client_certificate_bound_access_tokens: true
+  token_endpoint_auth_method: tls_client_auth
+  redirect_uris:
+  - {{ .financroo_tpp_url }}/api/callback
+  subject_type: pairwise
+  response_types:
+  - token
+  - code
+  scopes:
+  - openid
+  - offline_access
+  - READ_CONSENTS
+  - UPDATE_CONSENTS
+  - ACCOUNT_DETAILED
+  - ACCOUNT_BASIC
+  - TRANSACTIONS
+  grant_types:
+  - client_credentials
+  - authorization_code
+  - refresh_token
+
+#  developer tpp
+- tenant_id: {{ .tenant_id }}
+  authorization_server_id: {{ .server_id }}
+  client_id: {{ .developer_tpp_client_id }}
   client_name: Developer TPP
   client_uri: https://localhost:8090
-  client_secret: {{ default "-TlfoycUiE0qNi-XUBFDfTxMlhHTCjVxOF6pLrWZbQA" .fdx_developer_tpp_client_secret }}
-  token_endpoint_auth_method: client_secret_post
+  client_secret: {{ .developer_tpp_client_secret }}
+  tls_client_auth_subject_dn: {{ .financroo_tls_client_auth_subject_dn }}
+  tls_client_certificate_bound_access_tokens: true
+  token_endpoint_auth_method: tls_client_auth
   redirect_uris:
   - {{ .developer_tpp_url }}/callback
   subject_type: pairwise
@@ -74,8 +117,47 @@ clients:
   - code
   scopes:
   - openid
+  - offline_access
   - READ_CONSENTS
+  - UPDATE_CONSENTS
+  - ACCOUNT_DETAILED
+  - ACCOUNT_BASIC
+  - TRANSACTIONS
   grant_types:
   - client_credentials
   - authorization_code
   - refresh_token
+
+- tenant_id: {{ .tenant_id }}
+  authorization_server_id: {{ .server_id }}
+  client_id: {{ .bank_client_id }}
+  client_name: bank
+  description: bank resource server app used to introspect tokens
+  client_secret: {{ .bank_client_secret }}
+  grant_types:
+  - client_credentials
+  scopes:
+  - introspect_tokens
+  - revoke_tokens
+  - introspect_openbanking_tokens
+  subject_type: pairwise
+  system: true
+  tls_client_auth_subject_dn: {{ .bank_tls_client_auth_subject_dn }}
+  tls_client_certificate_bound_access_tokens: true
+  token_endpoint_auth_method: tls_client_auth
+
+- tenant_id: {{ .tenant_id }}
+  authorization_server_id: {{ .server_id }}
+  client_id: {{ .internal_bank_client_id }}
+  client_secret: {{ .internal_bank_client_secret }}
+  client_name: FDX Internal Bank Client
+  grant_types:
+  - client_credentials
+  scopes:
+  - ACCOUNT_DETAILED
+  - ACCOUNT_BASIC
+  - TRANSACTIONS
+  - introspect_openbanking_tokens
+  - introspect_tokens
+  - revoke_tokens
+  token_endpoint_auth_method: client_secret_post

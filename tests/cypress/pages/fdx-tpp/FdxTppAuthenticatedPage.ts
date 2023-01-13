@@ -16,7 +16,7 @@ export class FdxTppAuthenticatedPage {
   public assertThatPageIsDisplayed(): void {
     cy.get(this.authenticatedPageInfoLabelLocator).should(
       "have.text",
-      "User has been authenticated. Authorization code has been exchanged. " +
+      "User has been authenticated. Authorization code has been exchanged for an access token using mtls. " +
         "Implicit FDX consent has been created, see `grant_id` parameter"
     );
     cy.get(this.tryNextButtonLocator, { timeout: 3000 }).should("be.visible");
@@ -29,7 +29,7 @@ export class FdxTppAuthenticatedPage {
       expect(text).to.match(/\"access_token\"\: \"[a-zA-Z0-9_.-]+\"/);
       expect(text).to.match(/\"id_token\"\: \"[a-zA-Z0-9_.-]+\"/);
       expect(text).to.contain('"token_type": "bearer"');
-      expect(text).to.contain('"scope": "openid"');
+      expect(text).to.contain('"scope": "openid READ_CONSENTS UPDATE_CONSENTS"');
       expect(text).to.match(/\"expires_in\"\: [0-9]+\,/);
       expect(text).to.match(/\"grant_id\"\: \"[a-zA-Z0-9]+\"/);
     });
@@ -40,12 +40,12 @@ export class FdxTppAuthenticatedPage {
       let text: string = element.text();
       cy.log(text);
       expect(text).to.contain('"acr": "1"');
-      expect(text).to.contain('"aid": "fdx"');
-      expect(text).to.match(/\"spiffe\:\/\/[a-z0-9\/.-]+\/fdx\/fdx-profile\"/);
+      expect(text).to.match(/\"aid\"\: \"(?:fdx|[a-z0-9-]+fdx)\"/);
+      expect(text).to.match(/\"spiffe\:\/\/[a-z0-9\/.-]+\/(?:fdx|[a-z0-9-]+fdx)\/(?:fdx-profile|[a-z0-9-]+fdx-profile)\"/);
       expect(text).to.match(/\"exp\"\: [0-9]+\,/);
       expect(text).to.match(/\"iat\"\: [0-9]+\,/);
       expect(text).to.match(/\"idp\"\: \"[a-zA-Z0-9]+\"/);
-      expect(text).to.match(/\"iss\"\: \"https\:\/\/[a-z0-9\/:.-]+\/fdx\"/);
+      expect(text).to.match(/\"iss\"\: \"https\:\/\/[a-z0-9\/:.-]+\/(?:fdx|[a-z0-9-]+fdx)\"/);
       expect(text).to.match(/\"jti\"\: \"[a-zA-Z0-9-]+\"/);
       expect(text).to.match(/\"nbf\"\: [0-9]+\,/);
       expect(text).to.contain('"st": "pairwise"');

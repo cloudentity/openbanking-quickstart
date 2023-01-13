@@ -1,17 +1,17 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
+import { makeStyles } from "tss-react/mui";
+import Table from "@mui/material/Table";
+import TableBody from "@mui/material/TableBody";
+import TableCell from "@mui/material/TableCell";
+import TableHead from "@mui/material/TableHead";
+import TableRow from "@mui/material/TableRow";
 
 import Chip from "../Chip";
-import { getDate } from "../utils";
+import { Consent, getCurrency, getDate } from "../utils";
 import PaymentDrawer from "./Drawers/PaymentDrawer";
 import AccountAccessDrawer from "./Drawers/AccountAccessDrawer";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   table: {
     "& tr": {
       borderBottom: "solid 1px #ECECEC",
@@ -53,9 +53,6 @@ const useStyles = makeStyles(() => ({
     width: "100%",
     color: "gray",
   },
-}));
-
-const useTableStyles = makeStyles(() => ({
   tableRowRoot: {
     "& th": {
       fontWeight: "bold",
@@ -64,7 +61,7 @@ const useTableStyles = makeStyles(() => ({
 }));
 
 function TableHeadComponent({ type }: { type: "account" | "payment" }) {
-  const classes = useTableStyles();
+  const { classes } = useStyles();
 
   if (type === "account") {
     return (
@@ -95,16 +92,21 @@ function TableHeadComponent({ type }: { type: "account" | "payment" }) {
   return null;
 }
 
-function getTableBody(type: "account" | "payment", rows, setDrawerData, data) {
+function getTableBody(
+  type: "account" | "payment",
+  rows: Row[],
+  setDrawerData: (consent: Consent | undefined) => void,
+  data: Consent[]
+) {
   if (type === "account") {
     return (
       <TableBody>
-        {rows.map((row) => (
+        {rows.map(row => (
           <TableRow
             key={row.id}
-            className={`consent-row`}
+            className="consent-row"
             onClick={() => {
-              setDrawerData(data.find((v) => row.id === v.consent_id));
+              setDrawerData(data.find(v => row.id === v.consent_id));
             }}
           >
             <TableCell>{row.account}</TableCell>
@@ -113,7 +115,7 @@ function getTableBody(type: "account" | "payment", rows, setDrawerData, data) {
             <TableCell>{row.activeUntil}</TableCell>
 
             <TableCell align="right">
-              <Chip type={row.status && row.status.toLowerCase()}>
+              <Chip type={row.status && (row.status.toLowerCase() as any)}>
                 {row.status}
               </Chip>
             </TableCell>
@@ -125,23 +127,25 @@ function getTableBody(type: "account" | "payment", rows, setDrawerData, data) {
   if (type === "payment") {
     return (
       <TableBody>
-        {rows.map((row) => (
+        {rows.map(row => (
           <TableRow
             key={row.id}
-            className={`consent-row`}
+            className="consent-row"
             onClick={() => {
-              setDrawerData(data.find((v) => row.id === v.consent_id));
+              setDrawerData(data.find(v => row.id === v.consent_id));
             }}
           >
             <TableCell>{row.authorised}</TableCell>
             <TableCell>{row.account}</TableCell>
             <TableCell>{row.id}</TableCell>
             <TableCell>
-              <Chip type={row.status && row.status.toLowerCase()}>
+              <Chip type={row.status && (row.status.toLowerCase() as any)}>
                 {row.status}
               </Chip>
             </TableCell>
-            <TableCell align="right">£ {row.amount}</TableCell>
+            <TableCell align="right">
+              {getCurrency(row.currency)} {row.amount}
+            </TableCell>
           </TableRow>
         ))}
       </TableBody>
@@ -149,30 +153,41 @@ function getTableBody(type: "account" | "payment", rows, setDrawerData, data) {
   }
   return null;
 }
-
-type Props = {
-  data: any;
-  type: "account" | "payment";
+type Row = {
+  authorised: string;
+  account: string;
+  status: string;
+  activeUntil?: string;
+  id: string;
+  creditor?: string;
+  amount?: string;
+  currency?: string;
 };
 
+interface Props {
+  data: Consent[];
+  type: "account" | "payment";
+}
+
 function ConsentTable({ data, type }: Props) {
-  const classes = useStyles();
-  const [drawerPaymentData, setDrawerPaymentData] = useState<any>(null);
-  const [drawerAccountData, setDrawerAccountData] = useState<any>(null);
+  const { classes } = useStyles();
+  const [drawerPaymentData, setDrawerPaymentData] = useState<Consent>();
+  const [drawerAccountData, setDrawerAccountData] = useState<Consent>();
 
   function createDataAccount(authorised, account, status, activeUntil, id) {
     return { authorised, account, status, activeUntil, id };
   }
 
   function createDataPayment(
-    authorised,
-    account,
-    creditor,
-    status,
-    amount,
-    id
+    authorised: string,
+    account: string,
+    creditor: string,
+    status: string,
+    amount: string,
+    id: string,
+    currency: string
   ) {
-    return { authorised, account, creditor, status, amount, id };
+    return { authorised, account, creditor, status, amount, id, currency };
   }
   const rowsAccount =
     type === "account"
@@ -190,15 +205,25 @@ function ConsentTable({ data, type }: Props) {
 
   const rowsPayment =
     type === "payment"
-      ? data.map(({ domestic_payment, account_ids }) =>
-          createDataPayment(
-            getDate(domestic_payment?.created_at),
-            account_ids.join(", "),
-            domestic_payment?.Initiation?.CreditorAccount?.Name,
-            domestic_payment?.status,
-            domestic_payment?.Initiation?.InstructedAmount?.Amount,
-            domestic_payment?.consent_id
-          )
+      ? data.map(
+          ({
+            completed_at,
+            CreditorAccountName,
+            account_ids,
+            status,
+            Amount,
+            consent_id,
+            currency,
+          }) =>
+            createDataPayment(
+              getDate(completed_at),
+              account_ids.join(", "),
+              CreditorAccountName,
+              status,
+              Amount,
+              consent_id,
+              currency
+            )
         )
       : [];
 

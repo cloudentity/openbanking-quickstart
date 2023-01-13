@@ -8,8 +8,8 @@ services:
     networks:
       default:
         aliases:
-        - authorization.cloudentity.com
-        - test-docker
+          - authorization.cloudentity.com
+          - test-docker
     ports:
       - 8443:8443
     volumes:
@@ -37,6 +37,7 @@ services:
       - CLIENT_ROOT_CA=/acp_ca.pem
       - REDIS_ENABLED=true
       - REDIS_ADDRESS=redis:6379
+      - OTEL_JAEGER_AGENT_HOST=jaeger
     command:
       - server
       - start
@@ -58,7 +59,7 @@ services:
 
   crdb:
     container_name: quickstart-crdb
-    image: cockroachdb/cockroach:v21.2.3
+    image: docker.cloudentity.io/cockroachdb/cockroach:v22.2.0
     restart: always
     ports:
       - 26258:26257
@@ -69,13 +70,21 @@ services:
 
   redis:
     container_name: quickstart-redis
-    image: redislabs/redisearch:2.4.8
+    image: docker.cloudentity.io/redis/redis-stack:6.2.6-v0
     restart: on-failure
-    command: redis-server /usr/local/etc/redis/redis.conf --loadmodule /usr/lib/redis/modules/redisearch.so
     volumes:
-      - ./mount/redis/redis.conf:/usr/local/etc/redis/redis.conf
+      - ./mount/redis/redis.conf:/redis-stack.conf
     ports:
       - 6380:6379
+      - 8006:8001
+
+  jaeger:
+    container_name: jaeger
+    image: jaegertracing/all-in-one:1.17
+    restart: on-failure
+    ports:
+      - "6831:6831/udp"
+      - "16686:16686"
 
   runner:
     container_name: quickstart-runner

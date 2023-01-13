@@ -116,10 +116,12 @@ func (s *FDXAccountAccessConsentHandler) DenyConsent(c *gin.Context, loginReques
 		fdx.NewRejectFDXConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID).
 			WithRejectConsent(&models.RejectConsentRequest{
-				ID:         loginRequest.ID,
-				LoginState: loginRequest.State,
-				Error:      "rejected",
-				StatusCode: 403,
+				ID:               loginRequest.ID,
+				LoginState:       loginRequest.State,
+				Error:            "rejected",
+				ErrorCause:       "consent_rejected",
+				ErrorDescription: "The user rejected the authentication.",
+				StatusCode:       403,
 			}),
 		nil,
 	); err != nil {

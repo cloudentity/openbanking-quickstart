@@ -1,8 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
-import IconButton from "@material-ui/core/IconButton";
-import { makeStyles } from "@material-ui/core/styles";
+import IconButton from "@mui/material/IconButton";
+import { makeStyles } from "tss-react/mui";
 import { ArrowLeft, Lock } from "react-feather";
-import { useHistory } from "react-router";
+import { useNavigate } from "react-router-dom";
 import { useQuery } from "react-query";
 
 import PageContainer from "../common/PageContainer";
@@ -14,38 +14,9 @@ import { api } from "../../api/api";
 import Progress from "../Progress";
 import { banks as banksArray } from "../banks";
 import InvestmentsContributeRedirecting from "./InvestmentsContributeRedirecting";
-import { CreateCSSProperties } from "@material-ui/core/styles/withStyles";
+import { AccountsResponse, BalancesResponse, BanksResponse } from "../types";
 
-export type BalanceType = {
-  AccountId: string;
-  Amount: { Amount: string; Currency: string };
-  BankId: string;
-  CreditDebitIndicator: string;
-  CreditLine: any;
-  DateTime: string;
-  Type: string;
-};
-
-export type AccountType = {
-  Account: {
-    Identification: string;
-    Name: string;
-    SchemeName: string;
-    SecondaryIdentification: string;
-  }[];
-  AccountId: string;
-  AccountSubType: string;
-  AccountType: string;
-  BankId: string;
-  Currency: string;
-  MaturityDate: string;
-  Nickname: string;
-  OpeningDate: string;
-  Status: string;
-  StatusUpdateDateTime: string;
-};
-
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles()(theme => ({
   toolbarButton: {
     color: theme.palette.primary.main,
   },
@@ -57,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     padding: 34,
     display: "flex",
     alignItems: "center",
-    ...(theme.custom.caption as CreateCSSProperties),
+    ...theme.custom.caption,
   },
   spacer: {
     flex: 1,
@@ -71,53 +42,76 @@ const stepsTitle = {
 };
 
 export default function InvestmentsContribute() {
-  const classes = useStyles();
-  const history = useHistory();
+  const { classes } = useStyles();
+  const navigate = useNavigate();
+
   const [step, setStep] = useState(0);
   const [amount, setAmount] = useState("");
-  const [bank, setBank] = useState("");
-  const [account, setAccount] = useState("");
   const [alert, setAlert] = useState("");
-
   const [isProgress, setProgress] = useState(false);
+  const [selectedBankId, setSelectedBankId] = useState("");
+  const [selectedAccountId, setSelectedAccountId] = useState("");
 
-  const {
-    isLoading: fetchBanksProgress,
-    // error: fetchBanksError,
-    data: banksRes,
-  } = useQuery("fetchBanks", api.fetchBanks, {
-    refetchOnWindowFocus: false,
-    retry: false,
-  });
+  const { isLoading: fetchBanksProgress, data: banksRes } =
+    useQuery<BanksResponse>("fetchBanks", api.fetchBanks, {
+      refetchOnWindowFocus: false,
+      retry: false,
+    });
 
-  const {
-    isLoading: fetchBalancesProgress,
-    // error: fetchBalancesError,
-    data: balancesRes,
-  } = useQuery("fetchBalances", api.fetchBalances, {
-    refetchOnWindowFocus: false,
-    retry: true,
-  });
+  const { isLoading: fetchBalancesProgress, data: balancesRes } =
+    useQuery<BalancesResponse>("fetchBalances", api.fetchBalances, {
+      refetchOnWindowFocus: false,
+      retry: true,
+    });
 
-  const {
-    isLoading: fetchAccountsProgress,
-    // error: fetchAccountsError,
-    data: accountsRes,
-  } = useQuery("fetchAccounts", api.fetchAccounts, {
-    refetchOnWindowFocus: false,
-    retry: true,
-  });
+  const { isLoading: fetchAccountsProgress, data: accountsRes } =
+    useQuery<AccountsResponse>("fetchAccounts", api.fetchAccounts, {
+      refetchOnWindowFocus: false,
+      retry: true,
+    });
+
+  const balances = balancesRes?.balances ?? [];
+  const accounts = useMemo(() => accountsRes?.accounts ?? [], [accountsRes]);
+  const connectedBanks = useMemo(
+    () => banksRes?.connected_banks ?? [],
+    [banksRes]
+  );
+  const banks = useMemo(
+    () => banksArray.filter(({ value }) => connectedBanks.includes(value)),
+    [connectedBanks]
+  );
+
+  useEffect(() => {
+    if (banks.length) {
+      setSelectedBankId(banks[0].value);
+    }
+  }, [banks]);
+
+  useEffect(() => {
+    if (accounts.length) {
+      setSelectedAccountId(accounts[0].AccountId);
+    }
+  }, [accounts]);
+
+  const accountId = balances.length ? balances[0].AccountId : undefined;
+  const selectedBalance = balances.find(
+    balance => balance.AccountId === accountId
+  );
+  const accountDetails = selectedBalance
+    ? { amount: selectedBalance.Amount, currency: selectedBalance.Currency }
+    : undefined;
 
   useEffect(() => {
     if (step === -1) {
-      history.push("/investments");
+      navigate("/investments");
       setStep(0);
       setAmount("");
     }
-  }, [step, history, amount, bank, account]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [step, amount]);
 
   function handleBack() {
-    setStep((step) => step - 1);
+    setStep(step => step - 1);
   }
 
   function handleNext() {
@@ -127,42 +121,23 @@ export default function InvestmentsContribute() {
       api
         .domesticPaymentConsent({
           amount: amount,
-          bank_id: bank,
-          account_id: account,
+          bank_id: selectedBankId,
+          account_id: selectedAccountId || accountId,
           payee_account_name: "financroo-investment",
           payee_account_number: "12345678",
           payee_account_sort_code: "123456",
           payment_reference: "financroo-investment-123",
         })
-        .then((res) => {
+        .then(res => {
           window.location.href = res.login_url;
         })
         .finally(() => {
           setProgress(false);
         });
-      //history.push("/investments/contribute/mock-id/success");
     } else {
-      setStep((step) => step + 1);
+      setStep(step => step + 1);
     }
   }
-
-  const balances = useMemo(() => {
-    const tmpBallances = balancesRes?.balances ?? [];
-    if (tmpBallances.length) {
-      setAccount(tmpBallances[0].AccountId);
-    }
-    return tmpBallances;
-  }, [balancesRes]);
-
-  const banks = useMemo(() => {
-    const tmpBanks = banksRes?.connected_banks ?? [];
-    if (tmpBanks.length) {
-      setBank(tmpBanks[0]);
-    }
-    return tmpBanks.map(
-      (b) => banksArray.find((v) => v.value === b) || { value: b, name: b }
-    );
-  }, [banksRes]);
 
   const showProgress =
     isProgress ||
@@ -170,30 +145,18 @@ export default function InvestmentsContribute() {
     fetchBalancesProgress ||
     fetchAccountsProgress;
 
-  const accounts = accountsRes?.accounts ?? [];
-
-  // useEffect(() => {
-  //   const bankNeedsReconnect =
-  //     path(["response", "error", "status"], fetchBanksError) === 401 ||
-  //     path(["response", "error", "status"], fetchAccountsError) === 401 ||
-  //     path(["response", "error", "status"], fetchBalancesError) === 401;
-
-  //   if (bankNeedsReconnect) {
-  //     history.push({ pathname: "/", state: { bankNeedsReconnect } });
-  //   }
-  // }, [fetchBanksError, fetchBalancesError, fetchAccountsError, history]);
-
   return (
     <div style={{ position: "relative" }}>
       <PageToolbar
         mode="onlySubheader"
         subHeaderTitle={
-          <div className={classes.title}>
+          <div id="contribute-header" className={classes.title}>
             <IconButton
               className={classes.toolbarButton}
               onClick={() => {
-                setStep((step) => step - 1);
+                setStep(step => step - 1);
               }}
+              size="large"
             >
               <ArrowLeft style={{ color: "#36C6AF" }} />
             </IconButton>
@@ -225,33 +188,35 @@ export default function InvestmentsContribute() {
               setAmount={setAmount}
               handleBack={handleBack}
               handleNext={handleNext}
-              account={account}
+              accountDetails={accountDetails}
               setAlert={setAlert}
             />
           )}
           {step === 1 && (
             <InvestmentsContributeMethod
               amount={amount}
+              currency={accountDetails?.currency}
               handleBack={handleBack}
               handleNext={handleNext}
-              bank={bank}
-              setBank={setBank}
-              account={account}
-              setAcccount={setAccount}
-              banks={banks || []}
-              balances={balances || []}
+              selectedBankId={selectedBankId}
+              setSelectedBankId={setSelectedBankId}
+              selectedAccountId={selectedAccountId}
+              setSelectedAccountId={setSelectedAccountId}
+              balances={balances}
+              accounts={accounts}
+              banks={banks}
               alert={alert}
               setAlert={setAlert}
-              accounts={accounts}
             />
           )}
           {step === 2 && (
             <InvestmentsContributeSummary
               amount={amount}
+              currency={accountDetails?.currency}
               handleBack={handleBack}
               handleNext={handleNext}
-              bank={bank}
-              account={account}
+              selectedBankId={selectedBankId}
+              selectedAccountId={selectedAccountId}
               balances={balances}
               accounts={accounts}
             />

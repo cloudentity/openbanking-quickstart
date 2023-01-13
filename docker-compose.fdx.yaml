@@ -19,9 +19,36 @@ services:
       - REDIRECT_URL=https://${APP_HOST}:8090/callback
       - BANK_URL=http://bank:8070
       - SPEC=fdx
+      - CLIENT_ID=${DEVELOPER_TPP_CLIENT_ID}
     depends_on:
       configuration:
         condition: service_completed_successfully
+
+  financroo-tpp:
+      image: cloudentity/openbanking-quickstart-financroo-tpp:${VERSION}
+      container_name: financroo-tpp
+      restart: always
+      ports:
+        - "8091:8091"
+      volumes:
+        - ./data:/certs
+        - ./mount/financroo-tpp:/app/data
+      env_file:
+        - .env
+      environment:
+        - UI_URL=https://${APP_HOST}:8091
+        - TENANT=${TENANT}
+        - GIN_MODE=debug # change to release to disable gin debug
+        - SPEC=fdx
+        - BANK_URL=http://bank:8070
+        - OPENBANKING_SERVER_ID=${SERVER}
+        - ENABLE_TLS_SERVER=true
+        - REDIRECT_URL=https://${APP_HOST}:8091/api/callback
+        - CLIENT_ID=${FINANCROO_TPP_CLIENT_ID}
+      depends_on:
+        configuration:
+          condition: service_completed_successfully
+
 
   consent-page:
     image: cloudentity/openbanking-quickstart-consent-page:${VERSION}
@@ -44,6 +71,30 @@ services:
       - GIN_MODE=debug # change to release to disable gin debug
       - OTP_MODE=mock # change to custom to enable custom OTP handling
       - MFA_CLAIM=sub # for mobile use mobile_verified
+      - CLIENT_ID=${CONSENT_PAGE_CLIENT_ID}
+    depends_on:
+      configuration:
+        condition: service_completed_successfully
+
+
+  bank:
+    image: cloudentity/openbanking-quickstart-bank:${VERSION}
+    container_name: bank
+    restart: always
+    ports:
+      - "8070:8070"
+    volumes:
+      - ./data/ca.pem:/ca.pem
+      - ./data/bank_cert.pem:/bank_cert.pem
+      - ./data/bank_key.pem:/bank_key.pem
+      - ./mount/bank-fdx:/app/data
+    environment:
+      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/${SERVER}
+      - SPEC=fdx
+      - GIN_MODE=debug
+      - USER_IDENTIFIER_CLAIM=customer_id
+      - CLIENT_SECRET=8DPOMd3ZOvsjuUnU9goRMHTIUUXtSkgwQeo8v_S74aE
+      - CLIENT_ID=${BANK_CLIENT_ID}
     depends_on:
       configuration:
         condition: service_completed_successfully
@@ -59,6 +110,8 @@ services:
       - ./data/imports/system.tmpl:/app/imports-fdx/system.tmpl
       - ./data/imports/fdx.tmpl:/app/imports-fdx/fdx.tmpl
       - ./data/imports/tenant.tmpl:/app/imports-fdx/tenant.tmpl
+      - ./data/imports/bank-customers.tmpl:/app/imports-fdx/bank-customers.tmpl
+
     command:
       - /app/main
       - --tenant-url
@@ -73,4 +126,59 @@ services:
       - /app/imports-fdx
       - --variables-file
       - /variables.yaml
-      - --verbose   
+      - --verbose
+
+  consent-admin-portal:
+    image: cloudentity/openbanking-quickstart-consent-admin-portal:${VERSION}
+    container_name: consent-admin-portal
+    restart: always
+    ports:
+      - "8086:8086"
+    volumes:
+      - ./data/ca.pem:/ca.pem
+      - ./data/bank_cert.pem:/bank_cert.pem
+      - ./data/bank_key.pem:/bank_key.pem
+    environment:
+      - SYSTEM_CLIENT_ID=${SYSTEM_ADMIN_CONSENT_CLIENT_ID}
+      - SYSTEM_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
+      - OPENBANKING_WORKSPACE_ID=${SERVER}
+      - SPEC=fdx
+      - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/bank-admins
+    depends_on:
+      configuration:
+        condition: service_completed_successfully
+
+  consent-self-service-portal:
+    image: cloudentity/openbanking-quickstart-consent-self-service-portal:${VERSION}
+    container_name: consent-self-service-portal
+    restart: always
+    ports:
+      - "8085:8085"
+    env_file:
+      - .env
+    volumes:
+      - ./data/ca.pem:/ca.pem
+      - ./data/bank_cert.pem:/bank_cert.pem
+      - ./data/bank_key.pem:/bank_key.pem
+    environment:
+      - SYSTEM_CLIENT_ID=${SYSTEM_BANK_CLIENT_ID}
+      - LOGIN_CLIENT_ID=${CONSENT_SELF_SERVICE_CLIENT_ID}
+      - INTROSPECT_CLIENT_ID=${CONSENT_SELF_SERVICE_BACKEND_CLIENT_ID}
+      - SYSTEM_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
+      - BANK_URL=http://bank:8070
+      - LOGIN_AUTHORIZATION_SERVER_URL=${ACP_URL}
+      - LOGIN_AUTHORIZATION_SERVER_ID=${BANK_CUSTOMERS_SERVER}
+      - LOGIN_TENANT_ID=${TENANT}
+      - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/${BANK_CUSTOMERS_SERVER}
+      - OPENBANKING_SERVER_ID=${SERVER}
+      - SPEC=fdx
+      - BANK_CLIENT_TOKEN_URL=${ACP_URL}/${TENANT}/${SERVER}/oauth2/token
+      - BANK_CLIENT_ID=${INTERNAL_BANK_CLIENT_ID}
+      - BANK_CLIENT_SECRET=pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0
+      - BANK_CLIENT_SCOPES=introspect_openbanking_tokens, introspect_tokens, revoke_tokens
+      - BANK_ACCOUNTS_ENDPOINT=http://bank:8070/internal/accounts
+      - BANK_CLIENT_CERT_FILE=/bank_cert.pem
+      - BANK_CLIENT_KEY_FILE=/bank_key.pem
+    depends_on:
+      configuration:
+        condition: service_completed_successfully

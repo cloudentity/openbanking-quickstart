@@ -1,104 +1,76 @@
-import { createTheme, Theme } from "@material-ui/core/styles";
-import { CreateCSSProperties } from "@material-ui/core/styles/withStyles";
+import { createTheme } from "@mui/material/styles";
 
-declare module "@material-ui/core/styles/createTheme" {
+declare module "@mui/material/styles" {
   interface Theme {
     custom: {
       heading6: {
-        fontWeight: CreateCSSProperties["fontWeight"];
-        fontSize: CreateCSSProperties["fontSize"];
-        lineHeight: CreateCSSProperties["lineHeight"];
-        color: CreateCSSProperties["color"];
+        fontWeight: string;
+        fontSize: number;
+        lineHeight: string;
+        color: string;
       };
       label: {
-        fontWeight: CreateCSSProperties["fontWeight"];
-        fontSize: CreateCSSProperties["fontSize"];
-        lineHeight: CreateCSSProperties["lineHeight"];
-        color: CreateCSSProperties["color"];
+        fontWeight: string;
+        fontSize: number;
+        lineHeight: string;
+        color: string;
       };
       caption: {
-        fontWeight: CreateCSSProperties["fontWeight"];
-        fontSize: CreateCSSProperties["fontSize"];
-        lineHeight: CreateCSSProperties["lineHeight"];
-        color: CreateCSSProperties["color"];
+        fontWeight: string;
+        fontSize: number;
+        lineHeight: string;
+        color: string;
       };
       button: {
-        fontWeight: CreateCSSProperties["fontWeight"];
-        fontSize: CreateCSSProperties["fontSize"];
-        lineHeight: CreateCSSProperties["lineHeight"];
-        color: CreateCSSProperties["color"];
-        textTransform: CreateCSSProperties["textTransform"];
+        fontWeight: string;
+        fontSize: number;
+        lineHeight: string;
+        color: string;
       };
     };
   }
-  interface ThemeOptions {
-    custom?: {
-      heading6?: {
-        fontWeight?: CreateCSSProperties["fontWeight"];
-        fontSize?: CreateCSSProperties["fontSize"];
-        lineHeight?: CreateCSSProperties["lineHeight"];
-        color?: CreateCSSProperties["color"];
-      };
-      label?: {
-        fontWeight?: CreateCSSProperties["fontWeight"];
-        fontSize?: CreateCSSProperties["fontSize"];
-        lineHeight?: CreateCSSProperties["lineHeight"];
-        color?: CreateCSSProperties["color"];
-      };
-      caption?: {
-        fontWeight?: CreateCSSProperties["fontWeight"];
-        fontSize?: CreateCSSProperties["fontSize"];
-        lineHeight?: CreateCSSProperties["lineHeight"];
-        color?: CreateCSSProperties["color"];
-      };
-      button?: {
-        fontWeight?: CreateCSSProperties["fontWeight"];
-        fontSize?: CreateCSSProperties["fontSize"];
-        lineHeight?: CreateCSSProperties["lineHeight"];
-        color?: CreateCSSProperties["color"];
-        textTransform?: CreateCSSProperties["textTransform"];
-      };
-    };
-  }
+  interface ThemeOptions extends Theme {}
 }
 
-export const theme: Theme = createTheme({
-  custom: {
-    heading6: {
-      fontWeight: "bold",
-      fontSize: 12,
-      lineHeight: "16px",
-      color: "#626576",
-    },
-    label: {
-      fontWeight: "bold",
-      fontSize: 12,
-      lineHeight: "24px",
-      color: "#212533",
-    },
-    caption: {
-      fontWeight: "normal",
-      fontSize: 12,
-      lineHeight: "22px",
-      color: "#626576",
-    },
-    button: {
-      fontWeight: "normal",
-      fontSize: 16,
-      lineHeight: "24px",
-      color: "white",
-    },
+const custom = {
+  heading6: {
+    fontWeight: "bold",
+    fontSize: 12,
+    lineHeight: "16px",
+    color: "#626576",
   },
-  palette: {
-    primary: {
-      main: "#36C6AF",
-    },
-    secondary: {
-      main: "#1F2D48",
-    },
+  label: {
+    fontWeight: "bold",
+    fontSize: 12,
+    lineHeight: "24px",
+    color: "#212533",
   },
-  overrides: {
-    MuiTableRow: {
+  caption: {
+    fontWeight: "normal",
+    fontSize: 12,
+    lineHeight: "22px",
+    color: "#626576",
+  },
+  button: {
+    fontWeight: "normal",
+    fontSize: 16,
+    lineHeight: "24px",
+    color: "white",
+  },
+};
+
+const palette = {
+  primary: {
+    main: "#36C6AF",
+  },
+  secondary: {
+    main: "#1F2D48",
+  },
+};
+
+const overrides = {
+  MuiTableRow: {
+    styleOverrides: {
       root: {
         "&$selected": {
           backgroundColor: "rgba(54, 198, 175, 0.08)",
@@ -108,10 +80,28 @@ export const theme: Theme = createTheme({
         },
       },
     },
-    MuiTableCell: {
+  },
+  MuiTableCell: {
+    styleOverrides: {
       root: {
         borderBottom: "none",
       },
     },
   },
+};
+
+export const theme = createTheme({
+  custom,
+  palette,
+  components: overrides,
+  breakpoints: {
+    values: {
+      xs: 0,
+      sm: 480,
+      md: 768,
+      lg: 1280,
+      xl: 1920,
+    },
+  },
+  unstable_sx: {} as any,
 });

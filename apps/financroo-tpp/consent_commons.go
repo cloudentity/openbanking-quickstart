@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -46,6 +47,7 @@ func (o *OBBRLoginURLBuilder) BuildLoginURL(consentID string, client acpclient.C
 	}
 
 	return client.AuthorizeURL(
+		acpclient.WithResponseType("code"),
 		acpclient.WithOpenbankingIntentID(consentID, []string{"urn:brasil:openbanking:loa2"}),
 		acpclient.WithRequestObjectEncryption(o.key),
 		acpclient.WithPKCE(),
@@ -61,6 +63,7 @@ func NewOBUKLoginURLBuilder() (LoginURLBuilder, error) {
 
 func (o *OBUKLoginURLBuilder) BuildLoginURL(consentID string, client acpclient.Client) (string, acpclient.CSRF, error) {
 	return client.AuthorizeURL(
+		acpclient.WithResponseType("code"),
 		acpclient.WithOpenbankingIntentID(consentID, []string{"urn:openbanking:psd2:sca"}),
 		acpclient.WithPKCE(),
 		acpclient.WithResponseMode("jwt"),
@@ -75,18 +78,18 @@ func NewCDRLoginURLBuilder(config Config) (LoginURLBuilder, error) {
 
 func (o *CDRLoginURLBuilder) BuildLoginURL(arrangementID string, client acpclient.Client) (authorizeURL string, csrf acpclient.CSRF, err error) {
 	return client.AuthorizeURL(
-		acpclient.WithPKCE(),
-		acpclient.WithOpenbankingACR([]string{"urn:cds.au:cdr:2"}),
+		acpclient.WithResponseType("code"),
 		acpclient.WithResponseMode("jwt"),
+		acpclient.WithPAR(client.Config.ClientID, arrangementID),
 	)
 }
 
 func (s *Server) CreateConsentResponse(
-	c *gin.Context, bankID BankID,
-	consentID string,
+	c *gin.Context,
+	bankID BankID,
 	user User,
 	client acpclient.Client,
-	loginURLBuilder LoginURLBuilder,
+	consentID string,
 ) {
 	var (
 		loginURL           string
@@ -94,15 +97,28 @@ func (s *Server) CreateConsentResponse(
 		encodedCookieValue string
 		app                = AppStorage{
 			BankID:   bankID,
-			IntentID: consentID,
 			Sub:      user.Sub,
+			IntentID: consentID,
 		}
-		data = gin.H{}
+		data          = gin.H{}
+		parRequestURI string
 	)
 
-	if loginURL, app.CSRF, err = loginURLBuilder.BuildLoginURL(consentID, client); err != nil {
-		c.String(http.StatusInternalServerError, fmt.Sprintf("failed to build authorize url: %+v", err))
-		return
+	if s.Clients.ConsentClient.UsePAR() {
+		if parRequestURI, app.CSRF, err = s.Clients.ConsentClient.DoPAR(c); err != nil {
+			c.String(http.StatusBadRequest, fmt.Sprintf("failed to register PAR request: %+v", err))
+			return
+		}
+
+		if loginURL, _, err = s.LoginURLBuilder.BuildLoginURL(parRequestURI, client); err != nil {
+			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to build authorize url: %+v", err))
+			return
+		}
+	} else {
+		if loginURL, app.CSRF, err = s.LoginURLBuilder.BuildLoginURL(consentID, client); err != nil {
+			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to build authorize url: %+v", err))
+			return
+		}
 	}
 
 	if _, err = url.Parse(loginURL); err != nil {
@@ -131,10 +147,11 @@ func getEncryptionKey(client acpclient.Client) (jose.JSONWebKey, error) {
 		err          error
 	)
 
-	ctx := gin.Context{}
+	ctx, cancel := context.WithTimeout(context.Background(), client.Config.Timeout)
+	defer cancel()
 
 	if jwksResponse, err = client.Oauth2.Oauth2.Jwks(
-		oauth2.NewJwksParamsWithContext(&ctx),
+		oauth2.NewJwksParamsWithContext(ctx),
 	); err != nil {
 		return encKey, errors.Wrapf(err, "failed to get jwks from acp server")
 	}
@@ -154,4 +171,17 @@ func getEncryptionKey(client acpclient.Client) (jose.JSONWebKey, error) {
 	}
 
 	return encKey, nil
+}
+
+type FDXLoginURLBuilder struct{}
+
+func NewFDXLoginURLBuilder(config Config) (LoginURLBuilder, error) {
+	return &FDXLoginURLBuilder{}, nil
+}
+
+func (f *FDXLoginURLBuilder) BuildLoginURL(consentID string, client acpclient.Client) (authorizeURL string, csrf acpclient.CSRF, err error) {
+	return client.AuthorizeURL(
+		acpclient.WithResponseType("code"),
+		acpclient.WithPAR(client.Config.ClientID, consentID),
+	)
 }

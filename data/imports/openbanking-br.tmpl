@@ -34,7 +34,6 @@ servers:
   {{ end }}
   root_cas: |
 {{ readFile .ca_pem_file | indent 4 }}
-{{ readFile .conf_ca_pem_file | indent 4 }}
 
 idps:
 - tenant_id: {{ .tenant_id }}
@@ -142,7 +141,7 @@ idps:
           cnpj: "22233344455566"
 server_consents:
 - tenant_id: {{ .tenant_id }}
-  client_id: {{ default "bv0ocudfotn6edhsiu7g" .obbr_consent_page_client }}
+  client_id: {{ .consent_page_client_id }}
   custom:
     server_consent_url: {{ .consent_page_url }}
   server_id: {{ .server_id }}
@@ -151,8 +150,8 @@ clients:
 # consent page
 - tenant_id: {{ .tenant_id }}
   authorization_server_id: system
-  client_id: {{ default "bv0ocudfotn6edhsiu7g" .obbr_consent_page_client }}
-  client_secret: {{ default "pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0" .consent_page_client_secret }}
+  client_id: {{ .consent_page_client_id }}
+  client_secret: {{ .consent_page_client_secret }}
   client_name: custom server consent
   grant_types:
   - client_credentials
@@ -161,10 +160,10 @@ clients:
   token_endpoint_auth_method: client_secret_basic
 - tenant_id:  {{ .tenant_id }}
   authorization_server_id: {{ .server_id }}
-  client_id: bukj5p6k7qdmm5ppbi4g
+  client_id: {{ .bank_client_id }}
   client_name: bank
   description: bank resource server app used to introspect tokens
-  client_secret: 8DPOMd3ZOvsjuUnU9goRMHTIUUXtSkgwQeo8v_S74aE
+  client_secret: {{ .bank_client_secret }}
   grant_types:
   - client_credentials
   scopes:
@@ -176,19 +175,19 @@ clients:
   tls_client_auth_subject_dn: {{ .bank_tls_client_auth_subject_dn }}
   tls_client_certificate_bound_access_tokens: true
   token_endpoint_auth_method: tls_client_auth
-# financroo / developer tpp
+
+# financroo
 - tenant_id: {{ .tenant_id }}
   authorization_server_id: {{ .server_id }}
-  client_id: bugkgm23g9kregtu051g
+  client_id: {{ .financroo_tpp_client_id }}
   organisation_id: 3333-3333-3333-3333 
   client_name: Financroo
   client_uri: https://localhost:8090
-  client_secret: -TlfoycUiE0qNi-XUBFDfTxMlhHTCjVxOF6pLrWZbQA
+  client_secret: {{ .financroo_tpp_client_secret }}
   tls_client_auth_subject_dn: {{ .financroo_tls_client_auth_subject_dn }}
   tls_client_certificate_bound_access_tokens: true
   token_endpoint_auth_method: tls_client_auth
   redirect_uris:
-  - {{ .developer_tpp_url }}/callback
   - {{ .financroo_tpp_url }}/api/callback
   - {{ .financroo_tpp_url }}/api/domestic/callback
   subject_type: pairwise
@@ -211,134 +210,35 @@ clients:
   - refresh_token
   jwks:
 {{ readFile .financroo_pem_file | pemToPublicJwks | indent 4 }}
-- tenant_id: default
+
+#  developer tpp
+- tenant_id: {{ .tenant_id }}
   authorization_server_id: {{ .server_id }}
-  organisation_id: 74e929d9-33b6-4d85-8ba7-c146c867a817
-  client_id: cid-1
-  client_name: client-with-jwks
-  client_uri: {{ .conf_tpp_1_url }}
-  tls_client_auth_subject_dn: {{ .conf_tpp_1_sub_dn }}
+  client_id: {{ .developer_tpp_client_id }}
+  client_name: Developer TPP
+  client_uri: https://localhost:8090
+  client_secret: {{ .developer_tpp_client_secret }}
+  tls_client_auth_subject_dn: {{ .financroo_tls_client_auth_subject_dn }}
   tls_client_certificate_bound_access_tokens: true
   token_endpoint_auth_method: tls_client_auth
   redirect_uris:
-    - {{ .conf_tpp_1_url }}/test/a/OBBConfTests/callback
-    - https://fapi-test:8444/test/a/OBBConfTests/callback
-    - https://fapi-test:8444/test/a/MtlsDcrFapiTests/callback
-    - https://fapi-test:8444/test/a/PrivateKeyJwtDcrFapiTests/callback
+  - {{ .developer_tpp_url }}/callback
   subject_type: pairwise
-  request_object_signing_alg: PS256
   response_types:
-    - token
-    - code id_token
+  - token
+  - code
   scopes:
-    - consent:*
-    - consents
-    - accounts
-    - payments
-    - customers
-    - introspect_tokens
-    - offline_access
-    - openid
-    - revoke_tokens
-    - directory:software
+  - consents
+  - consent:*
+  - introspect_tokens
+  - offline_access
+  - openid
+  - revoke_tokens
+  - accounts
+  - payments
   grant_types:
-    - client_credentials
-    - authorization_code
-    - refresh_token
+  - client_credentials
+  - authorization_code
+  - refresh_token
   jwks:
-        {{ readFile .conf_tpp_1_public_jwks | indent 4 }}
-- tenant_id: default
-  authorization_server_id: {{ .server_id }}
-  organisation_id: 74e929d9-33b6-4d85-8ba7-c146c867a817
-  client_id: {{ .conf_tpp_1_id }}
-  client_name: Conformance-tpp-1
-  client_uri: {{ .conf_tpp_1_url }}
-  tls_client_auth_subject_dn: {{ .conf_tpp_1_sub_dn }}
-  tls_client_certificate_bound_access_tokens: true
-  token_endpoint_auth_method: tls_client_auth
-  redirect_uris:
-    - {{ .conf_tpp_1_url }}/test/a/OBBConfTests/callback
-    - https://fapi-test:8444/test/a/OBBConfTests/callback
-    - https://fapi-test:8444/test/a/MtlsDcrFapiTests/callback
-    - https://fapi-test:8444/test/a/PrivateKeyJwtDcrFapiTests/callback
-  subject_type: pairwise
-  request_object_signing_alg: PS256
-  response_types:
-    - token
-    - code id_token
-  scopes:
-    - consent:*
-    - consents
-    - accounts
-    - payments
-    - customers
-    - introspect_tokens
-    - offline_access
-    - openid
-    - revoke_tokens
-    - directory:software
-  grant_types:
-    - client_credentials
-    - authorization_code
-    - refresh_token
-  jwks:
-    {{ readFile .conf_tpp_1_public_jwks | indent 4 }}
-- tenant_id: default
-  authorization_server_id: {{ .server_id }}
-  organisation_id: 74e929d9-33b6-4d85-8ba7-c146c867a817
-  client_id: {{ .conf_tpp_2_id }}
-  client_name: Conformance-tpp-2
-  client_uri: {{ .conf_tpp_2_url }}
-  tls_client_auth_subject_dn: {{ .conf_tpp_2_sub_dn }}
-  tls_client_certificate_bound_access_tokens: true
-  token_endpoint_auth_method: tls_client_auth
-  redirect_uris:
-    - {{ .conf_tpp_2_url }}/test/a/OBBConfTests/callback
-    - https://fapi-test:8444/test/a/OBBConfTests/callback
-    - https://fapi-test:8444/test/a/OBBConfTests/callback?dummy1=lorem&dummy2=ipsum
-    - https://fapi-test:8444/test/a/MtlsDcrFapiTests/callback
-    - https://fapi-test:8444/test/a/MtlsDcrFapiTests/callback?dummy1=lorem&dummy2=ipsum
-    - https://fapi-test:8444/test/a/PrivateKeyJwtDcrFapiTests/callback
-    - https://fapi-test:8444/test/a/PrivateKeyJwtDcrFapiTests/callback?dummy1=lorem&dummy2=ipsum
-  subject_type: pairwise
-  request_object_signing_alg: PS256
-  response_types:
-    - token
-    - code
-    - code id_token
-  scopes:
-    - consent:*
-    - consents
-    - accounts
-    - payments
-    - customers
-    - introspect_tokens
-    - offline_access
-    - openid
-    - revoke_tokens
-    - directory:software
-  grant_types:
-    - client_credentials
-    - authorization_code
-    - refresh_token
-  jwks:
-    {{ readFile .conf_tpp_2_public_jwks | indent 4 }}
-policies:
-- id: block_openbanking_brasil_dcr
-  language: cloudentity
-  policy_name: Unlock DCR
-  server_id: {{ .server_id }}
-  tenant_id: {{ .tenant_id }}
-  type: dcr
-  validators:
-    - name: "true"
-services:
-- id: directory
-  tenant_id: default
-  name: directory
-  authorization_server_id: {{ .server_id }}
-  scopes:
-  - tenant_id: default
-    authorization_server_id: {{ .server_id }}
-    name: directory:software
-    id: directory-software
+{{ readFile .financroo_pem_file | pemToPublicJwks | indent 4 }}

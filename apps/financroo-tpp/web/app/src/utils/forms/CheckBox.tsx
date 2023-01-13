@@ -1,17 +1,24 @@
-import React, {useEffect} from "react";
-import FormControlLabel from "@material-ui/core/FormControlLabel";
-import Checkbox from "@material-ui/core/Checkbox";
-import FormHelperText from "@material-ui/core/FormHelperText";
+import React, { useEffect } from "react";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import Checkbox from "@mui/material/Checkbox";
+import FormHelperText from "@mui/material/FormHelperText";
 
-export default function CheckBox ({form, id, name, label, style = {}, helperText, ...props}) {
-
+export default function CheckBox({
+  form,
+  id,
+  name,
+  label,
+  style = {},
+  helperText,
+  ...props
+}) {
   useEffect(() => {
-    form.register({name});
+    form.register({ name });
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [name]);
 
   return (
-    <div style={{marginBottom: 32, width: '100%', ...style}}>
+    <div style={{ marginBottom: 32, width: "100%", ...style }}>
       <FormControlLabel
         id={`${id}-${name}-checkbox`}
         control={
@@ -27,8 +34,9 @@ export default function CheckBox ({form, id, name, label, style = {}, helperText
         label={label}
         {...props}
       />
-      {helperText && <FormHelperText style={{marginLeft: 28}}>{helperText}</FormHelperText>
-      }
+      {helperText && (
+        <FormHelperText style={{ marginLeft: 28 }}>{helperText}</FormHelperText>
+      )}
     </div>
-  )
-};
+  );
+}

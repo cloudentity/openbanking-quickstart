@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import { Theme } from "@material-ui/core";
-import Tabs from "@material-ui/core/Tabs";
-import Tab from "@material-ui/core/Tab";
+import { makeStyles } from "tss-react/mui";
+import Tabs from "@mui/material/Tabs";
+import Tab from "@mui/material/Tab";
 import ApplicationAccessTable from "./ApplicationAccessTable";
+import { ClientConsent, ConsentAccount } from "../types";
 
-const useStyles = makeStyles((theme: Theme) => ({
+const useStyles = makeStyles()(theme => ({
   container: {
     background: "#FFFFFF",
     boxShadow:
@@ -32,12 +32,12 @@ const useStyles = makeStyles((theme: Theme) => ({
   },
 }));
 
-type Props = {
-  data: any; // FIXME
-  accounts: any; // FIXME
+interface Props {
+  data: ClientConsent;
+  accounts: ConsentAccount[];
   handleRevoke: (id: string, consent_type: string) => void;
   status: string;
-};
+}
 
 function ApplicationAccessTabs({
   data,
@@ -45,7 +45,7 @@ function ApplicationAccessTabs({
   accounts,
   status,
 }: Props) {
-  const classes = useStyles();
+  const { classes } = useStyles();
   const [tab, setTab] = useState<"account" | "payment">("account");
 
   return (
@@ -76,7 +76,13 @@ function ApplicationAccessTabs({
       <div>
         {tab === "account" && (
           <ApplicationAccessTable
-            data={data.consents.filter((v) => v.type === "account_access" || v.type == "cdr_arrangement" || v.type == "consents")}
+            data={data.consents.filter(
+              v =>
+                v.type === "account_access" ||
+                v.type === "cdr_arrangement" ||
+                v.type === "fdx_consent" ||
+                v.type === "consents"
+            )}
             type="account"
             handleRevoke={handleRevoke}
             accounts={accounts}
@@ -85,7 +91,7 @@ function ApplicationAccessTabs({
         )}
         {tab === "payment" && (
           <ApplicationAccessTable
-            data={data.consents.filter((v) => v.type === "domestic_payment")}
+            data={data.consents.filter(v => v.type === "domestic_payment" || v.type === "payments")}
             type="payment"
             handleRevoke={handleRevoke}
             accounts={accounts}

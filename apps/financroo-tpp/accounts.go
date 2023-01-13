@@ -1,14 +1,18 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 
-	cdrModels "github.com/cloudentity/openbanking-quickstart/openbanking/cdr/banking/client/banking"
-	obbrAccounts "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/client/accounts"
-	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/client/accounts"
-	"github.com/cloudentity/openbanking-quickstart/openbanking/obuk/accountinformation/models"
+	cdrModels "github.com/cloudentity/openbanking-quickstart/generated/cdr/client/banking"
+	fdxAccounts "github.com/cloudentity/openbanking-quickstart/generated/fdx/client/account_information"
+	fdxModels "github.com/cloudentity/openbanking-quickstart/generated/fdx/models"
+	obbrAccounts "github.com/cloudentity/openbanking-quickstart/generated/obbr/accounts/client/accounts"
+	"github.com/cloudentity/openbanking-quickstart/generated/obuk/accounts/client/accounts"
+	"github.com/cloudentity/openbanking-quickstart/generated/obuk/accounts/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/runtime"
+	httptransport "github.com/go-openapi/runtime/client"
 	"github.com/go-openapi/strfmt"
 )
 
@@ -24,7 +28,7 @@ func (o *OBUKClient) GetAccounts(c *gin.Context, accessToken string, bank Connec
 		err          error
 	)
 
-	if resp, err = o.Accounts.GetAccounts(accounts.NewGetAccountsParamsWithContext(c).WithAuthorization(accessToken), nil); err != nil {
+	if resp, err = o.Accounts.Accounts.GetAccounts(accounts.NewGetAccountsParamsWithContext(c).WithAuthorization(accessToken), nil); err != nil {
 		return accountsData, err
 	}
 
@@ -90,6 +94,48 @@ func (o *OBBRClient) GetAccounts(c *gin.Context, accessToken string, bank Connec
 					{
 						Name:           models.Name0(*a.AccountID),
 						Identification: (*models.Identification0)(a.Number),
+					},
+				},
+			},
+			BankID: bank.BankID,
+		})
+	}
+
+	return accountsData, nil
+}
+
+func (o *FDXBankClient) GetAccounts(c *gin.Context, accessToken string, bank ConnectedBank) ([]Account, error) {
+	var (
+		resp         *fdxAccounts.SearchForAccountsOK
+		accountsData = []Account{}
+		err          error
+	)
+
+	if resp, err = o.AccountInformation.SearchForAccounts(fdxAccounts.NewSearchForAccountsParamsWithContext(c), httptransport.BearerToken(accessToken)); err != nil {
+		return accountsData, err
+	}
+
+	for _, acct := range resp.Payload.Accounts {
+		var (
+			depositAccount fdxModels.AccountWithDetailsentity
+			jsonStr        []byte
+		)
+		if jsonStr, err = json.Marshal(acct); err != nil {
+			return accountsData, err
+		}
+
+		if err = json.Unmarshal(jsonStr, &depositAccount); err != nil {
+			return accountsData, err
+		}
+
+		accountsData = append(accountsData, Account{
+			OBAccount6: models.OBAccount6{
+				AccountID: (*models.AccountID)(&depositAccount.DepositAccount.AccountID),
+				Nickname:  models.Nickname(depositAccount.DepositAccount.Nickname),
+				Account: []*models.OBAccount6AccountItems0{
+					{
+						Name:           models.Name0(depositAccount.DepositAccount.ProductName),
+						Identification: (*models.Identification0)(&depositAccount.DepositAccount.AccountNumber),
 					},
 				},
 			},

@@ -1,104 +1,57 @@
-import { createTheme, Theme } from "@material-ui/core/styles";
-import { CreateCSSProperties } from "@material-ui/core/styles/withStyles";
+import { createTheme } from "@mui/material/styles";
+import { CSSProperties } from "react";
 
-declare module "@material-ui/core/styles/createTheme" {
+declare module "@mui/material/styles" {
   interface Theme {
     custom: {
       heading2: {
-        fontWeight: CreateCSSProperties["fontWeight"];
-        fontSize: CreateCSSProperties["fontSize"];
-        lineHeight: CreateCSSProperties["lineHeight"];
+        fontWeight: string | number;
+        fontSize: number;
+        lineHeight: string;
       };
       heading3: {
-        fontWeight: CreateCSSProperties["fontWeight"];
-        fontSize: CreateCSSProperties["fontSize"];
-        lineHeight: CreateCSSProperties["lineHeight"];
+        fontWeight: string | number;
+        fontSize: number;
+        lineHeight: string;
       };
       heading6: {
-        fontWeight: CreateCSSProperties["fontWeight"];
-        fontSize: CreateCSSProperties["fontSize"];
-        lineHeight: CreateCSSProperties["lineHeight"];
-        color: CreateCSSProperties["color"];
+        fontWeight: string | number;
+        fontSize: number;
+        lineHeight: string;
+        color: string;
       };
       label: {
-        fontWeight: CreateCSSProperties["fontWeight"];
-        fontSize: CreateCSSProperties["fontSize"];
-        lineHeight: CreateCSSProperties["lineHeight"];
-        color: CreateCSSProperties["color"];
+        fontWeight: string | number;
+        fontSize: number;
+        lineHeight: string;
+        color: string;
       };
       caption: {
-        fontWeight: CreateCSSProperties["fontWeight"];
-        fontSize: CreateCSSProperties["fontSize"];
-        lineHeight: CreateCSSProperties["lineHeight"];
-        color: CreateCSSProperties["color"];
+        fontWeight: string | number;
+        fontSize: number;
+        lineHeight: string;
+        color: string;
       };
       button: {
-        fontWeight: CreateCSSProperties["fontWeight"];
-        fontSize: CreateCSSProperties["fontSize"];
-        lineHeight: CreateCSSProperties["lineHeight"];
-        color: CreateCSSProperties["color"];
-        textTransform: CreateCSSProperties["textTransform"];
+        fontWeight: string | number;
+        fontSize: number;
+        lineHeight: string;
+        color: string;
+        textTransform: CSSProperties["textTransform"];
       };
       body1: {
-        fontSize: CreateCSSProperties["fontSize"];
-        lineHeight: CreateCSSProperties["lineHeight"];
+        fontSize: number;
+        lineHeight: string;
       };
       body2: {
-        fontSize: CreateCSSProperties["fontSize"];
-        lineHeight: CreateCSSProperties["lineHeight"];
+        fontSize: number;
+        lineHeight: string;
       };
     };
   }
-  interface ThemeOptions {
-    custom?: {
-      heading2?: {
-        fontWeight?: CreateCSSProperties["fontWeight"];
-        fontSize?: CreateCSSProperties["fontSize"];
-        lineHeight?: CreateCSSProperties["lineHeight"];
-      };
-      heading3?: {
-        fontWeight?: CreateCSSProperties["fontWeight"];
-        fontSize?: CreateCSSProperties["fontSize"];
-        lineHeight?: CreateCSSProperties["lineHeight"];
-      };
-      heading6?: {
-        fontWeight?: CreateCSSProperties["fontWeight"];
-        fontSize?: CreateCSSProperties["fontSize"];
-        lineHeight?: CreateCSSProperties["lineHeight"];
-        color?: CreateCSSProperties["color"];
-      };
-      label?: {
-        fontWeight?: CreateCSSProperties["fontWeight"];
-        fontSize?: CreateCSSProperties["fontSize"];
-        lineHeight?: CreateCSSProperties["lineHeight"];
-        color?: CreateCSSProperties["color"];
-      };
-      caption?: {
-        fontWeight?: CreateCSSProperties["fontWeight"];
-        fontSize?: CreateCSSProperties["fontSize"];
-        lineHeight?: CreateCSSProperties["lineHeight"];
-        color?: CreateCSSProperties["color"];
-      };
-      button?: {
-        fontWeight?: CreateCSSProperties["fontWeight"];
-        fontSize?: CreateCSSProperties["fontSize"];
-        lineHeight?: CreateCSSProperties["lineHeight"];
-        color?: CreateCSSProperties["color"];
-        textTransform?: CreateCSSProperties["textTransform"];
-      };
-      body1?: {
-        fontSize?: CreateCSSProperties["fontSize"];
-        lineHeight?: CreateCSSProperties["lineHeight"];
-      };
-      body2?: {
-        fontSize?: CreateCSSProperties["fontSize"];
-        lineHeight?: CreateCSSProperties["lineHeight"];
-      };
-    };
-  }
+  interface ThemeOptions extends Theme {}
 }
-
-export const theme: Theme = createTheme({
+export const theme = createTheme({
   custom: {
     heading2: {
       fontWeight: "normal",
@@ -152,21 +105,26 @@ export const theme: Theme = createTheme({
       main: "#434656",
     },
   },
-  overrides: {
+  components: {
     MuiTableRow: {
-      root: {
-        "&$selected": {
-          backgroundColor: "rgba(54, 198, 175, 0.08)",
-          "&:hover": {
-            backgroundColor: "rgba(54, 198, 175, 0.2)",
+      styleOverrides: {
+        root: {
+          "&$selected": {
+            backgroundColor: "rgba(54, 198, 175, 0.08)",
+            "&:hover": {
+              backgroundColor: "rgba(54, 198, 175, 0.2)",
+            },
           },
         },
       },
     },
     MuiTableCell: {
-      root: {
-        borderBottom: "none",
+      styleOverrides: {
+        root: {
+          borderBottom: "none",
+        },
       },
     },
   },
+  unstable_sx: {} as any,
 });

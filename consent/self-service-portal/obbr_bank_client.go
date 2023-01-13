@@ -1,12 +1,13 @@
 package main
 
 import (
+	"context"
 	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 
-	"github.com/cloudentity/openbanking-quickstart/openbanking/obbr/accounts/models"
+	"github.com/cloudentity/openbanking-quickstart/generated/obbr/accounts/models"
 )
 
 type OBBRBankClient struct {
@@ -23,7 +24,7 @@ func NewOBBRBankClient(config Config) BankClient {
 	return &c
 }
 
-func (c *OBBRBankClient) GetInternalAccounts(subject string) (InternalAccounts, error) {
+func (c *OBBRBankClient) GetInternalAccounts(_ context.Context, subject string) (InternalAccounts, error) {
 	var (
 		request  *http.Request
 		response *http.Response

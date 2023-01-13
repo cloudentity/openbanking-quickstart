@@ -141,11 +141,15 @@ servers:
     - private_key_jwt
     - client_secret_post
     - tls_client_auth
+  token_endpoint_auth_signing_alg_values:
+    - RS256
+    - ES256
+    - PS256
   initialize: true
   cdr:
     brand_id:
-    adr_validation_enabled: true
-    register_url: "https://mock-register:7000"
+    adr_validation_enabled: {{ .cdr_adr_validation_enabled }}
+    register_url: https://mock-register:7000
     industry: banking
   {{ if .read_client_certificate_from_header }}
   read_client_certificate_from_header: {{ .read_client_certificate_from_header }}
@@ -153,7 +157,6 @@ servers:
   {{ end }}
   root_cas: |
 {{ readFile .ca_pem_file | indent 4 }}
-{{ readFile .conf_ca_pem_file | indent 4 }}
 
 idps:
 - tenant_id: {{ .tenant_id }}
@@ -249,7 +252,7 @@ idps:
           name: user3
 server_consents:
 - tenant_id: {{ .tenant_id }}
-  client_id: bv0ocudfotn6edhsiu7g
+  client_id: {{ .consent_page_client_id }}
   custom:
     server_consent_url: {{ .consent_page_url }}
   server_id: {{ .server_id }}
@@ -258,8 +261,8 @@ clients:
 # consent page
 - tenant_id: {{ .tenant_id }}
   authorization_server_id: system
-  client_id: bv0ocudfotn6edhsiu7g
-  client_secret: {{ default "pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0" .consent_page_client_secret }}
+  client_id: {{ .consent_page_client_id }}
+  client_secret: {{ .consent_page_client_secret }}
   client_name: CDR custom server consent
   grant_types:
   - client_credentials
@@ -269,10 +272,10 @@ clients:
 
 - tenant_id: {{ .tenant_id }}
   authorization_server_id: {{ .server_id }}
-  client_id: bukj5p6k7qdmm5ppbi4g
+  client_id: {{ .bank_client_id }}
   client_name: bank
   description: bank resource server app used to introspect tokens
-  client_secret: 8DPOMd3ZOvsjuUnU9goRMHTIUUXtSkgwQeo8v_S74aE
+  client_secret: {{ .bank_client_secret }}
   grant_types:
   - client_credentials
   scopes:
@@ -285,18 +288,17 @@ clients:
   tls_client_certificate_bound_access_tokens: true
   token_endpoint_auth_method: tls_client_auth
 
-# financroo / developer tpp
+# financroo
 - tenant_id: {{ .tenant_id }}
   authorization_server_id: {{ .server_id }}
-  client_id: bugkgm23g9kregtu051g
+  client_id: {{ .financroo_tpp_client_id }}
   client_name: Financroo
   client_uri: https://localhost:8090
-  client_secret: -TlfoycUiE0qNi-XUBFDfTxMlhHTCjVxOF6pLrWZbQA
+  client_secret: {{ .financroo_tpp_client_secret }}
   tls_client_auth_subject_dn: {{ .financroo_tls_client_auth_subject_dn }}
   tls_client_certificate_bound_access_tokens: true
   token_endpoint_auth_method: private_key_jwt
   redirect_uris:
-  - {{ .developer_tpp_url }}/callback
   - {{ .financroo_tpp_url }}/api/callback
   - {{ .financroo_tpp_url }}/api/domestic/callback
   subject_type: pairwise
@@ -304,6 +306,7 @@ clients:
   response_types:
   - token
   - code
+  - code id_token
   scopes:
   - bank:accounts.basic:read
   - bank:accounts.detail:read
@@ -319,11 +322,10 @@ clients:
   jwks:
 {{ readFile .financroo_pem_file | pemToPublicJwks | indent 4 }}
 
-
 - tenant_id: {{ .tenant_id }}
   authorization_server_id: {{ .server_id }}
-  client_id: cw1ocudfotn6edhsiv8h
-  client_secret: {{ default "pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0" .consent_page_client_secret }}
+  client_id: {{ .internal_bank_client_id }}
+  client_secret: {{ .internal_bank_client_secret }}
   client_name: Consent Page Bank Client
   grant_types:
   - client_credentials
@@ -331,19 +333,10 @@ clients:
   - bank:accounts.basic:read
   - bank:accounts.detail:read
   token_endpoint_auth_method: client_secret_post
-policies:
-- id: block_cdr_dcr
-  language: cloudentity
-  policy_name: Unlock DCR
-  server_id: {{ .server_id }}
-  tenant_id: {{ .tenant_id }}
-  type: dcr
-  validators:
-    - name: 'true'
-      conf: {}
+
 claims:
 - authorization_server_id: {{ .server_id }}
-  id: cdr_arrangement_id
+  id: {{ .server_id }}_arrangement_id
   mapping: cdr_arrangement_id
   name: cdr_arrangement_id
   source_path: openbanking_intent_id
@@ -351,7 +344,7 @@ claims:
   tenant_id: {{ .tenant_id }}
   type: access_token
 - authorization_server_id: {{ .server_id }}
-  id: cdr_software_product
+  id: {{ .server_id }}_software_product
   mapping: software_id
   name: software_id
   source_path: software_id
@@ -359,7 +352,7 @@ claims:
   tenant_id: {{ .tenant_id }}
   type: access_token
 - authorization_server_id: {{ .server_id }}
-  id: cdr_customer_id
+  id: {{ .server_id }}_customer_id
   mapping: customer_id
   name: customer_id
   source_path: customer_id
@@ -368,7 +361,7 @@ claims:
   type: access_token
 
 services:
-- id: cdr-cdr-australia
+- id: {{ .server_id }}-cdr-australia
   tenant_id: {{ .tenant_id }}
   authorization_server_id: {{ .server_id }}
   name: CDR Australia

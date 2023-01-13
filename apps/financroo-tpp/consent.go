@@ -7,18 +7,32 @@ import (
 	"strconv"
 	"time"
 
-	obbrModels "github.com/cloudentity/openbanking-quickstart/openbanking/obbr/consents/models"
-	obModels "github.com/cloudentity/openbanking-quickstart/openbanking/obuk/paymentinitiation/models"
+	obbrModels "github.com/cloudentity/openbanking-quickstart/generated/obbr/consents/models"
+	obModels "github.com/cloudentity/openbanking-quickstart/generated/obuk/payments/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
+
+	acpclient "github.com/cloudentity/acp-client-go"
 
 	obbrClientModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_b_r"
 	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
 	ob "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 	"github.com/cloudentity/acp-client-go/clients/openbankingBR/payments/client/pagamentos"
 )
+
+func (o *OBUKConsentClient) CreateConsentExplicitly() bool {
+	return true
+}
+
+func (o *OBUKConsentClient) UsePAR() bool {
+	return false
+}
+
+func (o *OBUKConsentClient) DoPAR(c *gin.Context) (string, acpclient.CSRF, error) {
+	return "", acpclient.CSRF{}, nil
+}
 
 func (o *OBUKConsentClient) CreateAccountConsent(c *gin.Context) (string, error) {
 	var (
@@ -163,76 +177,88 @@ const (
 	OperacoesDeCreditoDadosDoContrato   PermissionGroup = "Operações de Crédito Dados do Contrato" // nolint
 )
 
-type Permissions []obbrModels.OpenbankingBrasilPermission
+type Permissions []obbrModels.OpenbankingBrasilConsentV2Permission
 
 var PermissionGroupMap = map[PermissionGroup]Permissions{
 	CadastroDadosCadastraisPF: {
-		obbrModels.OpenbankingBrasilPermissionCUSTOMERSPERSONALIDENTIFICATIONSREAD,
-		obbrModels.OpenbankingBrasilPermissionCUSTOMERSPERSONALIDENTIFICATIONSREAD,
-		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionCUSTOMERSPERSONALIDENTIFICATIONSREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionCUSTOMERSPERSONALIDENTIFICATIONSREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionRESOURCESREAD,
 	},
 	CadastroInformacoesComplementaresPF: {
-		obbrModels.OpenbankingBrasilPermissionCUSTOMERSPERSONALADITTIONALINFOREAD,
-		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionCUSTOMERSPERSONALADITTIONALINFOREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionRESOURCESREAD,
 	},
 	CadastroDadosCadastraisPJ: {
-		obbrModels.OpenbankingBrasilPermissionCUSTOMERSBUSINESSIDENTIFICATIONSREAD,
-		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionCUSTOMERSBUSINESSIDENTIFICATIONSREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionRESOURCESREAD,
 	},
 	CadastroInformacoesComplementaresPJ: {
-		obbrModels.OpenbankingBrasilPermissionCUSTOMERSBUSINESSADITTIONALINFOREAD,
-		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionCUSTOMERSBUSINESSADITTIONALINFOREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionRESOURCESREAD,
 	},
 	ContasSaldos: {
-		obbrModels.OpenbankingBrasilPermissionACCOUNTSREAD,
-		obbrModels.OpenbankingBrasilPermissionACCOUNTSBALANCESREAD,
-		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionACCOUNTSREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionACCOUNTSBALANCESREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionRESOURCESREAD,
 	},
 	ContasLimites: {
-		obbrModels.OpenbankingBrasilPermissionACCOUNTSREAD,
-		obbrModels.OpenbankingBrasilPermissionACCOUNTSOVERDRAFTLIMITSREAD,
-		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionACCOUNTSREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionACCOUNTSOVERDRAFTLIMITSREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionRESOURCESREAD,
 	},
 	ContasExtratos: {
-		obbrModels.OpenbankingBrasilPermissionACCOUNTSREAD,
-		obbrModels.OpenbankingBrasilPermissionACCOUNTSTRANSACTIONSREAD,
-		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionACCOUNTSREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionACCOUNTSTRANSACTIONSREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionRESOURCESREAD,
 	},
 	CartaoDeCreditoLimites: {
-		obbrModels.OpenbankingBrasilPermissionCREDITCARDSACCOUNTSREAD,
-		obbrModels.OpenbankingBrasilPermissionCREDITCARDSACCOUNTSLIMITSREAD,
-		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionCREDITCARDSACCOUNTSREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionCREDITCARDSACCOUNTSLIMITSREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionRESOURCESREAD,
 	},
 	CartaoDeCreditoTransacoes: {
-		obbrModels.OpenbankingBrasilPermissionCREDITCARDSACCOUNTSREAD,
-		obbrModels.OpenbankingBrasilPermissionCREDITCARDSACCOUNTSTRANSACTIONSREAD,
-		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionCREDITCARDSACCOUNTSREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionCREDITCARDSACCOUNTSTRANSACTIONSREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionRESOURCESREAD,
 	},
 	CartaoDeCreditoFaturas: {
-		obbrModels.OpenbankingBrasilPermissionCREDITCARDSACCOUNTSREAD,
-		obbrModels.OpenbankingBrasilPermissionCREDITCARDSACCOUNTSBILLSREAD,
-		obbrModels.OpenbankingBrasilPermissionCREDITCARDSACCOUNTSBILLSTRANSACTIONSREAD,
-		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionCREDITCARDSACCOUNTSREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionCREDITCARDSACCOUNTSBILLSREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionCREDITCARDSACCOUNTSBILLSTRANSACTIONSREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionRESOURCESREAD,
 	},
 	OperacoesDeCreditoDadosDoContrato: {
-		obbrModels.OpenbankingBrasilPermissionLOANSREAD,
-		obbrModels.OpenbankingBrasilPermissionLOANSWARRANTIESREAD,
-		obbrModels.OpenbankingBrasilPermissionLOANSSCHEDULEDINSTALMENTSREAD,
-		obbrModels.OpenbankingBrasilPermissionLOANSPAYMENTSREAD,
-		obbrModels.OpenbankingBrasilPermissionFINANCINGSREAD,
-		obbrModels.OpenbankingBrasilPermissionFINANCINGSWARRANTIESREAD,
-		obbrModels.OpenbankingBrasilPermissionFINANCINGSSCHEDULEDINSTALMENTSREAD,
-		obbrModels.OpenbankingBrasilPermissionFINANCINGSPAYMENTSREAD,
-		obbrModels.OpenbankingBrasilPermissionUNARRANGEDACCOUNTSOVERDRAFTREAD,
-		obbrModels.OpenbankingBrasilPermissionUNARRANGEDACCOUNTSOVERDRAFTWARRANTIESREAD,
-		obbrModels.OpenbankingBrasilPermissionUNARRANGEDACCOUNTSOVERDRAFTSCHEDULEDINSTALMENTSREAD,
-		obbrModels.OpenbankingBrasilPermissionUNARRANGEDACCOUNTSOVERDRAFTPAYMENTSREAD,
-		obbrModels.OpenbankingBrasilPermissionINVOICEFINANCINGSREAD,
-		obbrModels.OpenbankingBrasilPermissionINVOICEFINANCINGSWARRANTIESREAD,
-		obbrModels.OpenbankingBrasilPermissionINVOICEFINANCINGSSCHEDULEDINSTALMENTSREAD,
-		obbrModels.OpenbankingBrasilPermissionINVOICEFINANCINGSPAYMENTSREAD,
-		obbrModels.OpenbankingBrasilPermissionRESOURCESREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionLOANSREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionLOANSWARRANTIESREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionLOANSSCHEDULEDINSTALMENTSREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionLOANSPAYMENTSREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionFINANCINGSREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionFINANCINGSWARRANTIESREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionFINANCINGSSCHEDULEDINSTALMENTSREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionFINANCINGSPAYMENTSREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionUNARRANGEDACCOUNTSOVERDRAFTREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionUNARRANGEDACCOUNTSOVERDRAFTWARRANTIESREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionUNARRANGEDACCOUNTSOVERDRAFTSCHEDULEDINSTALMENTSREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionUNARRANGEDACCOUNTSOVERDRAFTPAYMENTSREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionINVOICEFINANCINGSREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionINVOICEFINANCINGSWARRANTIESREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionINVOICEFINANCINGSSCHEDULEDINSTALMENTSREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionINVOICEFINANCINGSPAYMENTSREAD,
+		obbrModels.OpenbankingBrasilConsentV2PermissionRESOURCESREAD,
 	},
+}
+
+func (o *OBBRConsentClient) UsePAR() bool {
+	return false
+}
+
+func (o *OBBRConsentClient) DoPAR(c *gin.Context) (string, acpclient.CSRF, error) {
+	return "", acpclient.CSRF{}, nil
+}
+
+func (o *OBBRConsentClient) CreateConsentExplicitly() bool {
+	return true
 }
 
 func (o *OBBRConsentClient) CreateAccountConsent(c *gin.Context) (string, error) {
@@ -240,7 +266,7 @@ func (o *OBBRConsentClient) CreateAccountConsent(c *gin.Context) (string, error)
 		registerResponse *obbrClientModels.CreateDataAccessConsentCreated
 		connectRequest   = ConnectBankRequest{}
 		permissions      []ob.OpenbankingBrasilConsentPermission
-		uniquePerms      = map[obbrModels.OpenbankingBrasilPermission]bool{}
+		uniquePerms      = map[obbrModels.OpenbankingBrasilConsentV2Permission]bool{}
 		err              error
 	)
 
@@ -262,7 +288,7 @@ func (o *OBBRConsentClient) CreateAccountConsent(c *gin.Context) (string, error)
 
 	if registerResponse, err = o.Accounts.Openbanking.Openbankingbr.CreateDataAccessConsent(
 		obbrClientModels.NewCreateDataAccessConsentParamsWithContext(c).
-			WithRequest(&ob.BrazilCustomerDataAccessConsentRequest{
+			WithRequest(&ob.BrazilCustomerDataAccessConsentRequestV1{
 				Data: &ob.OpenbankingBrasilConsentData{
 					ExpirationDateTime: strfmt.DateTime(time.Now().Add(time.Hour * 24)),
 					LoggedUser: &ob.OpenbankingBrasilConsentLoggedUser{
@@ -341,7 +367,7 @@ func (o *OBBRConsentClient) CreatePaymentConsent(c *gin.Context, req CreatePayme
 		AccountType: &accountType,
 	}
 
-	obbrPaymentConsentRequest := ob.BrazilCustomerPaymentConsentRequest{
+	obbrPaymentConsentRequest := ob.BrazilCustomerCreatePaymentConsentRequest{
 		Aud: fmt.Sprintf("%s/open-banking/payments/v1/consents", o.Payments.Config.IssuerURL.String()),
 		Iat: time.Now().Unix(),
 		Jti: uuid.New().String(),

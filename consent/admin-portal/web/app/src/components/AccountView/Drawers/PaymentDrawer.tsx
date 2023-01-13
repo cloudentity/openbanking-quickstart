@@ -1,12 +1,12 @@
 import React from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import Avatar from "@material-ui/core/Avatar";
+import { makeStyles } from "tss-react/mui";
+import Avatar from "@mui/material/Avatar";
 
 import CustomDrawer from "./CustomDrawer";
-import { currencyDict, drawerStyles, getDate } from "../../utils";
+import { getCurrency, drawerStyles, getDate, Consent } from "../../utils";
 import Chip from "../../Chip";
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles()(() => ({
   ...drawerStyles,
   cardsWrapper: {
     display: "flex",
@@ -14,36 +14,31 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-type Props = {
-  drawerData: any;
-  setDrawerData: (data: string | null) => void;
-};
+interface Props {
+  drawerData: Consent;
+  setDrawerData: (data: Consent | undefined) => void;
+}
 
 function PaymentDrawer({ drawerData, setDrawerData }: Props) {
-  const classes = useStyles();
-
-  const details = drawerData?.domestic_payment_consent;
+  const { classes } = useStyles();
 
   const transactionDetails = {
-    Amount: `${
-      currencyDict[details?.Initiation?.InstructedAmount?.Currency] ||
-      currencyDict.GBP
-    } ${details?.Initiation?.InstructedAmount?.Amount}`,
-    Status: details?.Status,
-    "Consent id": details?.ConsentId,
+    Amount: `${getCurrency(drawerData.currency)} ${drawerData.Amount}`,
+    Status: drawerData.status,
+    "Consent id": drawerData.consent_id,
     "Debtor Account": {
-      id: details?.Initiation?.DebtorAccount?.Identification,
-      name: details?.Initiation?.DebtorAccount?.Name,
+      id: drawerData.DebtorAccountIdentification,
+      name: drawerData.DebtorAccountName,
     },
     "Creditor Account": {
-      id: details?.Initiation?.CreditorAccount?.Identification,
-      name: details?.Initiation?.CreditorAccount?.Name,
+      id: drawerData.CreditorAccountIdentification,
+      name: drawerData.CreditorAccountName,
     },
   };
 
   const permissionDates = {
-    Authorised: getDate(details?.Authorisation?.CompletionDateTime),
-    "Last updated": getDate(details?.StatusUpdateDateTime),
+    Authorised: getDate(drawerData.completed_at),
+    "Last updated": getDate(drawerData.updated_at),
   };
 
   const status = drawerData?.status;
@@ -57,11 +52,13 @@ function PaymentDrawer({ drawerData, setDrawerData }: Props) {
             className={classes.logo}
             style={{ backgroundColor: "white", color: "#626576" }}
           >
-            {drawerData?.Client?.name[0]?.toUpperCase()}
+            {drawerData.CreditorAccountName?.length
+              ? drawerData.CreditorAccountName[0].toUpperCase()
+              : ""}
           </Avatar>
           <h3 className={classes.name}>Financroo</h3>
           <div style={{ flex: 1 }} />
-          <Chip type={status && status.toLowerCase()}>{status}</Chip>
+          <Chip type={status && (status.toLowerCase() as any)}>{status}</Chip>
         </div>
       }
       setDrawerData={setDrawerData}
@@ -76,17 +73,17 @@ function PaymentDrawer({ drawerData, setDrawerData }: Props) {
       <div>
         <div className={classes.subHeader}>TRANSACTION Details</div>
         <div className={classes.cardsWrapper}>
-          {Object.entries(transactionDetails).map(([key, value]: any) => (
+          {Object.entries(transactionDetails).map(([key, value]) => (
             <div className={classes.card} key={key}>
               <div className={classes.cardTitle}>{key}</div>
               <div className={classes.cardContent}>
-                {value.id ? (
+                {typeof value === "object" && value?.id ? (
                   <>
                     <div>{value.id}</div>
                     <div>{value.name}</div>
                   </>
                 ) : (
-                  value
+                  <>{value}</>
                 )}
               </div>
             </div>

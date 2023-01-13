@@ -1,6 +1,6 @@
-import { createTheme, Theme } from "@material-ui/core";
+import { createTheme, Theme } from "@mui/material/styles";
 
-declare module "@material-ui/core/styles/createTheme" {
+declare module "@mui/material/styles" {
   interface Theme {
     custom: {
       heading2: {
@@ -39,44 +39,7 @@ declare module "@material-ui/core/styles/createTheme" {
       };
     };
   }
-  interface ThemeOptions {
-    custom?: {
-      heading2?: {
-        fontWeight?: React.CSSProperties["fontWeight"];
-        fontSize?: React.CSSProperties["fontSize"];
-        lineHeight?: React.CSSProperties["lineHeight"];
-      };
-      heading6?: {
-        fontWeight?: React.CSSProperties["fontWeight"];
-        fontSize?: React.CSSProperties["fontSize"];
-        lineHeight?: React.CSSProperties["lineHeight"];
-        color?: React.CSSProperties["color"];
-      };
-      label?: {
-        fontWeight?: React.CSSProperties["fontWeight"];
-        fontSize?: React.CSSProperties["fontSize"];
-        lineHeight?: React.CSSProperties["lineHeight"];
-        color?: React.CSSProperties["color"];
-      };
-      caption?: {
-        fontWeight?: React.CSSProperties["fontWeight"];
-        fontSize?: React.CSSProperties["fontSize"];
-        lineHeight?: React.CSSProperties["lineHeight"];
-        color?: React.CSSProperties["color"];
-      };
-      button?: {
-        fontWeight?: React.CSSProperties["fontWeight"];
-        fontSize?: React.CSSProperties["fontSize"];
-        lineHeight?: React.CSSProperties["lineHeight"];
-        color?: React.CSSProperties["color"];
-        textTransform?: React.CSSProperties["textTransform"];
-      };
-      body2?: {
-        fontSize?: React.CSSProperties["fontSize"];
-        lineHeight?: React.CSSProperties["lineHeight"];
-      };
-    };
-  }
+  interface ThemeOptions extends Theme {}
 }
 
 export const theme: Theme = createTheme({
@@ -118,27 +81,32 @@ export const theme: Theme = createTheme({
   },
   palette: {
     primary: {
-      main: "#007FFF"
+      main: "#007FFF",
     },
     secondary: {
-      main: "#434656"
-    }
+      main: "#434656",
+    },
   },
-  overrides: {
+  components: {
     MuiTableRow: {
-      root: {
-        '&$selected': {
-          backgroundColor: "rgba(54, 198, 175, 0.08)",
-          '&:hover': {
-            backgroundColor: "rgba(54, 198, 175, 0.2)",
-          }
-        }
-      }
+      styleOverrides: {
+        root: {
+          "&$selected": {
+            backgroundColor: "rgba(54, 198, 175, 0.08)",
+            "&:hover": {
+              backgroundColor: "rgba(54, 198, 175, 0.2)",
+            },
+          },
+        },
+      },
     },
     MuiTableCell: {
-      root: {
-        borderBottom: 'none'
-      }
-    }
-  }
+      styleOverrides: {
+        root: {
+          borderBottom: "none",
+        },
+      },
+    },
+  },
+  unstable_sx: {} as any,
 });
