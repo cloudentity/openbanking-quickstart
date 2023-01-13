@@ -7,7 +7,7 @@ import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
 
 import Chip from "../Chip";
-import { ClientType, Consent, getCurrency, getDate } from "../utils";
+import { Consent, getCurrency, getDate } from "../utils";
 import PaymentDrawer from "./Drawers/PaymentDrawer";
 import AccountAccessDrawer from "./Drawers/AccountAccessDrawer";
 

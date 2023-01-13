@@ -4,7 +4,6 @@ import { makeStyles } from "tss-react/mui";
 import Avatar from "@mui/material/Avatar";
 import { uniq } from "ramda";
 
-import Chip from "./Chip";
 import { ClientConsent } from "./types";
 
 const useStyles = makeStyles<{ clickable: boolean }>()((_, { clickable }) => ({
@@ -112,7 +111,6 @@ function ApplicationSimpleCard({ client, clickable = true }: Props) {
       )
       .filter(v => v)
   ).join(", ");
-
 
   return (
     <div

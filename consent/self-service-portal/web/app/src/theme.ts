@@ -108,4 +108,5 @@ export const theme: Theme = createTheme({
       },
     },
   },
+  unstable_sx: {} as any,
 });
