@@ -42,6 +42,7 @@ type Config struct {
 	IntrospectClientID          string        `env:"INTROSPECT_CLIENT_ID,required"`
 	IntrospectClientSecret      string        `env:"INTROSPECT_CLIENT_SECRET" envDefault:"KThGH68f-gMC4cscGLFeOpIU4EYriYhKspOV9IwHbnw"`
 	IntrospectIssuerURL         *url.URL      `env:"INTROSPECT_ISSUER_URL,required"`
+	EnableTLSServer  			      bool 		      `env:"ENABLE_TLS_SERVER" envDefault:"true"`
 	BankClientConfig            BankClientConfig
 }
 
@@ -166,7 +167,13 @@ func (s *Server) Start() error {
 		c.File("web/app/build/index.html")
 	})
 
-	return r.RunTLS(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)), s.Config.CertFile, s.Config.KeyFile)
+	if s.Config.EnableTLSServer {
+		logrus.Debugf("running consent self service server tls")
+		return r.RunTLS(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)), s.Config.CertFile, s.Config.KeyFile)
+	}
+
+	logrus.Debugf("running consent self service server non-tls")
+	return r.Run(fmt.Sprintf(":%s", strconv.Itoa(s.Config.Port)))
 }
 
 func main() {
