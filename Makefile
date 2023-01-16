@@ -18,7 +18,7 @@ build-%:
 run-%-local:
 	./scripts/additional_configuration.sh $* "local" ${BRANCH_NAME}
 	cp -f .env-local .env
-	docker-compose -f docker-compose.acp.local.yaml up -d --no-build ${ACP_LOCAL_APPS}
+	COMPOSE_HTTP_TIMEOUT=120 docker-compose -f docker-compose.acp.local.yaml up -d --no-build ${ACP_LOCAL_APPS}
 	./scripts/wait.sh
 	docker-compose -f docker-compose.$*.yaml up --no-build -d
 	./scripts/wait.sh
