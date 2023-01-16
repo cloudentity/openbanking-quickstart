@@ -60,13 +60,18 @@ services:
   crdb:
     container_name: quickstart-crdb
     image: docker.cloudentity.io/cockroachdb/cockroach:v22.2.0
-    restart: always
+    restart: on-failure
     ports:
       - 26258:26257
       - 8082:8080
     command: start-single-node --insecure
     volumes:
       - crdb:/cockroach/cockroach-data"
+    healthcheck:
+      test: [ "CMD-SHELL", "curl --silent --fail http://localhost:8080/health?ready=1 || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   redis:
     container_name: quickstart-redis
