@@ -25,30 +25,29 @@ services:
         condition: service_completed_successfully
 
   financroo-tpp:
-      image: cloudentity/openbanking-quickstart-financroo-tpp:${VERSION}
-      container_name: financroo-tpp
-      restart: always
-      ports:
-        - "8091:8091"
-      volumes:
-        - ./data:/certs
-        - ./mount/financroo-tpp:/app/data
-      env_file:
-        - .env
-      environment:
-        - UI_URL=https://${APP_HOST}:8091
-        - TENANT=${TENANT}
-        - GIN_MODE=debug # change to release to disable gin debug
-        - SPEC=fdx
-        - BANK_URL=http://bank:8070
-        - OPENBANKING_SERVER_ID=${SERVER}
-        - ENABLE_TLS_SERVER=true
-        - REDIRECT_URL=https://${APP_HOST}:8091/api/callback
-        - CLIENT_ID=${FINANCROO_TPP_CLIENT_ID}
-      depends_on:
-        configuration:
-          condition: service_completed_successfully
-
+    image: cloudentity/openbanking-quickstart-financroo-tpp:${VERSION}
+    container_name: financroo-tpp
+    restart: always
+    ports:
+      - "8091:8091"
+    volumes:
+      - ./data:/certs
+      - ./mount/financroo-tpp:/app/data
+    env_file:
+      - .env
+    environment:
+      - UI_URL=https://${APP_HOST}:8091
+      - TENANT=${TENANT}
+      - GIN_MODE=debug # change to release to disable gin debug
+      - SPEC=fdx
+      - BANK_URL=http://bank:8070
+      - OPENBANKING_SERVER_ID=${SERVER}
+      - ENABLE_TLS_SERVER=true
+      - REDIRECT_URL=https://${APP_HOST}:8091/api/callback
+      - CLIENT_ID=${FINANCROO_TPP_CLIENT_ID}
+    depends_on:
+      configuration:
+        condition: service_completed_successfully
 
   consent-page:
     image: cloudentity/openbanking-quickstart-consent-page:${VERSION}
@@ -75,7 +74,6 @@ services:
     depends_on:
       configuration:
         condition: service_completed_successfully
-
 
   bank:
     image: cloudentity/openbanking-quickstart-bank:${VERSION}
@@ -172,7 +170,7 @@ services:
       - INTROSPECT_ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/${BANK_CUSTOMERS_SERVER}
       - OPENBANKING_SERVER_ID=${SERVER}
       - SPEC=fdx
-      - BANK_CLIENT_TOKEN_URL=${ACP_URL}/${TENANT}/${SERVER}/oauth2/token
+      - BANK_CLIENT_TOKEN_URL=${ACP_MTLS_URL}/${TENANT}/${SERVER}/oauth2/token
       - BANK_CLIENT_ID=${INTERNAL_BANK_CLIENT_ID}
       - BANK_CLIENT_SECRET=pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0
       - BANK_CLIENT_SCOPES=introspect_openbanking_tokens, introspect_tokens, revoke_tokens
