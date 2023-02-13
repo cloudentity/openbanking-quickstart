@@ -14,7 +14,6 @@ import (
 
 	"github.com/cloudentity/openbanking-quickstart/generated/fdx/models"
 	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/clientcredentials"
 )
@@ -78,7 +77,6 @@ func (c *FDXBankClient) GetInternalAccounts(ctx context.Context, id string) (Int
 		body                 []byte
 		err                  error
 	)
-	logrus.Errorf("%+v", c.bankClientConfig)
 	if c.bankClientConfig.AccountsURL != nil {
 		accountsEndpointPath = c.bankClientConfig.AccountsURL.String()
 	} else {
