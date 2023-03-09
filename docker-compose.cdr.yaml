@@ -14,6 +14,7 @@ services:
   mock-register:
     container_name: mock-register
     image: docker.cloudentity.io/cdr-mock-register:0.5.0
+    platform: linux/x86_64/v8
     volumes:
       - ./mount/cdr/registry-seed.json:/app/admin/Data/seed-data.Release.json
     ports:
@@ -30,6 +31,7 @@ services:
   mssql:
     container_name: sql1
     image: 'mcr.microsoft.com/mssql/server:2019-latest'
+    platform: linux/x86_64/v8
     ports:
       - '1433:1433'
     environment:
@@ -44,6 +46,7 @@ services:
   mock-data-holder:
     container_name: mock-data-holder
     image: docker.cloudentity.io/cdr-mock-data-holder:0.0.3
+    platform: linux/x86_64/v8
     volumes:
       - ./mount/cdr/holder.json:/app/idsvr/appsettings.Production.json
       #- ./mount/cdr/holder-seed.json:/app/manage/Data/seed-data.json
@@ -61,6 +64,7 @@ services:
   mock-data-recipient:
     container_name: mock-data-recipient
     image: docker.cloudentity.io/cdr-mock-data-recipient:0.0.14
+    platform: linux/x86_64/v8
     networks:
       default:
         aliases:
@@ -78,6 +82,7 @@ services:
   consent-page:
     image: cloudentity/openbanking-quickstart-consent-page:${VERSION}
     container_name: consent-page
+    platform: linux/x86_64/v8
     restart: always
     ports:
       - "7080:8080"
@@ -113,6 +118,7 @@ services:
   consent-self-service-portal:
     image: cloudentity/openbanking-quickstart-consent-self-service-portal:${VERSION}
     container_name: consent-self-service-portal
+    platform: linux/x86_64/v8
     restart: always
     ports:
       - "8085:8085"
@@ -146,6 +152,7 @@ services:
   consent-admin-portal:
     image: cloudentity/openbanking-quickstart-consent-admin-portal:${VERSION}
     container_name: consent-admin-portal
+    platform: linux/x86_64/v8
     restart: always
     ports:
       - "8086:8086"
@@ -166,6 +173,7 @@ services:
   financroo-tpp:
     image: cloudentity/openbanking-quickstart-financroo-tpp:${VERSION}
     container_name: financroo-tpp
+    platform: linux/x86_64/v8
     restart: always
     ports:
       - "8091:8091"
@@ -190,6 +198,7 @@ services:
   bank:
     image: cloudentity/openbanking-quickstart-bank:${VERSION}
     container_name: bank
+    platform: linux/x86_64/v8
     restart: always
     ports:
       - "8070:8070"
@@ -211,6 +220,7 @@ services:
   configuration:
     container_name: configuration
     image: cloudentity/openbanking-quickstart-configuration:latest
+    platform: linux/x86_64/v8
     restart: on-failure
     volumes:
       - ./data/tpp_cert.pem:/certs/tpp_cert.pem

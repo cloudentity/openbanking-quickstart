@@ -3,6 +3,7 @@ version: "3.0"
 services:
   acp:
     container_name: quickstart-acp
+    platform: linux/x86_64/v8
     restart: always
     image: docker.cloudentity.io/acp:${ACP_VERSION}
     networks:
@@ -60,6 +61,7 @@ services:
   crdb:
     container_name: quickstart-crdb
     image: docker.cloudentity.io/cockroachdb/cockroach:v22.2.0
+    platform: linux/x86_64/v8
     restart: on-failure
     ports:
       - 26258:26257
@@ -76,6 +78,7 @@ services:
   redis:
     container_name: quickstart-redis
     image: docker.cloudentity.io/redis/redis-stack:6.2.6-v0
+    platform: linux/x86_64/v8
     restart: on-failure
     volumes:
       - ./mount/redis/redis.conf:/redis-stack.conf
@@ -86,6 +89,7 @@ services:
   jaeger:
     container_name: jaeger
     image: jaegertracing/all-in-one:1.17
+    platform: linux/x86_64/v8
     restart: on-failure
     ports:
       - "6831:6831/udp"
@@ -94,6 +98,7 @@ services:
   runner:
     container_name: quickstart-runner
     image: quickstart-runner
+    platform: linux/x86_64/v8
     command: /bin/sh
     tty: true
     volumes:
