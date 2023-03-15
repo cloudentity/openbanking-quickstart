@@ -55,3 +55,10 @@ financroo_jwks: |
       kty: RSA
       "n": 4b_IX1bV29pw6_Ce8DdkoNx4dxJnDD9AyxmTG2z99cvlHG6BJaMF6l09ncGXGbv3dufDKrhftkwfbTBdpUEAeext_ugCmXTV06Fayva6Iq7xCNE8pA6hJT1y3Edsqq3IU8KVivYjYwd_vrSUfCe8pQRsR6K8rqnJ66ryn0yewkTEyCgPIv6pOMbgq1d5iX_2G9rZNhj74miN5y4fy0tsbI3q2RUOzt2d-htkoysqu3Xta6qPA3vEJ2FnQo3dhgw4XSCEvjz-HSGnsTC-XBv6j6jI9SD5jI2UYqnyDcYmRHPJx2sQ_c8aLYHRdZxrxqIxUzulS6g0x74E2m0gBMKF5w
       use: sig
+    - alg: ES256
+      kty: EC
+      use: sig
+      crv: P-256
+      kid: Y4jgLf37RRxrv3B904cnCb8a_oeGz81OgOxSArzLaII
+      "x": O3kS63BWBDcXc--UqpRGFctBIDPgIlU5u5wCZlK4gH0
+      "y": D3cnnEZTW668_9OA27WUQHucgDZTG5xu2N0z_bZQwqA
