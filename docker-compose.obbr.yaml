@@ -4,6 +4,7 @@ services:
   developer-tpp:
     image: cloudentity/openbanking-quickstart-developer-tpp:${VERSION}
     container_name: developer-tpp
+    platform: linux/x86_64
     restart: always
     ports:
       - "8090:8090"
@@ -27,6 +28,7 @@ services:
   financroo-tpp:
     image: cloudentity/openbanking-quickstart-financroo-tpp:${VERSION}
     container_name: financroo-tpp
+    platform: linux/x86_64
     restart: always
     ports:
       - "8091:8091"
@@ -52,6 +54,7 @@ services:
   consent-page:
     image: cloudentity/openbanking-quickstart-consent-page:${VERSION}
     container_name: consent-page
+    platform: linux/x86_64
     restart: always
     ports:
       - "7080:8080"
@@ -79,6 +82,7 @@ services:
   consent-self-service-portal:
     image: cloudentity/openbanking-quickstart-consent-self-service-portal:${VERSION}
     container_name: consent-self-service-portal
+    platform: linux/x86_64
     restart: always
     ports:
       - "8085:8085"
@@ -107,6 +111,7 @@ services:
   consent-admin-portal:
     image: cloudentity/openbanking-quickstart-consent-admin-portal:${VERSION}
     container_name: consent-admin-portal
+    platform: linux/x86_64
     restart: always
     ports:
       - "8086:8086"
@@ -127,6 +132,7 @@ services:
   bank:
     image: cloudentity/openbanking-quickstart-bank:${VERSION}
     container_name: bank
+    platform: linux/x86_64
     restart: always
     ports:
       - "8070:8070"
@@ -146,6 +152,7 @@ services:
 
   configuration:
     container_name: configuration
+    platform: linux/x86_64
     image: cloudentity/openbanking-quickstart-configuration:latest
     restart: on-failure
     volumes:
