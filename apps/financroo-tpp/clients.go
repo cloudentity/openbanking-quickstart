@@ -177,7 +177,8 @@ func NewAcpClient(cfg Config, redirect string) (acpclient.Client, error) {
 		CertFile:                      cfg.CertFile,
 		KeyFile:                       cfg.KeyFile,
 		RootCA:                        cfg.RootCA,
-		ClientAssertionSigningKeyFile: cfg.KeyFile,
+		ClientAssertionSigningKeyFile: cfg.AssertionSigningKeyFile,
+		ClientAssertionSigningAlg:     cfg.AssertionSigningAlg,
 	}
 
 	if cfg.Spec == CDR {

@@ -318,7 +318,7 @@ clients:
   - authorization_code
   - refresh_token
   jwks:
-{{ readFile .financroo_pem_file | pemToPublicJwks | indent 4 }}
+{{ .financroo_jwks | indent 4 }}
 
 - tenant_id: {{ .tenant_id }}
   authorization_server_id: {{ .server_id }}
