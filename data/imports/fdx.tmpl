@@ -2,7 +2,7 @@ servers:
 - tenant_id: {{ .tenant_id }}
   id: {{ .server_id }}
   name: FDX
-  profile: fdx
+  profile: {{ .server_profile }}
   color: "#009687"
   access_token_strategy: "jwt"
   enforce_pkce: false

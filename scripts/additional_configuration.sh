@@ -42,8 +42,8 @@ configure_cdr() {
 }
 
 override_server() {
-  arrEnv=("SERVER" "BANK_CUSTOMERS_SERVER")
-  arrVar=("server_id" "bank_customers_server_id")
+  arrEnv=("SERVER" "BANK_CUSTOMERS_SERVER" "SERVER_PROFILE")
+  arrVar=("server_id" "bank_customers_server_id" "server_profile")
   arrIds=($@)
 
   for i in "${!arrIds[@]}"; do
@@ -75,20 +75,20 @@ do
   system_clients="bv0nab0mekk67nekvq7g bv2dkff8mll9cf6pvd6g buc3b1hhuc714r78env0 bv2fe0tpfc67lmeti340"
   case "$ACTION" in
   obuk)
-    override_server "openbanking" "bank-customers"
+    override_server "openbanking" "bank-customers" "openbanking_uk"
     override_client_ids "obuk-developer-tpp" "obuk-financroo-tpp" "obuk-bank" "obuk-consent-page" "obuk-internal-bank-client" $system_clients
     ;;
   obbr)
-    override_server "openbanking_brasil" "bank-customers" 
+    override_server "openbanking_brasil" "bank-customers" "openbanking_br"
     override_client_ids "obbr-developer-tpp" "obbr-financroo-tpp" "obbr-bank" "obbr-consent-page" "obbr-internal-bank-client" $system_clients
     ;;
   cdr)
-    override_server "cdr" "bank-customers"
+    override_server "cdr" "bank-customers" "cdr_australia_fapi_rw"
     override_client_ids "cdr-developer-tpp" "cdr-financroo-tpp" "cdr-bank" "cdr-consent-page" "cdr-internal-bank-client" $system_clients
     configure_cdr $env
     ;;
   fdx)
-    override_server "fdx" "bank-customers"
+    override_server "fdx" "bank-customers" "fdx"
     override_client_ids "fdx-developer-tpp" "fdx-financroo-tpp" "fdx-bank" "fdx-consent-page" "fdx-internal-bank-client" $system_clients
     ;;
   *)

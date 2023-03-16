@@ -1,5 +1,7 @@
 tenant_id: default
 server_id: cdr
+server_profile: cdr_australia_fapi_rw
+
 bank_customers_server_id: bank-customers
 ca_pem_file: /certs/ca.pem
 
