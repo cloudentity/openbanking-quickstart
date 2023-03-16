@@ -23,6 +23,7 @@ financroo_tpp_client_id: cdr-financroo-tpp
 financroo_tpp_client_secret: -TlfoycUiE0qNi-XUBFDfTxMlhHTCjVxOF6pLrWZbQA
 financroo_tls_client_auth_subject_dn: CN=cid1.authorization.cloudentity.com,OU=Authorization,O=Cloudentity,L=Seattle,ST=Washinghton,C=US
 financroo_pem_file: /certs/tpp_cert.pem
+financroo_pem_file2: /certs/cert.ps.pem
 
 bank_client_id: cdr-bank
 bank_client_secret: 8DPOMd3ZOvsjuUnU9goRMHTIUUXtSkgwQeo8v_S74aE
@@ -41,3 +42,23 @@ system_admin_consent_client_id: bv2fe0tpfc67lmeti340
 system_admin_consent_client_secret: v6yYaApda9juR_DrlI5mpdsdm9u2-D0rQIG9ynakyDE
 
 cdr_adr_validation_enabled: true
+
+financroo_jwks: |
+    keys:
+    - alg: PS256
+      e: AQAB
+      kty: RSA
+      "n": j0Rh-pDbmdaVr0nIaHz6uXUOfRYcp2L2xM5QeAIw5u0hgjd8-xlfHllBkbce0DIwDCqNXozkqqs709PodzGHHR_v4eCE8yjix_uRe5ckK4s9JLTyE075XXGUC5439X0lHvyXo7vFIaFgbVyQs3XSkCLDyi2fs62hNpfkUKuIkUJ-dUz1SZ8YKn-FS1d93PttVXItEv0sSRUGw_pvIBtojeS_xFirxiCITscLidxJXOeUXHhqYNG5WrnQI5q-zPZP_PFKL1Mwm_ER86km71WhzNiw33NL3RjsodKrd25IBNiq4IGWgSrDcegSSeotEsOyGs70qSXh2RkpZ1EPoMYhSw
+      use: sig
+    - alg: RS256
+      e: AQAB
+      kty: RSA
+      "n": 4b_IX1bV29pw6_Ce8DdkoNx4dxJnDD9AyxmTG2z99cvlHG6BJaMF6l09ncGXGbv3dufDKrhftkwfbTBdpUEAeext_ugCmXTV06Fayva6Iq7xCNE8pA6hJT1y3Edsqq3IU8KVivYjYwd_vrSUfCe8pQRsR6K8rqnJ66ryn0yewkTEyCgPIv6pOMbgq1d5iX_2G9rZNhj74miN5y4fy0tsbI3q2RUOzt2d-htkoysqu3Xta6qPA3vEJ2FnQo3dhgw4XSCEvjz-HSGnsTC-XBv6j6jI9SD5jI2UYqnyDcYmRHPJx2sQ_c8aLYHRdZxrxqIxUzulS6g0x74E2m0gBMKF5w
+      use: sig
+    - alg: ES256
+      kty: EC
+      use: sig
+      crv: P-256
+      kid: Y4jgLf37RRxrv3B904cnCb8a_oeGz81OgOxSArzLaII
+      "x": O3kS63BWBDcXc--UqpRGFctBIDPgIlU5u5wCZlK4gH0
+      "y": D3cnnEZTW668_9OA27WUQHucgDZTG5xu2N0z_bZQwqA

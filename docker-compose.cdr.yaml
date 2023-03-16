@@ -224,6 +224,8 @@ services:
     restart: on-failure
     volumes:
       - ./data/tpp_cert.pem:/certs/tpp_cert.pem
+      - ./data/cert.ps.pem:/certs/cert.ps.pem
+      - ./data/cert.es.pem:/certs/cert.es.pem
       - ./data/ca.pem:/certs/ca.pem
       - ./data/variables.yaml:/variables.yaml
       - ./data/imports/system.tmpl:/app/imports-cdr/system.tmpl
