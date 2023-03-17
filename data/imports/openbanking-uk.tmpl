@@ -2,7 +2,7 @@ servers:
 - tenant_id: {{ .tenant_id }}
   id: {{ .server_id }}
   name: Open Banking UK
-  profile: openbanking_uk
+  profile: {{ .server_profile }}
   color: "#0083FF"
   subject_format: legacy
   initialize: true

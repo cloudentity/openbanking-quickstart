@@ -77,19 +77,23 @@ do
   obuk)
     override_server "openbanking" "bank-customers"
     override_client_ids "obuk-developer-tpp" "obuk-financroo-tpp" "obuk-bank" "obuk-consent-page" "obuk-internal-bank-client" $system_clients
+    ./scripts/override_variables.sh  "server_profile" "openbanking_uk"
     ;;
   obbr)
-    override_server "openbanking_brasil" "bank-customers" 
+    override_server "openbanking_brasil" "bank-customers" "openbanking_br"
     override_client_ids "obbr-developer-tpp" "obbr-financroo-tpp" "obbr-bank" "obbr-consent-page" "obbr-internal-bank-client" $system_clients
+    ./scripts/override_variables.sh  "server_profile" "openbanking_br"
     ;;
   cdr)
-    override_server "cdr" "bank-customers"
+    override_server "cdr" "bank-customers" "cdr_australia_fapi_rw"
     override_client_ids "cdr-developer-tpp" "cdr-financroo-tpp" "cdr-bank" "cdr-consent-page" "cdr-internal-bank-client" $system_clients
+    ./scripts/override_variables.sh  "server_profile" "cdr_australia_fapi_rw"
     configure_cdr $env
     ;;
   fdx)
-    override_server "fdx" "bank-customers"
+    override_server "fdx" "bank-customers" "fdx"
     override_client_ids "fdx-developer-tpp" "fdx-financroo-tpp" "fdx-bank" "fdx-consent-page" "fdx-internal-bank-client" $system_clients
+    ./scripts/override_variables.sh  "server_profile" "fdx"
     ;;
   *)
     exit
