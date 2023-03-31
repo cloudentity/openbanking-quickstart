@@ -3,9 +3,10 @@ package main
 import (
 	"strings"
 
-	clientmodels "github.com/cloudentity/acp-client-go/clients/obbr/models"
 	obbrAccountModels "github.com/cloudentity/openbanking-quickstart/generated/obbr/accounts/models"
 	"github.com/gin-gonic/gin"
+
+	clientmodels "github.com/cloudentity/acp-client-go/clients/obbr/models"
 )
 
 // swagger:route GET /accounts bank br getAccountsRequest

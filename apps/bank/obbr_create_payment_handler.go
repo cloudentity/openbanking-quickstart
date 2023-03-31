@@ -6,11 +6,12 @@ import (
 	"strconv"
 	"strings"
 
-	clientmodels "github.com/cloudentity/acp-client-go/clients/obbr/models"
 	"github.com/cloudentity/openbanking-quickstart/generated/obbr/payments/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 	"github.com/google/uuid"
+
+	clientmodels "github.com/cloudentity/acp-client-go/clients/obbr/models"
 )
 
 // swagger:route POST /payments/v1/pix/payments bank br createOBBRPaymentRequest

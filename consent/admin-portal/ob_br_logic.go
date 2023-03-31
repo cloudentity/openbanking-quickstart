@@ -5,8 +5,8 @@ import (
 	"github.com/go-openapi/strfmt"
 
 	obbrModels "github.com/cloudentity/acp-client-go/clients/obbr/client/m_a_n_a_g_e_m_e_n_t"
-	system "github.com/cloudentity/acp-client-go/clients/system/client/clients"
 	clientmodels "github.com/cloudentity/acp-client-go/clients/obbr/models"
+	system "github.com/cloudentity/acp-client-go/clients/system/client/clients"
 )
 
 type OBBRConsentFetcher struct {

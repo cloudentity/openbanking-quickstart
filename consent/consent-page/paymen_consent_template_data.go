@@ -8,6 +8,3 @@ type PaymentConsentTemplateData struct {
 	Currency       string
 	Amount         string
 }
-
-
-

@@ -52,7 +52,7 @@ func (s *OBBRAccountAccessMFAConsentProvider) GetTemplateName() string {
 func (s *OBBRAccountAccessMFAConsentProvider) GetConsentMockData(loginRequest LoginRequest) map[string]interface{} {
 	return s.GetAccessConsentTemplateData(
 		loginRequest,
-		&obModels2.GetAccountAccessConsentResponse{ //UK model in BR spec!?
+		&obModels2.GetAccountAccessConsentResponse{ // UK model in BR spec!?
 			AccountAccessConsent: &obModels2.AccountAccessConsent{
 				Permissions: []string{"ReadAccountsBasic"},
 			},

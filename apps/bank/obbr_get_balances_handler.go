@@ -5,11 +5,12 @@ import (
 	"strconv"
 	"strings"
 
-	clientmodels "github.com/cloudentity/acp-client-go/clients/obbr/models"
 	"github.com/cloudentity/openbanking-quickstart/generated/obbr/consents/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 	"github.com/sirupsen/logrus"
+
+	clientmodels "github.com/cloudentity/acp-client-go/clients/obbr/models"
 )
 
 // swagger:route GET /accounts/v1/accounts/{accountID}/balances bank br getBalancesRequest

@@ -3,12 +3,13 @@ package main
 import (
 	"time"
 
-	clientmodels "github.com/cloudentity/acp-client-go/clients/obbr/models"
 	obbrAccountModels "github.com/cloudentity/openbanking-quickstart/generated/obbr/accounts/models"
 	"github.com/cloudentity/openbanking-quickstart/generated/obbr/consents/models"
 	paymentModels "github.com/cloudentity/openbanking-quickstart/generated/obbr/payments/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
+
+	clientmodels "github.com/cloudentity/acp-client-go/clients/obbr/models"
 )
 
 func OBBRMapError(c *gin.Context, err *Error) (code int, resp interface{}) {

@@ -6,7 +6,6 @@ import (
 
 	cdr "github.com/cloudentity/acp-client-go/clients/cdr/client/c_o_n_s_e_n_t_p_a_g_e"
 	clientmodels "github.com/cloudentity/acp-client-go/clients/cdr/models"
-
 )
 
 type CDRAccountAccessConsentHandler struct {

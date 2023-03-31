@@ -142,7 +142,6 @@ func (c *OBUKConsentTools) GetInternalBankDataIdentifier(sub string, authCtx obu
 	return fmt.Sprintf("%v", authCtx[c.Config.BankIDClaim])
 }
 
-
 func OBUKPaymentConsentTemplateData(consent *obukModels.DomesticPaymentConsent, customCurrency Currency) PaymentConsentTemplateData {
 	data := PaymentConsentTemplateData{
 		AccountName:    consent.Initiation.CreditorAccount.Name,

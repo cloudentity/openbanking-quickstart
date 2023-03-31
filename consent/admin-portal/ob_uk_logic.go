@@ -5,8 +5,8 @@ import (
 	"github.com/go-openapi/strfmt"
 
 	obukModels "github.com/cloudentity/acp-client-go/clients/obuk/client/m_a_n_a_g_e_m_e_n_t"
-	system "github.com/cloudentity/acp-client-go/clients/system/client/clients"
 	clientmodels "github.com/cloudentity/acp-client-go/clients/obuk/models"
+	system "github.com/cloudentity/acp-client-go/clients/system/client/clients"
 )
 
 type OBUKConsentFetcher struct {
