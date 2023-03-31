@@ -7,13 +7,13 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 
-	fdx "github.com/cloudentity/acp-client-go/clients/openbanking/client/f_d_x"
-	"github.com/cloudentity/acp-client-go/clients/openbanking/models"
+	fdx "github.com/cloudentity/acp-client-go/clients/fdx/client/c_o_n_s_e_n_t_p_a_g_e"
+	"github.com/cloudentity/acp-client-go/clients/fdx/models"
 )
 
 type FDXAccountAccessConsentHandler struct {
 	*Server
-	ConsentTools
+	FDXConsentTools
 }
 
 func (s *FDXAccountAccessConsentHandler) GetConsent(c *gin.Context, loginRequest LoginRequest) {
@@ -24,7 +24,7 @@ func (s *FDXAccountAccessConsentHandler) GetConsent(c *gin.Context, loginRequest
 		id       string
 	)
 
-	if response, err = s.Client.Openbanking.Fdx.GetFDXConsentSystem(
+	if response, err = s.Client.Fdx.Consentpage.GetFDXConsentSystem(
 		fdx.NewGetFDXConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID),
 		nil,
@@ -33,7 +33,7 @@ func (s *FDXAccountAccessConsentHandler) GetConsent(c *gin.Context, loginRequest
 		return
 	}
 
-	id = s.ConsentTools.GetInternalBankDataIdentifier(response.Payload.Subject, response.Payload.AuthenticationContext)
+	id = s.FDXConsentTools.GetInternalBankDataIdentifier(response.Payload.Subject, response.Payload.AuthenticationContext)
 
 	if accounts, err = s.BankClient.GetInternalAccounts(c, id); err != nil {
 		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to get accounts from bank"))
@@ -52,7 +52,7 @@ func (s *FDXAccountAccessConsentHandler) ConfirmConsent(c *gin.Context, loginReq
 		err     error
 	)
 
-	if consent, err = s.Client.Openbanking.Fdx.GetFDXConsentSystem(
+	if consent, err = s.Client.Fdx.Consentpage.GetFDXConsentSystem(
 		fdx.NewGetFDXConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID),
 		nil,
@@ -90,7 +90,7 @@ func (s *FDXAccountAccessConsentHandler) ConfirmConsent(c *gin.Context, loginReq
 		}
 	}
 
-	if accept, err = s.Client.Openbanking.Fdx.AcceptFDXConsentSystem(
+	if accept, err = s.Client.Fdx.Consentpage.AcceptFDXConsentSystem(
 		fdx.NewAcceptFDXConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID).
 			WithAcceptConsent(&models.AcceptFDXConsentRequest{
@@ -112,7 +112,7 @@ func (s *FDXAccountAccessConsentHandler) DenyConsent(c *gin.Context, loginReques
 		err    error
 	)
 
-	if reject, err = s.Client.Openbanking.Fdx.RejectFDXConsentSystem(
+	if reject, err = s.Client.Fdx.Consentpage.RejectFDXConsentSystem(
 		fdx.NewRejectFDXConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID).
 			WithRejectConsent(&models.RejectConsentRequest{

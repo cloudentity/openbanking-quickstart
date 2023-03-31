@@ -5,13 +5,13 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	obbrModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_b_r"
-	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
+	obbrModels "github.com/cloudentity/acp-client-go/clients/obbr/client/c_o_n_s_e_n_t_p_a_g_e"
+	obModels "github.com/cloudentity/acp-client-go/clients/obbr/models"
 )
 
 type OBBRPaymentMFAConsentProvider struct {
 	*Server
-	ConsentTools
+	OBBRConsentTools
 }
 
 func (s *OBBRPaymentMFAConsentProvider) GetMFAData(c *gin.Context, loginRequest LoginRequest) (MFAData, error) {
@@ -21,7 +21,7 @@ func (s *OBBRPaymentMFAConsentProvider) GetMFAData(c *gin.Context, loginRequest 
 		err      error
 	)
 
-	if response, err = s.Client.Openbanking.Openbankingbr.GetOBBRCustomerPaymentConsentSystem(
+	if response, err = s.Client.Obbr.Consentpage.GetOBBRCustomerPaymentConsentSystem(
 		obbrModels.NewGetOBBRCustomerPaymentConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID),
 		nil,

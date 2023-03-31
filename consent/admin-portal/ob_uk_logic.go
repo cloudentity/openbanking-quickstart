@@ -4,9 +4,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 
-	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
-	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
+	obukModels "github.com/cloudentity/acp-client-go/clients/obuk/client/m_a_n_a_g_e_m_e_n_t"
 	system "github.com/cloudentity/acp-client-go/clients/system/client/clients"
+	clientmodels "github.com/cloudentity/acp-client-go/clients/obuk/models"
 )
 
 type OBUKConsentFetcher struct {
@@ -35,10 +35,10 @@ func (o *OBUKConsentFetcher) Fetch(c *gin.Context) ([]ClientConsents, error) {
 	}
 
 	for _, oc := range cs.Payload.Clients {
-		if consents, err = o.Client.Openbanking.Openbankinguk.ListOBConsents(
+		if consents, err = o.Client.Obuk.Management.ListOBConsents(
 			obukModels.NewListOBConsentsParamsWithContext(c).
 				WithWid(o.Config.OpenbankingWorkspaceID).
-				WithConsentsRequest(&obModels.ConsentsRequest{
+				WithConsentsRequest(&clientmodels.ConsentsRequest{
 					ClientID: oc.ClientID,
 				}),
 			nil,
@@ -63,8 +63,8 @@ func (o *OBUKConsentFetcher) Fetch(c *gin.Context) ([]ClientConsents, error) {
 func (o *OBUKConsentFetcher) Revoke(c *gin.Context, revocationType RevocationType, id string) (err error) {
 	switch revocationType {
 	case ClientRevocation:
-		if _, err = o.Client.Openbanking.Openbankinguk.RevokeOpenbankingConsents(
-			obukModels.NewRevokeOpenbankingConsentsParamsWithContext(c).
+		if _, err = o.Client.Obuk.Management.RevokeOBUKConsents(
+			obukModels.NewRevokeOBUKConsentsParamsWithContext(c).
 				WithWid(o.Config.OpenbankingWorkspaceID).
 				WithConsentTypes(ConsentTypes).
 				WithClientID(&id),
@@ -73,8 +73,8 @@ func (o *OBUKConsentFetcher) Revoke(c *gin.Context, revocationType RevocationTyp
 			return err
 		}
 	case ConsentRevocation:
-		if _, err = o.Client.Openbanking.Openbankinguk.RevokeOpenbankingConsent(
-			obukModels.NewRevokeOpenbankingConsentParamsWithContext(c).
+		if _, err = o.Client.Obuk.Management.RevokeOBUKConsent(
+			obukModels.NewRevokeOBUKConsentParamsWithContext(c).
 				WithWid(o.Config.OpenbankingWorkspaceID).
 				WithConsentID(id),
 			nil,

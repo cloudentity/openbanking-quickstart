@@ -4,8 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 
-	obbrModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_b_r"
-	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
+	obbrModels "github.com/cloudentity/acp-client-go/clients/obbr/client/m_a_n_a_g_e_m_e_n_t"
+	clientmodels "github.com/cloudentity/acp-client-go/clients/obbr/models"
 )
 
 type OBBRConsentImpl struct {
@@ -29,10 +29,10 @@ func (o *OBBRConsentImpl) FetchConsents(c *gin.Context, accountIDs []string) ([]
 		types = nil
 	}
 
-	if response, err = o.Client.Openbanking.Openbankingbr.ListOBBRConsents(
+	if response, err = o.Client.Obbr.Management.ListOBBRConsents(
 		obbrModels.NewListOBBRConsentsParamsWithContext(c).
 			WithWid(o.Config.OpenbankingWorkspaceID).
-			WithConsentsRequest(&obModels.OBBRConsentsRequest{
+			WithConsentsRequest(&clientmodels.OBBRConsentsRequest{
 				Types:    types,
 				Accounts: accountIDs,
 			}),
@@ -107,7 +107,7 @@ func (o *OBBRConsentImpl) getConsents(resp *obbrModels.ListOBBRConsentsOK) []Con
 	return consents
 }
 
-func obbrPermissionsToStringSlice(permissions []obModels.OpenbankingBrasilConsentPermission1) []string {
+func obbrPermissionsToStringSlice(permissions []clientmodels.OpenbankingBrasilConsentPermission1) []string {
 	ret := make([]string, len(permissions))
 	for idx, perm := range permissions {
 		ret[idx] = string(perm)
@@ -116,7 +116,7 @@ func obbrPermissionsToStringSlice(permissions []obModels.OpenbankingBrasilConsen
 }
 
 func (o *OBBRConsentImpl) RevokeConsent(c *gin.Context, consentID string) (err error) {
-	if _, err = o.Client.Openbanking.Openbankingbr.RevokeOBBRConsent(
+	if _, err = o.Client.Obbr.Management.RevokeOBBRConsent(
 		obbrModels.NewRevokeOBBRConsentParamsWithContext(c).
 			WithWid(o.Config.OpenbankingWorkspaceID).
 			WithConsentID(consentID),

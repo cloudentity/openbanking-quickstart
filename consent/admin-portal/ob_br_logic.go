@@ -4,9 +4,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 
-	obbrModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_b_r"
-	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
+	obbrModels "github.com/cloudentity/acp-client-go/clients/obbr/client/m_a_n_a_g_e_m_e_n_t"
 	system "github.com/cloudentity/acp-client-go/clients/system/client/clients"
+	clientmodels "github.com/cloudentity/acp-client-go/clients/obbr/models"
 )
 
 type OBBRConsentFetcher struct {
@@ -35,10 +35,10 @@ func (o *OBBRConsentFetcher) Fetch(c *gin.Context) ([]ClientConsents, error) {
 	}
 
 	for _, oc := range cs.Payload.Clients {
-		if consents, err = o.Client.Openbanking.Openbankingbr.ListOBBRConsents(
+		if consents, err = o.Client.Obbr.Management.ListOBBRConsents(
 			obbrModels.NewListOBBRConsentsParamsWithContext(c).
 				WithWid(o.Config.OpenbankingWorkspaceID).
-				WithConsentsRequest(&obModels.OBBRConsentsRequest{
+				WithConsentsRequest(&clientmodels.OBBRConsentsRequest{
 					ClientID: oc.ClientID,
 				}),
 			nil,
@@ -63,7 +63,7 @@ func (o *OBBRConsentFetcher) Fetch(c *gin.Context) ([]ClientConsents, error) {
 func (o *OBBRConsentFetcher) Revoke(c *gin.Context, revocationType RevocationType, id string) (err error) {
 	switch revocationType {
 	case ClientRevocation:
-		if _, err = o.Client.Openbanking.Openbankingbr.RevokeOBBRConsents(
+		if _, err = o.Client.Obbr.Management.RevokeOBBRConsents(
 			obbrModels.NewRevokeOBBRConsentsParamsWithContext(c).
 				WithWid(o.Config.OpenbankingWorkspaceID).
 				WithConsentTypes([]string{"consents"}).
@@ -73,7 +73,7 @@ func (o *OBBRConsentFetcher) Revoke(c *gin.Context, revocationType RevocationTyp
 			return err
 		}
 	case ConsentRevocation:
-		if _, err = o.Client.Openbanking.Openbankingbr.RevokeOBBRConsent(
+		if _, err = o.Client.Obbr.Management.RevokeOBBRConsent(
 			obbrModels.NewRevokeOBBRConsentParamsWithContext(c).
 				WithWid(o.Config.OpenbankingWorkspaceID).
 				WithConsentID(id),
@@ -123,7 +123,7 @@ func (o *OBBRConsentFetcher) getConsents(resp *obbrModels.ListOBBRConsentsOK) []
 	return consents
 }
 
-func obbrPermissionsToStringSlice(permissions []obModels.OpenbankingBrasilConsentPermission1) []string {
+func obbrPermissionsToStringSlice(permissions []clientmodels.OpenbankingBrasilConsentPermission1) []string {
 	ret := make([]string, len(permissions))
 	for idx, perm := range permissions {
 		ret[idx] = string(perm)

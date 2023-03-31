@@ -4,8 +4,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 
-	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
-	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
+	obukModels "github.com/cloudentity/acp-client-go/clients/obuk/client/m_a_n_a_g_e_m_e_n_t"
+	clientmodels "github.com/cloudentity/acp-client-go/clients/obuk/models"
 )
 
 type OBUKConsentImpl struct {
@@ -29,10 +29,10 @@ func (o *OBUKConsentImpl) FetchConsents(c *gin.Context, accountIDs []string) ([]
 		types = nil
 	}
 
-	if response, err = o.Client.Openbanking.Openbankinguk.ListOBConsents(
+	if response, err = o.Client.Obuk.Management.ListOBConsents(
 		obukModels.NewListOBConsentsParamsWithContext(c).
 			WithWid(o.Config.OpenbankingWorkspaceID).
-			WithConsentsRequest(&obModels.ConsentsRequest{
+			WithConsentsRequest(&clientmodels.ConsentsRequest{
 				Types:    types,
 				Accounts: accountIDs,
 			}),
@@ -108,8 +108,8 @@ func (o *OBUKConsentImpl) getConsents(resp *obukModels.ListOBConsentsOK) []Conse
 }
 
 func (o *OBUKConsentImpl) RevokeConsent(c *gin.Context, consentID string) (err error) {
-	if _, err = o.Client.Openbanking.Openbankinguk.RevokeOpenbankingConsent(
-		obukModels.NewRevokeOpenbankingConsentParamsWithContext(c).
+	if _, err = o.Client.Obuk.Management.RevokeOBUKConsent(
+		obukModels.NewRevokeOBUKConsentParamsWithContext(c).
 			WithWid(o.Config.OpenbankingWorkspaceID).
 			WithConsentID(consentID),
 		nil,

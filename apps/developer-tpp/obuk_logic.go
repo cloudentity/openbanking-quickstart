@@ -8,8 +8,8 @@ import (
 	"github.com/go-openapi/strfmt"
 
 	acpclient "github.com/cloudentity/acp-client-go"
-	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
-	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
+	obukModels "github.com/cloudentity/acp-client-go/clients/obuk/client/o_b_u_k"
+	clientmodels "github.com/cloudentity/acp-client-go/clients/obuk/models"
 )
 
 type OBUKLogic struct {
@@ -39,10 +39,10 @@ func (h *OBUKLogic) CreateConsent(c *gin.Context) (interface{}, error) {
 		err              error
 	)
 
-	if registerResponse, err = h.Client.Openbanking.Openbankinguk.CreateAccountAccessConsentRequest(
+	if registerResponse, err = h.Client.Obuk.Obuk.CreateAccountAccessConsentRequest(
 		obukModels.NewCreateAccountAccessConsentRequestParamsWithContext(c).
-			WithRequest(&obModels.AccountAccessConsentRequest{
-				Data: &obModels.OBReadConsent1Data{
+			WithRequest(&clientmodels.AccountAccessConsentRequest{
+				Data: &clientmodels.OBReadConsent1Data{
 					Permissions:        c.PostFormArray("permissions"),
 					ExpirationDateTime: strfmt.DateTime(time.Now().Add(time.Hour * 24 * 30)),
 				},

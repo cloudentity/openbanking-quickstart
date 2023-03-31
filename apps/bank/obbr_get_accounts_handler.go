@@ -3,10 +3,9 @@ package main
 import (
 	"strings"
 
+	clientmodels "github.com/cloudentity/acp-client-go/clients/obbr/models"
 	obbrAccountModels "github.com/cloudentity/openbanking-quickstart/generated/obbr/accounts/models"
 	"github.com/gin-gonic/gin"
-
-	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
 )
 
 // swagger:route GET /accounts bank br getAccountsRequest
@@ -14,17 +13,19 @@ import (
 // get accounts
 //
 // Security:
-//   defaultcc: accounts
+//
+//	defaultcc: accounts
 //
 // Responses:
-//   200: ResponseAccountList
-//	 400: OpenbankingBrasilResponseError
-//   403: OpenbankingBrasilResponseError
-//   404: OpenbankingBrasilResponseError
-//   500: OpenbankingBrasilResponseError
+//
+//	  200: ResponseAccountList
+//		 400: OpenbankingBrasilResponseError
+//	  403: OpenbankingBrasilResponseError
+//	  404: OpenbankingBrasilResponseError
+//	  500: OpenbankingBrasilResponseError
 type OBBRGetAccountsHandler struct {
 	*Server
-	introspectionResponse *obModels.IntrospectOBBRDataAccessConsentResponse
+	introspectionResponse *clientmodels.IntrospectOBBRDataAccessConsentResponse
 }
 
 func NewOBBRGetAccountsHandler(server *Server) GetEndpointLogic {

@@ -3,9 +3,9 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 
-	cdr "github.com/cloudentity/acp-client-go/clients/openbanking/client/c_d_r"
-	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
+	cdr "github.com/cloudentity/acp-client-go/clients/cdr/client/m_a_n_a_g_e_m_e_n_t"
 	system "github.com/cloudentity/acp-client-go/clients/system/client/clients"
+	clientmodels "github.com/cloudentity/acp-client-go/clients/cdr/models"
 )
 
 type OBCDRConsentFetcher struct {
@@ -34,10 +34,10 @@ func (o *OBCDRConsentFetcher) Fetch(c *gin.Context) ([]ClientConsents, error) {
 	}
 
 	for _, oc := range cs.Payload.Clients {
-		if consents, err = o.Client.Openbanking.Cdr.ListCDRArrangements(
+		if consents, err = o.Client.Cdr.Management.ListCDRArrangements(
 			cdr.NewListCDRArrangementsParamsWithContext(c).
 				WithWid(o.Config.OpenbankingWorkspaceID).
-				WithConsentsRequest(&obModels.CDRConsentsRequest{
+				WithConsentsRequest(&clientmodels.CDRConsentsRequest{
 					ClientID: oc.ClientID,
 				}),
 			nil,
@@ -62,9 +62,9 @@ func (o *OBCDRConsentFetcher) Fetch(c *gin.Context) ([]ClientConsents, error) {
 func (o *OBCDRConsentFetcher) Revoke(c *gin.Context, revocationType RevocationType, id string) (err error) {
 	switch revocationType {
 	case ClientRevocation:
-		if _, err = o.Client.Openbanking.Cdr.RevokeCDRArrangements(
+		if _, err = o.Client.Cdr.Management.RevokeCDRArrangements(
 			cdr.NewRevokeCDRArrangementsParamsWithContext(c).
-				WithClientID(&id).
+				WithClientID(id).
 				WithWid(o.Config.OpenbankingWorkspaceID),
 			nil,
 		); err != nil {
@@ -72,7 +72,7 @@ func (o *OBCDRConsentFetcher) Revoke(c *gin.Context, revocationType RevocationTy
 		}
 
 	case ConsentRevocation:
-		if _, err = o.Client.Openbanking.Cdr.RevokeCDRArrangementByID(
+		if _, err = o.Client.Cdr.Management.RevokeCDRArrangementByID(
 			cdr.NewRevokeCDRArrangementByIDParamsWithContext(c).
 				WithWid(o.Config.OpenbankingWorkspaceID).
 				WithArrangementID(id),

@@ -10,8 +10,8 @@ import (
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
-	obuk "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
-	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
+	obuk "github.com/cloudentity/acp-client-go/clients/obuk/client/c_o_n_s_e_n_t_p_a_g_e"
+	obModels "github.com/cloudentity/acp-client-go/clients/obuk/models"
 )
 
 type MFAData struct {
@@ -44,7 +44,7 @@ func (s *Server) GetMFAConsentProvider(loginRequest LoginRequest) (MFAConsentPro
 
 type OBUKAccountAccessMFAConsentProvider struct {
 	*Server
-	ConsentTools
+	OBUKConsentTools
 }
 
 func (s *OBUKAccountAccessMFAConsentProvider) GetMFAData(c *gin.Context, loginRequest LoginRequest) (MFAData, error) {
@@ -54,7 +54,7 @@ func (s *OBUKAccountAccessMFAConsentProvider) GetMFAData(c *gin.Context, loginRe
 		err      error
 	)
 
-	if response, err = s.Client.Openbanking.Openbankinguk.GetAccountAccessConsentSystem(
+	if response, err = s.Client.Obuk.Consentpage.GetAccountAccessConsentSystem(
 		obuk.NewGetAccountAccessConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID),
 		nil,
@@ -107,7 +107,7 @@ func (s *OBUKAccountAccessMFAConsentProvider) GetConsentMockData(loginRequest Lo
 
 type DomesticPaymentMFAConsentProvider struct {
 	*Server
-	ConsentTools
+	OBUKConsentTools
 }
 
 func (s *DomesticPaymentMFAConsentProvider) GetMFAData(c *gin.Context, loginRequest LoginRequest) (MFAData, error) {
@@ -117,7 +117,7 @@ func (s *DomesticPaymentMFAConsentProvider) GetMFAData(c *gin.Context, loginRequ
 		err      error
 	)
 
-	if response, err = s.Client.Openbanking.Openbankinguk.GetDomesticPaymentConsentSystem(
+	if response, err = s.Client.Obuk.Consentpage.GetDomesticPaymentConsentSystem(
 		obuk.NewGetDomesticPaymentConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID),
 		nil,

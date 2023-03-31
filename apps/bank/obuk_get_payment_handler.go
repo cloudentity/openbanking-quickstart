@@ -6,7 +6,7 @@ import (
 	"github.com/cloudentity/openbanking-quickstart/generated/obuk/payments/models"
 	"github.com/gin-gonic/gin"
 
-	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
+	obukModels "github.com/cloudentity/acp-client-go/clients/obuk/client/o_b_u_k"
 )
 
 // swagger:route GET /domestic-payments/{DomesticPaymentId} bank uk getDomesticPaymentRequest

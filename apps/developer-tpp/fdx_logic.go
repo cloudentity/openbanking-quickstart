@@ -8,8 +8,8 @@ import (
 	"github.com/pkg/errors"
 
 	acpclient "github.com/cloudentity/acp-client-go"
+	"github.com/cloudentity/acp-client-go/clients/fdx/client/f_d_x"
 	a2 "github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
-	"github.com/cloudentity/acp-client-go/clients/openbanking/client/f_d_x"
 )
 
 type FDXLogic struct {
@@ -134,7 +134,7 @@ func (h *FDXLogic) PostAuthenticationAction(c *gin.Context, data map[string]inte
 		return nil, errors.New("grant_id is missing")
 	}
 
-	if resp, err = h.ACPClient.GetFDXConsent(
+	if resp, err = h.ACPClient.Fdx.Fdx.GetFDXConsent(
 		f_d_x.NewGetFDXConsentParams().
 			WithContext(c.Request.Context()).
 			WithConsentID(grantID),

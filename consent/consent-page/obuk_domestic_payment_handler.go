@@ -5,13 +5,13 @@ import (
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
-	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
-	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
+	obukModels "github.com/cloudentity/acp-client-go/clients/obuk/client/c_o_n_s_e_n_t_p_a_g_e"
+	obModels "github.com/cloudentity/acp-client-go/clients/obuk/models"
 )
 
 type OBUKDomesticPaymentConsentHandler struct {
 	*Server
-	ConsentTools
+	OBUKConsentTools
 }
 
 func (s *OBUKDomesticPaymentConsentHandler) GetConsent(c *gin.Context, loginRequest LoginRequest) {
@@ -23,7 +23,7 @@ func (s *OBUKDomesticPaymentConsentHandler) GetConsent(c *gin.Context, loginRequ
 		id       string
 	)
 
-	if response, err = s.Client.Openbanking.Openbankinguk.GetDomesticPaymentConsentSystem(
+	if response, err = s.Client.Obuk.Consentpage.GetDomesticPaymentConsentSystem(
 		obukModels.NewGetDomesticPaymentConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID),
 		nil,
@@ -32,7 +32,7 @@ func (s *OBUKDomesticPaymentConsentHandler) GetConsent(c *gin.Context, loginRequ
 		return
 	}
 
-	id = s.ConsentTools.GetInternalBankDataIdentifier(response.Payload.Subject, response.Payload.AuthenticationContext)
+	id = s.OBUKConsentTools.GetInternalBankDataIdentifier(response.Payload.Subject, response.Payload.AuthenticationContext)
 
 	if accounts, err = s.BankClient.GetInternalAccounts(c, id); err != nil {
 		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to get accounts from bank"))
@@ -55,7 +55,7 @@ func (s *OBUKDomesticPaymentConsentHandler) ConfirmConsent(c *gin.Context, login
 		redirect string
 	)
 
-	if consent, err = s.Client.Openbanking.Openbankinguk.GetDomesticPaymentConsentSystem(
+	if consent, err = s.Client.Obuk.Consentpage.GetDomesticPaymentConsentSystem(
 		obukModels.NewGetDomesticPaymentConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID),
 		nil,
@@ -63,7 +63,7 @@ func (s *OBUKDomesticPaymentConsentHandler) ConfirmConsent(c *gin.Context, login
 		return "", err
 	}
 
-	if accept, err = s.Client.Openbanking.Openbankinguk.AcceptDomesticPaymentConsentSystem(
+	if accept, err = s.Client.Obuk.Consentpage.AcceptDomesticPaymentConsentSystem(
 		obukModels.NewAcceptDomesticPaymentConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID).
 			WithAcceptConsent(&obModels.AcceptConsentRequest{
@@ -90,7 +90,7 @@ func (s *OBUKDomesticPaymentConsentHandler) DenyConsent(c *gin.Context, loginReq
 		err      error
 	)
 
-	if reject, err = s.Client.Openbanking.Openbankinguk.RejectDomesticPaymentConsentSystem(
+	if reject, err = s.Client.Obuk.Consentpage.RejectDomesticPaymentConsentSystem(
 		obukModels.NewRejectDomesticPaymentConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID).
 			WithRejectConsent(&obModels.RejectConsentRequest{

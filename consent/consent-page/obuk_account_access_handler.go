@@ -4,13 +4,13 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 
-	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
-	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
+	obukModels "github.com/cloudentity/acp-client-go/clients/obuk/client/c_o_n_s_e_n_t_p_a_g_e"
+	obModels "github.com/cloudentity/acp-client-go/clients/obuk/models"
 )
 
 type OBUKAccountAccessConsentHandler struct {
 	*Server
-	ConsentTools
+	OBUKConsentTools
 }
 
 func (s *OBUKAccountAccessConsentHandler) GetConsent(c *gin.Context, loginRequest LoginRequest) {
@@ -21,7 +21,7 @@ func (s *OBUKAccountAccessConsentHandler) GetConsent(c *gin.Context, loginReques
 		id       string
 	)
 
-	if response, err = s.Client.Openbanking.Openbankinguk.GetAccountAccessConsentSystem(
+	if response, err = s.Client.Obuk.Consentpage.GetAccountAccessConsentSystem(
 		obukModels.NewGetAccountAccessConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID),
 		nil,
@@ -30,7 +30,7 @@ func (s *OBUKAccountAccessConsentHandler) GetConsent(c *gin.Context, loginReques
 		return
 	}
 
-	id = s.ConsentTools.GetInternalBankDataIdentifier(response.Payload.Subject, response.Payload.AuthenticationContext)
+	id = s.OBUKConsentTools.GetInternalBankDataIdentifier(response.Payload.Subject, response.Payload.AuthenticationContext)
 
 	if accounts, err = s.BankClient.GetInternalAccounts(c, id); err != nil {
 		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to get accounts from bank"))
@@ -47,7 +47,7 @@ func (s *OBUKAccountAccessConsentHandler) ConfirmConsent(c *gin.Context, loginRe
 		err     error
 	)
 
-	if consent, err = s.Client.Openbanking.Openbankinguk.GetAccountAccessConsentSystem(
+	if consent, err = s.Client.Obuk.Consentpage.GetAccountAccessConsentSystem(
 		obukModels.NewGetAccountAccessConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID),
 		nil,
@@ -55,7 +55,7 @@ func (s *OBUKAccountAccessConsentHandler) ConfirmConsent(c *gin.Context, loginRe
 		return "", err
 	}
 
-	if accept, err = s.Client.Openbanking.Openbankinguk.AcceptAccountAccessConsentSystem(
+	if accept, err = s.Client.Obuk.Consentpage.AcceptAccountAccessConsentSystem(
 		obukModels.NewAcceptAccountAccessConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID).
 			WithAcceptConsent(&obModels.AcceptConsentRequest{
@@ -77,7 +77,7 @@ func (s *OBUKAccountAccessConsentHandler) DenyConsent(c *gin.Context, loginReque
 		err    error
 	)
 
-	if reject, err = s.Client.Openbanking.Openbankinguk.RejectAccountAccessConsentSystem(
+	if reject, err = s.Client.Obuk.Consentpage.RejectAccountAccessConsentSystem(
 		obukModels.NewRejectAccountAccessConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID).
 			WithRejectConsent(&obModels.RejectConsentRequest{

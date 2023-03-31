@@ -3,8 +3,8 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 
-	"github.com/cloudentity/acp-client-go/clients/openbanking/client/f_d_x"
-	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
+	clientmodels "github.com/cloudentity/acp-client-go/clients/fdx/models"
+	"github.com/cloudentity/acp-client-go/clients/fdx/client/m_a_n_a_g_e_m_e_n_t"
 	system "github.com/cloudentity/acp-client-go/clients/system/client/clients"
 )
 
@@ -18,26 +18,26 @@ func NewFDXConsentImpl(s *Server) ConsentClient {
 
 func (o *FDXConsentImpl) FetchConsents(c *gin.Context, accountIDs []string) ([]ClientConsents, error) {
 	var (
-		consentsResponse *f_d_x.ListFDXConsentsOK
+		consentsResponse *m_a_n_a_g_e_m_e_n_t.ListFDXConsentsOK
 		clientsResponse  *system.ListClientsSystemOK
 		err              error
 		cac              []ClientConsents
-		resource         *obModels.Resource
-		consentRequest   obModels.FDXConsentsRequest
+		resource         *clientmodels.Resource
+		consentRequest   clientmodels.FDXConsentsRequest
 	)
 
 	if len(accountIDs) > 0 {
-		resource = &obModels.Resource{
+		resource = &clientmodels.Resource{
 			ResourceType: "ACCOUNT",
 			Ids:          accountIDs,
 		}
-		consentRequest = obModels.FDXConsentsRequest{
+		consentRequest = clientmodels.FDXConsentsRequest{
 			Resource: resource,
 		}
 	}
 
-	if consentsResponse, err = o.Client.Openbanking.Fdx.ListFDXConsents(
-		f_d_x.NewListFDXConsentsParamsWithContext(c).
+	if consentsResponse, err = o.Client.Fdx.Management.ListFDXConsents(
+		m_a_n_a_g_e_m_e_n_t.NewListFDXConsentsParamsWithContext(c).
 			WithWid(o.Config.OpenbankingWorkspaceID).
 			WithFDXConsentsRequest(&consentRequest),
 		nil,
@@ -70,7 +70,7 @@ func (o *FDXConsentImpl) getClients(response *system.ListClientsSystemOK) []Clie
 	return clients
 }
 
-func (o *FDXConsentImpl) getConsents(response *f_d_x.ListFDXConsentsOK) []Consent {
+func (o *FDXConsentImpl) getConsents(response *m_a_n_a_g_e_m_e_n_t.ListFDXConsentsOK) []Consent {
 	var consents []Consent
 
 	for _, consent := range response.Payload.Consents {
@@ -105,13 +105,13 @@ func (o *FDXConsentImpl) getConsents(response *f_d_x.ListFDXConsentsOK) []Consen
 }
 
 func (o *FDXConsentImpl) RevokeConsent(c *gin.Context, id string) (err error) {
-	revocation := obModels.FDXConsentRevocation{
+	revocation := clientmodels.FDXConsentRevocation{
 		Initiator: "DATA_ACCESS_PLATFORM",
 		Reason:    "BUSINESS_RULE",
 	}
 
-	if _, err = o.Client.Openbanking.Fdx.RevokeFDXConsentByID(
-		f_d_x.NewRevokeFDXConsentByIDParamsWithContext(c).
+	if _, err = o.Client.Fdx.Management.RevokeFDXConsentByID(
+		m_a_n_a_g_e_m_e_n_t.NewRevokeFDXConsentByIDParamsWithContext(c).
 			WithWid(o.Config.OpenbankingWorkspaceID).
 			WithConsentID(id).
 			WithRevocationDetails(&revocation),

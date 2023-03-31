@@ -3,9 +3,9 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 
-	"github.com/cloudentity/acp-client-go/clients/openbanking/client/f_d_x"
-	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
+	"github.com/cloudentity/acp-client-go/clients/fdx/client/m_a_n_a_g_e_m_e_n_t"
 	system "github.com/cloudentity/acp-client-go/clients/system/client/clients"
+	clientmodels "github.com/cloudentity/acp-client-go/clients/fdx/models"
 )
 
 type OBFDXConsentFetcher struct {
@@ -18,7 +18,7 @@ func NewOBFDXConsentFetcher(server *Server) *OBFDXConsentFetcher {
 
 func (o *OBFDXConsentFetcher) Fetch(c *gin.Context) ([]ClientConsents, error) {
 	var (
-		consents       *f_d_x.ListFDXConsentsOK
+		consents       *m_a_n_a_g_e_m_e_n_t.ListFDXConsentsOK
 		clientConsents []ClientConsents
 		cs             *system.ListClientsSystemOK
 		err            error
@@ -34,10 +34,10 @@ func (o *OBFDXConsentFetcher) Fetch(c *gin.Context) ([]ClientConsents, error) {
 	}
 
 	for _, oc := range cs.Payload.Clients {
-		if consents, err = o.Client.Openbanking.Fdx.ListFDXConsents(
-			f_d_x.NewListFDXConsentsParamsWithContext(c).
+		if consents, err = o.Client.Fdx.Management.ListFDXConsents(
+			m_a_n_a_g_e_m_e_n_t.NewListFDXConsentsParamsWithContext(c).
 				WithWid(o.Config.OpenbankingWorkspaceID).
-				WithFDXConsentsRequest(&obModels.FDXConsentsRequest{
+				WithFDXConsentsRequest(&clientmodels.FDXConsentsRequest{
 					ClientID: oc.ClientID,
 				}),
 			nil,
@@ -62,15 +62,15 @@ func (o *OBFDXConsentFetcher) Fetch(c *gin.Context) ([]ClientConsents, error) {
 func (o *OBFDXConsentFetcher) Revoke(c *gin.Context, revocationType RevocationType, id string) (err error) {
 	switch revocationType {
 	case ClientRevocation:
-		revocation := obModels.ConsentRevocationByCLientID{
+		revocation := clientmodels.ConsentRevocationByCLientID{
 			ClientID: id,
-			RevocationDetails: &obModels.FDXConsentRevocation{
+			RevocationDetails: &clientmodels.FDXConsentRevocation{
 				Initiator: "DATA_ACCESS_PLATFORM",
 				Reason:    "BUSINESS_RULE",
 			},
 		}
-		if _, err = o.Client.Openbanking.Fdx.RevokeFDXConsents(
-			f_d_x.NewRevokeFDXConsentsParamsWithContext(c).
+		if _, err = o.Client.Fdx.Management.RevokeFDXConsents(
+			m_a_n_a_g_e_m_e_n_t.NewRevokeFDXConsentsParamsWithContext(c).
 				WithConsentRevocationByClientID(&revocation).
 				WithWid(o.Config.OpenbankingWorkspaceID),
 			nil,
@@ -79,13 +79,13 @@ func (o *OBFDXConsentFetcher) Revoke(c *gin.Context, revocationType RevocationTy
 		}
 
 	case ConsentRevocation:
-		revocation := obModels.FDXConsentRevocation{
+		revocation := clientmodels.FDXConsentRevocation{
 			Initiator: "DATA_ACCESS_PLATFORM",
 			Reason:    "BUSINESS_RULE",
 		}
 
-		if _, err = o.Client.Openbanking.Fdx.RevokeFDXConsentByID(
-			f_d_x.NewRevokeFDXConsentByIDParamsWithContext(c).
+		if _, err = o.Client.Fdx.Management.RevokeFDXConsentByID(
+			m_a_n_a_g_e_m_e_n_t.NewRevokeFDXConsentByIDParamsWithContext(c).
 				WithRevocationDetails(&revocation).
 				WithWid(o.Config.OpenbankingWorkspaceID).
 				WithConsentID(id),
@@ -98,7 +98,7 @@ func (o *OBFDXConsentFetcher) Revoke(c *gin.Context, revocationType RevocationTy
 	return nil
 }
 
-func (o *OBFDXConsentFetcher) getConsents(response *f_d_x.ListFDXConsentsOK) []Consent {
+func (o *OBFDXConsentFetcher) getConsents(response *m_a_n_a_g_e_m_e_n_t.ListFDXConsentsOK) []Consent {
 	var (
 		consents   []Consent
 		accountIDs []string
