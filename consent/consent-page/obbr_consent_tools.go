@@ -5,7 +5,6 @@ import (
 	"time"
 
 	obbrModels "github.com/cloudentity/acp-client-go/clients/obbr/models"
-	obukModels "github.com/cloudentity/acp-client-go/clients/obuk/models"
 )
 
 type OBBRConsentTools struct {
@@ -23,14 +22,21 @@ func (c *OBBRConsentTools) GetClientName(client *obbrModels.ClientInfo) string {
 
 func (c *OBBRConsentTools) GetAccessConsentTemplateData(
 	loginRequest LoginRequest,
-	consent *obukModels.GetAccountAccessConsentResponse,
+	consent *obbrModels.GetOBBRCustomerDataAccessConsentResponse,
 	accounts InternalAccounts,
 ) map[string]interface{} {
-	var expirationDate string
+	var (
+		expirationDate string
+		permissions    []string
+	)
 
-	edt := time.Time(consent.AccountAccessConsent.ExpirationDateTime)
+	edt := time.Time(consent.CustomerDataAccessConsent.ExpirationDateTime)
 	if !edt.IsZero() {
 		expirationDate = edt.Format("02/01/2006")
+	}
+
+	for _, item := range consent.CustomerDataAccessConsent.Permissions {
+		permissions = append(permissions, string(item))
 	}
 
 	clientName := c.GetClientName(nil)
@@ -52,7 +58,7 @@ func (c *OBBRConsentTools) GetAccessConsentTemplateData(
 		},
 		"login_request":   loginRequest,
 		"accounts":        accounts.Accounts,
-		"permissions":     c.GetPermissionsWithDescription(consent.AccountAccessConsent.Permissions),
+		"permissions":     c.GetPermissionsWithDescription(permissions),
 		"client_name":     clientName,
 		"expiration_date": expirationDate,
 		"ctx":             consent.AuthenticationContext,

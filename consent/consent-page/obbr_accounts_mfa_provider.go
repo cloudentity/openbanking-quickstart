@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	obbrModels "github.com/cloudentity/acp-client-go/clients/obbr/client/c_o_n_s_e_n_t_p_a_g_e"
-	obModels2 "github.com/cloudentity/acp-client-go/clients/obuk/models"
+	obModels2 "github.com/cloudentity/acp-client-go/clients/obbr/models"
 )
 
 type OBBRAccountAccessMFAConsentProvider struct {
@@ -52,9 +52,9 @@ func (s *OBBRAccountAccessMFAConsentProvider) GetTemplateName() string {
 func (s *OBBRAccountAccessMFAConsentProvider) GetConsentMockData(loginRequest LoginRequest) map[string]interface{} {
 	return s.GetAccessConsentTemplateData(
 		loginRequest,
-		&obModels2.GetAccountAccessConsentResponse{ // UK model in BR spec!?
-			AccountAccessConsent: &obModels2.AccountAccessConsent{
-				Permissions: []string{"ReadAccountsBasic"},
+		&obModels2.GetOBBRCustomerDataAccessConsentResponse{
+			CustomerDataAccessConsent: &obModels2.BrazilCustomerDataAccessConsentV1{
+				Permissions: []obModels2.OpenbankingBrasilConsentPermission1{"ReadAccountsBasic"},
 			},
 		},
 		InternalAccounts{
