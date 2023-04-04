@@ -4,8 +4,7 @@ import (
 	"fmt"
 	"time"
 
-	obModels "github.com/cloudentity/acp-client-go/clients/fdx/models"
-	obukModels "github.com/cloudentity/acp-client-go/clients/obuk/models"
+	"github.com/cloudentity/acp-client-go/clients/fdx/models"
 )
 
 type FDXConsentTools struct {
@@ -13,7 +12,7 @@ type FDXConsentTools struct {
 	Config Config
 }
 
-func (c *FDXConsentTools) GetClientName(client *obModels.ClientInfo) string {
+func (c *FDXConsentTools) GetClientName(client *models.ClientInfo) string {
 	if client != nil {
 		return client.ClientName
 	}
@@ -23,12 +22,12 @@ func (c *FDXConsentTools) GetClientName(client *obModels.ClientInfo) string {
 
 func (c *FDXConsentTools) GetAccessConsentTemplateData(
 	loginRequest LoginRequest,
-	consent *obukModels.GetAccountAccessConsentResponse,
+	consent *models.GetFDXConsentResponse,
 	accounts InternalAccounts,
 ) map[string]interface{} {
 	var expirationDate string
 
-	edt := time.Time(consent.AccountAccessConsent.ExpirationDateTime)
+	edt := time.Time(consent.FdxConsent.ExpirationTime)
 	if !edt.IsZero() {
 		expirationDate = edt.Format("02/01/2006")
 	}
@@ -36,23 +35,23 @@ func (c *FDXConsentTools) GetAccessConsentTemplateData(
 	clientName := c.GetClientName(nil)
 	return map[string]interface{}{
 		"trans": map[string]interface{}{
-			"headTitle":      c.Trans.T("uk.account.headTitle"),
-			"title":          c.Trans.T("uk.account.title"),
-			"selectAccounts": c.Trans.T("uk.account.selectAccounts"),
-			"reviewData":     c.Trans.T("uk.account.review_data"),
-			"permissions":    c.Trans.T("uk.account.permissions"),
-			"purpose":        c.Trans.T("uk.account.purpose"),
-			"purposeDetail":  c.Trans.T("uk.account.purposeDetail"),
-			"expiration": c.Trans.TD("uk.account.expiration", map[string]interface{}{
+			"headTitle":      c.Trans.T("fdx.account.headTitle"),
+			"title":          c.Trans.T("fdx.account.title"),
+			"selectAccounts": c.Trans.T("fdx.account.selectAccounts"),
+			"reviewData":     c.Trans.T("fdx.account.review_data"),
+			"permissions":    c.Trans.T("fdx.account.permissions"),
+			"purpose":        c.Trans.T("fdx.account.purpose"),
+			"purposeDetail":  c.Trans.T("fdx.account.purposeDetail"),
+			"expiration": c.Trans.TD("fdx.account.expiration", map[string]interface{}{
 				"client_name":     clientName,
 				"expiration_date": expirationDate,
 			}),
-			"cancel": c.Trans.T("uk.account.cancel"),
-			"agree":  c.Trans.T("uk.account.agree"),
+			"cancel": c.Trans.T("fdx.account.cancel"),
+			"agree":  c.Trans.T("fdx.account.agree"),
 		},
-		"login_request":   loginRequest,
-		"accounts":        accounts.Accounts,
-		"permissions":     c.GetPermissionsWithDescription(consent.AccountAccessConsent.Permissions),
+		"login_request": loginRequest,
+		"accounts":      accounts.Accounts,
+		// "permissions":     c.GetPermissionsWithDescription(consent.AccountAccessConsent.Permissions),
 		"client_name":     clientName,
 		"expiration_date": expirationDate,
 		"ctx":             consent.AuthenticationContext,
@@ -76,7 +75,7 @@ func (c *FDXConsentTools) GetPermissionsWithDescription(requestedPermissions []s
 	return permissions
 }
 
-func (c *FDXConsentTools) GetInternalBankDataIdentifier(sub string, authCtx obModels.AuthenticationContext) string {
+func (c *FDXConsentTools) GetInternalBankDataIdentifier(sub string, authCtx models.AuthenticationContext) string {
 	if c.Config.BankIDClaim == "sub" {
 		return sub
 	}
@@ -86,7 +85,7 @@ func (c *FDXConsentTools) GetInternalBankDataIdentifier(sub string, authCtx obMo
 
 func (c *FDXConsentTools) GetFDXAccountAccessConsentTemplateData(
 	loginRequest LoginRequest,
-	consent *obModels.GetFDXConsentResponse,
+	consent *models.GetFDXConsentResponse,
 	accounts InternalAccounts,
 ) map[string]interface{} {
 	var (
@@ -128,7 +127,7 @@ func (c *FDXConsentTools) GetFDXAccountAccessConsentTemplateData(
 	}
 }
 
-func (c *FDXConsentTools) GrantScopes(requestedScopes []*obModels.RequestedScope) []string {
+func (c *FDXConsentTools) GrantScopes(requestedScopes []*models.RequestedScope) []string {
 	grantScopes := make([]string, len(requestedScopes))
 
 	for i, r := range requestedScopes {

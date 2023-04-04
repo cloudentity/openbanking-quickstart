@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"github.com/cloudentity/acp-client-go/clients/fdx/client/c_o_n_s_e_n_t_p_a_g_e"
-	obModels "github.com/cloudentity/acp-client-go/clients/obuk/models"
+	obModels "github.com/cloudentity/acp-client-go/clients/fdx/models"
 )
 
 type FDXAccountAccessMFAConsentProvider struct {
@@ -49,10 +49,8 @@ func (s *FDXAccountAccessMFAConsentProvider) GetTemplateName() string {
 func (s *FDXAccountAccessMFAConsentProvider) GetConsentMockData(loginRequest LoginRequest) map[string]interface{} {
 	return s.GetAccessConsentTemplateData(
 		loginRequest,
-		&obModels.GetAccountAccessConsentResponse{ // UK model in FDX spec!?
-			AccountAccessConsent: &obModels.AccountAccessConsent{
-				Permissions: []string{"ReadAccountsBasic"},
-			},
+		&obModels.GetFDXConsentResponse{
+			FdxConsent: &obModels.FDXConsent{},
 		},
 		InternalAccounts{
 			Accounts: []InternalAccount{
