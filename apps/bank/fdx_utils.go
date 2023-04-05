@@ -7,7 +7,7 @@ import (
 
 	fdxModels "github.com/cloudentity/openbanking-quickstart/generated/fdx/models"
 
-	fdx "github.com/cloudentity/acp-client-go/clients/openbanking/client/f_d_x"
+	fdx "github.com/cloudentity/acp-client-go/clients/fdx/client/f_d_x"
 
 	"github.com/sirupsen/logrus"
 

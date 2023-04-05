@@ -11,7 +11,7 @@ import (
 
 	"github.com/cloudentity/openbanking-quickstart/generated/fdx/models"
 
-	fdxModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/f_d_x"
+	fdxModels "github.com/cloudentity/acp-client-go/clients/fdx/client/f_d_x"
 )
 
 type FDXGetAccountsHandler struct {

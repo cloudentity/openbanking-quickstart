@@ -10,8 +10,8 @@ import (
 	"gopkg.in/square/go-jose.v2"
 
 	acpclient "github.com/cloudentity/acp-client-go"
-	obbrModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_b_r"
-	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
+	obbrModels "github.com/cloudentity/acp-client-go/clients/obbr/client/o_b_b_r"
+	clientmodels "github.com/cloudentity/acp-client-go/clients/obbr/models"
 )
 
 type OBBRLogic struct {
@@ -37,27 +37,27 @@ func (h *OBBRLogic) GetAccounts(c *gin.Context, token string) (interface{}, erro
 func (h *OBBRLogic) CreateConsent(c *gin.Context) (interface{}, error) {
 	var (
 		registerResponse *obbrModels.CreateDataAccessConsentCreated
-		perms            []obModels.OpenbankingBrasilConsentPermission
+		perms            []clientmodels.OpenbankingBrasilConsentPermission
 		err              error
 	)
 
 	for _, p := range c.PostFormArray("permissions") {
-		perms = append(perms, obModels.OpenbankingBrasilConsentPermission(p))
+		perms = append(perms, clientmodels.OpenbankingBrasilConsentPermission(p))
 	}
 
-	if registerResponse, err = h.Client.Openbanking.Openbankingbr.CreateDataAccessConsent(
+	if registerResponse, err = h.Client.Obbr.Obbr.CreateDataAccessConsent(
 		obbrModels.NewCreateDataAccessConsentParamsWithContext(c).
-			WithRequest(&obModels.BrazilCustomerDataAccessConsentRequestV1{
-				Data: &obModels.OpenbankingBrasilConsentData{
+			WithRequest(&clientmodels.BrazilCustomerDataAccessConsentRequestV1{
+				Data: &clientmodels.OpenbankingBrasilConsentData{
 					ExpirationDateTime: strfmt.DateTime(time.Now().Add(time.Hour * 24)),
-					BusinessEntity: &obModels.OpenbankingBrasilConsentBusinessEntity{
-						Document: &obModels.OpenbankingBrasilConsentDocument1{
+					BusinessEntity: &clientmodels.OpenbankingBrasilConsentBusinessEntity{
+						Document: &clientmodels.OpenbankingBrasilConsentDocument1{
 							Identification: "11111111111111",
 							Rel:            "CNPJ",
 						},
 					},
-					LoggedUser: &obModels.OpenbankingBrasilConsentLoggedUser{
-						Document: &obModels.OpenbankingBrasilConsentDocument{
+					LoggedUser: &clientmodels.OpenbankingBrasilConsentLoggedUser{
+						Document: &clientmodels.OpenbankingBrasilConsentDocument{
 							Identification: "11111111111",
 							Rel:            "CPF",
 						},

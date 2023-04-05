@@ -5,7 +5,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 
-	cdr "github.com/cloudentity/acp-client-go/clients/openbanking/client/c_d_r"
+	cdr "github.com/cloudentity/acp-client-go/clients/cdr/client/c_d_r"
 )
 
 func CDRMapError(c *gin.Context, err *Error) (code int, resp interface{}) {

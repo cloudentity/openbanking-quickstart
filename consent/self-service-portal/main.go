@@ -42,7 +42,7 @@ type Config struct {
 	IntrospectClientID          string        `env:"INTROSPECT_CLIENT_ID,required"`
 	IntrospectClientSecret      string        `env:"INTROSPECT_CLIENT_SECRET" envDefault:"KThGH68f-gMC4cscGLFeOpIU4EYriYhKspOV9IwHbnw"`
 	IntrospectIssuerURL         *url.URL      `env:"INTROSPECT_ISSUER_URL,required"`
-	EnableTLSServer  			      bool 		      `env:"ENABLE_TLS_SERVER" envDefault:"true"`
+	EnableTLSServer             bool          `env:"ENABLE_TLS_SERVER" envDefault:"true"`
 	BankClientConfig            BankClientConfig
 }
 

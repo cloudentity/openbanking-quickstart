@@ -5,23 +5,23 @@ import (
 
 	"github.com/gin-gonic/gin"
 
-	"github.com/cloudentity/acp-client-go/clients/openbanking/client/f_d_x"
-	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
+	"github.com/cloudentity/acp-client-go/clients/fdx/client/c_o_n_s_e_n_t_p_a_g_e"
+	obModels "github.com/cloudentity/acp-client-go/clients/fdx/models"
 )
 
 type FDXAccountAccessMFAConsentProvider struct {
 	*Server
-	ConsentTools
+	FDXConsentTools
 }
 
 func (s *FDXAccountAccessMFAConsentProvider) GetMFAData(c *gin.Context, loginRequest LoginRequest) (MFAData, error) {
 	var (
-		response *f_d_x.GetFDXConsentSystemOK
+		response *c_o_n_s_e_n_t_p_a_g_e.GetFDXConsentSystemOK
 		data     = MFAData{}
 		err      error
 	)
 
-	if response, err = s.Client.OpenbankingFDX.GetFDXConsentSystem(f_d_x.NewGetFDXConsentSystemParamsWithContext(c).
+	if response, err = s.Client.Fdx.Consentpage.GetFDXConsentSystem(c_o_n_s_e_n_t_p_a_g_e.NewGetFDXConsentSystemParamsWithContext(c).
 		WithLogin(loginRequest.ID), nil); err != nil {
 		return data, err
 	}
@@ -49,10 +49,8 @@ func (s *FDXAccountAccessMFAConsentProvider) GetTemplateName() string {
 func (s *FDXAccountAccessMFAConsentProvider) GetConsentMockData(loginRequest LoginRequest) map[string]interface{} {
 	return s.GetAccessConsentTemplateData(
 		loginRequest,
-		&obModels.GetAccountAccessConsentResponse{
-			AccountAccessConsent: &obModels.AccountAccessConsent{
-				Permissions: []string{"ReadAccountsBasic"},
-			},
+		&obModels.GetFDXConsentResponse{
+			FdxConsent: &obModels.FDXConsent{},
 		},
 		InternalAccounts{
 			Accounts: []InternalAccount{

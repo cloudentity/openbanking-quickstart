@@ -7,11 +7,11 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 
-	cdr "github.com/cloudentity/acp-client-go/clients/openbanking/client/c_d_r"
-	fdx "github.com/cloudentity/acp-client-go/clients/openbanking/client/f_d_x"
-	obbr "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_b_r"
-	obuk "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
-	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
+	cdr "github.com/cloudentity/acp-client-go/clients/cdr/client/c_d_r"
+	fdx "github.com/cloudentity/acp-client-go/clients/fdx/client/f_d_x"
+	obbr "github.com/cloudentity/acp-client-go/clients/obbr/client/o_b_b_r"
+	"github.com/cloudentity/acp-client-go/clients/obbr/models"
+	obuk "github.com/cloudentity/acp-client-go/clients/obuk/client/o_b_u_k"
 )
 
 func (s *Server) OBUKIntrospectAccountsToken(c *gin.Context) (*obuk.OpenbankingAccountAccessConsentIntrospectOKBody, error) {
@@ -23,7 +23,7 @@ func (s *Server) OBUKIntrospectAccountsToken(c *gin.Context) (*obuk.OpenbankingA
 	token := c.GetHeader("Authorization")
 	token = strings.ReplaceAll(token, "Bearer ", "")
 
-	if introspectionResponse, err = s.Client.Openbanking.Openbankinguk.OpenbankingAccountAccessConsentIntrospect(
+	if introspectionResponse, err = s.Client.Obuk.Obuk.OpenbankingAccountAccessConsentIntrospect(
 		obuk.NewOpenbankingAccountAccessConsentIntrospectParamsWithContext(c).
 			WithToken(&token),
 		nil,
@@ -47,7 +47,7 @@ func (s *Server) OBUKIntrospectPaymentsToken(c *gin.Context) (*obuk.OpenbankingD
 	token := c.GetHeader("Authorization")
 	token = strings.ReplaceAll(token, "Bearer ", "")
 
-	if introspectionResponse, err = s.Client.Openbanking.Openbankinguk.OpenbankingDomesticPaymentConsentIntrospect(
+	if introspectionResponse, err = s.Client.Obuk.Obuk.OpenbankingDomesticPaymentConsentIntrospect(
 		obuk.NewOpenbankingDomesticPaymentConsentIntrospectParamsWithContext(c).
 			WithToken(&token),
 		nil,
@@ -59,7 +59,7 @@ func (s *Server) OBUKIntrospectPaymentsToken(c *gin.Context) (*obuk.OpenbankingD
 	return introspectionResponse.Payload, nil
 }
 
-func (s *Server) OBBRIntrospectAccountsToken(c *gin.Context) (*obModels.IntrospectOBBRDataAccessConsentResponse, error) {
+func (s *Server) OBBRIntrospectAccountsToken(c *gin.Context) (*models.IntrospectOBBRDataAccessConsentResponse, error) {
 	var (
 		introspectionResponse *obbr.ObbrDataAccessConsentIntrospectOK
 		err                   error
@@ -68,7 +68,7 @@ func (s *Server) OBBRIntrospectAccountsToken(c *gin.Context) (*obModels.Introspe
 	token := c.GetHeader("Authorization")
 	token = strings.ReplaceAll(token, "Bearer ", "")
 
-	if introspectionResponse, err = s.Client.Openbanking.Openbankingbr.ObbrDataAccessConsentIntrospect(
+	if introspectionResponse, err = s.Client.Obbr.Obbr.ObbrDataAccessConsentIntrospect(
 		obbr.NewObbrDataAccessConsentIntrospectParamsWithContext(c).
 			WithToken(&token),
 		nil,
@@ -83,7 +83,7 @@ func (s *Server) OBBRIntrospectAccountsToken(c *gin.Context) (*obModels.Introspe
 	return introspectionResponse.Payload, nil
 }
 
-func (s *Server) OBBRIntrospectPaymentsToken(c *gin.Context) (*obModels.IntrospectOBBRPaymentConsentResponse, error) {
+func (s *Server) OBBRIntrospectPaymentsToken(c *gin.Context) (*models.IntrospectOBBRPaymentConsentResponse, error) {
 	var (
 		introspectionResponse *obbr.ObbrPaymentConsentIntrospectOK
 		err                   error
@@ -92,7 +92,7 @@ func (s *Server) OBBRIntrospectPaymentsToken(c *gin.Context) (*obModels.Introspe
 	token := c.GetHeader("Authorization")
 	token = strings.ReplaceAll(token, "Bearer ", "")
 
-	if introspectionResponse, err = s.Client.Openbanking.Openbankingbr.ObbrPaymentConsentIntrospect(
+	if introspectionResponse, err = s.Client.Obbr.Obbr.ObbrPaymentConsentIntrospect(
 		obbr.NewObbrPaymentConsentIntrospectParamsWithContext(c).
 			WithToken(&token),
 		nil,
@@ -115,7 +115,7 @@ func (s *Server) CDRIntrospectAccountsToken(c *gin.Context) (*cdr.CdrConsentIntr
 
 	token := c.GetHeader("Authorization")
 	token = strings.ReplaceAll(token, "Bearer ", "")
-	if introspectResponse, err = s.Client.Openbanking.Cdr.CdrConsentIntrospect(
+	if introspectResponse, err = s.Client.Cdr.Cdr.CdrConsentIntrospect(
 		cdr.NewCdrConsentIntrospectParamsWithContext(c).
 			WithToken(&token),
 		nil,
@@ -138,7 +138,7 @@ func (s *Server) FDXIntrospectAccountsToken(c *gin.Context) (*fdx.FdxConsentIntr
 
 	token := c.GetHeader("Authorization")
 	token = strings.ReplaceAll(token, "Bearer ", "")
-	if introspectResponse, err = s.Client.FdxConsentIntrospect(
+	if introspectResponse, err = s.Client.Fdx.Fdx.FdxConsentIntrospect(
 		fdx.NewFdxConsentIntrospectParamsWithContext(c).
 			WithToken(&token),
 		nil,

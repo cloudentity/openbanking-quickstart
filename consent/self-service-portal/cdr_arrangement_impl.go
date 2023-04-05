@@ -3,8 +3,8 @@ package main
 import (
 	"github.com/gin-gonic/gin"
 
-	cdr "github.com/cloudentity/acp-client-go/clients/openbanking/client/c_d_r"
-	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
+	cdr "github.com/cloudentity/acp-client-go/clients/cdr/client/m_a_n_a_g_e_m_e_n_t"
+	clientmodels "github.com/cloudentity/acp-client-go/clients/cdr/models"
 	system "github.com/cloudentity/acp-client-go/clients/system/client/clients"
 )
 
@@ -24,10 +24,10 @@ func (o *CDRArrangementImpl) FetchConsents(c *gin.Context, accountIDs []string) 
 		cac                  []ClientConsents
 	)
 
-	if arrangementsResponse, err = o.Client.Openbanking.Cdr.ListCDRArrangements(
+	if arrangementsResponse, err = o.Client.Cdr.Management.ListCDRArrangements(
 		cdr.NewListCDRArrangementsParamsWithContext(c).
 			WithWid(o.Config.OpenbankingWorkspaceID).
-			WithConsentsRequest(&obModels.CDRConsentsRequest{
+			WithConsentsRequest(&clientmodels.CDRConsentsRequest{
 				Accounts: accountIDs,
 			}),
 		nil,
@@ -87,7 +87,7 @@ func (o *CDRArrangementImpl) getConsents(response *cdr.ListCDRArrangementsOK) []
 }
 
 func (o *CDRArrangementImpl) RevokeConsent(c *gin.Context, id string) (err error) {
-	if _, err = o.Client.Openbanking.Cdr.RevokeCDRArrangementByID(
+	if _, err = o.Client.Cdr.Management.RevokeCDRArrangementByID(
 		cdr.NewRevokeCDRArrangementByIDParamsWithContext(c).
 			WithWid(o.Config.OpenbankingWorkspaceID).
 			WithArrangementID(id),

@@ -10,7 +10,7 @@ import (
 	"github.com/go-openapi/strfmt"
 	"github.com/sirupsen/logrus"
 
-	acpClient "github.com/cloudentity/acp-client-go/clients/openbanking/models"
+	clientmodels "github.com/cloudentity/acp-client-go/clients/obbr/models"
 )
 
 // swagger:route GET /accounts/v1/accounts/{accountID}/balances bank br getBalancesRequest
@@ -18,15 +18,17 @@ import (
 // get balance
 //
 // Security:
-//   defaultcc: accounts
+//
+//	defaultcc: accounts
 //
 // Responses:
-//   200: AccountBalancesData
-//   403: OpenbankingBrasilResponseError
-//   404: OpenbankingBrasilResponseError
+//
+//	200: AccountBalancesData
+//	403: OpenbankingBrasilResponseError
+//	404: OpenbankingBrasilResponseError
 type OBBRGetBalanceHandler struct {
 	*Server
-	introspectionResponse *acpClient.IntrospectOBBRDataAccessConsentResponse
+	introspectionResponse *clientmodels.IntrospectOBBRDataAccessConsentResponse
 }
 
 func NewOBBRGetBalanceHandler(server *Server) GetEndpointLogic {

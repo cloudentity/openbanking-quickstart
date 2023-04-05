@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 
-	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
+	obukModels "github.com/cloudentity/acp-client-go/clients/obuk/client/o_b_u_k"
 )
 
 // swagger:route GET /balances bank uk getBalancesRequest

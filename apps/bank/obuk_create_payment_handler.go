@@ -13,7 +13,7 @@ import (
 	"github.com/google/uuid"
 	"github.com/jinzhu/copier"
 
-	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
+	obukModels "github.com/cloudentity/acp-client-go/clients/obuk/client/o_b_u_k"
 )
 
 // swagger:route POST /domestic-payments bank createDomesticPaymentRequest

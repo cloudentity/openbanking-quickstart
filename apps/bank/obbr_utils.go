@@ -9,7 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 
-	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
+	clientmodels "github.com/cloudentity/acp-client-go/clients/obbr/models"
 )
 
 func OBBRMapError(c *gin.Context, err *Error) (code int, resp interface{}) {
@@ -35,7 +35,7 @@ func NewOBBRAccountsResponse(accounts []obbrAccountModels.AccountData) obbrAccou
 	}
 }
 
-func OBBRPermsToStringSlice(perms []obModels.OpenbankingBrasilConsentPermission1) []string {
+func OBBRPermsToStringSlice(perms []clientmodels.OpenbankingBrasilConsentPermission1) []string {
 	var slice []string
 	for _, perm := range perms {
 		slice = append(slice, string(perm))
@@ -43,7 +43,7 @@ func OBBRPermsToStringSlice(perms []obModels.OpenbankingBrasilConsentPermission1
 	return slice
 }
 
-func NewOBBRPayment(introspectionResponse *obModels.IntrospectOBBRPaymentConsentResponse, self strfmt.URI, id string) paymentModels.OpenbankingBrasilPaymentResponsePixPayment {
+func NewOBBRPayment(introspectionResponse *clientmodels.IntrospectOBBRPaymentConsentResponse, self strfmt.URI, id string) paymentModels.OpenbankingBrasilPaymentResponsePixPayment {
 	now := strfmt.DateTime(time.Now())
 	status := paymentModels.OpenbankingBrasilPaymentEnumPaymentStatusTypePDNG
 	localInstrument := paymentModels.OpenbankingBrasilPaymentEnumLocalInstrumentMANU

@@ -235,23 +235,26 @@ func NewServer() (Server, error) {
 		logrus.Debugf("mfa is disabled... skipping otp db load")
 	}
 
-	tools := ConsentTools{Trans: server.Trans, Config: server.Config}
+	obbrTools := OBBRConsentTools{Trans: server.Trans, Config: server.Config}
+	obukTools := OBUKConsentTools{Trans: server.Trans, Config: server.Config}
+	cdrTools := CDRConsentTools{Trans: server.Trans, Config: server.Config}
+	fdxTools := FDXConsentTools{Trans: server.Trans, Config: server.Config}
 	switch server.Config.Spec {
 	case OBUK:
-		server.AccountAccessConsentHandler = &OBUKAccountAccessConsentHandler{&server, tools}
-		server.AccountAccessMFAConsentProvider = &OBUKAccountAccessMFAConsentProvider{&server, tools}
-		server.PaymentConsentHandler = &OBUKDomesticPaymentConsentHandler{&server, tools}
-		server.PaymentMFAConsentProvider = &DomesticPaymentMFAConsentProvider{&server, tools}
+		server.AccountAccessConsentHandler = &OBUKAccountAccessConsentHandler{&server, obukTools}
+		server.AccountAccessMFAConsentProvider = &OBUKAccountAccessMFAConsentProvider{&server, obukTools}
+		server.PaymentConsentHandler = &OBUKDomesticPaymentConsentHandler{&server, obukTools}
+		server.PaymentMFAConsentProvider = &DomesticPaymentMFAConsentProvider{&server, obukTools}
 	case OBBR:
-		server.AccountAccessConsentHandler = &OBBRAccountAccessConsentHandler{&server, tools}
-		server.AccountAccessMFAConsentProvider = &OBBRAccountAccessMFAConsentProvider{&server, tools}
-		server.PaymentConsentHandler = &OBBRPaymentConsentHandler{&server, tools, Version(server.Config.OBBRPaymentsVersion)}
-		server.PaymentMFAConsentProvider = &OBBRPaymentMFAConsentProvider{&server, tools}
+		server.AccountAccessConsentHandler = &OBBRAccountAccessConsentHandler{&server, obbrTools}
+		server.AccountAccessMFAConsentProvider = &OBBRAccountAccessMFAConsentProvider{&server, obbrTools}
+		server.PaymentConsentHandler = &OBBRPaymentConsentHandler{&server, obbrTools, Version(server.Config.OBBRPaymentsVersion)}
+		server.PaymentMFAConsentProvider = &OBBRPaymentMFAConsentProvider{&server, obbrTools}
 	case CDR:
-		server.AccountAccessConsentHandler = &CDRAccountAccessConsentHandler{&server, tools}
+		server.AccountAccessConsentHandler = &CDRAccountAccessConsentHandler{&server, cdrTools}
 	case FDX:
-		server.AccountAccessConsentHandler = &FDXAccountAccessConsentHandler{&server, tools}
-		server.AccountAccessMFAConsentProvider = &FDXAccountAccessMFAConsentProvider{&server, tools}
+		server.AccountAccessConsentHandler = &FDXAccountAccessConsentHandler{&server, fdxTools}
+		server.AccountAccessMFAConsentProvider = &FDXAccountAccessMFAConsentProvider{&server, fdxTools}
 	default:
 		return server, errors.Wrapf(err, "unsupported spec %s", server.Config.Spec)
 	}

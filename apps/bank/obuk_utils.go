@@ -9,8 +9,8 @@ import (
 	paymentModels "github.com/cloudentity/openbanking-quickstart/generated/obuk/payments/models"
 	"github.com/go-openapi/strfmt"
 
-	obukModels "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
-	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
+	obukModels "github.com/cloudentity/acp-client-go/clients/obuk/client/o_b_u_k"
+	clientmodels "github.com/cloudentity/acp-client-go/clients/obuk/models"
 )
 
 func OBUKMapError(err *Error) (int, models.OBError1) {
@@ -129,7 +129,7 @@ func initiationsAreEqual(initiation1, initiation2 interface{}) bool {
 	return bytes.Equal(initiation1Bytes, initiation2Bytes)
 }
 
-func toDomesticResponse5DataInitiation(initiation *obModels.OBWriteDomesticConsentResponse5DataInitiation) *paymentModels.OBWriteDomesticResponse5DataInitiation {
+func toDomesticResponse5DataInitiation(initiation *clientmodels.OBWriteDomesticConsentResponse5DataInitiation) *paymentModels.OBWriteDomesticResponse5DataInitiation {
 	var (
 		initiationBytes []byte
 		err             error

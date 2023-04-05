@@ -6,7 +6,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
 
-	fdx "github.com/cloudentity/acp-client-go/clients/openbanking/client/f_d_x"
+	fdx "github.com/cloudentity/acp-client-go/clients/fdx/client/f_d_x"
 )
 
 type FDXGetTransactionsHandler struct {

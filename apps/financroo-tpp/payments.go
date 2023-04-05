@@ -9,8 +9,8 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 
-	obbr "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_b_r"
-	obuk "github.com/cloudentity/acp-client-go/clients/openbanking/client/openbanking_u_k"
+	obbr "github.com/cloudentity/acp-client-go/clients/obbr/client/o_b_b_r"
+	obuk "github.com/cloudentity/acp-client-go/clients/obuk/client/o_b_u_k"
 )
 
 type PaymentCreated struct {

@@ -4,13 +4,13 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 
-	cdr "github.com/cloudentity/acp-client-go/clients/openbanking/client/c_d_r"
-	"github.com/cloudentity/acp-client-go/clients/openbanking/models"
+	cdr "github.com/cloudentity/acp-client-go/clients/cdr/client/c_o_n_s_e_n_t_p_a_g_e"
+	clientmodels "github.com/cloudentity/acp-client-go/clients/cdr/models"
 )
 
 type CDRAccountAccessConsentHandler struct {
 	*Server
-	ConsentTools
+	CDRConsentTools
 }
 
 func (s *CDRAccountAccessConsentHandler) GetConsent(c *gin.Context, loginRequest LoginRequest) {
@@ -21,7 +21,7 @@ func (s *CDRAccountAccessConsentHandler) GetConsent(c *gin.Context, loginRequest
 		id       string
 	)
 
-	if response, err = s.Client.Openbanking.Cdr.GetCDRArrangementSystem(
+	if response, err = s.Client.Cdr.Consentpage.GetCDRArrangementSystem(
 		cdr.NewGetCDRArrangementSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID),
 		nil,
@@ -30,7 +30,7 @@ func (s *CDRAccountAccessConsentHandler) GetConsent(c *gin.Context, loginRequest
 		return
 	}
 
-	id = s.ConsentTools.GetInternalBankDataIdentifier(response.Payload.Subject, response.Payload.AuthenticationContext)
+	id = s.CDRConsentTools.GetInternalBankDataIdentifier(response.Payload.Subject, response.Payload.AuthenticationContext)
 
 	if accounts, err = s.BankClient.GetInternalAccounts(c, id); err != nil {
 		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to get accounts from bank"))
@@ -49,7 +49,7 @@ func (s *CDRAccountAccessConsentHandler) ConfirmConsent(c *gin.Context, loginReq
 		err     error
 	)
 
-	if consent, err = s.Client.Openbanking.Cdr.GetCDRArrangementSystem(
+	if consent, err = s.Client.Cdr.Consentpage.GetCDRArrangementSystem(
 		cdr.NewGetCDRArrangementSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID),
 		nil,
@@ -57,10 +57,10 @@ func (s *CDRAccountAccessConsentHandler) ConfirmConsent(c *gin.Context, loginReq
 		return "", err
 	}
 
-	if accept, err = s.Client.Openbanking.Cdr.AcceptCDRArrangementSystem(
+	if accept, err = s.Client.Cdr.Consentpage.AcceptCDRArrangementSystem(
 		cdr.NewAcceptCDRArrangementSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID).
-			WithAcceptConsent(&models.AcceptCDRConsentRequest{
+			WithAcceptConsent(&clientmodels.AcceptCDRConsentRequest{
 				GrantedScopes: s.GrantScopes(consent.Payload.RequestedScopes),
 				AccountIds:    c.PostFormArray("account_ids"),
 				LoginState:    loginRequest.State,
@@ -79,10 +79,10 @@ func (s *CDRAccountAccessConsentHandler) DenyConsent(c *gin.Context, loginReques
 		err    error
 	)
 
-	if reject, err = s.Client.Openbanking.Cdr.RejectCDRArrangementSystem(
+	if reject, err = s.Client.Cdr.Consentpage.RejectCDRArrangementSystem(
 		cdr.NewRejectCDRArrangementSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID).
-			WithRejectConsent(&models.RejectCDRConsentRequest{
+			WithRejectConsent(&clientmodels.RejectCDRConsentRequest{
 				LoginState: loginRequest.State,
 				Error:      "rejected",
 				StatusCode: 403,

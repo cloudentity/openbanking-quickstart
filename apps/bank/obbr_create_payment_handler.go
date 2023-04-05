@@ -11,7 +11,7 @@ import (
 	"github.com/go-openapi/strfmt"
 	"github.com/google/uuid"
 
-	obModels "github.com/cloudentity/acp-client-go/clients/openbanking/models"
+	clientmodels "github.com/cloudentity/acp-client-go/clients/obbr/models"
 )
 
 // swagger:route POST /payments/v1/pix/payments bank br createOBBRPaymentRequest
@@ -19,23 +19,25 @@ import (
 // create obbr  payment
 //
 // Security:
-//   defaultcc: payments
+//
+//	defaultcc: payments
 //
 // Responses:
-//   201: ResponsePixPayment
-//   400: ResponseError
-//   401: ResponseError
-//   403: ResponseError
-//   404: ResponseError
-//   405: ResponseError
-//   406: ResponseError
-//   415: ResponseError
-//   422: ResponseError
-//   429: ResponseError
-//   500: ResponseError
+//
+//	201: ResponsePixPayment
+//	400: ResponseError
+//	401: ResponseError
+//	403: ResponseError
+//	404: ResponseError
+//	405: ResponseError
+//	406: ResponseError
+//	415: ResponseError
+//	422: ResponseError
+//	429: ResponseError
+//	500: ResponseError
 type OBBRCreatePaymentHandler struct {
 	*Server
-	introspectionResponse *obModels.IntrospectOBBRPaymentConsentResponse
+	introspectionResponse *clientmodels.IntrospectOBBRPaymentConsentResponse
 	request               models.OpenbankingBrasilPaymentCreatePixPayment
 }
 
