@@ -12,6 +12,7 @@ export class DiscoverDataHoldersPage {
 
   public visit(force: boolean = false): void {
     Urls.visit(Cypress.env(`mock_data_recipient_url`) + '/data-holders', false);
+    Urls.clearLocalStorage();
     this.assertThatPageIsDisplayed();
   }
 

@@ -13,6 +13,7 @@ export class ConsentAndAuthorisationCallbackPage {
 
   public visit(force: boolean = false): void {
     Urls.visit(Cypress.env(`mock_data_recipient_url`) + '/consent/callback', false);
+    Urls.clearLocalStorage();
     this.assertThatPageIsDisplayed();
   }
 
