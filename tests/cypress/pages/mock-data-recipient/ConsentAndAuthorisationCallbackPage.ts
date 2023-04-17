@@ -1,4 +1,4 @@
-import { Urls } from '../Urls';
+import { Urls } from "../Urls";
 
 export class ConsentAndAuthorisationCallbackPage {
   private readonly mainHeaderSelector: string = `[role='main'] > h2`;
@@ -42,18 +42,25 @@ export class ConsentAndAuthorisationCallbackPage {
       let text: string = element.text();
       expect(element.text()).to.match(/\d{3}/);
     });
-    
-    cy.get(this.scopeSelector)
-    .should('have.text', 'openid profile bank:accounts.basic:read '
-      + 'bank:accounts.detail:read bank:transactions:read '
-      + 'common:customer.basic:read offline_access');
 
-    cy.get(this.tokenTypeSelector)
-    .should('have.text', 'bearer');
+    let scopes: Array<string> = [
+      "openid",
+      "profile",
+      "bank:accounts.basic:read",
+      "bank:accounts.detail:read",
+      "bank:transactions:read",
+      "common:customer.basic:read",
+      "offline_access",
+    ];
+
+    scopes.forEach(function (scope) {
+      cy.get(this.scopeSelector).should("have.text", scope);
+    });
+
+    cy.get(this.tokenTypeSelector).should("have.text", "bearer");
 
     cy.get(this.cdrArrangementIdSelector).then((element) => {
       expect(element.text()).to.match(/[a-zA-Z0-9]{20}/);
     });
   }
-
 }
