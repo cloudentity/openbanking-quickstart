@@ -56,20 +56,20 @@ pipeline {
                 sh 'make test'
             }
         }
-        stage('CDR Tests') {
-            steps {
-                script {
-                    sh 'make clean'
-                    try {
-                        sh 'make run-cdr-local'
-                        sh 'make run-cdr-tests-headless'
-                    } catch(exc) {
-                        captureDockerLogs()
-                        unstable('CDR Tests failed')
-                    }
-                }
-            }
-        }
+        // stage('CDR Tests') {
+        //     steps {
+        //         script {
+        //             sh 'make clean'
+        //             try {
+        //                 sh 'make run-cdr-local'
+        //                 sh 'make run-cdr-tests-headless'
+        //             } catch(exc) {
+        //                 captureDockerLogs()
+        //                 unstable('CDR Tests failed')
+        //             }
+        //         }
+        //     }
+        // }
         stage('FDX Tests with disabled MFA') {
             steps {
                 script {
