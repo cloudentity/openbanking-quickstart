@@ -6,9 +6,18 @@ export class ConsentAndAuthorisationCallbackPage {
   private readonly accessTokenSelector: string = '#consent-callback-accessToken + dd';
   private readonly refreshTokenSelector: string = '#consent-callback-refreshToken + dd';
   private readonly expiresInSelector: string = '#consent-callback-expiresIn + dd';
-  private readonly scopeSelector: string = '#consent-callback-scope + dd';
   private readonly tokenTypeSelector: string = '#consent-callback-tokenType + dd';
   private readonly cdrArrangementIdSelector: string = '#consent-callback-cdrArrangementId + dd';
+
+  private readonly scopes: Array<string> = [
+    "openid",
+    "profile",
+    "bank:accounts.basic:read",
+    "bank:accounts.detail:read",
+    "bank:transactions:read",
+    "common:customer.basic:read",
+    "offline_access",
+  ];
 
 
   public visit(force: boolean = false): void {
@@ -43,18 +52,8 @@ export class ConsentAndAuthorisationCallbackPage {
       expect(element.text()).to.match(/\d{3}/);
     });
 
-    let scopes: Array<string> = [
-      "openid",
-      "profile",
-      "bank:accounts.basic:read",
-      "bank:accounts.detail:read",
-      "bank:transactions:read",
-      "common:customer.basic:read",
-      "offline_access",
-    ];
-
-    scopes.forEach(function (scope) {
-      cy.get(this.scopeSelector).should("have.text", scope);
+    this.scopes.forEach(element => {
+      cy.get('#consent-callback-scope + dd').should("contain.text", element);
     });
 
     cy.get(this.tokenTypeSelector).should("have.text", "bearer");
