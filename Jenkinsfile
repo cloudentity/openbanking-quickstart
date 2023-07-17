@@ -9,6 +9,9 @@ pipeline {
         skipStagesAfterUnstable()
         timeout(time: 1, unit: 'HOURS')
     }
+    parameters {
+        booleanParam(name: 'RUN_XRAY_SCAN', defaultValue: false, description: 'Check this option if you want to run Xray Scan for vulnerabilities in artifacts.')
+    }
     environment {
         COMPOSE_HTTP_TIMEOUT = 120 
         VERIFY_TEST_RUNNER_TIMEOUT_MS = 80000
@@ -26,6 +29,9 @@ pipeline {
                 script{
                     if (env.BRANCH_NAME.startsWith('PR-')) {
                         abortPreviousRunningBuilds()
+                    }
+                    if (params.RUN_XRAY_SCAN == true) {
+                        initArtifactoryServer()
                     }
                 }
                 sh '''#!/bin/bash
