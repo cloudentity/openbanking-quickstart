@@ -61,8 +61,10 @@ pipeline {
                 sh 'make stop-runner'
                 sh 'make build'
                 sh 'make list-docker-images'
+                sh 'docker images'
                 script{
                     if (params.RUN_XRAY_SCAN == true) {
+                        sh 'make retag-docker-images'
                         dockerList = sh(
                         script: """
                         make -s list-docker-images | sed \"s/cloudentity\\//docker.cloudentity.io\\//g\"
