@@ -36,8 +36,7 @@ pipeline {
                     if (params.RUN_XRAY_SCAN == true) {
                         artifactory = initArtifactoryServer()
                         rtDocker = artifactory[0]
-                        rtServer = artifactory[1]
-                        buildInfo = artifactory[2]
+                        buildInfo = artifactory[1]
                     }
                 }
                 sh '''#!/bin/bash
@@ -53,6 +52,7 @@ pipeline {
                 }
             }
         }
+
         stage('Build') {
             steps {
                 sh 'rm -f docker-compose.log'
