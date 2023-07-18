@@ -65,12 +65,11 @@ pipeline {
                     if (params.RUN_XRAY_SCAN == true) {
                         dockerList = sh(
                         script: """
-                        LIST=\$(make list-docker-images)
-                        echo \${LIST} | sed -E 's/^.*pid[[:space:]][0-9]+[[:space:]]//'
+                        make -s list-docker-images
                         """,
                         returnStdout: true
                         ).trim()
-                        images = dockerList.split(' ')
+                        images = dockerList.split("\n")
                         pushCommits(rtDocker, buildInfo, images, "")
                     }
                 }
