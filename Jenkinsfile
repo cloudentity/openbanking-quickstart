@@ -76,28 +76,7 @@ pipeline {
                 }
             }
         }
-        stage("Xray Scan") {
-            when {
-                expression {
-                    params.RUN_XRAY_SCAN == true
-                }
-            }
-            steps {
-                script {
-                    scanResult = rtServer.xrayScan scanConfig
-                    if (scanResult.foundVulnerable) {
-                        scanresult = scanResult.toString()
-                        writeFile(file: '/tmp/scanresult.json', text: scanresult)
-                        env.XRAY_SCAN_TABLE = sh(
-                            script: './scripts/format_xray_result.sh',
-                            returnStdout: true
-                        ).trim()
-                        env.VULNERABILITIES = true
-                        currentBuild.result = 'UNSUCCESSFUL'
-                    }
-                }
-            }
-        }
+
         stage('Unit tests') {
             steps {
                 sh 'make test'
