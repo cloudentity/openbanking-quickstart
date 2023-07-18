@@ -76,7 +76,6 @@ pipeline {
                 }
             }
         }
-
         stage('Unit tests') {
             steps {
                 sh 'make test'
