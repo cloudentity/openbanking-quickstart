@@ -129,5 +129,5 @@ list-push-commits: docker
 	$(foreach image, $(DOCKERS),$(call DOCKER_LIST,$(image),$(COMMIT)))
 
 .PHONY: list-docker-images
-build:
+list-docker-images:
 	docker-compose images ${ALL_DOCKER_COMPOSES}
