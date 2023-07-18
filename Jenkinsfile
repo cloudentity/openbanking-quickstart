@@ -287,18 +287,3 @@ void captureCypressArtifacts() {
     archiveArtifacts(artifacts: 'tests/cypress/screenshots/**/*', allowEmptyArchive: true)
     archiveArtifacts(artifacts: 'tests/cypress/videos/**/*', allowEmptyArchive: true)
 }
-
-def initArtifactoryServer() {
-  script {
-    rtServer = Artifactory.server 'Artifactory'
-    rtDocker = Artifactory.docker server: rtServer
-    buildInfo = Artifactory.newBuildInfo()
-    buildInfo.env.capture = true
-    scanConfig = [
-      'buildName'   : buildInfo.name,
-      'buildNumber' : buildInfo.number,
-      'failBuild'   : false
-    ]
-  }
-  return [rtServer, rtDocker]
-}
