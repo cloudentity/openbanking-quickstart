@@ -36,7 +36,8 @@ pipeline {
                     if (params.RUN_XRAY_SCAN == true) {
                         artifactory = initArtifactoryServer()
                         rtDocker = artifactory[0]
-                        buildInfo = artifactory[1]
+                        rtServer artifactory[1]
+                        buildInfo = artifactory[2]
                     }
                 }
                 sh '''#!/bin/bash
@@ -72,6 +73,28 @@ pipeline {
                         ).trim()
                         images = dockerList.split("\n")
                         pushCommits(rtDocker, buildInfo, images, "")
+                    }
+                }
+            }
+        }
+        stage("Xray Scan") {
+            when {
+                expression {
+                    params.RUN_XRAY_SCAN == true
+                }
+            }
+            steps {
+                script {
+                    scanResult = rtServer.xrayScan scanConfig
+                        if (scanResult.foundVulnerable) {
+                        scanresult = scanResult.toString()
+                        writeFile(file: '/tmp/scanresult.json', text: scanresult)
+                        env.XRAY_SCAN_TABLE = sh(
+                            script: './scripts/format_xray_result.sh',
+                            returnStdout: true
+                        ).trim()
+                        env.VULNERABILITIES = true
+                        currentBuild.result = 'UNSUCCESSFUL'
                     }
                 }
             }
