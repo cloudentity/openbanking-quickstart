@@ -126,7 +126,7 @@ set_saas_configuration:
 
 .PHONY: list-docker-images
 list-docker-images:
-	docker-compose ${ALL_DOCKER_COMPOSES} config | yq -r '.services[].image'
+	docker-compose ${ALL_DOCKER_COMPOSES} config | yq -r '.services[].image' | grep -iv mcr.microsoft.com
 
 .PHONY: retag-docker-images
 retag-docker-images:
