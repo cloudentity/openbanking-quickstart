@@ -130,4 +130,4 @@ list-push-commits: docker
 
 .PHONY: list-docker-images
 list-docker-images:
-	docker-compose images ${ALL_DOCKER_COMPOSES}
+	docker-compose ${ALL_DOCKER_COMPOSES} config | yq -r '.services[].image'

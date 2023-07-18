@@ -60,12 +60,12 @@ pipeline {
                 sh 'make lint'
                 sh 'make stop-runner'
                 sh 'make build'
-                sh 'make -s list-docker-images'
+                sh 'make list-docker-images'
                 script{
                     if (params.RUN_XRAY_SCAN == true) {
                         dockerList = sh(
                         script: """
-                        LIST=\$(make -s list-docker-images)
+                        LIST=\$(make list-docker-images)
                         echo \${LIST} | sed -E 's/^.*pid[[:space:]][0-9]+[[:space:]]//'
                         """,
                         returnStdout: true
