@@ -55,6 +55,11 @@ pipeline {
                 sh 'make lint'
                 sh 'make stop-runner'
                 sh 'make build'
+                script{
+                    if (params.RUN_XRAY_SCAN == true) {
+                      pushCommits("")
+                    }
+                }
             }
         }
         stage('Unit tests') {
