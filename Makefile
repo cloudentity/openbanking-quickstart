@@ -123,3 +123,11 @@ stop-runner:
 .PHONY: set_saas_configuration
 set_saas_configuration:
 	./scripts/set_saas_configuration.sh
+
+.PHONY: list-push-commits
+list-push-commits: docker
+	$(foreach image, $(DOCKERS),$(call DOCKER_LIST,$(image),$(COMMIT)))
+
+.PHONY: list-docker-images
+build:
+	docker-compose images ${ALL_DOCKER_COMPOSES}
