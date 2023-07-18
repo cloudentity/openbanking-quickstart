@@ -65,7 +65,7 @@ pipeline {
                     if (params.RUN_XRAY_SCAN == true) {
                         dockerList = sh(
                         script: """
-                        make -s list-docker-images
+                        make -s list-docker-images | sed "s/cloudentity\//docker.cloudentity.io\//g"
                         """,
                         returnStdout: true
                         ).trim()
