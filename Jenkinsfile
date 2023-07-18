@@ -1,3 +1,6 @@
+def rtDocker;
+def buildInfo;
+
 pipeline {
     agent {
         label 'openbanking'
@@ -31,7 +34,9 @@ pipeline {
                         abortPreviousRunningBuilds()
                     }
                     if (params.RUN_XRAY_SCAN == true) {
-                        initArtifactoryServer()
+                        artifactory = initArtifactoryServer()
+                        rtDocker = artifactory[0]
+                        buildInfo = artifactory[1]
                     }
                 }
                 sh '''#!/bin/bash
@@ -57,7 +62,7 @@ pipeline {
                 sh 'make build'
                 script{
                     if (params.RUN_XRAY_SCAN == true) {
-                      pushCommits("")
+                      pushCommits(rtDocker, buildInfo, "")
                     }
                 }
             }
