@@ -124,10 +124,10 @@ stop-runner:
 set_saas_configuration:
 	./scripts/set_saas_configuration.sh
 
-.PHONY: list-push-commits
-list-push-commits: docker
-	$(foreach image, $(DOCKERS),$(call DOCKER_LIST,$(image),$(COMMIT)))
-
 .PHONY: list-docker-images
 list-docker-images:
 	docker-compose ${ALL_DOCKER_COMPOSES} config | yq -r '.services[].image'
+
+.PHONY: retag-docker-images
+retag-docker-images:
+	make -s list-docker-images | ./scripts/retag_docker_images.sh
