@@ -124,6 +124,10 @@ stop-runner:
 set_saas_configuration:
 	./scripts/set_saas_configuration.sh
 
+.PHONY: pull-docker-images
+pull-docker-images:
+	docker-compose ${ALL_DOCKER_COMPOSES} pull
+
 .PHONY: list-docker-images
 list-docker-images:
 	docker-compose ${ALL_DOCKER_COMPOSES} config | yq -r '.services[].image' | grep -iv mcr.microsoft.com
