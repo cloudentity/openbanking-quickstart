@@ -269,7 +269,22 @@ pipeline {
         always {
             sh "make clean-saas"
         }
-        
+        unsuccessful {
+            script {
+                if (env.VULNERABILITIES) {
+                    env.SLACK_MESSAGE = """
+                                        |:warning: JFrog Xray scan found security vulnerabilities
+                                        |${BUILD_URL}
+                                        |```
+                                        |${XRAY_SCAN_TABLE}
+                                        |```
+                                        |To view the vulnerabilities: click on the build link, then 'Xray Scan Report', then Violations tab.
+                                        |Based on your judgement, fix the vulnerabilities or configure them to be ignored.
+                                        """.stripMargin()
+                    sendSlackNotification('UNSUCCESSFUL', '#proj-openbanking', "${SLACK_MESSAGE}", false, false, '', true)
+                }
+            }
+        }
         failure {
             script {
                 captureCypressArtifacts()
