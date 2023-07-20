@@ -36,6 +36,7 @@ services:
       - SERVER_DISABLE_CSRF=true
       - SERVER_DO_NOT_PRINT_AUDIT_LOGS_FOR_STATIC_FILES=true
       - CLIENT_ROOT_CA=/acp_ca.pem
+      - CLIENT_INSECURE_SKIP_VERIFY=true
       - REDIS_ENABLED=true
       - REDIS_ADDRESS=redis:6379
       - OTEL_JAEGER_AGENT_HOST=jaeger
