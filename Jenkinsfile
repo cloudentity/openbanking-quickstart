@@ -53,7 +53,6 @@ pipeline {
                 }
             }
         }
-
         stage('Build') {
             steps {
                 sh 'rm -f docker-compose.log'
@@ -61,48 +60,6 @@ pipeline {
                 sh 'make lint'
                 sh 'make stop-runner'
                 sh 'make build'
-                sh 'make list-docker-images'
-                script{
-                    if (params.RUN_XRAY_SCAN == true) {
-                        sh 'docker images'
-                        sh 'make retag-docker-images'
-                        dockerList = sh(
-                        script: """
-                        make -s list-docker-images | sed \"s/cloudentity\\//docker.cloudentity.io\\//g\"
-                        """,
-                        returnStdout: true
-                        ).trim()
-                        images = dockerList.split("\n")
-                        pushCommits(rtDocker, buildInfo, images, "")
-                    }
-                }
-            }
-        }
-        stage("Xray Scan") {
-            when {
-                expression {
-                    params.RUN_XRAY_SCAN == true
-                }
-            }
-            steps {
-                script {
-                    scanConfig = [
-                    'buildName'   : buildInfo.name,
-                    'buildNumber' : buildInfo.number,
-                    'failBuild'   : false
-                    ]
-                    scanResult = rtServer.xrayScan scanConfig
-                    if (scanResult.foundVulnerable) {
-                        scanresult = scanResult.toString()
-                        writeFile(file: '/tmp/scanresult.json', text: scanresult)
-                        env.XRAY_SCAN_TABLE = sh(
-                            script: './scripts/format_xray_result.sh',
-                            returnStdout: true
-                        ).trim()
-                        env.VULNERABILITIES = true
-                        currentBuild.result = 'UNSUCCESSFUL'
-                    }
-                }
             }
         }
         stage('Unit tests') {
@@ -260,6 +217,46 @@ pipeline {
                     } catch(exc) {
                         captureDockerLogs()
                         unstable('SaaS CDR Tests failed')
+                    }
+                }
+            }
+        }
+        stage("Xray Scan") {
+            when {
+                expression {
+                    params.RUN_XRAY_SCAN == true
+                }
+            }
+            steps {
+                script {
+                    sh 'make list-docker-images'
+                    if (params.RUN_XRAY_SCAN == true) {
+                        sh 'docker images'
+                        sh 'make retag-docker-images'
+                        dockerList = sh(
+                        script: """
+                        make -s list-docker-images | sed \"s/cloudentity\\//docker.cloudentity.io\\//g\"
+                        """,
+                        returnStdout: true
+                        ).trim()
+                        images = dockerList.split("\n")
+                        pushCommits(rtDocker, buildInfo, images, "")
+                    }
+                    scanConfig = [
+                    'buildName'   : buildInfo.name,
+                    'buildNumber' : buildInfo.number,
+                    'failBuild'   : false
+                    ]
+                    scanResult = rtServer.xrayScan scanConfig
+                    if (scanResult.foundVulnerable) {
+                        scanresult = scanResult.toString()
+                        writeFile(file: '/tmp/scanresult.json', text: scanresult)
+                        env.XRAY_SCAN_TABLE = sh(
+                            script: './scripts/format_xray_result.sh',
+                            returnStdout: true
+                        ).trim()
+                        env.VULNERABILITIES = true
+                        currentBuild.result = 'UNSUCCESSFUL'
                     }
                 }
             }
