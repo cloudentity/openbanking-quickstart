@@ -64,6 +64,7 @@ pipeline {
                 sh 'make list-docker-images'
                 script{
                     if (params.RUN_XRAY_SCAN == true) {
+                        sh 'docker images'
                         sh 'make retag-docker-images'
                         dockerList = sh(
                         script: """
