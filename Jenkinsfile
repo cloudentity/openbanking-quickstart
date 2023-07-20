@@ -24,6 +24,8 @@ pipeline {
         SAAS_CLEANUP_CLIENT_ID = credentials('OPENBANKING_CLEANUP_CLIENT_ID')
         SAAS_CLEANUP_CLIENT_SECRET = credentials('OPENBANKING_CLEANUP_CLIENT_SECRET')
         NOTIFICATION_CHANNEL = credentials('OPENBANKING_NOTIFICATION_CHANNEL')
+        JENKINS_AUTH_USER = credentials('JENKINS_AUTH_USER')
+        JENKINS_AUTH_TOKEN = credentials('JENKINS_AUTH_TOKEN')
         DEBUG = 'true'
     }
     stages {
