@@ -83,10 +83,12 @@ pipeline {
                     ).trim()
                     images = dockerList.split("\n")
                     pushCommits(rtDocker, buildInfo, images, "")
+                    buildInfo.env.collect()
+                    rtServer.publishBuildInfo buildInfo
                     scanConfig = [
-                    'buildName'   : buildInfo.name,
-                    'buildNumber' : buildInfo.number,
-                    'failBuild'   : false
+                        'buildName'   : buildInfo.name,
+                        'buildNumber' : buildInfo.number,
+                        'failBuild'   : false
                     ]
                     scanResult = rtServer.xrayScan scanConfig
                     if (scanResult.foundVulnerable) {
