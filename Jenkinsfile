@@ -6,7 +6,9 @@ pipeline {
         label 'openbanking'
     }
     triggers {
-        cron(env.BRANCH_NAME == 'master' ? 'H 5 * * *' : '')
+        parameterizedCron(env.BRANCH_NAME == 'master' ? '''
+        H 5 * * * %RUN_XRAY_SCAN=true
+        ''' : '')
     }
     options {
         skipStagesAfterUnstable()
