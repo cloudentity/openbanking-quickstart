@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.1.3-experimental
-FROM node:14.15.1 as js-builder
+FROM node:lts as js-builder
 
 WORKDIR /app/web/app
 
@@ -12,7 +12,7 @@ COPY consent/admin-portal/web/app/public public
 COPY consent/admin-portal/web/app/src src
 RUN npm run build
 
-FROM golang:1.18 as go-builder
+FROM golang:1.20 as go-builder
 
 WORKDIR /app
 
