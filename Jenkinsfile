@@ -49,6 +49,7 @@ pipeline {
                         echo "127.0.0.1       mock-data-recipient" | sudo tee -a /etc/hosts
                 '''
                 sh 'curl -I https://registry.yarnpkg.com/'
+                sh 'curl -I https://registry.yarnpkg.com/cypress/-/cypress-7.4.0.tgz'
                 sh 'cd tests && yarn install --verbose'
                 sh 'docker-compose version'
                 sh "docker rm -f \$(docker ps -aq) || true"
