@@ -29,8 +29,11 @@ pipeline {
                     }
                 }
                 sh '''#!/bin/bash
+                        curl -I https://registry.yarnpkg.com/
                         echo "127.0.0.1       authorization.cloudentity.com test-docker" | sudo tee -a /etc/hosts
+                        curl -I https://registry.yarnpkg.com/
                         echo "127.0.0.1       mock-data-recipient" | sudo tee -a /etc/hosts
+                        curl -I https://registry.yarnpkg.com/
                         cd tests && yarn install --verbose
                 '''
                 sh 'docker-compose version'
