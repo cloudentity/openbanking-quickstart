@@ -50,7 +50,7 @@ pipeline {
                 '''
                 sh 'curl -I https://registry.yarnpkg.com/'
                 sh 'curl -I https://registry.yarnpkg.com/cypress/-/cypress-7.4.0.tgz'
-                sh 'cd tests && yarn install --verbose'
+                sh 'cd tests && yarn install --network-timeout 100000 --verbose'
                 sh 'docker-compose version'
                 sh "docker rm -f \$(docker ps -aq) || true"
                 retry(3) {
