@@ -31,7 +31,7 @@ pipeline {
                 sh '''#!/bin/bash
                         echo "127.0.0.1       authorization.cloudentity.com test-docker" | sudo tee -a /etc/hosts
                         echo "127.0.0.1       mock-data-recipient" | sudo tee -a /etc/hosts
-                        cd tests && yarn install
+                        cd tests && yarn install --verbose
                 '''
                 sh 'docker-compose version'
                 sh "docker rm -f \$(docker ps -aq) || true"
