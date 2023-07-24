@@ -1,6 +1,6 @@
 pipeline {
     agent {
-        label 'openbanking'
+        label 'openbanking-hetzner'
     }
     triggers {
         cron(env.BRANCH_NAME == 'master' ? 'H 5 * * *' : '')
