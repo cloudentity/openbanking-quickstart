@@ -1,13 +1,21 @@
+def rtDocker;
+def buildInfo;
+
 pipeline {
     agent {
         label 'openbanking'
     }
     triggers {
-        cron(env.BRANCH_NAME == 'master' ? 'H 5 * * *' : '')
+        parameterizedCron(env.BRANCH_NAME == 'master' ? '''
+        H 5 * * * %RUN_XRAY_SCAN=true
+        ''' : '')
     }
     options {
         skipStagesAfterUnstable()
         timeout(time: 1, unit: 'HOURS')
+    }
+    parameters {
+        booleanParam(name: 'RUN_XRAY_SCAN', defaultValue: false, description: 'Check this option if you want to run Xray Scan for vulnerabilities in artifacts.')
     }
     environment {
         COMPOSE_HTTP_TIMEOUT = 120 
@@ -18,6 +26,8 @@ pipeline {
         SAAS_CLEANUP_CLIENT_ID = credentials('OPENBANKING_CLEANUP_CLIENT_ID')
         SAAS_CLEANUP_CLIENT_SECRET = credentials('OPENBANKING_CLEANUP_CLIENT_SECRET')
         NOTIFICATION_CHANNEL = credentials('OPENBANKING_NOTIFICATION_CHANNEL')
+        JENKINS_AUTH_USER = credentials('JENKINS_AUTH_USER')
+        JENKINS_AUTH_TOKEN = credentials('JENKINS_AUTH_TOKEN')
         DEBUG = 'true'
     }
     stages {
@@ -26,6 +36,12 @@ pipeline {
                 script{
                     if (env.BRANCH_NAME.startsWith('PR-')) {
                         abortPreviousRunningBuilds()
+                    }
+                    if (params.RUN_XRAY_SCAN == true) {
+                        artifactory = initArtifactoryServer()
+                        rtServer = artifactory[0]
+                        rtDocker = artifactory[1]
+                        buildInfo = artifactory[2]
                     }
                 }
                 sh '''#!/bin/bash
@@ -41,7 +57,6 @@ pipeline {
                 }
             }
         }
-
         stage('Build') {
             steps {
                 sh 'rm -f docker-compose.log'
@@ -49,6 +64,46 @@ pipeline {
                 sh 'make lint'
                 sh 'make stop-runner'
                 sh 'make build'
+            }
+        }
+        stage("Xray Scan") {
+            when {
+                expression {
+                    params.RUN_XRAY_SCAN == true
+                }
+            }
+            steps {
+                script {
+                    sh 'make pull-docker-images'
+                    sh 'docker images'
+                    sh 'make retag-docker-images'
+                    dockerList = sh(
+                        script: """
+                                make -s list-docker-images | sed \"s/cloudentity\\//docker.cloudentity.io\\//g\"
+                                """,
+                        returnStdout: true
+                    ).trim()
+                    images = dockerList.split("\n")
+                    pushCommits(rtDocker, buildInfo, images, "")
+                    buildInfo.env.collect()
+                    rtServer.publishBuildInfo buildInfo
+                    scanConfig = [
+                        'buildName'   : buildInfo.name,
+                        'buildNumber' : buildInfo.number,
+                        'failBuild'   : false
+                    ]
+                    scanResult = rtServer.xrayScan scanConfig
+                    if (scanResult.foundVulnerable) {
+                        scanresult = scanResult.toString()
+                        writeFile(file: '/tmp/scanresult.json', text: scanresult)
+                        env.XRAY_SCAN_TABLE = sh(
+                            script: './scripts/format_xray_result.sh',
+                            returnStdout: true
+                        ).trim()
+                        env.VULNERABILITIES = true
+                        currentBuild.result = 'UNSUCCESSFUL'
+                    }
+                }
             }
         }
         stage('Unit tests') {
@@ -216,7 +271,22 @@ pipeline {
         always {
             sh "make clean-saas"
         }
-        
+        unsuccessful {
+            script {
+                if (env.VULNERABILITIES) {
+                    env.SLACK_MESSAGE = """
+                                        |:warning: JFrog Xray scan found security vulnerabilities
+                                        |${BUILD_URL}
+                                        |```
+                                        |${XRAY_SCAN_TABLE}
+                                        |```
+                                        |To view the vulnerabilities: click on the build link, then 'Xray Scan Report', then Violations tab.
+                                        |Based on your judgement, fix the vulnerabilities or configure them to be ignored.
+                                        """.stripMargin()
+                    sendSlackNotification('UNSUCCESSFUL', '#proj-openbanking', "${SLACK_MESSAGE}", false, false, '', true)
+                }
+            }
+        }
         failure {
             script {
                 captureCypressArtifacts()
