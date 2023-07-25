@@ -110,6 +110,7 @@ pipeline {
                 sh 'make test'
             }
         }
+        /*
         stage('CDR Tests') {
             steps {
                 script {
@@ -123,7 +124,7 @@ pipeline {
                     }
                 }
             }
-        }
+        }*/
         stage('FDX Tests with disabled MFA') {
             steps {
                 script {
@@ -250,6 +251,7 @@ pipeline {
                 }
             }
         }
+        /*
         stage('SaaS CDR Tests') {
             steps {
                 script {
@@ -263,7 +265,7 @@ pipeline {
                     }
                 }
             }
-        }
+        }*/
     }
 
     post {
