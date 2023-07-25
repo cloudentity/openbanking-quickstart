@@ -8,7 +8,7 @@ export class FdxTppLandingPage {
   private expectedAuthorizationDetails: string =
     '{"authorization_details":[{"type":"fdx_v1.0","consentRequest":' +
     '{"durationType":"ONE_TIME","lookbackPeriod":60,"resources":' +
-    '[{"resourceType":"ACCOUNT","dataClusters":["ACCOUNT_DETAILED","TRANSACTIONS","STATEMENTS"]},' +
+    '[{"resourceType":"ACCOUNT","dataClusters":["fdx:accountdetailed:read","fdx:transactions:read","fdx:statements:read"]},' +
     '{"resourceType":"CUSTOMER","dataClusters":["CUSTOMER_CONTACT"]}]}}]}';
 
   public visit(force: boolean = false): void {

@@ -45,15 +45,15 @@ func (f *FDXClient) DoPAR(c *gin.Context) (string, acpclient.CSRF, error) {
                {
                   "resourceType":"ACCOUNT",
                   "dataClusters":[
-                     "ACCOUNT_DETAILED",
-                     "TRANSACTIONS",
-                     "STATEMENTS"
+                     "fdx:accountdetailed:read",
+                     "fdx:transactions:read",
+                     "fdx:statements:read"
                   ]
                },
                {
                   "resourceType":"CUSTOMER",
                   "dataClusters":[
-                     "CUSTOMER_CONTACT"
+                     "fdx:customercontact:read"
                   ]
                }
             ]
