@@ -3,7 +3,7 @@ def buildInfo;
 
 pipeline {
     agent {
-        label 'openbanking'
+        label 'openbanking-hetzner'
     }
     triggers {
         parameterizedCron(env.BRANCH_NAME == 'master' ? '''
@@ -18,7 +18,7 @@ pipeline {
         booleanParam(name: 'RUN_XRAY_SCAN', defaultValue: false, description: 'Check this option if you want to run Xray Scan for vulnerabilities in artifacts.')
     }
     environment {
-        COMPOSE_HTTP_TIMEOUT = 120 
+        COMPOSE_HTTP_TIMEOUT = 120
         VERIFY_TEST_RUNNER_TIMEOUT_MS = 80000
         SAAS_TENANT_ID = 'amfudxn6-qa-us-east-1-ob-quickstart'
         SAAS_CLIENT_ID = credentials('OPENBANKING_CONFIGURATION_CLIENT_ID')
@@ -33,7 +33,7 @@ pipeline {
     stages {
         stage('Prepare') {
             steps {
-                script{
+                script {
                     if (env.BRANCH_NAME.startsWith('PR-')) {
                         abortPreviousRunningBuilds()
                     }
@@ -47,13 +47,12 @@ pipeline {
                 sh '''#!/bin/bash
                         echo "127.0.0.1       authorization.cloudentity.com test-docker" | sudo tee -a /etc/hosts
                         echo "127.0.0.1       mock-data-recipient" | sudo tee -a /etc/hosts
-                        cd tests && yarn install
                 '''
+                sh 'cd tests && yarn install'
                 sh 'docker-compose version'
                 sh "docker rm -f \$(docker ps -aq) || true"
-                 
                 retry(3) {
-                    sh "make run-tests-verify"
+                    sh 'make run-tests-verify'
                 }
             }
         }
@@ -118,7 +117,7 @@ pipeline {
                     try {
                         sh 'make run-cdr-local'
                         sh 'make run-cdr-tests-headless'
-                    } catch(exc) {
+                    } catch (exc) {
                         captureDockerLogs()
                         unstable('CDR Tests failed')
                     }
@@ -132,7 +131,7 @@ pipeline {
                     try {
                         sh 'make disable-mfa run-fdx-local'
                         sh 'make run-fdx-tests-headless'
-                    } catch(exc) {
+                    } catch (exc) {
                         captureDockerLogs()
                         unstable('FDX Tests with disabled MFA failed')
                     }
@@ -146,7 +145,7 @@ pipeline {
                     try {
                         sh 'make enable-mfa run-fdx-local'
                         sh 'make run-fdx-tests-headless'
-                    } catch(exc) {
+                    } catch (exc) {
                         captureDockerLogs()
                         unstable('FDX Tests with enabled MFA failed')
                     }
@@ -160,7 +159,7 @@ pipeline {
                     try {
                         sh 'make disable-mfa run-obuk-local'
                         sh 'make run-obuk-tests-headless'
-                    } catch(exc) {
+                    } catch (exc) {
                         captureDockerLogs()
                         unstable('OBUK Tests with disabled MFA failed')
                     }
@@ -174,7 +173,7 @@ pipeline {
                     try {
                         sh 'make enable-mfa run-obuk-local'
                         sh 'make run-obuk-tests-headless'
-                    } catch(exc) {
+                    } catch (exc) {
                         captureDockerLogs()
                         unstable('OBUK Tests with enabled MFA failed')
                     }
@@ -188,7 +187,7 @@ pipeline {
                     try {
                         sh 'make disable-mfa run-obbr-local'
                         sh 'make run-obbr-tests-headless'
-                    } catch(exc) {
+                    } catch (exc) {
                         captureDockerLogs()
                         unstable('OBBR Tests with disabled MFA failed')
                     }
@@ -202,7 +201,7 @@ pipeline {
                     try {
                         sh 'make enable-mfa run-obbr-local'
                         sh 'make run-obbr-tests-headless'
-                    } catch(exc) {
+                    } catch (exc) {
                         captureDockerLogs()
                         unstable('OBBR Tests with enabled MFA failed')
                     }
@@ -216,7 +215,7 @@ pipeline {
                     try {
                         sh 'make disable-mfa run-fdx-saas'
                         sh 'make run-saas-fdx-tests-headless'
-                    } catch(exc) {
+                    } catch (exc) {
                         captureDockerLogs()
                         unstable('SaaS FDX Tests failed')
                     }
@@ -230,7 +229,7 @@ pipeline {
                     try {
                         sh 'make disable-mfa run-obuk-saas'
                         sh 'make run-saas-obuk-tests-headless'
-                    } catch(exc) {
+                    } catch (exc) {
                         captureDockerLogs()
                         unstable('SaaS OBUK Tests failed')
                     }
@@ -244,7 +243,7 @@ pipeline {
                     try {
                         sh 'make disable-mfa run-obbr-saas'
                         sh 'make run-saas-obbr-tests-headless'
-                    } catch(exc) {
+                    } catch (exc) {
                         captureDockerLogs()
                         unstable('SaaS OBBR Tests failed')
                     }
@@ -258,7 +257,7 @@ pipeline {
                     try {
                         sh 'make disable-mfa run-cdr-saas'
                         sh 'make run-saas-cdr-tests-headless'
-                    } catch(exc) {
+                    } catch (exc) {
                         captureDockerLogs()
                         unstable('SaaS CDR Tests failed')
                     }
@@ -269,7 +268,7 @@ pipeline {
 
     post {
         always {
-            sh "make clean-saas"
+            sh 'make clean-saas'
         }
         unsuccessful {
             script {
@@ -290,7 +289,7 @@ pipeline {
         failure {
             script {
                 captureCypressArtifacts()
-                if (env.BRANCH_NAME=='master') {
+                if (env.BRANCH_NAME == 'master') {
                     sendSlackNotification(currentBuild.result, NOTIFICATION_CHANNEL, '', true)
                 }
             }
@@ -299,7 +298,7 @@ pipeline {
         unstable {
             script {
                 captureCypressArtifacts()
-                if (env.BRANCH_NAME=='master') {
+                if (env.BRANCH_NAME == 'master') {
                     sendSlackNotification(currentBuild.result, NOTIFICATION_CHANNEL, '', true)
                 }
             }
@@ -307,7 +306,7 @@ pipeline {
 
         fixed {
             script {
-                if (env.BRANCH_NAME=='master') {
+                if (env.BRANCH_NAME == 'master') {
                     sendSlackNotification(currentBuild.result, NOTIFICATION_CHANNEL, '', true)
                 }
             }
@@ -321,7 +320,6 @@ pipeline {
             }
         }
     }
-
 }
 
 void captureDockerLogs() {
