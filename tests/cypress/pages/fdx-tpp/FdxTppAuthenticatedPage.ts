@@ -11,7 +11,7 @@ export class FdxTppAuthenticatedPage {
     '"registeredEntityName":"MidwestPrimaryBank,NA","registryName":"GLEIF"}';
 
   private expectedAccountDetails = (id: string) =>
-    `{"dataClusters":["fdx:accountdetailed:read","fdx:transactions:read","fdx:statements:read"],"id":"${id}","resourceType":"ACCOUNT"}`;
+    `{"dataClusters":["ACCOUNT_DETAILED","TRANSACTIONS","STATEMENTS"],"id":"${id}","resourceType":"ACCOUNT"}`;
 
   public assertThatPageIsDisplayed(): void {
     cy.get(this.authenticatedPageInfoLabelLocator).should(
