@@ -45,8 +45,8 @@ func (h *FDXGetAccountsHandler) BuildResponse(c *gin.Context, data BankUserData)
 
 func (h *FDXGetAccountsHandler) Validate(c *gin.Context) *Error {
 	scopes := strings.Split(h.introspectionResponse.Scope, " ")
-	if !has(scopes, "ACCOUNT_DETAILED") {
-		return ErrForbidden.WithMessage("token has no ACCOUNT_DETAILED scope granted")
+	if !has(scopes, "fdx:accountdetailed:read") {
+		return ErrForbidden.WithMessage("token has no fdx:accountdetailed:read scope granted")
 	}
 
 	return nil
