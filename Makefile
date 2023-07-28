@@ -130,7 +130,7 @@ pull-docker-images:
 
 .PHONY: list-docker-images
 list-docker-images:
-	docker-compose ${ALL_DOCKER_COMPOSES} config | yq -r '.services[].image' | grep -iv mcr.microsoft.com
+	docker-compose ${ALL_DOCKER_COMPOSES} config | yq -r '.services[].image' | grep cloudentity
 
 .PHONY: retag-docker-images
 retag-docker-images:

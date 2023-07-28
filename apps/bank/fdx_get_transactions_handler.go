@@ -38,7 +38,7 @@ func (h *FDXGetTransactionsHandler) BuildResponse(c *gin.Context, data BankUserD
 
 func (h *FDXGetTransactionsHandler) Validate(c *gin.Context) *Error {
 	scopes := strings.Split(h.introspectionResponse.Scope, " ")
-	if !has(scopes, "TRANSACTIONS") {
+	if !has(scopes, "fdx:transactions:read") {
 		return ErrForbidden.WithMessage("token has no TRANSACTIONS scope granted")
 	}
 	return nil

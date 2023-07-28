@@ -165,7 +165,7 @@ paths:
           headers: {}
       security:
             - defaultcc:
-              - ACCOUNT_DETAILED
+              - fdx:accountdetailed:read
   '/accounts/{accountId}':
     get:
       description: Get a specific account
@@ -217,7 +217,7 @@ paths:
           headers: {}
       security:
             - defaultcc:
-              - ACCOUNT_DETAILED
+              - fdx:accountdetailed:read
   '/accounts/{accountId}/statements':
     get:
       description: >-
