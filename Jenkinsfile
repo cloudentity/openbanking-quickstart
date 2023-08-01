@@ -75,6 +75,7 @@ pipeline {
                 script {
                     sh 'make pull-docker-images'
                     sh 'docker images'
+                    sh 'make list-docker-images'
                     sh 'make retag-docker-images'
                     dockerList = sh(
                         script: """
