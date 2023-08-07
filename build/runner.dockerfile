@@ -19,6 +19,6 @@ RUN --mount=type=ssh,mode=777 go mod download
 
 # golangci-lint
 RUN curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh \
-  | sh -s -- -b $(go env GOPATH)/bin v1.46.2
+  | sh -s -- -b $(go env GOPATH)/bin v1.53.3
 
 USER ${USERNAME}
