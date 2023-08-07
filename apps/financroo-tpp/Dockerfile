@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.1.3-experimental
-FROM node:14.15.1 as js-builder
+FROM node:14 as js-builder
 
 WORKDIR /app/web/app
 
