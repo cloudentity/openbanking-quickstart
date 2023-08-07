@@ -1,4 +1,4 @@
-FROM golang:1.18 as base
+FROM golang:1.20 as base
 ENV GO111MODULE=on
 WORKDIR /code
 RUN GOPROXY="direct" go install github.com/go-swagger/go-swagger/cmd/swagger@v0.28.0
