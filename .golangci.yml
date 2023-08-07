@@ -125,6 +125,7 @@ linters-settings:
     min-len: 3
     # minimal occurrences count to trigger, 3 by default
     min-occurrences: 5
+
   depguard:
     list-type: blacklist
     include-go-root: false
@@ -135,6 +136,7 @@ linters-settings:
     packages-with-error-messages:
       # specify an error message to output when a blacklisted package is used
       github.com/ory/x: "use internal go-tools"
+
   misspell:
     # Correct spellings using locale preferences for US or UK.
     # Default is to use a neutral variety of English.
@@ -247,6 +249,7 @@ linters:
     - cyclop
     - gci
     - forbidigo
+    - nosnakecase
   fast: false
   
 

@@ -35,7 +35,7 @@ func (c *OBUKBankClient) GetInternalAccounts(ctx context.Context, id string) (In
 		err      error
 	)
 
-	if request, err = http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s/internal/accounts?id=%s", c.baseURL, id), http.NoBody); err != nil {
+	if request, err = http.NewRequestWithContext(ctx, http.MethodGet, fmt.Sprintf("%s/internal/accounts?id=%s", c.baseURL, id), http.NoBody); err != nil {
 		return InternalAccounts{}, err
 	}
 
@@ -48,7 +48,7 @@ func (c *OBUKBankClient) GetInternalAccounts(ctx context.Context, id string) (In
 		return InternalAccounts{}, err
 	}
 
-	if response.StatusCode != 200 {
+	if response.StatusCode != http.StatusOK {
 		return InternalAccounts{}, fmt.Errorf("unexpected status code: %d, body: %s", response.StatusCode, string(bytes))
 	}
 
@@ -80,7 +80,7 @@ func (c *OBUKBankClient) GetInternalBalances(ctx context.Context, id string) (Ba
 		err      error
 	)
 
-	if request, err = http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s/internal/balances?id=%s", c.baseURL, id), http.NoBody); err != nil {
+	if request, err = http.NewRequestWithContext(ctx, http.MethodGet, fmt.Sprintf("%s/internal/balances?id=%s", c.baseURL, id), http.NoBody); err != nil {
 		return resp, err
 	}
 
@@ -93,7 +93,7 @@ func (c *OBUKBankClient) GetInternalBalances(ctx context.Context, id string) (Ba
 		return resp, err
 	}
 
-	if response.StatusCode != 200 {
+	if response.StatusCode != http.StatusOK {
 		return resp, fmt.Errorf("unexpected status code: %d, body: %s", response.StatusCode, string(bytes))
 	}
 

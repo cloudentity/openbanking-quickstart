@@ -69,10 +69,10 @@ func TestImport(t *testing.T) {
 func serverWithMockedImportEndpoint(path string) *httptest.Server {
 	return httptest.NewUnstartedServer(http.HandlerFunc(func(rw http.ResponseWriter, req *http.Request) {
 		if req.Method != "PUT" || req.URL.String() != path {
-			rw.WriteHeader(404)
+			rw.WriteHeader(http.StatusNotFound)
 			return
 		}
 
-		rw.WriteHeader(204)
+		rw.WriteHeader(http.StatusNoContent)
 	}))
 }

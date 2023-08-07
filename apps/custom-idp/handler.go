@@ -248,7 +248,7 @@ func ClaimAsStringSlice(claims jwt.MapClaims, name string) []string {
 
 // ErrorPayload returns the *models.Error for errors that have it.
 func ErrorPayload(err error) (*models.Error, bool) {
-	switch e := err.(type) { // nolint
+	switch e := err.(type) { //nolint
 	case *logins.AcceptLoginRequestUnauthorized:
 		return e.Payload, true
 	case *logins.AcceptLoginRequestForbidden:

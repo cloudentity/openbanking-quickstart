@@ -9,11 +9,13 @@ import (
 // get all accounts for user
 //
 // Security:
-//   defaultcc: accounts
+//
+//	defaultcc: accounts
 //
 // Responses:
-//   200: ResponseAccountList
-//   404: OpenbankingBrasilResponseError
+//
+//	200: ResponseAccountList
+//	404: OpenbankingBrasilResponseError
 type OBBRGetAccountsInternalHandler struct {
 	*Server
 }

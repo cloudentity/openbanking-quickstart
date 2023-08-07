@@ -13,11 +13,13 @@ import (
 // get all balances for user
 //
 // Security:
-//   defaultcc: accounts
+//
+//	defaultcc: accounts
 //
 // Responses:
-//   200: OBReadBalance1
-//   404: OBErrorResponse1
+//
+//	200: OBReadBalance1
+//	404: OBErrorResponse1
 type OBUKGetBalancesInternalHandler struct {
 	*Server
 }

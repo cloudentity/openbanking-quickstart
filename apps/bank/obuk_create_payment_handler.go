@@ -21,14 +21,16 @@ import (
 // create domestic payment
 //
 // Security:
-//   defaultcc: payments
+//
+//	defaultcc: payments
 //
 // Responses:
-//   201: OBWriteDomesticResponse5
-//   400: OBErrorResponse1
-//   403: OBErrorResponse1
-//   422: OBErrorResponse1
-//   500: OBErrorResponse1
+//
+//	201: OBWriteDomesticResponse5
+//	400: OBErrorResponse1
+//	403: OBErrorResponse1
+//	422: OBErrorResponse1
+//	500: OBErrorResponse1
 type OBUKCreatePaymentHandler struct {
 	*Server
 	introspectionResponse *obukModels.OpenbankingDomesticPaymentConsentIntrospectOKBody

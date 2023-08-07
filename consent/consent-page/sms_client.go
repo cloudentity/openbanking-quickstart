@@ -45,7 +45,7 @@ func (s *SMSClient) Send(to string, body string) error {
 	msgData.Set("From", s.from)
 	msgData.Set("Body", body)
 
-	if req, err = http.NewRequest("POST", urlStr, strings.NewReader(msgData.Encode())); err != nil {
+	if req, err = http.NewRequest(http.MethodPost, urlStr, strings.NewReader(msgData.Encode())); err != nil {
 		return err
 	}
 

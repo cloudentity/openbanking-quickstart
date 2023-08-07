@@ -13,11 +13,13 @@ import (
 // get all balances for user
 //
 // Security:
-//   defaultcc: accounts
+//
+//	defaultcc: accounts
 //
 // Responses:
-//   200: AccountBalancesData
-//   404: OpenbankingBrasilResponseError
+//
+//	200: AccountBalancesData
+//	404: OpenbankingBrasilResponseError
 type OBBRGetBalancesInternalHandler struct {
 	*Server
 }

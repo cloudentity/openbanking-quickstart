@@ -33,7 +33,7 @@ func (c *OBUKBankClient) GetInternalAccounts(_ context.Context, subject string) 
 		err      error
 	)
 
-	if request, err = http.NewRequest("GET", fmt.Sprintf("%s/internal/accounts?id=%s", c.baseURL, subject), http.NoBody); err != nil {
+	if request, err = http.NewRequest(http.MethodGet, fmt.Sprintf("%s/internal/accounts?id=%s", c.baseURL, subject), http.NoBody); err != nil {
 		return InternalAccounts{}, err
 	}
 
@@ -46,12 +46,12 @@ func (c *OBUKBankClient) GetInternalAccounts(_ context.Context, subject string) 
 		return InternalAccounts{}, err
 	}
 
-	if response.StatusCode != 200 {
+	if response.StatusCode != http.StatusOK {
 		return InternalAccounts{}, fmt.Errorf("unexpected status code: %d, body: %s", response.StatusCode, string(bytes))
 	}
 
 	if err = json.Unmarshal(bytes, &resp); err != nil {
-		return InternalAccounts{}, nil
+		return InternalAccounts{}, err
 	}
 
 	return c.ToInternalAccounts(resp), nil

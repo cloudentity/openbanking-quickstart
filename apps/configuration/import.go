@@ -32,7 +32,7 @@ func ImportConfiguration(tenantURL *url.URL, tenant *string, client *http.Client
 
 	logrus.Debugf("call endpoint: %s with body: %s", tenantURL.String(), string(body))
 
-	if req, err = http.NewRequest("PUT", tenantURL.String(), bytes.NewBuffer(body)); err != nil {
+	if req, err = http.NewRequest(http.MethodPut, tenantURL.String(), bytes.NewBuffer(body)); err != nil {
 		return err
 	}
 	req.Header.Set("content-type", "application/json")

@@ -49,7 +49,7 @@ func (c *FDXClient) GetInternalAccounts(ctx context.Context, id string) (Interna
 		err         error
 	)
 
-	if request, err = http.NewRequestWithContext(ctx, "GET", fmt.Sprintf("%s/internal/accounts", c.baseURL), http.NoBody); err != nil {
+	if request, err = http.NewRequestWithContext(ctx, http.MethodGet, fmt.Sprintf("%s/internal/accounts", c.baseURL), http.NoBody); err != nil {
 		return InternalAccounts{}, err
 	}
 
@@ -62,7 +62,7 @@ func (c *FDXClient) GetInternalAccounts(ctx context.Context, id string) (Interna
 		return InternalAccounts{}, err
 	}
 
-	if response.StatusCode != 200 {
+	if response.StatusCode != http.StatusOK {
 		return InternalAccounts{}, fmt.Errorf("unexpected status code: %d, body: %s", response.StatusCode, string(bytes))
 	}
 

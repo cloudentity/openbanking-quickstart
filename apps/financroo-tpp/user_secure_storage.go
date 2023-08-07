@@ -56,7 +56,7 @@ func (s *UserSecureStorage) Read(c *gin.Context) (BankTokens, error) {
 	)
 
 	if encodedData, err = c.Cookie("data"); err != nil {
-		return BankTokens{}, nil
+		return BankTokens{}, err
 	}
 
 	if err = s.sc.Decode("data", encodedData, &tokens); err != nil {

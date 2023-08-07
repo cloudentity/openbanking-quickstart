@@ -131,6 +131,7 @@ func TestCreateConsentResponse(t *testing.T) {
 
 			s.CreateConsentResponse(ctx, "test_bank_id", User{}, s.Clients.AcpAccountsClient, "test_consent_id")
 			response := recorder.Result()
+			defer response.Body.Close()
 
 			assert.Equal(tt, tc.expectedDoPARCount, tc.fakeConsentClient.DoPARCalls)
 			assert.Equal(tt, tc.expectedLoginBuilderCount, tc.fakeLoginBuilder.BuildLoginURLCount)
