@@ -1,7 +1,9 @@
 package main
 
 import (
+	"errors"
 	"fmt"
+	"net/http"
 
 	"github.com/gin-gonic/gin"
 	"github.com/gorilla/securecookie"
@@ -56,6 +58,10 @@ func (s *UserSecureStorage) Read(c *gin.Context) (BankTokens, error) {
 	)
 
 	if encodedData, err = c.Cookie("data"); err != nil {
+		if errors.Is(err, http.ErrNoCookie) {
+			return BankTokens{}, nil
+		}
+
 		return BankTokens{}, err
 	}
 
