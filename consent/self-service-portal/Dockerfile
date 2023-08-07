@@ -14,7 +14,7 @@ COPY consent/self-service-portal/web/app/src src
 
 RUN npm run build
 
-FROM golang:1.18 as go-builder
+FROM golang:1.20 as go-builder
 
 WORKDIR /app
 
@@ -27,7 +27,7 @@ COPY consent/self-service-portal .
 RUN --mount=type=cache,target=/root/.cache/go-build,mode=777 \
     CGO_ENABLED=0 go build -tags static_all -o main .
 
-FROM alpine:latest
+FROM alpine:3.18
 RUN apk --no-cache add ca-certificates
 
 WORKDIR /app

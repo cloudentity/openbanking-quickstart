@@ -1,4 +1,4 @@
-FROM golang:1.18 as base
+FROM golang:1.20 as base
 ENV GO111MODULE=on
 WORKDIR /code
 RUN GOPROXY="direct" go install github.com/go-swagger/go-swagger/cmd/swagger@v0.28.0
@@ -19,6 +19,6 @@ RUN --mount=type=ssh,mode=777 go mod download
 
 # golangci-lint
 RUN curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh \
-  | sh -s -- -b $(go env GOPATH)/bin v1.46.2
+  | sh -s -- -b $(go env GOPATH)/bin v1.53.3
 
 USER ${USERNAME}

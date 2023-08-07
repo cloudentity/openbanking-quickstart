@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.2
-FROM golang:1.18 as builder
+FROM golang:1.20 as builder
 
 WORKDIR /app
 
@@ -12,7 +12,7 @@ COPY apps/custom-idp .
 RUN --mount=type=cache,target=/root/.cache/go-build,mode=777 \
     CGO_ENABLED=0 go build -tags static_all -o main .
 
-FROM alpine:latest
+FROM alpine:3.18
 RUN apk --no-cache add ca-certificates
 
 WORKDIR /app
