@@ -7,13 +7,14 @@ import (
 	"strconv"
 	"time"
 
-	obbrModels2 "github.com/cloudentity/acp-client-go/clients/obbr/models"
 	obbrModels "github.com/cloudentity/openbanking-quickstart/generated/obbr/consents/models"
 	obModels "github.com/cloudentity/openbanking-quickstart/generated/obuk/payments/models"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/strfmt"
 	"github.com/google/uuid"
 	"github.com/pkg/errors"
+
+	obbrModels2 "github.com/cloudentity/acp-client-go/clients/obbr/models"
 
 	acpclient "github.com/cloudentity/acp-client-go"
 
@@ -172,10 +173,10 @@ const (
 	ContasSaldos                        PermissionGroup = "Contas Saldos"
 	ContasLimites                       PermissionGroup = "Contas Limites"
 	ContasExtratos                      PermissionGroup = "Contas Extratos"
-	CartaoDeCreditoLimites              PermissionGroup = "Cartão de Crédito Limites"              // nolint
-	CartaoDeCreditoTransacoes           PermissionGroup = "Cartão de Crédito Transações"           // nolint
-	CartaoDeCreditoFaturas              PermissionGroup = "Cartão de Crédito Faturas"              // nolint
-	OperacoesDeCreditoDadosDoContrato   PermissionGroup = "Operações de Crédito Dados do Contrato" // nolint
+	CartaoDeCreditoLimites              PermissionGroup = "Cartão de Crédito Limites"              //nolint
+	CartaoDeCreditoTransacoes           PermissionGroup = "Cartão de Crédito Transações"           //nolint
+	CartaoDeCreditoFaturas              PermissionGroup = "Cartão de Crédito Faturas"              //nolint
+	OperacoesDeCreditoDadosDoContrato   PermissionGroup = "Operações de Crédito Dados do Contrato" //nolint
 )
 
 type Permissions []obbrModels.OpenbankingBrasilConsentV2Permission

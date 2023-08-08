@@ -27,7 +27,7 @@ func (s *OBBRAccountAccessConsentHandler) GetConsent(c *gin.Context, loginReques
 			WithLogin(loginRequest.ID),
 		nil,
 	); err != nil {
-		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to get data access consent consent"))
+		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to get data access consent consent")) //nolint
 		return
 	}
 

@@ -27,7 +27,7 @@ func (t *Trans) T(id string) interface{} {
 	logrus.WithField("message", message).
 		Debugf("tried to find message %s", id)
 
-	return template.HTML(message) // nolint
+	return template.HTML(message) //nolint
 }
 
 func (t *Trans) TD(id string, data map[string]interface{}) interface{} {
@@ -44,5 +44,5 @@ func (t *Trans) TD(id string, data map[string]interface{}) interface{} {
 		WithField("data", data).
 		Debugf("tried to find message %s", id)
 
-	return template.HTML(message) // nolint
+	return template.HTML(message) //nolint
 }

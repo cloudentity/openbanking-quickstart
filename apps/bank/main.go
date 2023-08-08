@@ -76,7 +76,6 @@ type Server struct {
 	Config  Config
 	Client  acpclient.Client
 	Storage Storage
-	// PaymentQueue PaymentQueue
 }
 
 func NewServer() (Server, error) {

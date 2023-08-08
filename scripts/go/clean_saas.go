@@ -46,7 +46,7 @@ func main() {
 		Timeout: time.Second * 30,
 		Transport: &http.Transport{
 			TLSClientConfig: &tls.Config{
-				InsecureSkipVerify: true, // nolint
+				InsecureSkipVerify: true, //nolint
 			},
 		},
 	}
@@ -64,7 +64,7 @@ func main() {
 			sid = fmt.Sprintf("%s-%s", strings.ToLower(*prefix), sid)
 		}
 		fmt.Printf("INFO: Trying to delete server with ID: '%s'\n", sid)
-		if request, err = http.NewRequest("DELETE", fmt.Sprintf("%s/api/admin/%s/servers/%s", tURL.String(), *tenantID, sid), http.NoBody); err != nil {
+		if request, err = http.NewRequest(http.MethodDelete, fmt.Sprintf("%s/api/admin/%s/servers/%s", tURL.String(), *tenantID, sid), http.NoBody); err != nil {
 			log.Fatalf("ERROR: Failed to setup delete server '%s' request: %v", sid, err)
 		}
 
@@ -80,7 +80,7 @@ func main() {
 			cid = fmt.Sprintf("%s-%s", strings.ToLower(*prefix), cid)
 		}
 		fmt.Printf("INFO: Trying to delete client with ID: '%s'\n", cid)
-		if request, err = http.NewRequest("DELETE", fmt.Sprintf("%s/api/admin/%s/clients/%s", tURL.String(), *tenantID, cid), http.NoBody); err != nil {
+		if request, err = http.NewRequest(http.MethodDelete, fmt.Sprintf("%s/api/admin/%s/clients/%s", tURL.String(), *tenantID, cid), http.NoBody); err != nil {
 			log.Fatalf("ERROR: Failed to setup delete client '%s' request: %v", cid, err)
 		}
 

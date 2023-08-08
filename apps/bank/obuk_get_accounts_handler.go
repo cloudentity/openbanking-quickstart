@@ -17,14 +17,16 @@ import (
 // get accounts
 //
 // Security:
-//   defaultcc: accounts
+//
+//	defaultcc: accounts
 //
 // Responses:
-//   200: OBReadAccount6
-//	 400: OBErrorResponse1
-//   403: OBErrorResponse1
-//   404: OBErrorResponse1
-//   500: OBErrorResponse1
+//
+//	  200: OBReadAccount6
+//		 400: OBErrorResponse1
+//	  403: OBErrorResponse1
+//	  404: OBErrorResponse1
+//	  500: OBErrorResponse1
 type OBUKGetAccountsHandler struct {
 	*Server
 	introspectionResponse *obukModels.OpenbankingAccountAccessConsentIntrospectOKBody

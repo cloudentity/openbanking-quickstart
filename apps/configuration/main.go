@@ -68,7 +68,7 @@ func main() {
 		Timeout: *httpTimeout,
 		Transport: &http.Transport{
 			TLSClientConfig: &tls.Config{
-				InsecureSkipVerify: *httpInsecure, // nolint
+				InsecureSkipVerify: *httpInsecure, //nolint
 			},
 		},
 	}

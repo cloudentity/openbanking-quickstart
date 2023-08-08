@@ -13,11 +13,13 @@ import (
 // get all accounts for user
 //
 // Security:
-//   defaultcc: accounts
+//
+//	defaultcc: accounts
 //
 // Responses:
-//   200: OBReadAccount6
-//   404: OBErrorResponse1
+//
+//	200: OBReadAccount6
+//	404: OBErrorResponse1
 type OBUKGetAccountsInternalHandler struct {
 	*Server
 }
