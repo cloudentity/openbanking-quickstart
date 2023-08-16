@@ -12,16 +12,20 @@ import (
 
 	cdrBank "github.com/cloudentity/openbanking-quickstart/generated/cdr/client"
 	fdxBank "github.com/cloudentity/openbanking-quickstart/generated/fdx/client"
-	obbrAccounts "github.com/cloudentity/openbanking-quickstart/generated/obbr/accounts/client"
 	obbrPayments "github.com/cloudentity/openbanking-quickstart/generated/obbr/payments/client"
 	obukAccounts "github.com/cloudentity/openbanking-quickstart/generated/obuk/accounts/client"
+	"github.com/cloudentity/openbanking-quickstart/generated/obuk/accounts/models"
 	payments_client "github.com/cloudentity/openbanking-quickstart/generated/obuk/payments/client"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 
 	acpclient "github.com/cloudentity/acp-client-go"
 	"github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
 	oauth2Models "github.com/cloudentity/acp-client-go/clients/oauth2/models"
+
+	obbrAccounts "github.com/cloudentity/openbanking-quickstart/generated/obbr/accounts/client"
+	obbrAccounts2 "github.com/cloudentity/openbanking-quickstart/generated/obbr/accounts/client/accounts"
 )
 
 type Clients struct {
@@ -397,16 +401,65 @@ func (c *CDRConsentClient) Sign([]byte) (string, error) {
 	return "", nil
 }
 
-type GenericBankClient struct{}
+type GenericBankClient struct {
+	*obbrAccounts.Accounts
+}
 
 func NewGenericBankClient(config Config) (BankClient, error) {
-	return &GenericBankClient{}, nil
+	var (
+		c   = &GenericBankClient{}
+		hc  = &http.Client{}
+		u   *url.URL
+		err error
+	)
+
+	if u, err = url.Parse(config.BankURL); err != nil {
+		return c, errors.Wrapf(err, "failed to parse bank url")
+	}
+
+	c.Accounts = obbrAccounts.New(NewHTTPRuntimeWithClient(
+		u.Host,
+		u.Path+"/accounts/v1",
+		[]string{u.Scheme},
+		hc,
+	), nil)
+
+	return c, nil
 }
 
 var _ BankClient = &GenericBankClient{}
 
 func (c *GenericBankClient) GetAccounts(ctx *gin.Context, accessToken string, bank ConnectedBank) ([]Account, error) {
-	return nil, errors.New("not implemented")
+	var (
+		resp         *obbrAccounts2.AccountsGetAccountsOK
+		accountsData = []Account{}
+		err          error
+	)
+	if resp, err = c.Accounts.Accounts.AccountsGetAccounts(
+		obbrAccounts2.NewAccountsGetAccountsParamsWithContext(ctx).
+			WithAuthorization(accessToken),
+		nil,
+	); err != nil {
+		return accountsData, err
+	}
+
+	for _, a := range resp.Payload.Data {
+		accountsData = append(accountsData, Account{
+			OBAccount6: models.OBAccount6{
+				AccountID: (*models.AccountID)(a.AccountID),
+				Nickname:  models.Nickname(*a.AccountID),
+				Account: []*models.OBAccount6AccountItems0{
+					{
+						Name:           models.Name0(*a.AccountID),
+						Identification: (*models.Identification0)(a.Number),
+					},
+				},
+			},
+			BankID: bank.BankID,
+		})
+	}
+
+	return accountsData, nil
 }
 
 func (c *GenericBankClient) GetTransactions(ctx *gin.Context, accessToken string, bank ConnectedBank) ([]Transaction, error) {
@@ -447,6 +500,8 @@ func (c *GenericConsentClient) DoPAR(ctx *gin.Context) (string, acpclient.CSRF, 
 		resp acpclient.PARResponse
 		err  error
 	)
+
+	logrus.Infof("XXX doPAR %+v", c.PublicClient)
 
 	if resp, csrf, err = c.PublicClient.DoPAR(
 		acpclient.WithResponseType("code"),

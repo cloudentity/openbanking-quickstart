@@ -40,9 +40,6 @@ func (l *LoginRequest) Validate(spec Spec) error {
 }
 
 func (s *Server) GetTemplateNameForSpec(basename string) string {
-	logrus.Infof("XXX GetTemplateNameForSpec %+v", basename)
-
-	return string(s.Config.Spec) + "-" + basename
 	switch s.Config.Spec {
 	case OBUK:
 		return string(OBUK) + "-" + basename
