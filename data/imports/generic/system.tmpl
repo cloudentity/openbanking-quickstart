@@ -1,0 +1,15 @@
+clients:
+- tenant_id: {{ .tenant_id }}
+  authorization_server_id: system
+  client_id: {{ .system_bank_client_id }}
+  client_name: Bank
+  client_secret: {{ .system_bank_client_secret }}
+  grant_types:
+  - client_credentials
+  scopes:
+  - introspect_tokens
+  - revoke_tokens
+  - view_clients
+  tls_client_auth_subject_dn: {{ .bank_tls_client_auth_subject_dn }}
+  tls_client_certificate_bound_access_tokens: true
+  token_endpoint_auth_method: client_secret_post
