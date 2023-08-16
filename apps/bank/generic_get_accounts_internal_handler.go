@@ -1,8 +1,6 @@
 package main
 
 import (
-	obbrAccountModels "github.com/cloudentity/openbanking-quickstart/generated/obbr/accounts/models"
-	"github.com/cloudentity/openbanking-quickstart/generated/obbr/consents/models"
 	"github.com/gin-gonic/gin"
 )
 
@@ -51,25 +49,7 @@ func (h *GenericGetAccountsInternalHandler) Filter(c *gin.Context, data BankUser
 	return data
 }
 
-func GenericMapError(c *gin.Context, err *Error) (code int, resp interface{}) {
-	code, resp = err.Code, models.OpenbankingBrasilConsentV2ResponseError{
-		Errors: []*models.OpenbankingBrasilConsentV2Error{
-			{
-				Detail: err.Message,
-			},
-		},
-	}
+func GenericCDRMapError(c *gin.Context, err *Error) (code int, resp interface{}) {
+	code, resp = 400, nil
 	return
-}
-
-func NewGenericAccountsResponse(accounts []obbrAccountModels.AccountData) obbrAccountModels.ResponseAccountList {
-	accountPointers := []*obbrAccountModels.AccountData{}
-	for _, account := range accounts {
-		a := account
-		accountPointers = append(accountPointers, &a)
-	}
-
-	return obbrAccountModels.ResponseAccountList{
-		Data: accountPointers,
-	}
 }

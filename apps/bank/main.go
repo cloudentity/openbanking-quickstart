@@ -144,8 +144,10 @@ func (s *Server) Start() error {
 		r.GET("/accounts/:accountId/transactions", s.Get(NewFDXGetTransactionsHandler))
 
 	case Generic:
-		r.GET("/accounts/v1/accounts", s.Get(NewGenericGetAccountsHandler)) // TODOX change path
-		r.GET("/internal/accounts", s.Get(NewGenericGetAccountsInternalHandler))
+		r.POST("/internal/accounts", s.Get(NewGenericGetAccountsInternalHandler))
+		r.GET("/banking/accounts", s.Get(NewGenericGetAccountsHandler))
+		r.GET("/banking/accounts/:accountId/transactions", s.Get(NewGenericGetTransactionsHandler))
+		r.GET("/banking/accounts/balances", s.Get(NewGenericGetBalancesHandler))
 
 	default:
 		return fmt.Errorf("unsupported spec %s", s.Config.Spec)

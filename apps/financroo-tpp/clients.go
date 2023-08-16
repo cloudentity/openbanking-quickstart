@@ -11,12 +11,16 @@ import (
 	"time"
 
 	cdrBank "github.com/cloudentity/openbanking-quickstart/generated/cdr/client"
+	"github.com/cloudentity/openbanking-quickstart/generated/cdr/client/banking"
+	cdrModels "github.com/cloudentity/openbanking-quickstart/generated/cdr/client/banking"
 	fdxBank "github.com/cloudentity/openbanking-quickstart/generated/fdx/client"
 	obbrPayments "github.com/cloudentity/openbanking-quickstart/generated/obbr/payments/client"
 	obukAccounts "github.com/cloudentity/openbanking-quickstart/generated/obuk/accounts/client"
 	"github.com/cloudentity/openbanking-quickstart/generated/obuk/accounts/models"
 	payments_client "github.com/cloudentity/openbanking-quickstart/generated/obuk/payments/client"
 	"github.com/gin-gonic/gin"
+	"github.com/go-openapi/runtime"
+	"github.com/go-openapi/strfmt"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
 
@@ -25,7 +29,6 @@ import (
 	oauth2Models "github.com/cloudentity/acp-client-go/clients/oauth2/models"
 
 	obbrAccounts "github.com/cloudentity/openbanking-quickstart/generated/obbr/accounts/client"
-	obbrAccounts2 "github.com/cloudentity/openbanking-quickstart/generated/obbr/accounts/client/accounts"
 )
 
 type Clients struct {
@@ -402,13 +405,12 @@ func (c *CDRConsentClient) Sign([]byte) (string, error) {
 }
 
 type GenericBankClient struct {
-	*obbrAccounts.Accounts
+	*cdrBank.Banking
 }
 
 func NewGenericBankClient(config Config) (BankClient, error) {
 	var (
 		c   = &GenericBankClient{}
-		hc  = &http.Client{}
 		u   *url.URL
 		err error
 	)
@@ -417,41 +419,45 @@ func NewGenericBankClient(config Config) (BankClient, error) {
 		return c, errors.Wrapf(err, "failed to parse bank url")
 	}
 
-	c.Accounts = obbrAccounts.New(NewHTTPRuntimeWithClient(
+	tr := NewHTTPRuntimeWithClient(
 		u.Host,
-		u.Path+"/accounts/v1",
+		u.Path,
 		[]string{u.Scheme},
-		hc,
-	), nil)
-
-	return c, nil
+		http.DefaultClient,
+	)
+	return &GenericBankClient{
+		cdrBank.New(tr, nil),
+	}, nil
 }
 
 var _ BankClient = &GenericBankClient{}
 
 func (c *GenericBankClient) GetAccounts(ctx *gin.Context, accessToken string, bank ConnectedBank) ([]Account, error) {
 	var (
-		resp         *obbrAccounts2.AccountsGetAccountsOK
+		resp         *cdrModels.ListAccountsOK
 		accountsData = []Account{}
 		err          error
 	)
-	if resp, err = c.Accounts.Accounts.AccountsGetAccounts(
-		obbrAccounts2.NewAccountsGetAccountsParamsWithContext(ctx).
-			WithAuthorization(accessToken),
-		nil,
+
+	if resp, err = c.Banking.Banking.ListAccounts(
+		cdrModels.NewListAccountsParamsWithContext(ctx).
+			WithDefaults(),
+		runtime.ClientAuthInfoWriterFunc(func(request runtime.ClientRequest, registry strfmt.Registry) error {
+			return request.SetHeaderParam("Authorization", fmt.Sprintf("Bearer %s", accessToken))
+		}),
 	); err != nil {
 		return accountsData, err
 	}
 
-	for _, a := range resp.Payload.Data {
+	for _, a := range resp.Payload.Data.Accounts {
 		accountsData = append(accountsData, Account{
 			OBAccount6: models.OBAccount6{
 				AccountID: (*models.AccountID)(a.AccountID),
-				Nickname:  models.Nickname(*a.AccountID),
+				Nickname:  models.Nickname(a.Nickname),
 				Account: []*models.OBAccount6AccountItems0{
 					{
 						Name:           models.Name0(*a.AccountID),
-						Identification: (*models.Identification0)(a.Number),
+						Identification: (*models.Identification0)(a.MaskedNumber),
 					},
 				},
 			},
@@ -459,15 +465,72 @@ func (c *GenericBankClient) GetAccounts(ctx *gin.Context, accessToken string, ba
 		})
 	}
 
-	return accountsData, nil
+	return accountsData, err
 }
 
 func (c *GenericBankClient) GetTransactions(ctx *gin.Context, accessToken string, bank ConnectedBank) ([]Transaction, error) {
-	return nil, errors.New("not implemented")
+	var (
+		resp             *banking.GetTransactionsOK
+		accounts         []Account
+		transactionsData []Transaction
+		err              error
+	)
+
+	if accounts, err = c.GetAccounts(ctx, accessToken, bank); err != nil {
+		return transactionsData, errors.Wrap(err, "failed to get account ids for transactions")
+	}
+
+	for _, account := range accounts {
+		if resp, err = c.Banking.Banking.GetTransactions(
+			banking.NewGetTransactionsParams().
+				WithDefaults().
+				WithAccountID(string(*account.AccountID)),
+			runtime.ClientAuthInfoWriterFunc(func(request runtime.ClientRequest, registry strfmt.Registry) error {
+				return request.SetHeaderParam("Authorization", fmt.Sprintf("Bearer %s", accessToken))
+			}),
+		); err != nil {
+			return transactionsData, err
+		}
+
+		for _, cdrTransaction := range resp.Payload.Data.Transactions {
+			if transaction, err := cdrTransactionToInternalTransaction(cdrTransaction, bank); err != nil {
+				logrus.Infof("failed to map cdr transaction to internal transaction: %+v", err)
+			} else {
+				transactionsData = append(transactionsData, transaction)
+			}
+		}
+	}
+
+	return transactionsData, nil
 }
 
 func (c *GenericBankClient) GetBalances(ctx *gin.Context, accessToken string, bank ConnectedBank) ([]Balance, error) {
-	return nil, errors.New("not implemented")
+	var (
+		resp         *banking.ListBalancesBulkOK
+		balancesData []Balance
+		err          error
+	)
+
+	if resp, err = c.Banking.Banking.ListBalancesBulk(
+		banking.NewListBalancesBulkParams().
+			WithDefaults(),
+		runtime.ClientAuthInfoWriterFunc(func(request runtime.ClientRequest, registry strfmt.Registry) error {
+			return request.SetHeaderParam("Authorization", fmt.Sprintf("Bearer %s", accessToken))
+		}),
+	); err != nil {
+		return []Balance{}, err
+	}
+
+	for _, balance := range resp.Payload.Data.Balances {
+		balancesData = append(balancesData, Balance{
+			AccountID: *balance.AccountID,
+			Amount:    *balance.AvailableBalance,
+			Currency:  balance.Currency,
+			BankID:    bank.BankID,
+		})
+	}
+
+	return balancesData, nil
 }
 
 func (c *GenericBankClient) CreatePayment(ctx *gin.Context, data interface{}, accessToken string) (PaymentCreated, error) {
@@ -500,8 +563,6 @@ func (c *GenericConsentClient) DoPAR(ctx *gin.Context) (string, acpclient.CSRF, 
 		resp acpclient.PARResponse
 		err  error
 	)
-
-	logrus.Infof("XXX doPAR %+v", c.PublicClient)
 
 	if resp, csrf, err = c.PublicClient.DoPAR(
 		acpclient.WithResponseType("code"),

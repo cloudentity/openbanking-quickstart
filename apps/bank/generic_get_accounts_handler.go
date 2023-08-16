@@ -6,24 +6,8 @@ import (
 	"github.com/gin-gonic/gin"
 
 	oauth2Models "github.com/cloudentity/acp-client-go/clients/oauth2/models"
-	obbrAccountModels "github.com/cloudentity/openbanking-quickstart/generated/obbr/accounts/models"
 )
 
-// swagger:route GET /accounts bank br getAccountsRequest
-//
-// get accounts
-//
-// Security:
-//
-//	defaultcc: accounts
-//
-// Responses:
-//
-//	  200: ResponseAccountList
-//		 400: OpenbankingBrasilResponseError
-//	  403: OpenbankingBrasilResponseError
-//	  404: OpenbankingBrasilResponseError
-//	  500: OpenbankingBrasilResponseError
 type GenericGetAccountsHandler struct {
 	*Server
 	introspectionResponse *oauth2Models.IntrospectResponse
@@ -69,22 +53,12 @@ func (h *GenericGetAccountsHandler) GetUserIdentifier(c *gin.Context) string {
 }
 
 func (h *GenericGetAccountsHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
-	var (
-		filteredAccounts []obbrAccountModels.AccountData
-		// requestedAccountType = c.Query("accountType")
-	)
-
-	// for _, account := range data.GenericAccounts {
-	// 	if !has(h.introspectionResponse.AccountIDs, *account.AccountID) {
-	// 		continue
-	// 	}
-	// 	if requestedAccountType != "" && string(*account.Type) != requestedAccountType {
-	// 		continue
-	// 	}
-	// 	filteredAccounts = append(filteredAccounts, account)
-	// }
-
-	return BankUserData{
-		GenericAccounts: filteredAccounts,
+	var ret BankUserData
+	for _, account := range data.GenericAccounts {
+		// if has(h.introspectionResponse.AccountIDs, *account.AccountID) {
+		ret.GenericAccounts = append(ret.GenericAccounts, account)
+		// }
 	}
+
+	return ret
 }

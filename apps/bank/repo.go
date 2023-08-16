@@ -35,7 +35,9 @@ type BankUserData struct {
 	FDXTransactions fdxAccountModels.Transactionsentity         `json:"fdx_transactions"`
 	FDXPayments     []fdxAccountModels.Paymententity            `json:"fdx_payments"`
 
-	GenericAccounts []obbrAccountModels.AccountData `json:"generic_accounts"`
+	GenericAccounts     []cdrAccountModels.BankingAccount     `json:"generic_accounts"`
+	GenericBalances     []cdrAccountModels.BankingBalance     `json:"generic_balances"`
+	GenericTransactions []cdrAccountModels.BankingTransaction `json:"generic_transactions"`
 }
 
 type AccountData struct {
