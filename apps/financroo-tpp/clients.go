@@ -191,6 +191,10 @@ func NewAcpClient(cfg Config, redirect string) (acpclient.Client, error) {
 		config.AuthMethod = acpclient.TLSClientAuthnMethod
 	}
 
+	if cfg.Spec == GENERIC {
+		config.SkipClientCredentialsAuthn = true
+	}
+
 	if client, err = acpclient.New(config); err != nil {
 		return client, err
 	}
