@@ -392,3 +392,68 @@ func (c *CDRConsentClient) CreatePaymentConsent(ctx *gin.Context, req CreatePaym
 func (c *CDRConsentClient) Sign([]byte) (string, error) {
 	return "", nil
 }
+
+type GenericBankClient struct{}
+
+func NewGenericBankClient(config Config) (BankClient, error) {
+	return &GenericBankClient{}, nil
+}
+
+var _ BankClient = &GenericBankClient{}
+
+func (c *GenericBankClient) GetAccounts(ctx *gin.Context, accessToken string, bank ConnectedBank) ([]Account, error) {
+	return nil, errors.New("not implemented")
+}
+
+func (c *GenericBankClient) GetTransactions(ctx *gin.Context, accessToken string, bank ConnectedBank) ([]Transaction, error) {
+	return nil, errors.New("not implemented")
+}
+
+func (c *GenericBankClient) GetBalances(ctx *gin.Context, accessToken string, bank ConnectedBank) ([]Balance, error) {
+	return nil, errors.New("not implemented")
+}
+
+func (c *GenericBankClient) CreatePayment(ctx *gin.Context, data interface{}, accessToken string) (PaymentCreated, error) {
+	return PaymentCreated{}, errors.New("not implemented")
+}
+
+type GenericConsentClient struct {
+}
+
+var _ ConsentClient = &GenericConsentClient{}
+
+func NewGenericConsentClient(publicClient, clientCredentialsClient acpclient.Client, _ Signer) ConsentClient {
+	return &GenericConsentClient{}
+}
+
+func (c *GenericConsentClient) CreateConsentExplicitly() bool {
+	return false
+}
+
+func (c *GenericConsentClient) UsePAR() bool {
+	return true
+}
+
+func (c *GenericConsentClient) DoPAR(ctx *gin.Context) (string, acpclient.CSRF, error) {
+	return "", acpclient.CSRF{}, errors.New("not implemented")
+}
+
+func (c *GenericConsentClient) CreateAccountConsent(ctx *gin.Context) (string, error) {
+	return "", errors.New("not implemented")
+}
+
+func (c *GenericConsentClient) DoRequestObjectEncryption() bool {
+	return false
+}
+
+func (c *GenericConsentClient) GetPaymentConsent(ctx *gin.Context, consentID string) (interface{}, error) {
+	return "", errors.New("not implemented")
+}
+
+func (c *GenericConsentClient) CreatePaymentConsent(ctx *gin.Context, req CreatePaymentRequest) (string, error) {
+	return "", errors.New("not implemented")
+}
+
+func (c *GenericConsentClient) Sign([]byte) (string, error) {
+	return "", errors.New("not implemented")
+}

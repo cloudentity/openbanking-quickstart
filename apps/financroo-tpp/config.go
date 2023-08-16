@@ -13,10 +13,11 @@ type BankID string
 type Spec string
 
 const (
-	OBUK Spec = "obuk"
-	OBBR Spec = "obbr"
-	CDR  Spec = "cdr"
-	FDX  Spec = "fdx"
+	OBUK    Spec = "obuk"
+	OBBR    Spec = "obbr"
+	CDR     Spec = "cdr"
+	FDX     Spec = "fdx"
+	GENERIC Spec = "generic"
 )
 
 type Config struct {
@@ -58,6 +59,8 @@ func (c *Config) SetImplicitValues() {
 			c.Currency = "BRL"
 		case OBUK:
 			c.Currency = "GBP"
+		case GENERIC:
+			c.Currency = "USD"
 		}
 	}
 }

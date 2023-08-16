@@ -185,3 +185,16 @@ func (f *FDXLoginURLBuilder) BuildLoginURL(consentID string, client acpclient.Cl
 		acpclient.WithPAR(client.Config.ClientID, consentID),
 	)
 }
+
+type GenericLoginURLBuilder struct{}
+
+func NewGenericLoginURLBuilder(config Config) (LoginURLBuilder, error) {
+	return &GenericLoginURLBuilder{}, nil
+}
+
+func (f *GenericLoginURLBuilder) BuildLoginURL(consentID string, client acpclient.Client) (authorizeURL string, csrf acpclient.CSRF, err error) {
+	return client.AuthorizeURL(
+		acpclient.WithResponseType("code"),
+		acpclient.WithPAR(client.Config.ClientID, consentID),
+	)
+}
