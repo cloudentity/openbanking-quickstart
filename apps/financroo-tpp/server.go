@@ -77,7 +77,7 @@ func NewServer() (Server, error) {
 			return server, errors.Wrapf(err, "failed to create login url builder")
 		}
 	case GENERIC:
-		server.Config.ClientScopes = []string{"openid", "email", "custom", "offline_access"}
+		server.Config.ClientScopes = []string{"openid", "email", "sample", "offline_access"}
 		if server.Clients, err = InitClients(server.Config, nil, NewGenericBankClient, NewGenericConsentClient); err != nil {
 			return server, errors.Wrapf(err, "failed to create clients")
 		}

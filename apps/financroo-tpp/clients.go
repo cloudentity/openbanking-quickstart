@@ -422,12 +422,15 @@ func (c *GenericBankClient) CreatePayment(ctx *gin.Context, data interface{}, ac
 }
 
 type GenericConsentClient struct {
+	PublicClient acpclient.Client
 }
 
 var _ ConsentClient = &GenericConsentClient{}
 
 func NewGenericConsentClient(publicClient, clientCredentialsClient acpclient.Client, _ Signer) ConsentClient {
-	return &GenericConsentClient{}
+	return &GenericConsentClient{
+		PublicClient: publicClient,
+	}
 }
 
 func (c *GenericConsentClient) CreateConsentExplicitly() bool {
@@ -439,7 +442,21 @@ func (c *GenericConsentClient) UsePAR() bool {
 }
 
 func (c *GenericConsentClient) DoPAR(ctx *gin.Context) (string, acpclient.CSRF, error) {
-	return "", acpclient.CSRF{}, errors.New("not implemented")
+	var (
+		csrf acpclient.CSRF
+		resp acpclient.PARResponse
+		err  error
+	)
+
+	if resp, csrf, err = c.PublicClient.DoPAR(
+		acpclient.WithResponseType("code"),
+		acpclient.WithPKCE(),
+		acpclient.WithOpenbankingACR([]string{"generic:acr:3"}),
+		acpclient.WithResponseMode("jwt"),
+	); err != nil {
+		return "", acpclient.CSRF{}, err
+	}
+	return resp.RequestURI, csrf, err
 }
 
 func (c *GenericConsentClient) CreateAccountConsent(ctx *gin.Context) (string, error) {
