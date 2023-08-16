@@ -26,10 +26,11 @@ import (
 type Spec string
 
 const (
-	OBUK Spec = "obuk"
-	OBBR Spec = "obbr"
-	CDR  Spec = "cdr"
-	FDX  Spec = "fdx"
+	OBUK    Spec = "obuk"
+	OBBR    Spec = "obbr"
+	CDR     Spec = "cdr"
+	FDX     Spec = "fdx"
+	Generic Spec = "generic"
 )
 
 type Version string
@@ -110,12 +111,12 @@ type BankClientConfig struct {
 	Scopes       []string `env:"BANK_CLIENT_SCOPES"`
 }
 
-func (c *Config) ClientConfig() acpclient.Config {
+func (c *Config) ClientConfig(scopes []string) acpclient.Config {
 	return acpclient.Config{
 		ClientID:     c.ClientID,
 		ClientSecret: c.ClientSecret,
 		IssuerURL:    c.IssuerURL,
-		Scopes:       []string{"manage_openbanking_consents"},
+		Scopes:       scopes,
 		Timeout:      c.Timeout,
 		CertFile:     c.CertFile,
 		KeyFile:      c.KeyFile,
@@ -167,8 +168,15 @@ func NewServer() (Server, error) {
 	}
 	logrus.SetLevel(l)
 
-	if server.Client, err = acpclient.New(server.Config.ClientConfig()); err != nil {
-		return server, errors.Wrapf(err, "failed to init acp client")
+	switch server.Config.Spec {
+	case Generic:
+		if server.Client, err = acpclient.New(server.Config.ClientConfig([]string{"manage_scope_grants"})); err != nil {
+			return server, errors.Wrapf(err, "failed to init acp client")
+		}
+	default:
+		if server.Client, err = acpclient.New(server.Config.ClientConfig([]string{"manage_openbanking_consents"})); err != nil {
+			return server, errors.Wrapf(err, "failed to init acp client")
+		}
 	}
 
 	bundle := i18n.NewBundle(server.Config.DefaultLanguage)
@@ -213,6 +221,8 @@ func NewServer() (Server, error) {
 		server.BankClient = NewCDRBankClient(server.Config)
 	case FDX:
 		server.BankClient = NewFDXClient(server.Config)
+	case Generic:
+		server.BankClient = NewOBBRBankClient(server.Config)
 	default:
 		return Server{}, errors.New("invalid SPEC configuration")
 	}
@@ -235,26 +245,29 @@ func NewServer() (Server, error) {
 		logrus.Debugf("mfa is disabled... skipping otp db load")
 	}
 
-	obbrTools := OBBRConsentTools{Trans: server.Trans, Config: server.Config}
-	obukTools := OBUKConsentTools{Trans: server.Trans, Config: server.Config}
-	cdrTools := CDRConsentTools{Trans: server.Trans, Config: server.Config}
-	fdxTools := FDXConsentTools{Trans: server.Trans, Config: server.Config}
 	switch server.Config.Spec {
 	case OBUK:
-		server.AccountAccessConsentHandler = &OBUKAccountAccessConsentHandler{&server, obukTools}
-		server.AccountAccessMFAConsentProvider = &OBUKAccountAccessMFAConsentProvider{&server, obukTools}
-		server.PaymentConsentHandler = &OBUKDomesticPaymentConsentHandler{&server, obukTools}
-		server.PaymentMFAConsentProvider = &DomesticPaymentMFAConsentProvider{&server, obukTools}
+		tools := OBUKConsentTools{Trans: server.Trans, Config: server.Config}
+		server.AccountAccessConsentHandler = &OBUKAccountAccessConsentHandler{&server, tools}
+		server.AccountAccessMFAConsentProvider = &OBUKAccountAccessMFAConsentProvider{&server, tools}
+		server.PaymentConsentHandler = &OBUKDomesticPaymentConsentHandler{&server, tools}
+		server.PaymentMFAConsentProvider = &DomesticPaymentMFAConsentProvider{&server, tools}
 	case OBBR:
-		server.AccountAccessConsentHandler = &OBBRAccountAccessConsentHandler{&server, obbrTools}
-		server.AccountAccessMFAConsentProvider = &OBBRAccountAccessMFAConsentProvider{&server, obbrTools}
-		server.PaymentConsentHandler = &OBBRPaymentConsentHandler{&server, obbrTools, Version(server.Config.OBBRPaymentsVersion)}
-		server.PaymentMFAConsentProvider = &OBBRPaymentMFAConsentProvider{&server, obbrTools}
+		tools := OBBRConsentTools{Trans: server.Trans, Config: server.Config}
+		server.AccountAccessConsentHandler = &OBBRAccountAccessConsentHandler{&server, tools}
+		server.AccountAccessMFAConsentProvider = &OBBRAccountAccessMFAConsentProvider{&server, tools}
+		server.PaymentConsentHandler = &OBBRPaymentConsentHandler{&server, tools, Version(server.Config.OBBRPaymentsVersion)}
+		server.PaymentMFAConsentProvider = &OBBRPaymentMFAConsentProvider{&server, tools}
 	case CDR:
-		server.AccountAccessConsentHandler = &CDRAccountAccessConsentHandler{&server, cdrTools}
+		tools := CDRConsentTools{Trans: server.Trans, Config: server.Config}
+		server.AccountAccessConsentHandler = &CDRAccountAccessConsentHandler{&server, tools}
 	case FDX:
-		server.AccountAccessConsentHandler = &FDXAccountAccessConsentHandler{&server, fdxTools}
-		server.AccountAccessMFAConsentProvider = &FDXAccountAccessMFAConsentProvider{&server, fdxTools}
+		tools := FDXConsentTools{Trans: server.Trans, Config: server.Config}
+		server.AccountAccessConsentHandler = &FDXAccountAccessConsentHandler{&server, tools}
+		server.AccountAccessMFAConsentProvider = &FDXAccountAccessMFAConsentProvider{&server, tools}
+	case Generic:
+		tools := GenericConsentTools{Trans: server.Trans, Config: server.Config}
+		server.AccountAccessConsentHandler = &GenericAccountAccessConsentHandler{&server, tools}
 	default:
 		return server, errors.Wrapf(err, "unsupported spec %s", server.Config.Spec)
 	}
