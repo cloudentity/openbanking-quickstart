@@ -16,7 +16,7 @@ func (c *GenericConsentTools) GetClientName(client *models.ClientInfo) string {
 		return client.ClientName
 	}
 
-	return "TPP"
+	return DefaultTPPName
 }
 
 func (c *GenericConsentTools) GetAccessConsentTemplateData(
@@ -24,7 +24,6 @@ func (c *GenericConsentTools) GetAccessConsentTemplateData(
 	consent *models.ScopeGrantSessionResponse,
 	accounts InternalAccounts,
 ) map[string]interface{} {
-
 	clientName := c.GetClientName(consent.ClientInfo)
 	return map[string]interface{}{
 		"trans": map[string]interface{}{
@@ -50,7 +49,7 @@ func (c *GenericConsentTools) GetAccessConsentTemplateData(
 }
 
 func (c *GenericConsentTools) GetInternalBankDataIdentifier(sub string, authCtx models.AuthenticationContext) string {
-	if c.Config.BankIDClaim == "sub" {
+	if c.Config.BankIDClaim == SubClaim {
 		return sub
 	}
 

@@ -11,7 +11,6 @@ import (
 	"time"
 
 	cdrBank "github.com/cloudentity/openbanking-quickstart/generated/cdr/client"
-	"github.com/cloudentity/openbanking-quickstart/generated/cdr/client/banking"
 	cdrModels "github.com/cloudentity/openbanking-quickstart/generated/cdr/client/banking"
 	fdxBank "github.com/cloudentity/openbanking-quickstart/generated/fdx/client"
 	obbrPayments "github.com/cloudentity/openbanking-quickstart/generated/obbr/payments/client"
@@ -470,7 +469,7 @@ func (c *GenericBankClient) GetAccounts(ctx *gin.Context, accessToken string, ba
 
 func (c *GenericBankClient) GetTransactions(ctx *gin.Context, accessToken string, bank ConnectedBank) ([]Transaction, error) {
 	var (
-		resp             *banking.GetTransactionsOK
+		resp             *cdrModels.GetTransactionsOK
 		accounts         []Account
 		transactionsData []Transaction
 		err              error
@@ -482,7 +481,7 @@ func (c *GenericBankClient) GetTransactions(ctx *gin.Context, accessToken string
 
 	for _, account := range accounts {
 		if resp, err = c.Banking.Banking.GetTransactions(
-			banking.NewGetTransactionsParams().
+			cdrModels.NewGetTransactionsParams().
 				WithDefaults().
 				WithAccountID(string(*account.AccountID)),
 			runtime.ClientAuthInfoWriterFunc(func(request runtime.ClientRequest, registry strfmt.Registry) error {
@@ -506,13 +505,13 @@ func (c *GenericBankClient) GetTransactions(ctx *gin.Context, accessToken string
 
 func (c *GenericBankClient) GetBalances(ctx *gin.Context, accessToken string, bank ConnectedBank) ([]Balance, error) {
 	var (
-		resp         *banking.ListBalancesBulkOK
+		resp         *cdrModels.ListBalancesBulkOK
 		balancesData []Balance
 		err          error
 	)
 
 	if resp, err = c.Banking.Banking.ListBalancesBulk(
-		banking.NewListBalancesBulkParams().
+		cdrModels.NewListBalancesBulkParams().
 			WithDefaults(),
 		runtime.ClientAuthInfoWriterFunc(func(request runtime.ClientRequest, registry strfmt.Registry) error {
 			return request.SetHeaderParam("Authorization", fmt.Sprintf("Bearer %s", accessToken))

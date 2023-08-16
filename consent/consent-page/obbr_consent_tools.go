@@ -17,7 +17,7 @@ func (c *OBBRConsentTools) GetClientName(client *obbrModels.ClientInfo) string {
 		return client.ClientName
 	}
 
-	return "TPP"
+	return DefaultTPPName
 }
 
 func (c *OBBRConsentTools) GetAccessConsentTemplateData(
@@ -83,7 +83,7 @@ func (c *OBBRConsentTools) GetPermissionsWithDescription(requestedPermissions []
 }
 
 func (c *OBBRConsentTools) GetInternalBankDataIdentifier(sub string, authCtx obbrModels.AuthenticationContext) string {
-	if c.Config.BankIDClaim == "sub" {
+	if c.Config.BankIDClaim == SubClaim {
 		return sub
 	}
 

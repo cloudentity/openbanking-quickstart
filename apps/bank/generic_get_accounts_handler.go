@@ -1,8 +1,6 @@
 package main
 
 import (
-
-	// obbrAccountModels "github.com/cloudentity/openbanking-quickstart/generated/obbr/accounts/models"
 	"github.com/gin-gonic/gin"
 
 	oauth2Models "github.com/cloudentity/acp-client-go/clients/oauth2/models"
@@ -35,16 +33,6 @@ func (h *GenericGetAccountsHandler) BuildResponse(c *gin.Context, data BankUserD
 }
 
 func (h *GenericGetAccountsHandler) Validate(c *gin.Context) *Error {
-	// scopes := strings.Split(h.introspectionResponse.Scope, " ")
-	// if !has(scopes, "consents") {
-	// 	return ErrForbidden.WithMessage("token has no consents scope granted")
-	// }
-
-	// grantedPermissions := h.introspectionResponse.Permissions
-	// if !has(GenericPermsToStringSlice(grantedPermissions), "ACCOUNTS_READ") {
-	// 	return ErrForbidden.WithMessage("ACCOUNTS_READ permission has not been granted")
-	// }
-
 	return nil
 }
 
@@ -53,12 +41,5 @@ func (h *GenericGetAccountsHandler) GetUserIdentifier(c *gin.Context) string {
 }
 
 func (h *GenericGetAccountsHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
-	var ret BankUserData
-	for _, account := range data.GenericAccounts {
-		// if has(h.introspectionResponse.AccountIDs, *account.AccountID) {
-		ret.GenericAccounts = append(ret.GenericAccounts, account)
-		// }
-	}
-
-	return ret
+	return data
 }
