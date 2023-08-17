@@ -4,18 +4,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// swagger:route GET /internal/accounts bank generic getInternalAccountsRequest
-//
-// get all accounts for user
-//
-// Security:
-//
-//	defaultcc: accounts
-//
-// Responses:
-//
-//	200: ResponseAccountList
-//	404: OpenbankingBrasilResponseError
 type GenericGetAccountsInternalHandler struct {
 	*Server
 }

@@ -33,10 +33,6 @@ func (h *GenericGetTransactionsHandler) BuildResponse(c *gin.Context, data BankU
 }
 
 func (h *GenericGetTransactionsHandler) Validate(c *gin.Context) *Error {
-	// scopes := strings.Split(h.introspectionResponse.Scope, " ")
-	// if !has(scopes, "bank:transactions:read") {
-	// 	return ErrForbidden.WithMessage("token has no bank:transactions:read scope granted")
-	// }
 	return nil
 }
 
@@ -52,7 +48,6 @@ func (h *GenericGetTransactionsHandler) Filter(c *gin.Context, data BankUserData
 
 	for _, transaction := range data.GenericTransactions {
 		if *transaction.AccountID == accountID {
-			// if has(h.introspectionResponse.AccountIDs, *transaction.AccountID) && *transaction.AccountID == accountID {
 			ret.GenericTransactions = append(ret.GenericTransactions, transaction)
 		}
 	}
