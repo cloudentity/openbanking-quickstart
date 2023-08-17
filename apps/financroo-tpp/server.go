@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -34,12 +35,23 @@ type Server struct {
 
 func NewServer() (Server, error) {
 	var (
-		server = Server{}
-		err    error
+		server      = Server{}
+		dcrResponse DCRClientCreated
+		err         error
 	)
 
 	if server.Config, err = LoadConfig(); err != nil {
 		return server, errors.Wrapf(err, "failed to load config")
+	}
+
+	if server.Config.EnableDCR {
+		if dcrResponse, err = RegisterClient(context.Background(), server.Config); err != nil {
+			return server, errors.Wrapf(err, "failed to register client")
+		}
+
+		logrus.Infof("client dynamically registered, id: %s", dcrResponse.ClientID)
+
+		server.Config.ClientID = dcrResponse.ClientID
 	}
 
 	switch server.Config.Spec {

@@ -45,6 +45,7 @@ type Config struct {
 	AssertionSigningKeyFile     string       `env:"ASSERTION_SIGNING_KEY_FILE" envDefault:"/certs/private.ps.pem"`
 	RequestObjectSigningAlg     string       `env:"REQUEST_OBJECT_SIGNING_ALG" envDefault:"ES256"`
 	RequestObjectSigningKeyFile string       `env:"REQUEST_OBJECT_SIGNING_KEY_FILE" envDefault:"/certs/private.es.pem"`
+	EnableDCR                   bool         `env:"ENABLE_DCR" envDefault:"false"`
 	ClientScopes                []string
 }
 

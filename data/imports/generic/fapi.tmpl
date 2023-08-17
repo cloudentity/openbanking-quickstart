@@ -14,6 +14,8 @@ servers:
   {{ end }}
   root_cas: |
 {{ readFile .ca_pem_file | indent 4 }}
+  dynamic_client_registration:
+    enabled: true
 
 idps:
 - tenant_id: {{ .tenant_id }}
