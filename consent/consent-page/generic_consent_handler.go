@@ -16,6 +16,7 @@ type GenericAccountAccessConsentHandler struct {
 func (s *GenericAccountAccessConsentHandler) GetConsent(c *gin.Context, loginRequest LoginRequest) {
 	var (
 		response *logins.GetScopeGrantRequestOK
+		accounts InternalAccounts
 		err      error
 	)
 
@@ -27,40 +28,12 @@ func (s *GenericAccountAccessConsentHandler) GetConsent(c *gin.Context, loginReq
 		return
 	}
 
-	// TODO call bank
-	accounts := InternalAccounts{
-		Accounts: []InternalAccount{
-			{
-				ID:          "123",
-				Name:        "Savings",
-				Balance:     Balance{},
-				Preselected: true,
-			},
-		},
+	id := s.GenericConsentTools.GetInternalBankDataIdentifier(response.Payload.Subject, response.Payload.AuthenticationContext)
+
+	if accounts, err = s.BankClient.GetInternalAccounts(c, id); err != nil {
+		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to get accounts from bank"))
+		return
 	}
-
-	// var (
-	// 	accounts InternalAccounts
-	// 	response *obukModels.GetAccountAccessConsentSystemOK
-	// 	err      error
-	// 	id       string
-	// )
-
-	// if response, err = s.Client.Obuk.Consentpage.GetAccountAccessConsentSystem(
-	// 	obukModels.NewGetAccountAccessConsentSystemParamsWithContext(c).
-	// 		WithLogin(loginRequest.ID),
-	// 	nil,
-	// ); err != nil {
-	// 	RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to get account access consent"))
-	// 	return
-	// }
-
-	// id := s.GenericConsentTools.GetInternalBankDataIdentifier(response.Payload.Subject, response.Payload.AuthenticationContext)
-
-	// if accounts, err = s.BankClient.GetInternalAccounts(c, id); err != nil {
-	// 	RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to get accounts from bank"))
-	// 	return
-	// }
 
 	Render(c, s.GetTemplateNameForSpec("account-consent.tmpl"), s.GetAccessConsentTemplateData(loginRequest, response.Payload, accounts))
 }

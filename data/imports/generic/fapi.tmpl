@@ -4,6 +4,10 @@ servers:
   name: Open Finance Generic FAPI
   profile: {{ .server_profile }}
   initialize: true
+  token_endpoint_auth_methods:
+    - private_key_jwt
+    - client_secret_post
+    - tls_client_auth
   {{ if .read_client_certificate_from_header }}
   read_client_certificate_from_header: {{ .read_client_certificate_from_header }}
   client_certificate_header: {{ .client_certificate_header }}
@@ -97,6 +101,15 @@ clients:
   - refresh_token
   jwks:
 {{ readFile .financroo_pem_file | pemToPublicJwks | indent 4 }}
+
+- tenant_id: {{ .tenant_id }}
+  authorization_server_id: {{ .server_id }}
+  client_id: {{ .internal_bank_client_id }}
+  client_secret: {{ .internal_bank_client_secret }}
+  client_name: Consent Page Bank Client
+  grant_types:
+  - client_credentials
+  token_endpoint_auth_method: client_secret_post
 
 services:
 - authorization_server_id: {{ .server_id }}

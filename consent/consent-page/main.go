@@ -222,7 +222,7 @@ func NewServer() (Server, error) {
 	case FDX:
 		server.BankClient = NewFDXClient(server.Config)
 	case Generic:
-		server.BankClient = NewOBBRBankClient(server.Config)
+		server.BankClient = NewGenericBankClient(server.Config)
 	default:
 		return Server{}, errors.New("invalid SPEC configuration")
 	}
