@@ -17,7 +17,7 @@ func (c *FDXConsentTools) GetClientName(client *models.ClientInfo) string {
 		return client.ClientName
 	}
 
-	return "TPP"
+	return DefaultTPPName
 }
 
 func (c *FDXConsentTools) GetAccessConsentTemplateData(
@@ -76,7 +76,7 @@ func (c *FDXConsentTools) GetPermissionsWithDescription(requestedPermissions []s
 }
 
 func (c *FDXConsentTools) GetInternalBankDataIdentifier(sub string, authCtx models.AuthenticationContext) string {
-	if c.Config.BankIDClaim == "sub" {
+	if c.Config.BankIDClaim == SubClaim {
 		return sub
 	}
 

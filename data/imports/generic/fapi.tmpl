@@ -1,0 +1,125 @@
+servers:
+- tenant_id: {{ .tenant_id }}
+  id: {{ .server_id }}
+  name: Open Finance Generic FAPI
+  profile: {{ .server_profile }}
+  initialize: true
+  token_endpoint_auth_methods:
+    - private_key_jwt
+    - client_secret_post
+    - tls_client_auth
+  {{ if .read_client_certificate_from_header }}
+  read_client_certificate_from_header: {{ .read_client_certificate_from_header }}
+  client_certificate_header: {{ .client_certificate_header }}
+  {{ end }}
+  root_cas: |
+{{ readFile .ca_pem_file | indent 4 }}
+
+idps:
+- tenant_id: {{ .tenant_id }}
+  authorization_server_id: {{ .server_id }}
+  id: bugkgai3g9kregtu04u0
+  name: Sandbox IDP
+  method: static
+  settings:
+    static:
+      hint: true
+  credentials:
+    static:
+      users:
+      - username: user
+        password: p@ssw0rd!
+        email: user@example.com
+        email_verified: true
+        additional_attributes:
+          given_name: Joe
+          family_name: Doe
+
+server_consents:
+- tenant_id: {{ .tenant_id }}
+  client_id: {{ .consent_page_client_id }}
+  custom:
+    server_consent_url: {{ .consent_page_url }}
+  server_id: {{ .server_id }}
+  type: custom
+
+clients:
+# consent page
+- tenant_id: {{ .tenant_id }}
+  authorization_server_id: system
+  client_id: {{ .consent_page_client_id }}
+  client_secret: {{ .consent_page_client_secret }}
+  client_name: custom server consent
+  grant_types:
+  - client_credentials
+  scopes:
+  - manage_scope_grants
+  token_endpoint_auth_method: client_secret_basic
+
+- tenant_id:  {{ .tenant_id }}
+  authorization_server_id: {{ .server_id }}
+  client_id: {{ .bank_client_id }}
+  client_name: bank
+  description: bank resource server app used to introspect tokens
+  client_secret: {{ .bank_client_secret }}
+  grant_types:
+  - client_credentials
+  scopes:
+  - introspect_tokens
+  - revoke_tokens
+  subject_type: pairwise
+  system: true
+  tls_client_auth_subject_dn: {{ .bank_tls_client_auth_subject_dn }}
+  tls_client_certificate_bound_access_tokens: true
+  token_endpoint_auth_method: tls_client_auth
+
+# financroo
+- tenant_id: {{ .tenant_id }}
+  authorization_server_id: {{ .server_id }}
+  client_id: {{ .financroo_tpp_client_id }}
+  client_name: Financroo
+  client_uri: https://localhost:8090
+  client_secret: {{ .financroo_tpp_client_secret }}
+  tls_client_auth_subject_dn: {{ .financroo_tls_client_auth_subject_dn }}
+  tls_client_certificate_bound_access_tokens: true
+  token_endpoint_auth_method: tls_client_auth
+  redirect_uris:
+  - {{ .financroo_tpp_url }}/api/callback
+  - {{ .financroo_tpp_url }}/api/domestic/callback
+  subject_type: pairwise
+  request_object_signing_alg: RS256
+  response_types:
+  - code
+  scopes:
+  - offline_access
+  - openid
+  - email
+  - sample
+  grant_types:
+  - client_credentials
+  - authorization_code
+  - refresh_token
+  jwks:
+{{ readFile .financroo_pem_file | pemToPublicJwks | indent 4 }}
+
+- tenant_id: {{ .tenant_id }}
+  authorization_server_id: {{ .server_id }}
+  client_id: {{ .internal_bank_client_id }}
+  client_secret: {{ .internal_bank_client_secret }}
+  client_name: Consent Page Bank Client
+  grant_types:
+  - client_credentials
+  token_endpoint_auth_method: client_secret_post
+
+services:
+- authorization_server_id: {{ .server_id }}
+  id: {{ .server_id}}-sample
+  name: Sample
+  tenant_id: {{ .tenant_id }}
+  scopes:
+  - authorization_server_id: {{ .server_id }}
+    id: sample
+    name: sample
+    tenant_id: {{ .tenant_id }}
+    transient: true
+    implicit: true

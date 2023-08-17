@@ -11,17 +11,23 @@ import (
 	"time"
 
 	cdrBank "github.com/cloudentity/openbanking-quickstart/generated/cdr/client"
+	cdrModels "github.com/cloudentity/openbanking-quickstart/generated/cdr/client/banking"
 	fdxBank "github.com/cloudentity/openbanking-quickstart/generated/fdx/client"
-	obbrAccounts "github.com/cloudentity/openbanking-quickstart/generated/obbr/accounts/client"
 	obbrPayments "github.com/cloudentity/openbanking-quickstart/generated/obbr/payments/client"
 	obukAccounts "github.com/cloudentity/openbanking-quickstart/generated/obuk/accounts/client"
+	"github.com/cloudentity/openbanking-quickstart/generated/obuk/accounts/models"
 	payments_client "github.com/cloudentity/openbanking-quickstart/generated/obuk/payments/client"
 	"github.com/gin-gonic/gin"
+	"github.com/go-openapi/runtime"
+	"github.com/go-openapi/strfmt"
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 
 	acpclient "github.com/cloudentity/acp-client-go"
 	"github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
 	oauth2Models "github.com/cloudentity/acp-client-go/clients/oauth2/models"
+
+	obbrAccounts "github.com/cloudentity/openbanking-quickstart/generated/obbr/accounts/client"
 )
 
 type Clients struct {
@@ -189,6 +195,10 @@ func NewAcpClient(cfg Config, redirect string) (acpclient.Client, error) {
 	if cfg.Spec == FDX {
 		config.SkipClientCredentialsAuthn = true
 		config.AuthMethod = acpclient.TLSClientAuthnMethod
+	}
+
+	if cfg.Spec == GENERIC {
+		config.SkipClientCredentialsAuthn = true
 	}
 
 	if client, err = acpclient.New(config); err != nil {
@@ -391,4 +401,195 @@ func (c *CDRConsentClient) CreatePaymentConsent(ctx *gin.Context, req CreatePaym
 
 func (c *CDRConsentClient) Sign([]byte) (string, error) {
 	return "", nil
+}
+
+type GenericBankClient struct {
+	*cdrBank.Banking
+}
+
+func NewGenericBankClient(config Config) (BankClient, error) {
+	var (
+		c   = &GenericBankClient{}
+		u   *url.URL
+		err error
+	)
+
+	if u, err = url.Parse(config.BankURL); err != nil {
+		return c, errors.Wrapf(err, "failed to parse bank url")
+	}
+
+	tr := NewHTTPRuntimeWithClient(
+		u.Host,
+		u.Path,
+		[]string{u.Scheme},
+		http.DefaultClient,
+	)
+	return &GenericBankClient{
+		cdrBank.New(tr, nil),
+	}, nil
+}
+
+var _ BankClient = &GenericBankClient{}
+
+func (c *GenericBankClient) GetAccounts(ctx *gin.Context, accessToken string, bank ConnectedBank) ([]Account, error) {
+	var (
+		resp         *cdrModels.ListAccountsOK
+		accountsData = []Account{}
+		err          error
+	)
+
+	if resp, err = c.Banking.Banking.ListAccounts(
+		cdrModels.NewListAccountsParamsWithContext(ctx).
+			WithDefaults(),
+		runtime.ClientAuthInfoWriterFunc(func(request runtime.ClientRequest, registry strfmt.Registry) error {
+			return request.SetHeaderParam("Authorization", fmt.Sprintf("Bearer %s", accessToken))
+		}),
+	); err != nil {
+		return accountsData, err
+	}
+
+	for _, a := range resp.Payload.Data.Accounts {
+		accountsData = append(accountsData, Account{
+			OBAccount6: models.OBAccount6{
+				AccountID: (*models.AccountID)(a.AccountID),
+				Nickname:  models.Nickname(a.Nickname),
+				Account: []*models.OBAccount6AccountItems0{
+					{
+						Name:           models.Name0(*a.AccountID),
+						Identification: (*models.Identification0)(a.MaskedNumber),
+					},
+				},
+			},
+			BankID: bank.BankID,
+		})
+	}
+
+	return accountsData, err
+}
+
+func (c *GenericBankClient) GetTransactions(ctx *gin.Context, accessToken string, bank ConnectedBank) ([]Transaction, error) {
+	var (
+		resp             *cdrModels.GetTransactionsOK
+		accounts         []Account
+		transactionsData []Transaction
+		err              error
+	)
+
+	if accounts, err = c.GetAccounts(ctx, accessToken, bank); err != nil {
+		return transactionsData, errors.Wrap(err, "failed to get account ids for transactions")
+	}
+
+	for _, account := range accounts {
+		if resp, err = c.Banking.Banking.GetTransactions(
+			cdrModels.NewGetTransactionsParams().
+				WithDefaults().
+				WithAccountID(string(*account.AccountID)),
+			runtime.ClientAuthInfoWriterFunc(func(request runtime.ClientRequest, registry strfmt.Registry) error {
+				return request.SetHeaderParam("Authorization", fmt.Sprintf("Bearer %s", accessToken))
+			}),
+		); err != nil {
+			return transactionsData, err
+		}
+
+		for _, cdrTransaction := range resp.Payload.Data.Transactions {
+			if transaction, err := cdrTransactionToInternalTransaction(cdrTransaction, bank); err != nil {
+				logrus.Infof("failed to map cdr transaction to internal transaction: %+v", err)
+			} else {
+				transactionsData = append(transactionsData, transaction)
+			}
+		}
+	}
+
+	return transactionsData, nil
+}
+
+func (c *GenericBankClient) GetBalances(ctx *gin.Context, accessToken string, bank ConnectedBank) ([]Balance, error) {
+	var (
+		resp         *cdrModels.ListBalancesBulkOK
+		balancesData []Balance
+		err          error
+	)
+
+	if resp, err = c.Banking.Banking.ListBalancesBulk(
+		cdrModels.NewListBalancesBulkParams().
+			WithDefaults(),
+		runtime.ClientAuthInfoWriterFunc(func(request runtime.ClientRequest, registry strfmt.Registry) error {
+			return request.SetHeaderParam("Authorization", fmt.Sprintf("Bearer %s", accessToken))
+		}),
+	); err != nil {
+		return []Balance{}, err
+	}
+
+	for _, balance := range resp.Payload.Data.Balances {
+		balancesData = append(balancesData, Balance{
+			AccountID: *balance.AccountID,
+			Amount:    *balance.AvailableBalance,
+			Currency:  balance.Currency,
+			BankID:    bank.BankID,
+		})
+	}
+
+	return balancesData, nil
+}
+
+func (c *GenericBankClient) CreatePayment(ctx *gin.Context, data interface{}, accessToken string) (PaymentCreated, error) {
+	return PaymentCreated{}, errors.New("not implemented")
+}
+
+type GenericConsentClient struct {
+	PublicClient acpclient.Client
+}
+
+var _ ConsentClient = &GenericConsentClient{}
+
+func NewGenericConsentClient(publicClient, clientCredentialsClient acpclient.Client, _ Signer) ConsentClient {
+	return &GenericConsentClient{
+		PublicClient: publicClient,
+	}
+}
+
+func (c *GenericConsentClient) CreateConsentExplicitly() bool {
+	return false
+}
+
+func (c *GenericConsentClient) UsePAR() bool {
+	return true
+}
+
+func (c *GenericConsentClient) DoPAR(ctx *gin.Context) (string, acpclient.CSRF, error) {
+	var (
+		csrf acpclient.CSRF
+		resp acpclient.PARResponse
+		err  error
+	)
+
+	if resp, csrf, err = c.PublicClient.DoPAR(
+		acpclient.WithResponseType("code"),
+		acpclient.WithPKCE(),
+		acpclient.WithOpenbankingACR([]string{"generic:acr:3"}),
+		acpclient.WithResponseMode("jwt"),
+	); err != nil {
+		return "", acpclient.CSRF{}, err
+	}
+	return resp.RequestURI, csrf, err
+}
+
+func (c *GenericConsentClient) CreateAccountConsent(ctx *gin.Context) (string, error) {
+	return "", errors.New("not implemented")
+}
+
+func (c *GenericConsentClient) DoRequestObjectEncryption() bool {
+	return false
+}
+
+func (c *GenericConsentClient) GetPaymentConsent(ctx *gin.Context, consentID string) (interface{}, error) {
+	return "", errors.New("not implemented")
+}
+
+func (c *GenericConsentClient) CreatePaymentConsent(ctx *gin.Context, req CreatePaymentRequest) (string, error) {
+	return "", errors.New("not implemented")
+}
+
+func (c *GenericConsentClient) Sign([]byte) (string, error) {
+	return "", errors.New("not implemented")
 }

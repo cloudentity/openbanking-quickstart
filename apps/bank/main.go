@@ -17,10 +17,11 @@ import (
 type Spec string
 
 const (
-	OBUK Spec = "obuk"
-	OBBR Spec = "obbr"
-	CDR  Spec = "cdr"
-	FDX  Spec = "fdx"
+	OBUK    Spec = "obuk"
+	OBBR    Spec = "obbr"
+	CDR     Spec = "cdr"
+	FDX     Spec = "fdx"
+	Generic Spec = "generic"
 )
 
 type Config struct {
@@ -37,11 +38,11 @@ type Config struct {
 	SeedFilePath        string
 }
 
-func (c *Config) ClientConfig() acpclient.Config {
+func (c *Config) ClientConfig(scopes []string) acpclient.Config {
 	return acpclient.Config{
 		ClientID:  c.ClientID,
 		IssuerURL: c.IssuerURL,
-		Scopes:    []string{"introspect_openbanking_tokens"},
+		Scopes:    scopes,
 		Timeout:   c.Timeout,
 		CertFile:  c.CertFile,
 		KeyFile:   c.KeyFile,
@@ -63,6 +64,10 @@ func LoadConfig() (config Config, err error) {
 		config.SeedFilePath = fmt.Sprintf("data/%s-data.json", CDR)
 	case FDX:
 		config.SeedFilePath = fmt.Sprintf("data/%s-data.json", FDX)
+	case Generic:
+		config.SeedFilePath = fmt.Sprintf("data/%s-data.json", Generic)
+	default:
+		return config, fmt.Errorf("unknown spec: %s", config.Spec)
 	}
 
 	if config.GINMODE == "debug" {
@@ -88,8 +93,15 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to load config")
 	}
 
-	if server.Client, err = acpclient.New(server.Config.ClientConfig()); err != nil {
-		return server, errors.Wrapf(err, "failed to init acp client")
+	switch server.Config.Spec {
+	case Generic:
+		if server.Client, err = acpclient.New(server.Config.ClientConfig([]string{"introspect_tokens"})); err != nil {
+			return server, errors.Wrapf(err, "failed to init acp client")
+		}
+	default:
+		if server.Client, err = acpclient.New(server.Config.ClientConfig([]string{"introspect_openbanking_tokens"})); err != nil {
+			return server, errors.Wrapf(err, "failed to init acp client")
+		}
 	}
 
 	if server.Storage, err = NewUserRepo(server.Config.SeedFilePath); err != nil {
@@ -130,6 +142,12 @@ func (s *Server) Start() error {
 		r.GET("/internal/accounts", s.Get(NewFDXGetAccountsInternalHandler))
 		r.GET("/accounts/:accountId", s.Get(NewFDXGetBalancesHandler))
 		r.GET("/accounts/:accountId/transactions", s.Get(NewFDXGetTransactionsHandler))
+
+	case Generic:
+		r.POST("/internal/accounts", s.Get(NewGenericGetAccountsInternalHandler))
+		r.GET("/banking/accounts", s.Get(NewGenericGetAccountsHandler))
+		r.GET("/banking/accounts/:accountId/transactions", s.Get(NewGenericGetTransactionsHandler))
+		r.GET("/banking/accounts/balances", s.Get(NewGenericGetBalancesHandler))
 
 	default:
 		return fmt.Errorf("unsupported spec %s", s.Config.Spec)

@@ -12,7 +12,7 @@ type CDRConsentTools struct {
 }
 
 func (c *CDRConsentTools) GetInternalBankDataIdentifier(sub string, authCtx cdrModels.AuthenticationContext) string {
-	if c.Config.BankIDClaim == "sub" {
+	if c.Config.BankIDClaim == SubClaim {
 		return sub
 	}
 
@@ -89,7 +89,7 @@ func (c *CDRConsentTools) GetClientName(client *cdrModels.ClientInfo) string {
 		return client.ClientName
 	}
 
-	return "TPP"
+	return DefaultTPPName
 }
 
 func (c *CDRConsentTools) GrantScopes(requestedScopes []*cdrModels.RequestedScope) []string {

@@ -14,7 +14,7 @@ build:
 build-%:
 	docker-compose ${ALL_DOCKER_COMPOSES} build $*
 
-# obuk, obbr, cdr, fdx
+# obuk, obbr, cdr, fdx, generic
 run-%-local:
 	./scripts/additional_configuration.sh $* "local" ${BRANCH_NAME}
 	cp -f .env-local .env

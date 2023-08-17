@@ -217,7 +217,7 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 			err             error
 		)
 
-		if err = r.Validate(); err != nil {
+		if err = r.Validate(s.Config.Spec); err != nil {
 			RenderInvalidRequestError(c, s.Trans, err)
 			return
 		}

@@ -95,6 +95,11 @@ do
     override_client_ids "fdx-developer-tpp" "fdx-financroo-tpp" "fdx-bank" "fdx-consent-page" "fdx-internal-bank-client" $system_clients
     ./scripts/override_variables.sh  "server_profile" "fdx"
     ;;
+  generic)
+    override_server "generic" "bank-customers" "generic"
+    override_client_ids "generic-developer-tpp" "generic-financroo-tpp" "generic-bank" "generic-consent-page" "generic-internal-bank-client" $system_clients
+    ./scripts/override_variables.sh  "server_profile" "fapi_20_security"
+    ;;
   *)
     exit
     ;;

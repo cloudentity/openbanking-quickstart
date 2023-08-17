@@ -99,7 +99,7 @@ func (t Templates) Merge() (YamlFile, error) {
 		}
 	}
 
-	logrus.Debugf("final yaml file: \n %s", yamlFile)
+	logrus.WithField("body", yamlFile).Debugf("import configuration")
 
 	return yamlFile, nil
 }

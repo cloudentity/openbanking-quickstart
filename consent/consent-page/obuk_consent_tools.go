@@ -17,7 +17,7 @@ func (c *OBUKConsentTools) GetClientName(client *obukModels.ClientInfo) string {
 		return client.ClientName
 	}
 
-	return "TPP"
+	return DefaultTPPName
 }
 
 func (c *OBUKConsentTools) GetAccessConsentTemplateData(
@@ -135,7 +135,7 @@ func (c *OBUKConsentTools) GetAccountsWithBalance(accounts InternalAccounts, bal
 }
 
 func (c *OBUKConsentTools) GetInternalBankDataIdentifier(sub string, authCtx obukModels.AuthenticationContext) string {
-	if c.Config.BankIDClaim == "sub" {
+	if c.Config.BankIDClaim == SubClaim {
 		return sub
 	}
 

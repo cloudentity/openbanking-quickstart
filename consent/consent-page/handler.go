@@ -23,9 +23,17 @@ func NewLoginRequest(c *gin.Context) LoginRequest {
 	}
 }
 
-func (l *LoginRequest) Validate() error {
-	if l.ID == "" || l.State == "" || l.ConsentType == "" {
-		return errors.New("login_id / login_state / consent_type missing")
+func (l *LoginRequest) Validate(spec Spec) error {
+	if l.ID == "" || l.State == "" {
+		return errors.New("login_id / login_state query param missing")
+	}
+
+	switch spec {
+	case Generic:
+	default:
+		if l.ConsentType == "" {
+			return errors.New("consent_type query param missing")
+		}
 	}
 
 	return nil
@@ -41,6 +49,8 @@ func (s *Server) GetTemplateNameForSpec(basename string) string {
 		return string(CDR) + "-" + basename
 	case FDX:
 		return string(FDX) + "-" + basename
+	case Generic:
+		return string(Generic) + "-" + basename
 	}
 
 	return basename
@@ -54,7 +64,7 @@ func (s *Server) WithConsentHandler(c *gin.Context) (ConsentHandler, LoginReques
 		ok           bool
 	)
 
-	if err = loginRequest.Validate(); err != nil {
+	if err = loginRequest.Validate(s.Config.Spec); err != nil {
 		return handler, loginRequest, err
 	}
 
@@ -129,10 +139,14 @@ func (s *Server) PostConsent(c *gin.Context, loginRequest LoginRequest, consentH
 }
 
 func (s *Server) GetConsentHandler(loginRequest LoginRequest) (ConsentHandler, bool) {
+	logrus.Infof("XXX GetConsentHandler: %+v", loginRequest.ConsentType)
+
 	switch loginRequest.ConsentType {
 	case "domestic_payment", "payments":
 		return s.PaymentConsentHandler, true
 	case "account_access", "consents", "cdr_arrangement", "fdx":
+		return s.AccountAccessConsentHandler, true
+	case "": // generic consent does not have a consent type
 		return s.AccountAccessConsentHandler, true
 	default:
 		return nil, false
