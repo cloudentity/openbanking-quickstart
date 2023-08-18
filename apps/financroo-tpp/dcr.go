@@ -233,8 +233,6 @@ func (c *ClientIDStorage) Get() (string, bool, error) {
 		if value != nil {
 			clientID = string(value)
 			exists = true
-		} else {
-			exists = false
 		}
 
 		return nil
