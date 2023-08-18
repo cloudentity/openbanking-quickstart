@@ -90,7 +90,7 @@ services:
       - ./data/variables.yaml:/variables.yaml
       - ./data/imports/generic/system.tmpl:/app/imports-generic/system.tmpl
       # - ./data/imports/bank-customers.tmpl:/app/imports-generic/bank-customers.tmpl
-      - ./data/imports/generic/fapi.tmpl:/app/imports-generic/fapi.tmpl
+      - ./data/imports/generic/go-bank.tmpl:/app/imports-generic/go-bank.tmpl
       - ./data/imports/generic/tenant.tmpl:/app/imports-generic/tenant.tmpl
     command:
       - /app/main

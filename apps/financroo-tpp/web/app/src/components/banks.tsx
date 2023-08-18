@@ -3,8 +3,8 @@ import apexfinancial from "../assets/banks/apexfinancial-logo.svg";
 import chase from "../assets/banks/chase-logo.svg";
 import deutcshebank from "../assets/banks/deutcshebank-logo.svg";
 import hsbc from "../assets/banks/hsbc-logo.svg";
-import santander from "../assets/banks/santander-logo.svg";
-import santanderIcon from "../assets/banks/santander-icon.svg";
+import hyperscalebank from "../assets/banks/hyperscalebank-logo.svg";
+import hyperscalebankIcon from "../assets/banks/hyperscalebank-icon.svg";
 import gobankIcon from "../assets/banks/gobank-icon.svg";
 import apexfinancialIcon from "../assets/banks/apexfinancial-icon.svg";
 import chaseIcon from "../assets/banks/chase-icon.svg";
@@ -40,11 +40,15 @@ export const banks: Bank[] = [
         : requestAccessPermissionsBR.permissions,
   },
   {
-    value: "santander",
-    name: "Santander",
-    disabled: true,
-    logo: santander,
-    icon: santanderIcon,
+    value: "hyperscale",
+    name: "Hyperscale Bank",
+    disabled: false,
+    logo: hyperscalebank,
+    icon: hyperscalebankIcon,
+    permissions:
+      window.spec === "obuk"
+        ? requestAccessPermissionsUK.permissions
+        : requestAccessPermissionsBR.permissions,
   },
   {
     value: "apexfinancial",
