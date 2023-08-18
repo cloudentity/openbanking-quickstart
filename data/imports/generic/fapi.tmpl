@@ -76,33 +76,34 @@ clients:
   token_endpoint_auth_method: tls_client_auth
 
 # financroo
-- tenant_id: {{ .tenant_id }}
-  authorization_server_id: {{ .server_id }}
-  client_id: {{ .financroo_tpp_client_id }}
-  client_name: Financroo
-  client_uri: https://localhost:8090
-  client_secret: {{ .financroo_tpp_client_secret }}
-  tls_client_auth_subject_dn: {{ .financroo_tls_client_auth_subject_dn }}
-  tls_client_certificate_bound_access_tokens: true
-  token_endpoint_auth_method: tls_client_auth
-  redirect_uris:
-  - {{ .financroo_tpp_url }}/api/callback
-  - {{ .financroo_tpp_url }}/api/domestic/callback
-  subject_type: pairwise
-  request_object_signing_alg: RS256
-  response_types:
-  - code
-  scopes:
-  - offline_access
-  - openid
-  - email
-  - sample
-  grant_types:
-  - client_credentials
-  - authorization_code
-  - refresh_token
-  jwks:
-{{ readFile .financroo_pem_file | pemToPublicJwks | indent 4 }}
+# Uncomment if DCR_ENABLED=true is not set
+# - tenant_id: {{ .tenant_id }}
+#   authorization_server_id: {{ .server_id }}
+#   client_id: {{ .financroo_tpp_client_id }}
+#   client_name: Financroo
+#   client_uri: https://localhost:8090
+#   client_secret: {{ .financroo_tpp_client_secret }}
+#   tls_client_auth_subject_dn: {{ .financroo_tls_client_auth_subject_dn }}
+#   tls_client_certificate_bound_access_tokens: true
+#   token_endpoint_auth_method: tls_client_auth
+#   redirect_uris:
+#   - {{ .financroo_tpp_url }}/api/callback
+#   - {{ .financroo_tpp_url }}/api/domestic/callback
+#   subject_type: pairwise
+#   request_object_signing_alg: RS256
+#   response_types:
+#   - code
+#   scopes:
+#   - offline_access
+#   - openid
+#   - email
+#   - sample
+#   grant_types:
+#   - client_credentials
+#   - authorization_code
+#   - refresh_token
+#   jwks:
+# {{ readFile .financroo_pem_file | pemToPublicJwks | indent 4 }}
 
 - tenant_id: {{ .tenant_id }}
   authorization_server_id: {{ .server_id }}
