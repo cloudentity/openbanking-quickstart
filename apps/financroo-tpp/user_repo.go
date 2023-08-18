@@ -23,29 +23,6 @@ type UserRepo struct {
 	*bolt.DB
 }
 
-var bucket = []byte("users")
-
-func NewUserRepo(db *bolt.DB) (UserRepo, error) {
-	var (
-		repo = UserRepo{}
-		err  error
-	)
-
-	if err = db.Update(func(tx *bolt.Tx) error {
-		if _, err = tx.CreateBucketIfNotExists(bucket); err != nil {
-			return errors.Wrapf(err, "failed to create bucket")
-		}
-
-		return nil
-	}); err != nil {
-		return repo, err
-	}
-
-	repo.DB = db
-
-	return repo, nil
-}
-
 func (u *UserRepo) Get(sub string) (User, error) {
 	var (
 		user User
@@ -55,7 +32,7 @@ func (u *UserRepo) Get(sub string) (User, error) {
 	)
 
 	if err = u.DB.View(func(tx *bolt.Tx) error {
-		k, bs = tx.Bucket(bucket).Cursor().Seek([]byte(sub))
+		k, bs = tx.Bucket(usersBucket).Cursor().Seek([]byte(sub))
 
 		if bs == nil || !bytes.Equal(k, []byte(sub)) {
 			user = User{Sub: sub}
@@ -86,7 +63,7 @@ func (u *UserRepo) Set(user User) error {
 	}
 
 	if err = u.DB.Update(func(tx *bolt.Tx) error {
-		return tx.Bucket(bucket).Put([]byte(user.Sub), bs)
+		return tx.Bucket(usersBucket).Put([]byte(user.Sub), bs)
 	}); err != nil {
 		return errors.Wrapf(err, "failed to update user")
 	}

@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"encoding/json"
+	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -35,7 +36,8 @@ func TestRegisterClient(t *testing.T) {
 		w.Header().Set("Content-Type", "application/json")
 		w.WriteHeader(statusCode)
 		if payload != nil {
-			json.NewEncoder(w).Encode(payload)
+			err := json.NewEncoder(w).Encode(payload)
+			require.NoError(t, err)
 		}
 	})
 
@@ -58,4 +60,27 @@ func TestRegisterClient(t *testing.T) {
 	)
 	require.NoError(t, err)
 	require.NotEmpty(t, resp.ClientID)
+}
+
+func TestClientIDStorage(t *testing.T) {
+	dir := t.TempDir()
+
+	db, err := InitDB(Config{DBFile: fmt.Sprintf("%s/test.db", dir)})
+	require.NoError(t, err)
+	defer db.Close()
+
+	storage := ClientIDStorage{DB: db}
+
+	id, exists, err := storage.Get()
+	require.NoError(t, err)
+	require.False(t, exists)
+	require.Empty(t, id)
+
+	err = storage.Set("client-123")
+	require.NoError(t, err)
+
+	id, exists, err = storage.Get()
+	require.NoError(t, err)
+	require.True(t, exists)
+	require.Equal(t, "client-123", id)
 }

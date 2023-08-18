@@ -13,6 +13,7 @@ import (
 	"time"
 
 	"github.com/pkg/errors"
+	bolt "go.etcd.io/bbolt"
 	"gopkg.in/square/go-jose.v2"
 
 	acpclient "github.com/cloudentity/acp-client-go"
@@ -211,4 +212,41 @@ func toPublicJWKs(c *x509.Certificate) (models.ClientJWKs, error) {
 	}
 
 	return models.ClientJWKs{Keys: []*models.ClientJWK{&res}}, nil
+}
+
+var clientIDKey = []byte("client_id")
+
+type ClientIDStorage struct {
+	*bolt.DB
+}
+
+func (c *ClientIDStorage) Get() (string, bool, error) {
+	var (
+		clientID string
+		exists   bool
+		err      error
+	)
+
+	if err = c.View(func(tx *bolt.Tx) error {
+		value := tx.Bucket(dcrBucket).Get(clientIDKey)
+
+		if value != nil {
+			clientID = string(value)
+			exists = true
+		} else {
+			exists = false
+		}
+
+		return nil
+	}); err != nil {
+		return "", false, errors.Wrapf(err, "failed to fetch client_id from db")
+	}
+
+	return clientID, exists, nil
+}
+
+func (c *ClientIDStorage) Set(clientID string) error {
+	return c.Update(func(tx *bolt.Tx) error {
+		return tx.Bucket(dcrBucket).Put(clientIDKey, []byte(clientID))
+	})
 }

@@ -37,6 +37,8 @@ func NewServer() (Server, error) {
 	var (
 		server      = Server{}
 		dcrResponse DCRClientCreated
+		ok          bool
+		clientID    string
 		err         error
 	)
 
@@ -44,14 +46,34 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to load config")
 	}
 
+	if server.DB, err = InitDB(server.Config); err != nil {
+		return server, errors.Wrapf(err, "failed to init db")
+	}
+
 	if server.Config.EnableDCR {
-		if dcrResponse, err = RegisterClient(context.Background(), server.Config); err != nil {
-			return server, errors.Wrapf(err, "failed to register client")
+		storage := ClientIDStorage{DB: server.DB}
+
+		if clientID, ok, err = storage.Get(); err != nil {
+			return server, errors.Wrapf(err, "failed to fetch client id from db")
 		}
 
-		logrus.Infof("client dynamically registered, id: %s", dcrResponse.ClientID)
+		if !ok {
+			if dcrResponse, err = RegisterClient(context.Background(), server.Config); err != nil {
+				return server, errors.Wrapf(err, "failed to register client")
+			}
 
-		server.Config.ClientID = dcrResponse.ClientID
+			if err = storage.Set(dcrResponse.ClientID); err != nil {
+				return server, errors.Wrapf(err, "failed to store client id in db")
+			}
+
+			server.Config.ClientID = dcrResponse.ClientID
+
+			logrus.Infof("client dynamically registered, id: %s", dcrResponse.ClientID)
+		} else {
+			logrus.Infof("client already registered, use id: %s", clientID)
+
+			server.Config.ClientID = clientID
+		}
 	}
 
 	switch server.Config.Spec {
@@ -98,13 +120,7 @@ func NewServer() (Server, error) {
 
 	server.SecureCookie = securecookie.New([]byte(server.Config.CookieHashKey), []byte(server.Config.CookieBlockKey))
 
-	if server.DB, err = InitDB(server.Config); err != nil {
-		return server, errors.Wrapf(err, "failed to init db")
-	}
-
-	if server.UserRepo, err = NewUserRepo(server.DB); err != nil {
-		return server, errors.Wrapf(err, "failed to init user repo")
-	}
+	server.UserRepo = UserRepo{DB: server.DB}
 
 	server.UserSecureStorage = NewUserSecureStorage(server.SecureCookie)
 
