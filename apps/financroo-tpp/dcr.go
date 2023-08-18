@@ -140,12 +140,7 @@ func RegisterClient(ctx context.Context, config Config) (DCRClientCreated, error
 			RedirectURLs: []string{
 				config.UIURL + "/api/callback",
 			},
-			Scopes: []string{
-				"openid",
-				"email",
-				"offline_access",
-				"sample",
-			},
+			Scopes:                  config.ClientScopes,
 			TokenEndpointAuthMethod: "tls_client_auth",
 			TLSClientAuthSubjectDN:  cert.Subject.ToRDNSequence().String(),
 			ResponseTypes: []string{

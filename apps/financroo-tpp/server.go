@@ -56,7 +56,6 @@ func NewServer() (Server, error) {
 
 	switch server.Config.Spec {
 	case OBUK:
-		server.Config.ClientScopes = []string{"accounts", "payments", "openid", "offline_access"}
 		if server.Clients, err = InitClients(server.Config, NewOBUKSigner, NewOBUKClient, NewOBUKConsentClient); err != nil {
 			return server, errors.Wrapf(err, "failed to create clients")
 		}
@@ -64,7 +63,6 @@ func NewServer() (Server, error) {
 			return server, errors.Wrapf(err, "failed to create login url builder")
 		}
 	case OBBR:
-		server.Config.ClientScopes = []string{"accounts", "payments", "openid", "offline_access", "consents"}
 		if server.Clients, err = InitClients(server.Config, NewOBBRSigner, NewOBBRClient, NewOBBRConsentClient); err != nil {
 			return server, errors.Wrapf(err, "failed to create clients")
 		}
@@ -72,7 +70,6 @@ func NewServer() (Server, error) {
 			return server, errors.Wrapf(err, "failed to create login url builder")
 		}
 	case CDR:
-		server.Config.ClientScopes = []string{"offline_access", "openid", "bank:accounts.basic:read", "bank:accounts.detail:read", "bank:transactions:read", "common:customer.basic:read"}
 		if server.Clients, err = InitClients(server.Config, nil, NewCDRClient, NewCDRConsentClient); err != nil {
 			return server, errors.Wrapf(err, "failed to create clients")
 		}
@@ -80,7 +77,6 @@ func NewServer() (Server, error) {
 			return server, errors.Wrapf(err, "failed to create login url builder")
 		}
 	case FDX:
-		server.Config.ClientScopes = []string{"offline_access", "fdx:accountdetailed:read", "READ_CONSENTS", "fdx:accountbasic:read", "fdx:transactions:read"}
 		if server.Clients, err = InitClients(server.Config, nil, NewFDXBankClient, NewFDXConsentClient); err != nil {
 			return server, errors.Wrapf(err, "failed to create clients")
 		}
@@ -89,7 +85,6 @@ func NewServer() (Server, error) {
 			return server, errors.Wrapf(err, "failed to create login url builder")
 		}
 	case GENERIC:
-		server.Config.ClientScopes = []string{"openid", "email", "sample", "offline_access"}
 		if server.Clients, err = InitClients(server.Config, nil, NewGenericBankClient, NewGenericConsentClient); err != nil {
 			return server, errors.Wrapf(err, "failed to create clients")
 		}
