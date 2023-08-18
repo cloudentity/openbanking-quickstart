@@ -40,11 +40,11 @@ type DCRHandler interface {
 	Register(ctx context.Context, client DCRClient) (DCRClientCreated, error)
 }
 
-type OAuth2DCRHandler struct {
+type GenericDCRHandler struct {
 	client acpclient.Client
 }
 
-func (d *OAuth2DCRHandler) Register(ctx context.Context, client DCRClient) (DCRClientCreated, error) {
+func (d *GenericDCRHandler) Register(ctx context.Context, client DCRClient) (DCRClientCreated, error) {
 	var (
 		resp    *oauth2.DynamicClientRegistrationCreated
 		created DCRClientCreated
@@ -74,11 +74,11 @@ func (d *OAuth2DCRHandler) Register(ctx context.Context, client DCRClient) (DCRC
 	return created, nil
 }
 
-var _ DCRHandler = &OAuth2DCRHandler{}
+var _ DCRHandler = &GenericDCRHandler{}
 
-func NewOAuth2DCR(cfg Config) (DCRHandler, error) {
+func NewGenericDCRHandler(cfg Config) (DCRHandler, error) {
 	var (
-		c         = OAuth2DCRHandler{}
+		c         = GenericDCRHandler{}
 		issuerURL *url.URL
 		err       error
 	)
@@ -109,32 +109,20 @@ func RegisterClient(ctx context.Context, config Config) (DCRClientCreated, error
 		dcr  DCRHandler
 		err  error
 		resp DCRClientCreated
-		data []byte
 		cert *x509.Certificate
 		jwks models.ClientJWKs
-		pm   *pem.Block
 	)
 
 	if config.Spec != GENERIC {
 		return resp, errors.New("DCR can be enabled only for Generic spec")
 	}
 
-	if dcr, err = NewOAuth2DCR(config); err != nil {
+	if dcr, err = NewGenericDCRHandler(config); err != nil {
 		return resp, errors.Wrapf(err, "failed to init DCR")
 	}
 
-	if data, err = os.ReadFile(config.CertFile); err != nil {
-		return resp, errors.Wrapf(err, "failed to read cert file")
-	}
-
-	pm, _ = pem.Decode(data)
-
-	if pm != nil {
-		data = pm.Bytes
-	}
-
-	if cert, err = x509.ParseCertificate(data); err != nil {
-		return resp, errors.Wrapf(err, "failed to parse x509 certificate")
+	if cert, err = loadCertificate(config); err != nil {
+		return resp, errors.Wrapf(err, "failed to load certificate")
 	}
 
 	if jwks, err = toPublicJWKs(cert); err != nil {
@@ -170,6 +158,31 @@ func RegisterClient(ctx context.Context, config Config) (DCRClientCreated, error
 	}
 
 	return resp, nil
+}
+
+func loadCertificate(config Config) (*x509.Certificate, error) {
+	var (
+		data []byte
+		pm   *pem.Block
+		cert *x509.Certificate
+		err  error
+	)
+
+	if data, err = os.ReadFile(config.CertFile); err != nil {
+		return nil, errors.Wrapf(err, "failed to read cert file")
+	}
+
+	pm, _ = pem.Decode(data)
+
+	if pm != nil {
+		data = pm.Bytes
+	}
+
+	if cert, err = x509.ParseCertificate(data); err != nil {
+		return nil, errors.Wrapf(err, "failed to parse x509 certificate")
+	}
+
+	return cert, nil
 }
 
 func toPublicJWKs(c *x509.Certificate) (models.ClientJWKs, error) {
