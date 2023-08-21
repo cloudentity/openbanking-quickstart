@@ -1,6 +1,7 @@
 package main
 
 import (
+	"context"
 	"fmt"
 	"log"
 	"net/http"
@@ -34,17 +35,49 @@ type Server struct {
 
 func NewServer() (Server, error) {
 	var (
-		server = Server{}
-		err    error
+		server      = Server{}
+		dcrResponse DCRClientCreated
+		ok          bool
+		clientID    string
+		err         error
 	)
 
 	if server.Config, err = LoadConfig(); err != nil {
 		return server, errors.Wrapf(err, "failed to load config")
 	}
 
+	if server.DB, err = InitDB(server.Config); err != nil {
+		return server, errors.Wrapf(err, "failed to init db")
+	}
+
+	if server.Config.EnableDCR {
+		storage := ClientIDStorage{DB: server.DB}
+
+		if clientID, ok, err = storage.Get(); err != nil {
+			return server, errors.Wrapf(err, "failed to fetch client id from db")
+		}
+
+		if !ok {
+			if dcrResponse, err = RegisterClient(context.Background(), server.Config); err != nil {
+				return server, errors.Wrapf(err, "failed to register client")
+			}
+
+			if err = storage.Set(dcrResponse.ClientID); err != nil {
+				return server, errors.Wrapf(err, "failed to store client id in db")
+			}
+
+			server.Config.ClientID = dcrResponse.ClientID
+
+			logrus.Infof("client dynamically registered, id: %s", dcrResponse.ClientID)
+		} else {
+			logrus.Infof("client already registered, use id: %s", clientID)
+
+			server.Config.ClientID = clientID
+		}
+	}
+
 	switch server.Config.Spec {
 	case OBUK:
-		server.Config.ClientScopes = []string{"accounts", "payments", "openid", "offline_access"}
 		if server.Clients, err = InitClients(server.Config, NewOBUKSigner, NewOBUKClient, NewOBUKConsentClient); err != nil {
 			return server, errors.Wrapf(err, "failed to create clients")
 		}
@@ -52,7 +85,6 @@ func NewServer() (Server, error) {
 			return server, errors.Wrapf(err, "failed to create login url builder")
 		}
 	case OBBR:
-		server.Config.ClientScopes = []string{"accounts", "payments", "openid", "offline_access", "consents"}
 		if server.Clients, err = InitClients(server.Config, NewOBBRSigner, NewOBBRClient, NewOBBRConsentClient); err != nil {
 			return server, errors.Wrapf(err, "failed to create clients")
 		}
@@ -60,7 +92,6 @@ func NewServer() (Server, error) {
 			return server, errors.Wrapf(err, "failed to create login url builder")
 		}
 	case CDR:
-		server.Config.ClientScopes = []string{"offline_access", "openid", "bank:accounts.basic:read", "bank:accounts.detail:read", "bank:transactions:read", "common:customer.basic:read"}
 		if server.Clients, err = InitClients(server.Config, nil, NewCDRClient, NewCDRConsentClient); err != nil {
 			return server, errors.Wrapf(err, "failed to create clients")
 		}
@@ -68,7 +99,6 @@ func NewServer() (Server, error) {
 			return server, errors.Wrapf(err, "failed to create login url builder")
 		}
 	case FDX:
-		server.Config.ClientScopes = []string{"offline_access", "fdx:accountdetailed:read", "READ_CONSENTS", "fdx:accountbasic:read", "fdx:transactions:read"}
 		if server.Clients, err = InitClients(server.Config, nil, NewFDXBankClient, NewFDXConsentClient); err != nil {
 			return server, errors.Wrapf(err, "failed to create clients")
 		}
@@ -77,7 +107,6 @@ func NewServer() (Server, error) {
 			return server, errors.Wrapf(err, "failed to create login url builder")
 		}
 	case GENERIC:
-		server.Config.ClientScopes = []string{"openid", "email", "sample", "offline_access"}
 		if server.Clients, err = InitClients(server.Config, nil, NewGenericBankClient, NewGenericConsentClient); err != nil {
 			return server, errors.Wrapf(err, "failed to create clients")
 		}
@@ -91,13 +120,7 @@ func NewServer() (Server, error) {
 
 	server.SecureCookie = securecookie.New([]byte(server.Config.CookieHashKey), []byte(server.Config.CookieBlockKey))
 
-	if server.DB, err = InitDB(server.Config); err != nil {
-		return server, errors.Wrapf(err, "failed to init db")
-	}
-
-	if server.UserRepo, err = NewUserRepo(server.DB); err != nil {
-		return server, errors.Wrapf(err, "failed to init user repo")
-	}
+	server.UserRepo = UserRepo{DB: server.DB}
 
 	server.UserSecureStorage = NewUserSecureStorage(server.SecureCookie)
 

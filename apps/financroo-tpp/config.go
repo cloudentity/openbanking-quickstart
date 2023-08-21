@@ -45,6 +45,7 @@ type Config struct {
 	AssertionSigningKeyFile     string       `env:"ASSERTION_SIGNING_KEY_FILE" envDefault:"/certs/private.ps.pem"`
 	RequestObjectSigningAlg     string       `env:"REQUEST_OBJECT_SIGNING_ALG" envDefault:"ES256"`
 	RequestObjectSigningKeyFile string       `env:"REQUEST_OBJECT_SIGNING_KEY_FILE" envDefault:"/certs/private.es.pem"`
+	EnableDCR                   bool         `env:"ENABLE_DCR" envDefault:"false"`
 	ClientScopes                []string
 }
 
@@ -62,6 +63,19 @@ func (c *Config) SetImplicitValues() {
 		case GENERIC:
 			c.Currency = "USD"
 		}
+	}
+
+	switch c.Spec {
+	case OBUK:
+		c.ClientScopes = []string{"accounts", "payments", "openid", "offline_access"}
+	case OBBR:
+		c.ClientScopes = []string{"accounts", "payments", "openid", "offline_access", "consents"}
+	case CDR:
+		c.ClientScopes = []string{"offline_access", "openid", "bank:accounts.basic:read", "bank:accounts.detail:read", "bank:transactions:read", "common:customer.basic:read"}
+	case FDX:
+		c.ClientScopes = []string{"offline_access", "fdx:accountdetailed:read", "READ_CONSENTS", "fdx:accountbasic:read", "fdx:transactions:read"}
+	case GENERIC:
+		c.ClientScopes = []string{"openid", "email", "sample", "offline_access"}
 	}
 }
 

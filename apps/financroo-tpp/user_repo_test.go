@@ -14,8 +14,7 @@ func TestUsersRepo(t *testing.T) {
 	require.NoError(t, err)
 	defer db.Close()
 
-	repo, err := NewUserRepo(db)
-	require.NoError(t, err)
+	repo := UserRepo{DB: db}
 
 	u1, err := repo.Get("test")
 	require.NoError(t, err)

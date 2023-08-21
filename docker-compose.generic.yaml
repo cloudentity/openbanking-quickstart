@@ -22,6 +22,7 @@ services:
       - OPENBANKING_SERVER_ID=${SERVER}
       - ENABLE_TLS_SERVER=true
       - CLIENT_ID=${FINANCROO_TPP_CLIENT_ID}
+      - ENABLE_DCR=true
     depends_on:
       configuration:
         condition: service_completed_successfully
