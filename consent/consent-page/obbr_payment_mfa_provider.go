@@ -12,32 +12,43 @@ import (
 type OBBRPaymentMFAConsentProvider struct {
 	*Server
 	OBBRConsentTools
+	SystemConsentRetriever
+}
+
+func NewOBBRPaymentMFAConsentProvider(server *Server, tools OBBRConsentTools, version Version) *OBBRPaymentMFAConsentProvider {
+	provider := &OBBRPaymentMFAConsentProvider{
+		Server:           server,
+		OBBRConsentTools: tools,
+	}
+
+	switch version {
+	case V1:
+		provider.SystemConsentRetriever = GetOBBRPaymentsV1SystemConsent
+	case V2:
+		provider.SystemConsentRetriever = GetOBBRPaymentsV2SystemConsent
+	}
+
+	return provider
 }
 
 func (s *OBBRPaymentMFAConsentProvider) GetMFAData(c *gin.Context, loginRequest LoginRequest) (MFAData, error) {
 	var (
-		response *obbrModels.GetOBBRCustomerPaymentConsentSystemOK
-		data     = MFAData{}
-		err      error
+		wrapper OBBRConsentWrapper
+		data    = MFAData{}
+		err     error
 	)
 
-	if response, err = s.Client.Obbr.Consentpage.GetOBBRCustomerPaymentConsentSystem(
-		obbrModels.NewGetOBBRCustomerPaymentConsentSystemParamsWithContext(c).
-			WithLogin(loginRequest.ID),
-		nil,
-	); err != nil {
+	if wrapper, err = s.SystemConsentRetriever(c, s.Client, loginRequest); err != nil {
 		return data, err
 	}
 
-	wrapper := OBBRConsentWrapper{v1: response.Payload.CustomerPaymentConsent}
-
-	data.ConsentID = response.Payload.ConsentID
-	data.AuthenticationContext = response.Payload.AuthenticationContext
-	data.ClientName = s.GetClientName(response.Payload.ClientInfo)
+	data.ConsentID = wrapper.GetConsentID()
+	data.AuthenticationContext = wrapper.GetAuthenticationContext()
+	data.ClientName = s.GetClientName(wrapper.GetClientInfo())
 	data.Amount = fmt.Sprintf(
 		"%s%s",
-		response.Payload.CustomerPaymentConsent.Payment.Amount,
-		response.Payload.CustomerPaymentConsent.Payment.Currency,
+		wrapper.GetPaymentAmount(),
+		wrapper.GetPaymentCurrency(),
 	)
 	data.Account = wrapper.GetDebtorAccountNumber()
 
@@ -64,17 +75,22 @@ func (s *OBBRPaymentMFAConsentProvider) GetConsentMockData(loginRequest LoginReq
 
 	return s.GetOBBRPaymentConsentTemplateData(
 		loginRequest,
-		&obModels.GetOBBRCustomerPaymentConsentResponse{
-			CustomerPaymentConsent: &obModels.BrazilCustomerPaymentConsent{
-				Creditor: &obModels.OpenbankingBrasilPaymentIdentification{
-					Name: "ACME Inc",
-				},
-				DebtorAccount: &obModels.OpenbankingBrasilPaymentDebtorAccount{
-					Number: account,
-				},
-				Payment: &obModels.OpenbankingBrasilPaymentPaymentConsent{
-					Currency: "BRL",
-					Amount:   "100",
+		OBBRConsentWrapper{
+			version: V1,
+			v1: &obbrModels.GetOBBRCustomerPaymentConsentSystemOK{
+				Payload: &obModels.GetOBBRCustomerPaymentConsentResponse{
+					CustomerPaymentConsent: &obModels.BrazilCustomerPaymentConsent{
+						Creditor: &obModels.OpenbankingBrasilPaymentIdentification{
+							Name: "ACME Inc",
+						},
+						DebtorAccount: &obModels.OpenbankingBrasilPaymentDebtorAccount{
+							Number: account,
+						},
+						Payment: &obModels.OpenbankingBrasilPaymentPaymentConsent{
+							Currency: "BRL",
+							Amount:   "100",
+						},
+					},
 				},
 			},
 		},

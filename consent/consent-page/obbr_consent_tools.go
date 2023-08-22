@@ -138,39 +138,6 @@ func (c *OBBRConsentTools) GrantScopes(requestedScopes []*obbrModels.RequestedSc
 	return grantScopes
 }
 
-func (c *OBBRConsentTools) GetOBBRPaymentConsentTemplateData(
-	loginRequest LoginRequest,
-	consent *obbrModels.GetOBBRCustomerPaymentConsentResponse,
-	accounts InternalAccounts,
-	balances BalanceData,
-) map[string]interface{} {
-	clientName := c.GetClientName(nil)
-	wrapper := OBBRConsentWrapper{v1: consent.CustomerPaymentConsent}
-	return map[string]interface{}{
-		"trans": map[string]interface{}{
-			"headTitle":        c.Trans.T("br.payment.headTitle"),
-			"title":            c.Trans.T("br.payment.title"),
-			"paymentInfo":      c.Trans.T("br.payment.paymentInfo"),
-			"payeeAccountName": c.Trans.T("br.payment.payeeAccountName"),
-			"sortCode":         c.Trans.T("br.payment.sortCode"),
-			"accountNumber":    c.Trans.T("br.payment.accountNumber"),
-			"paymentReference": c.Trans.T("br.payment.paymentReference"),
-			"amount":           c.Trans.T("br.payment.amount"),
-			"accountInfo":      c.Trans.T("br.payment.accountInfo"),
-			"clickToProceed": c.Trans.TD("br.payment.clickToProceed", map[string]interface{}{
-				"client_name": clientName,
-			}),
-			"cancel":  c.Trans.T("br.payment.cancel"),
-			"confirm": c.Trans.T("br.payment.confirm"),
-		},
-		"login_request": loginRequest,
-		"accounts":      c.GetAccountsWithBalance(accounts, balances, wrapper.GetDebtorAccountNumber()),
-		"client_name":   clientName,
-		"consent":       OBBRPaymentConsentTemplateData(consent.CustomerPaymentConsent, c.Config.Currency, wrapper.GetDebtorAccountNumber()),
-		"ctx":           consent.AuthenticationContext,
-	}
-}
-
 func (c *OBBRConsentTools) GetAccountsWithBalance(accounts InternalAccounts, balances BalanceData, accountID string) []InternalAccount {
 	var filteredAccounts []InternalAccount
 
@@ -188,14 +155,13 @@ func (c *OBBRConsentTools) GetAccountsWithBalance(accounts InternalAccounts, bal
 	return filteredAccounts
 }
 
-func (c *OBBRConsentTools) GetOBBRPaymentConsentTemplateDataV2(
+func (c *OBBRConsentTools) GetOBBRPaymentConsentTemplateData(
 	loginRequest LoginRequest,
-	consent *obbrModels.GetOBBRCustomerPaymentConsentResponseV2,
+	wrapper OBBRConsentWrapper,
 	accounts InternalAccounts,
 	balances BalanceData,
 ) map[string]interface{} {
 	clientName := c.GetClientName(nil)
-	wrapper := OBBRConsentWrapper{v2: consent.CustomerPaymentConsentV2}
 	return map[string]interface{}{
 		"trans": map[string]interface{}{
 			"headTitle":        c.Trans.T("br.payment.headTitle"),
@@ -216,32 +182,17 @@ func (c *OBBRConsentTools) GetOBBRPaymentConsentTemplateDataV2(
 		"login_request": loginRequest,
 		"accounts":      c.GetAccountsWithBalance(accounts, balances, wrapper.GetDebtorAccountNumber()),
 		"client_name":   clientName,
-		"consent":       OBBRPaymentConsentTemplateDataV2(consent.CustomerPaymentConsentV2, c.Config.Currency, wrapper.GetDebtorAccountNumber()),
-		"ctx":           consent.AuthenticationContext,
+		"consent":       OBBRPaymentConsentTemplateDataFromWrapper(wrapper, c.Config.Currency),
+		"ctx":           wrapper.GetAuthenticationContext(),
 	}
 }
 
-func OBBRPaymentConsentTemplateDataV2(consent *obbrModels.BrazilCustomerPaymentConsentV2, customCurrency Currency, debtorAccountNumber string) PaymentConsentTemplateData {
+func OBBRPaymentConsentTemplateDataFromWrapper(wrapper OBBRConsentWrapper, customCurrency Currency) PaymentConsentTemplateData {
 	data := PaymentConsentTemplateData{
-		AccountName:    consent.Creditor.Name,
-		Identification: debtorAccountNumber,
-		Currency:       consent.Payment.Currency,
-		Amount:         consent.Payment.Amount,
-	}
-
-	if customCurrency != "" {
-		data.Currency = customCurrency.ToString()
-	}
-
-	return data
-}
-
-func OBBRPaymentConsentTemplateData(consent *obbrModels.BrazilCustomerPaymentConsent, customCurrency Currency, debtorAccountNumber string) PaymentConsentTemplateData {
-	data := PaymentConsentTemplateData{
-		AccountName:    consent.Creditor.Name,
-		Identification: debtorAccountNumber,
-		Currency:       consent.Payment.Currency,
-		Amount:         consent.Payment.Amount,
+		AccountName:    wrapper.GetCreditorName(),
+		Identification: wrapper.GetDebtorAccountNumber(),
+		Currency:       wrapper.GetPaymentCurrency(),
+		Amount:         wrapper.GetPaymentAmount(),
 	}
 
 	if customCurrency != "" {
