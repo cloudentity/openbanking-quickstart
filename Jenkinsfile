@@ -28,6 +28,7 @@ pipeline {
         NOTIFICATION_CHANNEL = credentials('OPENBANKING_NOTIFICATION_CHANNEL')
         JENKINS_AUTH_USER = credentials('JENKINS_AUTH_USER')
         JENKINS_AUTH_TOKEN = credentials('JENKINS_AUTH_TOKEN')
+        ARTIFACTORY_GO_PROXY_PASSWORD = credentials('ARTIFACTORY_GO_PROXY_PASSWORD')
         DEBUG = 'true'
     }
     stages {
@@ -60,7 +61,7 @@ pipeline {
             steps {
                 sh 'rm -f docker-compose.log'
                 sh 'make clean'
-                sh 'make lint'
+                sh 'CI=true ARTIFACTORY_GO_PROXY_PASSWORD=${ARTIFACTORY_GO_PROXY_PASSWORD} make lint'
                 sh 'make stop-runner'
                 sh 'make build'
             }

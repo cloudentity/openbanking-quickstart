@@ -1,9 +1,16 @@
 export DOCKER_BUILDKIT=1
 export COMPOSE_DOCKER_CLI_BUILD=1
 
+ARTIFACTORY_USER              ?= jenkins
+ARTIFACTORY_GO_PROXY_PASSWORD ?= PUT_ARTIFACTORY_GO_PROXY_PASSWORD_HERE
+
 .EXPORT_ALL_VARIABLES: ;
-ACP_LOCAL_APPS=acp crdb redis jaeger
-ALL_DOCKER_COMPOSES=-f docker-compose.obuk.yaml -f docker-compose.obbr.yaml -f docker-compose.cdr.yaml -f docker-compose.build.yaml
+ACP_LOCAL_APPS      =acp crdb redis jaeger
+ALL_DOCKER_COMPOSES =-f docker-compose.obuk.yaml -f docker-compose.obbr.yaml -f docker-compose.cdr.yaml -f docker-compose.build.yaml
+
+ifeq ($(CI), true)
+	DOCKER_BUILD_PARAMS := --build-arg GOPROXY=https://${ARTIFACTORY_USER}:${ARTIFACTORY_GO_PROXY_PASSWORD}@artifactory.cloudentity.com/artifactory/api/go/go-virtual
+endif
 
 .PHONY: build
 build:
@@ -32,7 +39,7 @@ run-%-saas: set_saas_configuration
 
 .PHONY: test
 test: start-runner
-	docker exec quickstart-runner sh -c "go test -failfast -p=4 -parallel=8 ./..."  
+	docker exec quickstart-runner sh -c "go test -failfast -p=4 -parallel=8 ./..."
 
 .PHONY: run-tests
 run-tests:
@@ -59,7 +66,7 @@ ifeq (${DEBUG},true)
 	rm -fr mount/cdr/*
 endif
 
-clean-saas: set_saas_configuration start-runner 
+clean-saas: set_saas_configuration start-runner
 	docker exec quickstart-runner sh -c \
     "go run ./scripts/go/clean_saas.go \
         -tenant=${SAAS_TENANT_ID} \
@@ -112,7 +119,7 @@ bump_acp:
 
 .PHONY: start-runner
 start-runner:
-	docker build -t quickstart-runner -f build/runner.dockerfile .
+	docker build -t quickstart-runner -f build/runner.dockerfile . $(DOCKER_BUILD_PARAMS)
 	docker-compose -f docker-compose.acp.local.yaml up -d runner
 	docker ps -a
 
