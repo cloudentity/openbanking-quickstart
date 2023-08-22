@@ -63,7 +63,7 @@ pipeline {
                 sh 'make clean'
                 sh 'CI=true ARTIFACTORY_GO_PROXY_PASSWORD=${ARTIFACTORY_GO_PROXY_PASSWORD} make lint'
                 sh 'make stop-runner'
-                sh 'make build'
+                sh 'CI=true ARTIFACTORY_GO_PROXY_PASSWORD=${ARTIFACTORY_GO_PROXY_PASSWORD} make build'
             }
         }
         stage("Xray Scan") {

@@ -15,7 +15,7 @@ endif
 .PHONY: build
 build:
 	cp -f .env-local .env
-	docker-compose ${ALL_DOCKER_COMPOSES} build
+	docker-compose ${ALL_DOCKER_COMPOSES} build $(DOCKER_BUILD_PARAMS)
 
 # developer-tpp, financroo-tpp, consent-page, bank, configuration,consent-self-service-portal, consent-admin-portal
 build-%:
