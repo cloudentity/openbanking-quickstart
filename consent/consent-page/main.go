@@ -16,6 +16,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"github.com/pkg/errors"
+	"github.com/samber/lo"
 	"github.com/sirupsen/logrus"
 	bolt "go.etcd.io/bbolt"
 	"golang.org/x/text/language"
@@ -38,6 +39,7 @@ type Version string
 const (
 	V1 Version = "v1" //nolint
 	V2 Version = "v2"
+	V3 Version = "v3"
 )
 
 type Config struct {
@@ -70,7 +72,17 @@ type Config struct {
 	EnableTLSServer     bool     `env:"ENABLE_TLS_SERVER" envDefault:"true"`
 	Currency            Currency `env:"CURRENCY"` // optional custom currency, one of=USD AUD GBP BRL EUR
 	BankClientConfig    BankClientConfig
-	OBBRPaymentsVersion string `env:"OPENBANKING_BRASIL_PAYMENTS_VERSION" envDefault:"v1"`
+	OBBRPaymentsVersion Version `env:"OPENBANKING_BRASIL_PAYMENTS_VERSION" envDefault:"v1"`
+}
+
+func (c Config) Validate() error {
+	if c.Spec == OBBR {
+		if !lo.Contains([]Version{V1, V2, V3}, c.OBBRPaymentsVersion) {
+			return fmt.Errorf("unsupported obbr payments version %s", c.OBBRPaymentsVersion)
+		}
+	}
+
+	return nil
 }
 
 type Currency string
@@ -161,6 +173,10 @@ func NewServer() (Server, error) {
 
 	if server.Config, err = LoadConfig(); err != nil {
 		return server, errors.Wrapf(err, "failed to load config")
+	}
+
+	if err = server.Config.Validate(); err != nil {
+		return server, errors.Wrapf(err, "server config validation failed")
 	}
 
 	if l, err = logrus.ParseLevel(server.Config.LogLevel); err != nil {
@@ -256,8 +272,8 @@ func NewServer() (Server, error) {
 		tools := OBBRConsentTools{Trans: server.Trans, Config: server.Config}
 		server.AccountAccessConsentHandler = &OBBRAccountAccessConsentHandler{&server, tools}
 		server.AccountAccessMFAConsentProvider = &OBBRAccountAccessMFAConsentProvider{&server, tools}
-		server.PaymentConsentHandler = &OBBRPaymentConsentHandler{&server, tools, Version(server.Config.OBBRPaymentsVersion)}
-		server.PaymentMFAConsentProvider = &OBBRPaymentMFAConsentProvider{&server, tools}
+		server.PaymentConsentHandler = NewOBBRPaymentConsentHandler(&server, tools, server.Config.OBBRPaymentsVersion)
+		server.PaymentMFAConsentProvider = NewOBBRPaymentMFAConsentProvider(&server, tools, server.Config.OBBRPaymentsVersion)
 	case CDR:
 		tools := CDRConsentTools{Trans: server.Trans, Config: server.Config}
 		server.AccountAccessConsentHandler = &CDRAccountAccessConsentHandler{&server, tools}
