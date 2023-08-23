@@ -119,7 +119,7 @@ bump_acp:
 
 .PHONY: start-runner
 start-runner:
-	docker build -t quickstart-runner -f build/runner.dockerfile . $(DOCKER_BUILD_PARAMS)
+	docker build -t quickstart-runner -f build/runner.dockerfile $(DOCKER_BUILD_PARAMS) .
 	docker-compose -f docker-compose.acp.local.yaml up -d runner
 	docker ps -a
 
