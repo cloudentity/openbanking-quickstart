@@ -46,6 +46,8 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to load config")
 	}
 
+	logrus.WithField("config", server.Config).Info("Config loaded")
+
 	if server.DB, err = InitDB(server.Config); err != nil {
 		return server, errors.Wrapf(err, "failed to init db")
 	}
