@@ -214,13 +214,11 @@ func toPublicJWKs(c *x509.Certificate) (models.ClientJWKs, error) {
 	return models.ClientJWKs{Keys: []*models.ClientJWK{&res}}, nil
 }
 
-var clientIDKey = []byte("client_id")
-
 type ClientIDStorage struct {
 	*bolt.DB
 }
 
-func (c *ClientIDStorage) Get() (string, bool, error) {
+func (c *ClientIDStorage) Get(id BankID) (string, bool, error) {
 	var (
 		clientID string
 		exists   bool
@@ -228,7 +226,7 @@ func (c *ClientIDStorage) Get() (string, bool, error) {
 	)
 
 	if err = c.View(func(tx *bolt.Tx) error {
-		value := tx.Bucket(dcrBucket).Get(clientIDKey)
+		value := tx.Bucket(dcrBucket).Get([]byte(id))
 
 		if value != nil {
 			clientID = string(value)
@@ -243,8 +241,8 @@ func (c *ClientIDStorage) Get() (string, bool, error) {
 	return clientID, exists, nil
 }
 
-func (c *ClientIDStorage) Set(clientID string) error {
+func (c *ClientIDStorage) Set(id BankID, clientID string) error {
 	return c.Update(func(tx *bolt.Tx) error {
-		return tx.Bucket(dcrBucket).Put(clientIDKey, []byte(clientID))
+		return tx.Bucket(dcrBucket).Put([]byte(id), []byte(clientID))
 	})
 }

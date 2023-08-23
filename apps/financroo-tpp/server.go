@@ -52,29 +52,31 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to init db")
 	}
 
-	if server.Config.EnableDCR {
-		storage := ClientIDStorage{DB: server.DB}
+	storage := ClientIDStorage{DB: server.DB}
 
-		if clientID, ok, err = storage.Get(); err != nil {
-			return server, errors.Wrapf(err, "failed to fetch client id from db")
-		}
-
-		if !ok {
-			if dcrResponse, err = RegisterClient(context.Background(), server.Config); err != nil {
-				return server, errors.Wrapf(err, "failed to register client")
+	for _, b := range server.Config.Banks {
+		if b.EnableDCR {
+			if clientID, ok, err = storage.Get(b.ID); err != nil {
+				return server, errors.Wrapf(err, "failed to fetch client id from db for bank: %s", b.ID)
 			}
 
-			if err = storage.Set(dcrResponse.ClientID); err != nil {
-				return server, errors.Wrapf(err, "failed to store client id in db")
+			if !ok {
+				if dcrResponse, err = RegisterClient(context.Background(), server.Config); err != nil {
+					return server, errors.Wrapf(err, "failed to register client for bank: %s", b.ID)
+				}
+
+				if err = storage.Set(b.ID, dcrResponse.ClientID); err != nil {
+					return server, errors.Wrapf(err, "failed to store client id in db for bank: %s", b.ID)
+				}
+
+				server.Config.ClientID = dcrResponse.ClientID
+
+				logrus.Infof("client dynamically registered for bank: %s, id: %s", b.ID, dcrResponse.ClientID)
+			} else {
+				logrus.Infof("client already registered for bank: %s, use id: %s", b.ID, clientID)
+
+				server.Config.ClientID = clientID
 			}
-
-			server.Config.ClientID = dcrResponse.ClientID
-
-			logrus.Infof("client dynamically registered, id: %s", dcrResponse.ClientID)
-		} else {
-			logrus.Infof("client already registered, use id: %s", clientID)
-
-			server.Config.ClientID = clientID
 		}
 	}
 

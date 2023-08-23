@@ -71,15 +71,17 @@ func TestClientIDStorage(t *testing.T) {
 
 	storage := ClientIDStorage{DB: db}
 
-	id, exists, err := storage.Get()
+	bankID := BankID("gobank")
+
+	id, exists, err := storage.Get(bankID)
 	require.NoError(t, err)
 	require.False(t, exists)
 	require.Empty(t, id)
 
-	err = storage.Set("client-123")
+	err = storage.Set(bankID, "client-123")
 	require.NoError(t, err)
 
-	id, exists, err = storage.Get()
+	id, exists, err = storage.Get(bankID)
 	require.NoError(t, err)
 	require.True(t, exists)
 	require.Equal(t, "client-123", id)
