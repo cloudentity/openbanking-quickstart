@@ -77,14 +77,14 @@ func (d *GenericDCRHandler) Register(ctx context.Context, client DCRClient) (DCR
 
 var _ DCRHandler = &GenericDCRHandler{}
 
-func NewGenericDCRHandler(cfg Config) (DCRHandler, error) {
+func NewGenericDCRHandler(cfg Config, bankConfig BankConfig) (DCRHandler, error) {
 	var (
 		c         = GenericDCRHandler{}
 		issuerURL *url.URL
 		err       error
 	)
 
-	if issuerURL, err = url.Parse(fmt.Sprintf("%s/%s/%s", cfg.ACPInternalURL, cfg.Tenant, cfg.ServerID)); err != nil {
+	if issuerURL, err = url.Parse(fmt.Sprintf("%s/%s/%s", bankConfig.ACPInternalURL, bankConfig.Tenant, bankConfig.Server)); err != nil {
 		return nil, err
 	}
 
@@ -105,7 +105,7 @@ func NewGenericDCRHandler(cfg Config) (DCRHandler, error) {
 	return &c, nil
 }
 
-func RegisterClient(ctx context.Context, config Config) (DCRClientCreated, error) {
+func RegisterClient(ctx context.Context, config Config, bankConfig BankConfig) (DCRClientCreated, error) {
 	var (
 		dcr  DCRHandler
 		err  error
@@ -118,7 +118,7 @@ func RegisterClient(ctx context.Context, config Config) (DCRClientCreated, error
 		return resp, errors.New("DCR can be enabled only for Generic spec")
 	}
 
-	if dcr, err = NewGenericDCRHandler(config); err != nil {
+	if dcr, err = NewGenericDCRHandler(config, bankConfig); err != nil {
 		return resp, errors.Wrapf(err, "failed to init DCR")
 	}
 
@@ -214,11 +214,11 @@ func toPublicJWKs(c *x509.Certificate) (models.ClientJWKs, error) {
 	return models.ClientJWKs{Keys: []*models.ClientJWK{&res}}, nil
 }
 
-type ClientIDStorage struct {
+type DCRClientIDStorage struct {
 	*bolt.DB
 }
 
-func (c *ClientIDStorage) Get(id BankID) (string, bool, error) {
+func (c *DCRClientIDStorage) Get(id BankID) (string, bool, error) {
 	var (
 		clientID string
 		exists   bool
@@ -241,7 +241,7 @@ func (c *ClientIDStorage) Get(id BankID) (string, bool, error) {
 	return clientID, exists, nil
 }
 
-func (c *ClientIDStorage) Set(id BankID, clientID string) error {
+func (c *DCRClientIDStorage) Set(id BankID, clientID string) error {
 	return c.Update(func(tx *bolt.Tx) error {
 		return tx.Bucket(dcrBucket).Put([]byte(id), []byte(clientID))
 	})

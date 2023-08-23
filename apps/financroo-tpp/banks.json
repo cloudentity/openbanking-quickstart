@@ -2,13 +2,21 @@
   "banks": [
     {
       "id": "gobank",
-      "url": "http://bank:8070",
+      "url": "http://gobank:8070",
       "acp_url": "https://authorization.cloudentity.com:8443",
       "acp_internal_url": "https://acp:8443",
       "tenant": "default",
-      "server": "generic",
-      "enable_dcr": true,
-      "client_id": "123"
+      "server": "gobank",
+      "enable_dcr": true
+    },
+    {
+      "id": "hyperscalebank",
+      "url": "http://bank:7070",
+      "acp_url": "https://authorization.cloudentity.com:8443",
+      "acp_internal_url": "https://acp:8443",
+      "tenant": "default",
+      "server": "hyperscalebank",
+      "enable_dcr": true
     }
   ]
 }

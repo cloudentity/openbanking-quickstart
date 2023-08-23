@@ -1,6 +1,6 @@
 servers:
 - tenant_id: {{ .tenant_id }}
-  id: hyperscale
+  id: hyperscalebank
   color: "#E576C6"
   name: Hyperscale Bank
   profile: {{ .server_profile }}
@@ -20,7 +20,7 @@ servers:
 
 idps:
 - tenant_id: {{ .tenant_id }}
-  authorization_server_id: hyperscale
+  authorization_server_id: hyperscalebank
   id: bugkgai3g9kregtu04u1
   name: Sandbox IDP
   method: static
@@ -40,17 +40,17 @@ idps:
 
 server_consents:
 - tenant_id: {{ .tenant_id }}
-  client_id: hyperscale-consent-page
+  client_id: hyperscalebank-consent-page
   custom:
     server_consent_url: {{ .consent_page_url }}
-  server_id: hyperscale
+  server_id: hyperscalebank
   type: custom
 
 clients:
 # consent page
 - tenant_id: {{ .tenant_id }}
   authorization_server_id: system
-  client_id: hyperscale-consent-page
+  client_id: hyperscalebank-consent-page
   client_secret: {{ .consent_page_client_secret }}
   client_name: Hyperscale consent page
   grant_types:
@@ -60,7 +60,7 @@ clients:
   token_endpoint_auth_method: client_secret_basic
 
 # - tenant_id:  {{ .tenant_id }}
-#   authorization_server_id: hyperscale
+#   authorization_server_id: hyperscalebank
 #   client_id: {{ .bank_client_id }}
 #   client_name: bank
 #   description: bank resource server app used to introspect tokens
@@ -77,7 +77,7 @@ clients:
 #   token_endpoint_auth_method: tls_client_auth
 
 # - tenant_id: {{ .tenant_id }}
-#   authorization_server_id: hyperscale
+#   authorization_server_id: hyperscalebank
 #   client_id: {{ .internal_bank_client_id }}
 #   client_secret: {{ .internal_bank_client_secret }}
 #   client_name: Consent Page Hyperscale Bank Client
@@ -86,13 +86,13 @@ clients:
 #   token_endpoint_auth_method: client_secret_post
 
 services:
-- authorization_server_id: hyperscale
-  id: hyperscale-sample
+- authorization_server_id: hyperscalebank
+  id: hyperscalebank-sample
   name: Sample
   tenant_id: {{ .tenant_id }}
   scopes:
-  - authorization_server_id: hyperscale
-    id: hyperscale-sample
+  - authorization_server_id: hyperscalebank
+    id: hyperscalebank-sample
     name: sample
     tenant_id: {{ .tenant_id }}
     transient: true

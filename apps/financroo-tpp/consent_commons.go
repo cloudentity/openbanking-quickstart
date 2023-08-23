@@ -88,6 +88,7 @@ func (s *Server) CreateConsentResponse(
 	c *gin.Context,
 	bankID BankID,
 	user User,
+	consentClient ConsentClient,
 	client acpclient.Client,
 	consentID string,
 ) {
@@ -104,8 +105,8 @@ func (s *Server) CreateConsentResponse(
 		parRequestURI string
 	)
 
-	if s.Clients.ConsentClient.UsePAR() {
-		if parRequestURI, app.CSRF, err = s.Clients.ConsentClient.DoPAR(c); err != nil {
+	if consentClient.UsePAR() {
+		if parRequestURI, app.CSRF, err = consentClient.DoPAR(c); err != nil {
 			c.String(http.StatusBadRequest, fmt.Sprintf("failed to register PAR request: %+v", err))
 			return
 		}

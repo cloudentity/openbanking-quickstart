@@ -129,7 +129,7 @@ func TestCreateConsentResponse(t *testing.T) {
 			s.LoginURLBuilder = &tc.fakeLoginBuilder
 			s.SecureCookie = tc.securecookie
 
-			s.CreateConsentResponse(ctx, "test_bank_id", User{}, s.Clients.AcpAccountsClient, "test_consent_id")
+			s.CreateConsentResponse(ctx, "test_bank_id", User{}, s.Clients.ConsentClient, s.Clients.AcpAccountsClient, "test_consent_id")
 			response := recorder.Result()
 			defer response.Body.Close()
 

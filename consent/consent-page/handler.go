@@ -139,8 +139,6 @@ func (s *Server) PostConsent(c *gin.Context, loginRequest LoginRequest, consentH
 }
 
 func (s *Server) GetConsentHandler(loginRequest LoginRequest) (ConsentHandler, bool) {
-	logrus.Infof("XXX GetConsentHandler: %+v", loginRequest.ConsentType)
-
 	switch loginRequest.ConsentType {
 	case "domestic_payment", "payments":
 		return s.PaymentConsentHandler, true

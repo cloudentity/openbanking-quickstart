@@ -3,15 +3,12 @@ package main
 import (
 	"fmt"
 	"net/http"
-	"time"
 
 	"github.com/cloudentity/openbanking-quickstart/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
 
 	acpclient "github.com/cloudentity/acp-client-go"
-	oauth2 "github.com/cloudentity/acp-client-go/clients/oauth2/models"
 )
 
 type AppStorage struct {
@@ -38,10 +35,12 @@ type ConnectBankRequest struct {
 func (s *Server) ConnectBank() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			bankID    = BankID(c.Param("bankId"))
-			user      User
-			err       error
-			consentID string
+			bankID         = BankID(c.Param("bankId"))
+			user           User
+			consentID      string
+			consentClient  ConsentClient
+			accountsClient acpclient.Client
+			err            error
 		)
 
 		if user, _, err = s.WithUser(c); err != nil {
@@ -49,13 +48,24 @@ func (s *Server) ConnectBank() func(*gin.Context) {
 			return
 		}
 
-		if s.Clients.ConsentClient.CreateConsentExplicitly() {
-			if consentID, err = s.Clients.ConsentClient.CreateAccountConsent(c); err != nil {
+		if consentClient, err = s.Clients.GetConsentClient(bankID); err != nil {
+			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to get consent client: %+v", err))
+			return
+		}
+
+		if consentClient.CreateConsentExplicitly() {
+			if consentID, err = consentClient.CreateAccountConsent(c); err != nil {
 				c.String(http.StatusBadRequest, fmt.Sprintf("failed to register account access consent: %+v", err))
 				return
 			}
 		}
-		s.CreateConsentResponse(c, bankID, user, s.Clients.AcpAccountsClient, consentID)
+
+		if accountsClient, err = s.Clients.GetAccountsClient(bankID); err != nil {
+			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to get accounts client: %+v", err))
+			return
+		}
+
+		s.CreateConsentResponse(c, bankID, user, consentClient, accountsClient, consentID)
 	}
 }
 
@@ -108,45 +118,47 @@ func (s *Server) ConnectBankCallback() func(*gin.Context) {
 func (s *Server) ConnectedBanks() func(c *gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			user           User
-			err            error
-			tokenResponse  *oauth2.TokenResponse
+			// user           User
+			// err            error
+			// tokenResponse  *oauth2.TokenResponse
 			connectedBanks = []string{}
 			expiredBanks   = []string{}
-			tokens         = []BankToken{}
+			// tokens         = []BankToken{}
 		)
 
-		if user, _, err = s.WithUser(c); err != nil {
-			c.String(http.StatusUnauthorized, err.Error())
-			return
-		}
-		for i, b := range user.Banks {
-			if tokenResponse, err = s.Clients.RenewAccountsToken(c, b); err != nil {
-				logrus.WithError(err).Warnf("failed to renew token for bank: %s, err: %+v", b.BankID, err)
-				expiredBanks = append(expiredBanks, b.BankID)
-				continue
-			}
+		// TODOX
+		// if user, _, err = s.WithUser(c); err != nil {
+		// 	c.String(http.StatusUnauthorized, err.Error())
+		// 	return
+		// }
 
-			connectedBanks = append(connectedBanks, b.BankID)
+		// for i, b := range user.Banks {
+		// 	if tokenResponse, err = s.Clients.RenewAccountsToken(c, b); err != nil {
+		// 		logrus.WithError(err).Warnf("failed to renew token for bank: %s, err: %+v", b.BankID, err)
+		// 		expiredBanks = append(expiredBanks, b.BankID)
+		// 		continue
+		// 	}
 
-			tokens = append(tokens, BankToken{
-				BankID:      b.BankID,
-				AccessToken: tokenResponse.AccessToken,
-				ExpiresAt:   time.Now().Add(time.Second * time.Duration(tokenResponse.ExpiresIn)).Unix(),
-			})
+		// 	connectedBanks = append(connectedBanks, b.BankID)
 
-			user.Banks[i].RefreshToken = tokenResponse.RefreshToken
-		}
+		// 	tokens = append(tokens, BankToken{
+		// 		BankID:      b.BankID,
+		// 		AccessToken: tokenResponse.AccessToken,
+		// 		ExpiresAt:   time.Now().Add(time.Second * time.Duration(tokenResponse.ExpiresIn)).Unix(),
+		// 	})
 
-		if err = s.UserRepo.Set(user); err != nil {
-			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to update user: %+v", err))
-			return
-		}
+		// 	user.Banks[i].RefreshToken = tokenResponse.RefreshToken
+		// }
 
-		if err = s.UserSecureStorage.Store(c, tokens); err != nil {
-			c.String(http.StatusInternalServerError, fmt.Sprintf("error while storing user data: %+v", err))
-			return
-		}
+		// if err = s.UserRepo.Set(user); err != nil {
+		// 	c.String(http.StatusInternalServerError, fmt.Sprintf("failed to update user: %+v", err))
+		// 	return
+		// }
+
+		// if err = s.UserSecureStorage.Store(c, tokens); err != nil {
+		// 	c.String(http.StatusInternalServerError, fmt.Sprintf("error while storing user data: %+v", err))
+		// 	return
+		// }
 
 		c.JSON(200, gin.H{
 			"connected_banks": connectedBanks,

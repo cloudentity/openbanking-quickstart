@@ -40,7 +40,7 @@ export const banks: Bank[] = [
         : requestAccessPermissionsBR.permissions,
   },
   {
-    value: "hyperscale",
+    value: "hyperscalebank",
     name: "Hyperscale Bank",
     disabled: false,
     logo: hyperscalebank,

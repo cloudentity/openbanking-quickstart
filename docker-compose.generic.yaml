@@ -19,7 +19,7 @@ services:
       - TENANT=${TENANT}
       - GIN_MODE=debug # change to release to disable gin debug
       - SPEC=generic
-      - BANK_URL=http://bank:8070
+      - BANK_URL=http://gobank:8070
       - OPENBANKING_SERVER_ID=${SERVER}
       - ENABLE_TLS_SERVER=true
       - CLIENT_ID=${FINANCROO_TPP_CLIENT_ID}
@@ -28,9 +28,9 @@ services:
       configuration:
         condition: service_completed_successfully
 
-  consent-page:
+  gobank-consent-page:
     image: cloudentity/openbanking-quickstart-consent-page:${VERSION}
-    container_name: consent-page
+    container_name: gobank-consent-page
     platform: linux/x86_64
     restart: always
     ports:
@@ -44,8 +44,8 @@ services:
       - .env
     environment:
       - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
-      - BANK_URL=http://bank:8070
-      - BANK_ACCOUNTS_ENDPOINT=http://bank:8070/internal/accounts
+      - BANK_URL=http://gobank:8070
+      - BANK_ACCOUNTS_ENDPOINT=http://gobank:8070/internal/accounts
       - BANK_CLIENT_TOKEN_URL=${ACP_URL}/${TENANT}/${SERVER}/oauth2/token
       - BANK_CLIENT_ID=${INTERNAL_BANK_CLIENT_ID}
       - BANK_CLIENT_SECRET=pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0
@@ -59,9 +59,40 @@ services:
       configuration:
         condition: service_completed_successfully
 
-  bank:
+  hyperscale-consent-page:
+    image: cloudentity/openbanking-quickstart-consent-page:${VERSION}
+    container_name: hyperscale-consent-page
+    platform: linux/x86_64
+    restart: always
+    ports:
+      - "6080:8080"
+    volumes:
+      - ./mount/consent-page:/data
+      - ./data/ca.pem:/ca.pem
+      - ./data/bank_cert.pem:/bank_cert.pem
+      - ./data/bank_key.pem:/bank_key.pem
+    env_file:
+      - .env
+    environment:
+      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/system
+      - BANK_URL=http://hyperscalebank:8070
+      - BANK_ACCOUNTS_ENDPOINT=http://hyperscalebank:8070/internal/accounts
+      - BANK_CLIENT_TOKEN_URL=${ACP_URL}/${TENANT}/${SERVER}/oauth2/token
+      - BANK_CLIENT_ID=${INTERNAL_BANK_CLIENT_ID}
+      - BANK_CLIENT_SECRET=pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0
+      - LOG_LEVEL=debug
+      - SPEC=generic
+      - GIN_MODE=debug # change to release to disable gin debug
+      - OTP_MODE=mock # change to custom to enable custom OTP handling
+      - MFA_CLAIM=sub # for mobile use mobile_verified
+      - CLIENT_ID=${CONSENT_PAGE_CLIENT_ID}
+    depends_on:
+      configuration:
+        condition: service_completed_successfully
+
+  gobank:
     image: cloudentity/openbanking-quickstart-bank:${VERSION}
-    container_name: bank
+    container_name: gobank
     platform: linux/x86_64
     restart: always
     ports:
@@ -70,7 +101,28 @@ services:
       - ./data/ca.pem:/ca.pem
       - ./data/bank_cert.pem:/bank_cert.pem
       - ./data/bank_key.pem:/bank_key.pem
-      - ./mount/bank-generic:/app/data
+      - ./mount/gobank-generic:/app/data
+    environment:
+      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/${SERVER}
+      - SPEC=generic
+      - GIN_MODE=debug
+      - CLIENT_ID=${BANK_CLIENT_ID}
+    depends_on:
+      configuration:
+        condition: service_completed_successfully
+
+  hyperscalebank:
+    image: cloudentity/openbanking-quickstart-bank:${VERSION}
+    container_name: hyperscalebank
+    platform: linux/x86_64
+    restart: always
+    ports:
+      - "7070:8070"
+    volumes:
+      - ./data/ca.pem:/ca.pem
+      - ./data/bank_cert.pem:/bank_cert.pem
+      - ./data/bank_key.pem:/bank_key.pem
+      - ./mount/hyperscalebank-generic:/app/data
     environment:
       - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/${SERVER}
       - SPEC=generic

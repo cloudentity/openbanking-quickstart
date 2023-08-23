@@ -39,8 +39,8 @@ func TestConfig(t *testing.T) {
 	require.Equal(t, Spec("obbr"), config.Spec)
 	require.Equal(t, "http://bank-br:8070", config.BankURL)
 
-	require.Equal(t, 1, len(config.Banks))
-	require.Equal(t, []BankID{BankID("gobank")}, config.Banks.GetIDs())
+	require.Equal(t, 2, len(config.Banks))
+	require.Equal(t, []BankID{BankID("gobank"), BankID("hyperscalebank")}, config.Banks.GetIDs())
 }
 
 func TestLoadBanksConfig(t *testing.T) {

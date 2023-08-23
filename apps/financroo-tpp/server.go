@@ -15,8 +15,6 @@ import (
 	"gopkg.in/go-playground/validator.v9"
 	"gopkg.in/square/go-jose.v2"
 
-	"github.com/cloudentity/openbanking-quickstart/utils"
-
 	acpclient "github.com/cloudentity/acp-client-go"
 )
 
@@ -52,16 +50,16 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to init db")
 	}
 
-	storage := ClientIDStorage{DB: server.DB}
+	storage := DCRClientIDStorage{DB: server.DB}
 
-	for _, b := range server.Config.Banks {
+	for i, b := range server.Config.Banks {
 		if b.EnableDCR {
 			if clientID, ok, err = storage.Get(b.ID); err != nil {
 				return server, errors.Wrapf(err, "failed to fetch client id from db for bank: %s", b.ID)
 			}
 
 			if !ok {
-				if dcrResponse, err = RegisterClient(context.Background(), server.Config); err != nil {
+				if dcrResponse, err = RegisterClient(context.Background(), server.Config, b); err != nil {
 					return server, errors.Wrapf(err, "failed to register client for bank: %s", b.ID)
 				}
 
@@ -69,13 +67,15 @@ func NewServer() (Server, error) {
 					return server, errors.Wrapf(err, "failed to store client id in db for bank: %s", b.ID)
 				}
 
-				server.Config.ClientID = dcrResponse.ClientID
+				b.ClientID = dcrResponse.ClientID
+				server.Config.Banks[i] = b
 
 				logrus.Infof("client dynamically registered for bank: %s, id: %s", b.ID, dcrResponse.ClientID)
 			} else {
 				logrus.Infof("client already registered for bank: %s, use id: %s", b.ID, clientID)
 
-				server.Config.ClientID = clientID
+				b.ClientID = clientID
+				server.Config.Banks[i] = b
 			}
 		}
 	}
@@ -128,9 +128,9 @@ func NewServer() (Server, error) {
 
 	server.UserSecureStorage = NewUserSecureStorage(server.SecureCookie)
 
-	if server.SignatureVerificationKey, err = utils.GetServerKey(&server.Clients.AcpAccountsClient, utils.SIG); err != nil {
-		return server, errors.Wrapf(err, "failed to retrieve server signature key")
-	}
+	// if server.SignatureVerificationKey, err = utils.GetServerKey(&server.Clients.AcpAccountsClient, utils.SIG); err != nil {
+	// 	return server, errors.Wrapf(err, "failed to retrieve server signature key")
+	// }
 
 	return server, nil
 }
