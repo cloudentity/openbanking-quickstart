@@ -17,6 +17,7 @@ import (
 	obukAccounts "github.com/cloudentity/openbanking-quickstart/generated/obuk/accounts/client"
 	"github.com/cloudentity/openbanking-quickstart/generated/obuk/accounts/models"
 	payments_client "github.com/cloudentity/openbanking-quickstart/generated/obuk/payments/client"
+	"github.com/cloudentity/openbanking-quickstart/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
@@ -28,6 +29,8 @@ import (
 	oauth2Models "github.com/cloudentity/acp-client-go/clients/oauth2/models"
 
 	obbrAccounts "github.com/cloudentity/openbanking-quickstart/generated/obbr/accounts/client"
+
+	"gopkg.in/square/go-jose.v2"
 )
 
 type Clients struct {
@@ -41,6 +44,8 @@ type Clients struct {
 	AcpPaymentsClients map[BankID]acpclient.Client
 	BankClients        map[BankID]BankClient
 	ConsentClients     map[BankID]ConsentClient
+
+	SignatureVerificationKey map[BankID]jose.JSONWebKey
 }
 
 func (c *Clients) GetConsentClient(id BankID) (ConsentClient, error) {
@@ -136,17 +141,16 @@ func InitClients(
 ) (Clients, error) {
 	var (
 		clients = Clients{
-			AcpAccountsClients: make(map[BankID]acpclient.Client),
-			AcpPaymentsClients: make(map[BankID]acpclient.Client),
-			BankClients:        make(map[BankID]BankClient),
-			ConsentClients:     make(map[BankID]ConsentClient),
+			AcpAccountsClients:       make(map[BankID]acpclient.Client),
+			AcpPaymentsClients:       make(map[BankID]acpclient.Client),
+			BankClients:              make(map[BankID]BankClient),
+			ConsentClients:           make(map[BankID]ConsentClient),
+			SignatureVerificationKey: make(map[BankID]jose.JSONWebKey),
 		}
 		acpAccountsWebClient acpclient.Client
 		acpPaymentsWebClient acpclient.Client
-		// bankClient           BankClient
-		signer Signer
-		// consentClient        ConsentClient
-		err error
+		signer               Signer
+		err                  error
 	)
 
 	for _, b := range config.Banks {
@@ -174,6 +178,10 @@ func InitClients(
 
 		if consentClientCreateFn != nil {
 			clients.ConsentClients[b.ID] = consentClientCreateFn(acpAccountsWebClient, acpPaymentsWebClient, signer)
+		}
+
+		if clients.SignatureVerificationKey[b.ID], err = utils.GetServerKey(&acpPaymentsWebClient, utils.SIG); err != nil {
+			return clients, errors.Wrapf(err, "failed to get signature verification key for %s", config.Spec)
 		}
 	}
 

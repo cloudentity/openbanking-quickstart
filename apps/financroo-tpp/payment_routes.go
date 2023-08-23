@@ -7,6 +7,7 @@ import (
 
 	"github.com/cloudentity/openbanking-quickstart/utils"
 	"github.com/gin-gonic/gin"
+	"gopkg.in/square/go-jose.v2"
 
 	acpclient "github.com/cloudentity/acp-client-go"
 )
@@ -44,24 +45,16 @@ func (s *Server) CreateDomesticPaymentConsent() func(*gin.Context) {
 func (s *Server) DomesticPaymentCallback() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			app             string
-			appStorage      = AppStorage{}
-			responseClaims  utils.ResponseData
-			consentResponse interface{}
-			paymentCreated  PaymentCreated
-			token           acpclient.Token
-			err             error
+			app                      string
+			appStorage               = AppStorage{}
+			responseClaims           utils.ResponseData
+			consentResponse          interface{}
+			paymentCreated           PaymentCreated
+			token                    acpclient.Token
+			ok                       bool
+			signatureVerificationKey jose.JSONWebKey
+			err                      error
 		)
-
-		if responseClaims, err = utils.HandleAuthResponseMode(c.Request, s.SignatureVerificationKey); err != nil {
-			c.String(http.StatusBadRequest, fmt.Sprintf("failed to decode response jwt token %v", err))
-			return
-		}
-
-		if responseClaims.Error != "" {
-			c.String(http.StatusBadRequest, fmt.Sprintf("acp returned an error: %s: %s", responseClaims.Error, responseClaims.ErrorDescription))
-			return
-		}
 
 		if app, err = c.Cookie("app"); err != nil {
 			c.String(http.StatusBadRequest, fmt.Sprintf("failed to get app cookie: %+v", err))
@@ -70,6 +63,21 @@ func (s *Server) DomesticPaymentCallback() func(*gin.Context) {
 
 		if err = s.SecureCookie.Decode("app", app, &appStorage); err != nil {
 			c.String(http.StatusBadRequest, fmt.Sprintf("failed to decode app storage: %+v", err))
+			return
+		}
+
+		if signatureVerificationKey, ok = s.Clients.SignatureVerificationKey[appStorage.BankID]; !ok {
+			c.String(http.StatusBadRequest, fmt.Sprintf("failed to get signature verification key for bank: %s", appStorage.BankID))
+			return
+		}
+
+		if responseClaims, err = utils.HandleAuthResponseMode(c.Request, signatureVerificationKey); err != nil {
+			c.String(http.StatusBadRequest, fmt.Sprintf("failed to decode response jwt token %v", err))
+			return
+		}
+
+		if responseClaims.Error != "" {
+			c.String(http.StatusBadRequest, fmt.Sprintf("acp returned an error: %s: %s", responseClaims.Error, responseClaims.ErrorDescription))
 			return
 		}
 

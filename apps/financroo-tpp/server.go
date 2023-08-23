@@ -13,22 +13,20 @@ import (
 	"github.com/sirupsen/logrus"
 	bolt "go.etcd.io/bbolt"
 	"gopkg.in/go-playground/validator.v9"
-	"gopkg.in/square/go-jose.v2"
 
 	acpclient "github.com/cloudentity/acp-client-go"
 )
 
 type Server struct {
-	Config                   Config
-	Clients                  Clients
-	SecureCookie             *securecookie.SecureCookie
-	DB                       *bolt.DB
-	UserRepo                 UserRepo
-	LoginClient              acpclient.Client
-	Validator                *validator.Validate
-	UserSecureStorage        UserSecureStorage
-	LoginURLBuilder          LoginURLBuilder
-	SignatureVerificationKey jose.JSONWebKey
+	Config            Config
+	Clients           Clients
+	SecureCookie      *securecookie.SecureCookie
+	DB                *bolt.DB
+	UserRepo          UserRepo
+	LoginClient       acpclient.Client
+	Validator         *validator.Validate
+	UserSecureStorage UserSecureStorage
+	LoginURLBuilder   LoginURLBuilder
 }
 
 func NewServer() (Server, error) {
@@ -127,10 +125,6 @@ func NewServer() (Server, error) {
 	server.UserRepo = UserRepo{DB: server.DB}
 
 	server.UserSecureStorage = NewUserSecureStorage(server.SecureCookie)
-
-	// if server.SignatureVerificationKey, err = utils.GetServerKey(&server.Clients.AcpAccountsClient, utils.SIG); err != nil {
-	// 	return server, errors.Wrapf(err, "failed to retrieve server signature key")
-	// }
 
 	return server, nil
 }
