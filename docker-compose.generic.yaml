@@ -85,7 +85,7 @@ services:
       - GIN_MODE=debug # change to release to disable gin debug
       - OTP_MODE=mock # change to custom to enable custom OTP handling
       - MFA_CLAIM=sub # for mobile use mobile_verified
-      - CLIENT_ID=${CONSENT_PAGE_CLIENT_ID}
+      - CLIENT_ID=hyperscalebank-consent-page
     depends_on:
       configuration:
         condition: service_completed_successfully
@@ -124,10 +124,10 @@ services:
       - ./data/bank_key.pem:/bank_key.pem
       - ./mount/hyperscalebank-generic:/app/data
     environment:
-      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/${SERVER}
+      - ISSUER_URL=${ACP_MTLS_URL}/${TENANT}/hyperscalebank
       - SPEC=generic
       - GIN_MODE=debug
-      - CLIENT_ID=${BANK_CLIENT_ID}
+      - CLIENT_ID=hyperscalebank
     depends_on:
       configuration:
         condition: service_completed_successfully

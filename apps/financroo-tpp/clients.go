@@ -64,6 +64,14 @@ func (c *Clients) GetAccountsClient(id BankID) (acpclient.Client, error) {
 	return acpclient.Client{}, fmt.Errorf("acp accounts client not configured for bank %s", id)
 }
 
+func (c *Clients) GetBankClient(id BankID) (BankClient, error) {
+	if client, ok := c.BankClients[id]; ok {
+		return client, nil
+	}
+
+	return nil, fmt.Errorf("bank client not configured for bank %s", id)
+}
+
 type BankClient interface {
 	GetAccounts(c *gin.Context, accessToken string, bank ConnectedBank) ([]Account, error)
 	GetTransactions(c *gin.Context, accessToken string, bank ConnectedBank) ([]Transaction, error)
@@ -82,55 +90,6 @@ type ConsentClient interface {
 	UsePAR() bool
 	DoPAR(c *gin.Context) (string, acpclient.CSRF, error)
 	Signer
-}
-
-func (c *Clients) RenewAccountsToken(ctx context.Context, bank ConnectedBank) (*oauth2Models.TokenResponse, error) {
-	var (
-		resp      oauth2.TokenOK
-		request   *http.Request
-		response  *http.Response
-		assertion string
-		body      []byte
-		err       error
-	)
-
-	values := url.Values{
-		"client_id":     {c.AcpAccountsClient.Config.ClientID},
-		"grant_type":    {"refresh_token"},
-		"refresh_token": {bank.RefreshToken},
-	}
-
-	if c.AcpAccountsClient.Config.AuthMethod == acpclient.ClientSecretPostAuthnMethod && c.AcpAccountsClient.Config.ClientSecret != "" {
-		values.Add("client_secret", c.AcpAccountsClient.Config.ClientSecret)
-	}
-
-	if c.AcpAccountsClient.Config.AuthMethod == acpclient.PrivateKeyJwtAuthnMethod {
-		if assertion, err = c.AcpAccountsClient.GenerateClientAssertion(); err != nil {
-			return nil, err
-		}
-		values.Add("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer")
-		values.Add("client_assertion", assertion)
-	}
-
-	if request, err = http.NewRequest(http.MethodPost, c.AcpAccountsClient.Config.GetTokenURL(), strings.NewReader(values.Encode())); err != nil {
-		return nil, errors.Wrapf(err, "failed to create token request")
-	}
-	request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
-
-	if response, err = c.AcpAccountsClient.DoRequest(request); err != nil {
-		return nil, err
-	}
-	defer response.Body.Close()
-
-	if body, err = ioutil.ReadAll(response.Body); err != nil {
-		return nil, err
-	}
-
-	if err = json.Unmarshal(body, &resp.Payload); err != nil {
-		return nil, err
-	}
-
-	return resp.Payload, nil
 }
 
 func InitClients(
@@ -243,6 +202,55 @@ func NewAcpClient(config Config, bankConfig BankConfig, redirect string) (acpcli
 	}
 
 	return client, nil
+}
+
+func RenewAccountsToken(ctx context.Context, bank ConnectedBank, client acpclient.Client) (*oauth2Models.TokenResponse, error) {
+	var (
+		resp      oauth2.TokenOK
+		request   *http.Request
+		response  *http.Response
+		assertion string
+		body      []byte
+		err       error
+	)
+
+	values := url.Values{
+		"client_id":     {client.Config.ClientID},
+		"grant_type":    {"refresh_token"},
+		"refresh_token": {bank.RefreshToken},
+	}
+
+	if client.Config.AuthMethod == acpclient.ClientSecretPostAuthnMethod && client.Config.ClientSecret != "" {
+		values.Add("client_secret", client.Config.ClientSecret)
+	}
+
+	if client.Config.AuthMethod == acpclient.PrivateKeyJwtAuthnMethod {
+		if assertion, err = client.GenerateClientAssertion(); err != nil {
+			return nil, err
+		}
+		values.Add("client_assertion_type", "urn:ietf:params:oauth:client-assertion-type:jwt-bearer")
+		values.Add("client_assertion", assertion)
+	}
+
+	if request, err = http.NewRequest(http.MethodPost, client.Config.GetTokenURL(), strings.NewReader(values.Encode())); err != nil {
+		return nil, errors.Wrapf(err, "failed to create token request")
+	}
+	request.Header.Set("Content-Type", "application/x-www-form-urlencoded")
+
+	if response, err = client.DoRequest(request); err != nil {
+		return nil, err
+	}
+	defer response.Body.Close()
+
+	if body, err = ioutil.ReadAll(response.Body); err != nil {
+		return nil, err
+	}
+
+	if err = json.Unmarshal(body, &resp.Payload); err != nil {
+		return nil, err
+	}
+
+	return resp.Payload, nil
 }
 
 type OBUKClient struct {

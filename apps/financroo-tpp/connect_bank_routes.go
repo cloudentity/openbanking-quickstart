@@ -3,13 +3,16 @@ package main
 import (
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/cloudentity/openbanking-quickstart/utils"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
+	"github.com/sirupsen/logrus"
 	"gopkg.in/square/go-jose.v2"
 
 	acpclient "github.com/cloudentity/acp-client-go"
+	oauth2 "github.com/cloudentity/acp-client-go/clients/oauth2/models"
 )
 
 type AppStorage struct {
@@ -132,47 +135,53 @@ func (s *Server) ConnectBankCallback() func(*gin.Context) {
 func (s *Server) ConnectedBanks() func(c *gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			// user           User
-			// err            error
-			// tokenResponse  *oauth2.TokenResponse
+			user           User
+			tokenResponse  *oauth2.TokenResponse
 			connectedBanks = []string{}
 			expiredBanks   = []string{}
-			// tokens         = []BankToken{}
+			tokens         = []BankToken{}
+			err            error
 		)
 
-		// TODOX
-		// if user, _, err = s.WithUser(c); err != nil {
-		// 	c.String(http.StatusUnauthorized, err.Error())
-		// 	return
-		// }
+		if user, _, err = s.WithUser(c); err != nil {
+			c.String(http.StatusUnauthorized, err.Error())
+			return
+		}
 
-		// for i, b := range user.Banks {
-		// 	if tokenResponse, err = s.Clients.RenewAccountsToken(c, b); err != nil {
-		// 		logrus.WithError(err).Warnf("failed to renew token for bank: %s, err: %+v", b.BankID, err)
-		// 		expiredBanks = append(expiredBanks, b.BankID)
-		// 		continue
-		// 	}
+		for i, b := range user.Banks {
+			var client acpclient.Client
 
-		// 	connectedBanks = append(connectedBanks, b.BankID)
+			if client, err = s.Clients.GetAccountsClient(BankID(b.BankID)); err != nil {
+				c.String(http.StatusInternalServerError, fmt.Sprintf("failed to get accounts client: %+v for bank: %s", err, b.BankID))
+				return
+			}
 
-		// 	tokens = append(tokens, BankToken{
-		// 		BankID:      b.BankID,
-		// 		AccessToken: tokenResponse.AccessToken,
-		// 		ExpiresAt:   time.Now().Add(time.Second * time.Duration(tokenResponse.ExpiresIn)).Unix(),
-		// 	})
+			if tokenResponse, err = RenewAccountsToken(c, b, client); err != nil {
+				logrus.WithError(err).Warnf("failed to renew token for bank: %s, err: %+v", b.BankID, err)
+				expiredBanks = append(expiredBanks, b.BankID)
+				continue
+			}
 
-		// 	user.Banks[i].RefreshToken = tokenResponse.RefreshToken
-		// }
+			connectedBanks = append(connectedBanks, b.BankID)
 
-		// if err = s.UserRepo.Set(user); err != nil {
-		// 	c.String(http.StatusInternalServerError, fmt.Sprintf("failed to update user: %+v", err))
-		// 	return
-		// }
+			tokens = append(tokens, BankToken{
+				BankID:      b.BankID,
+				AccessToken: tokenResponse.AccessToken,
+				ExpiresAt:   time.Now().Add(time.Second * time.Duration(tokenResponse.ExpiresIn)).Unix(),
+			})
 
-		// if err = s.UserSecureStorage.Store(c, tokens); err != nil {
-		// 	c.String(http.StatusInternalServerError, fmt.Sprintf("error while storing user data: %+v", err))
-		// 	return
-		// }
+			user.Banks[i].RefreshToken = tokenResponse.RefreshToken
+		}
+
+		if err = s.UserRepo.Set(user); err != nil {
+			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to update user: %+v", err))
+			return
+		}
+
+		if err = s.UserSecureStorage.Store(c, tokens); err != nil {
+			c.String(http.StatusInternalServerError, fmt.Sprintf("error while storing user data: %+v", err))
+			return
+		}
 
 		c.JSON(200, gin.H{
 			"connected_banks": connectedBanks,

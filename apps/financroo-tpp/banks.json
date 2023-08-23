@@ -11,7 +11,7 @@
     },
     {
       "id": "hyperscalebank",
-      "url": "http://bank:7070",
+      "url": "http://hyperscalebank:8070",
       "acp_url": "https://authorization.cloudentity.com:8443",
       "acp_internal_url": "https://acp:8443",
       "tenant": "default",
