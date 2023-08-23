@@ -13,6 +13,9 @@ COPY consent/admin-portal/web/app/src src
 RUN npm run build
 
 FROM golang:1.20 as go-builder
+ARG GOPROXY
+
+ENV GOPROXY=${GOPROXY}
 
 WORKDIR /app
 
