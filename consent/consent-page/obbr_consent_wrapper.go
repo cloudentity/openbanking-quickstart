@@ -5,112 +5,193 @@ import (
 	obModels "github.com/cloudentity/acp-client-go/clients/obbr/models"
 )
 
+type SystemConsent interface {
+	GetDebtorAccountNumber() string
+	GetSubject() string
+	GetAuthenticationContext() obModels.AuthenticationContext
+	GetRequestedScopes() []*obModels.RequestedScope
+	GetConsentID() string
+	GetCreditorName() string
+	GetPaymentCurrency() string
+	GetPaymentAmount() string
+	GetClientInfo() *obModels.ClientInfo
+}
+
 type OBBRConsentWrapper struct {
-	version Version
-	v1      *obbrModels.GetOBBRCustomerPaymentConsentSystemOK
-	v2      *obbrModels.GetOBBRCustomerPaymentConsentSystemV2OK
-	// v3
+	Version
+	OBBRPaymentsV1SystemConsent
+	OBBRPaymentsV2SystemConsent
+	OBBRPaymentsV3SystemConsent
+}
+
+func (w *OBBRConsentWrapper) SelectSpecificConsent() SystemConsent {
+	switch w.Version {
+	case V1:
+		return w.OBBRPaymentsV1SystemConsent
+	case V2:
+		return w.OBBRPaymentsV2SystemConsent
+	case V3:
+		return w.OBBRPaymentsV3SystemConsent
+	}
+
+	return nil
 }
 
 func (w *OBBRConsentWrapper) GetDebtorAccountNumber() string {
-	switch w.version {
-	case V1:
-		if w.v1.Payload.CustomerPaymentConsent.DebtorAccount != nil {
-			return w.v1.Payload.CustomerPaymentConsent.DebtorAccount.Number
-		}
-	case V2:
-		if w.v2.Payload.CustomerPaymentConsentV2.DebtorAccount != nil {
-			return w.v2.Payload.CustomerPaymentConsentV2.DebtorAccount.Number
-		}
-	}
-
-	return "N/A"
+	return w.SelectSpecificConsent().GetDebtorAccountNumber()
 }
 
 func (w *OBBRConsentWrapper) GetSubject() string {
-	switch w.version {
-	case V1:
-		return w.v1.Payload.Subject
-	case V2:
-		return w.v2.Payload.Subject
-	default:
-		return "N/A"
-	}
+	return w.SelectSpecificConsent().GetSubject()
 }
 
 func (w *OBBRConsentWrapper) GetAuthenticationContext() obModels.AuthenticationContext {
-	switch w.version {
-	case V1:
-		return w.v1.Payload.AuthenticationContext
-	case V2:
-		return w.v2.Payload.AuthenticationContext
-	default:
-		return make(map[string]interface{})
-	}
+	return w.SelectSpecificConsent().GetAuthenticationContext()
 }
 
 func (w *OBBRConsentWrapper) GetRequestedScopes() []*obModels.RequestedScope {
-	switch w.version {
-	case V1:
-		return w.v1.Payload.RequestedScopes
-	case V2:
-		return w.v2.Payload.RequestedScopes
-	default:
-		return make([]*obModels.RequestedScope, 1)
-	}
+	return w.SelectSpecificConsent().GetRequestedScopes()
 }
 
 func (w *OBBRConsentWrapper) GetConsentID() string {
-	switch w.version {
-	case V1:
-		return w.v1.Payload.ConsentID
-	case V2:
-		return w.v2.Payload.ConsentID
-	default:
-		return "N/A"
-	}
+	return w.SelectSpecificConsent().GetConsentID()
 }
 
 func (w *OBBRConsentWrapper) GetCreditorName() string {
-	switch w.version {
-	case V1:
-		return w.v1.Payload.CustomerPaymentConsent.Creditor.Name
-	case V2:
-		return w.v2.Payload.CustomerPaymentConsentV2.Creditor.Name
-	default:
-		return "N/A"
-	}
+	return w.SelectSpecificConsent().GetCreditorName()
 }
 
 func (w *OBBRConsentWrapper) GetPaymentCurrency() string {
-	switch w.version {
-	case V1:
-		return w.v1.Payload.CustomerPaymentConsent.Payment.Currency
-	case V2:
-		return w.v2.Payload.CustomerPaymentConsentV2.Payment.Currency
-	default:
-		return "N/A"
-	}
+	return w.SelectSpecificConsent().GetPaymentCurrency()
 }
 
 func (w *OBBRConsentWrapper) GetPaymentAmount() string {
-	switch w.version {
-	case V1:
-		return w.v1.Payload.CustomerPaymentConsent.Payment.Amount
-	case V2:
-		return w.v2.Payload.CustomerPaymentConsentV2.Payment.Amount
-	default:
-		return "N/A"
-	}
+	return w.SelectSpecificConsent().GetPaymentAmount()
 }
 
 func (w *OBBRConsentWrapper) GetClientInfo() *obModels.ClientInfo {
-	switch w.version {
-	case V1:
-		return w.v1.Payload.ClientInfo
-	case V2:
-		return w.v2.Payload.ClientInfo
-	default:
-		return &obModels.ClientInfo{}
+	return w.SelectSpecificConsent().GetClientInfo()
+}
+
+type OBBRPaymentsV1SystemConsent struct {
+	*obbrModels.GetOBBRCustomerPaymentConsentSystemOK
+}
+
+func (c OBBRPaymentsV1SystemConsent) GetDebtorAccountNumber() string {
+	if c.Payload.CustomerPaymentConsent.DebtorAccount != nil {
+		return c.Payload.CustomerPaymentConsent.DebtorAccount.Number
 	}
+	return ""
+}
+
+func (c OBBRPaymentsV1SystemConsent) GetSubject() string {
+	return c.Payload.Subject
+}
+
+func (c OBBRPaymentsV1SystemConsent) GetAuthenticationContext() obModels.AuthenticationContext {
+	return c.Payload.AuthenticationContext
+}
+func (c OBBRPaymentsV1SystemConsent) GetRequestedScopes() []*obModels.RequestedScope {
+	return c.Payload.RequestedScopes
+}
+func (c OBBRPaymentsV1SystemConsent) GetConsentID() string {
+	return c.Payload.ConsentID
+}
+
+func (c OBBRPaymentsV1SystemConsent) GetCreditorName() string {
+	return c.Payload.CustomerPaymentConsent.Creditor.Name
+}
+
+func (c OBBRPaymentsV1SystemConsent) GetPaymentCurrency() string {
+	return c.Payload.CustomerPaymentConsent.Payment.Currency
+}
+
+func (c OBBRPaymentsV1SystemConsent) GetPaymentAmount() string {
+	return c.Payload.CustomerPaymentConsent.Payment.Amount
+}
+
+func (c OBBRPaymentsV1SystemConsent) GetClientInfo() *obModels.ClientInfo {
+	return c.Payload.ClientInfo
+}
+
+type OBBRPaymentsV2SystemConsent struct {
+	*obbrModels.GetOBBRCustomerPaymentConsentSystemV2OK
+}
+
+func (c OBBRPaymentsV2SystemConsent) GetDebtorAccountNumber() string {
+	if c.Payload.CustomerPaymentConsentV2.DebtorAccount != nil {
+		return c.Payload.CustomerPaymentConsentV2.DebtorAccount.Number
+	}
+	return ""
+}
+
+func (c OBBRPaymentsV2SystemConsent) GetSubject() string {
+	return c.Payload.Subject
+}
+
+func (c OBBRPaymentsV2SystemConsent) GetAuthenticationContext() obModels.AuthenticationContext {
+	return c.Payload.AuthenticationContext
+}
+func (c OBBRPaymentsV2SystemConsent) GetRequestedScopes() []*obModels.RequestedScope {
+	return c.Payload.RequestedScopes
+}
+func (c OBBRPaymentsV2SystemConsent) GetConsentID() string {
+	return c.Payload.ConsentID
+}
+
+func (c OBBRPaymentsV2SystemConsent) GetCreditorName() string {
+	return c.Payload.CustomerPaymentConsentV2.Creditor.Name
+}
+
+func (c OBBRPaymentsV2SystemConsent) GetPaymentCurrency() string {
+	return c.Payload.CustomerPaymentConsentV2.Payment.Currency
+}
+
+func (c OBBRPaymentsV2SystemConsent) GetPaymentAmount() string {
+	return c.Payload.CustomerPaymentConsentV2.Payment.Amount
+}
+
+func (c OBBRPaymentsV2SystemConsent) GetClientInfo() *obModels.ClientInfo {
+	return c.Payload.ClientInfo
+}
+
+type OBBRPaymentsV3SystemConsent struct {
+	*obbrModels.GetOBBRCustomerPaymentConsentSystemV3OK
+}
+
+func (c OBBRPaymentsV3SystemConsent) GetDebtorAccountNumber() string {
+	if c.Payload.CustomerPaymentConsentV3.DebtorAccount != nil {
+		return c.Payload.CustomerPaymentConsentV3.DebtorAccount.Number
+	}
+	return ""
+}
+
+func (c OBBRPaymentsV3SystemConsent) GetSubject() string {
+	return c.Payload.Subject
+}
+
+func (c OBBRPaymentsV3SystemConsent) GetAuthenticationContext() obModels.AuthenticationContext {
+	return c.Payload.AuthenticationContext
+}
+func (c OBBRPaymentsV3SystemConsent) GetRequestedScopes() []*obModels.RequestedScope {
+	return c.Payload.RequestedScopes
+}
+func (c OBBRPaymentsV3SystemConsent) GetConsentID() string {
+	return c.Payload.ConsentID
+}
+
+func (c OBBRPaymentsV3SystemConsent) GetCreditorName() string {
+	return c.Payload.CustomerPaymentConsentV3.Creditor.Name
+}
+
+func (c OBBRPaymentsV3SystemConsent) GetPaymentCurrency() string {
+	return c.Payload.CustomerPaymentConsentV3.Payment.Currency
+}
+
+func (c OBBRPaymentsV3SystemConsent) GetPaymentAmount() string {
+	return c.Payload.CustomerPaymentConsentV3.Payment.Amount
+}
+
+func (c OBBRPaymentsV3SystemConsent) GetClientInfo() *obModels.ClientInfo {
+	return c.Payload.ClientInfo
 }

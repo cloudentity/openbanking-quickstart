@@ -37,7 +37,7 @@ const (
 type Version string
 
 const (
-	V1 Version = "v1" //nolint
+	V1 Version = "v1"
 	V2 Version = "v2"
 	V3 Version = "v3"
 )
@@ -77,7 +77,7 @@ type Config struct {
 
 func (c Config) Validate() error {
 	if c.Spec == OBBR {
-		if !lo.Contains([]Version{V1, V2, V3}, c.OBBRPaymentsVersion) {
+		if !lo.Contains([]Version{V1, V2 /*V3*/}, c.OBBRPaymentsVersion) {
 			return fmt.Errorf("unsupported obbr payments version %s", c.OBBRPaymentsVersion)
 		}
 	}
