@@ -26,6 +26,8 @@ func NewOBBRPaymentMFAConsentProvider(server *Server, tools OBBRConsentTools, ve
 		provider.SystemConsentRetriever = GetOBBRPaymentsV1SystemConsent
 	case V2:
 		provider.SystemConsentRetriever = GetOBBRPaymentsV2SystemConsent
+	case V3:
+		provider.SystemConsentRetriever = GetOBBRPaymentsV3SystemConsent
 	}
 
 	return provider

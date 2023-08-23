@@ -25,6 +25,8 @@ func NewOBBRPaymentConsentHandler(server *Server, consentTools OBBRConsentTools,
 		handler.SystemConsentRetriever = GetOBBRPaymentsV1SystemConsent
 	case V2:
 		handler.SystemConsentRetriever = GetOBBRPaymentsV2SystemConsent
+	case V3:
+		handler.SystemConsentRetriever = GetOBBRPaymentsV3SystemConsent
 	}
 
 	return handler

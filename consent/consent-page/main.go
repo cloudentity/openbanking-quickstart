@@ -77,7 +77,7 @@ type Config struct {
 
 func (c Config) Validate() error {
 	if c.Spec == OBBR {
-		if !lo.Contains([]Version{V1, V2 /*V3*/}, c.OBBRPaymentsVersion) {
+		if !lo.Contains([]Version{V1, V2, V3}, c.OBBRPaymentsVersion) {
 			return fmt.Errorf("unsupported obbr payments version %s", c.OBBRPaymentsVersion)
 		}
 	}

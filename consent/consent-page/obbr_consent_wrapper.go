@@ -91,9 +91,11 @@ func (c OBBRPaymentsV1SystemConsent) GetSubject() string {
 func (c OBBRPaymentsV1SystemConsent) GetAuthenticationContext() obModels.AuthenticationContext {
 	return c.Payload.AuthenticationContext
 }
+
 func (c OBBRPaymentsV1SystemConsent) GetRequestedScopes() []*obModels.RequestedScope {
 	return c.Payload.RequestedScopes
 }
+
 func (c OBBRPaymentsV1SystemConsent) GetConsentID() string {
 	return c.Payload.ConsentID
 }
@@ -132,9 +134,11 @@ func (c OBBRPaymentsV2SystemConsent) GetSubject() string {
 func (c OBBRPaymentsV2SystemConsent) GetAuthenticationContext() obModels.AuthenticationContext {
 	return c.Payload.AuthenticationContext
 }
+
 func (c OBBRPaymentsV2SystemConsent) GetRequestedScopes() []*obModels.RequestedScope {
 	return c.Payload.RequestedScopes
 }
+
 func (c OBBRPaymentsV2SystemConsent) GetConsentID() string {
 	return c.Payload.ConsentID
 }
@@ -173,9 +177,11 @@ func (c OBBRPaymentsV3SystemConsent) GetSubject() string {
 func (c OBBRPaymentsV3SystemConsent) GetAuthenticationContext() obModels.AuthenticationContext {
 	return c.Payload.AuthenticationContext
 }
+
 func (c OBBRPaymentsV3SystemConsent) GetRequestedScopes() []*obModels.RequestedScope {
 	return c.Payload.RequestedScopes
 }
+
 func (c OBBRPaymentsV3SystemConsent) GetConsentID() string {
 	return c.Payload.ConsentID
 }
