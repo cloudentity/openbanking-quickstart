@@ -12,25 +12,6 @@ import (
 type OBBRPaymentMFAConsentProvider struct {
 	*Server
 	OBBRConsentTools
-	SystemConsentRetriever
-}
-
-func NewOBBRPaymentMFAConsentProvider(server *Server, tools OBBRConsentTools, version Version) *OBBRPaymentMFAConsentProvider {
-	provider := &OBBRPaymentMFAConsentProvider{
-		Server:           server,
-		OBBRConsentTools: tools,
-	}
-
-	switch version {
-	case V1:
-		provider.SystemConsentRetriever = GetOBBRPaymentsV1SystemConsent
-	case V2:
-		provider.SystemConsentRetriever = GetOBBRPaymentsV2SystemConsent
-	case V3:
-		provider.SystemConsentRetriever = GetOBBRPaymentsV3SystemConsent
-	}
-
-	return provider
 }
 
 func (s *OBBRPaymentMFAConsentProvider) GetMFAData(c *gin.Context, loginRequest LoginRequest) (MFAData, error) {
@@ -40,7 +21,7 @@ func (s *OBBRPaymentMFAConsentProvider) GetMFAData(c *gin.Context, loginRequest 
 		err     error
 	)
 
-	if wrapper, err = s.SystemConsentRetriever(c, s.Client, loginRequest); err != nil {
+	if wrapper, err = GetOBBRPaymentsSystemConsent(c, s.Client, loginRequest); err != nil {
 		return data, err
 	}
 
@@ -78,21 +59,18 @@ func (s *OBBRPaymentMFAConsentProvider) GetConsentMockData(loginRequest LoginReq
 	return s.GetOBBRPaymentConsentTemplateData(
 		loginRequest,
 		OBBRConsentWrapper{
-			Version: V1,
-			OBBRPaymentsV1SystemConsent: OBBRPaymentsV1SystemConsent{
-				&obbrModels.GetOBBRCustomerPaymentConsentSystemOK{
-					Payload: &obModels.GetOBBRCustomerPaymentConsentResponse{
-						CustomerPaymentConsent: &obModels.BrazilCustomerPaymentConsent{
-							Creditor: &obModels.OpenbankingBrasilPaymentIdentification{
-								Name: "ACME Inc",
-							},
-							DebtorAccount: &obModels.OpenbankingBrasilPaymentDebtorAccount{
-								Number: account,
-							},
-							Payment: &obModels.OpenbankingBrasilPaymentPaymentConsent{
-								Currency: "BRL",
-								Amount:   "100",
-							},
+			GetOBBRCustomerPaymentConsentSystemOK: &obbrModels.GetOBBRCustomerPaymentConsentSystemOK{
+				Payload: &obModels.GetOBBRCustomerPaymentConsentResponse{
+					CustomerPaymentConsent: &obModels.BrazilCustomerPaymentConsent{
+						Creditor: &obModels.OpenbankingBrasilPaymentIdentification{
+							Name: "ACME Inc",
+						},
+						DebtorAccount: &obModels.OpenbankingBrasilPaymentDebtorAccount{
+							Number: account,
+						},
+						Payment: &obModels.OpenbankingBrasilPaymentPaymentConsent{
+							Currency: "BRL",
+							Amount:   "100",
 						},
 					},
 				},

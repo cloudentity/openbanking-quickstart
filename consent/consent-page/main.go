@@ -16,7 +16,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"github.com/pkg/errors"
-	"github.com/samber/lo"
 	"github.com/sirupsen/logrus"
 	bolt "go.etcd.io/bbolt"
 	"golang.org/x/text/language"
@@ -43,46 +42,35 @@ const (
 )
 
 type Config struct {
-	Port                int           `env:"PORT" envDefault:"8080"`
-	ClientID            string        `env:"CLIENT_ID,required"`
-	ClientSecret        string        `env:"CLIENT_SECRET" envDefault:"pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0"`
-	IssuerURL           *url.URL      `env:"ISSUER_URL,required"`
-	Timeout             time.Duration `env:"TIMEOUT" envDefault:"5s"`
-	RootCA              string        `env:"ROOT_CA" envDefault:"/ca.pem"`
-	CertFile            string        `env:"CERT_FILE" envDefault:"/bank_cert.pem"`
-	KeyFile             string        `env:"KEY_FILE" envDefault:"/bank_key.pem"`
-	BankIDClaim         string        `env:"BANK_ID_CLAIM" envDefault:"sub"`
-	EnableMFA           bool          `env:"ENABLE_MFA"`
-	MFAProvider         string        `env:"MFA_PROVIDER"`
-	OTPMode             string        `env:"OTP_MODE" envDefault:"demo"`
-	HyprToken           string        `env:"HYPR_TOKEN"`
-	HyprBaseURL         string        `env:"HYPR_BASE_URL"`
-	HyprAppID           string        `env:"HYPR_APP_ID"`
-	TwilioAccountSid    string        `env:"TWILIO_ACCOUNT_SID"`
-	TwilioAuthToken     string        `env:"TWILIO_AUTH_TOKEN"`
-	TwilioFrom          string        `env:"TWILIO_FROM" envDefault:"Cloudentity"`
-	DBFile              string        `env:"DB_FILE" envDefault:"/data/my.db"`
-	MFAClaim            string        `env:"MFA_CLAIM" envDefault:"mobile_verified"`
-	LogLevel            string        `env:"LOG_LEVEL" envDefault:"info"`
-	DevMode             bool          `env:"DEV_MODE"`
-	DefaultLanguage     language.Tag  `env:"DEFAULT_LANGUAGE"  envDefault:"en-us"`
-	TransDir            string        `env:"TRANS_DIR" envDefault:"./translations"`
-	Spec                Spec          `env:"SPEC,required"`
-	Otp                 OtpConfig
-	EnableTLSServer     bool     `env:"ENABLE_TLS_SERVER" envDefault:"true"`
-	Currency            Currency `env:"CURRENCY"` // optional custom currency, one of=USD AUD GBP BRL EUR
-	BankClientConfig    BankClientConfig
-	OBBRPaymentsVersion Version `env:"OPENBANKING_BRASIL_PAYMENTS_VERSION" envDefault:"v1"`
-}
-
-func (c Config) Validate() error {
-	if c.Spec == OBBR {
-		if !lo.Contains([]Version{V1, V2, V3}, c.OBBRPaymentsVersion) {
-			return fmt.Errorf("unsupported obbr payments version %s", c.OBBRPaymentsVersion)
-		}
-	}
-
-	return nil
+	Port             int           `env:"PORT" envDefault:"8080"`
+	ClientID         string        `env:"CLIENT_ID,required"`
+	ClientSecret     string        `env:"CLIENT_SECRET" envDefault:"pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0"`
+	IssuerURL        *url.URL      `env:"ISSUER_URL,required"`
+	Timeout          time.Duration `env:"TIMEOUT" envDefault:"5s"`
+	RootCA           string        `env:"ROOT_CA" envDefault:"/ca.pem"`
+	CertFile         string        `env:"CERT_FILE" envDefault:"/bank_cert.pem"`
+	KeyFile          string        `env:"KEY_FILE" envDefault:"/bank_key.pem"`
+	BankIDClaim      string        `env:"BANK_ID_CLAIM" envDefault:"sub"`
+	EnableMFA        bool          `env:"ENABLE_MFA"`
+	MFAProvider      string        `env:"MFA_PROVIDER"`
+	OTPMode          string        `env:"OTP_MODE" envDefault:"demo"`
+	HyprToken        string        `env:"HYPR_TOKEN"`
+	HyprBaseURL      string        `env:"HYPR_BASE_URL"`
+	HyprAppID        string        `env:"HYPR_APP_ID"`
+	TwilioAccountSid string        `env:"TWILIO_ACCOUNT_SID"`
+	TwilioAuthToken  string        `env:"TWILIO_AUTH_TOKEN"`
+	TwilioFrom       string        `env:"TWILIO_FROM" envDefault:"Cloudentity"`
+	DBFile           string        `env:"DB_FILE" envDefault:"/data/my.db"`
+	MFAClaim         string        `env:"MFA_CLAIM" envDefault:"mobile_verified"`
+	LogLevel         string        `env:"LOG_LEVEL" envDefault:"info"`
+	DevMode          bool          `env:"DEV_MODE"`
+	DefaultLanguage  language.Tag  `env:"DEFAULT_LANGUAGE"  envDefault:"en-us"`
+	TransDir         string        `env:"TRANS_DIR" envDefault:"./translations"`
+	Spec             Spec          `env:"SPEC,required"`
+	Otp              OtpConfig
+	EnableTLSServer  bool     `env:"ENABLE_TLS_SERVER" envDefault:"true"`
+	Currency         Currency `env:"CURRENCY"` // optional custom currency, one of=USD AUD GBP BRL EUR
+	BankClientConfig BankClientConfig
 }
 
 type Currency string
@@ -173,10 +161,6 @@ func NewServer() (Server, error) {
 
 	if server.Config, err = LoadConfig(); err != nil {
 		return server, errors.Wrapf(err, "failed to load config")
-	}
-
-	if err = server.Config.Validate(); err != nil {
-		return server, errors.Wrapf(err, "server config validation failed")
 	}
 
 	if l, err = logrus.ParseLevel(server.Config.LogLevel); err != nil {
@@ -272,8 +256,8 @@ func NewServer() (Server, error) {
 		tools := OBBRConsentTools{Trans: server.Trans, Config: server.Config}
 		server.AccountAccessConsentHandler = &OBBRAccountAccessConsentHandler{&server, tools}
 		server.AccountAccessMFAConsentProvider = &OBBRAccountAccessMFAConsentProvider{&server, tools}
-		server.PaymentConsentHandler = NewOBBRPaymentConsentHandler(&server, tools, server.Config.OBBRPaymentsVersion)
-		server.PaymentMFAConsentProvider = NewOBBRPaymentMFAConsentProvider(&server, tools, server.Config.OBBRPaymentsVersion)
+		server.PaymentConsentHandler = &OBBRPaymentConsentHandler{&server, tools}
+		server.PaymentMFAConsentProvider = &OBBRAccountAccessMFAConsentProvider{&server, tools}
 	case CDR:
 		tools := CDRConsentTools{Trans: server.Trans, Config: server.Config}
 		server.AccountAccessConsentHandler = &CDRAccountAccessConsentHandler{&server, tools}

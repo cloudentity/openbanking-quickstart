@@ -12,24 +12,6 @@ import (
 type OBBRPaymentConsentHandler struct {
 	*Server
 	OBBRConsentTools
-	SystemConsentRetriever
-}
-
-func NewOBBRPaymentConsentHandler(server *Server, consentTools OBBRConsentTools, version Version) *OBBRPaymentConsentHandler {
-	handler := &OBBRPaymentConsentHandler{
-		Server:           server,
-		OBBRConsentTools: consentTools,
-	}
-	switch version {
-	case V1:
-		handler.SystemConsentRetriever = GetOBBRPaymentsV1SystemConsent
-	case V2:
-		handler.SystemConsentRetriever = GetOBBRPaymentsV2SystemConsent
-	case V3:
-		handler.SystemConsentRetriever = GetOBBRPaymentsV3SystemConsent
-	}
-
-	return handler
 }
 
 func (s *OBBRPaymentConsentHandler) GetConsent(c *gin.Context, loginRequest LoginRequest) {
@@ -41,7 +23,7 @@ func (s *OBBRPaymentConsentHandler) GetConsent(c *gin.Context, loginRequest Logi
 		id       string
 	)
 
-	if wrapper, err = s.SystemConsentRetriever(c, s.Client, loginRequest); err != nil {
+	if wrapper, err = GetOBBRPaymentsSystemConsent(c, s.Client, loginRequest); err != nil {
 		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to get payment consent"))
 		return
 	}
@@ -69,7 +51,7 @@ func (s *OBBRPaymentConsentHandler) ConfirmConsent(c *gin.Context, loginRequest 
 		redirect string
 	)
 
-	if wrapper, err = s.SystemConsentRetriever(c, s.Client, loginRequest); err != nil {
+	if wrapper, err = GetOBBRPaymentsSystemConsent(c, s.Client, loginRequest); err != nil {
 		return "", err
 	}
 
