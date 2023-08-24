@@ -56,25 +56,28 @@ func (s *OBBRPaymentMFAConsentProvider) GetTemplateName() string {
 func (s *OBBRPaymentMFAConsentProvider) GetConsentMockData(loginRequest LoginRequest) map[string]interface{} {
 	account := "08080021325698"
 
+	mockResponse := &obbrModels.GetOBBRCustomerPaymentConsentSystemOK{
+		Payload: &obModels.GetOBBRCustomerPaymentConsentResponse{
+			CustomerPaymentConsent: &obModels.BrazilCustomerPaymentConsent{
+				Creditor: &obModels.OpenbankingBrasilPaymentIdentification{
+					Name: "ACME Inc",
+				},
+				DebtorAccount: &obModels.OpenbankingBrasilPaymentDebtorAccount{
+					Number: account,
+				},
+				Payment: &obModels.OpenbankingBrasilPaymentPaymentConsent{
+					Currency: "BRL",
+					Amount:   "100",
+				},
+			},
+		},
+	}
+
 	return s.GetOBBRPaymentConsentTemplateData(
 		loginRequest,
 		OBBRConsentWrapper{
-			GetOBBRCustomerPaymentConsentSystemOK: &obbrModels.GetOBBRCustomerPaymentConsentSystemOK{
-				Payload: &obModels.GetOBBRCustomerPaymentConsentResponse{
-					CustomerPaymentConsent: &obModels.BrazilCustomerPaymentConsent{
-						Creditor: &obModels.OpenbankingBrasilPaymentIdentification{
-							Name: "ACME Inc",
-						},
-						DebtorAccount: &obModels.OpenbankingBrasilPaymentDebtorAccount{
-							Number: account,
-						},
-						Payment: &obModels.OpenbankingBrasilPaymentPaymentConsent{
-							Currency: "BRL",
-							Amount:   "100",
-						},
-					},
-				},
-			},
+			GetOBBRCustomerPaymentConsentSystemOK: mockResponse,
+			SystemConsent:                         OBBRPaymentsV1SystemConsent{mockResponse.Payload.CustomerPaymentConsent},
 		},
 		InternalAccounts{
 			Accounts: []InternalAccount{
