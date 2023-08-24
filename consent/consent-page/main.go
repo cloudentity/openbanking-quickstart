@@ -249,7 +249,7 @@ func NewServer() (Server, error) {
 		server.AccountAccessConsentHandler = &OBBRAccountAccessConsentHandler{&server, tools}
 		server.AccountAccessMFAConsentProvider = &OBBRAccountAccessMFAConsentProvider{&server, tools}
 		server.PaymentConsentHandler = &OBBRPaymentConsentHandler{&server, tools}
-		server.PaymentMFAConsentProvider = &OBBRAccountAccessMFAConsentProvider{&server, tools}
+		server.PaymentMFAConsentProvider = &OBBRPaymentMFAConsentProvider{&server, tools}
 	case CDR:
 		tools := CDRConsentTools{Trans: server.Trans, Config: server.Config}
 		server.AccountAccessConsentHandler = &CDRAccountAccessConsentHandler{&server, tools}
