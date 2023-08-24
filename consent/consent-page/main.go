@@ -33,14 +33,6 @@ const (
 	Generic Spec = "generic"
 )
 
-type Version string
-
-const (
-	V1 Version = "v1"
-	V2 Version = "v2"
-	V3 Version = "v3"
-)
-
 type Config struct {
 	Port             int           `env:"PORT" envDefault:"8080"`
 	ClientID         string        `env:"CLIENT_ID,required"`
