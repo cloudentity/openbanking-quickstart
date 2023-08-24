@@ -22,15 +22,15 @@ func GetOBBRPaymentsSystemConsent(c *gin.Context, client acpclient.Client, login
 		return OBBRConsentWrapper{}, err
 	}
 
-	if response.Payload.CustomerPaymentConsent != nil {
+	if response.Payload.CustomerPaymentConsent != nil && response.Payload.CustomerPaymentConsent.ConsentID != "" {
 		return OBBRConsentWrapper{response, OBBRPaymentsV1SystemConsent{response.Payload.CustomerPaymentConsent}}, nil
 	}
 
-	if response.Payload.CustomerPaymentConsentV2 != nil {
+	if response.Payload.CustomerPaymentConsentV2 != nil && response.Payload.CustomerPaymentConsentV2.ConsentID != "" {
 		return OBBRConsentWrapper{response, OBBRPaymentsV2SystemConsent{response.Payload.CustomerPaymentConsentV2}}, nil
 	}
 
-	if response.Payload.CustomerPaymentConsentV3 != nil {
+	if response.Payload.CustomerPaymentConsentV3 != nil && response.Payload.CustomerPaymentConsentV3.ConsentID != "" {
 		return OBBRConsentWrapper{response, OBBRPaymentsV3SystemConsent{response.Payload.CustomerPaymentConsentV3}}, nil
 	}
 
