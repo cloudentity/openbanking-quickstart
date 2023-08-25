@@ -184,10 +184,27 @@ func (s *Server) ConnectedBanks() func(c *gin.Context) {
 		}
 
 		c.JSON(200, gin.H{
+			"available_banks": []AvailableBank{
+				{
+					ID:   "gobank",
+					Name: "Go Bank",
+				},
+				{
+					ID:   "hyperscalebank",
+					Name: "Hyperscale Bank",
+				},
+			},
 			"connected_banks": connectedBanks,
 			"expired_banks":   expiredBanks,
 		})
 	}
+}
+
+type AvailableBank struct {
+	ID   string `json:"id"`
+	Name string `json:"name"`
+	Icon string `json:"icon"`
+	Logo string `json:"logo"`
 }
 
 func (s *Server) DisconnectBank() func(*gin.Context) {
