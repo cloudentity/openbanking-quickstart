@@ -91,6 +91,9 @@ func (c *Config) SetImplicitValues() {
 
 type BankConfig struct {
 	ID             BankID `json:"id" validate:"required"`
+	Name           string `json:"name"`
+	IconURL        string `json:"icon_url"`
+	LogoURL        string `json:"logo_url"`
 	URL            string `json:"url" validate:"required,url"`
 	ACPURL         string `json:"acp_url" validate:"required,url"`
 	ACPInternalURL string `json:"acp_internal_url" validate:"required,url"`

@@ -2,6 +2,7 @@
   "banks": [
     {
       "id": "gobank",
+      "name": "Go Bank",
       "url": "http://gobank:8070",
       "acp_url": "https://authorization.cloudentity.com:8443",
       "acp_internal_url": "https://acp:8443",
@@ -11,6 +12,7 @@
     },
     {
       "id": "hyperscalebank",
+      "name": "Hyperscale Bank",
       "url": "http://hyperscalebank:8070",
       "acp_url": "https://authorization.cloudentity.com:8443",
       "acp_internal_url": "https://acp:8443",

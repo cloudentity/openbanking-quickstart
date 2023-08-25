@@ -183,17 +183,19 @@ func (s *Server) ConnectedBanks() func(c *gin.Context) {
 			return
 		}
 
+		availableBanks := []AvailableBank{}
+
+		for _, b := range s.Config.Banks {
+			availableBanks = append(availableBanks, AvailableBank{
+				ID:      string(b.ID),
+				Name:    b.Name,
+				IconURL: b.IconURL,
+				LogoURL: b.LogoURL,
+			})
+		}
+
 		c.JSON(200, gin.H{
-			"available_banks": []AvailableBank{
-				{
-					ID:   "gobank",
-					Name: "Go Bank",
-				},
-				{
-					ID:   "hyperscalebank",
-					Name: "Hyperscale Bank",
-				},
-			},
+			"available_banks": availableBanks,
 			"connected_banks": connectedBanks,
 			"expired_banks":   expiredBanks,
 		})
@@ -201,10 +203,10 @@ func (s *Server) ConnectedBanks() func(c *gin.Context) {
 }
 
 type AvailableBank struct {
-	ID   string `json:"id"`
-	Name string `json:"name"`
-	Icon string `json:"icon"`
-	Logo string `json:"logo"`
+	ID      string `json:"id"`
+	Name    string `json:"name"`
+	IconURL string `json:"icon_url"`
+	LogoURL string `json:"logo_url"`
 }
 
 func (s *Server) DisconnectBank() func(*gin.Context) {
