@@ -33,7 +33,7 @@ export type Bank = {
 export const banks: Bank[] = [
   {
     value: "gobank",
-    disabled: false,
+    disabled: true,
     name: "GO Bank",
     logo: gobank,
     icon: gobankIcon,
@@ -44,8 +44,8 @@ export const banks: Bank[] = [
   },
   {
     value: "hyperscalebank",
+    disabled: true,
     name: "Hyperscale Bank",
-    disabled: false,
     logo: hyperscalebank,
     icon: hyperscalebankIcon,
     permissions:

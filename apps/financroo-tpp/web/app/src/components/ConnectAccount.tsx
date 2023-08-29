@@ -111,11 +111,11 @@ export default function ConnectAccount({
                       <Card
                         className={cx(
                           classes.cardRoot,
-                          (isConnected || configBank.disabled) &&
+                          (isConnected) &&
                             classes.disabled
                         )}
                         onClick={() => {
-                          if (!(isConnected || configBank.disabled)) {
+                          if (!isConnected) {
                             setSelected(configBank);
                           }
                         }}
