@@ -17,9 +17,17 @@ export type Account = {
   StatusUpdateDateTime: string;
 };
 
+export type AvailableBank = {
+  icon_url: string;
+  id: string;
+  logo_url: string;
+  name: string;
+};
+
 export type BanksResponse = {
   connected_banks: string[];
   expired_banks: string[];
+  available_banks: AvailableBank[];
 };
 
 export type Balance = {

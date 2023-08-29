@@ -8,8 +8,11 @@ import hyperscalebankIcon from "../assets/banks/hyperscalebank-icon.svg";
 import gobankIcon from "../assets/banks/gobank-icon.svg";
 import apexfinancialIcon from "../assets/banks/apexfinancial-icon.svg";
 import chaseIcon from "../assets/banks/chase-icon.svg";
+import unknownBankLogo from "../assets/banks/unknown-bank-logo.svg";
+import unknownBankIcon from "../assets/banks/unknown-bank.svg";
 import requestAccessPermissionsUK from "./request-uk-access-permissions.json";
 import requestAccessPermissionsBR from "./request-br-access-permissions.json";
+import { AvailableBank } from "./types";
 
 export type Permission = {
   title: string;
@@ -74,3 +77,11 @@ export const banks: Bank[] = [
     logo: hsbc,
   },
 ];
+
+export const getUnknownBankConfig = (bank: AvailableBank) => ({
+  value: bank.id,
+  name: bank.name ?? "Unknown Bank",
+  disabled: false,
+  logo: bank.logo_url ?? unknownBankLogo,
+  icon: bank.icon_url ?? unknownBankIcon,
+});

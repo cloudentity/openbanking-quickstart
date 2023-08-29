@@ -68,7 +68,7 @@ interface Props {
   setOpen: (open: boolean) => void;
 }
 
-export default function AcccountsAddedDialog({ open, setOpen }: Props) {
+export default function AccountsAddedDialog({ open, setOpen }: Props) {
   const { classes } = useStyles();
   const navigate = useNavigate();
 
