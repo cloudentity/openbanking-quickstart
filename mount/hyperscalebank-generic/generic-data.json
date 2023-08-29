@@ -1,7 +1,7 @@
 {
 	"user": {
 		"generic_accounts": [{
-				"accountId": "1000001",
+				"accountId": "2000002",
 				"creationDate": "2015-01-01",
 				"displayName": "string",
 				"nickname": "Savings Account",
@@ -11,7 +11,7 @@
 				"productName": "string"
 			},
 			{
-				"accountId": "1000002",
+				"accountId": "2000011",
 				"creationDate": "2015-01-01",
 				"displayName": "string",
 				"nickname": "Loan Account",
@@ -21,7 +21,7 @@
 				"productName": "string"
 			},
 			{
-				"accountId": "96534987",
+				"accountId": "95120321",
 				"creationDate": "2015-01-01",
 				"displayName": "string",
 				"nickname": "Checkings Account",
@@ -33,7 +33,7 @@
 		],
 		"generic_transactions": [
 			{
-				"accountID": "1000001",
+				"accountID": "2000002",
 				"TransactionId": "TRN11113",
 				"TransactionType": "PAYMENT",
 				"Status": "POSTED",
@@ -53,7 +53,7 @@
 			},
 
 			{
-				"accountID": "96534987",
+				"accountID": "95120321",
 				"TransactionId": "TRN11114",
 				"TransactionType": "PAYMENT",
 				"Status": "POSTED",
@@ -73,7 +73,7 @@
 			},
 
 			{
-				"accountID": "96534987",
+				"accountID": "95120321",
 				"TransactionId": "TRN11115",
 				"TransactionType": "PAYMENT",
 				"Status": "POSTED",
@@ -93,7 +93,7 @@
 			},
 
 			{
-				"accountID": "96534987",
+				"accountID": "95120321",
 				"TransactionId": "TRN11116",
 				"TransactionType": "PAYMENT",
 				"Status": "POSTED",
@@ -113,7 +113,7 @@
 			},
 
 			{
-				"accountID": "96534987",
+				"accountID": "95120321",
 				"TransactionId": "TRN11117",
 				"TransactionType": "PAYMENT",
 				"Status": "POSTED",
@@ -133,9 +133,9 @@
 			}
 		],
 		"generic_balances": [{
-				"accountId": "1000001",
-				"currentBalance": "1000.00",
-				"availableBalance": "1000.00",
+				"accountId": "2000002",
+				"currentBalance": "2010.00",
+				"availableBalance": "1100.00",
 				"creditLimit": "string",
 				"amortisedLimit": "string",
 				"currency": "AUD",
@@ -145,9 +145,9 @@
 				}]
 			},
 			{
-				"accountId": "1000002",
-				"currentBalance": "2330.45",
-				"availableBalance": "2330.45",
+				"accountId": "2000011",
+				"currentBalance": "3340.45",
+				"availableBalance": "1430.45",
 				"creditLimit": "string",
 				"amortisedLimit": "string",
 				"currency": "AUD",
@@ -157,9 +157,9 @@
 				}]
 			},
 			{
-				"accountId": "96534987",
-				"currentBalance": "1174.23",
-				"availableBalance": "1174.23",
+				"accountId": "95120321",
+				"currentBalance": "2175.23",
+				"availableBalance": "2004.23",
 				"creditLimit": "string",
 				"amortisedLimit": "string",
 				"currency": "AUD",
