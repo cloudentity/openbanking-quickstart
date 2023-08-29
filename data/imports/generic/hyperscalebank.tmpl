@@ -97,3 +97,24 @@ services:
     tenant_id: {{ .tenant_id }}
     transient: true
     implicit: true
+
+script_execution_points:
+  - server_id: hyperscalebank
+    tenant_id: {{ .tenant_id }}
+    script_id: token-minting
+    target_fk: hyperscalebank
+    type: token_minting
+
+scripts:
+  - authorization_server_id: hyperscalebank
+    tenant_id: {{ .tenant_id }}
+    id: token-minting
+    name: Token minting
+    body: |
+      module.exports = async function(context) {
+        return {
+          access_token: {
+            "consent_id": context.consent_id
+          }
+        };
+      }
