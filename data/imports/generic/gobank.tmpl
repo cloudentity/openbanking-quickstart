@@ -97,7 +97,7 @@ clients:
 #   - offline_access
 #   - openid
 #   - email
-#   - sample
+#   - accounts
 #   grant_types:
 #   - client_credentials
 #   - authorization_code
@@ -116,13 +116,13 @@ clients:
 
 services:
 - authorization_server_id: {{ .server_id }}
-  id: {{ .server_id}}-sample
-  name: Sample
+  id: {{ .server_id}}-accounts
+  name: Accounts
   tenant_id: {{ .tenant_id }}
   scopes:
   - authorization_server_id: {{ .server_id }}
-    id: sample
-    name: sample
+    id: accounts
+    name: accounts
     tenant_id: {{ .tenant_id }}
     transient: true
     implicit: true

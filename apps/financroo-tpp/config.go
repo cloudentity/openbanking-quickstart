@@ -87,7 +87,7 @@ func (c *Config) SetImplicitValues() {
 	case FDX:
 		c.ClientScopes = []string{"offline_access", "fdx:accountdetailed:read", "READ_CONSENTS", "fdx:accountbasic:read", "fdx:transactions:read"}
 	case GENERIC:
-		c.ClientScopes = []string{"openid", "email", "sample", "offline_access"}
+		c.ClientScopes = []string{"openid", "email", "accounts", "offline_access"}
 	}
 }
 
