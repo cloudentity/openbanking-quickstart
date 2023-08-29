@@ -23,6 +23,7 @@ import (
 
 type DCRClient struct {
 	Name                    string
+	URI                     string
 	GrantTypes              []string
 	RedirectURLs            []string
 	Scopes                  []string
@@ -56,6 +57,7 @@ func (d *GenericDCRHandler) Register(ctx context.Context, client DCRClient) (DCR
 		oauth2.NewDynamicClientRegistrationParamsWithContext(ctx).
 			WithClient(&models.DynamicClientRegistrationRequest{
 				ClientName:              client.Name,
+				ClientURI:               client.URI,
 				GrantTypes:              client.GrantTypes,
 				RedirectUris:            client.RedirectURLs,
 				ResponseTypes:           client.ResponseTypes,
@@ -134,6 +136,7 @@ func RegisterClient(ctx context.Context, config Config, bankConfig BankConfig) (
 		ctx,
 		DCRClient{
 			Name: "Financroo TPP",
+			URI:  config.UIURL,
 			GrantTypes: []string{
 				"authorization_code",
 				"refresh_token",
