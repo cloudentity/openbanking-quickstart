@@ -64,7 +64,7 @@ export default function Dashboard() {
   const connectedBanks = banksRes?.connected_banks ?? [];
 
   useEffect(() => {
-    if (queryParams.get("connected") === "yes") {
+    if (queryParams.get("connected") === "yes" && window.featureFlags?.Investments) {
       setAccountAddedDialog(true);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
