@@ -90,7 +90,7 @@ func NewServer() (Server, error) {
 		if server.Clients, err = InitClients(server.Config, NewOBBRSigner, NewOBBRClient, NewOBBRConsentClient); err != nil {
 			return server, errors.Wrapf(err, "failed to create clients")
 		}
-		if server.LoginURLBuilder, err = NewOBBRLoginURLBuilder(server.Clients.AcpAccountsClient); err != nil {
+		if server.LoginURLBuilder, err = NewOBBRLoginURLBuilder(); err != nil {
 			return server, errors.Wrapf(err, "failed to create login url builder")
 		}
 	case CDR:

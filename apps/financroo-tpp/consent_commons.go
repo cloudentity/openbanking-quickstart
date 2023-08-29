@@ -19,28 +19,24 @@ type LoginURLBuilder interface {
 	BuildLoginURL(string, acpclient.Client) (string, acpclient.CSRF, error)
 }
 
-type OBBRLoginURLBuilder struct {
-	key jose.JSONWebKey
-}
+type OBBRLoginURLBuilder struct{}
 
-func NewOBBRLoginURLBuilder(client acpclient.Client) (LoginURLBuilder, error) {
-	var (
-		key jose.JSONWebKey
-		err error
-	)
-
-	if key, err = getEncryptionKey(client); err != nil {
-		return nil, err
-	}
-
-	return &OBBRLoginURLBuilder{key: key}, nil
+func NewOBBRLoginURLBuilder() (LoginURLBuilder, error) {
+	return &OBBRLoginURLBuilder{}, nil
 }
 
 func (o *OBBRLoginURLBuilder) BuildLoginURL(consentID string, client acpclient.Client) (string, acpclient.CSRF, error) {
-	var err error
+	var (
+		err error
+		key jose.JSONWebKey
+	)
 
 	config := client.Config
 	config.Scopes = append(config.Scopes, "consent:"+consentID)
+
+	if key, err = o.getEncryptionKey(client); err != nil {
+		return "", acpclient.CSRF{}, errors.Wrapf(err, "failed to get encryption key")
+	}
 
 	if client, err = acpclient.New(config); err != nil {
 		return "", acpclient.CSRF{}, errors.Wrapf(err, "failed to create new acp client")
@@ -49,10 +45,44 @@ func (o *OBBRLoginURLBuilder) BuildLoginURL(consentID string, client acpclient.C
 	return client.AuthorizeURL(
 		acpclient.WithResponseType("code"),
 		acpclient.WithOpenbankingIntentID(consentID, []string{"urn:brasil:openbanking:loa2"}),
-		acpclient.WithRequestObjectEncryption(o.key),
+		acpclient.WithRequestObjectEncryption(key),
 		acpclient.WithPKCE(),
 		acpclient.WithResponseMode("jwt"),
 	)
+}
+
+func (o *OBBRLoginURLBuilder) getEncryptionKey(client acpclient.Client) (jose.JSONWebKey, error) {
+	var (
+		jwksResponse *oauth2.JwksOK
+		encKey       jose.JSONWebKey
+		b            []byte
+		err          error
+	)
+
+	ctx, cancel := context.WithTimeout(context.Background(), client.Config.Timeout)
+	defer cancel()
+
+	if jwksResponse, err = client.Oauth2.Oauth2.Jwks(
+		oauth2.NewJwksParamsWithContext(ctx),
+	); err != nil {
+		return encKey, errors.Wrapf(err, "failed to get jwks from acp server")
+	}
+
+	for _, key := range jwksResponse.Payload.Keys {
+		if key.Use == "enc" {
+			if b, err = json.Marshal(key); err != nil {
+				return encKey, errors.Wrapf(err, "failed to marshal key")
+			}
+
+			if err = encKey.UnmarshalJSON(b); err != nil {
+				return encKey, errors.Wrapf(err, "failed to unmarshal jwk")
+			}
+
+			break
+		}
+	}
+
+	return encKey, nil
 }
 
 type OBUKLoginURLBuilder struct{}
@@ -138,40 +168,6 @@ func (s *Server) CreateConsentResponse(
 	data["login_url"] = loginURL
 
 	c.JSON(http.StatusOK, data)
-}
-
-func getEncryptionKey(client acpclient.Client) (jose.JSONWebKey, error) {
-	var (
-		jwksResponse *oauth2.JwksOK
-		encKey       jose.JSONWebKey
-		b            []byte
-		err          error
-	)
-
-	ctx, cancel := context.WithTimeout(context.Background(), client.Config.Timeout)
-	defer cancel()
-
-	if jwksResponse, err = client.Oauth2.Oauth2.Jwks(
-		oauth2.NewJwksParamsWithContext(ctx),
-	); err != nil {
-		return encKey, errors.Wrapf(err, "failed to get jwks from acp server")
-	}
-
-	for _, key := range jwksResponse.Payload.Keys {
-		if key.Use == "enc" {
-			if b, err = json.Marshal(key); err != nil {
-				return encKey, errors.Wrapf(err, "failed to marshal key")
-			}
-
-			if err = encKey.UnmarshalJSON(b); err != nil {
-				return encKey, errors.Wrapf(err, "failed to unmarshal jwk")
-			}
-
-			break
-		}
-	}
-
-	return encKey, nil
 }
 
 type FDXLoginURLBuilder struct{}

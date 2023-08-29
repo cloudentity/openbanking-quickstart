@@ -34,12 +34,6 @@ import (
 )
 
 type Clients struct {
-	// TODOX get rid of single clients and switch to map completly
-	AcpAccountsClient acpclient.Client
-	AcpPaymentsClient acpclient.Client
-	BankClient        BankClient
-	ConsentClient     ConsentClient
-
 	AcpAccountsClients map[BankID]acpclient.Client
 	AcpPaymentsClients map[BankID]acpclient.Client
 	BankClients        map[BankID]BankClient
@@ -62,6 +56,14 @@ func (c *Clients) GetAccountsClient(id BankID) (acpclient.Client, error) {
 	}
 
 	return acpclient.Client{}, fmt.Errorf("acp accounts client not configured for bank %s", id)
+}
+
+func (c *Clients) GetPaymentsClient(id BankID) (acpclient.Client, error) {
+	if client, ok := c.AcpPaymentsClients[id]; ok {
+		return client, nil
+	}
+
+	return acpclient.Client{}, fmt.Errorf("acp payments client not configured for bank %s", id)
 }
 
 func (c *Clients) GetBankClient(id BankID) (BankClient, error) {
