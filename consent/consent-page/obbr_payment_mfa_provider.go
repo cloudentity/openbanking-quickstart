@@ -16,28 +16,22 @@ type OBBRPaymentMFAConsentProvider struct {
 
 func (s *OBBRPaymentMFAConsentProvider) GetMFAData(c *gin.Context, loginRequest LoginRequest) (MFAData, error) {
 	var (
-		response *obbrModels.GetOBBRCustomerPaymentConsentSystemOK
-		data     = MFAData{}
-		err      error
+		wrapper OBBRConsentWrapper
+		data    = MFAData{}
+		err     error
 	)
 
-	if response, err = s.Client.Obbr.Consentpage.GetOBBRCustomerPaymentConsentSystem(
-		obbrModels.NewGetOBBRCustomerPaymentConsentSystemParamsWithContext(c).
-			WithLogin(loginRequest.ID),
-		nil,
-	); err != nil {
+	if wrapper, err = GetOBBRPaymentsSystemConsent(c, s.Client, loginRequest); err != nil {
 		return data, err
 	}
 
-	wrapper := OBBRConsentWrapper{v1: response.Payload.CustomerPaymentConsent}
-
-	data.ConsentID = response.Payload.ConsentID
-	data.AuthenticationContext = response.Payload.AuthenticationContext
-	data.ClientName = s.GetClientName(response.Payload.ClientInfo)
+	data.ConsentID = wrapper.GetConsentID()
+	data.AuthenticationContext = wrapper.GetAuthenticationContext()
+	data.ClientName = s.GetClientName(wrapper.GetClientInfo())
 	data.Amount = fmt.Sprintf(
 		"%s%s",
-		response.Payload.CustomerPaymentConsent.Payment.Amount,
-		response.Payload.CustomerPaymentConsent.Payment.Currency,
+		wrapper.GetPaymentAmount(),
+		wrapper.GetPaymentCurrency(),
 	)
 	data.Account = wrapper.GetDebtorAccountNumber()
 
@@ -62,9 +56,8 @@ func (s *OBBRPaymentMFAConsentProvider) GetTemplateName() string {
 func (s *OBBRPaymentMFAConsentProvider) GetConsentMockData(loginRequest LoginRequest) map[string]interface{} {
 	account := "08080021325698"
 
-	return s.GetOBBRPaymentConsentTemplateData(
-		loginRequest,
-		&obModels.GetOBBRCustomerPaymentConsentResponse{
+	mockResponse := &obbrModels.GetOBBRCustomerPaymentConsentSystemOK{
+		Payload: &obModels.GetOBBRCustomerPaymentConsentResponse{
 			CustomerPaymentConsent: &obModels.BrazilCustomerPaymentConsent{
 				Creditor: &obModels.OpenbankingBrasilPaymentIdentification{
 					Name: "ACME Inc",
@@ -77,6 +70,14 @@ func (s *OBBRPaymentMFAConsentProvider) GetConsentMockData(loginRequest LoginReq
 					Amount:   "100",
 				},
 			},
+		},
+	}
+
+	return s.GetOBBRPaymentConsentTemplateData(
+		loginRequest,
+		OBBRConsentWrapper{
+			GetOBBRCustomerPaymentConsentSystemOK: mockResponse,
+			SystemConsent:                         OBBRPaymentsV1SystemConsent{mockResponse.Payload.CustomerPaymentConsent},
 		},
 		InternalAccounts{
 			Accounts: []InternalAccount{

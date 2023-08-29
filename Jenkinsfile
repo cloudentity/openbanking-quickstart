@@ -28,6 +28,7 @@ pipeline {
         NOTIFICATION_CHANNEL = credentials('OPENBANKING_NOTIFICATION_CHANNEL')
         JENKINS_AUTH_USER = credentials('JENKINS_AUTH_USER')
         JENKINS_AUTH_TOKEN = credentials('JENKINS_AUTH_TOKEN')
+        ARTIFACTORY_GO_PROXY_PASSWORD = credentials('ARTIFACTORY_GO_PROXY_PASSWORD')
         DEBUG = 'true'
     }
     stages {
@@ -60,9 +61,9 @@ pipeline {
             steps {
                 sh 'rm -f docker-compose.log'
                 sh 'make clean'
-                sh 'make lint'
+                sh 'CI=true ARTIFACTORY_GO_PROXY_PASSWORD=${ARTIFACTORY_GO_PROXY_PASSWORD} make lint'
                 sh 'make stop-runner'
-                sh 'make build'
+                sh 'CI=true ARTIFACTORY_GO_PROXY_PASSWORD=${ARTIFACTORY_GO_PROXY_PASSWORD} make build'
             }
         }
         stage("Xray Scan") {
@@ -126,6 +127,34 @@ pipeline {
             }
         }
         */
+          stage('OBBR Tests with disabled MFA') {
+            steps {
+                script {
+                    sh 'make clean'
+                    try {
+                        sh 'make disable-mfa run-obbr-local'
+                        sh 'make run-obbr-tests-headless'
+                    } catch (exc) {
+                        captureDockerLogs()
+                        unstable('OBBR Tests with disabled MFA failed')
+                    }
+                }
+            }
+        }
+        stage('OBBR Tests with enabled MFA') {
+            steps {
+                script {
+                    sh 'make clean'
+                    try {
+                        sh 'make enable-mfa run-obbr-local'
+                        sh 'make run-obbr-tests-headless'
+                    } catch (exc) {
+                        captureDockerLogs()
+                        unstable('OBBR Tests with enabled MFA failed')
+                    }
+                }
+            }
+        }
         stage('FDX Tests with disabled MFA') {
             steps {
                 script {
@@ -178,34 +207,6 @@ pipeline {
                     } catch (exc) {
                         captureDockerLogs()
                         unstable('OBUK Tests with enabled MFA failed')
-                    }
-                }
-            }
-        }
-        stage('OBBR Tests with disabled MFA') {
-            steps {
-                script {
-                    sh 'make clean'
-                    try {
-                        sh 'make disable-mfa run-obbr-local'
-                        sh 'make run-obbr-tests-headless'
-                    } catch (exc) {
-                        captureDockerLogs()
-                        unstable('OBBR Tests with disabled MFA failed')
-                    }
-                }
-            }
-        }
-        stage('OBBR Tests with enabled MFA') {
-            steps {
-                script {
-                    sh 'make clean'
-                    try {
-                        sh 'make enable-mfa run-obbr-local'
-                        sh 'make run-obbr-tests-headless'
-                    } catch (exc) {
-                        captureDockerLogs()
-                        unstable('OBBR Tests with enabled MFA failed')
                     }
                 }
             }

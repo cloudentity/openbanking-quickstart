@@ -1,7 +1,11 @@
 FROM golang:1.20 as base
+ARG GOPROXY
+
+ENV GOPROXY=${GOPROXY}
 ENV GO111MODULE=on
 WORKDIR /code
-RUN GOPROXY="direct" go install github.com/go-swagger/go-swagger/cmd/swagger@v0.28.0
+
+RUN go install github.com/go-swagger/go-swagger/cmd/swagger@v0.28.0
 
 ARG UID=1000
 ARG GID=1000

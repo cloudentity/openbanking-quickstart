@@ -82,7 +82,10 @@ func TestLoadBanksConfig(t *testing.T) {
 	}
 
 	for _, tc := range testCases {
+		tc := tc
 		t.Run(tc.name, func(t *testing.T) {
+			t.Parallel()
+
 			if tc.jsonContent != "" {
 				configFile, err := ioutil.TempFile("/tmp", "testbankconfig_*.json")
 				require.NoError(t, err)
