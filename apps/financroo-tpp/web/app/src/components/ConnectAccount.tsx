@@ -8,7 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import Card from "@mui/material/Card";
-import { banks, Bank } from "./banks";
+import { banks as banksConfig, Bank, getUnknownBankConfig } from "./banks";
 import Slide from "@mui/material/Slide";
 import Button from "@mui/material/Button";
 import connectArrows from "../assets/connect-arrows.svg";
@@ -18,7 +18,7 @@ import AccordionSummary from "@mui/material/AccordionSummary";
 import AccordionDetails from "@mui/material/AccordionDetails";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
 import financrooIcon from "../assets/banks/financroo-icon.svg";
-import { includes } from "ramda";
+import { BanksResponse } from "./types";
 
 const useStyles = makeStyles()(() => ({
   cardRoot: {
@@ -49,18 +49,21 @@ const useStyles = makeStyles()(() => ({
 }));
 
 interface Props {
-  connected: string[];
+  banks: BanksResponse | undefined;
   onAllowAccess: (bankId: string, permissions: string[] | undefined) => void;
   onClose: () => void;
 }
 
 export default function ConnectAccount({
-  connected,
+  banks,
   onAllowAccess,
   onClose,
 }: Props) {
   const { cx, classes } = useStyles();
   const [selected, setSelected] = useState<Bank | null>(null);
+
+  const connectedBanks = banks?.connected_banks ?? [];
+  const availableBanks = banks?.available_banks ?? [];
 
   return (
     <Dialog open={true} fullScreen>
@@ -76,9 +79,11 @@ export default function ConnectAccount({
             <CloseIcon />
           </IconButton>
         )}
-        {selected && <img alt="icon" src={selected.logo} />}
+        {selected && (
+          <img alt="icon" src={selected.logo} style={{ maxHeight: 40 }} />
+        )}
       </PageToolbar>
-      <PageContainer style={{ marginBottom: 112 }} withBackground>
+      <PageContainer style={{ paddingBottom: 112 }} withBackground>
         {!selected && (
           <Grid container justifyContent="center" style={{ marginTop: 64 }}>
             <Grid item xs={12} sm={8} md={6} style={{ textAlign: "center" }}>
@@ -95,30 +100,65 @@ export default function ConnectAccount({
                 being
               </Typography>
               <Grid container style={{ marginTop: 48 }} spacing={3}>
-                {banks.map(bank => (
-                  <Grid item xs={6} sm={4} key={bank.value} id={bank.value}>
-                    <Card
-                      className={cx(
-                        classes.cardRoot,
-                        (includes(bank.value, connected) || bank.disabled) &&
-                          classes.disabled
-                      )}
-                      onClick={() => {
-                        if (
-                          !(includes(bank.value, connected) || bank.disabled)
-                        ) {
-                          setSelected(bank);
-                        }
-                      }}
-                    >
-                      <img
-                        alt="icon"
-                        src={bank.logo}
-                        style={{ width: "100%" }}
-                      />
-                    </Card>
-                  </Grid>
-                ))}
+                {availableBanks.map(bank => {
+                  const isConnected = connectedBanks.includes(bank.id);
+                  const configBank =
+                    banksConfig.find(b => b.value === bank.id) ||
+                    getUnknownBankConfig(bank);
+
+                  return (
+                    <Grid item xs={6} sm={4} key={bank.id} id={bank.id}>
+                      <Card
+                        className={cx(
+                          classes.cardRoot,
+                          (isConnected) &&
+                            classes.disabled
+                        )}
+                        onClick={() => {
+                          if (!isConnected) {
+                            setSelected(configBank);
+                          }
+                        }}
+                      >
+                        <img
+                          alt="icon"
+                          src={configBank?.logo}
+                          style={{ width: "100%" }}
+                        />
+                      </Card>
+                    </Grid>
+                  );
+                })}
+
+                {banksConfig
+                  .filter(
+                    bank => !availableBanks.find(b => b.id === bank.value)
+                  )
+                  .map(bank => {
+                    const isConnected = connectedBanks.includes(bank.value);
+
+                    return (
+                      <Grid item xs={6} sm={4} key={bank.value} id={bank.value}>
+                        <Card
+                          className={cx(
+                            classes.cardRoot,
+                            (isConnected || bank.disabled) && classes.disabled
+                          )}
+                          onClick={() => {
+                            if (!(isConnected || bank.disabled)) {
+                              setSelected(bank);
+                            }
+                          }}
+                        >
+                          <img
+                            alt="icon"
+                            src={bank.logo}
+                            style={{ width: "100%" }}
+                          />
+                        </Card>
+                      </Grid>
+                    );
+                  })}
               </Grid>
             </Grid>
           </Grid>

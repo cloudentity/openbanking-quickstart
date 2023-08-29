@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+	"gopkg.in/square/go-jose.v2"
 
 	acpclient "github.com/cloudentity/acp-client-go"
 	oauth2 "github.com/cloudentity/acp-client-go/clients/oauth2/models"
@@ -38,10 +39,12 @@ type ConnectBankRequest struct {
 func (s *Server) ConnectBank() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			bankID    = BankID(c.Param("bankId"))
-			user      User
-			err       error
-			consentID string
+			bankID         = BankID(c.Param("bankId"))
+			user           User
+			consentID      string
+			consentClient  ConsentClient
+			accountsClient acpclient.Client
+			err            error
 		)
 
 		if user, _, err = s.WithUser(c); err != nil {
@@ -49,35 +52,39 @@ func (s *Server) ConnectBank() func(*gin.Context) {
 			return
 		}
 
-		if s.Clients.ConsentClient.CreateConsentExplicitly() {
-			if consentID, err = s.Clients.ConsentClient.CreateAccountConsent(c); err != nil {
+		if consentClient, err = s.Clients.GetConsentClient(bankID); err != nil {
+			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to get consent client: %+v", err))
+			return
+		}
+
+		if consentClient.CreateConsentExplicitly() {
+			if consentID, err = consentClient.CreateAccountConsent(c); err != nil {
 				c.String(http.StatusBadRequest, fmt.Sprintf("failed to register account access consent: %+v", err))
 				return
 			}
 		}
-		s.CreateConsentResponse(c, bankID, user, s.Clients.AcpAccountsClient, consentID)
+
+		if accountsClient, err = s.Clients.GetAccountsClient(bankID); err != nil {
+			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to get accounts client: %+v", err))
+			return
+		}
+
+		s.CreateConsentResponse(c, bankID, user, consentClient, accountsClient, consentID)
 	}
 }
 
 func (s *Server) ConnectBankCallback() func(*gin.Context) {
 	return func(c *gin.Context) {
 		var (
-			app            string
-			appStorage     = AppStorage{}
-			token          acpclient.Token
-			responseClaims utils.ResponseData
-			err            error
+			app                      string
+			appStorage               = AppStorage{}
+			token                    acpclient.Token
+			responseClaims           utils.ResponseData
+			ok                       bool
+			signatureVerificationKey jose.JSONWebKey
+			accountsClient           acpclient.Client
+			err                      error
 		)
-
-		if responseClaims, err = utils.HandleAuthResponseMode(c.Request, s.SignatureVerificationKey); err != nil {
-			c.String(http.StatusBadRequest, fmt.Sprintf("failed to decode response jwt token %v", err))
-			return
-		}
-
-		if responseClaims.Error != "" {
-			c.String(http.StatusBadRequest, fmt.Sprintf("acp returned an error: %v: %v", responseClaims.Error, responseClaims.ErrorDescription))
-			return
-		}
 
 		if app, err = c.Cookie("app"); err != nil {
 			c.String(http.StatusBadRequest, fmt.Sprintf("failed to get app cookie: %+v", err))
@@ -89,7 +96,27 @@ func (s *Server) ConnectBankCallback() func(*gin.Context) {
 			return
 		}
 
-		if token, err = s.Clients.AcpAccountsClient.Exchange(responseClaims.Code, responseClaims.State, appStorage.CSRF); err != nil {
+		if signatureVerificationKey, ok = s.Clients.SignatureVerificationKey[appStorage.BankID]; !ok {
+			c.String(http.StatusBadRequest, fmt.Sprintf("failed to get signature verification key for bank: %s", appStorage.BankID))
+			return
+		}
+
+		if responseClaims, err = utils.HandleAuthResponseMode(c.Request, signatureVerificationKey); err != nil {
+			c.String(http.StatusBadRequest, fmt.Sprintf("failed to decode response jwt token %v", err))
+			return
+		}
+
+		if responseClaims.Error != "" {
+			c.String(http.StatusBadRequest, fmt.Sprintf("acp returned an error: %v: %v", responseClaims.Error, responseClaims.ErrorDescription))
+			return
+		}
+
+		if accountsClient, err = s.Clients.GetAccountsClient(appStorage.BankID); err != nil {
+			c.String(http.StatusInternalServerError, fmt.Sprintf("failed to get accounts client: %+v", err))
+			return
+		}
+
+		if token, err = accountsClient.Exchange(responseClaims.Code, responseClaims.State, appStorage.CSRF); err != nil {
 			c.String(http.StatusUnauthorized, fmt.Sprintf("failed to exchange code: %+v", err))
 			return
 		}
@@ -109,19 +136,27 @@ func (s *Server) ConnectedBanks() func(c *gin.Context) {
 	return func(c *gin.Context) {
 		var (
 			user           User
-			err            error
 			tokenResponse  *oauth2.TokenResponse
 			connectedBanks = []string{}
 			expiredBanks   = []string{}
 			tokens         = []BankToken{}
+			err            error
 		)
 
 		if user, _, err = s.WithUser(c); err != nil {
 			c.String(http.StatusUnauthorized, err.Error())
 			return
 		}
+
 		for i, b := range user.Banks {
-			if tokenResponse, err = s.Clients.RenewAccountsToken(c, b); err != nil {
+			var client acpclient.Client
+
+			if client, err = s.Clients.GetAccountsClient(BankID(b.BankID)); err != nil {
+				c.String(http.StatusInternalServerError, fmt.Sprintf("failed to get accounts client: %+v for bank: %s", err, b.BankID))
+				return
+			}
+
+			if tokenResponse, err = RenewAccountsToken(c, b, client); err != nil {
 				logrus.WithError(err).Warnf("failed to renew token for bank: %s, err: %+v", b.BankID, err)
 				expiredBanks = append(expiredBanks, b.BankID)
 				continue
@@ -148,11 +183,30 @@ func (s *Server) ConnectedBanks() func(c *gin.Context) {
 			return
 		}
 
+		availableBanks := []AvailableBank{}
+
+		for _, b := range s.Config.Banks {
+			availableBanks = append(availableBanks, AvailableBank{
+				ID:      string(b.ID),
+				Name:    b.Name,
+				IconURL: b.IconURL,
+				LogoURL: b.LogoURL,
+			})
+		}
+
 		c.JSON(200, gin.H{
+			"available_banks": availableBanks,
 			"connected_banks": connectedBanks,
 			"expired_banks":   expiredBanks,
 		})
 	}
+}
+
+type AvailableBank struct {
+	ID      string `json:"id"`
+	Name    string `json:"name"`
+	IconURL string `json:"icon_url"`
+	LogoURL string `json:"logo_url"`
 }
 
 func (s *Server) DisconnectBank() func(*gin.Context) {

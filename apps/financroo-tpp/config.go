@@ -1,8 +1,15 @@
 package main
 
 import (
+	"encoding/json"
+	"io/ioutil"
+
 	"github.com/caarlos0/env/v6"
+	"github.com/go-playground/validator/v10"
+	"github.com/pkg/errors"
 )
+
+var Validator = validator.New()
 
 type FeatureFlags struct {
 	Investments bool `env:"investments"`
@@ -46,7 +53,10 @@ type Config struct {
 	RequestObjectSigningAlg     string       `env:"REQUEST_OBJECT_SIGNING_ALG" envDefault:"ES256"`
 	RequestObjectSigningKeyFile string       `env:"REQUEST_OBJECT_SIGNING_KEY_FILE" envDefault:"/certs/private.es.pem"`
 	EnableDCR                   bool         `env:"ENABLE_DCR" envDefault:"false"`
-	ClientScopes                []string
+	BanksConfigFile             string       `env:"BANKS_CONFIG_FILE"`
+
+	ClientScopes []string
+	Banks        BanksConfig
 }
 
 func (c *Config) SetImplicitValues() {
@@ -79,6 +89,34 @@ func (c *Config) SetImplicitValues() {
 	}
 }
 
+type BankConfig struct {
+	ID             BankID `json:"id" validate:"required"`
+	Name           string `json:"name"`
+	IconURL        string `json:"icon_url"`
+	LogoURL        string `json:"logo_url"`
+	URL            string `json:"url" validate:"required,url"`
+	ACPURL         string `json:"acp_url" validate:"required,url"`
+	ACPInternalURL string `json:"acp_internal_url" validate:"required,url"`
+	Tenant         string `json:"tenant" validate:"required"`
+	Server         string `json:"server" validate:"required"`
+	EnableDCR      bool   `json:"enable_dcr"`
+	ClientID       string `json:"client_id"`
+}
+
+type RawBankConfig struct {
+	Banks BanksConfig `json:"banks" validate:"dive"`
+}
+
+type BanksConfig []BankConfig
+
+func (b *BanksConfig) GetIDs() (ids []BankID) {
+	for _, x := range *b {
+		ids = append(ids, x.ID)
+	}
+
+	return ids
+}
+
 func LoadConfig() (Config, error) {
 	var (
 		config = Config{}
@@ -91,5 +129,48 @@ func LoadConfig() (Config, error) {
 
 	config.SetImplicitValues()
 
+	if config.Banks, err = LoadBanksConfig(config); err != nil {
+		return config, err
+	}
+
 	return config, nil
+}
+
+func LoadBanksConfig(config Config) (BanksConfig, error) {
+	var (
+		bs  []byte
+		c   RawBankConfig
+		err error
+	)
+
+	if config.BanksConfigFile == "" {
+		// compatibility with old config
+		return []BankConfig{
+			{
+				ID:             "gobank",
+				Name:           "Go Bank",
+				URL:            config.BankURL,
+				ACPURL:         config.ACPURL,
+				ACPInternalURL: config.ACPInternalURL,
+				Tenant:         config.Tenant,
+				Server:         config.ServerID,
+				EnableDCR:      config.EnableDCR,
+				ClientID:       config.ClientID,
+			},
+		}, nil
+	}
+
+	if bs, err = ioutil.ReadFile(config.BanksConfigFile); err != nil {
+		return BanksConfig{}, errors.Wrapf(err, "failed to read banks config file: %s", config.BanksConfigFile)
+	}
+
+	if err = json.Unmarshal(bs, &c); err != nil {
+		return BanksConfig{}, errors.Wrapf(err, "failed to unmarshal banks config file: %s", config.BanksConfigFile)
+	}
+
+	if err = Validator.Struct(c); err != nil {
+		return BanksConfig{}, errors.Wrapf(err, "failed to validate banks config")
+	}
+
+	return c.Banks, nil
 }

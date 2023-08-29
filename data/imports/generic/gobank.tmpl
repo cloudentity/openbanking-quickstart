@@ -1,7 +1,7 @@
 servers:
 - tenant_id: {{ .tenant_id }}
   id: {{ .server_id }}
-  name: Open Finance Generic FAPI
+  name: Go Bank
   profile: {{ .server_profile }}
   initialize: true
   token_endpoint_auth_methods:
@@ -51,7 +51,7 @@ clients:
   authorization_server_id: system
   client_id: {{ .consent_page_client_id }}
   client_secret: {{ .consent_page_client_secret }}
-  client_name: custom server consent
+  client_name: Go Bank Consent Page
   grant_types:
   - client_credentials
   scopes:

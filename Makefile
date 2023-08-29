@@ -80,6 +80,10 @@ clean-saas: set_saas_configuration start-runner
 purge:
 	docker images -a | grep openbanking-quickstart | awk '{print $3}' | xargs docker rmi -f || true
 
+.PHONY: clean-financroo-db
+clean-financroo-db:
+	rm -f mount/financroo-tpp/my.db
+
 .PHONY: restart-acp
 restart-acp:
 	docker-compose -f docker-compose.acp.local.yaml rm -s -f acp

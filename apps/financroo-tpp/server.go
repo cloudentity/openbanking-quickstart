@@ -13,24 +13,20 @@ import (
 	"github.com/sirupsen/logrus"
 	bolt "go.etcd.io/bbolt"
 	"gopkg.in/go-playground/validator.v9"
-	"gopkg.in/square/go-jose.v2"
-
-	"github.com/cloudentity/openbanking-quickstart/utils"
 
 	acpclient "github.com/cloudentity/acp-client-go"
 )
 
 type Server struct {
-	Config                   Config
-	Clients                  Clients
-	SecureCookie             *securecookie.SecureCookie
-	DB                       *bolt.DB
-	UserRepo                 UserRepo
-	LoginClient              acpclient.Client
-	Validator                *validator.Validate
-	UserSecureStorage        UserSecureStorage
-	LoginURLBuilder          LoginURLBuilder
-	SignatureVerificationKey jose.JSONWebKey
+	Config            Config
+	Clients           Clients
+	SecureCookie      *securecookie.SecureCookie
+	DB                *bolt.DB
+	UserRepo          UserRepo
+	LoginClient       acpclient.Client
+	Validator         *validator.Validate
+	UserSecureStorage UserSecureStorage
+	LoginURLBuilder   LoginURLBuilder
 }
 
 func NewServer() (Server, error) {
@@ -46,33 +42,39 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to load config")
 	}
 
+	logrus.WithField("config", server.Config).Info("Config loaded")
+
 	if server.DB, err = InitDB(server.Config); err != nil {
 		return server, errors.Wrapf(err, "failed to init db")
 	}
 
-	if server.Config.EnableDCR {
-		storage := ClientIDStorage{DB: server.DB}
+	storage := DCRClientIDStorage{DB: server.DB}
 
-		if clientID, ok, err = storage.Get(); err != nil {
-			return server, errors.Wrapf(err, "failed to fetch client id from db")
-		}
-
-		if !ok {
-			if dcrResponse, err = RegisterClient(context.Background(), server.Config); err != nil {
-				return server, errors.Wrapf(err, "failed to register client")
+	for i, b := range server.Config.Banks {
+		if b.EnableDCR {
+			if clientID, ok, err = storage.Get(b.ID); err != nil {
+				return server, errors.Wrapf(err, "failed to fetch client id from db for bank: %s", b.ID)
 			}
 
-			if err = storage.Set(dcrResponse.ClientID); err != nil {
-				return server, errors.Wrapf(err, "failed to store client id in db")
+			if !ok {
+				if dcrResponse, err = RegisterClient(context.Background(), server.Config, b); err != nil {
+					return server, errors.Wrapf(err, "failed to register client for bank: %s", b.ID)
+				}
+
+				if err = storage.Set(b.ID, dcrResponse.ClientID); err != nil {
+					return server, errors.Wrapf(err, "failed to store client id in db for bank: %s", b.ID)
+				}
+
+				b.ClientID = dcrResponse.ClientID
+				server.Config.Banks[i] = b
+
+				logrus.Infof("client dynamically registered for bank: %s, id: %s", b.ID, dcrResponse.ClientID)
+			} else {
+				logrus.Infof("client already registered for bank: %s, use id: %s", b.ID, clientID)
+
+				b.ClientID = clientID
+				server.Config.Banks[i] = b
 			}
-
-			server.Config.ClientID = dcrResponse.ClientID
-
-			logrus.Infof("client dynamically registered, id: %s", dcrResponse.ClientID)
-		} else {
-			logrus.Infof("client already registered, use id: %s", clientID)
-
-			server.Config.ClientID = clientID
 		}
 	}
 
@@ -88,7 +90,7 @@ func NewServer() (Server, error) {
 		if server.Clients, err = InitClients(server.Config, NewOBBRSigner, NewOBBRClient, NewOBBRConsentClient); err != nil {
 			return server, errors.Wrapf(err, "failed to create clients")
 		}
-		if server.LoginURLBuilder, err = NewOBBRLoginURLBuilder(server.Clients.AcpAccountsClient); err != nil {
+		if server.LoginURLBuilder, err = NewOBBRLoginURLBuilder(); err != nil {
 			return server, errors.Wrapf(err, "failed to create login url builder")
 		}
 	case CDR:
@@ -123,10 +125,6 @@ func NewServer() (Server, error) {
 	server.UserRepo = UserRepo{DB: server.DB}
 
 	server.UserSecureStorage = NewUserSecureStorage(server.SecureCookie)
-
-	if server.SignatureVerificationKey, err = utils.GetServerKey(&server.Clients.AcpAccountsClient, utils.SIG); err != nil {
-		return server, errors.Wrapf(err, "failed to retrieve server signature key")
-	}
 
 	return server, nil
 }

@@ -77,7 +77,11 @@ func (s *Server) GetClientWithToken(bank ConnectedBank, tokens BankTokens) (Bank
 		return client, token, err
 	}
 
-	return s.Clients.BankClient, token, nil
+	if client, err = s.Clients.GetBankClient(BankID(bank.BankID)); err != nil {
+		return client, token, err
+	}
+
+	return client, token, nil
 }
 
 func (s *Server) GetAccounts() func(ctx *gin.Context) {

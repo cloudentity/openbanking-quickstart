@@ -63,12 +63,15 @@ func (c OBBRPaymentsV1SystemConsent) GetDebtorAccountNumber() string {
 	}
 	return ""
 }
+
 func (c OBBRPaymentsV1SystemConsent) GetCreditorName() string {
 	return c.Creditor.Name
 }
+
 func (c OBBRPaymentsV1SystemConsent) GetPaymentCurrency() string {
 	return c.Payment.Currency
 }
+
 func (c OBBRPaymentsV1SystemConsent) GetPaymentAmount() string {
 	return c.Payment.Amount
 }
@@ -83,12 +86,15 @@ func (c OBBRPaymentsV2SystemConsent) GetDebtorAccountNumber() string {
 	}
 	return ""
 }
+
 func (c OBBRPaymentsV2SystemConsent) GetCreditorName() string {
 	return c.Creditor.Name
 }
+
 func (c OBBRPaymentsV2SystemConsent) GetPaymentCurrency() string {
 	return c.Payment.Currency
 }
+
 func (c OBBRPaymentsV2SystemConsent) GetPaymentAmount() string {
 	return c.Payment.Amount
 }
@@ -103,12 +109,15 @@ func (c OBBRPaymentsV3SystemConsent) GetDebtorAccountNumber() string {
 	}
 	return ""
 }
+
 func (c OBBRPaymentsV3SystemConsent) GetCreditorName() string {
 	return c.Creditor.Name
 }
+
 func (c OBBRPaymentsV3SystemConsent) GetPaymentCurrency() string {
 	return c.Payment.Currency
 }
+
 func (c OBBRPaymentsV3SystemConsent) GetPaymentAmount() string {
 	return c.Payment.Amount
 }

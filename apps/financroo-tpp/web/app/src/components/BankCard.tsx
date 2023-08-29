@@ -81,7 +81,7 @@ export default function BankCard({
   };
   const isAccountChecked = id => filtering?.accounts?.includes(id);
 
-  let selectedBank = banks.find(b => b.value === bankId);
+  const selectedBank = banks.find(b => b.value === bankId);
 
   return (
     <Card style={style} id={bankId}>
@@ -94,7 +94,7 @@ export default function BankCard({
           />
         </div>
         <div style={{ marginLeft: 24 }}>
-          <Typography>{banks.find(b => b.value === bankId)?.name}</Typography>
+          <Typography>{selectedBank?.name}</Typography>
           <Typography
             style={{
               background: "rgba(54, 198, 175, 0.08)",
@@ -183,7 +183,10 @@ export default function BankCard({
               }}
               inputProps={{ "aria-label": "primary checkbox" }}
             />
-            <div style={{ marginLeft: 12 }} id={`account-id-${account.AccountId}`}>
+            <div
+              style={{ marginLeft: 12 }}
+              id={`account-id-${account.AccountId}`}
+            >
               <Typography className="account-name">
                 {account.Nickname}
               </Typography>

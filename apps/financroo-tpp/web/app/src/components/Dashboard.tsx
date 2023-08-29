@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useState } from "react";
 import PageToolbar from "./common/PageToolbar";
 import Connected from "./Connected";
 import Welcome from "./Welcome";
@@ -14,7 +14,7 @@ import IconButton from "@mui/material/IconButton";
 import CloseIcon from "@mui/icons-material/Close";
 import Alert from "@mui/material/Alert";
 import { makeStyles } from "tss-react/mui";
-import AcccountsAddedDialog from "./AccountsAddedDialog";
+import AccountsAddedDialog from "./AccountsAddedDialog";
 import { BanksResponse } from "./types";
 
 const useStyles = makeStyles()(() => ({
@@ -61,7 +61,7 @@ export default function Dashboard() {
     retry: false,
   });
 
-  const banks = useMemo(() => banksRes?.connected_banks ?? [], [banksRes]);
+  const connectedBanks = banksRes?.connected_banks ?? [];
 
   useEffect(() => {
     if (queryParams.get("connected") === "yes") {
@@ -123,15 +123,14 @@ export default function Dashboard() {
 
       {!showProgress && (
         <>
-          {banks.length === 0 && (
+          {connectedBanks.length === 0 ? (
             <PageContainer withBackground>
               <Welcome onConnectClick={() => setConnectAccountOpen(true)} />
             </PageContainer>
-          )}
-          {banks.length > 0 && (
+          ) : (
             <PageContent>
               <Connected
-                banks={banks}
+                banks={connectedBanks}
                 onConnectClick={() => setConnectAccountOpen(true)}
                 onDisconnect={handleDisconnectBank}
                 onReconnect={handleReconnectBank}
@@ -143,7 +142,7 @@ export default function Dashboard() {
 
       {connectAccountOpen && (
         <ConnectAccount
-          connected={banks}
+          banks={banksRes}
           onAllowAccess={handleAllowAccess}
           onClose={() => setConnectAccountOpen(false)}
         />
@@ -175,7 +174,7 @@ export default function Dashboard() {
         </Alert>
       </Snackbar>
 
-      <AcccountsAddedDialog
+      <AccountsAddedDialog
         open={accountAddedDialog === null ? false : accountAddedDialog}
         setOpen={setAccountAddedDialog}
       />

@@ -47,14 +47,16 @@ func TestRegisterClient(t *testing.T) {
 	resp, err := RegisterClient(
 		context.Background(),
 		Config{
+			UIURL:    "https://localhost:8091",
+			CertFile: "../../data/tpp_cert.pem",
+			Spec:     GENERIC,
+			RootCA:   "../../data/ca.pem",
+		},
+		BankConfig{
 			ACPInternalURL: server.URL,
 			// ACPInternalURL: "https://localhost:8443",
 			Tenant:    "default",
-			ServerID:  "generic",
-			UIURL:     "https://localhost:8091",
-			CertFile:  "../../data/tpp_cert.pem",
-			Spec:      GENERIC,
-			RootCA:    "../../data/ca.pem",
+			Server:    "generic",
 			EnableDCR: true,
 		},
 	)
@@ -69,17 +71,19 @@ func TestClientIDStorage(t *testing.T) {
 	require.NoError(t, err)
 	defer db.Close()
 
-	storage := ClientIDStorage{DB: db}
+	storage := DCRClientIDStorage{DB: db}
 
-	id, exists, err := storage.Get()
+	bankID := BankID("gobank")
+
+	id, exists, err := storage.Get(bankID)
 	require.NoError(t, err)
 	require.False(t, exists)
 	require.Empty(t, id)
 
-	err = storage.Set("client-123")
+	err = storage.Set(bankID, "client-123")
 	require.NoError(t, err)
 
-	id, exists, err = storage.Get()
+	id, exists, err = storage.Get(bankID)
 	require.NoError(t, err)
 	require.True(t, exists)
 	require.Equal(t, "client-123", id)
