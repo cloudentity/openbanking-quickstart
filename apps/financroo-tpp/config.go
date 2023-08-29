@@ -53,7 +53,7 @@ type Config struct {
 	RequestObjectSigningAlg     string       `env:"REQUEST_OBJECT_SIGNING_ALG" envDefault:"ES256"`
 	RequestObjectSigningKeyFile string       `env:"REQUEST_OBJECT_SIGNING_KEY_FILE" envDefault:"/certs/private.es.pem"`
 	EnableDCR                   bool         `env:"ENABLE_DCR" envDefault:"false"`
-	BanksConfigFile             string       `env:"BANKS_CONFIG_FILE" envDefault:"/app/banks.json"`
+	BanksConfigFile             string       `env:"BANKS_CONFIG_FILE"`
 
 	ClientScopes []string
 	Banks        BanksConfig
@@ -148,6 +148,7 @@ func LoadBanksConfig(config Config) (BanksConfig, error) {
 		return []BankConfig{
 			{
 				ID:             "gobank",
+				Name:           "Go Bank",
 				URL:            config.BankURL,
 				ACPURL:         config.ACPURL,
 				ACPInternalURL: config.ACPInternalURL,
