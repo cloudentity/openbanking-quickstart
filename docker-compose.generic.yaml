@@ -72,6 +72,7 @@ services:
       - ./data/ca.pem:/ca.pem
       - ./data/bank_cert.pem:/bank_cert.pem
       - ./data/bank_key.pem:/bank_key.pem
+      - ./consent/consent-page/assets/images/hyperscalebank_logo.svg:/app/assets/images/bank_logo.svg
     env_file:
       - .env
     environment:

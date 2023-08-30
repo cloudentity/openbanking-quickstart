@@ -40,6 +40,8 @@ services:
       - REDIS_ENABLED=true
       - REDIS_ADDRESS=redis:6379
       - OTEL_JAEGER_AGENT_HOST=jaeger
+      - FAAS_PROVIDER=docker
+      - DOCKER_NODE_URL=http://node-env:8888
     command:
       - server
       - start
@@ -95,6 +97,13 @@ services:
     ports:
       - "6831:6831/udp"
       - "16686:16686"
+
+  node-env:
+    image: docker.cloudentity.io/node-env:5.1
+    container_name: node-env
+    restart: on-failure
+    ports:
+      - 8888:8888
 
   runner:
     container_name: quickstart-runner

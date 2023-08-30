@@ -87,13 +87,34 @@ clients:
 
 services:
 - authorization_server_id: hyperscalebank
-  id: hyperscalebank-sample
-  name: Sample
+  id: hyperscalebank-accounts
+  name: Accounts
   tenant_id: {{ .tenant_id }}
   scopes:
   - authorization_server_id: hyperscalebank
-    id: hyperscalebank-sample
-    name: sample
+    id: hyperscalebank-accounts
+    name: accounts
     tenant_id: {{ .tenant_id }}
     transient: true
     implicit: true
+
+script_execution_points:
+  - server_id: hyperscalebank
+    tenant_id: {{ .tenant_id }}
+    script_id: token-minting
+    target_fk: hyperscalebank
+    type: token_minting
+
+scripts:
+  - authorization_server_id: hyperscalebank
+    tenant_id: {{ .tenant_id }}
+    id: token-minting
+    name: Token minting
+    body: |
+      module.exports = async function(context) {
+        return {
+          access_token: {
+            "consent_id": context.consent_id
+          }
+        };
+      }

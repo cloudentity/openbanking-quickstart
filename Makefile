@@ -5,7 +5,7 @@ ARTIFACTORY_USER              ?= jenkins
 ARTIFACTORY_GO_PROXY_PASSWORD ?= PUT_ARTIFACTORY_GO_PROXY_PASSWORD_HERE
 
 .EXPORT_ALL_VARIABLES: ;
-ACP_LOCAL_APPS      =acp crdb redis jaeger
+ACP_LOCAL_APPS      =acp crdb redis jaeger node-env
 ALL_DOCKER_COMPOSES =-f docker-compose.obuk.yaml -f docker-compose.obbr.yaml -f docker-compose.cdr.yaml -f docker-compose.build.yaml
 
 ifeq ($(CI), true)

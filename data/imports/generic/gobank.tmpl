@@ -97,7 +97,7 @@ clients:
 #   - offline_access
 #   - openid
 #   - email
-#   - sample
+#   - accounts
 #   grant_types:
 #   - client_credentials
 #   - authorization_code
@@ -116,13 +116,34 @@ clients:
 
 services:
 - authorization_server_id: {{ .server_id }}
-  id: {{ .server_id}}-sample
-  name: Sample
+  id: {{ .server_id}}-accounts
+  name: Accounts
   tenant_id: {{ .tenant_id }}
   scopes:
   - authorization_server_id: {{ .server_id }}
-    id: sample
-    name: sample
+    id: accounts
+    name: accounts
     tenant_id: {{ .tenant_id }}
     transient: true
     implicit: true
+
+script_execution_points:
+  - server_id: {{ .server_id }}
+    tenant_id: {{ .tenant_id }}
+    script_id: token-minting
+    target_fk: {{ .server_id }}
+    type: token_minting
+
+scripts:
+  - authorization_server_id: {{ .server_id }}
+    tenant_id: {{ .tenant_id }}
+    id: token-minting
+    name: Token minting
+    body: |
+      module.exports = async function(context) {
+        return {
+          access_token: {
+            "consent_id": context.consent_id
+          }
+        };
+      }
