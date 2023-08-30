@@ -43,9 +43,6 @@ describe(`FDX Financroo Consent self service tests`, () => {
     accountConsentPage.checkAccounts(accountsIDs);
     accountConsentPage.clickAgree();
 
-    financrooModalPage.assertThatModalIsDisplayed();
-    financrooModalPage.close();
-
     financrooAccountsPage.assertThatPageIsDisplayed();
     financrooAccountsPage.assertAccountsSyncedNumber(accountsIDs.length);
     financrooAccountsPage.assertAccountsIds(accountsIDs);
