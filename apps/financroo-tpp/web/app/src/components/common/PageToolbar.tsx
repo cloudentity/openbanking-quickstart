@@ -129,6 +129,7 @@ export default function PageToolbar({
                   style={{ height: 64 }}
                   onClick={() => navigate("/")}
                 />
+                {window.featureFlags?.Investments && (
                 <Tab
                   label="Investments"
                   value="investments"
@@ -136,6 +137,7 @@ export default function PageToolbar({
                   style={{ height: 64 }}
                   onClick={() => navigate("/investments")}
                 />
+                )}
                 <Tab label="Spending" value="spending" style={{ height: 64 }} />
                 <Tab label="Settings" value="settings" style={{ height: 64 }} />
               </Tabs>

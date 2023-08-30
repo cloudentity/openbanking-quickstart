@@ -85,9 +85,6 @@ describe(`FDX Financroo Consent admin portal tests`, () => {
     accountConsentPage.clickContinue();
     accountConsentPage.clickAgree();
 
-    financrooModalPage.assertThatModalIsDisplayed();
-    financrooModalPage.close();
-
     financrooAccountsPage.assertThatPageIsDisplayed();
     financrooAccountsPage.assertAccountsSyncedNumber(0);
 
@@ -122,9 +119,6 @@ describe(`FDX Financroo Consent admin portal tests`, () => {
     accountConsentPage.clickContinue();
     accountConsentPage.checkAccounts(accountsIDs);
     accountConsentPage.clickAgree();
-
-    financrooModalPage.assertThatModalIsDisplayed();
-    financrooModalPage.close();
 
     financrooAccountsPage.assertThatPageIsDisplayed();
     financrooAccountsPage.assertAccountsSyncedNumber(accountsIDs.length);

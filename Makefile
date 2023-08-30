@@ -41,6 +41,10 @@ run-%-saas: set_saas_configuration
 test: start-runner
 	docker exec quickstart-runner sh -c "go test -failfast -p=4 -parallel=8 ./..."
 
+.PHONY: build-tests
+build-tests:
+	yarn --cwd tests install
+
 .PHONY: run-tests
 run-tests:
 	yarn --cwd tests run cypress open
