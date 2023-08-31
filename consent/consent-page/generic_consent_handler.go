@@ -11,6 +11,7 @@ import (
 type GenericAccountAccessConsentHandler struct {
 	*Server
 	GenericConsentTools
+	ConsentStorage
 }
 
 func (s *GenericAccountAccessConsentHandler) GetConsent(c *gin.Context, loginRequest LoginRequest) {
@@ -40,10 +41,11 @@ func (s *GenericAccountAccessConsentHandler) GetConsent(c *gin.Context, loginReq
 
 func (s *GenericAccountAccessConsentHandler) ConfirmConsent(c *gin.Context, loginRequest LoginRequest) (string, error) {
 	var (
-		response      *logins.GetScopeGrantRequestOK
-		accept        *logins.AcceptScopeGrantRequestOK
-		grantedScopes = []string{}
-		err           error
+		response          *logins.GetScopeGrantRequestOK
+		accept            *logins.AcceptScopeGrantRequestOK
+		grantedScopes     = []string{}
+		externalConsentID ConsentID
+		err               error
 	)
 
 	if response, err = s.Client.System.Logins.GetScopeGrantRequest(
@@ -53,8 +55,9 @@ func (s *GenericAccountAccessConsentHandler) ConfirmConsent(c *gin.Context, logi
 		return "", errors.Wrapf(err, "failed to get login session")
 	}
 
-	// TODO store consent in the external service
-	externalConsentID := "external-consent-id"
+	if externalConsentID, err = s.Store(c, Subject(response.Payload.Subject), Data(*response.Payload)); err != nil {
+		return "", errors.Wrapf(err, "failed to store consent")
+	}
 
 	for _, scp := range response.Payload.RequestedScopes {
 		grantedScopes = append(grantedScopes, scp.RequestedName)
@@ -66,7 +69,7 @@ func (s *GenericAccountAccessConsentHandler) ConfirmConsent(c *gin.Context, logi
 			WithAcceptScopeGrant(&models.AcceptScopeGrant{
 				GrantedScopes: grantedScopes,
 				LoginState:    loginRequest.State,
-				ConsentID:     externalConsentID,
+				ConsentID:     string(externalConsentID),
 			}),
 		nil,
 	); err != nil {

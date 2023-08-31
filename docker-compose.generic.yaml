@@ -163,3 +163,18 @@ services:
       - --variables-file
       - /variables.yaml
       - --verbose
+
+  consent-storage:
+    container_name: consent-storage
+    platform: linux/x86_64
+    image: cloudentity/openbanking-quickstart-consent-storage:latest
+    ports:
+      - "8084:8084"
+    restart: on-failure
+    volumes:
+      - ./data/ca.pem:/ca.pem
+      - ./data/bank_cert.pem:/bank_cert.pem
+      - ./data/bank_key.pem:/bank_key.pem
+    depends_on:
+      configuration:
+        condition: service_completed_successfully

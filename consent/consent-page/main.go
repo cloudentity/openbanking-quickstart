@@ -259,7 +259,7 @@ func NewServer() (Server, error) {
 		server.AccountAccessMFAConsentProvider = &FDXAccountAccessMFAConsentProvider{&server, tools}
 	case Generic:
 		tools := GenericConsentTools{Trans: server.Trans, Config: server.Config}
-		server.AccountAccessConsentHandler = &GenericAccountAccessConsentHandler{&server, tools}
+		server.AccountAccessConsentHandler = &GenericAccountAccessConsentHandler{&server, tools, &DummyConsentStorage{}}
 	default:
 		return server, errors.Wrapf(err, "unsupported spec %s", server.Config.Spec)
 	}
