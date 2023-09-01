@@ -164,10 +164,10 @@ services:
       - /variables.yaml
       - --verbose
 
-  consent-storage:
-    container_name: consent-storage
-    platform: linux/x86_64
-    image: cloudentity/openbanking-quickstart-consent-storage:latest
+  gobank-consent-storage:
+    # image: cloudentity/openbanking-quickstart-consent-storage:${VERSION}
+    image: openbanking-quickstart_consent-storage:${VERSION}
+    container_name: gobank-consent-storage
     ports:
       - "8084:8084"
     restart: on-failure
@@ -175,6 +175,7 @@ services:
       - ./data/ca.pem:/ca.pem
       - ./data/bank_cert.pem:/bank_cert.pem
       - ./data/bank_key.pem:/bank_key.pem
+      - ./mount/gobank-consent-storage:/app/data
     depends_on:
       configuration:
         condition: service_completed_successfully

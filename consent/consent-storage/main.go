@@ -8,6 +8,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
+	bolt "go.etcd.io/bbolt"
 )
 
 type Config struct {
@@ -16,6 +17,7 @@ type Config struct {
 	KeyFile         string `env:"KEY_FILE" envDefault:"/bank_key.pem"`
 	Port            int    `env:"PORT" envDefault:"8084"`
 	EnableTLSServer bool   `env:"ENABLE_TLS_SERVER" envDefault:"true"`
+	DBFile          string `env:"DB_FILE" envDefault:"/app/data/my.db"`
 }
 
 func LoadConfig() (config Config, err error) {
@@ -28,6 +30,8 @@ func LoadConfig() (config Config, err error) {
 
 type Server struct {
 	Config Config
+	DB     *bolt.DB
+	Repo   ConsentRepo
 }
 
 func NewServer() (Server, error) {
@@ -40,14 +44,20 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to load config")
 	}
 
+	if server.DB, err = InitDB(server.Config); err != nil {
+		return server, errors.Wrapf(err, "failed to init db")
+	}
+
+	server.Repo = ConsentRepo{server.DB}
+
 	return server, nil
 }
 
 func (s *Server) Start() error {
 	r := gin.Default()
 
-	r.POST("/consents", createConsent)
-	r.GET("/consents", listConsents)
+	r.POST("/consents", s.CreateConsent)
+	r.GET("/consents", s.ListConsents)
 
 	if s.Config.EnableTLSServer {
 		logrus.Debugf("running consent storage server tls")

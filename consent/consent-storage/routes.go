@@ -7,33 +7,43 @@ import (
 	"github.com/google/uuid"
 )
 
-type Consent struct {
-	ID      string   `json:"id"`
-	Subject string   `json:"subject"`
-	Scopes  []string `json:"scopes"`
-}
+func (s *Server) CreateConsent(c *gin.Context) {
+	var (
+		consent Consent
+		err     error
+	)
 
-// dummy in-memory implementation
-var consents []Consent
-
-// createConsent handles the creation of a new consent.
-func createConsent(c *gin.Context) {
-	var consent Consent
-	if err := c.ShouldBindJSON(&consent); err != nil {
+	if err = c.ShouldBindJSON(&consent); err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
 
-	// Generate a random UUID for the consent
-	consent.ID = uuid.New().String()
+	if consent.ID == "" {
+		consent.ID = uuid.New().String()
+	}
 
-	// Append the new consent to the consents list
-	consents = append(consents, consent)
+	if err = s.Repo.Create(consent); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
 
 	c.JSON(http.StatusCreated, consent)
 }
 
-// listConsents lists all consents.
-func listConsents(c *gin.Context) {
-	c.JSON(http.StatusOK, consents)
+type ConsentsReponse struct {
+	Consents []Consent `json:"consents"`
+}
+
+func (s *Server) ListConsents(c *gin.Context) {
+	var (
+		res ConsentsReponse
+		err error
+	)
+
+	if res.Consents, err = s.Repo.List(); err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+
+	c.JSON(http.StatusOK, res)
 }
