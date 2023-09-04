@@ -12,6 +12,7 @@ COPY generated generated
 RUN go mod download
 
 COPY consent/consent-page .
+COPY shared shared
 RUN --mount=type=cache,target=/root/.cache/go-build,mode=777 \
     CGO_ENABLED=0 go build -tags static_all -o main .
 

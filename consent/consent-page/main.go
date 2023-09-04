@@ -21,6 +21,7 @@ import (
 	"golang.org/x/text/language"
 
 	acpclient "github.com/cloudentity/acp-client-go"
+	"github.com/cloudentity/openbanking-quickstart/shared"
 )
 
 type Spec string
@@ -221,7 +222,7 @@ func NewServer() (Server, error) {
 
 	if server.Config.EnableMFA && server.Config.MFAProvider == "" {
 		logrus.Debugf("mfa is enabled... loading otp db")
-		if db, err = InitDB(server.Config); err != nil {
+		if db, err = shared.InitDB(server.Config.DBFile); err != nil {
 			return server, errors.Wrapf(err, "failed to init db")
 		}
 

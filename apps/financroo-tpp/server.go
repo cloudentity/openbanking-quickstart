@@ -15,6 +15,7 @@ import (
 	"gopkg.in/go-playground/validator.v9"
 
 	acpclient "github.com/cloudentity/acp-client-go"
+	"github.com/cloudentity/openbanking-quickstart/shared"
 )
 
 type Server struct {
@@ -44,7 +45,7 @@ func NewServer() (Server, error) {
 
 	logrus.WithField("config", server.Config).Info("Config loaded")
 
-	if server.DB, err = InitDB(server.Config); err != nil {
+	if server.DB, err = shared.InitDB(server.Config.DBFile, shared.WithBuckets(usersBucket, dcrBucket)); err != nil {
 		return server, errors.Wrapf(err, "failed to init db")
 	}
 

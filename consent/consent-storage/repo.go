@@ -11,6 +11,8 @@ type ConsentRepo struct {
 	*bolt.DB
 }
 
+var consentsBucket = []byte("consents")
+
 func (u *ConsentRepo) List() ([]Consent, error) {
 	var (
 		consents = []Consent{}

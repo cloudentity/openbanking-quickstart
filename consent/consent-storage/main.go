@@ -5,6 +5,7 @@ import (
 	"strconv"
 
 	"github.com/caarlos0/env/v6"
+	"github.com/cloudentity/openbanking-quickstart/shared"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -44,7 +45,7 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to load config")
 	}
 
-	if server.DB, err = InitDB(server.Config); err != nil {
+	if server.DB, err = shared.InitDB(server.Config.DBFile, shared.WithBuckets(consentsBucket)); err != nil {
 		return server, errors.Wrapf(err, "failed to init db")
 	}
 

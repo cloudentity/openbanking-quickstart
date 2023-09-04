@@ -19,6 +19,8 @@ type ConnectedBank struct {
 	RefreshToken string `json:"refresh_token"`
 }
 
+var usersBucket = []byte("users")
+
 type UserRepo struct {
 	*bolt.DB
 }

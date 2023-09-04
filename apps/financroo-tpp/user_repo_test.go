@@ -4,13 +4,14 @@ import (
 	"fmt"
 	"testing"
 
+	"github.com/cloudentity/openbanking-quickstart/shared"
 	"github.com/stretchr/testify/require"
 )
 
 func TestUsersRepo(t *testing.T) {
 	t.Parallel()
 	dir := t.TempDir()
-	db, err := InitDB(Config{DBFile: fmt.Sprintf("%s/test.db", dir)})
+	db, err := shared.InitDB(fmt.Sprintf("%s/test.db", dir), shared.WithBuckets(usersBucket))
 	require.NoError(t, err)
 	defer db.Close()
 

@@ -217,6 +217,8 @@ func toPublicJWKs(c *x509.Certificate) (models.ClientJWKs, error) {
 	return models.ClientJWKs{Keys: []*models.ClientJWK{&res}}, nil
 }
 
+var dcrBucket = []byte("dcr")
+
 type DCRClientIDStorage struct {
 	*bolt.DB
 }

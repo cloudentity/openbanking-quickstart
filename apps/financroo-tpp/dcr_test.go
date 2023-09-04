@@ -8,6 +8,7 @@ import (
 	"net/http/httptest"
 	"testing"
 
+	"github.com/cloudentity/openbanking-quickstart/shared"
 	"github.com/stretchr/testify/require"
 )
 
@@ -67,7 +68,7 @@ func TestRegisterClient(t *testing.T) {
 func TestClientIDStorage(t *testing.T) {
 	dir := t.TempDir()
 
-	db, err := InitDB(Config{DBFile: fmt.Sprintf("%s/test.db", dir)})
+	db, err := shared.InitDB(fmt.Sprintf("%s/test.db", dir), shared.WithBuckets(dcrBucket))
 	require.NoError(t, err)
 	defer db.Close()
 
