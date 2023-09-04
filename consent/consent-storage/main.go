@@ -45,11 +45,13 @@ func NewServer() (Server, error) {
 		return server, errors.Wrapf(err, "failed to load config")
 	}
 
-	if server.DB, err = shared.InitDB(server.Config.DBFile, shared.WithBuckets(consentsBucket)); err != nil {
+	if server.DB, err = shared.InitDB(server.Config.DBFile); err != nil {
 		return server, errors.Wrapf(err, "failed to init db")
 	}
 
-	server.Repo = ConsentRepo{server.DB}
+	if server.Repo, err = NewConsentRepo(server.DB); err != nil {
+		return server, errors.Wrapf(err, "failed to init consent repo")
+	}
 
 	return server, nil
 }

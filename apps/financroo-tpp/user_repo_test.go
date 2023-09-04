@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"testing"
 
 	"github.com/cloudentity/openbanking-quickstart/shared"
@@ -10,12 +9,12 @@ import (
 
 func TestUsersRepo(t *testing.T) {
 	t.Parallel()
-	dir := t.TempDir()
-	db, err := shared.InitDB(fmt.Sprintf("%s/test.db", dir), shared.WithBuckets(usersBucket))
-	require.NoError(t, err)
+
+	db := shared.InitTestDB(t)
 	defer db.Close()
 
-	repo := UserRepo{DB: db}
+	repo, err := NewUserRepo(db)
+	require.NoError(t, err)
 
 	u1, err := repo.Get("test")
 	require.NoError(t, err)

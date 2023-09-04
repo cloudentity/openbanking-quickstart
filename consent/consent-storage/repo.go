@@ -3,6 +3,7 @@ package main
 import (
 	"encoding/json"
 
+	"github.com/cloudentity/openbanking-quickstart/shared"
 	"github.com/pkg/errors"
 	bolt "go.etcd.io/bbolt"
 )
@@ -12,6 +13,14 @@ type ConsentRepo struct {
 }
 
 var consentsBucket = []byte("consents")
+
+func NewConsentRepo(db *bolt.DB) (repo ConsentRepo, err error) {
+	if err = shared.CreateBucket(db, consentsBucket); err != nil {
+		return repo, err
+	}
+
+	return ConsentRepo{db}, nil
+}
 
 func (u *ConsentRepo) List() ([]Consent, error) {
 	var (

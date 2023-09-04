@@ -1,17 +1,17 @@
 package main
 
 import (
-	"fmt"
 	"testing"
 
+	"github.com/cloudentity/openbanking-quickstart/shared"
 	"github.com/stretchr/testify/require"
 )
 
 func TestOTP(t *testing.T) {
 	mobile := "+48987654321"
-	dir := t.TempDir()
-	db, err := InitDB(Config{DBFile: fmt.Sprintf("%s/test.db", dir)})
-	require.NoError(t, err)
+
+	db := shared.InitTestDB(t)
+	defer db.Close()
 
 	otpRepo, err := NewOTPRepo(db)
 	require.NoError(t, err)

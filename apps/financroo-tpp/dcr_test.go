@@ -3,7 +3,6 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
@@ -66,13 +65,11 @@ func TestRegisterClient(t *testing.T) {
 }
 
 func TestClientIDStorage(t *testing.T) {
-	dir := t.TempDir()
-
-	db, err := shared.InitDB(fmt.Sprintf("%s/test.db", dir), shared.WithBuckets(dcrBucket))
-	require.NoError(t, err)
+	db := shared.InitTestDB(t)
 	defer db.Close()
 
-	storage := DCRClientIDStorage{DB: db}
+	storage, err := NewDCRClientIDStorage(db)
+	require.NoError(t, err)
 
 	bankID := BankID("gobank")
 

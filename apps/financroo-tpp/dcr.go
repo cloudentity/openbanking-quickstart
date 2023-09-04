@@ -19,6 +19,7 @@ import (
 	acpclient "github.com/cloudentity/acp-client-go"
 	"github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
 	"github.com/cloudentity/acp-client-go/clients/oauth2/models"
+	"github.com/cloudentity/openbanking-quickstart/shared"
 )
 
 type DCRClient struct {
@@ -221,6 +222,16 @@ var dcrBucket = []byte("dcr")
 
 type DCRClientIDStorage struct {
 	*bolt.DB
+}
+
+func NewDCRClientIDStorage(db *bolt.DB) (storage DCRClientIDStorage, err error) {
+	if err = shared.CreateBucket(db, dcrBucket); err != nil {
+		return storage, err
+	}
+
+	storage.DB = db
+
+	return storage, nil
 }
 
 func (c *DCRClientIDStorage) Get(id BankID) (string, bool, error) {
