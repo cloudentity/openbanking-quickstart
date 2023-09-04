@@ -13,8 +13,8 @@ import (
 
 type Config struct {
 	RootCA          string `env:"ROOT_CA" envDefault:"/ca.pem"`
-	CertFile        string `env:"CERT_FILE" envDefault:"/bank_cert.pem"`
-	KeyFile         string `env:"KEY_FILE" envDefault:"/bank_key.pem"`
+	CertFile        string `env:"CERT_FILE" envDefault:"/consent_storage_cert.pem"`
+	KeyFile         string `env:"KEY_FILE" envDefault:"/consent_storage_key.pem"`
 	Port            int    `env:"PORT" envDefault:"8084"`
 	EnableTLSServer bool   `env:"ENABLE_TLS_SERVER" envDefault:"true"`
 	DBFile          string `env:"DB_FILE" envDefault:"/app/data/my.db"`

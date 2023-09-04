@@ -41,6 +41,8 @@ services:
       - ./data/ca.pem:/ca.pem
       - ./data/bank_cert.pem:/bank_cert.pem
       - ./data/bank_key.pem:/bank_key.pem
+      - ./data/consent_storage_cert.pem:/consent_storage_cert.pem
+      - ./data/consent_storage_key.pem:/consent_storage_key.pem
     env_file:
       - .env
     environment:
@@ -56,6 +58,25 @@ services:
       - OTP_MODE=mock # change to custom to enable custom OTP handling
       - MFA_CLAIM=sub # for mobile use mobile_verified
       - CLIENT_ID=${CONSENT_PAGE_CLIENT_ID}
+      - EXTERNAL_CONSENT_STORAGE_URL=https://gobank-consent-storage:8084
+      - EXTERNAL_CONSENT_STORAGE_CLIENT_CERT_FILE=/consent_storage_cert.pem
+      - EXTERNAL_CONSENT_STORAGE_CLIENT_KEY_FILE=/consent_storage_key.pem
+      - EXTERNAL_CONSENT_STORAGE_CLIENT_ROOT_CA=/ca.pem
+    depends_on:
+      configuration:
+        condition: service_completed_successfully
+
+  gobank-consent-storage:
+    image: openbanking-quickstart_consent-storage:${VERSION}
+    container_name: gobank-consent-storage
+    ports:
+      - "8084:8084"
+    restart: on-failure
+    volumes:
+      - ./data/ca.pem:/ca.pem
+      - ./data/consent_storage_cert.pem:/consent_storage_cert.pem
+      - ./data/consent_storage_key.pem:/consent_storage_key.pem
+      - ./mount/gobank-consent-storage:/app/data
     depends_on:
       configuration:
         condition: service_completed_successfully
@@ -163,19 +184,3 @@ services:
       - --variables-file
       - /variables.yaml
       - --verbose
-
-  gobank-consent-storage:
-    # image: cloudentity/openbanking-quickstart-consent-storage:${VERSION}
-    image: openbanking-quickstart_consent-storage:${VERSION}
-    container_name: gobank-consent-storage
-    ports:
-      - "8084:8084"
-    restart: on-failure
-    volumes:
-      - ./data/ca.pem:/ca.pem
-      - ./data/bank_cert.pem:/bank_cert.pem
-      - ./data/bank_key.pem:/bank_key.pem
-      - ./mount/gobank-consent-storage:/app/data
-    depends_on:
-      configuration:
-        condition: service_completed_successfully
