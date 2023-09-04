@@ -17,7 +17,7 @@ import (
 	obukAccounts "github.com/cloudentity/openbanking-quickstart/generated/obuk/accounts/client"
 	"github.com/cloudentity/openbanking-quickstart/generated/obuk/accounts/models"
 	payments_client "github.com/cloudentity/openbanking-quickstart/generated/obuk/payments/client"
-	"github.com/cloudentity/openbanking-quickstart/utils"
+	"github.com/cloudentity/openbanking-quickstart/shared"
 	"github.com/gin-gonic/gin"
 	"github.com/go-openapi/runtime"
 	"github.com/go-openapi/strfmt"
@@ -141,7 +141,7 @@ func InitClients(
 			clients.ConsentClients[b.ID] = consentClientCreateFn(acpAccountsWebClient, acpPaymentsWebClient, signer)
 		}
 
-		if clients.SignatureVerificationKey[b.ID], err = utils.GetServerKey(&acpPaymentsWebClient, utils.SIG); err != nil {
+		if clients.SignatureVerificationKey[b.ID], err = shared.GetServerKey(&acpPaymentsWebClient, shared.SIG); err != nil {
 			return clients, errors.Wrapf(err, "failed to get signature verification key for %s", config.Spec)
 		}
 	}
