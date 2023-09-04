@@ -23,10 +23,10 @@ type ConnectedBank struct {
 var usersBucket = []byte("users")
 
 type UserRepo struct {
-	*bolt.DB
+	shared.DB
 }
 
-func NewUserRepo(db *bolt.DB) (repo UserRepo, err error) {
+func NewUserRepo(db shared.DB) (repo UserRepo, err error) {
 	if err = shared.CreateBucket(db, usersBucket); err != nil {
 		return repo, err
 	}

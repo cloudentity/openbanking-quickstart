@@ -17,7 +17,6 @@ import (
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
-	bolt "go.etcd.io/bbolt"
 	"golang.org/x/text/language"
 
 	acpclient "github.com/cloudentity/acp-client-go"
@@ -145,11 +144,12 @@ type Server struct {
 
 func NewServer() (Server, error) {
 	var (
-		server = Server{}
-		db     *bolt.DB
-		l      logrus.Level
-		err    error
-		trans  []fs.FileInfo
+		server         = Server{}
+		db             shared.DB
+		l              logrus.Level
+		err            error
+		trans          []fs.FileInfo
+		consentStorage ConsentStorage
 	)
 
 	if server.Config, err = LoadConfig(); err != nil {

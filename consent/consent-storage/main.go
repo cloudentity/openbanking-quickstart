@@ -9,7 +9,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
-	bolt "go.etcd.io/bbolt"
 )
 
 type Config struct {
@@ -31,7 +30,7 @@ func LoadConfig() (config Config, err error) {
 
 type Server struct {
 	Config Config
-	DB     *bolt.DB
+	DB     shared.DB
 	Repo   ConsentRepo
 }
 

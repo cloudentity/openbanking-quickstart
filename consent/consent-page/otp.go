@@ -9,6 +9,7 @@ import (
 	"strings"
 	"time"
 
+	"github.com/cloudentity/openbanking-quickstart/shared"
 	"github.com/pkg/errors"
 	bolt "go.etcd.io/bbolt"
 )
@@ -27,25 +28,19 @@ type OTP struct {
 }
 
 type OTPRepo struct {
-	*bolt.DB
+	shared.DB
 }
 
 var bucket = []byte("otps")
 
-func NewOTPRepo(db *bolt.DB) (*OTPRepo, error) {
+func NewOTPRepo(db shared.DB) (*OTPRepo, error) {
 	var (
 		repo = OTPRepo{}
 		err  error
 	)
 
-	if err = db.Update(func(tx *bolt.Tx) error {
-		if _, err = tx.CreateBucketIfNotExists(bucket); err != nil {
-			return errors.Wrapf(err, "failed to create bucket")
-		}
-
-		return nil
-	}); err != nil {
-		return nil, err
+	if err = shared.CreateBucket(db, bucket); err != nil {
+		return nil, errors.Wrapf(err, "failed to create bucket %s", bucket)
 	}
 
 	repo.DB = db

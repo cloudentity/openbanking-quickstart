@@ -9,12 +9,12 @@ import (
 )
 
 type ConsentRepo struct {
-	*bolt.DB
+	shared.DB
 }
 
 var consentsBucket = []byte("consents")
 
-func NewConsentRepo(db *bolt.DB) (repo ConsentRepo, err error) {
+func NewConsentRepo(db shared.DB) (repo ConsentRepo, err error) {
 	if err = shared.CreateBucket(db, consentsBucket); err != nil {
 		return repo, err
 	}

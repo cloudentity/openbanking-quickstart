@@ -1,64 +1,62 @@
 package shared
 
 import (
+	"fmt"
 	"os"
+	"testing"
 	"time"
 
 	"github.com/pkg/errors"
+	"github.com/stretchr/testify/require"
 	bolt "go.etcd.io/bbolt"
 )
 
-type DBOptions struct {
-	Buckets [][]byte
-}
-
-type DBOption func(*DBOptions)
-
-func WithBuckets(buckets ...[]byte) DBOption {
-	return func(o *DBOptions) {
-		o.Buckets = buckets
-	}
-}
-
 var mode = os.FileMode(0o600)
 
-func InitDB(dbFilePath string, options ...DBOption) (*bolt.DB, error) {
+type DB struct {
+	*bolt.DB
+}
+
+func InitDB(dbFilePath string) (DB, error) {
 	var (
-		db   *bolt.DB
-		err  error
-		opts = DBOptions{}
+		db  = DB{}
+		err error
 	)
 
-	for _, o := range options {
-		o(&opts)
-	}
-
-	if db, err = bolt.Open(dbFilePath, mode, &bolt.Options{Timeout: 3 * time.Second}); err != nil {
-		return nil, errors.Wrapf(err, "failed to open db")
-	}
-
-	if err = initBuckets(db, opts.Buckets); err != nil {
-		return nil, errors.Wrapf(err, "failed to init buckets")
+	if db.DB, err = bolt.Open(dbFilePath, mode, &bolt.Options{Timeout: 3 * time.Second}); err != nil {
+		return db, errors.Wrapf(err, "failed to open db")
 	}
 
 	return db, nil
 }
 
-func initBuckets(db *bolt.DB, buckets [][]byte) error {
+func CreateBucket(db DB, bucket []byte) error {
 	var err error
 
-	for _, b := range buckets {
-		bucket := b
-		if err = db.Update(func(tx *bolt.Tx) error {
-			if _, err = tx.CreateBucketIfNotExists(bucket); err != nil {
-				return errors.Wrapf(err, "failed to create bucket: %s", string(bucket))
-			}
-
-			return nil
-		}); err != nil {
-			return err
+	if err = db.Update(func(tx *bolt.Tx) error {
+		if _, err = tx.CreateBucketIfNotExists(bucket); err != nil {
+			return errors.Wrapf(err, "failed to create bucket: %s", string(bucket))
 		}
+
+		return nil
+	}); err != nil {
+		return err
 	}
 
 	return nil
+}
+
+func InitTestDB(t *testing.T) DB {
+	t.Helper()
+
+	var (
+		dir = t.TempDir()
+		db  DB
+		err error
+	)
+
+	db, err = InitDB(fmt.Sprintf("%s/test.db", dir))
+	require.NoError(t, err)
+
+	return db
 }

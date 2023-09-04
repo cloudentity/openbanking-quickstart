@@ -11,18 +11,18 @@ import (
 	"github.com/gorilla/securecookie"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
-	bolt "go.etcd.io/bbolt"
 	"gopkg.in/go-playground/validator.v9"
 
-	acpclient "github.com/cloudentity/acp-client-go"
 	"github.com/cloudentity/openbanking-quickstart/shared"
+
+	acpclient "github.com/cloudentity/acp-client-go"
 )
 
 type Server struct {
 	Config            Config
 	Clients           Clients
 	SecureCookie      *securecookie.SecureCookie
-	DB                *bolt.DB
+	DB                shared.DB
 	UserRepo          UserRepo
 	LoginClient       acpclient.Client
 	Validator         *validator.Validate

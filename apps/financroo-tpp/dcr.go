@@ -16,10 +16,11 @@ import (
 	bolt "go.etcd.io/bbolt"
 	"gopkg.in/square/go-jose.v2"
 
+	"github.com/cloudentity/openbanking-quickstart/shared"
+
 	acpclient "github.com/cloudentity/acp-client-go"
 	"github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
 	"github.com/cloudentity/acp-client-go/clients/oauth2/models"
-	"github.com/cloudentity/openbanking-quickstart/shared"
 )
 
 type DCRClient struct {
@@ -221,10 +222,10 @@ func toPublicJWKs(c *x509.Certificate) (models.ClientJWKs, error) {
 var dcrBucket = []byte("dcr")
 
 type DCRClientIDStorage struct {
-	*bolt.DB
+	shared.DB
 }
 
-func NewDCRClientIDStorage(db *bolt.DB) (storage DCRClientIDStorage, err error) {
+func NewDCRClientIDStorage(db shared.DB) (storage DCRClientIDStorage, err error) {
 	if err = shared.CreateBucket(db, dcrBucket); err != nil {
 		return storage, err
 	}
