@@ -11,7 +11,6 @@ import (
 	"github.com/gorilla/securecookie"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
-	"gopkg.in/go-playground/validator.v9"
 
 	"github.com/cloudentity/openbanking-quickstart/shared"
 
@@ -25,7 +24,6 @@ type Server struct {
 	DB                shared.DB
 	UserRepo          UserRepo
 	LoginClient       acpclient.Client
-	Validator         *validator.Validate
 	UserSecureStorage UserSecureStorage
 	LoginURLBuilder   LoginURLBuilder
 }
