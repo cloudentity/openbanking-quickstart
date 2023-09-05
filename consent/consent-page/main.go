@@ -3,9 +3,9 @@ package main
 import (
 	"fmt"
 	"io/fs"
-	"io/ioutil"
 	"net/http"
 	"net/url"
+	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
@@ -17,8 +17,9 @@ import (
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
-	bolt "go.etcd.io/bbolt"
 	"golang.org/x/text/language"
+
+	"github.com/cloudentity/openbanking-quickstart/shared"
 
 	acpclient "github.com/cloudentity/acp-client-go"
 )
@@ -34,35 +35,43 @@ const (
 )
 
 type Config struct {
-	Port             int           `env:"PORT" envDefault:"8080"`
-	ClientID         string        `env:"CLIENT_ID,required"`
-	ClientSecret     string        `env:"CLIENT_SECRET" envDefault:"pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0"`
-	IssuerURL        *url.URL      `env:"ISSUER_URL,required"`
-	Timeout          time.Duration `env:"TIMEOUT" envDefault:"5s"`
-	RootCA           string        `env:"ROOT_CA" envDefault:"/ca.pem"`
-	CertFile         string        `env:"CERT_FILE" envDefault:"/bank_cert.pem"`
-	KeyFile          string        `env:"KEY_FILE" envDefault:"/bank_key.pem"`
-	BankIDClaim      string        `env:"BANK_ID_CLAIM" envDefault:"sub"`
-	EnableMFA        bool          `env:"ENABLE_MFA"`
-	MFAProvider      string        `env:"MFA_PROVIDER"`
-	OTPMode          string        `env:"OTP_MODE" envDefault:"demo"`
-	HyprToken        string        `env:"HYPR_TOKEN"`
-	HyprBaseURL      string        `env:"HYPR_BASE_URL"`
-	HyprAppID        string        `env:"HYPR_APP_ID"`
-	TwilioAccountSid string        `env:"TWILIO_ACCOUNT_SID"`
-	TwilioAuthToken  string        `env:"TWILIO_AUTH_TOKEN"`
-	TwilioFrom       string        `env:"TWILIO_FROM" envDefault:"Cloudentity"`
-	DBFile           string        `env:"DB_FILE" envDefault:"/data/my.db"`
-	MFAClaim         string        `env:"MFA_CLAIM" envDefault:"mobile_verified"`
-	LogLevel         string        `env:"LOG_LEVEL" envDefault:"info"`
-	DevMode          bool          `env:"DEV_MODE"`
-	DefaultLanguage  language.Tag  `env:"DEFAULT_LANGUAGE"  envDefault:"en-us"`
-	TransDir         string        `env:"TRANS_DIR" envDefault:"./translations"`
-	Spec             Spec          `env:"SPEC,required"`
-	Otp              OtpConfig
-	EnableTLSServer  bool     `env:"ENABLE_TLS_SERVER" envDefault:"true"`
-	Currency         Currency `env:"CURRENCY"` // optional custom currency, one of=USD AUD GBP BRL EUR
-	BankClientConfig BankClientConfig
+	Port                         int           `env:"PORT" envDefault:"8080"`
+	ClientID                     string        `env:"CLIENT_ID,required"`
+	ClientSecret                 string        `env:"CLIENT_SECRET" envDefault:"pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0"`
+	IssuerURL                    *url.URL      `env:"ISSUER_URL,required"`
+	Timeout                      time.Duration `env:"TIMEOUT" envDefault:"5s"`
+	RootCA                       string        `env:"ROOT_CA" envDefault:"/ca.pem"`
+	CertFile                     string        `env:"CERT_FILE" envDefault:"/bank_cert.pem"`
+	KeyFile                      string        `env:"KEY_FILE" envDefault:"/bank_key.pem"`
+	BankIDClaim                  string        `env:"BANK_ID_CLAIM" envDefault:"sub"`
+	EnableMFA                    bool          `env:"ENABLE_MFA"`
+	MFAProvider                  string        `env:"MFA_PROVIDER"`
+	OTPMode                      string        `env:"OTP_MODE" envDefault:"demo"`
+	HyprToken                    string        `env:"HYPR_TOKEN"`
+	HyprBaseURL                  string        `env:"HYPR_BASE_URL"`
+	HyprAppID                    string        `env:"HYPR_APP_ID"`
+	TwilioAccountSid             string        `env:"TWILIO_ACCOUNT_SID"`
+	TwilioAuthToken              string        `env:"TWILIO_AUTH_TOKEN"`
+	TwilioFrom                   string        `env:"TWILIO_FROM" envDefault:"Cloudentity"`
+	DBFile                       string        `env:"DB_FILE" envDefault:"/data/my.db"`
+	MFAClaim                     string        `env:"MFA_CLAIM" envDefault:"mobile_verified"`
+	LogLevel                     string        `env:"LOG_LEVEL" envDefault:"info"`
+	DevMode                      bool          `env:"DEV_MODE"`
+	DefaultLanguage              language.Tag  `env:"DEFAULT_LANGUAGE"  envDefault:"en-us"`
+	TransDir                     string        `env:"TRANS_DIR" envDefault:"./translations"`
+	Spec                         Spec          `env:"SPEC,required"`
+	Otp                          OtpConfig
+	EnableTLSServer              bool     `env:"ENABLE_TLS_SERVER" envDefault:"true"`
+	Currency                     Currency `env:"CURRENCY"` // optional custom currency, one of=USD AUD GBP BRL EUR
+	BankClientConfig             BankClientConfig
+	ExternalConsentStorageConfig ExternalConsentStorageConfig
+}
+
+type ExternalConsentStorageConfig struct {
+	URL      *url.URL `env:"EXTERNAL_CONSENT_STORAGE_URL"` // only for generic spec
+	CertFile string   `env:"EXTERNAL_CONSENT_STORAGE_CLIENT_CERT_FILE"`
+	KeyFile  string   `env:"EXTERNAL_CONSENT_STORAGE_CLIENT_KEY_FILE"`
+	RootCA   string   `env:"EXTERNAL_CONSENT_STORAGE_CLIENT_ROOT_CA"`
 }
 
 type Currency string
@@ -144,11 +153,12 @@ type Server struct {
 
 func NewServer() (Server, error) {
 	var (
-		server = Server{}
-		db     *bolt.DB
-		l      logrus.Level
-		err    error
-		trans  []fs.FileInfo
+		server         = Server{}
+		db             shared.DB
+		l              logrus.Level
+		trans          []fs.DirEntry
+		consentStorage ExternalConsentStorage
+		err            error
 	)
 
 	if server.Config, err = LoadConfig(); err != nil {
@@ -174,7 +184,7 @@ func NewServer() (Server, error) {
 	bundle := i18n.NewBundle(server.Config.DefaultLanguage)
 	bundle.RegisterUnmarshalFunc("yaml", yaml.Unmarshal)
 
-	if trans, err = ioutil.ReadDir(server.Config.TransDir); err != nil {
+	if trans, err = os.ReadDir(server.Config.TransDir); err != nil {
 		return server, errors.Wrapf(err, "failed to read dir %s", server.Config.TransDir)
 	}
 
@@ -221,7 +231,7 @@ func NewServer() (Server, error) {
 
 	if server.Config.EnableMFA && server.Config.MFAProvider == "" {
 		logrus.Debugf("mfa is enabled... loading otp db")
-		if db, err = InitDB(server.Config); err != nil {
+		if db, err = shared.InitDB(server.Config.DBFile); err != nil {
 			return server, errors.Wrapf(err, "failed to init db")
 		}
 
@@ -259,7 +269,16 @@ func NewServer() (Server, error) {
 		server.AccountAccessMFAConsentProvider = &FDXAccountAccessMFAConsentProvider{&server, tools}
 	case Generic:
 		tools := GenericConsentTools{Trans: server.Trans, Config: server.Config}
-		server.AccountAccessConsentHandler = &GenericAccountAccessConsentHandler{&server, tools}
+
+		if consentStorage, err = NewExternalConsentStorage(server.Config.ExternalConsentStorageConfig); err != nil {
+			return server, errors.Wrapf(err, "failed to init external consent storage")
+		}
+
+		server.AccountAccessConsentHandler = &GenericAccountAccessConsentHandler{
+			&server,
+			tools,
+			&consentStorage,
+		}
 	default:
 		return server, errors.Wrapf(err, "unsupported spec %s", server.Config.Spec)
 	}

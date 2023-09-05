@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"net/url"
 
-	"github.com/cloudentity/openbanking-quickstart/utils"
+	"github.com/cloudentity/openbanking-quickstart/shared"
 	"github.com/gin-gonic/gin"
 	"gopkg.in/square/go-jose.v2"
 
@@ -59,7 +59,7 @@ func (s *Server) DomesticPaymentCallback() func(*gin.Context) {
 		var (
 			app                      string
 			appStorage               = AppStorage{}
-			responseClaims           utils.ResponseData
+			responseClaims           shared.ResponseData
 			consentResponse          interface{}
 			paymentCreated           PaymentCreated
 			token                    acpclient.Token
@@ -86,7 +86,7 @@ func (s *Server) DomesticPaymentCallback() func(*gin.Context) {
 			return
 		}
 
-		if responseClaims, err = utils.HandleAuthResponseMode(c.Request, signatureVerificationKey); err != nil {
+		if responseClaims, err = shared.HandleAuthResponseMode(c.Request, signatureVerificationKey); err != nil {
 			c.String(http.StatusBadRequest, fmt.Sprintf("failed to decode response jwt token %v", err))
 			return
 		}

@@ -7,7 +7,7 @@ import (
 	"net/url"
 	"strings"
 
-	"github.com/cloudentity/openbanking-quickstart/utils"
+	"github.com/cloudentity/openbanking-quickstart/shared"
 	"github.com/dgrijalva/jwt-go"
 	"github.com/gin-gonic/gin"
 
@@ -123,13 +123,13 @@ func (s *Server) Callback() func(*gin.Context) {
 			appStorage       = AppStorage{}
 			userinfoResponse map[string]interface{}
 			additionalData   map[string]interface{}
-			responseClaims   utils.ResponseData
+			responseClaims   shared.ResponseData
 			token            acpclient.Token
 			data             = gin.H{}
 			err              error
 		)
 
-		if responseClaims, err = utils.HandleAuthResponseMode(c.Request, s.SignatureVerificationKey); err != nil {
+		if responseClaims, err = shared.HandleAuthResponseMode(c.Request, s.SignatureVerificationKey); err != nil {
 			c.String(http.StatusBadRequest, fmt.Sprintf("failed to decode response jwt token %v", err))
 			return
 		}

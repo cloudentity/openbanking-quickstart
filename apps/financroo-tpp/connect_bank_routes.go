@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/cloudentity/openbanking-quickstart/utils"
+	"github.com/cloudentity/openbanking-quickstart/shared"
 	"github.com/gin-gonic/gin"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
@@ -79,7 +79,7 @@ func (s *Server) ConnectBankCallback() func(*gin.Context) {
 			app                      string
 			appStorage               = AppStorage{}
 			token                    acpclient.Token
-			responseClaims           utils.ResponseData
+			responseClaims           shared.ResponseData
 			ok                       bool
 			signatureVerificationKey jose.JSONWebKey
 			accountsClient           acpclient.Client
@@ -101,7 +101,7 @@ func (s *Server) ConnectBankCallback() func(*gin.Context) {
 			return
 		}
 
-		if responseClaims, err = utils.HandleAuthResponseMode(c.Request, signatureVerificationKey); err != nil {
+		if responseClaims, err = shared.HandleAuthResponseMode(c.Request, signatureVerificationKey); err != nil {
 			c.String(http.StatusBadRequest, fmt.Sprintf("failed to decode response jwt token %v", err))
 			return
 		}

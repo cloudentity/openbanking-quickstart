@@ -1,20 +1,20 @@
 package main
 
 import (
-	"fmt"
 	"testing"
 
+	"github.com/cloudentity/openbanking-quickstart/shared"
 	"github.com/stretchr/testify/require"
 )
 
 func TestUsersRepo(t *testing.T) {
 	t.Parallel()
-	dir := t.TempDir()
-	db, err := InitDB(Config{DBFile: fmt.Sprintf("%s/test.db", dir)})
-	require.NoError(t, err)
+
+	db := shared.InitTestDB(t)
 	defer db.Close()
 
-	repo := UserRepo{DB: db}
+	repo, err := NewUserRepo(db)
+	require.NoError(t, err)
 
 	u1, err := repo.Get("test")
 	require.NoError(t, err)

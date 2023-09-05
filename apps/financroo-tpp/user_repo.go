@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 
+	"github.com/cloudentity/openbanking-quickstart/shared"
 	"github.com/pkg/errors"
 	bolt "go.etcd.io/bbolt"
 )
@@ -19,8 +20,18 @@ type ConnectedBank struct {
 	RefreshToken string `json:"refresh_token"`
 }
 
+var usersBucket = []byte("users")
+
 type UserRepo struct {
-	*bolt.DB
+	shared.DB
+}
+
+func NewUserRepo(db shared.DB) (repo UserRepo, err error) {
+	if err = shared.CreateBucket(db, usersBucket); err != nil {
+		return repo, err
+	}
+
+	return UserRepo{db}, nil
 }
 
 func (u *UserRepo) Get(sub string) (User, error) {

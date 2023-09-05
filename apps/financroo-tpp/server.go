@@ -11,8 +11,9 @@ import (
 	"github.com/gorilla/securecookie"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
-	bolt "go.etcd.io/bbolt"
 	"gopkg.in/go-playground/validator.v9"
+
+	"github.com/cloudentity/openbanking-quickstart/shared"
 
 	acpclient "github.com/cloudentity/acp-client-go"
 )
@@ -21,7 +22,7 @@ type Server struct {
 	Config            Config
 	Clients           Clients
 	SecureCookie      *securecookie.SecureCookie
-	DB                *bolt.DB
+	DB                shared.DB
 	UserRepo          UserRepo
 	LoginClient       acpclient.Client
 	Validator         *validator.Validate
@@ -35,6 +36,7 @@ func NewServer() (Server, error) {
 		dcrResponse DCRClientCreated
 		ok          bool
 		clientID    string
+		dcrStorage  DCRClientIDStorage
 		err         error
 	)
 
@@ -44,15 +46,17 @@ func NewServer() (Server, error) {
 
 	logrus.WithField("config", server.Config).Info("Config loaded")
 
-	if server.DB, err = InitDB(server.Config); err != nil {
+	if server.DB, err = shared.InitDB(server.Config.DBFile); err != nil {
 		return server, errors.Wrapf(err, "failed to init db")
 	}
 
-	storage := DCRClientIDStorage{DB: server.DB}
+	if dcrStorage, err = NewDCRClientIDStorage(server.DB); err != nil {
+		return server, errors.Wrapf(err, "failed to init dcr client storage")
+	}
 
 	for i, b := range server.Config.Banks {
 		if b.EnableDCR {
-			if clientID, ok, err = storage.Get(b.ID); err != nil {
+			if clientID, ok, err = dcrStorage.Get(b.ID); err != nil {
 				return server, errors.Wrapf(err, "failed to fetch client id from db for bank: %s", b.ID)
 			}
 
@@ -61,7 +65,7 @@ func NewServer() (Server, error) {
 					return server, errors.Wrapf(err, "failed to register client for bank: %s", b.ID)
 				}
 
-				if err = storage.Set(b.ID, dcrResponse.ClientID); err != nil {
+				if err = dcrStorage.Set(b.ID, dcrResponse.ClientID); err != nil {
 					return server, errors.Wrapf(err, "failed to store client id in db for bank: %s", b.ID)
 				}
 
@@ -122,7 +126,9 @@ func NewServer() (Server, error) {
 
 	server.SecureCookie = securecookie.New([]byte(server.Config.CookieHashKey), []byte(server.Config.CookieBlockKey))
 
-	server.UserRepo = UserRepo{DB: server.DB}
+	if server.UserRepo, err = NewUserRepo(server.DB); err != nil {
+		return server, errors.Wrapf(err, "failed to init user repo")
+	}
 
 	server.UserSecureStorage = NewUserSecureStorage(server.SecureCookie)
 

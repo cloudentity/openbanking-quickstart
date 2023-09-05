@@ -29,3 +29,7 @@ services:
     build:
       context: .
       dockerfile: apps/configuration/Dockerfile
+  consent-storage:
+    build:
+      context: .
+      dockerfile: consent/consent-storage/Dockerfile

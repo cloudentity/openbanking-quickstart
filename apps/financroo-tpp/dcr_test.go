@@ -3,11 +3,11 @@ package main
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"net/http"
 	"net/http/httptest"
 	"testing"
 
+	"github.com/cloudentity/openbanking-quickstart/shared"
 	"github.com/stretchr/testify/require"
 )
 
@@ -65,13 +65,11 @@ func TestRegisterClient(t *testing.T) {
 }
 
 func TestClientIDStorage(t *testing.T) {
-	dir := t.TempDir()
-
-	db, err := InitDB(Config{DBFile: fmt.Sprintf("%s/test.db", dir)})
-	require.NoError(t, err)
+	db := shared.InitTestDB(t)
 	defer db.Close()
 
-	storage := DCRClientIDStorage{DB: db}
+	storage, err := NewDCRClientIDStorage(db)
+	require.NoError(t, err)
 
 	bankID := BankID("gobank")
 

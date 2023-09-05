@@ -16,7 +16,7 @@ import (
 	"github.com/sirupsen/logrus"
 	"gopkg.in/square/go-jose.v2"
 
-	"github.com/cloudentity/openbanking-quickstart/utils"
+	"github.com/cloudentity/openbanking-quickstart/shared"
 
 	acpclient "github.com/cloudentity/acp-client-go"
 	oauth2 "github.com/cloudentity/acp-client-go/clients/oauth2/client/oauth2"
@@ -137,7 +137,7 @@ func NewServer() (Server, error) {
 		}
 	}
 
-	if server.SignatureVerificationKey, err = utils.GetServerKey(&server.Client, utils.SIG); err != nil {
+	if server.SignatureVerificationKey, err = shared.GetServerKey(&server.Client, shared.SIG); err != nil {
 		return server, errors.Wrapf(err, "failed to retrieve server signing key")
 	}
 
