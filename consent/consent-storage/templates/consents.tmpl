@@ -1,0 +1,51 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 3.2//EN">
+<html>
+   <head>
+      <link rel="stylesheet" href="/assets/material-components-web.min.css">
+      <script src="/assets/material-components-web.min.js"></script>
+      <link href="/assets/fonts.css" rel="stylesheet">
+      <link href="/assets/material-icons.css" rel="stylesheet">
+      <link rel="stylesheet" href="/assets/style.css">
+      <title>Mock Consent Storage</title>
+   </head>
+   <body>
+      <div class="aut-banner">
+         <div class="aut-banner-logo">
+            <img src="/assets/images/cloudentity-logo-short.png" alt="Cloudentity ACP">
+            <span>Mock Consent Storage</span>
+         </div>
+      </div>
+      <div class="aut-container" style="padding: 5px;">
+         <div class="aut-demo-info">
+            <div class="material-icons aut-demo-info-icon">error_outline</div>
+            <div class="aut-demo-info-text" id="fdx-login-info-text">
+               <p style="color: rgba(0, 0, 0, 0.6);">Below is the list of consents created after the user approval on the consent page. You can use revoke link to revoke tokens bound to a given consent.</p>
+            </div>
+         </div>
+      </div>
+      <div class="mdc-card aut-container" style="padding: 16px 22px">
+         <table>
+            <thead>
+               <tr>
+                  <th>ID</th>
+                  <th>Subject</th>
+                  <th>Status</th>
+                  <th>Created Date</th>
+                  <th></th>
+               </tr>
+            </thead>
+            <tbody>
+               {{range .consents}}
+               <tr>
+                  <td>{{.ID}}</td>
+                  <td>{{.Subject}}</td>
+                  <td>{{.Status}}</td>
+                  <td>{{.CreatedDate}}</td>
+                  <td>{{ if eq .Status "authorized" }}<a href="/{{.ID}}">Revoke</a>{{ end }}</td>
+               </tr>
+               {{end}}
+            </tbody>
+         </table>
+      </div>
+   </body>
+</html>

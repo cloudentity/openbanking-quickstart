@@ -6,6 +6,7 @@ ENV GOPROXY=${GOPROXY}
 
 WORKDIR /app
 
+COPY consent/consent-storage/templates templates
 COPY go.mod .
 COPY go.sum .
 RUN go mod download
@@ -20,6 +21,8 @@ RUN apk --no-cache add ca-certificates
 
 WORKDIR /app
 
+COPY --from=builder /app/assets assets
+COPY --from=builder /app/templates templates
 COPY --from=builder /app/main .
 
 CMD ["./main"]

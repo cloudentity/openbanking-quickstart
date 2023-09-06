@@ -1,6 +1,6 @@
 tenant_id: default
-server_id: fdx
-server_profile: fdx
+server_id: gobank
+server_profile: fapi_20_security
 
 bank_customers_server_id: bank-customers
 ca_pem_file: /certs/ca.pem
@@ -9,25 +9,25 @@ consent_self_service_portal_url: https://localhost:8085
 consent_admin_portal_url: https://localhost:8086
 
 consent_page_url: https://localhost:7080
-consent_page_client_id: fdx-consent-page
+consent_page_client_id: gobank-consent-page
 consent_page_client_secret: pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0
 
-internal_bank_client_id: fdx-internal-bank-client
+internal_bank_client_id: gobank-internal-bank-client
 internal_bank_client_secret: pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0
 
 developer_tpp_url: https://localhost:8090
-developer_tpp_client_id: fdx-developer-tpp
+developer_tpp_client_id: gobank-developer-tpp
 developer_tpp_client_secret: -TlfoycUiE0qNi-XUBFDfTxMlhHTCjVxOF6pLrWZbQA
 
 
 financroo_tpp_url: https://localhost:8091
-financroo_tpp_client_id: fdx-financroo-tpp
+financroo_tpp_client_id: gobank-financroo-tpp
 financroo_tpp_client_secret: -TlfoycUiE0qNi-XUBFDfTxMlhHTCjVxOF6pLrWZbQA
 financroo_tls_client_auth_subject_dn: CN=cid1.authorization.cloudentity.com,OU=Authorization,O=Cloudentity,L=Seattle,ST=Washinghton,C=US
 financroo_pem_file: /certs/tpp_cert.pem
 financroo_pem_file2: /certs/cert.ps.pem
 
-bank_client_id: fdx-bank
+bank_client_id: gobank-bank
 bank_client_secret: 8DPOMd3ZOvsjuUnU9goRMHTIUUXtSkgwQeo8v_S74aE
 bank_tls_client_auth_subject_dn: CN=cid2.authorization.cloudentity.com,OU=Authorization,O=Cloudentity,L=Seattle,ST=Washinghton,C=US
 
@@ -42,6 +42,9 @@ system_bank_client_secret: PBV7q0akoP603rZbU0EFdxbhZ-djxF7FIVwyKaLnBYU
 
 system_admin_consent_client_id: bv2fe0tpfc67lmeti340
 system_admin_consent_client_secret: v6yYaApda9juR_DrlI5mpdsdm9u2-D0rQIG9ynakyDE
+
+consent_storage_client_id: gobank-consent-storage
+consent_storage_client_secret: aMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E1
 
 cdr_adr_validation_enabled: true
 
