@@ -14,15 +14,15 @@ type Subject string
 type Data models.ScopeGrantSessionResponse
 
 type ConsentStorage interface {
-	Store(ctx context.Context, sub Subject, data Data) (ConsentID, error)
+	Store(ctx context.Context, data Data) (ConsentID, error)
 }
 
 type DummyConsentStorage struct{}
 
 var _ ConsentStorage = &DummyConsentStorage{}
 
-func (d DummyConsentStorage) Store(ctx context.Context, sub Subject, data Data) (ConsentID, error) {
-	logrus.Infof("Store consent for sub: %s with data: %+v", sub, data)
+func (d DummyConsentStorage) Store(ctx context.Context, data Data) (ConsentID, error) {
+	logrus.Infof("Store consent for sub: %s with data: %+v", data.Subject, data)
 
 	return "external-consent-id", nil
 }

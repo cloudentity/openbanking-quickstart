@@ -71,7 +71,7 @@ type CreateConsentResponse struct {
 	ID string `json:"id"`
 }
 
-func (e *ExternalConsentStorage) Store(ctx context.Context, sub Subject, data Data) (ConsentID, error) {
+func (e *ExternalConsentStorage) Store(ctx context.Context, data Data) (ConsentID, error) {
 	var (
 		bs   []byte
 		req  *http.Request

@@ -55,12 +55,15 @@ func (s *GenericAccountAccessConsentHandler) ConfirmConsent(c *gin.Context, logi
 		return "", errors.Wrapf(err, "failed to get login session")
 	}
 
-	if externalConsentID, err = s.Store(c, Subject(response.Payload.Subject), Data(*response.Payload)); err != nil {
-		return "", errors.Wrapf(err, "failed to store consent")
-	}
-
 	for _, scp := range response.Payload.RequestedScopes {
 		grantedScopes = append(grantedScopes, scp.RequestedName)
+	}
+
+	data := Data(*response.Payload)
+	data.GrantedScopes = grantedScopes
+
+	if externalConsentID, err = s.Store(c, data); err != nil {
+		return "", errors.Wrapf(err, "failed to store consent")
 	}
 
 	if accept, err = s.Client.System.Logins.AcceptScopeGrantRequest(

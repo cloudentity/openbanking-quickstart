@@ -36,7 +36,7 @@ func NewIdentityPoolConsentStorage(config IdentityPoolConsentStorageConfig) (Con
 
 var _ ConsentStorage = &IdentityPoolConsentStorage{}
 
-func (s *IdentityPoolConsentStorage) Store(ctx context.Context, sub Subject, data Data) (ConsentID, error) {
+func (s *IdentityPoolConsentStorage) Store(ctx context.Context, data Data) (ConsentID, error) {
 	var (
 		resp *users.CreateUserCreated
 		err  error
