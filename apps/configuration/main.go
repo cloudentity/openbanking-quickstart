@@ -64,7 +64,6 @@ func main() {
 	if tURL, err = url.Parse(*tenantURL); err != nil {
 		log.Fatal(err)
 	}
-	logrus.Infof("XXX rURL %+v", tURL)
 
 	httpClient := &http.Client{
 		Timeout: *httpTimeout,

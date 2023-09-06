@@ -204,8 +204,6 @@ services:
     image: cloudentity/openbanking-quickstart-configuration:latest
     restart: on-failure
     volumes:
-      # - ./data/tpp_cert.pem:/certs/tpp_cert.pem
-      # - ./data/ca.pem:/certs/ca.pem
       - ./data/variables.yaml:/variables.yaml
       - ./data/imports/generic/hyperscalebank-identity.tmpl:/app/imports-generic/hyperscalebank-identity.tmpl
     command:
