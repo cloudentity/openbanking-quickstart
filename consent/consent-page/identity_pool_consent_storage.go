@@ -3,10 +3,11 @@ package main
 import (
 	"context"
 
+	"github.com/pkg/errors"
+
 	acpclient "github.com/cloudentity/acp-client-go"
 	"github.com/cloudentity/acp-client-go/clients/identity/client/users"
 	"github.com/cloudentity/acp-client-go/clients/identity/models"
-	"github.com/pkg/errors"
 )
 
 type IdentityPoolConsentStorage struct {

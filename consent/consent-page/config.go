@@ -5,8 +5,9 @@ import (
 	"time"
 
 	"github.com/caarlos0/env/v6"
-	acpclient "github.com/cloudentity/acp-client-go"
 	"golang.org/x/text/language"
+
+	acpclient "github.com/cloudentity/acp-client-go"
 )
 
 type Spec string

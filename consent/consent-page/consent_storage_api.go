@@ -3,8 +3,9 @@ package main
 import (
 	"context"
 
-	"github.com/cloudentity/acp-client-go/clients/system/models"
 	"github.com/sirupsen/logrus"
+
+	"github.com/cloudentity/acp-client-go/clients/system/models"
 )
 
 type ConsentID string
