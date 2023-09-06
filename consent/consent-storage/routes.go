@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"errors"
 	"net/http"
 	"time"
@@ -81,9 +82,15 @@ func (s *Server) DeleteConsentHTML(c *gin.Context) {
 	c.Redirect(http.StatusFound, "/")
 }
 
+type ConsentData struct {
+	Consent
+	Pretty string
+}
+
 func (s *Server) ListConsentsHTML(c *gin.Context) {
 	var (
 		consents []Consent
+		data     []ConsentData
 		err      error
 	)
 
@@ -92,5 +99,18 @@ func (s *Server) ListConsentsHTML(c *gin.Context) {
 		return
 	}
 
-	c.HTML(http.StatusOK, "consents.tmpl", gin.H{"consents": consents})
+	for _, consent := range consents {
+		var bs []byte
+
+		if bs, err = json.MarshalIndent(consent, "", " "); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		}
+
+		data = append(data, ConsentData{
+			Consent: consent,
+			Pretty:  string(bs),
+		})
+	}
+
+	c.HTML(http.StatusOK, "consents.tmpl", gin.H{"consents": data})
 }
