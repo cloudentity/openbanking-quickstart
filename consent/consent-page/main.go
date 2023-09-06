@@ -4,136 +4,21 @@ import (
 	"fmt"
 	"io/fs"
 	"net/http"
-	"net/url"
 	"os"
 	"path/filepath"
 	"strconv"
 	"strings"
-	"time"
 
-	"github.com/caarlos0/env/v6"
 	"github.com/ghodss/yaml"
 	"github.com/gin-gonic/gin"
 	"github.com/nicksnyder/go-i18n/v2/i18n"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
-	"golang.org/x/text/language"
 
 	"github.com/cloudentity/openbanking-quickstart/shared"
 
 	acpclient "github.com/cloudentity/acp-client-go"
 )
-
-type Spec string
-
-const (
-	OBUK    Spec = "obuk"
-	OBBR    Spec = "obbr"
-	CDR     Spec = "cdr"
-	FDX     Spec = "fdx"
-	Generic Spec = "generic"
-)
-
-type Config struct {
-	Port                         int           `env:"PORT" envDefault:"8080"`
-	ClientID                     string        `env:"CLIENT_ID,required"`
-	ClientSecret                 string        `env:"CLIENT_SECRET" envDefault:"pMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E0"`
-	IssuerURL                    *url.URL      `env:"ISSUER_URL,required"`
-	Timeout                      time.Duration `env:"TIMEOUT" envDefault:"5s"`
-	RootCA                       string        `env:"ROOT_CA" envDefault:"/ca.pem"`
-	CertFile                     string        `env:"CERT_FILE" envDefault:"/bank_cert.pem"`
-	KeyFile                      string        `env:"KEY_FILE" envDefault:"/bank_key.pem"`
-	BankIDClaim                  string        `env:"BANK_ID_CLAIM" envDefault:"sub"`
-	EnableMFA                    bool          `env:"ENABLE_MFA"`
-	MFAProvider                  string        `env:"MFA_PROVIDER"`
-	OTPMode                      string        `env:"OTP_MODE" envDefault:"demo"`
-	HyprToken                    string        `env:"HYPR_TOKEN"`
-	HyprBaseURL                  string        `env:"HYPR_BASE_URL"`
-	HyprAppID                    string        `env:"HYPR_APP_ID"`
-	TwilioAccountSid             string        `env:"TWILIO_ACCOUNT_SID"`
-	TwilioAuthToken              string        `env:"TWILIO_AUTH_TOKEN"`
-	TwilioFrom                   string        `env:"TWILIO_FROM" envDefault:"Cloudentity"`
-	DBFile                       string        `env:"DB_FILE" envDefault:"/data/my.db"`
-	MFAClaim                     string        `env:"MFA_CLAIM" envDefault:"mobile_verified"`
-	LogLevel                     string        `env:"LOG_LEVEL" envDefault:"info"`
-	DevMode                      bool          `env:"DEV_MODE"`
-	DefaultLanguage              language.Tag  `env:"DEFAULT_LANGUAGE"  envDefault:"en-us"`
-	TransDir                     string        `env:"TRANS_DIR" envDefault:"./translations"`
-	Spec                         Spec          `env:"SPEC,required"`
-	Otp                          OtpConfig
-	EnableTLSServer              bool     `env:"ENABLE_TLS_SERVER" envDefault:"true"`
-	Currency                     Currency `env:"CURRENCY"` // optional custom currency, one of=USD AUD GBP BRL EUR
-	BankClientConfig             BankClientConfig
-	ExternalConsentStorageConfig ExternalConsentStorageConfig
-}
-
-type ExternalConsentStorageConfig struct {
-	URL      *url.URL `env:"EXTERNAL_CONSENT_STORAGE_URL"` // only for generic spec
-	CertFile string   `env:"EXTERNAL_CONSENT_STORAGE_CLIENT_CERT_FILE"`
-	KeyFile  string   `env:"EXTERNAL_CONSENT_STORAGE_CLIENT_KEY_FILE"`
-	RootCA   string   `env:"EXTERNAL_CONSENT_STORAGE_CLIENT_ROOT_CA"`
-}
-
-type Currency string
-
-func (c Currency) ToString() string {
-	switch c {
-	case "USD":
-		return "$"
-	case "AUD":
-		return "$"
-	case "GBP":
-		return "£"
-	case "EUR":
-		return "€"
-	case "BRL":
-		return "R$"
-	default:
-		return "$"
-	}
-}
-
-type OtpConfig struct {
-	Type       string        `env:"OTP_TYPE" envDefault:"otp"`
-	RequestURL string        `env:"OTP_REQUEST_URL"`
-	VerifyURL  string        `env:"OTP_VERIFY_URL"`
-	Timeout    time.Duration `env:"OTP_TIMEOUT" envDefault:"10s"`
-	AuthHeader string        `env:"OTP_AUTH_HEADER"`
-}
-
-type BankClientConfig struct {
-	URL          *url.URL `env:"BANK_URL,required"`
-	AccountsURL  *url.URL `env:"BANK_ACCOUNTS_ENDPOINT"`
-	CertFile     string   `env:"BANK_CLIENT_CERT_FILE"`
-	KeyFile      string   `env:"BANK_CLIENT_KEY_FILE"`
-	TokenURL     string   `env:"BANK_CLIENT_TOKEN_URL"`
-	ClientID     string   `env:"BANK_CLIENT_ID"`
-	ClientSecret string   `env:"BANK_CLIENT_SECRET"`
-	Scopes       []string `env:"BANK_CLIENT_SCOPES"`
-}
-
-func (c *Config) ClientConfig(scopes []string) acpclient.Config {
-	return acpclient.Config{
-		ClientID:     c.ClientID,
-		ClientSecret: c.ClientSecret,
-		IssuerURL:    c.IssuerURL,
-		Scopes:       scopes,
-		Timeout:      c.Timeout,
-		CertFile:     c.CertFile,
-		KeyFile:      c.KeyFile,
-		RootCA:       c.RootCA,
-	}
-}
-
-func LoadConfig() (config Config, err error) {
-	if err = env.Parse(&config); err != nil {
-		return config, err
-	}
-
-	logrus.WithField("config", config).Debug("loaded config")
-
-	return config, err
-}
 
 type Server struct {
 	Config                          Config
@@ -153,12 +38,11 @@ type Server struct {
 
 func NewServer() (Server, error) {
 	var (
-		server         = Server{}
-		db             shared.DB
-		l              logrus.Level
-		trans          []fs.DirEntry
-		consentStorage ExternalConsentStorage
-		err            error
+		server = Server{}
+		db     shared.DB
+		l      logrus.Level
+		trans  []fs.DirEntry
+		err    error
 	)
 
 	if server.Config, err = LoadConfig(); err != nil {
@@ -169,6 +53,8 @@ func NewServer() (Server, error) {
 		l = logrus.InfoLevel
 	}
 	logrus.SetLevel(l)
+
+	logrus.WithField("config", server.Config).Infof("app config")
 
 	switch server.Config.Spec {
 	case Generic:
@@ -270,14 +156,25 @@ func NewServer() (Server, error) {
 	case Generic:
 		tools := GenericConsentTools{Trans: server.Trans, Config: server.Config}
 
-		if consentStorage, err = NewExternalConsentStorage(server.Config.ExternalConsentStorageConfig); err != nil {
-			return server, errors.Wrapf(err, "failed to init external consent storage")
+		var consentStorage ConsentStorage
+
+		switch server.Config.ConsentStorageMode {
+		case "external":
+			if consentStorage, err = NewExternalConsentStorage(server.Config.ExternalConsentStorageConfig); err != nil {
+				return server, errors.Wrapf(err, "failed to init external consent storage")
+			}
+		case "identity":
+			if consentStorage, err = NewIdentityPoolConsentStorage(server.Config.IdentityPoolConsentStorageConfig); err != nil {
+				return server, errors.Wrapf(err, "failed to init identity pool consent storage")
+			}
+		default:
+			return server, fmt.Errorf("unsupported consent storage mode: %s", server.Config.ConsentStorageMode)
 		}
 
 		server.AccountAccessConsentHandler = &GenericAccountAccessConsentHandler{
 			&server,
 			tools,
-			&consentStorage,
+			consentStorage,
 		}
 	default:
 		return server, errors.Wrapf(err, "unsupported spec %s", server.Config.Spec)

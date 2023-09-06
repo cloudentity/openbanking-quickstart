@@ -20,7 +20,7 @@ type ExternalConsentStorage struct {
 	HC  *http.Client
 }
 
-func NewExternalConsentStorage(config ExternalConsentStorageConfig) (ExternalConsentStorage, error) {
+func NewExternalConsentStorage(config ExternalConsentStorageConfig) (ConsentStorage, error) {
 	var (
 		pool  *x509.CertPool
 		data  []byte
@@ -30,19 +30,19 @@ func NewExternalConsentStorage(config ExternalConsentStorageConfig) (ExternalCon
 	)
 
 	if pool, err = x509.SystemCertPool(); err != nil {
-		return ExternalConsentStorage{}, errors.Wrap(err, "failed to load system cert pool")
+		return nil, errors.Wrap(err, "failed to load system cert pool")
 	}
 
 	if config.RootCA != "" {
 		if data, err = os.ReadFile(config.RootCA); err != nil {
-			return ExternalConsentStorage{}, errors.Wrap(err, "failed to read root CA")
+			return nil, errors.Wrap(err, "failed to read root CA")
 		}
 		pool.AppendCertsFromPEM(data)
 	}
 
 	if config.CertFile != "" && config.KeyFile != "" {
 		if cert, err = tls.LoadX509KeyPair(config.CertFile, config.KeyFile); err != nil {
-			return ExternalConsentStorage{}, errors.Wrap(err, "failed to load tls cert")
+			return nil, errors.Wrap(err, "failed to load tls cert")
 		}
 
 		certs = append(certs, cert)
@@ -59,7 +59,7 @@ func NewExternalConsentStorage(config ExternalConsentStorageConfig) (ExternalCon
 		},
 	}
 
-	return ExternalConsentStorage{
+	return &ExternalConsentStorage{
 		URL: config.URL,
 		HC:  hc,
 	}, nil

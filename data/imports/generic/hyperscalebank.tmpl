@@ -88,6 +88,16 @@ clients:
   - manage_configuration
   token_endpoint_auth_method: client_secret_basic
 
+# consent storage management
+- tenant_id: {{ .tenant_id }}
+  authorization_server_id: admin
+  client_id: hyperscalebank-consent-storage-mgmt
+  client_secret: {{ .hyperscale_consent_mgmt_client_secret }}
+  client_name: Hyperscale Consent Management
+  grant_types:
+  - client_credentials
+  token_endpoint_auth_method: client_secret_basic
+
 # - tenant_id: {{ .tenant_id }}
 #   authorization_server_id: hyperscalebank
 #   client_id: {{ .internal_bank_client_id }}

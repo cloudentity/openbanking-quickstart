@@ -58,6 +58,7 @@ services:
       - OTP_MODE=mock # change to custom to enable custom OTP handling
       - MFA_CLAIM=sub # for mobile use mobile_verified
       - CLIENT_ID=${CONSENT_PAGE_CLIENT_ID}
+      - CONSENT_STORAGE_MODE=external
       - EXTERNAL_CONSENT_STORAGE_URL=https://gobank-consent-storage:8084
       - EXTERNAL_CONSENT_STORAGE_CLIENT_CERT_FILE=/consent_storage_cert.pem
       - EXTERNAL_CONSENT_STORAGE_CLIENT_KEY_FILE=/consent_storage_key.pem
@@ -116,6 +117,12 @@ services:
       - OTP_MODE=mock # change to custom to enable custom OTP handling
       - MFA_CLAIM=sub # for mobile use mobile_verified
       - CLIENT_ID=hyperscalebank-consent-page
+      - CONSENT_STORAGE_MODE=identity
+      - IDENTITY_POOL_CONSENT_STORAGE_ISSUER_URL=${ACP_URL}/${TENANT}/admin
+      - IDENTITY_POOL_CONSENT_STORAGE_CLIENT_ID=hyperscalebank-consent-storage-mgmt
+      - IDENTITY_POOL_CONSENT_STORAGE_CLIENT_SECRET=aXPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-X3
+      - IDENTITY_POOL_CONSENT_STORAGE_ROOT_CA=/ca.pem
+      - IDENTITY_POOL_CONSENT_STORAGE_POOL_ID=hyperscalebank-consent-storage
     depends_on:
       configuration:
         condition: service_completed_successfully

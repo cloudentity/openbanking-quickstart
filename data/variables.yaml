@@ -47,6 +47,7 @@ consent_storage_client_id: gobank-consent-storage
 consent_storage_client_secret: aMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-E1
 
 hyperscale_identity_import_client_secret: rMPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-A2
+hyperscale_consent_mgmt_client_secret: aXPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-X3
 
 cdr_adr_validation_enabled: true
 
