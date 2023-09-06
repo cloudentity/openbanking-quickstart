@@ -18,6 +18,7 @@ func TestImport(t *testing.T) {
 		client     *http.Client
 		body       []byte
 		mode       string
+		target     string
 		mockServer *httptest.Server
 		err        error
 	}{
@@ -29,6 +30,7 @@ func TestImport(t *testing.T) {
 			tenant:     "system",
 			client:     http.DefaultClient,
 			body:       []byte(`{"tenants": []}`),
+			target:     "system",
 			mockServer: serverWithMockedImportEndpoint("/api/system/configuration"),
 		},
 		{
@@ -39,7 +41,19 @@ func TestImport(t *testing.T) {
 			tenant:     "custom",
 			client:     http.DefaultClient,
 			body:       []byte(`{"servers": [{"id": "new", "initialize": true}]}`),
+			target:     "system",
 			mockServer: serverWithMockedImportEndpoint("/api/system/custom/configuration"),
+		},
+		{
+			name: "import identity configuration",
+			tenantURL: func(port string) string {
+				return fmt.Sprintf("http://localhost:%s/system", port)
+			},
+			tenant:     "system",
+			client:     http.DefaultClient,
+			body:       []byte(`{"schemas": []}`),
+			target:     "identity",
+			mockServer: serverWithMockedImportEndpoint("/api/identity/configuration"),
 		},
 	}
 
@@ -55,7 +69,7 @@ func TestImport(t *testing.T) {
 			u, err := url.Parse(tc.tenantURL(serverURL.Port()))
 			require.NoError(tt, err)
 
-			err = ImportConfiguration(u, &tc.tenant, tc.client, tc.body, tc.mode)
+			err = ImportConfiguration(u, &tc.tenant, tc.client, tc.body, tc.mode, tc.target)
 
 			if tc.err != nil {
 				require.Error(tt, err)

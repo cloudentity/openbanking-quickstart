@@ -28,6 +28,7 @@ var (
 	httpInsecure  = flag.Bool("http-insecure", true, "http insecure connection")
 	importMode    = flag.String("import-mode", "update", "how acp should behave in case of conflicts, possible options: fail | ignore | update")
 	verbose       = flag.Bool("verbose", false, "show verbose logs")
+	target        = flag.String("target", "system", "where the data should be imported, one of: system | identity")
 )
 
 const systemServer = "system"
@@ -63,6 +64,7 @@ func main() {
 	if tURL, err = url.Parse(*tenantURL); err != nil {
 		log.Fatal(err)
 	}
+	logrus.Infof("XXX rURL %+v", tURL)
 
 	httpClient := &http.Client{
 		Timeout: *httpTimeout,
@@ -95,7 +97,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	if err = ImportConfiguration(tURL, tenant, client, body, *importMode); err != nil {
+	if err = ImportConfiguration(tURL, tenant, client, body, *importMode, *target); err != nil {
 		log.Fatal(err)
 	}
 
