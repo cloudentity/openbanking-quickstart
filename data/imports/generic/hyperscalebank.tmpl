@@ -76,6 +76,18 @@ clients:
   tls_client_certificate_bound_access_tokens: true
   token_endpoint_auth_method: tls_client_auth
 
+# identity import
+- tenant_id: {{ .tenant_id }}
+  authorization_server_id: system
+  client_id: hyperscalebank-identity-import
+  client_secret: {{ .hyperscale_identity_import_client_secret }}
+  client_name: Hyperscale identity import
+  grant_types:
+  - client_credentials
+  scopes:
+  - manage_configuration
+  token_endpoint_auth_method: client_secret_basic
+
 # - tenant_id: {{ .tenant_id }}
 #   authorization_server_id: hyperscalebank
 #   client_id: {{ .internal_bank_client_id }}
@@ -118,3 +130,4 @@ scripts:
           }
         };
       }
+

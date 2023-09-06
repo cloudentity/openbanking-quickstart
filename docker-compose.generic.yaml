@@ -163,7 +163,7 @@ services:
         condition: service_completed_successfully
 
   configuration:
-    container_name: configuration
+    container_name: configuration-system
     platform: linux/x86_64
     image: cloudentity/openbanking-quickstart-configuration:latest
     restart: on-failure
@@ -172,7 +172,6 @@ services:
       - ./data/ca.pem:/certs/ca.pem
       - ./data/variables.yaml:/variables.yaml
       - ./data/imports/generic/system.tmpl:/app/imports-generic/system.tmpl
-      # - ./data/imports/bank-customers.tmpl:/app/imports-generic/bank-customers.tmpl
       - ./data/imports/generic/gobank.tmpl:/app/imports-generic/gobank.tmpl
       - ./data/imports/generic/hyperscalebank.tmpl:/app/imports-generic/hyperscalebank.tmpl
       - ./data/imports/generic/tenant.tmpl:/app/imports-generic/tenant.tmpl
@@ -191,3 +190,34 @@ services:
       - --variables-file
       - /variables.yaml
       - --verbose
+
+  configuration-identity:
+    container_name: configuration-identity
+    platform: linux/x86_64
+    image: cloudentity/openbanking-quickstart-configuration:latest
+    restart: on-failure
+    volumes:
+      # - ./data/tpp_cert.pem:/certs/tpp_cert.pem
+      # - ./data/ca.pem:/certs/ca.pem
+      - ./data/variables.yaml:/variables.yaml
+      - ./data/imports/generic/hyperscalebank-identity.tmpl:/app/imports-generic/hyperscalebank-identity.tmpl
+    command:
+      - /app/main
+      - --tenant-url
+      - ${IDENTITY_CONFIGURATION_TENANT_URL}
+      - --tenant
+      - ${IDENTITY_CONFIGURATION_TENANT}
+      - --client-id
+      - ${IDENTITY_CONFIGURATION_CLIENT_ID}
+      - --client-secret
+      - ${IDENTITY_CONFIGURATION_CLIENT_SECRET}
+      - --templates-dirs
+      - /app/imports-generic
+      - --variables-file
+      - /variables.yaml
+      - --verbose
+      - --target
+      - identity
+    depends_on:
+      configuration:
+        condition: service_completed_successfully
