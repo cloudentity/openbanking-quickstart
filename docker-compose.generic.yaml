@@ -11,7 +11,7 @@ services:
     volumes:
       - ./data:/certs
       - ./mount/financroo-tpp:/app/data
-      - ./apps/financroo-tpp/banks.json:/app/banks.json
+      - ./mount/financroo-tpp/banks.json:/app/banks.json
     env_file:
       - .env
     environment:
