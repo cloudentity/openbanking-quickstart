@@ -10,9 +10,10 @@ import (
 
 type ConsentID string
 
-type Subject string
-
-type Data models.ScopeGrantSessionResponse
+type Data struct {
+	AccountIDs []string `json:"account_ids"`
+	models.ScopeGrantSessionResponse
+}
 
 type ConsentStorage interface {
 	Store(ctx context.Context, data Data) (ConsentID, error)

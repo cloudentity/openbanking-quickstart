@@ -59,8 +59,9 @@ func (s *GenericAccountAccessConsentHandler) ConfirmConsent(c *gin.Context, logi
 		grantedScopes = append(grantedScopes, scp.RequestedName)
 	}
 
-	data := Data(*response.Payload)
+	data := Data{ScopeGrantSessionResponse: *response.Payload}
 	data.GrantedScopes = grantedScopes
+	data.AccountIDs = c.PostFormArray("account_ids")
 
 	if externalConsentID, err = s.Store(c, data); err != nil {
 		return "", errors.Wrapf(err, "failed to store consent")

@@ -43,8 +43,6 @@ func (s *IdentityPoolConsentStorage) Store(ctx context.Context, data Data) (Cons
 		err  error
 	)
 
-	accountIDs := []string{} // TODOX
-
 	if resp, err = s.Client.Identity.Acp.Users.CreateUser(
 		users.NewCreateUserParamsWithContext(ctx).
 			WithIPID(s.PoolID).
@@ -55,7 +53,7 @@ func (s *IdentityPoolConsentStorage) Store(ctx context.Context, data Data) (Cons
 					"client_id":      data.ClientID,
 					"status":         "authorized",
 					"granted_scopes": data.GrantedScopes,
-					"account_ids":    accountIDs,
+					"account_ids":    data.AccountIDs,
 				},
 			}),
 		nil,

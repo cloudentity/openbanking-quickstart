@@ -17,6 +17,7 @@ type Consent struct {
 	Status        Status    `json:"status"`
 	Subject       string    `json:"subject"`
 	GrantedScopes []string  `json:"granted_scopes"`
+	AccountIDs    []string  `json:"account_ids"`
 }
 
 type ConsentsByCreatedDate []Consent
