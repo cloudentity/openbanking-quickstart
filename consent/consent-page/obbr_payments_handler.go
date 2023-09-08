@@ -24,23 +24,23 @@ func (s *OBBRPaymentConsentHandler) GetConsent(c *gin.Context, loginRequest Logi
 	)
 
 	if wrapper, err = GetOBBRPaymentsSystemConsent(c, s.Client, loginRequest); err != nil {
-		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to get payment consent"))
+		s.RenderInternalServerError(c, errors.Wrapf(err, "failed to get payment consent"))
 		return
 	}
 
 	id = s.OBBRConsentTools.GetInternalBankDataIdentifier(wrapper.GetSubject(), wrapper.GetAuthenticationContext())
 
 	if accounts, err = s.BankClient.GetInternalAccounts(c, id); err != nil {
-		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to get accounts from bank"))
+		s.RenderInternalServerError(c, errors.Wrapf(err, "failed to get accounts from bank"))
 		return
 	}
 
 	if balances, err = s.BankClient.GetInternalBalances(c, wrapper.GetSubject()); err != nil {
-		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to load account balances"))
+		s.RenderInternalServerError(c, errors.Wrapf(err, "failed to load account balances"))
 		return
 	}
 
-	Render(c, s.GetTemplateNameForSpec("payment-consent.tmpl"), s.GetOBBRPaymentConsentTemplateData(loginRequest, wrapper, accounts, balances.Data))
+	s.Render(c, s.GetTemplateNameForSpec("payment-consent.tmpl"), s.GetOBBRPaymentConsentTemplateData(loginRequest, wrapper, accounts, balances.Data))
 }
 
 func (s *OBBRPaymentConsentHandler) ConfirmConsent(c *gin.Context, loginRequest LoginRequest) (string, error) {

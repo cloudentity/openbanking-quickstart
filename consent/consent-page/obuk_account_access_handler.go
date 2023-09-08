@@ -26,18 +26,18 @@ func (s *OBUKAccountAccessConsentHandler) GetConsent(c *gin.Context, loginReques
 			WithLogin(loginRequest.ID),
 		nil,
 	); err != nil {
-		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to get account access consent"))
+		s.RenderInternalServerError(c, errors.Wrapf(err, "failed to get account access consent"))
 		return
 	}
 
 	id = s.OBUKConsentTools.GetInternalBankDataIdentifier(response.Payload.Subject, response.Payload.AuthenticationContext)
 
 	if accounts, err = s.BankClient.GetInternalAccounts(c, id); err != nil {
-		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to get accounts from bank"))
+		s.RenderInternalServerError(c, errors.Wrapf(err, "failed to get accounts from bank"))
 		return
 	}
 
-	Render(c, s.GetTemplateNameForSpec("account-consent.tmpl"), s.GetAccessConsentTemplateData(loginRequest, response.Payload, accounts))
+	s.Render(c, s.GetTemplateNameForSpec("account-consent.tmpl"), s.GetAccessConsentTemplateData(loginRequest, response.Payload, accounts))
 }
 
 func (s *OBUKAccountAccessConsentHandler) ConfirmConsent(c *gin.Context, loginRequest LoginRequest) (string, error) {

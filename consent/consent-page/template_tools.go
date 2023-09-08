@@ -7,28 +7,30 @@ import (
 	"github.com/sirupsen/logrus"
 )
 
-func RenderInvalidRequestError(c *gin.Context, trans *Trans, err error) {
-	message := trans.T("invalidRequest")
+func (s *Server) RenderInvalidRequestError(c *gin.Context, err error) {
+	message := s.Trans.T("invalidRequest")
 
-	RenderError(c, http.StatusBadRequest, message, err)
+	s.RenderError(c, http.StatusBadRequest, message, err)
 }
 
-func RenderInternalServerError(c *gin.Context, trans *Trans, err error) {
-	message := trans.T("internalServerError")
+func (s *Server) RenderInternalServerError(c *gin.Context, err error) {
+	message := s.Trans.T("internalServerError")
 
-	RenderError(c, http.StatusInternalServerError, message, err)
+	s.RenderError(c, http.StatusInternalServerError, message, err)
 }
 
-func RenderError(c *gin.Context, statusCode int, msg interface{}, err error) {
+func (s *Server) RenderError(c *gin.Context, statusCode int, msg interface{}, err error) {
 	if err != nil {
 		logrus.WithError(err).Errorf(err.Error())
 	}
 
 	c.HTML(statusCode, "error.tmpl", gin.H{
-		"msg": msg,
+		"bank_logo": s.Config.BankLogo,
+		"msg":       msg,
 	})
 }
 
-func Render(c *gin.Context, templateName string, data map[string]interface{}) {
+func (s *Server) Render(c *gin.Context, templateName string, data map[string]interface{}) {
+	data["bank_logo"] = s.Config.BankLogo
 	c.HTML(http.StatusOK, templateName, data)
 }

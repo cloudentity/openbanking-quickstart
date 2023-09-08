@@ -198,7 +198,7 @@ func RequireMFAMiddleware(s *Server) gin.HandlerFunc {
 		)
 
 		if approved, err = s.MFAApprovalChecker.IsApproved(NewLoginRequest(c)); err != nil {
-			RenderInvalidRequestError(c, s.Trans, nil)
+			s.RenderInvalidRequestError(c, err)
 			c.Abort()
 			return
 		}

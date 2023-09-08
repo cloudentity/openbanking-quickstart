@@ -218,29 +218,29 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 		)
 
 		if err = r.Validate(s.Config.Spec); err != nil {
-			RenderInvalidRequestError(c, s.Trans, err)
+			s.RenderInvalidRequestError(c, err)
 			return
 		}
 
 		if provider, ok = s.GetMFAConsentProvider(r); !ok {
-			RenderInvalidRequestError(c, s.Trans, fmt.Errorf("invalid consent type %s", r.ConsentType))
+			s.RenderInvalidRequestError(c, fmt.Errorf("invalid consent type %s", r.ConsentType))
 			return
 		}
 
 		if data, err = provider.GetMFAData(c, r); err != nil {
-			RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to get authn context"))
+			s.RenderInternalServerError(c, errors.Wrapf(err, "failed to get authn context"))
 			return
 		}
 
 		claimData, ok := data.AuthenticationContext[s.Config.MFAClaim]
 
 		if !ok {
-			RenderInvalidRequestError(c, s.Trans, fmt.Errorf("user does not have %s configured", s.Config.MFAClaim))
+			s.RenderInvalidRequestError(c, fmt.Errorf("user does not have %s configured", s.Config.MFAClaim))
 			return
 		}
 
 		if mobile, ok = claimData.(string); !ok {
-			RenderInternalServerError(c, s.Trans,
+			s.RenderInternalServerError(c,
 				fmt.Errorf(
 					"failed to get %s from authn context: %+v, type: %T",
 					s.Config.MFAClaim,
@@ -258,7 +258,7 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 		switch action {
 		case "request", "resend":
 			if err = s.OTPHandler.Send(r, provider, mobile, data); err != nil {
-				RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to send sms otp"))
+				s.RenderInternalServerError(c, errors.Wrapf(err, "failed to send sms otp"))
 				return
 			}
 
@@ -282,18 +282,18 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 			}
 
 			if err = mergo.Merge(&templateData, provider.GetConsentMockData(r)); err != nil {
-				RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to merge template data"))
+				s.RenderInternalServerError(c, errors.Wrapf(err, "failed to merge template data"))
 				return
 			}
 
-			Render(c, provider.GetTemplateName(), templateData)
+			s.Render(c, provider.GetTemplateName(), templateData)
 			return
 		case "verify":
 			otpStr := c.PostForm("otp")
 			logrus.Debugf("check otp: %s", otpStr)
 
 			if valid, err = s.OTPHandler.Verify(r, mobile, otpStr); err != nil {
-				RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to validate otp"))
+				s.RenderInternalServerError(c, errors.Wrapf(err, "failed to validate otp"))
 				return
 			}
 
@@ -317,11 +317,11 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 				}
 
 				if err = mergo.Merge(&templateData, provider.GetConsentMockData(r)); err != nil {
-					RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to merge template data"))
+					s.RenderInternalServerError(c, errors.Wrapf(err, "failed to merge template data"))
 					return
 				}
 
-				Render(c, provider.GetTemplateName(), templateData)
+				s.Render(c, provider.GetTemplateName(), templateData)
 				return
 			}
 
@@ -335,16 +335,16 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 			case "hypr":
 				mfaProviderArgs["username"] = fmt.Sprintf("%s", data.AuthenticationContext["name"])
 			default:
-				RenderInternalServerError(c, s.Trans, errors.New("invalid MFA provider"))
+				s.RenderInternalServerError(c, errors.New("invalid MFA provider"))
 				return
 			}
 
 			if err := s.MFAStrategy.Approve(mfaProviderArgs); err != nil {
 				switch err.Code {
 				case http.StatusInternalServerError:
-					RenderInternalServerError(c, s.Trans, errors.Wrapf(err.Err, err.Message))
+					s.RenderInternalServerError(c, errors.Wrapf(err.Err, err.Message))
 				default:
-					RenderError(c, err.Code, err.Err, errors.Wrapf(err.Err, err.Message))
+					s.RenderError(c, err.Code, err.Err, errors.Wrapf(err.Err, err.Message))
 					return
 				}
 			}
@@ -372,11 +372,11 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 			}
 
 			if err = mergo.Merge(&templateData, provider.GetConsentMockData(r)); err != nil {
-				RenderInternalServerError(c, s.Trans, errors.Wrapf(err, "failed to validate otp"))
+				s.RenderInternalServerError(c, errors.Wrapf(err, "failed to validate otp"))
 				return
 			}
 
-			Render(c, provider.GetTemplateName(), templateData)
+			s.Render(c, provider.GetTemplateName(), templateData)
 		}
 	}
 }

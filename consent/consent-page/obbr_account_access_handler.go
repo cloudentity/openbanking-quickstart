@@ -27,18 +27,18 @@ func (s *OBBRAccountAccessConsentHandler) GetConsent(c *gin.Context, loginReques
 			WithLogin(loginRequest.ID),
 		nil,
 	); err != nil {
-		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to get data access consent consent")) //nolint
+		s.RenderInternalServerError(c, errors.Wrapf(err, "failed to get data access consent consent")) //nolint
 		return
 	}
 
 	id = s.OBBRConsentTools.GetInternalBankDataIdentifier(response.Payload.Subject, response.Payload.AuthenticationContext)
 
 	if accounts, err = s.BankClient.GetInternalAccounts(c, id); err != nil {
-		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to get accounts from bank"))
+		s.RenderInternalServerError(c, errors.Wrapf(err, "failed to get accounts from bank"))
 		return
 	}
 
-	Render(c, s.GetTemplateNameForSpec("account-consent.tmpl"), s.GetOBBRDataAccessConsentTemplateData(loginRequest, response.Payload, accounts))
+	s.Render(c, s.GetTemplateNameForSpec("account-consent.tmpl"), s.GetOBBRDataAccessConsentTemplateData(loginRequest, response.Payload, accounts))
 }
 
 func (s *OBBRAccountAccessConsentHandler) ConfirmConsent(c *gin.Context, loginRequest LoginRequest) (string, error) {

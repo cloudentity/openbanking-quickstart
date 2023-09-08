@@ -53,6 +53,7 @@ type Config struct {
 	ConsentStorageMode               string `env:"CONSENT_STORAGE_MODE"` // only for generic, one of: external | identity
 	ExternalConsentStorageConfig     ExternalConsentStorageConfig
 	IdentityPoolConsentStorageConfig IdentityPoolConsentStorageConfig
+	BankLogo                         string `env:"BANK_LOGO" envDefault:"bank_logo.svg"`
 }
 
 type ExternalConsentStorageConfig struct {

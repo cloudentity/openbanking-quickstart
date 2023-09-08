@@ -25,18 +25,18 @@ func (s *GenericAccountAccessConsentHandler) GetConsent(c *gin.Context, loginReq
 		logins.NewGetScopeGrantRequestParamsWithContext(c).WithLogin(loginRequest.ID),
 		nil,
 	); err != nil {
-		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to get login session"))
+		s.RenderInternalServerError(c, errors.Wrapf(err, "failed to get login session"))
 		return
 	}
 
 	id := s.GenericConsentTools.GetInternalBankDataIdentifier(response.Payload.Subject, response.Payload.AuthenticationContext)
 
 	if accounts, err = s.BankClient.GetInternalAccounts(c, id); err != nil {
-		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to get accounts from bank"))
+		s.RenderInternalServerError(c, errors.Wrapf(err, "failed to get accounts from bank"))
 		return
 	}
 
-	Render(c, s.GetTemplateNameForSpec("account-consent.tmpl"), s.GetAccessConsentTemplateData(loginRequest, response.Payload, accounts))
+	s.Render(c, s.GetTemplateNameForSpec("account-consent.tmpl"), s.GetAccessConsentTemplateData(loginRequest, response.Payload, accounts))
 }
 
 func (s *GenericAccountAccessConsentHandler) ConfirmConsent(c *gin.Context, loginRequest LoginRequest) (string, error) {
