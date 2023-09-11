@@ -67,7 +67,7 @@ services:
         condition: service_completed_successfully
 
   gobank-consent-storage:
-    image: openbanking-quickstart_consent-storage:${VERSION}
+    image: openbanking-quickstart-consent-storage:${VERSION}
     container_name: gobank-consent-storage
     ports:
       - "8084:8084"
