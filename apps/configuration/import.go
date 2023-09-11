@@ -12,7 +12,7 @@ import (
 
 const systemTenant = "system"
 
-func ImportConfiguration(tenantURL *url.URL, tenant *string, client *http.Client, body []byte, mode string) error {
+func ImportConfiguration(tenantURL *url.URL, tenant *string, client *http.Client, body []byte, mode string, target string) error {
 	var (
 		req  *http.Request
 		resp *http.Response
@@ -21,9 +21,9 @@ func ImportConfiguration(tenantURL *url.URL, tenant *string, client *http.Client
 	)
 
 	if *tenant == systemTenant {
-		tenantURL.Path = "/api/system/configuration"
+		tenantURL.Path = fmt.Sprintf("/api/%s/configuration", target)
 	} else {
-		tenantURL.Path = fmt.Sprintf("/api/system/%s/configuration", *tenant)
+		tenantURL.Path = fmt.Sprintf("/api/%s/%s/configuration", target, *tenant)
 	}
 
 	if mode != "" {

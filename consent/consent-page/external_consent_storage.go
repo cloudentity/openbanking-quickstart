@@ -13,37 +13,14 @@ import (
 	"os"
 
 	"github.com/pkg/errors"
-	"github.com/sirupsen/logrus"
-
-	"github.com/cloudentity/acp-client-go/clients/system/models"
 )
-
-type ConsentID string
-
-type Subject string
-
-type Data models.ScopeGrantSessionResponse
-
-type ConsentStorage interface {
-	Store(ctx context.Context, sub Subject, data Data) (ConsentID, error)
-}
-
-type DummyConsentStorage struct{}
-
-var _ ConsentStorage = &DummyConsentStorage{}
-
-func (d DummyConsentStorage) Store(ctx context.Context, sub Subject, data Data) (ConsentID, error) {
-	logrus.Infof("Store consent for sub: %s with data: %+v", sub, data)
-
-	return "external-consent-id", nil
-}
 
 type ExternalConsentStorage struct {
 	URL *url.URL
 	HC  *http.Client
 }
 
-func NewExternalConsentStorage(config ExternalConsentStorageConfig) (ExternalConsentStorage, error) {
+func NewExternalConsentStorage(config ExternalConsentStorageConfig) (ConsentStorage, error) {
 	var (
 		pool  *x509.CertPool
 		data  []byte
@@ -53,19 +30,19 @@ func NewExternalConsentStorage(config ExternalConsentStorageConfig) (ExternalCon
 	)
 
 	if pool, err = x509.SystemCertPool(); err != nil {
-		return ExternalConsentStorage{}, errors.Wrap(err, "failed to load system cert pool")
+		return nil, errors.Wrap(err, "failed to load system cert pool")
 	}
 
 	if config.RootCA != "" {
 		if data, err = os.ReadFile(config.RootCA); err != nil {
-			return ExternalConsentStorage{}, errors.Wrap(err, "failed to read root CA")
+			return nil, errors.Wrap(err, "failed to read root CA")
 		}
 		pool.AppendCertsFromPEM(data)
 	}
 
 	if config.CertFile != "" && config.KeyFile != "" {
 		if cert, err = tls.LoadX509KeyPair(config.CertFile, config.KeyFile); err != nil {
-			return ExternalConsentStorage{}, errors.Wrap(err, "failed to load tls cert")
+			return nil, errors.Wrap(err, "failed to load tls cert")
 		}
 
 		certs = append(certs, cert)
@@ -82,7 +59,7 @@ func NewExternalConsentStorage(config ExternalConsentStorageConfig) (ExternalCon
 		},
 	}
 
-	return ExternalConsentStorage{
+	return &ExternalConsentStorage{
 		URL: config.URL,
 		HC:  hc,
 	}, nil
@@ -94,7 +71,7 @@ type CreateConsentResponse struct {
 	ID string `json:"id"`
 }
 
-func (e *ExternalConsentStorage) Store(ctx context.Context, sub Subject, data Data) (ConsentID, error) {
+func (e *ExternalConsentStorage) Store(ctx context.Context, data Data) (ConsentID, error) {
 	var (
 		bs   []byte
 		req  *http.Request

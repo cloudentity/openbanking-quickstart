@@ -248,6 +248,10 @@ func RenewAccountsToken(ctx context.Context, bank ConnectedBank, client acpclien
 		return nil, err
 	}
 
+	if response.StatusCode != http.StatusOK {
+		return nil, errors.Errorf("token endpoint returned unexpected status code: %d", response.StatusCode)
+	}
+
 	if err = json.Unmarshal(body, &resp.Payload); err != nil {
 		return nil, err
 	}

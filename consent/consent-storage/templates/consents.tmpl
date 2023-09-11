@@ -27,20 +27,14 @@
          <table>
             <thead>
                <tr>
-                  <th>ID</th>
-                  <th>Subject</th>
-                  <th>Status</th>
-                  <th>Created Date</th>
+                  <th></td>
                   <th></th>
                </tr>
             </thead>
             <tbody>
                {{range .consents}}
                <tr>
-                  <td>{{.ID}}</td>
-                  <td>{{.Subject}}</td>
-                  <td>{{.Status}}</td>
-                  <td>{{.CreatedDate}}</td>
+                  <td><pre>{{.Pretty }}</pre></td>
                   <td>{{ if eq .Status "authorized" }}<a href="/{{.ID}}">Revoke</a>{{ end }}</td>
                </tr>
                {{end}}

@@ -28,23 +28,23 @@ func (s *OBUKDomesticPaymentConsentHandler) GetConsent(c *gin.Context, loginRequ
 			WithLogin(loginRequest.ID),
 		nil,
 	); err != nil {
-		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to get domestic payment consent"))
+		s.RenderInternalServerError(c, errors.Wrapf(err, "failed to get domestic payment consent"))
 		return
 	}
 
 	id = s.OBUKConsentTools.GetInternalBankDataIdentifier(response.Payload.Subject, response.Payload.AuthenticationContext)
 
 	if accounts, err = s.BankClient.GetInternalAccounts(c, id); err != nil {
-		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to get accounts from bank"))
+		s.RenderInternalServerError(c, errors.Wrapf(err, "failed to get accounts from bank"))
 		return
 	}
 
 	if balances, err = s.BankClient.GetInternalBalances(c, response.Payload.Subject); err != nil {
-		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to load account balances"))
+		s.RenderInternalServerError(c, errors.Wrapf(err, "failed to load account balances"))
 		return
 	}
 
-	Render(c, s.GetTemplateNameForSpec("payment-consent.tmpl"), s.GetDomesticPaymentTemplateData(loginRequest, response.Payload, accounts, balances.Data))
+	s.Render(c, s.GetTemplateNameForSpec("payment-consent.tmpl"), s.GetDomesticPaymentTemplateData(loginRequest, response.Payload, accounts, balances.Data))
 }
 
 func (s *OBUKDomesticPaymentConsentHandler) ConfirmConsent(c *gin.Context, loginRequest LoginRequest) (string, error) {

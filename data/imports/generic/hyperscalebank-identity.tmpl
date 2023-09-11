@@ -1,0 +1,61 @@
+schemas:
+  - tenant_id: {{ .tenant_id }}
+    id: hyperscalebank-payload-schema
+    name: Hyperscale Bank Consent Payload Schema
+    schema:
+      type: object
+      properties:
+        account_ids:
+          description: List of account identifiers
+          type: array
+          items:
+            type: string
+        client_id:
+          description: Subject
+          type: string
+          minLength: 1
+        granted_scopes:
+          description: List of granted scopes
+          type: array
+          items:
+            type: string
+        status:
+          description: Status
+          type: string
+          minLength: 1
+        subject:
+          description: Subject
+          type: string
+          minLength: 1
+      description: consent schema
+      type: object
+      required:
+        - subject
+        - status
+        - client_id
+    # to be removed after ACP bump AUT-9886
+    created_at: "2020-02-19T13:06:57.052165Z"
+    updated_at: "2020-02-19T13:06:57.052165Z"
+
+  - tenant_id: {{ .tenant_id }}
+    id: hyperscalebank-metadata-schema
+    name: Hyperscale Bank Consent Metadata Schema
+    schema:
+      type: object
+      properties:
+        customer_id:
+          description: Customer ID
+          type: string
+      description: hyperscale consent metadata schema
+      type: object
+    # to be removed after ACP bump AUT-9886
+    created_at: "2020-02-19T13:06:57.052165Z"
+    updated_at: "2020-02-19T13:06:57.052165Z"
+
+pools:
+  - tenant_id: {{ .tenant_id }}
+    id: hyperscalebank-consent-storage
+    # workspace_id: hyperscalebank
+    name: Hyperscale Bank Consent Storage
+    payload_schema_id: hyperscalebank-payload-schema
+    metadata_schema_id: hyperscalebank-metadata-schema

@@ -26,20 +26,20 @@ func (s *CDRAccountAccessConsentHandler) GetConsent(c *gin.Context, loginRequest
 			WithLogin(loginRequest.ID),
 		nil,
 	); err != nil {
-		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to get account access consent"))
+		s.RenderInternalServerError(c, errors.Wrapf(err, "failed to get account access consent"))
 		return
 	}
 
 	id = s.CDRConsentTools.GetInternalBankDataIdentifier(response.Payload.Subject, response.Payload.AuthenticationContext)
 
 	if accounts, err = s.BankClient.GetInternalAccounts(c, id); err != nil {
-		RenderInternalServerError(c, s.Server.Trans, errors.Wrapf(err, "failed to get accounts from bank"))
+		s.RenderInternalServerError(c, errors.Wrapf(err, "failed to get accounts from bank"))
 		return
 	}
 
 	data := s.GetCDRAccountAccessConsentTemplateData(loginRequest, response.Payload, accounts)
 
-	Render(c, s.GetTemplateNameForSpec("account-consent.tmpl"), data)
+	s.Render(c, s.GetTemplateNameForSpec("account-consent.tmpl"), data)
 }
 
 func (s *CDRAccountAccessConsentHandler) ConfirmConsent(c *gin.Context, loginRequest LoginRequest) (string, error) {

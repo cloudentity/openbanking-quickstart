@@ -51,7 +51,7 @@ func (u *ConsentRepo) List() ([]Consent, error) {
 		return consents, errors.Wrapf(err, "failed to list consents")
 	}
 
-	return consents, nil
+	return ConsentsByCreatedDate(consents), nil
 }
 
 func (u *ConsentRepo) Create(consent Consent) error {

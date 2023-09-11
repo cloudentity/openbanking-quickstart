@@ -84,9 +84,9 @@ clean-saas: set_saas_configuration start-runner
 purge:
 	docker images -a | grep openbanking-quickstart | awk '{print $3}' | xargs docker rmi -f || true
 
-.PHONY: clean-financroo-db
-clean-financroo-db:
-	rm -f mount/financroo-tpp/my.db
+.PHONY: clean-dbs
+clean-dbs:
+	find mount -name "*.db" | xargs rm -f
 
 .PHONY: restart-acp
 restart-acp:

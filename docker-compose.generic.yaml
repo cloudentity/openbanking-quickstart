@@ -11,7 +11,7 @@ services:
     volumes:
       - ./data:/certs
       - ./mount/financroo-tpp:/app/data
-      - ./apps/financroo-tpp/banks.json:/app/banks.json
+      - ./mount/financroo-tpp/banks.json:/app/banks.json
     env_file:
       - .env
     environment:
@@ -58,6 +58,7 @@ services:
       - OTP_MODE=mock # change to custom to enable custom OTP handling
       - MFA_CLAIM=sub # for mobile use mobile_verified
       - CLIENT_ID=${CONSENT_PAGE_CLIENT_ID}
+      - CONSENT_STORAGE_MODE=external
       - EXTERNAL_CONSENT_STORAGE_URL=https://gobank-consent-storage:8084
       - EXTERNAL_CONSENT_STORAGE_CLIENT_CERT_FILE=/consent_storage_cert.pem
       - EXTERNAL_CONSENT_STORAGE_CLIENT_KEY_FILE=/consent_storage_key.pem
@@ -67,7 +68,7 @@ services:
         condition: service_completed_successfully
 
   gobank-consent-storage:
-    image: openbanking-quickstart-consent-storage:${VERSION}
+    image: cloudentity/openbanking-quickstart-consent-storage:${VERSION}
     container_name: gobank-consent-storage
     ports:
       - "8084:8084"
@@ -100,7 +101,6 @@ services:
       - ./data/ca.pem:/ca.pem
       - ./data/bank_cert.pem:/bank_cert.pem
       - ./data/bank_key.pem:/bank_key.pem
-      - ./consent/consent-page/assets/images/hyperscalebank_logo.svg:/app/assets/images/bank_logo.svg
     env_file:
       - .env
     environment:
@@ -116,6 +116,13 @@ services:
       - OTP_MODE=mock # change to custom to enable custom OTP handling
       - MFA_CLAIM=sub # for mobile use mobile_verified
       - CLIENT_ID=hyperscalebank-consent-page
+      - CONSENT_STORAGE_MODE=identity
+      - IDENTITY_POOL_CONSENT_STORAGE_ISSUER_URL=${ACP_URL}/${TENANT}/admin
+      - IDENTITY_POOL_CONSENT_STORAGE_CLIENT_ID=hyperscalebank-consent-storage-mgmt
+      - IDENTITY_POOL_CONSENT_STORAGE_CLIENT_SECRET=aXPBmv62z3Jt1S4sWl2qRhOhEGPVZ9EcujGL7Xy0-X3
+      - IDENTITY_POOL_CONSENT_STORAGE_ROOT_CA=/ca.pem
+      - IDENTITY_POOL_CONSENT_STORAGE_POOL_ID=hyperscalebank-consent-storage
+      - BANK_LOGO=hyperscalebank_logo.svg
     depends_on:
       configuration:
         condition: service_completed_successfully
@@ -163,16 +170,15 @@ services:
         condition: service_completed_successfully
 
   configuration:
-    container_name: configuration
+    container_name: configuration-system
     platform: linux/x86_64
-    image: cloudentity/openbanking-quickstart-configuration:latest
+    image: cloudentity/openbanking-quickstart-configuration:${VERSION}
     restart: on-failure
     volumes:
       - ./data/tpp_cert.pem:/certs/tpp_cert.pem
       - ./data/ca.pem:/certs/ca.pem
       - ./data/variables.yaml:/variables.yaml
       - ./data/imports/generic/system.tmpl:/app/imports-generic/system.tmpl
-      # - ./data/imports/bank-customers.tmpl:/app/imports-generic/bank-customers.tmpl
       - ./data/imports/generic/gobank.tmpl:/app/imports-generic/gobank.tmpl
       - ./data/imports/generic/hyperscalebank.tmpl:/app/imports-generic/hyperscalebank.tmpl
       - ./data/imports/generic/tenant.tmpl:/app/imports-generic/tenant.tmpl
@@ -191,3 +197,32 @@ services:
       - --variables-file
       - /variables.yaml
       - --verbose
+
+  configuration-identity:
+    container_name: configuration-identity
+    platform: linux/x86_64
+    image: cloudentity/openbanking-quickstart-configuration:${VERSION}
+    restart: on-failure
+    volumes:
+      - ./data/variables.yaml:/variables.yaml
+      - ./data/imports/generic/hyperscalebank-identity.tmpl:/app/imports-generic/hyperscalebank-identity.tmpl
+    command:
+      - /app/main
+      - --tenant-url
+      - ${IDENTITY_CONFIGURATION_TENANT_URL}
+      - --tenant
+      - ${IDENTITY_CONFIGURATION_TENANT}
+      - --client-id
+      - ${IDENTITY_CONFIGURATION_CLIENT_ID}
+      - --client-secret
+      - ${IDENTITY_CONFIGURATION_CLIENT_SECRET}
+      - --templates-dirs
+      - /app/imports-generic
+      - --variables-file
+      - /variables.yaml
+      - --verbose
+      - --target
+      - identity
+    depends_on:
+      configuration:
+        condition: service_completed_successfully

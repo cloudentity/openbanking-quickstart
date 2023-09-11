@@ -104,7 +104,7 @@ services:
   configuration:
     container_name: configuration
     platform: linux/x86_64
-    image: cloudentity/openbanking-quickstart-configuration:latest
+    image: cloudentity/openbanking-quickstart-configuration:${VERSION}
     restart: on-failure
     volumes:
       - ./data/tpp_cert.pem:/certs/tpp_cert.pem
