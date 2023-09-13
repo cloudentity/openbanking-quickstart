@@ -47,7 +47,13 @@ func ImportConfiguration(tenantURL *url.URL, tenant *string, client *http.Client
 			return err
 		}
 
-		return fmt.Errorf("import endpoint: %s returned invalid status code: %d, body: %s", tenantURL.String(), resp.StatusCode, bs)
+		return fmt.Errorf(
+			"import endpoint: %s returned invalid status code: %d, x-trace-id: %s body: %s",
+			tenantURL.String(),
+			resp.StatusCode,
+			resp.Header.Get("X-Trace-ID"),
+			bs,
+		)
 	}
 
 	return nil
