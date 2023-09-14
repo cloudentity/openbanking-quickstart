@@ -111,6 +111,19 @@ pipeline {
                 sh 'make test'
             }
         }
+        stage('Run generic openbanking with disabled MFA') {
+            steps {
+                script {
+                    sh 'make clean'
+                    try {
+                        sh 'make disable-mfa run-generic-local'
+                    } catch (exc) {
+                        captureDockerLogs()
+                        unstable('Generic Openbanking run failed')
+                    }
+                }
+            }
+        }
         /*
         stage('CDR Tests') {
             steps {
