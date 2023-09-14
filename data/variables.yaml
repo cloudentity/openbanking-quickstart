@@ -1,5 +1,6 @@
 tenant_id: default
 server_id: gobank
+hyperscalebank_server_id: hyperscalebank
 server_profile: fapi_20_security
 
 bank_customers_server_id: bank-customers
@@ -30,6 +31,9 @@ financroo_pem_file2: /certs/cert.ps.pem
 bank_client_id: gobank-bank
 bank_client_secret: 8DPOMd3ZOvsjuUnU9goRMHTIUUXtSkgwQeo8v_S74aE
 bank_tls_client_auth_subject_dn: CN=cid2.authorization.cloudentity.com,OU=Authorization,O=Cloudentity,L=Seattle,ST=Washinghton,C=US
+
+
+hyperscalebank_client_id: hyperscalebank
 
 consent_self_service_client_id: bv0nab0mekk67nekvq7g
 consent_self_service_client_secret: 5j1RFwfeLQRci7jaouPr-O5qejBWql7waFkfR_x7H6A
