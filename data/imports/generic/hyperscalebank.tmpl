@@ -40,7 +40,7 @@ idps:
 
 server_consents:
 - tenant_id: {{ .tenant_id }}
-  client_id: hyperscalebank-consent-page
+  client_id: {{ .hyperscalebank_server_id }}-consent-page
   custom:
     server_consent_url: https://localhost:6080
   server_id: {{ .hyperscalebank_server_id }}
@@ -99,7 +99,7 @@ clients:
   token_endpoint_auth_method: client_secret_basic
 
 # - tenant_id: {{ .tenant_id }}
-#   authorization_server_id: hyperscalebank
+#   authorization_server_id: {{ .hyperscalebank_server_id }}
 #   client_id: {{ .internal_bank_client_id }}
 #   client_secret: {{ .internal_bank_client_secret }}
 #   client_name: Consent Page Hyperscale Bank Client
@@ -109,12 +109,12 @@ clients:
 
 services:
 - authorization_server_id: {{ .hyperscalebank_server_id }}
-  id: hyperscalebank-accounts
+  id: {{ .hyperscalebank_server_id }}-accounts
   name: Accounts
   tenant_id: {{ .tenant_id }}
   scopes:
   - authorization_server_id: {{ .hyperscalebank_server_id }}
-    id: hyperscalebank-accounts
+    id: {{ .hyperscalebank_server_id }}-accounts
     name: accounts
     tenant_id: {{ .tenant_id }}
     transient: true
@@ -123,7 +123,7 @@ script_execution_points:
   - server_id: {{ .hyperscalebank_server_id }}
     tenant_id: {{ .tenant_id }}
     script_id: token-minting
-    target_fk: hyperscalebank
+    target_fk: {{ .hyperscalebank_server_id }}
     type: token_minting
 
 scripts:
@@ -139,4 +139,3 @@ scripts:
           }
         };
       }
-
