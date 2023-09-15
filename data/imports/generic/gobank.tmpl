@@ -133,7 +133,7 @@ services:
   tenant_id: {{ .tenant_id }}
   scopes:
   - authorization_server_id: {{ .server_id }}
-    id: accounts
+    id: {{ .server_id }}-accounts
     name: accounts
     tenant_id: {{ .tenant_id }}
     transient: true
