@@ -90,13 +90,15 @@ clients:
 
 # consent storage management
 - tenant_id: {{ .tenant_id }}
-  authorization_server_id: admin
+  authorization_server_id: system
   client_id: hyperscalebank-consent-storage-mgmt
   client_secret: {{ .hyperscale_consent_mgmt_client_secret }}
   client_name: Hyperscale Consent Management
   grant_types:
   - client_credentials
   token_endpoint_auth_method: client_secret_basic
+  scopes:
+  - identity
 
 # - tenant_id: {{ .tenant_id }}
 #   authorization_server_id: {{ .hyperscalebank_server_id }}
