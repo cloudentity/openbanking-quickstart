@@ -6,8 +6,8 @@ import (
 	"github.com/pkg/errors"
 
 	acpclient "github.com/cloudentity/acp-client-go"
-	"github.com/cloudentity/acp-client-go/clients/identity/client/users"
-	"github.com/cloudentity/acp-client-go/clients/identity/models"
+	"github.com/cloudentity/acp-client-go/clients/identitysystem/client/users"
+	"github.com/cloudentity/acp-client-go/clients/identitysystem/models"
 )
 
 type IdentityPoolConsentStorage struct {
@@ -28,6 +28,7 @@ func NewIdentityPoolConsentStorage(config IdentityPoolConsentStorageConfig) (Con
 		ClientID:     config.ClientID,
 		ClientSecret: config.ClientSecret,
 		RootCA:       config.RootCA,
+		Scopes:       []string{"identity"},
 	}); err != nil {
 		return nil, errors.Wrapf(err, "failed to create acp client")
 	}
@@ -39,12 +40,12 @@ var _ ConsentStorage = &IdentityPoolConsentStorage{}
 
 func (s *IdentityPoolConsentStorage) Store(ctx context.Context, data Data) (ConsentID, error) {
 	var (
-		resp *users.CreateUserCreated
+		resp *users.SystemCreateUserCreated
 		err  error
 	)
 
-	if resp, err = s.Client.Identity.Acp.Users.CreateUser(
-		users.NewCreateUserParamsWithContext(ctx).
+	if resp, err = s.Client.IdentitySystem.Users.SystemCreateUser(
+		users.NewSystemCreateUserParamsWithContext(ctx).
 			WithIPID(s.PoolID).
 			WithNewUser(&models.NewUser{
 				Metadata: map[string]interface{}{},
