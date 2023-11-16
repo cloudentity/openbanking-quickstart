@@ -18,6 +18,18 @@ export class FinancrooWelcomePage {
     })
   }
 
+  public reconnectHyperscaleBank(): void {
+    cy.get(this.accessBankLocator).then(ele => {
+      cy.wrap(ele).click()
+      if (ele.text().includes(`disconnect`)) {
+        this.reconnectHyperscaleBank()
+      } else if (ele.text().includes(`Connect your bank`)) {
+        this.financrooConnectAccountPage.clickHyperscaleBankIcon()
+        this.financrooConnectAccountPage.allow()
+      }
+    })
+  }
+
  public assertThatConnectBankPageIsDisplayed(): void {
     cy.get(this.welcomeTitleLocator).should('be.visible')
     cy.get(this.welcomeTitleLocator).should('contain.text', 'Welcome to Financroo Smart Banking');

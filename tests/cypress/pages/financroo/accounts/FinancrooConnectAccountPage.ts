@@ -1,6 +1,6 @@
 export class FinancrooConnectAccountPage {
   private readonly goBankLocator: string = `#gobank`;
-  private readonly santanderBankLocator: string = '#santander'; 
+  private readonly hyperscaleBankLocator: string = '#hyperscalebank';
   private readonly cancelButtonLocator: string = `#cancel-button`;
   private readonly allowButtonLocator: string = `#allow-button`;
 
@@ -8,8 +8,8 @@ export class FinancrooConnectAccountPage {
     cy.get(this.goBankLocator).click()
   }
 
-  public clickSantanderBankIcon(): void {
-    cy.get(this.santanderBankLocator).click()
+  public clickHyperscaleBankIcon(): void {
+    cy.get(this.hyperscaleBankLocator).click()
   }
 
   public allow(): void {
