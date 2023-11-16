@@ -7,7 +7,6 @@ export class FinancrooAccountsPage {
   private readonly disconnectAccountsButtonLocator: string = `#access-bank-button`;
   private readonly connectBankLocator: string = "#connect-bank";
   private getAccountLocator = (id: string) => `#account-id-${id}`;
-  b
 
   public assertAccounts(accounts: string[]): void {
     const accountElements = cy.get(this.accountsLocator);
