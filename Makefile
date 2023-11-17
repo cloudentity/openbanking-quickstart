@@ -88,7 +88,7 @@ purge:
 
 .PHONY: clean-dbs
 clean-dbs:
-	find mount -name "*.db" | xargs sudo rm -f
+	find mount -name "*.db" | xargs rm -f
 
 .PHONY: restart-acp
 restart-acp:
