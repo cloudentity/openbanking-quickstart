@@ -1,0 +1,45 @@
+{
+  "name": "dev_quickstart",
+  "build": { "dockerfile": "Dockerfile" },
+  "mounts": [
+    "source=projectname-bashhistory,target=/commandhistory,type=volume",
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.npmrc,target=/home/vscode/.npmrc,type=bind,consistency=cached",
+    "source=${localEnv:HOME}${localEnv:USERPROFILE}/.m2/settings.xml,target=/home/vscode/.m2/settings.xml,type=bind,consistency=cached"
+  ],
+  "features": {
+    "ghcr.io/devcontainers/features/go:1.2.2": {
+      "version": "1.21"
+    },
+    "ghcr.io/devcontainers/features/node:1": {
+      "version": "lts"
+    },
+    "ghcr.io/devcontainers/features/docker-in-docker:2.7.1": {
+      "version": "latest",
+      "moby": true
+    }
+  },
+  "postCreateCommand": ". ${NVM_DIR}/nvm.sh && nvm install --lts",
+  "runArgs": ["--name", "${localEnv:USER}_devcontainer_quickstart"],
+  "containerEnv": {
+    "GIT_EDITOR": "vi"
+  },
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.profiles.linux": { "zsh": { "path": "/bin/zsh" } }
+      },
+      "extensions": [
+        "golang.go",
+        "dbaeumer.vscode-eslint",
+        "github.copilot",
+        "github.copilot-chat",
+        "github.vscode-pull-request-github",
+        "ms-vsliveshare.vsliveshare",
+        "eamodio.gitlens",
+        "esbenp.prettier-vscode",
+        "mutantdino.resourcem"
+      ]
+    }
+  }
+}
