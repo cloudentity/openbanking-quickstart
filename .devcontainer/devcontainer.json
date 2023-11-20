@@ -1,5 +1,5 @@
 {
-  "name": "dev",
+  "name": "dev_quickstart",
   "build": { "dockerfile": "Dockerfile" },
   "mounts": [
     "source=projectname-bashhistory,target=/commandhistory,type=volume",
@@ -19,7 +19,7 @@
     }
   },
   "postCreateCommand": ". ${NVM_DIR}/nvm.sh && nvm install --lts",
-  "runArgs": ["--name", "${localEnv:USER}_devcontainer"],
+  "runArgs": ["--name", "${localEnv:USER}_devcontainer_quickstart"],
   "containerEnv": {
     "GIT_EDITOR": "vi"
   },
