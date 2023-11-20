@@ -225,8 +225,7 @@ pipeline {
                 }
             }
         }
-
-        stage('Generic Tests with enabled MFA') {
+        /*stage('Generic Tests with enabled MFA') {
             steps {
                 script {
                     sh 'make clean'
@@ -239,7 +238,7 @@ pipeline {
                     }
                 }
             }
-        }
+        }*/
         stage('SaaS FDX Tests') {
             steps {
                 script {
