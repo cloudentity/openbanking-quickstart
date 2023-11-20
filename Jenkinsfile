@@ -225,7 +225,7 @@ pipeline {
                 }
             }
         }
-        /*
+
         stage('Generic Tests with enabled MFA') {
             steps {
                 script {
@@ -240,7 +240,6 @@ pipeline {
                 }
             }
         }
-        */
         stage('SaaS FDX Tests') {
             steps {
                 script {
