@@ -111,6 +111,36 @@ pipeline {
                 sh 'make test'
             }
         }
+        stage('Generic Tests with disabled MFA') {
+            steps {
+                script {
+                    sh 'make clean'
+                    try {
+                        sh 'make disable-mfa run-generic-local'
+                        sh 'make run-generic-tests-headless'
+                    } catch (exc) {
+                        captureDockerLogs()
+                        unstable('Generic Tests with disabled MFA failed')
+                    }
+                }
+            }
+        }
+        /*
+        stage('Generic Tests with enabled MFA') {
+            steps {
+                script {
+                    sh 'make clean'
+                    try {
+                        sh 'make enable-mfa run-generic-local'
+                        sh 'make run-generic-tests-headless'
+                    } catch (exc) {
+                        captureDockerLogs()
+                        unstable('Generic Tests with enabled MFA failed')
+                    }
+                }
+            }
+        }
+        */
         /*
         stage('CDR Tests') {
             steps {
@@ -211,36 +241,6 @@ pipeline {
                 }
             }
         }
-        stage('Generic Tests with disabled MFA') {
-            steps {
-                script {
-                    sh 'make clean'
-                    try {
-                        sh 'make disable-mfa run-generic-local'
-                        sh 'make run-generic-tests-headless'
-                    } catch (exc) {
-                        captureDockerLogs()
-                        unstable('Generic Tests with disabled MFA failed')
-                    }
-                }
-            }
-        }
-        /*
-        stage('Generic Tests with enabled MFA') {
-            steps {
-                script {
-                    sh 'make clean'
-                    try {
-                        sh 'make enable-mfa run-generic-local'
-                        sh 'make run-generic-tests-headless'
-                    } catch (exc) {
-                        captureDockerLogs()
-                        unstable('Generic Tests with enabled MFA failed')
-                    }
-                }
-            }
-        }
-        */
         stage('SaaS FDX Tests') {
             steps {
                 script {
