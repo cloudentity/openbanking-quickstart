@@ -96,8 +96,8 @@ do
     ./scripts/override_variables.sh  "server_profile" "fdx"
     ;;
   generic)
-    override_server "gobank" "bank-customers" "gobank"
-    override_client_ids "gobank-developer-tpp" "gobank-financroo-tpp" "gobank-bank" "gobank-consent-page" "gobank-internal-bank-client" $system_clients
+    #override_server "gobank" "bank-customers" "gobank"
+    #override_client_ids "gobank-developer-tpp" "gobank-financroo-tpp" "gobank-bank" "gobank-consent-page" "gobank-internal-bank-client" $system_clients
     ./scripts/override_variables.sh  "server_profile" "fapi_20_security"
     ;;
   *)
