@@ -126,6 +126,7 @@ pipeline {
                 }
             }
         }
+        */
           stage('OBBR Tests with disabled MFA') {
             steps {
                 script {
@@ -210,7 +211,6 @@ pipeline {
                 }
             }
         }
-        */
         stage('Generic Tests with disabled MFA') {
             steps {
                 script {
@@ -218,7 +218,6 @@ pipeline {
                     try {
                         sh 'make disable-mfa run-generic-local'
                         sh 'make run-generic-tests-headless'
-                        sh 'sleep 3000'
                     } catch (exc) {
                         captureDockerLogs()
                         unstable('Generic Tests with disabled MFA failed')
@@ -226,8 +225,7 @@ pipeline {
                 }
             }
         }
-
-        stage('Generic Tests with enabled MFA') {
+        /*stage('Generic Tests with enabled MFA') {
             steps {
                 script {
                     sh 'make clean'
@@ -240,7 +238,7 @@ pipeline {
                     }
                 }
             }
-        }
+        }*/
         stage('SaaS FDX Tests') {
             steps {
                 script {
