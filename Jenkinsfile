@@ -217,8 +217,8 @@ pipeline {
                     sh 'make clean'
                     try {
                         sh 'make disable-mfa run-generic-local'
-                        sh 'sleep 3000'
                         sh 'make run-generic-tests-headless'
+                        sh 'sleep 3000'
                     } catch (exc) {
                         captureDockerLogs()
                         unstable('Generic Tests with disabled MFA failed')
