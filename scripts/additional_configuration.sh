@@ -43,7 +43,7 @@ configure_cdr() {
 
 override_server() {
   arrEnv=("SERVER" "BANK_CUSTOMERS_SERVER" "HYPERSCALE_SERVER")
-  arrVar=("server_id" "bank_customers_server_id" "hyperscale_server_id")
+  arrVar=("server_id" "bank_customers_server_id" "hyperscalebank_server_id")
   arrJson=(".banks[0].server" ".banks[1].server" ".banks[1].server")
   arrIds=($@)
 
