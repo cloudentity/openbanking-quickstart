@@ -1,4 +1,4 @@
-import {Urls} from '../Urls'
+import { Urls } from '../Urls'
 
 export class TppLoginPage {
   private readonly nextButtonLocator: string = `[type="submit"]`;
@@ -35,27 +35,27 @@ export class TppLoginPage {
   public checkAccountsReadPermission(check: boolean): void {
     const cb = cy.get(this.accountsReadPermissionCheckboxLocator);
     if (check) {
-      cb.check(); 
+      cb.check();
     } else {
-      cb.uncheck(); 
+      cb.uncheck();
     }
   }
 
   public checkAccountsOverdraftLimitsReadPermission(check: boolean): void {
-    const cb = cy.get(this.accountsOverdraftLimitsReadPermissionCheckboxLocator); 
+    const cb = cy.get(this.accountsOverdraftLimitsReadPermissionCheckboxLocator);
     if (check) {
-      cb.check(); 
+      cb.check();
     } else {
-      cb.uncheck(); 
+      cb.uncheck();
     }
   }
 
   public checkResourcesReadPermission(check: boolean): void {
-    const cb = cy.get(this.resourcesReadPermissionCheckboxLocator); 
+    const cb = cy.get(this.resourcesReadPermissionCheckboxLocator);
     if (check) {
       cb.check();
     } else {
-      cb.uncheck(); 
+      cb.uncheck();
     }
   }
 

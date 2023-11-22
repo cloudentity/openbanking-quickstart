@@ -53,12 +53,12 @@ export class PushedAuthorisationRequestPage {
 
   public setSharingDuration(duration: number): void {
     cy.get(this.sharingDurationSelector('#SharingDuration'))
-    .type(duration.toString());
+      .type(duration.toString());
   }
 
   public setScopes(scopes: string[]): void {
     cy.get(this.scopeSelector('#Scope'))
-    .type(scopes.join(' ').toString());
+      .type(scopes.join(' ').toString());
   }
 
   public clickInitiateParButton(): void {
@@ -66,15 +66,15 @@ export class PushedAuthorisationRequestPage {
   }
 
   public assertThatAuthorizationUriIsGenerated(): void {
-    cy.get(this.consentAuthorizationUriSelector, {timeout: 30000,})
+    cy.get(this.consentAuthorizationUriSelector, { timeout: 30000, })
       .should('be.visible');
-    cy.get(this.requestUriLabelSelector, {timeout: 30000,})
+    cy.get(this.requestUriLabelSelector, { timeout: 30000, })
       .should('have.text', 'request_uri');
-    cy.get(this.requestUriOutputSelector, {timeout: 30000,})
+    cy.get(this.requestUriOutputSelector, { timeout: 30000, })
       .should('contain.text', 'urn:ietf:params:oauth:request_uri:');
-    cy.get(this.expiresInLabelSelector, {timeout: 30000,})
+    cy.get(this.expiresInLabelSelector, { timeout: 30000, })
       .should('have.text', 'expires_in');
-    cy.get(this.expiresInOutputSelector, {timeout: 30000,})
+    cy.get(this.expiresInOutputSelector, { timeout: 30000, })
       .should('have.text', '60');
 
     cy.get(this.registrationSelector(`#RegistrationId > option`)).eq(0)

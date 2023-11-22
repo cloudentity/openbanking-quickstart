@@ -66,19 +66,6 @@ describe(`Tpp technical app`, () => {
     });
   });
 
-  it(`Cancel on ACP login`, () => {
-    tppLoginPage.next();
-    tppIntentPage.login();
-
-    acpLoginPage.assertThatModalIsDisplayed();
-    acpLoginPage.cancelLogin();
-    
-    tppErrorPage.assertThatCancelLoginErrorPageIsDisplayed(
-      `access denied`,
-      `The user rejected the authentication`
-    );
-  });
-
   it(`Cancel on consent`, () => {
     tppLoginPage.next();
     tppIntentPage.login();

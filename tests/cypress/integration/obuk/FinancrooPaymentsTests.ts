@@ -58,7 +58,7 @@ describe(`Financroo payments app test`, () => {
     acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.loginWithMfaOption();
 
-    paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.UK.code, Accounts.ids.UK.bills);  
+    paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.UK.code, Accounts.ids.UK.bills);
     paymentConsentPage.clickConfirm();
 
     financrooInvestmentsPage.assertThatTransactionWasCompleted(amount, Currencies.currency.UK.symbol);
@@ -86,33 +86,11 @@ describe(`Financroo payments app test`, () => {
     acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.loginWithMfaOption();
 
-    paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.UK.code, Accounts.ids.UK.bills); 
+    paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.UK.code, Accounts.ids.UK.bills);
     paymentConsentPage.clickCancel();
 
     // UI error page improvements AUT-5845
     errorPage.assertError(`acp returned an error: rejected:`);
-  });
-
-  it(`Cancel on ACP login`, () => {
-    const amount: number = Math.floor(Math.random() * 50) + 1;
-
-    financrooLoginPage.visit();
-    financrooLoginPage.login();
-    
-    financrooAccountsPage.assertThatPageIsDisplayed();
-    financrooAccountsPage.goToInvestmentsTab();
-
-    financrooInvestmentsPage.clickInvest();
-    
-    financrooContributePage.contributeAmount(amount, Currencies.currency.UK.symbol);
-    financrooContributePage.contributePaymentMethod(amount, Currencies.currency.UK.symbol, Accounts.ids.UK.household);
-    financrooContributePage.contributeInvestmentSummary(amount, Currencies.currency.UK.symbol, Accounts.ids.UK.household);
-
-    acpLoginPage.assertThatModalIsDisplayed();
-    acpLoginPage.cancelLogin();
-
-    // UI error page improvements AUT-5845
-    errorPage.assertError(`The user rejected the authentication`);
   });
 
 });

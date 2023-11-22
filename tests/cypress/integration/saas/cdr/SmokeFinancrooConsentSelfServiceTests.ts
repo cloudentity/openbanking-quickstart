@@ -1,14 +1,3 @@
-import { AcpLoginPage } from "../../../pages/acp/AcpLoginPage";
-import { AccountConsentPage } from "../../../pages/consent/AccountConsentPage";
-import { ConsentSelfServicePage } from "../../../pages/consent-self-service/ConsentSelfServicePage";
-import { ConsentSelfServiceApplicationPage } from "../../../pages/consent-self-service/ConsentSelfServiceApplicationPage";
-import { ConsentSelfServiceAccountDetailsPage } from "../../../pages/consent-self-service/ConsentSelfServiceAccountDetailsPage";
-import { Accounts } from "../../../pages/Accounts";
-import { FinancrooLoginPage } from "../../../pages/financroo/FinancrooLoginPage";
-import { FinancrooWelcomePage } from "../../../pages/financroo/FinancrooWelcomePage";
-import { FinancrooModalPage } from "../../../pages/financroo/accounts/FinancrooModalPage";
-import { FinancrooAccountsPage } from "../../../pages/financroo/accounts/FinancrooAccountsPage";
-
 // FIXME
 // describe(`Smoke Financroo Consent self service tests`, () => {
 //   const financrooLoginPage: FinancrooLoginPage = new FinancrooLoginPage();

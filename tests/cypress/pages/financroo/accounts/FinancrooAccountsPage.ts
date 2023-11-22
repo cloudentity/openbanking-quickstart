@@ -1,4 +1,3 @@
-
 export class FinancrooAccountsPage {
   private readonly accountsLocator: string = `.account-name`;
   private readonly accountsSyncedNumberLocator: string = `#accounts-synced-number`;

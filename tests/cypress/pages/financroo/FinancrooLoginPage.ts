@@ -1,4 +1,4 @@
-import {Urls} from '../Urls'
+import { Urls } from '../Urls'
 
 export class FinancrooLoginPage {
   private readonly loginButtonLocator: string = `.login-button`;

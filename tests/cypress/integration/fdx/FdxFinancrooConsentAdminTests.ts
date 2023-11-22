@@ -1,12 +1,12 @@
-import {FinancrooLoginPage} from "../../pages/financroo/FinancrooLoginPage";
-import {Accounts} from "../../pages/Accounts";
-import {FinancrooWelcomePage} from "../../pages/financroo/FinancrooWelcomePage";
-import {AcpLoginPage} from "../../pages/acp/AcpLoginPage";
-import {AccountConsentPage} from "../../pages/consent/AccountConsentPage";
-import {ConsentAdminPage} from "../../pages/consent-admin/ConsentAdminPage";
-import {FinancrooModalPage} from "../../pages/financroo/accounts/FinancrooModalPage";
-import {FinancrooAccountsPage} from "../../pages/financroo/accounts/FinancrooAccountsPage";
-import {ErrorPage} from "../../pages/ErrorPage";
+import { FinancrooLoginPage } from "../../pages/financroo/FinancrooLoginPage";
+import { Accounts } from "../../pages/Accounts";
+import { FinancrooWelcomePage } from "../../pages/financroo/FinancrooWelcomePage";
+import { AcpLoginPage } from "../../pages/acp/AcpLoginPage";
+import { AccountConsentPage } from "../../pages/consent/AccountConsentPage";
+import { ConsentAdminPage } from "../../pages/consent-admin/ConsentAdminPage";
+import { FinancrooModalPage } from "../../pages/financroo/accounts/FinancrooModalPage";
+import { FinancrooAccountsPage } from "../../pages/financroo/accounts/FinancrooAccountsPage";
+import { ErrorPage } from "../../pages/ErrorPage";
 
 describe(`FDX Financroo Consent admin portal tests`, () => {
   const financrooLoginPage: FinancrooLoginPage = new FinancrooLoginPage();

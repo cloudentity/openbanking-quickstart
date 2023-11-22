@@ -1,10 +1,10 @@
-import {FinancrooLoginPage} from "../../pages/financroo/FinancrooLoginPage";
-import {Accounts} from "../../pages/Accounts";
-import {FinancrooWelcomePage} from "../../pages/financroo/FinancrooWelcomePage";
-import {AcpLoginPage} from "../../pages/acp/AcpLoginPage";
-import {AccountConsentPage} from "../../pages/consent/AccountConsentPage";
-import {FinancrooAccountsPage} from "../../pages/financroo/accounts/FinancrooAccountsPage";
-import {FinancrooConnectAccountPage} from "../../pages/financroo/accounts/FinancrooConnectAccountPage";
+import { FinancrooLoginPage } from "../../pages/financroo/FinancrooLoginPage";
+import { Accounts } from "../../pages/Accounts";
+import { FinancrooWelcomePage } from "../../pages/financroo/FinancrooWelcomePage";
+import { AcpLoginPage } from "../../pages/acp/AcpLoginPage";
+import { AccountConsentPage } from "../../pages/consent/AccountConsentPage";
+import { FinancrooAccountsPage } from "../../pages/financroo/accounts/FinancrooAccountsPage";
+import { FinancrooConnectAccountPage } from "../../pages/financroo/accounts/FinancrooConnectAccountPage";
 
 describe(`Generic Financroo Consent self service tests`, () => {
   const financrooLoginPage: FinancrooLoginPage = new FinancrooLoginPage();
