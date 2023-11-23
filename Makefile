@@ -6,7 +6,7 @@ ARTIFACTORY_GO_PROXY_PASSWORD ?= PUT_ARTIFACTORY_GO_PROXY_PASSWORD_HERE
 
 .EXPORT_ALL_VARIABLES: ;
 ACP_LOCAL_APPS      =acp crdb redis jaeger node-env
-ALL_DOCKER_COMPOSES =-f docker-compose.obuk.yaml -f docker-compose.obbr.yaml -f docker-compose.cdr.yaml -f docker-compose.build.yaml
+ALL_DOCKER_COMPOSES =-f docker-compose.obuk.yaml -f docker-compose.obbr.yaml -f docker-compose.cdr.yaml -f docker-compose.generic.yaml -f docker-compose.fdx.yaml -f docker-compose.build.yaml
 
 ifeq ($(CI), true)
 	DOCKER_BUILD_PARAMS := --build-arg GOPROXY=https://${ARTIFACTORY_USER}:${ARTIFACTORY_GO_PROXY_PASSWORD}@artifactory.cloudentity.com/artifactory/api/go/go-virtual
@@ -17,7 +17,7 @@ build:
 	cp -f .env-local .env
 	docker-compose ${ALL_DOCKER_COMPOSES} build $(DOCKER_BUILD_PARAMS)
 
-# developer-tpp, financroo-tpp, consent-page, bank, configuration,consent-self-service-portal, consent-admin-portal
+# developer-tpp, financroo-tpp, consent-page, bank, configuration, consent-self-service-portal, consent-admin-portal
 build-%:
 	docker-compose ${ALL_DOCKER_COMPOSES} build $*
 
@@ -25,6 +25,8 @@ build-%:
 run-%-local:
 	./scripts/additional_configuration.sh $* "local" ${BRANCH_NAME}
 	cp -f .env-local .env
+	docker-compose -f docker-compose.acp.local.yaml up -d --no-build crdb
+	./scripts/wait.sh
 	docker-compose -f docker-compose.acp.local.yaml up -d --no-build ${ACP_LOCAL_APPS}
 	./scripts/wait.sh
 	docker-compose -f docker-compose.$*.yaml up --no-build -d
@@ -53,7 +55,7 @@ run-tests:
 run-tests-verify:
 	VERIFY_TEST_RUNNER_TIMEOUT_MS=80000 yarn --cwd tests run cypress verify
 
-# obuk, obbr, cdr, fdx
+# obuk, obbr, cdr, fdx, generic
 run-%-tests-headless:
 	yarn --cwd tests run cypress run -s cypress/integration/$*/*.ts
 

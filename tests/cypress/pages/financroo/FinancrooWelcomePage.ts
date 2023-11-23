@@ -1,4 +1,4 @@
-import {FinancrooConnectAccountPage} from './accounts/FinancrooConnectAccountPage';
+import { FinancrooConnectAccountPage } from './accounts/FinancrooConnectAccountPage';
 
 export class FinancrooWelcomePage {
   private readonly accessBankLocator: string = `#access-bank-button`
@@ -18,13 +18,25 @@ export class FinancrooWelcomePage {
     })
   }
 
- public assertThatConnectBankPageIsDisplayed(): void {
+  public reconnectHyperscaleBank(): void {
+    cy.get(this.accessBankLocator).then(ele => {
+      cy.wrap(ele).click()
+      if (ele.text().includes(`disconnect`)) {
+        this.reconnectHyperscaleBank()
+      } else if (ele.text().includes(`Connect your bank`)) {
+        this.financrooConnectAccountPage.clickHyperscaleBankIcon()
+        this.financrooConnectAccountPage.allow()
+      }
+    })
+  }
+
+  public assertThatConnectBankPageIsDisplayed(): void {
     cy.get(this.welcomeTitleLocator).should('be.visible')
     cy.get(this.welcomeTitleLocator).should('contain.text', 'Welcome to Financroo Smart Banking');
     cy.get(this.welcomeSubtleLocator).should('be.visible')
     cy.get(this.welcomeSubtleLocator).should('contain.text', 'Connect your bank, bills and credit cards to uncover insights that can improve your financial well being');
     cy.get(this.accessBankLocator).should('be.visible')
     cy.get(this.accessBankLocator).should('contain.text', 'Connect your bank');
- }
- 
+  }
+
 }

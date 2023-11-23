@@ -60,7 +60,7 @@ describe(`Tpp technical app`, () => {
         "To uncover insights that can improve your financial well being."
       );
       accountConsentPage.clickAgree();
-      
+
       tppAuthenticatedPage.assertSuccess();
     });
   });

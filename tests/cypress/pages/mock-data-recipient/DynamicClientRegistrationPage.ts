@@ -45,7 +45,7 @@ export class DynamicClientRegistrationPage {
       .should('contain.text', 'Waiting...');
   }
 
-  public assertThatDynamicClientRegistrationFormIsDisplayed() :void {
+  public assertThatDynamicClientRegistrationFormIsDisplayed(): void {
     cy.get(this.mainHeaderSelector)
       .should('have.text', 'Dynamic Client Registration');
     cy.get(this.createClientRegistrationHeaderSelector)
@@ -71,7 +71,7 @@ export class DynamicClientRegistrationPage {
     cy.get(this.tokenEndpointAuthSigningAlgSelector('#TokenEndpointAuthSigningAlg'))
       .should('be.visible');
     cy.get(this.tokenEndpointAuthMethodSelector('label'))
-      .should('have.text','Token Endpoint Auth Method');
+      .should('have.text', 'Token Endpoint Auth Method');
     cy.get(this.tokenEndpointAuthMethodSelector('#TokenEndpointAuthMethod'))
       .should('be.visible');
     cy.get(this.grantTypesSelector('label'))
@@ -83,7 +83,7 @@ export class DynamicClientRegistrationPage {
     cy.get(this.responseTypesSelector('#ResponseTypes'))
       .should('be.visible');
     cy.get(this.applicationTypeSelector('label'))
-      .should('have.text','Application Type');
+      .should('have.text', 'Application Type');
     cy.get(this.applicationTypeSelector('#ApplicationType'))
       .should('be.visible');
     cy.get(this.idTokenSignedResponseAlgSelector('label'))
@@ -128,7 +128,7 @@ export class DynamicClientRegistrationPage {
   }
 
   public assertThatClientRegistered(): void {
-    cy.get(this.registerMessageSelector, {timeout: 30000,})
+    cy.get(this.registerMessageSelector, { timeout: 30000, })
       .should('contain.text', 'Created - Registered');
     cy.get(this.noRegistrationMessage)
       .should('not.exist');
@@ -137,7 +137,7 @@ export class DynamicClientRegistrationPage {
   }
 
   public assertThatRegisteredClientWasRemoved(): void {
-    cy.get(this.noRegistrationMessage, {timeout: 30000,})
+    cy.get(this.noRegistrationMessage, { timeout: 30000, })
       .should('have.text', 'No existing registrations found.');
     cy.get(this.registrationsCountMessageSelector('strong'))
       .should('have.text', '0');

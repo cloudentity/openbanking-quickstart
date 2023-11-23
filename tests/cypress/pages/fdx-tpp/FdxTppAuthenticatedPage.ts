@@ -17,7 +17,7 @@ export class FdxTppAuthenticatedPage {
     cy.get(this.authenticatedPageInfoLabelLocator).should(
       "have.text",
       "User has been authenticated. Authorization code has been exchanged for an access token using mtls. " +
-        "Implicit FDX consent has been created, see `grant_id` parameter"
+      "Implicit FDX consent has been created, see `grant_id` parameter"
     );
     cy.get(this.tryNextButtonLocator, { timeout: 3000 }).should("be.visible");
   }

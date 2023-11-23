@@ -26,7 +26,7 @@ export class ConsentSelfServiceAccountDetailsPage {
   public assertThatRevokeAccountDetailsAreVisible(): void {
     cy.get(this.revokeInfoLocator).should(
       `contain.text`,
-      `Warning: Deleteing this consent will remove access to all accounts to which you have previously granted access.`
+      `Warning: Deleting this consent will remove access to all accounts to which you have previously granted access.`
     );
     cy.get(this.revokeInfoLocator).should(
       `contain.text`,

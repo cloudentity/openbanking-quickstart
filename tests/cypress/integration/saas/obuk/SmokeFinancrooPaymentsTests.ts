@@ -45,7 +45,7 @@ describe(`Smoke Financroo payments app test`, () => {
 
     financrooAccountsPage.assertThatPageIsDisplayed();
     financrooAccountsPage.goToInvestmentsTab();
-    
+
     financrooInvestmentsPage.assertThatDashboardIsVisible(Currencies.currency.UK.code);
     financrooInvestmentsPage.clickInvest();
 
@@ -55,8 +55,8 @@ describe(`Smoke Financroo payments app test`, () => {
 
     acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.loginWithMfaOption();
-    
-    paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.UK.code, Accounts.ids.UK.bills);  
+
+    paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.UK.code, Accounts.ids.UK.bills);
     paymentConsentPage.clickConfirm();
 
     financrooInvestmentsPage.assertThatTransactionWasCompleted(amount, Currencies.currency.UK.symbol);

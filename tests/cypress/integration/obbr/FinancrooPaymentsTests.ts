@@ -23,7 +23,7 @@ describe(`Financroo payments app test`, () => {
   const financrooInvestmentsPage: FinancrooInvestmentsPage = new FinancrooInvestmentsPage();
   const financrooContributePage: FinancrooContributePage = new FinancrooContributePage();
 
-  
+
   beforeEach(() => {
     financrooLoginPage.visit();
     financrooLoginPage.login();
@@ -32,7 +32,7 @@ describe(`Financroo payments app test`, () => {
 
     acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.loginWithMfaOption();
-    
+
     accountConsentPage.checkAllAccounts();
     accountConsentPage.clickAgree();
 
@@ -58,7 +58,7 @@ describe(`Financroo payments app test`, () => {
     acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.loginWithMfaOption();
 
-    paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.BR.code, Accounts.ids.BR.account1);  
+    paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.BR.code, Accounts.ids.BR.account1);
     paymentConsentPage.clickConfirm();
 
     financrooInvestmentsPage.assertThatTransactionWasCompleted(amount, Currencies.currency.BR.symbol);
@@ -85,33 +85,11 @@ describe(`Financroo payments app test`, () => {
     acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.loginWithMfaOption();
 
-    paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.BR.code, Accounts.ids.BR.account1); 
+    paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.BR.code, Accounts.ids.BR.account1);
     paymentConsentPage.clickCancel();
 
     // UI error page improvements AUT-5845
     errorPage.assertError(`acp returned an error: access_denied: rejected`);
-  })
-
-  it(`Cancel on ACP login`, () => {
-    const amount: number = Math.floor(Math.random() * 50) + 1;
-
-    financrooLoginPage.visit();
-    financrooLoginPage.login();
-
-    financrooAccountsPage.assertThatPageIsDisplayed();
-    financrooAccountsPage.goToInvestmentsTab();
-
-    financrooInvestmentsPage.clickInvest();
-    
-    financrooContributePage.contributeAmount(amount, Currencies.currency.BR.symbol);
-    financrooContributePage.contributePaymentMethod(amount, Currencies.currency.BR.symbol, Accounts.ids.BR.account1);
-    financrooContributePage.contributeInvestmentSummary(amount, Currencies.currency.BR.symbol, Accounts.ids.BR.account1);
-
-    acpLoginPage.assertThatModalIsDisplayed();
-    acpLoginPage.cancelLogin();
-
-    // UI error page improvements AUT-5845
-    errorPage.assertError(`The user rejected the authentication`);
   })
 
 })

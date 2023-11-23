@@ -47,7 +47,7 @@ export class ConsentAndAuthorisationPage {
 
   public setSharingDuration(duration: number): void {
     cy.get(this.sharingDurationSelector('#SharingDuration'))
-    .type(duration.toString());
+      .type(duration.toString());
   }
 
   public clickConstructAuthorizationUriButton(): void {
@@ -55,9 +55,9 @@ export class ConsentAndAuthorisationPage {
   }
 
   public assertThatAuthorizationUriIsGenerated(): void {
-    cy.get(this.consentAuthorizationUriSelector, {timeout: 30000,})
+    cy.get(this.consentAuthorizationUriSelector, { timeout: 30000, })
       .should('be.visible');
-    
+
     cy.get(this.registrationSelector(`[selected='selected']`))
       .should('be.visible')
       .then(($registrationId) => {

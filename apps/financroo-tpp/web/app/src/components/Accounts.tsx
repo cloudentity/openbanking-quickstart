@@ -91,6 +91,7 @@ export default function Accounts({
         size="large"
         style={{ width: "100%" }}
         onClick={onConnectClick}
+        id="connect-bank"
       >
         Connect your bank
       </Button>

@@ -4,7 +4,7 @@ export class ConsentSelfServicePaymentDetailsPage {
   private readonly detailsLocator: string = `#payment-details`;
   private readonly permissionDatesLocator: string = `#payment-permission-dates`;
   private readonly detailsSharedLocator: string = `#payment-details-shared`;
- 
+
 
   public assertThatPaymentDetailsAreVisible(): void {
     cy.get(this.purposeLocator).should(`contain.text`, `Purpose for sharing data`);

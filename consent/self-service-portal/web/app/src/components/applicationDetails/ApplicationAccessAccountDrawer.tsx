@@ -197,7 +197,7 @@ function ApplicationAccessPaymentDrawer({
             classes={{ root: classes.alertRoot, icon: classes.alertIcon }}
             color="error"
           >
-            Warning: Deleteing this consent will remove access to all accounts
+            Warning: Deleting this consent will remove access to all accounts
             to which you have previously granted access.
           </Alert>
           <div className={classes.revokeInfo}>

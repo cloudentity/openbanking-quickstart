@@ -6,6 +6,11 @@ services:
     platform: linux/x86_64
     restart: always
     image: docker.cloudentity.io/acp:${ACP_VERSION}
+    healthcheck:
+      test: [ "CMD-SHELL", "wget --quiet --no-check-certificate https://localhost:8443/alive -O- || exit 1" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
     networks:
       default:
         aliases:

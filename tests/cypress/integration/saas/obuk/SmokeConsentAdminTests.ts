@@ -40,7 +40,7 @@ describe(`Consent admin app`, () => {
 
     accountConsentPage.checkAllAccounts();
     accountConsentPage.clickAgree();
-    ;
+
     consentAdminPage.visit();
     consentAdminPage.login();
 

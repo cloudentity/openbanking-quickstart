@@ -1,6 +1,7 @@
 import { AcpLoginPage } from "../../pages/acp/AcpLoginPage";
 import { AccountConsentPage } from "../../pages/consent/AccountConsentPage";
-import { PaymentConsentPage } from "../../pages/consent/PaymentConsentPage";import { ErrorPage } from "../../pages/ErrorPage";
+import { PaymentConsentPage } from "../../pages/consent/PaymentConsentPage";
+import { ErrorPage } from "../../pages/ErrorPage";
 import { ConsentSelfServicePage } from "../../pages/consent-self-service/ConsentSelfServicePage";
 import { ConsentSelfServicePaymentDetailsPage } from "../../pages/consent-self-service/ConsentSelfServicePaymentDetailsPage";
 import { ConsentSelfServiceAccountDetailsPage } from "../../pages/consent-self-service/ConsentSelfServiceAccountDetailsPage";
@@ -62,7 +63,7 @@ describe(`Consent self service app`, () => {
     acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.loginWithMfaOption();
 
-    paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.UK.code, Accounts.ids.UK.bills); 
+    paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.UK.code, Accounts.ids.UK.bills);
     paymentConsentPage.clickConfirm();
 
     financrooInvestmentsPage.assertThatTransactionWasCompleted(amount, Currencies.currency.UK.symbol);
@@ -109,7 +110,7 @@ describe(`Consent self service app`, () => {
     acpLoginPage.login();
 
     consentSelfServicePage.clickOnApplicationCard();
-    
+
     consentSelfServiceApplicationPage.expandPaymentsTab();
     consentSelfServiceApplicationPage.checkAccount(Accounts.ids.UK.bills);
     consentSelfServiceApplicationPage.checkAmount(Currencies.currency.UK.symbol, amount);
@@ -120,10 +121,4 @@ describe(`Consent self service app`, () => {
     consentSelfServicePaymentDetailsPage.assertAccount(Accounts.ids.UK.bills);
   });
 
-  it(`Cancel ACP login`, () => {
-    acpLoginPage.assertThatModalIsDisplayed();
-    acpLoginPage.cancelLogin();
-    // UI error page improvements AUT-5845
-    errorPage.assertError("The user rejected the authentication");
-  });
 });

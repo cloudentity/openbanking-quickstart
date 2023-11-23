@@ -23,7 +23,7 @@ describe(`Financroo payments app test`, () => {
   const financrooInvestmentsPage: FinancrooInvestmentsPage = new FinancrooInvestmentsPage();
   const financrooContributePage: FinancrooContributePage = new FinancrooContributePage();
 
-  
+
   beforeEach(() => {
     financrooLoginPage.visit();
     financrooLoginPage.login();
@@ -32,7 +32,7 @@ describe(`Financroo payments app test`, () => {
 
     acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.loginWithMfaOption();
-    
+
     accountConsentPage.checkAllAccounts();
     accountConsentPage.clickAgree();
 
@@ -58,7 +58,7 @@ describe(`Financroo payments app test`, () => {
     acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.loginWithMfaOption();
 
-    paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.BR.code, Accounts.ids.BR.account1);  
+    paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.BR.code, Accounts.ids.BR.account1);
     paymentConsentPage.clickConfirm();
 
     financrooInvestmentsPage.assertThatTransactionWasCompleted(amount, Currencies.currency.BR.symbol);
@@ -71,7 +71,7 @@ describe(`Financroo payments app test`, () => {
 
     financrooLoginPage.visit();
     financrooLoginPage.login();
-    
+
     financrooAccountsPage.assertThatPageIsDisplayed();
     financrooAccountsPage.goToInvestmentsTab();
 
@@ -84,8 +84,8 @@ describe(`Financroo payments app test`, () => {
 
     acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.loginWithMfaOption();
-    
-    paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.BR.code, Accounts.ids.BR.account1); 
+
+    paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.BR.code, Accounts.ids.BR.account1);
     paymentConsentPage.clickCancel();
 
     // UI error page improvements AUT-5845
