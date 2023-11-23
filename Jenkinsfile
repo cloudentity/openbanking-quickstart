@@ -127,7 +127,7 @@ pipeline {
             }
         }
         */
-         /* stage('OBBR Tests with disabled MFA') {
+          stage('OBBR Tests with disabled MFA') {
             steps {
                 script {
                     sh 'make clean'
@@ -224,7 +224,7 @@ pipeline {
                     }
                 }
             }
-        }*/
+        }
         /*
         stage('Generic Tests with enabled MFA') {
             steps {
