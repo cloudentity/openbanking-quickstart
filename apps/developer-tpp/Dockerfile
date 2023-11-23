@@ -1,5 +1,5 @@
 # syntax=docker/dockerfile:1.1.3-experimental
-FROM golang:1.20 as builder
+FROM golang:1.21 as builder
 ARG GOPROXY
 
 ENV GOPROXY=${GOPROXY}

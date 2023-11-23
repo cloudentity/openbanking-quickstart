@@ -1,4 +1,4 @@
-FROM golang:1.20 as base
+FROM golang:1.21 as base
 ARG GOPROXY
 
 ENV GOPROXY=${GOPROXY}
