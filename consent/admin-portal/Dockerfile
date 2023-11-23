@@ -12,7 +12,7 @@ COPY consent/admin-portal/web/app/public public
 COPY consent/admin-portal/web/app/src src
 RUN npm run build
 
-FROM golang:1.21 as go-builder
+FROM golang:1.21.4 as go-builder
 ARG GOPROXY
 
 ENV GOPROXY=${GOPROXY}
