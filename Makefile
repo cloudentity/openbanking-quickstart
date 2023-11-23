@@ -57,11 +57,11 @@ run-tests-verify:
 
 # obuk, obbr, cdr, fdx, generic
 run-%-tests-headless:
-	yarn --cwd tests run cypress run -s cypress/integration/$*/*.ts
+	yarn --cwd tests run cypress run -s cypress/e2e/$*/*.ts
 
 # obuk, obbr, cdr, fdx
 run-saas-%-tests-headless:
-	yarn --cwd tests run cypress run -s cypress/integration/saas/$*/*.ts
+	yarn --cwd tests run cypress run -s cypress/e2e/saas/$*/*.ts
 
 .PHONY: clean
 clean:
