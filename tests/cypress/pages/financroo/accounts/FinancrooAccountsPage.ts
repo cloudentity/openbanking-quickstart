@@ -1,10 +1,10 @@
-
 export class FinancrooAccountsPage {
   private readonly accountsLocator: string = `.account-name`;
   private readonly accountsSyncedNumberLocator: string = `#accounts-synced-number`;
   private readonly investmentsTabLocator: string = `#investments-tab`;
   private readonly accountsTabLocator: string = `#accounts-tab`;
   private readonly disconnectAccountsButtonLocator: string = `#access-bank-button`;
+  private readonly connectBankLocator: string = "#connect-bank";
   private getAccountLocator = (id: string) => `#account-id-${id}`;
 
   public assertAccounts(accounts: string[]): void {
@@ -52,6 +52,10 @@ export class FinancrooAccountsPage {
 
   public disconnectAccounts(): void {
     cy.get(this.disconnectAccountsButtonLocator).click();
+  }
+
+  public addNewBankAccount(): void {
+    cy.get(this.connectBankLocator).click()
   }
 
 }

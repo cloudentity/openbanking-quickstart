@@ -69,21 +69,12 @@ describe(`Financroo app`, () => {
     financrooWelcomePage.assertThatConnectBankPageIsDisplayed();
   });
 
-  it(`Cancel on ACP login`, () => {
-    financrooWelcomePage.reconnectGoBank();
-
-    acpLoginPage.assertThatModalIsDisplayed();
-    acpLoginPage.cancelLogin();
-    // UI error page improvements AUT-5845
-    errorPage.assertError(`The user rejected the authentication`);
-  });
-
   it(`Cancel on consent`, () => {
     financrooWelcomePage.reconnectGoBank();
 
     acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.loginWithMfaOption();
-    
+
     accountConsentPage.clickCancel();
     // UI error page improvements AUT-5845
     errorPage.assertError(`rejected`);

@@ -42,7 +42,7 @@ describe(`Smoke Tpp technical app`, () => {
 
         acpLoginPage.assertThatModalIsDisplayed();
         acpLoginPage.loginWithMfaOption();
-        
+
         accountconsentPage.expandPermissions();
         accountconsentPage.assertPermissions(permissions.length);
         accountconsentPage.clickAgree();

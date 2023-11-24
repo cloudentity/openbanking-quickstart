@@ -42,24 +42,28 @@ configure_cdr() {
 }
 
 override_server() {
-  arrEnv=("SERVER" "BANK_CUSTOMERS_SERVER")
-  arrVar=("server_id" "bank_customers_server_id")
+  arrEnv=("SERVER" "BANK_CUSTOMERS_SERVER" "HYPERSCALE_SERVER")
+  arrVar=("server_id" "bank_customers_server_id" "hyperscalebank_server_id")
+  arrJson=(".banks[0].server" ".banks[1].server" ".banks[1].server")
   arrIds=($@)
 
   for i in "${!arrIds[@]}"; do
     ./scripts/override_env.sh "${arrEnv[i]}" $(configure_prefix "${arrIds[i]}")
     ./scripts/override_variables.sh "${arrVar[i]}" $(configure_prefix "${arrIds[i]}")
+    ./scripts/override_json.sh "${arrJson[i]}" $(configure_prefix "${arrIds[i]}")
   done
 }
 
 override_client_ids() {
   arrEnv=("DEVELOPER_TPP_CLIENT_ID" "FINANCROO_TPP_CLIENT_ID" "BANK_CLIENT_ID" \
   "CONSENT_PAGE_CLIENT_ID" "INTERNAL_BANK_CLIENT_ID" "CONSENT_SELF_SERVICE_CLIENT_ID" \
-  "CONSENT_SELF_SERVICE_BACKEND_CLIENT_ID" "SYSTEM_BANK_CLIENT_ID" "SYSTEM_ADMIN_CONSENT_CLIENT_ID")
+  "CONSENT_SELF_SERVICE_BACKEND_CLIENT_ID" "SYSTEM_BANK_CLIENT_ID" "SYSTEM_ADMIN_CONSENT_CLIENT_ID" \
+  "CONSENT_STORAGE_CLIENT_ID" "HYPERSCALE_BANK_CLIENT_ID" "HYPERSCALE_CONSENT_PAGE_CLIENT_ID")
 
   arrVar=("developer_tpp_client_id" "financroo_tpp_client_id" "bank_client_id" \
   "consent_page_client_id" "internal_bank_client_id" "consent_self_service_client_id" \
-  "consent_self_service_backend_client_id" "system_bank_client_id" "system_admin_consent_client_id")
+  "consent_self_service_backend_client_id" "system_bank_client_id" "system_admin_consent_client_id" \
+  "consent_storage_client_id" "hyperscalebank_client_id" "hyperscale_consent_page_client_id")
 
   arrIds=($@)
 
@@ -96,8 +100,8 @@ do
     ./scripts/override_variables.sh  "server_profile" "fdx"
     ;;
   generic)
-    override_server "gobank" "bank-customers" "gobank"
-    override_client_ids "gobank-developer-tpp" "gobank-financroo-tpp" "gobank-bank" "gobank-consent-page" "gobank-internal-bank-client" $system_clients
+    override_server "gobank" "bank-customers" "hyperscale"
+    override_client_ids "gobank-developer-tpp" "gobank-financroo-tpp" "gobank-bank" "gobank-consent-page" "gobank-internal-bank-client" $system_clients "gobank-consent-storage hyperscalebank hyperscale-consent-page"
     ./scripts/override_variables.sh  "server_profile" "fapi_20_security"
     ;;
   *)

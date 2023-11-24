@@ -27,9 +27,9 @@ export class ConsentSelfServiceApplicationPage {
 
   public checkAccountHasStatus(accountID: string, status: string): void {
     cy.get(this.consentRowLocator)
-    .filter(`:contains(${accountID})`)
-    .filter(`:contains(${status})`)
-    .should("exist");
+      .filter(`:contains(${accountID})`)
+      .filter(`:contains(${status})`)
+      .should("exist");
   }
 
   public checkAmount(currency: string, amount: number): void {
@@ -50,15 +50,15 @@ export class ConsentSelfServiceApplicationPage {
 
   public assertAuthorisedAccountRowExists(accountID: string): void {
     cy.get(this.consentRowLocator)
-    .filter(`:contains(${accountID})`)
-    .filter(`:contains('Authorised')`)
-    .should('have.length', 1);
+      .filter(`:contains(${accountID})`)
+      .filter(`:contains('Authorised')`)
+      .should('have.length', 1);
   }
 
   public assertAuthorisedAccountRowDoesNotExist(accountID: string): void {
     cy.get(this.consentRowLocator)
-    .filter(`:contains(${accountID})`)
-    .filter(`:contains('Authorised')`)
-    .should('have.length', 0);
+      .filter(`:contains(${accountID})`)
+      .filter(`:contains('Authorised')`)
+      .should('have.length', 0);
   }
 }

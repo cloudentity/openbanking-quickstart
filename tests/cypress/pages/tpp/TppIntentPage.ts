@@ -1,4 +1,4 @@
-import {Aliases} from '../Aliases';
+import { Aliases } from '../Aliases';
 
 export class TppIntentPage {
   private readonly loginButtonLocator: string = `[onclick="onLogin()"]`;

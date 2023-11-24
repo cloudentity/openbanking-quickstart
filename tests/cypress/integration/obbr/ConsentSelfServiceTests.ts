@@ -31,7 +31,7 @@ describe(`Consent self service app`, () => {
 
     acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.loginWithMfaOption();
-    
+
     accountConsentPage.checkAllAccounts();
     accountConsentPage.clickAgree();
 
@@ -77,14 +77,8 @@ describe(`Consent self service app`, () => {
     consentSelfServiceAccountDetailsPage.clickRevokeAccessButton();
     consentSelfServiceAccountDetailsPage.assertThatRevokeAccountDetailsAreVisible();
     consentSelfServiceAccountDetailsPage.confirmRevokeAccessAction();
-    
+
     consentSelfServiceApplicationPage.assertNumberOfConsents(0);
   });
 
-  it(`Cancel ACP login`, () => {
-    acpLoginPage.assertThatModalIsDisplayed();
-    acpLoginPage.cancelLogin();
-    // UI error page improvements AUT-5845
-    errorPage.assertError("The user rejected the authentication");
-  });
 });

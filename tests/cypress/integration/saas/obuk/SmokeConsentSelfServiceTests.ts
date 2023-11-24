@@ -1,6 +1,6 @@
 import { AcpLoginPage } from "../../../pages/acp/AcpLoginPage";
 import { AccountConsentPage } from "../../../pages/consent/AccountConsentPage";
-import { PaymentConsentPage } from "../../../pages/consent/PaymentConsentPage";import { Credentials } from "../../../pages/Credentials";
+import { PaymentConsentPage } from "../../../pages/consent/PaymentConsentPage";
 import { ConsentSelfServicePage } from "../../../pages/consent-self-service/ConsentSelfServicePage";
 import { ConsentSelfServicePaymentDetailsPage } from "../../../pages/consent-self-service/ConsentSelfServicePaymentDetailsPage";
 import { ConsentSelfServiceAccountDetailsPage } from "../../../pages/consent-self-service/ConsentSelfServiceAccountDetailsPage";
@@ -26,7 +26,7 @@ describe(`Smoke Consent self service app`, () => {
   const financrooWelcomePage: FinancrooWelcomePage = new FinancrooWelcomePage();
   const financrooModalPage: FinancrooModalPage = new FinancrooModalPage();
   const financrooAccountsPage: FinancrooAccountsPage = new FinancrooAccountsPage();
-  const financrooInvestmentsPage: FinancrooInvestmentsPage =  new FinancrooInvestmentsPage();
+  const financrooInvestmentsPage: FinancrooInvestmentsPage = new FinancrooInvestmentsPage();
   const financrooContributePage: FinancrooContributePage = new FinancrooContributePage();
 
   const amount: number = Math.floor(Math.random() * 50) + 1;
@@ -39,7 +39,7 @@ describe(`Smoke Consent self service app`, () => {
 
     acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.loginWithMfaOption();
-    
+
     accountConsentPage.checkAllAccounts();
     accountConsentPage.clickAgree();
 
@@ -61,7 +61,7 @@ describe(`Smoke Consent self service app`, () => {
     acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.loginWithMfaOption();
 
-    paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.UK.code, Accounts.ids.UK.bills); 
+    paymentConsentPage.assertThatConsentPageIsVisible(amount, Currencies.currency.UK.code, Accounts.ids.UK.bills);
     paymentConsentPage.clickConfirm();
 
     financrooInvestmentsPage.assertThatTransactionWasCompleted(amount, Currencies.currency.UK.symbol);

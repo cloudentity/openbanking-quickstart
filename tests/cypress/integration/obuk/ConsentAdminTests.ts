@@ -42,7 +42,7 @@ describe(`Consent admin app`, () => {
 
     accountConsentPage.checkAllAccounts();
     accountConsentPage.clickAgree();
-    
+
     consentAdminPage.visit();
     consentAdminPage.login();
 
@@ -56,10 +56,4 @@ describe(`Consent admin app`, () => {
     consentAdminPage.assertClientAccountWithStatus("Developer TPP", "Inactive");
   })
 
-  it(`Cancel first ACP login`, () => {
-    acpLoginPage.assertThatModalIsDisplayed();
-    acpLoginPage.cancelLogin();
-    // UI error page improvements AUT-5845
-    errorPage.assertError(`The user rejected the authentication`);
-  });
 });

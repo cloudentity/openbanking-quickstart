@@ -29,7 +29,7 @@ describe(`Consent self service app`, () => {
 
     acpLoginPage.assertThatModalIsDisplayed();
     acpLoginPage.loginWithMfaOption();
-    
+
     accountConsentPage.checkAllAccounts();
     accountConsentPage.clickAgree();
 
@@ -69,7 +69,7 @@ describe(`Consent self service app`, () => {
     consentSelfServiceAccountDetailsPage.clickRevokeAccessButton();
     consentSelfServiceAccountDetailsPage.assertThatRevokeAccountDetailsAreVisible();
     consentSelfServiceAccountDetailsPage.confirmRevokeAccessAction();
-    
+
     consentSelfServiceApplicationPage.assertNumberOfConsents(0);
   });
 });

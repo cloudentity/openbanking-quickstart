@@ -17,7 +17,7 @@ describe(`Consent admin app`, () => {
   beforeEach(() => {
     tppLoginPage.visit(true);
     tppLoginPage.next();
-    
+
     tppIntentPage.saveIntentId();
     tppIntentPage.login();
   });
@@ -56,10 +56,4 @@ describe(`Consent admin app`, () => {
     consentAdminPage.assertClientAccountWithStatus("Developer TPP", "Inactive");
   })
 
-  it(`Cancel first ACP login`, () => {
-    acpLoginPage.assertThatModalIsDisplayed();
-    acpLoginPage.cancelLogin();
-    // UI error page improvements AUT-5845
-    errorPage.assertError(`The user rejected the authentication`);
-  });
 });

@@ -26,8 +26,8 @@ export class AccountConsentPage {
   }
 
   public assertPermissionsDetails(name: string, content: string): void {
-      cy.get(this.permissionNameLocator).should('contain.text', name)
-      cy.get(this.permissionContentLocator).should('contain.text', content)
+    cy.get(this.permissionNameLocator).should('contain.text', name)
+    cy.get(this.permissionContentLocator).should('contain.text', content)
   }
 
   public assertPermissions(length: number): void {
@@ -47,8 +47,8 @@ export class AccountConsentPage {
   }
 
   public assertThatPageIsNotVisible(): void {
-    cy.get(this.cancelButtonLocator, { timeout: 5000 } ).should('not.exist');
-    cy.get(this.confirmButtonLocator, { timeout: 5000 } ).should('not.exist');
+    cy.get(this.cancelButtonLocator, { timeout: 5000 }).should('not.exist');
+    cy.get(this.confirmButtonLocator, { timeout: 5000 }).should('not.exist');
   }
 
   public assertThatAccountsAreNotVisible(accounts: string[]): void {

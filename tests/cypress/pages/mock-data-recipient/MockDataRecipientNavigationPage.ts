@@ -74,7 +74,7 @@ export class MockDataRecipientNavigationPage {
     cy.get(this.navIdTokenHelperSelector).click();
   }
 
-  public clicknavPrivateKeyJwtGeneratorLink(): void {
+  public clickPrivateKeyJwtGeneratorLink(): void {
     cy.get(this.navPrivateKeyJwtGeneratorSelector).click();
   }
 }
