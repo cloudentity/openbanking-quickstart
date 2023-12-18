@@ -63,7 +63,7 @@ func (h *OBBRGetBalanceHandler) BuildResponse(c *gin.Context, data BankUserData)
 	return nil, ErrNotFound.WithMessage(fmt.Sprintf("account %s not found", accountID))
 }
 
-func (h *OBBRGetBalanceHandler) Validate(c *gin.Context) *Error {
+func (h *OBBRGetBalanceHandler) Validate(_ *gin.Context) *Error {
 	scopes := strings.Split(h.introspectionResponse.Scope, " ")
 	if !has(scopes, "accounts") {
 		return ErrForbidden.WithMessage("token has no accounts scope granted")
@@ -83,11 +83,11 @@ func (h *OBBRGetBalanceHandler) Validate(c *gin.Context) *Error {
 	return nil
 }
 
-func (h *OBBRGetBalanceHandler) GetUserIdentifier(c *gin.Context) string {
+func (h *OBBRGetBalanceHandler) GetUserIdentifier(_ *gin.Context) string {
 	return h.introspectionResponse.Sub
 }
 
-func (h *OBBRGetBalanceHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
+func (h *OBBRGetBalanceHandler) Filter(_ *gin.Context, data BankUserData) BankUserData {
 	var filteredBalances []OBBRBalance
 
 	for _, balance := range data.OBBRBalances {

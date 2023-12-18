@@ -32,7 +32,7 @@ func (h *CDRGetTransactionsHandler) MapError(c *gin.Context, err *Error) (code i
 	return
 }
 
-func (h *CDRGetTransactionsHandler) BuildResponse(c *gin.Context, data BankUserData) (interface{}, *Error) {
+func (h *CDRGetTransactionsHandler) BuildResponse(_ *gin.Context, data BankUserData) (interface{}, *Error) {
 	return NewCDRTransactionsResponse(data.CDRTransactions), nil
 }
 

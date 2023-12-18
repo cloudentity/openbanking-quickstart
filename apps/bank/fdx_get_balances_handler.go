@@ -27,7 +27,7 @@ func (h *FDXGetBalancesHandler) SetIntrospectionResponse(c *gin.Context) *Error 
 	return nil
 }
 
-func (h *FDXGetBalancesHandler) MapError(_ *gin.Context, _ *Error) (code int, resp interface{}) {
+func (h *FDXGetBalancesHandler) MapError(_ *gin.Context, err *Error) (code int, resp interface{}) {
 	code, resp = FDXMapError(err)
 	return
 }

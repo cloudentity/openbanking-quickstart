@@ -102,7 +102,7 @@ func (s *Server) Callback(c *gin.Context) {
 
 // DoMyCustomStuff can be used to implement your own interactions.
 // The gin.Context can access the http.Request and ResponseWriter.
-func DoMyCustomStuff(s *Server, c *gin.Context, tokens acpclient.Token) error {
+func DoMyCustomStuff(_ *Server, _ *gin.Context, _ acpclient.Token) error {
 	return nil
 }
 

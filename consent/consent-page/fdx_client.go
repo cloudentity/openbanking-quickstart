@@ -73,7 +73,7 @@ func (c *FDXClient) GetInternalAccounts(ctx context.Context, _ string) (Internal
 	return ToInternalFDXAccounts(fdxAccounts), nil
 }
 
-func (c *FDXClient) GetInternalBalances(_ context.Context, id string) (BalanceResponse, error) {
+func (c *FDXClient) GetInternalBalances(_ context.Context, _ string) (BalanceResponse, error) {
 	return BalanceResponse{}, nil
 }
 

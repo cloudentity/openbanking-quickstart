@@ -36,7 +36,7 @@ func (h *CDRGetAccountsHandler) BuildResponse(_ *gin.Context, data BankUserData)
 	return NewCDRAccountsResponse(data.CDRAccounts), nil
 }
 
-func (h *CDRGetAccountsHandler) Validate(c *gin.Context) *Error {
+func (h *CDRGetAccountsHandler) Validate(_ *gin.Context) *Error {
 	scopes := strings.Split(h.introspectionResponse.Scope, " ")
 	if !has(scopes, "bank:accounts.basic:read") {
 		return ErrForbidden.WithMessage("token has no bank:accounts.basic:read scope granted")
@@ -44,7 +44,7 @@ func (h *CDRGetAccountsHandler) Validate(c *gin.Context) *Error {
 	return nil
 }
 
-func (h *CDRGetAccountsHandler) GetUserIdentifier(c *gin.Context) string {
+func (h *CDRGetAccountsHandler) GetUserIdentifier(_ *gin.Context) string {
 	return GetCDRUserIdentifierClaimFromIntrospectionResponse(h.Config, h.introspectionResponse)
 }
 

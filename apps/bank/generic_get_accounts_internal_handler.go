@@ -12,7 +12,7 @@ func NewGenericGetAccountsInternalHandler(server *Server) GetEndpointLogic {
 	return &GenericGetAccountsInternalHandler{Server: server}
 }
 
-func (h *GenericGetAccountsInternalHandler) SetIntrospectionResponse(c *gin.Context) *Error {
+func (h *GenericGetAccountsInternalHandler) SetIntrospectionResponse(_ *gin.Context) *Error {
 	return nil
 }
 
@@ -21,11 +21,11 @@ func (h *GenericGetAccountsInternalHandler) MapError(c *gin.Context, err *Error)
 	return
 }
 
-func (h *GenericGetAccountsInternalHandler) BuildResponse(c *gin.Context, data BankUserData) (interface{}, *Error) {
+func (h *GenericGetAccountsInternalHandler) BuildResponse(_ *gin.Context, data BankUserData) (interface{}, *Error) {
 	return NewGenericAccountsResponse(data.GenericAccounts), nil
 }
 
-func (h *GenericGetAccountsInternalHandler) Validate(c *gin.Context) *Error {
+func (h *GenericGetAccountsInternalHandler) Validate(_ *gin.Context) *Error {
 	return nil
 }
 
@@ -33,7 +33,7 @@ func (h *GenericGetAccountsInternalHandler) GetUserIdentifier(c *gin.Context) st
 	return c.Query("id")
 }
 
-func (h *GenericGetAccountsInternalHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
+func (h *GenericGetAccountsInternalHandler) Filter(_ *gin.Context, data BankUserData) BankUserData {
 	return data
 }
 

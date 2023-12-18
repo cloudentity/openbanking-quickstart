@@ -33,7 +33,7 @@ func (h *FDXGetAccountsHandler) SetIntrospectionResponse(c *gin.Context) *Error 
 	return nil
 }
 
-func (h *FDXGetAccountsHandler) MapError(_ *gin.Context, _ *Error) (code int, resp interface{}) {
+func (h *FDXGetAccountsHandler) MapError(_ *gin.Context, err *Error) (code int, resp interface{}) {
 	code, resp = FDXMapError(err)
 	return
 }

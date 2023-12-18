@@ -83,7 +83,7 @@ func (h *OBUKCreatePaymentHandler) SetIntrospectionResponse(c *gin.Context) *Err
 	return nil
 }
 
-func (h *OBUKCreatePaymentHandler) Validate(c *gin.Context) *Error {
+func (h *OBUKCreatePaymentHandler) Validate(_ *gin.Context) *Error {
 	scopes := strings.Split(h.introspectionResponse.Scope, " ")
 	if !has(scopes, "payments") {
 		return ErrForbidden.WithMessage("token has no payments scope granted")
@@ -122,7 +122,7 @@ func (h *OBUKCreatePaymentHandler) Validate(c *gin.Context) *Error {
 	return nil
 }
 
-func (h *OBUKCreatePaymentHandler) MapError(_ *gin.Context, _ *Error) (code int, resp interface{}) {
+func (h *OBUKCreatePaymentHandler) MapError(_ *gin.Context, err *Error) (code int, resp interface{}) {
 	code, resp = OBUKMapError(err)
 	return
 }

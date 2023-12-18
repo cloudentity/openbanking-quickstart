@@ -56,7 +56,7 @@ func NewGenericAccountsResponse(accounts []models.BankingAccount) interface{} {
 	return resp
 }
 
-func GenericMapError(_ *gin.Context, err *Error) (code int, resp interface{}) {
+func GenericMapError(_ *gin.Context, _ *Error) (code int, resp interface{}) {
 	code, resp = 400, nil
 	return
 }

@@ -32,11 +32,11 @@ func (h *FDXGetTransactionsHandler) MapError(_ *gin.Context, err *Error) (code i
 	return
 }
 
-func (h *FDXGetTransactionsHandler) BuildResponse(c *gin.Context, data BankUserData) (interface{}, *Error) {
+func (h *FDXGetTransactionsHandler) BuildResponse(_ *gin.Context, data BankUserData) (interface{}, *Error) {
 	return NewFDXTransactionsResponse(data.FDXTransactions), nil
 }
 
-func (h *FDXGetTransactionsHandler) Validate(c *gin.Context) *Error {
+func (h *FDXGetTransactionsHandler) Validate(_ *gin.Context) *Error {
 	scopes := strings.Split(h.introspectionResponse.Scope, " ")
 	if !has(scopes, "fdx:transactions:read") {
 		return ErrForbidden.WithMessage("token has no TRANSACTIONS scope granted")

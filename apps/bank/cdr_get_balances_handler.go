@@ -30,7 +30,7 @@ func (h *CDRGetBalancesHandler) MapError(c *gin.Context, err *Error) (code int, 
 	return
 }
 
-func (h *CDRGetBalancesHandler) BuildResponse(c *gin.Context, data BankUserData) (interface{}, *Error) {
+func (h *CDRGetBalancesHandler) BuildResponse(_ *gin.Context, data BankUserData) (interface{}, *Error) {
 	return NewCDRBalancesResponse(data.CDRBalances), nil
 }
 

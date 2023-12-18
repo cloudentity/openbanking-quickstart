@@ -87,7 +87,7 @@ func (h *OBBRCreatePaymentHandler) SetIntrospectionResponse(c *gin.Context) *Err
 	return nil
 }
 
-func (h *OBBRCreatePaymentHandler) Validate(c *gin.Context) *Error {
+func (h *OBBRCreatePaymentHandler) Validate(_ *gin.Context) *Error {
 	scopes := strings.Split(h.introspectionResponse.Scope, " ")
 	if !has(scopes, "payments") {
 		return ErrForbidden.WithMessage("token has no payments scope granted")

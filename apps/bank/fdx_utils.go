@@ -29,7 +29,7 @@ type DepositAccount struct {
 	CurrentBalance float64 `json:"currentBalance"`
 }
 
-func NewFDXAccountsResponse(accounts fdxModels.Accountsentity, self strfmt.URI) fdxModels.Accountsentity {
+func NewFDXAccountsResponse(accounts fdxModels.Accountsentity, _ strfmt.URI) fdxModels.Accountsentity {
 	return accounts
 }
 
@@ -53,7 +53,7 @@ func NewFDXTransactionsResponse(transactions fdxModels.Transactionsentity) inter
 	return transactions
 }
 
-func NewFDXPayment(introspectionResponse *fdx.FdxConsentIntrospectOKBody, self strfmt.URI, id string) fdxModels.Paymententity {
+func NewFDXPayment(_ *fdx.FdxConsentIntrospectOKBody, _ strfmt.URI, id string) fdxModels.Paymententity {
 	log.Println("NewFDXPayment called")
 	t := strfmt.Date(time.Now())
 	return fdxModels.Paymententity{

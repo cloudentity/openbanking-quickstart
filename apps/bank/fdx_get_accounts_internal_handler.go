@@ -20,17 +20,17 @@ func (h *FDXGetAccountsInternalHandler) SetIntrospectionResponse(_ *gin.Context)
 	return nil
 }
 
-func (h *FDXGetAccountsInternalHandler) MapError(c *gin.Context, err *Error) (code int, resp interface{}) {
+func (h *FDXGetAccountsInternalHandler) MapError(_ *gin.Context, err *Error) (code int, resp interface{}) {
 	code, resp = FDXMapError(err)
 	return
 }
 
-func (h *FDXGetAccountsInternalHandler) BuildResponse(c *gin.Context, data BankUserData) (interface{}, *Error) {
+func (h *FDXGetAccountsInternalHandler) BuildResponse(_ *gin.Context, data BankUserData) (interface{}, *Error) {
 	self := strfmt.URI(fmt.Sprintf("http://localhost:%s/internal/accounts", strconv.Itoa(h.Config.Port)))
 	return NewFDXAccountsResponse(data.FDXAccounts, self), nil
 }
 
-func (h *FDXGetAccountsInternalHandler) Validate(c *gin.Context) *Error {
+func (h *FDXGetAccountsInternalHandler) Validate(_ *gin.Context) *Error {
 	return nil
 }
 
@@ -38,6 +38,6 @@ func (h *FDXGetAccountsInternalHandler) GetUserIdentifier(c *gin.Context) string
 	return c.PostForm("user_id")
 }
 
-func (h *FDXGetAccountsInternalHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
+func (h *FDXGetAccountsInternalHandler) Filter(_ *gin.Context, data BankUserData) BankUserData {
 	return data
 }

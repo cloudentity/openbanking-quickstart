@@ -132,7 +132,7 @@ func (o *OBBRClient) CreatePayment(c *gin.Context, data interface{}, accessToken
 	}, nil
 }
 
-func (o *CDRClient) CreatePayment(_ *gin.Context, data interface{}, accessToken string) (PaymentCreated, error) {
+func (o *CDRClient) CreatePayment(_ *gin.Context, _ interface{}, _ string) (PaymentCreated, error) {
 	return PaymentCreated{}, nil
 }
 

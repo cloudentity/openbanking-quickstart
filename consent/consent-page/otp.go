@@ -144,7 +144,7 @@ func (m *MockOTPHandler) Store(otp OTP) error {
 	return nil
 }
 
-func (m *MockOTPHandler) Send(r LoginRequest, _ MFAConsentProvider, to string, data MFAData) error {
+func (m *MockOTPHandler) Send(r LoginRequest, _ MFAConsentProvider, _ string, _ MFAData) error {
 	var (
 		otp OTP
 		err error

@@ -183,11 +183,11 @@ func (f *FakeConsentClient) CreateAccountConsent(_ *gin.Context) (string, error)
 	return "", nil
 }
 
-func (f *FakeConsentClient) CreatePaymentConsent(_ *gin.Context, req CreatePaymentRequest) (string, error) {
+func (f *FakeConsentClient) CreatePaymentConsent(_ *gin.Context, _ CreatePaymentRequest) (string, error) {
 	return "", nil
 }
 
-func (f *FakeConsentClient) GetPaymentConsent(_ *gin.Context, consentID string) (interface{}, error) {
+func (f *FakeConsentClient) GetPaymentConsent(_ *gin.Context, _ string) (interface{}, error) {
 	return interface{}(""), nil
 }
 

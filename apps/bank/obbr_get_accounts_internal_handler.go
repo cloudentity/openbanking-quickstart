@@ -33,11 +33,11 @@ func (h *OBBRGetAccountsInternalHandler) MapError(c *gin.Context, err *Error) (c
 	return
 }
 
-func (h *OBBRGetAccountsInternalHandler) BuildResponse(c *gin.Context, data BankUserData) (interface{}, *Error) {
+func (h *OBBRGetAccountsInternalHandler) BuildResponse(_ *gin.Context, data BankUserData) (interface{}, *Error) {
 	return NewOBBRAccountsResponse(data.OBBRAccounts), nil
 }
 
-func (h *OBBRGetAccountsInternalHandler) Validate(c *gin.Context) *Error {
+func (h *OBBRGetAccountsInternalHandler) Validate(_ *gin.Context) *Error {
 	return nil
 }
 
@@ -45,6 +45,6 @@ func (h *OBBRGetAccountsInternalHandler) GetUserIdentifier(c *gin.Context) strin
 	return c.Query("id")
 }
 
-func (h *OBBRGetAccountsInternalHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
+func (h *OBBRGetAccountsInternalHandler) Filter(_ *gin.Context, data BankUserData) BankUserData {
 	return data
 }

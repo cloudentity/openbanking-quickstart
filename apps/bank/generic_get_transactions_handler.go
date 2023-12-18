@@ -32,11 +32,11 @@ func (h *GenericGetTransactionsHandler) BuildResponse(_ *gin.Context, data BankU
 	return NewGenericTransactionsResponse(data.GenericTransactions), nil
 }
 
-func (h *GenericGetTransactionsHandler) Validate(c *gin.Context) *Error {
+func (h *GenericGetTransactionsHandler) Validate(_ *gin.Context) *Error {
 	return nil
 }
 
-func (h *GenericGetTransactionsHandler) GetUserIdentifier(c *gin.Context) string {
+func (h *GenericGetTransactionsHandler) GetUserIdentifier(_ *gin.Context) string {
 	return GetGenericUserIdentifierClaimFromIntrospectionResponse(h.Config, h.introspectionResponse)
 }
 

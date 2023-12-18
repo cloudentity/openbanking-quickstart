@@ -78,11 +78,11 @@ func (f *FDXClient) DoRequestObjectEncryption() bool {
 	return false
 }
 
-func (f *FDXClient) GetPaymentConsent(_ *gin.Context, consentID string) (interface{}, error) {
+func (f *FDXClient) GetPaymentConsent(_ *gin.Context, _ string) (interface{}, error) {
 	return "", nil
 }
 
-func (f *FDXClient) CreatePaymentConsent(_ *gin.Context, req CreatePaymentRequest) (string, error) {
+func (f *FDXClient) CreatePaymentConsent(_ *gin.Context, _ CreatePaymentRequest) (string, error) {
 	return "", nil
 }
 

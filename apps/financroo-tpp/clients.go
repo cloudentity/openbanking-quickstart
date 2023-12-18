@@ -442,11 +442,11 @@ func (c *CDRConsentClient) DoRequestObjectEncryption() bool {
 	return false
 }
 
-func (c *CDRConsentClient) GetPaymentConsent(_ *gin.Context, consentID string) (interface{}, error) {
+func (c *CDRConsentClient) GetPaymentConsent(_ *gin.Context, _ string) (interface{}, error) {
 	return "", nil
 }
 
-func (c *CDRConsentClient) CreatePaymentConsent(_ *gin.Context, req CreatePaymentRequest) (string, error) {
+func (c *CDRConsentClient) CreatePaymentConsent(_ *gin.Context, _ CreatePaymentRequest) (string, error) {
 	return "", nil
 }
 
@@ -583,7 +583,7 @@ func (c *GenericBankClient) GetBalances(_ *gin.Context, accessToken string, bank
 	return balancesData, nil
 }
 
-func (c *GenericBankClient) CreatePayment(_ *gin.Context, data interface{}, accessToken string) (PaymentCreated, error) {
+func (c *GenericBankClient) CreatePayment(_ *gin.Context, _ interface{}, _ string) (PaymentCreated, error) {
 	return PaymentCreated{}, errors.New("not implemented")
 }
 
@@ -633,11 +633,11 @@ func (c *GenericConsentClient) DoRequestObjectEncryption() bool {
 	return false
 }
 
-func (c *GenericConsentClient) GetPaymentConsent(_ *gin.Context, consentID string) (interface{}, error) {
+func (c *GenericConsentClient) GetPaymentConsent(_ *gin.Context, _ string) (interface{}, error) {
 	return "", errors.New("not implemented")
 }
 
-func (c *GenericConsentClient) CreatePaymentConsent(_ *gin.Context, req CreatePaymentRequest) (string, error) {
+func (c *GenericConsentClient) CreatePaymentConsent(_ *gin.Context, _ CreatePaymentRequest) (string, error) {
 	return "", errors.New("not implemented")
 }
 

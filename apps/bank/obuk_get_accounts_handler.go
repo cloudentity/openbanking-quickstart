@@ -49,12 +49,12 @@ func (h *OBUKGetAccountsHandler) MapError(_ *gin.Context, err *Error) (code int,
 	return
 }
 
-func (h *OBUKGetAccountsHandler) BuildResponse(c *gin.Context, data BankUserData) (interface{}, *Error) {
+func (h *OBUKGetAccountsHandler) BuildResponse(_ *gin.Context, data BankUserData) (interface{}, *Error) {
 	self := strfmt.URI(fmt.Sprintf("http://localhost:%s/accounts", strconv.Itoa(h.Config.Port)))
 	return NewAccountsResponse(data.OBUKAccounts, self), nil
 }
 
-func (h *OBUKGetAccountsHandler) Validate(c *gin.Context) *Error {
+func (h *OBUKGetAccountsHandler) Validate(_ *gin.Context) *Error {
 	scopes := strings.Split(h.introspectionResponse.Scope, " ")
 	if !has(scopes, "accounts") {
 		return ErrForbidden.WithMessage("token has no accounts scope granted")
