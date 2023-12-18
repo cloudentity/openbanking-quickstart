@@ -37,7 +37,7 @@ func (h *GenericGetAccountsInternalHandler) Filter(c *gin.Context, data BankUser
 	return data
 }
 
-func GenericCDRMapError(c *gin.Context, err *Error) (code int, resp interface{}) {
+func GenericCDRMapError(_ *gin.Context, _ *Error) (code int, resp interface{}) {
 	code, resp = 400, nil
 	return
 }

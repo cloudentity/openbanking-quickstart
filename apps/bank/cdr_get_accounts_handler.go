@@ -32,7 +32,7 @@ func (h *CDRGetAccountsHandler) MapError(c *gin.Context, err *Error) (code int, 
 	return
 }
 
-func (h *CDRGetAccountsHandler) BuildResponse(c *gin.Context, data BankUserData) (interface{}, *Error) {
+func (h *CDRGetAccountsHandler) BuildResponse(_ *gin.Context, data BankUserData) (interface{}, *Error) {
 	return NewCDRAccountsResponse(data.CDRAccounts), nil
 }
 
@@ -48,7 +48,7 @@ func (h *CDRGetAccountsHandler) GetUserIdentifier(c *gin.Context) string {
 	return GetCDRUserIdentifierClaimFromIntrospectionResponse(h.Config, h.introspectionResponse)
 }
 
-func (h *CDRGetAccountsHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
+func (h *CDRGetAccountsHandler) Filter(_ *gin.Context, data BankUserData) BankUserData {
 	var ret BankUserData
 	for _, account := range data.CDRAccounts {
 		if has(h.introspectionResponse.AccountIDs, *account.AccountID) {

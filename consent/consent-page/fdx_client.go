@@ -40,7 +40,7 @@ type DepositAccount struct {
 	Status         string  `json:"status"`
 }
 
-func (c *FDXClient) GetInternalAccounts(ctx context.Context, id string) (InternalAccounts, error) {
+func (c *FDXClient) GetInternalAccounts(ctx context.Context, _ string) (InternalAccounts, error) {
 	var (
 		request     *http.Request
 		response    *http.Response
@@ -73,7 +73,7 @@ func (c *FDXClient) GetInternalAccounts(ctx context.Context, id string) (Interna
 	return ToInternalFDXAccounts(fdxAccounts), nil
 }
 
-func (c *FDXClient) GetInternalBalances(ctx context.Context, id string) (BalanceResponse, error) {
+func (c *FDXClient) GetInternalBalances(_ context.Context, id string) (BalanceResponse, error) {
 	return BalanceResponse{}, nil
 }
 

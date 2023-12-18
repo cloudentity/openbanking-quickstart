@@ -144,7 +144,7 @@ func (m *MockOTPHandler) Store(otp OTP) error {
 	return nil
 }
 
-func (m *MockOTPHandler) Send(r LoginRequest, provider MFAConsentProvider, to string, data MFAData) error {
+func (m *MockOTPHandler) Send(r LoginRequest, _ MFAConsentProvider, to string, data MFAData) error {
 	var (
 		otp OTP
 		err error
@@ -161,7 +161,7 @@ func (m *MockOTPHandler) Send(r LoginRequest, provider MFAConsentProvider, to st
 	return nil
 }
 
-func (m *MockOTPHandler) Verify(r LoginRequest, login string, otp string) (bool, error) {
+func (m *MockOTPHandler) Verify(r LoginRequest, _ string, otp string) (bool, error) {
 	var (
 		id  = GetOTPID(r)
 		ok  bool
@@ -242,7 +242,7 @@ func (o *DemoOTPHandler) Send(r LoginRequest, provider MFAConsentProvider, to st
 	return o.SMSClient.Send(to, provider.GetSMSBody(data, otp))
 }
 
-func (o *DemoOTPHandler) Verify(r LoginRequest, login string, otp string) (bool, error) {
+func (o *DemoOTPHandler) Verify(r LoginRequest, _ string, otp string) (bool, error) {
 	var (
 		storedOtp OTP
 		err       error

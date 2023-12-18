@@ -56,7 +56,7 @@ type CustomOtpRequest struct {
 	Sub string `json:"sub"`
 }
 
-func (c *CustomOTPHandler) Send(r LoginRequest, provider MFAConsentProvider, to string, data MFAData) error {
+func (c *CustomOTPHandler) Send(_ LoginRequest, provider MFAConsentProvider, to string, data MFAData) error {
 	var (
 		bts []byte
 		err error

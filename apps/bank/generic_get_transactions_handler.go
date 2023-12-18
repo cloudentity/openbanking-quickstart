@@ -28,7 +28,7 @@ func (h *GenericGetTransactionsHandler) MapError(c *gin.Context, err *Error) (co
 	return
 }
 
-func (h *GenericGetTransactionsHandler) BuildResponse(c *gin.Context, data BankUserData) (interface{}, *Error) {
+func (h *GenericGetTransactionsHandler) BuildResponse(_ *gin.Context, data BankUserData) (interface{}, *Error) {
 	return NewGenericTransactionsResponse(data.GenericTransactions), nil
 }
 

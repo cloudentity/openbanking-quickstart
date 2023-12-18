@@ -44,7 +44,7 @@ func (h *OBUKGetAccountsHandler) SetIntrospectionResponse(c *gin.Context) *Error
 	return nil
 }
 
-func (h *OBUKGetAccountsHandler) MapError(c *gin.Context, err *Error) (code int, resp interface{}) {
+func (h *OBUKGetAccountsHandler) MapError(_ *gin.Context, err *Error) (code int, resp interface{}) {
 	code, resp = OBUKMapError(err)
 	return
 }
@@ -68,11 +68,11 @@ func (h *OBUKGetAccountsHandler) Validate(c *gin.Context) *Error {
 	return nil
 }
 
-func (h *OBUKGetAccountsHandler) GetUserIdentifier(c *gin.Context) string {
+func (h *OBUKGetAccountsHandler) GetUserIdentifier(_ *gin.Context) string {
 	return h.introspectionResponse.Sub
 }
 
-func (h *OBUKGetAccountsHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
+func (h *OBUKGetAccountsHandler) Filter(_ *gin.Context, data BankUserData) BankUserData {
 	grantedPermissions := h.introspectionResponse.Permissions
 	filteredAccounts := []models.OBAccount6{}
 

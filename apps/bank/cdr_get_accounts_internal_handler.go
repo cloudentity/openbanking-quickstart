@@ -12,7 +12,7 @@ func NewCDRGetAccountsInternalHandler(server *Server) GetEndpointLogic {
 	return &CDRGetAccountsInternalHandler{Server: server}
 }
 
-func (h *CDRGetAccountsInternalHandler) SetIntrospectionResponse(c *gin.Context) *Error {
+func (h *CDRGetAccountsInternalHandler) SetIntrospectionResponse(_ *gin.Context) *Error {
 	// should try introspecting for this at some point
 	return nil
 }

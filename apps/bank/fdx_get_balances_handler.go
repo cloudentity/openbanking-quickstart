@@ -27,16 +27,16 @@ func (h *FDXGetBalancesHandler) SetIntrospectionResponse(c *gin.Context) *Error 
 	return nil
 }
 
-func (h *FDXGetBalancesHandler) MapError(c *gin.Context, err *Error) (code int, resp interface{}) {
+func (h *FDXGetBalancesHandler) MapError(_ *gin.Context, _ *Error) (code int, resp interface{}) {
 	code, resp = FDXMapError(err)
 	return
 }
 
-func (h *FDXGetBalancesHandler) BuildResponse(c *gin.Context, data BankUserData) (interface{}, *Error) {
+func (h *FDXGetBalancesHandler) BuildResponse(_ *gin.Context, data BankUserData) (interface{}, *Error) {
 	return NewFDXBalancesResponse(data.FDXBalances), nil
 }
 
-func (h *FDXGetBalancesHandler) Validate(c *gin.Context) *Error {
+func (h *FDXGetBalancesHandler) Validate(_ *gin.Context) *Error {
 	scopes := strings.Split(h.introspectionResponse.Scope, " ")
 
 	if !has(scopes, "fdx:accountdetailed:read") {
@@ -45,7 +45,7 @@ func (h *FDXGetBalancesHandler) Validate(c *gin.Context) *Error {
 	return nil
 }
 
-func (h *FDXGetBalancesHandler) GetUserIdentifier(c *gin.Context) string {
+func (h *FDXGetBalancesHandler) GetUserIdentifier(_ *gin.Context) string {
 	return GetFDXUserIdentifierClaimFromIntrospectionResponse(h.Config, h.introspectionResponse)
 }
 

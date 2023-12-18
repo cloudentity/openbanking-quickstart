@@ -24,7 +24,7 @@ func NewOBBRGetAccountsInternalHandler(server *Server) GetEndpointLogic {
 	return &OBBRGetAccountsInternalHandler{Server: server}
 }
 
-func (h *OBBRGetAccountsInternalHandler) SetIntrospectionResponse(c *gin.Context) *Error {
+func (h *OBBRGetAccountsInternalHandler) SetIntrospectionResponse(_ *gin.Context) *Error {
 	return nil
 }
 

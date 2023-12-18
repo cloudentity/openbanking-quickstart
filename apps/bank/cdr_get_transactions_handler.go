@@ -36,7 +36,7 @@ func (h *CDRGetTransactionsHandler) BuildResponse(c *gin.Context, data BankUserD
 	return NewCDRTransactionsResponse(data.CDRTransactions), nil
 }
 
-func (h *CDRGetTransactionsHandler) Validate(c *gin.Context) *Error {
+func (h *CDRGetTransactionsHandler) Validate(_ *gin.Context) *Error {
 	scopes := strings.Split(h.introspectionResponse.Scope, " ")
 	if !has(scopes, "bank:transactions:read") {
 		return ErrForbidden.WithMessage("token has no bank:transactions:read scope granted")
@@ -44,7 +44,7 @@ func (h *CDRGetTransactionsHandler) Validate(c *gin.Context) *Error {
 	return nil
 }
 
-func (h *CDRGetTransactionsHandler) GetUserIdentifier(c *gin.Context) string {
+func (h *CDRGetTransactionsHandler) GetUserIdentifier(_ *gin.Context) string {
 	return GetCDRUserIdentifierClaimFromIntrospectionResponse(h.Config, h.introspectionResponse)
 }
 

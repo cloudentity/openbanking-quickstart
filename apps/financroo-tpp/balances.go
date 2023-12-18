@@ -46,7 +46,7 @@ func (o *OBUKClient) GetBalances(c *gin.Context, accessToken string, bank Connec
 	return balancesData, nil
 }
 
-func (o *CDRClient) GetBalances(c *gin.Context, accessToken string, bank ConnectedBank) (balancesData []Balance, err error) {
+func (o *CDRClient) GetBalances(_ *gin.Context, accessToken string, bank ConnectedBank) (balancesData []Balance, err error) {
 	var resp *banking.ListBalancesBulkOK
 
 	if resp, err = o.Banking.Banking.ListBalancesBulk(

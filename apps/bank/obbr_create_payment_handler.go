@@ -52,7 +52,7 @@ func (h *OBBRCreatePaymentHandler) SetRequest(c *gin.Context) *Error {
 	return nil
 }
 
-func (h *OBBRCreatePaymentHandler) CreateResource(c *gin.Context, sub string) (interface{}, *Error) {
+func (h *OBBRCreatePaymentHandler) CreateResource(_ *gin.Context, sub string) (interface{}, *Error) {
 	var (
 		data    BankUserData
 		id      = uuid.New().String()
@@ -116,6 +116,6 @@ func (h *OBBRCreatePaymentHandler) MapError(c *gin.Context, err *Error) (code in
 	return
 }
 
-func (h *OBBRCreatePaymentHandler) GetUserIdentifier(c *gin.Context) string {
+func (h *OBBRCreatePaymentHandler) GetUserIdentifier(_ *gin.Context) string {
 	return h.introspectionResponse.Sub
 }

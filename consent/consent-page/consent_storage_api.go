@@ -23,7 +23,7 @@ type DummyConsentStorage struct{}
 
 var _ ConsentStorage = &DummyConsentStorage{}
 
-func (d DummyConsentStorage) Store(ctx context.Context, data Data) (ConsentID, error) {
+func (d DummyConsentStorage) Store(_ context.Context, data Data) (ConsentID, error) {
 	logrus.Infof("Store consent for sub: %s with data: %+v", data.Subject, data)
 
 	return "external-consent-id", nil

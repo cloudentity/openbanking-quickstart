@@ -52,7 +52,7 @@ func (h *OBUKGetPaymentHandler) MapError(c *gin.Context, err *Error) (code int, 
 	return
 }
 
-func (h *OBUKGetPaymentHandler) GetUserIdentifier(c *gin.Context) string {
+func (h *OBUKGetPaymentHandler) GetUserIdentifier(_ *gin.Context) string {
 	return h.introspectionResponse.Sub
 }
 

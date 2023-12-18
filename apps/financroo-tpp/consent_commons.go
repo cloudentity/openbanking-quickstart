@@ -102,7 +102,7 @@ func (o *OBUKLoginURLBuilder) BuildLoginURL(consentID string, client acpclient.C
 
 type CDRLoginURLBuilder struct{}
 
-func NewCDRLoginURLBuilder(config Config) (LoginURLBuilder, error) {
+func NewCDRLoginURLBuilder(_ Config) (LoginURLBuilder, error) {
 	return &CDRLoginURLBuilder{}, nil
 }
 
@@ -172,7 +172,7 @@ func (s *Server) CreateConsentResponse(
 
 type FDXLoginURLBuilder struct{}
 
-func NewFDXLoginURLBuilder(config Config) (LoginURLBuilder, error) {
+func NewFDXLoginURLBuilder(_ Config) (LoginURLBuilder, error) {
 	return &FDXLoginURLBuilder{}, nil
 }
 
@@ -185,7 +185,7 @@ func (f *FDXLoginURLBuilder) BuildLoginURL(consentID string, client acpclient.Cl
 
 type GenericLoginURLBuilder struct{}
 
-func NewGenericLoginURLBuilder(config Config) (LoginURLBuilder, error) {
+func NewGenericLoginURLBuilder(_ Config) (LoginURLBuilder, error) {
 	return &GenericLoginURLBuilder{}, nil
 }
 

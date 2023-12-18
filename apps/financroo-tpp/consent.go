@@ -32,7 +32,7 @@ func (o *OBUKConsentClient) UsePAR() bool {
 	return false
 }
 
-func (o *OBUKConsentClient) DoPAR(c *gin.Context) (string, acpclient.CSRF, error) {
+func (o *OBUKConsentClient) DoPAR(_ *gin.Context) (string, acpclient.CSRF, error) {
 	return "", acpclient.CSRF{}, nil
 }
 
@@ -255,7 +255,7 @@ func (o *OBBRConsentClient) UsePAR() bool {
 	return false
 }
 
-func (o *OBBRConsentClient) DoPAR(c *gin.Context) (string, acpclient.CSRF, error) {
+func (o *OBBRConsentClient) DoPAR(_ *gin.Context) (string, acpclient.CSRF, error) {
 	return "", acpclient.CSRF{}, nil
 }
 

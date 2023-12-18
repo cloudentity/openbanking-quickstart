@@ -123,7 +123,7 @@ func (h *OBBRLogic) BuildLoginURL(c *gin.Context, consentID string, doRequestObj
 	)
 }
 
-func (h *OBBRLogic) PostAuthenticationAction(c *gin.Context, d map[string]interface{}) (map[string]interface{}, error) {
+func (h *OBBRLogic) PostAuthenticationAction(_ *gin.Context, _ map[string]interface{}) (map[string]interface{}, error) {
 	return map[string]interface{}{}, nil
 }
 

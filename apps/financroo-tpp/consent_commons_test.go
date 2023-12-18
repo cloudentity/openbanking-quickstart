@@ -179,15 +179,15 @@ func (f *FakeConsentClient) CreateConsentExplicitly() bool {
 	return false
 }
 
-func (f *FakeConsentClient) CreateAccountConsent(c *gin.Context) (string, error) {
+func (f *FakeConsentClient) CreateAccountConsent(_ *gin.Context) (string, error) {
 	return "", nil
 }
 
-func (f *FakeConsentClient) CreatePaymentConsent(c *gin.Context, req CreatePaymentRequest) (string, error) {
+func (f *FakeConsentClient) CreatePaymentConsent(_ *gin.Context, req CreatePaymentRequest) (string, error) {
 	return "", nil
 }
 
-func (f *FakeConsentClient) GetPaymentConsent(c *gin.Context, consentID string) (interface{}, error) {
+func (f *FakeConsentClient) GetPaymentConsent(_ *gin.Context, consentID string) (interface{}, error) {
 	return interface{}(""), nil
 }
 
@@ -195,7 +195,7 @@ func (f *FakeConsentClient) UsePAR() bool {
 	return f.UsePARvar
 }
 
-func (f *FakeConsentClient) DoPAR(c *gin.Context) (string, acpclient.CSRF, error) {
+func (f *FakeConsentClient) DoPAR(_ *gin.Context) (string, acpclient.CSRF, error) {
 	f.DoPARCalls++
 	return "test_request_uri",
 		acpclient.CSRF{},

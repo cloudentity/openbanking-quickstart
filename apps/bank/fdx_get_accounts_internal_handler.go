@@ -16,7 +16,7 @@ func NewFDXGetAccountsInternalHandler(server *Server) GetEndpointLogic {
 	return &FDXGetAccountsInternalHandler{Server: server}
 }
 
-func (h *FDXGetAccountsInternalHandler) SetIntrospectionResponse(c *gin.Context) *Error {
+func (h *FDXGetAccountsInternalHandler) SetIntrospectionResponse(_ *gin.Context) *Error {
 	return nil
 }
 

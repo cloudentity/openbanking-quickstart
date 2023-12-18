@@ -48,7 +48,7 @@ func (h *OBUKCreatePaymentHandler) SetRequest(c *gin.Context) *Error {
 	return nil
 }
 
-func (h *OBUKCreatePaymentHandler) CreateResource(c *gin.Context, sub string) (interface{}, *Error) {
+func (h *OBUKCreatePaymentHandler) CreateResource(_ *gin.Context, sub string) (interface{}, *Error) {
 	var (
 		data    BankUserData
 		id      = uuid.New().String()
@@ -122,11 +122,11 @@ func (h *OBUKCreatePaymentHandler) Validate(c *gin.Context) *Error {
 	return nil
 }
 
-func (h *OBUKCreatePaymentHandler) MapError(c *gin.Context, err *Error) (code int, resp interface{}) {
+func (h *OBUKCreatePaymentHandler) MapError(_ *gin.Context, _ *Error) (code int, resp interface{}) {
 	code, resp = OBUKMapError(err)
 	return
 }
 
-func (h *OBUKCreatePaymentHandler) GetUserIdentifier(c *gin.Context) string {
+func (h *OBUKCreatePaymentHandler) GetUserIdentifier(_ *gin.Context) string {
 	return h.introspectionResponse.Sub
 }

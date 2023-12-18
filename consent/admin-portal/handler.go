@@ -123,6 +123,6 @@ func (s *Server) RevokeConsentsForClient() func(*gin.Context) {
 	}
 }
 
-func (s *Server) IntrospectToken(c *gin.Context) error {
+func (s *Server) IntrospectToken(_ *gin.Context) error {
 	return nil
 }
