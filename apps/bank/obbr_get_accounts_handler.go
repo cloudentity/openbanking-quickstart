@@ -46,11 +46,11 @@ func (h *OBBRGetAccountsHandler) MapError(c *gin.Context, err *Error) (code int,
 	return
 }
 
-func (h *OBBRGetAccountsHandler) BuildResponse(c *gin.Context, data BankUserData) (interface{}, *Error) {
+func (h *OBBRGetAccountsHandler) BuildResponse(_ *gin.Context, data BankUserData) (interface{}, *Error) {
 	return NewOBBRAccountsResponse(data.OBBRAccounts), nil
 }
 
-func (h *OBBRGetAccountsHandler) Validate(c *gin.Context) *Error {
+func (h *OBBRGetAccountsHandler) Validate(_ *gin.Context) *Error {
 	scopes := strings.Split(h.introspectionResponse.Scope, " ")
 	if !has(scopes, "consents") {
 		return ErrForbidden.WithMessage("token has no consents scope granted")
@@ -64,7 +64,7 @@ func (h *OBBRGetAccountsHandler) Validate(c *gin.Context) *Error {
 	return nil
 }
 
-func (h *OBBRGetAccountsHandler) GetUserIdentifier(c *gin.Context) string {
+func (h *OBBRGetAccountsHandler) GetUserIdentifier(_ *gin.Context) string {
 	return h.introspectionResponse.Sub
 }
 

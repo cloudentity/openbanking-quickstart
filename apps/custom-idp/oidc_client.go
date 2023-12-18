@@ -11,14 +11,14 @@ import (
 )
 
 type OidcConfig struct {
-	AuthMethod   string        `env:"OIDC_AUTH_METHOD" envDefault:"client_secret_post"`
+	AuthMethod   string        `env:"OIDC_AUTH_METHOD"   envDefault:"client_secret_post"`
 	ClientID     string        `env:"OIDC_CLIENT_ID"`
 	ClientSecret string        `env:"OIDC_CLIENT_SECRET"`
 	IssuerURL    string        `env:"OIDC_ISSUER_URL"`
 	PKCEEnabled  bool          `env:"OIDC_PKCE_ENABLED"`
 	RedirectURL  string        `env:"OIDC_REDIRECT_URL"`
-	Scopes       []string      `env:"OIDC_SCOPES" envDefault:"openid"`
-	Timeout      time.Duration `env:"OIDC_TIMEOUT" envDefault:"5s"`
+	Scopes       []string      `env:"OIDC_SCOPES"        envDefault:"openid"`
+	Timeout      time.Duration `env:"OIDC_TIMEOUT"       envDefault:"5s"`
 	CAPath       string        `env:"OIDC_CA_PATH"`
 }
 

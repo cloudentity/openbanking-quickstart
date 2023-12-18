@@ -127,15 +127,11 @@ linters-settings:
     min-occurrences: 5
 
   depguard:
-    list-type: blacklist
-    include-go-root: false
-    packages:
-      - github.com/ory/x
-      - github.com/ory/fosite
-      - github.com/ory/viper
-    packages-with-error-messages:
-      # specify an error message to output when a blacklisted package is used
-      github.com/ory/x: "use internal go-tools"
+    rules:
+      main:
+        deny:
+          - pkg: "github.com/ory/x"
+            desc: use internal go-tools
 
   misspell:
     # Correct spellings using locale preferences for US or UK.

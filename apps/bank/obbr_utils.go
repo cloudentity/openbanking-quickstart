@@ -12,7 +12,7 @@ import (
 	clientmodels "github.com/cloudentity/acp-client-go/clients/obbr/models"
 )
 
-func OBBRMapError(c *gin.Context, err *Error) (code int, resp interface{}) {
+func OBBRMapError(_ *gin.Context, err *Error) (code int, resp interface{}) {
 	code, resp = err.Code, models.OpenbankingBrasilConsentV2ResponseError{
 		Errors: []*models.OpenbankingBrasilConsentV2Error{
 			{

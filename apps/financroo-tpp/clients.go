@@ -206,7 +206,7 @@ func NewAcpClient(config Config, bankConfig BankConfig, redirect string) (acpcli
 	return client, nil
 }
 
-func RenewAccountsToken(ctx context.Context, bank ConnectedBank, client acpclient.Client) (*oauth2Models.TokenResponse, error) {
+func RenewAccountsToken(_ context.Context, bank ConnectedBank, client acpclient.Client) (*oauth2Models.TokenResponse, error) {
 	var (
 		resp      oauth2.TokenOK
 		request   *http.Request
@@ -417,7 +417,7 @@ func (c *CDRConsentClient) UsePAR() bool {
 	return true
 }
 
-func (c *CDRConsentClient) DoPAR(ctx *gin.Context) (string, acpclient.CSRF, error) {
+func (c *CDRConsentClient) DoPAR(_ *gin.Context) (string, acpclient.CSRF, error) {
 	var (
 		csrf acpclient.CSRF
 		resp acpclient.PARResponse
@@ -434,7 +434,7 @@ func (c *CDRConsentClient) DoPAR(ctx *gin.Context) (string, acpclient.CSRF, erro
 	return resp.RequestURI, csrf, err
 }
 
-func (c *CDRConsentClient) CreateAccountConsent(ctx *gin.Context) (string, error) {
+func (c *CDRConsentClient) CreateAccountConsent(_ *gin.Context) (string, error) {
 	return "", nil
 }
 
@@ -442,11 +442,11 @@ func (c *CDRConsentClient) DoRequestObjectEncryption() bool {
 	return false
 }
 
-func (c *CDRConsentClient) GetPaymentConsent(ctx *gin.Context, consentID string) (interface{}, error) {
+func (c *CDRConsentClient) GetPaymentConsent(_ *gin.Context, _ string) (interface{}, error) {
 	return "", nil
 }
 
-func (c *CDRConsentClient) CreatePaymentConsent(ctx *gin.Context, req CreatePaymentRequest) (string, error) {
+func (c *CDRConsentClient) CreatePaymentConsent(_ *gin.Context, _ CreatePaymentRequest) (string, error) {
 	return "", nil
 }
 
@@ -554,7 +554,7 @@ func (c *GenericBankClient) GetTransactions(ctx *gin.Context, accessToken string
 	return transactionsData, nil
 }
 
-func (c *GenericBankClient) GetBalances(ctx *gin.Context, accessToken string, bank ConnectedBank) ([]Balance, error) {
+func (c *GenericBankClient) GetBalances(_ *gin.Context, accessToken string, bank ConnectedBank) ([]Balance, error) {
 	var (
 		resp         *cdrModels.ListBalancesBulkOK
 		balancesData []Balance
@@ -583,7 +583,7 @@ func (c *GenericBankClient) GetBalances(ctx *gin.Context, accessToken string, ba
 	return balancesData, nil
 }
 
-func (c *GenericBankClient) CreatePayment(ctx *gin.Context, data interface{}, accessToken string) (PaymentCreated, error) {
+func (c *GenericBankClient) CreatePayment(_ *gin.Context, _ interface{}, _ string) (PaymentCreated, error) {
 	return PaymentCreated{}, errors.New("not implemented")
 }
 
@@ -593,7 +593,7 @@ type GenericConsentClient struct {
 
 var _ ConsentClient = &GenericConsentClient{}
 
-func NewGenericConsentClient(publicClient, clientCredentialsClient acpclient.Client, _ Signer) ConsentClient {
+func NewGenericConsentClient(publicClient, _ acpclient.Client, _ Signer) ConsentClient {
 	return &GenericConsentClient{
 		PublicClient: publicClient,
 	}
@@ -607,7 +607,7 @@ func (c *GenericConsentClient) UsePAR() bool {
 	return true
 }
 
-func (c *GenericConsentClient) DoPAR(ctx *gin.Context) (string, acpclient.CSRF, error) {
+func (c *GenericConsentClient) DoPAR(_ *gin.Context) (string, acpclient.CSRF, error) {
 	var (
 		csrf acpclient.CSRF
 		resp acpclient.PARResponse
@@ -625,7 +625,7 @@ func (c *GenericConsentClient) DoPAR(ctx *gin.Context) (string, acpclient.CSRF, 
 	return resp.RequestURI, csrf, err
 }
 
-func (c *GenericConsentClient) CreateAccountConsent(ctx *gin.Context) (string, error) {
+func (c *GenericConsentClient) CreateAccountConsent(_ *gin.Context) (string, error) {
 	return "", errors.New("not implemented")
 }
 
@@ -633,11 +633,11 @@ func (c *GenericConsentClient) DoRequestObjectEncryption() bool {
 	return false
 }
 
-func (c *GenericConsentClient) GetPaymentConsent(ctx *gin.Context, consentID string) (interface{}, error) {
+func (c *GenericConsentClient) GetPaymentConsent(_ *gin.Context, _ string) (interface{}, error) {
 	return "", errors.New("not implemented")
 }
 
-func (c *GenericConsentClient) CreatePaymentConsent(ctx *gin.Context, req CreatePaymentRequest) (string, error) {
+func (c *GenericConsentClient) CreatePaymentConsent(_ *gin.Context, _ CreatePaymentRequest) (string, error) {
 	return "", errors.New("not implemented")
 }
 

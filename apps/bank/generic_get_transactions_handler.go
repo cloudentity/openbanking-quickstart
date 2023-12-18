@@ -28,15 +28,15 @@ func (h *GenericGetTransactionsHandler) MapError(c *gin.Context, err *Error) (co
 	return
 }
 
-func (h *GenericGetTransactionsHandler) BuildResponse(c *gin.Context, data BankUserData) (interface{}, *Error) {
+func (h *GenericGetTransactionsHandler) BuildResponse(_ *gin.Context, data BankUserData) (interface{}, *Error) {
 	return NewGenericTransactionsResponse(data.GenericTransactions), nil
 }
 
-func (h *GenericGetTransactionsHandler) Validate(c *gin.Context) *Error {
+func (h *GenericGetTransactionsHandler) Validate(_ *gin.Context) *Error {
 	return nil
 }
 
-func (h *GenericGetTransactionsHandler) GetUserIdentifier(c *gin.Context) string {
+func (h *GenericGetTransactionsHandler) GetUserIdentifier(_ *gin.Context) string {
 	return GetGenericUserIdentifierClaimFromIntrospectionResponse(h.Config, h.introspectionResponse)
 }
 

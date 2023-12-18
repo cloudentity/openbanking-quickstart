@@ -32,7 +32,7 @@ func (o *OBUKConsentClient) UsePAR() bool {
 	return false
 }
 
-func (o *OBUKConsentClient) DoPAR(c *gin.Context) (string, acpclient.CSRF, error) {
+func (o *OBUKConsentClient) DoPAR(_ *gin.Context) (string, acpclient.CSRF, error) {
 	return "", acpclient.CSRF{}, nil
 }
 
@@ -65,13 +65,13 @@ func (o *OBUKConsentClient) CreateAccountConsent(c *gin.Context) (string, error)
 }
 
 type CreatePaymentRequest struct {
-	Amount               string `json:"amount" binding:"required"`
-	AccountID            string `json:"account_id" binding:"required"`
-	PayeeAccountName     string `json:"payee_account_name" binding:"required"`
-	PayeeAccountNumber   string `json:"payee_account_number" binding:"required"`
-	PayeeAccountSortCode string `json:"payee_account_sort_code" binding:"required"`
-	PaymentReference     string `json:"payment_reference" binding:"required"`
-	BankID               BankID `json:"bank_id" binding:"required"`
+	Amount               string `binding:"required" json:"amount"`
+	AccountID            string `binding:"required" json:"account_id"`
+	PayeeAccountName     string `binding:"required" json:"payee_account_name"`
+	PayeeAccountNumber   string `binding:"required" json:"payee_account_number"`
+	PayeeAccountSortCode string `binding:"required" json:"payee_account_sort_code"`
+	PaymentReference     string `binding:"required" json:"payment_reference"`
+	BankID               BankID `binding:"required" json:"bank_id"`
 }
 
 func (o *OBUKConsentClient) CreatePaymentConsent(c *gin.Context, req CreatePaymentRequest) (string, error) {
@@ -255,7 +255,7 @@ func (o *OBBRConsentClient) UsePAR() bool {
 	return false
 }
 
-func (o *OBBRConsentClient) DoPAR(c *gin.Context) (string, acpclient.CSRF, error) {
+func (o *OBBRConsentClient) DoPAR(_ *gin.Context) (string, acpclient.CSRF, error) {
 	return "", acpclient.CSRF{}, nil
 }
 

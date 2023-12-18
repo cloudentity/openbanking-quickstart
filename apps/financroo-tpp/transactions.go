@@ -47,7 +47,7 @@ func (o *OBUKClient) GetTransactions(c *gin.Context, accessToken string, bank Co
 }
 
 // TODO: /accounts/v1/accounts/{accountId}/transactions needs to be implemented in bank application
-func (o *OBBRClient) GetTransactions(c *gin.Context, accessToken string, bank ConnectedBank) ([]Transaction, error) {
+func (o *OBBRClient) GetTransactions(_ *gin.Context, _ string, _ ConnectedBank) ([]Transaction, error) {
 	return []Transaction{}, nil
 }
 

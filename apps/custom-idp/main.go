@@ -22,9 +22,9 @@ type Config struct {
 	KeyFile      string        `env:"KEY_FILE"`
 	RootCA       string        `env:"ROOT_CA"`
 	FailureURL   string        `env:"FAILURE_URL"`
-	LogLevel     string        `env:"LOG_LEVEL" envDefault:"info"`
-	Port         int           `env:"PORT" envDefault:"8080"`
-	Timeout      time.Duration `env:"TIMEOUT" envDefault:"5s"`
+	LogLevel     string        `env:"LOG_LEVEL"              envDefault:"info"`
+	Port         int           `env:"PORT"                   envDefault:"8080"`
+	Timeout      time.Duration `env:"TIMEOUT"                envDefault:"5s"`
 
 	OIDC OidcConfig
 }

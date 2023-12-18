@@ -31,19 +31,13 @@ func InitDB(dbFilePath string) (DB, error) {
 }
 
 func CreateBucket(db DB, bucket []byte) error {
-	var err error
-
-	if err = db.Update(func(tx *bolt.Tx) error {
-		if _, err = tx.CreateBucketIfNotExists(bucket); err != nil {
+	return db.Update(func(tx *bolt.Tx) error {
+		if _, err := tx.CreateBucketIfNotExists(bucket); err != nil {
 			return errors.Wrapf(err, "failed to create bucket: %s", string(bucket))
 		}
 
 		return nil
-	}); err != nil {
-		return err
-	}
-
-	return nil
+	})
 }
 
 func InitTestDB(t *testing.T) DB {

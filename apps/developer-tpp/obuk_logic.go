@@ -68,7 +68,7 @@ func (h *OBUKLogic) GetConsentID(data interface{}) string {
 	return registerResponse.Payload.Data.ConsentID
 }
 
-func (h *OBUKLogic) BuildLoginURL(c *gin.Context, consentID string, doRequestObjectEncryption bool) (string, acpclient.CSRF, error) {
+func (h *OBUKLogic) BuildLoginURL(_ *gin.Context, consentID string, _ bool) (string, acpclient.CSRF, error) {
 	return h.Client.AuthorizeURL(
 		acpclient.WithResponseType("code"),
 		acpclient.WithOpenbankingIntentID(consentID, []string{"urn:openbanking:psd2:sca"}),
@@ -77,7 +77,7 @@ func (h *OBUKLogic) BuildLoginURL(c *gin.Context, consentID string, doRequestObj
 	)
 }
 
-func (h *OBUKLogic) PostAuthenticationAction(c *gin.Context, d map[string]interface{}) (map[string]interface{}, error) {
+func (h *OBUKLogic) PostAuthenticationAction(_ *gin.Context, _ map[string]interface{}) (map[string]interface{}, error) {
 	return map[string]interface{}{}, nil
 }
 

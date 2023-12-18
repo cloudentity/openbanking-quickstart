@@ -28,7 +28,7 @@ func (f *FDXClient) UsePAR() bool {
 	return true
 }
 
-func (f *FDXClient) DoPAR(c *gin.Context) (string, acpclient.CSRF, error) {
+func (f *FDXClient) DoPAR(_ *gin.Context) (string, acpclient.CSRF, error) {
 	var (
 		csrf acpclient.CSRF
 		resp acpclient.PARResponse
@@ -70,7 +70,7 @@ func (f *FDXClient) DoPAR(c *gin.Context) (string, acpclient.CSRF, error) {
 	return resp.RequestURI, csrf, err
 }
 
-func (f *FDXClient) CreateAccountConsent(c *gin.Context) (string, error) {
+func (f *FDXClient) CreateAccountConsent(_ *gin.Context) (string, error) {
 	return "", nil
 }
 
@@ -78,11 +78,11 @@ func (f *FDXClient) DoRequestObjectEncryption() bool {
 	return false
 }
 
-func (f *FDXClient) GetPaymentConsent(c *gin.Context, consentID string) (interface{}, error) {
+func (f *FDXClient) GetPaymentConsent(_ *gin.Context, _ string) (interface{}, error) {
 	return "", nil
 }
 
-func (f *FDXClient) CreatePaymentConsent(c *gin.Context, req CreatePaymentRequest) (string, error) {
+func (f *FDXClient) CreatePaymentConsent(_ *gin.Context, _ CreatePaymentRequest) (string, error) {
 	return "", nil
 }
 

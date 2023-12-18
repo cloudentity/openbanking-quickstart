@@ -33,17 +33,17 @@ func (h *FDXGetAccountsHandler) SetIntrospectionResponse(c *gin.Context) *Error 
 	return nil
 }
 
-func (h *FDXGetAccountsHandler) MapError(c *gin.Context, err *Error) (code int, resp interface{}) {
+func (h *FDXGetAccountsHandler) MapError(_ *gin.Context, err *Error) (code int, resp interface{}) {
 	code, resp = FDXMapError(err)
 	return
 }
 
-func (h *FDXGetAccountsHandler) BuildResponse(c *gin.Context, data BankUserData) (interface{}, *Error) {
+func (h *FDXGetAccountsHandler) BuildResponse(_ *gin.Context, data BankUserData) (interface{}, *Error) {
 	self := strfmt.URI(fmt.Sprintf("http://localhost:%s/accounts", strconv.Itoa(h.Config.Port)))
 	return NewFDXAccountsResponse(data.FDXAccounts, self), nil
 }
 
-func (h *FDXGetAccountsHandler) Validate(c *gin.Context) *Error {
+func (h *FDXGetAccountsHandler) Validate(_ *gin.Context) *Error {
 	scopes := strings.Split(h.introspectionResponse.Scope, " ")
 	if !has(scopes, "fdx:accountdetailed:read") {
 		return ErrForbidden.WithMessage("token has no fdx:accountdetailed:read scope granted")
@@ -52,11 +52,11 @@ func (h *FDXGetAccountsHandler) Validate(c *gin.Context) *Error {
 	return nil
 }
 
-func (h *FDXGetAccountsHandler) GetUserIdentifier(c *gin.Context) string {
+func (h *FDXGetAccountsHandler) GetUserIdentifier(_ *gin.Context) string {
 	return h.introspectionResponse.Sub
 }
 
-func (h *FDXGetAccountsHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
+func (h *FDXGetAccountsHandler) Filter(_ *gin.Context, data BankUserData) BankUserData {
 	var (
 		jsonStr []byte
 		err     error

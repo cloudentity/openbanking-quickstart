@@ -8,7 +8,7 @@ import (
 	cdr "github.com/cloudentity/acp-client-go/clients/cdr/client/c_d_r"
 )
 
-func CDRMapError(c *gin.Context, err *Error) (code int, resp interface{}) {
+func CDRMapError(_ *gin.Context, _ *Error) (code int, resp interface{}) {
 	code, resp = 400, nil
 	return
 }

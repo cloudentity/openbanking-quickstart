@@ -30,18 +30,18 @@ func (h *CDRGetBalancesHandler) MapError(c *gin.Context, err *Error) (code int, 
 	return
 }
 
-func (h *CDRGetBalancesHandler) BuildResponse(c *gin.Context, data BankUserData) (interface{}, *Error) {
+func (h *CDRGetBalancesHandler) BuildResponse(_ *gin.Context, data BankUserData) (interface{}, *Error) {
 	return NewCDRBalancesResponse(data.CDRBalances), nil
 }
 
-func (h *CDRGetBalancesHandler) Validate(c *gin.Context) *Error {
+func (h *CDRGetBalancesHandler) Validate(_ *gin.Context) *Error {
 	return nil
 }
 
-func (h *CDRGetBalancesHandler) GetUserIdentifier(c *gin.Context) string {
+func (h *CDRGetBalancesHandler) GetUserIdentifier(_ *gin.Context) string {
 	return GetCDRUserIdentifierClaimFromIntrospectionResponse(h.Config, h.introspectionResponse)
 }
 
-func (h *CDRGetBalancesHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
+func (h *CDRGetBalancesHandler) Filter(_ *gin.Context, data BankUserData) BankUserData {
 	return data
 }

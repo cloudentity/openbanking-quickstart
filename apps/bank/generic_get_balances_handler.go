@@ -28,18 +28,18 @@ func (h *GenericGetBalancesHandler) MapError(c *gin.Context, err *Error) (code i
 	return
 }
 
-func (h *GenericGetBalancesHandler) BuildResponse(c *gin.Context, data BankUserData) (interface{}, *Error) {
+func (h *GenericGetBalancesHandler) BuildResponse(_ *gin.Context, data BankUserData) (interface{}, *Error) {
 	return NewGenericBalancesResponse(data.GenericBalances), nil
 }
 
-func (h *GenericGetBalancesHandler) Validate(c *gin.Context) *Error {
+func (h *GenericGetBalancesHandler) Validate(_ *gin.Context) *Error {
 	return nil
 }
 
-func (h *GenericGetBalancesHandler) GetUserIdentifier(c *gin.Context) string {
+func (h *GenericGetBalancesHandler) GetUserIdentifier(_ *gin.Context) string {
 	return GetGenericUserIdentifierClaimFromIntrospectionResponse(h.Config, h.introspectionResponse)
 }
 
-func (h *GenericGetBalancesHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
+func (h *GenericGetBalancesHandler) Filter(_ *gin.Context, data BankUserData) BankUserData {
 	return data
 }

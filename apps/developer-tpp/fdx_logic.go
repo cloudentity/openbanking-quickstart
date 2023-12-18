@@ -38,7 +38,7 @@ func NewFDXLogic(serverConfig Config) (*FDXLogic, error) {
 	return logic, nil
 }
 
-func (h *FDXLogic) GetAccounts(c *gin.Context, token string) (interface{}, error) {
+func (h *FDXLogic) GetAccounts(_ *gin.Context, _ string) (interface{}, error) {
 	return nil, nil //nolint
 }
 
@@ -108,7 +108,7 @@ func (h *FDXLogic) DoRequestObjectEncryption() bool {
 	return false
 }
 
-func (h *FDXLogic) BuildLoginURL(c *gin.Context, consentID string, _ bool) (string, acpclient.CSRF, error) {
+func (h *FDXLogic) BuildLoginURL(_ *gin.Context, consentID string, _ bool) (string, acpclient.CSRF, error) {
 	var (
 		u   string
 		err error

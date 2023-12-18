@@ -25,13 +25,13 @@ const (
 )
 
 type Config struct {
-	Port                int           `env:"PORT" envDefault:"8070"`
-	ClientID            string        `env:"CLIENT_ID" envDefault:"bukj5p6k7qdmm5ppbi4g"`
+	Port                int           `env:"PORT"                  envDefault:"8070"`
+	ClientID            string        `env:"CLIENT_ID"             envDefault:"bukj5p6k7qdmm5ppbi4g"`
 	IssuerURL           *url.URL      `env:"ISSUER_URL,required"`
-	Timeout             time.Duration `env:"TIMEOUT" envDefault:"5s"`
-	RootCA              string        `env:"ROOT_CA" envDefault:"/ca.pem"`
-	CertFile            string        `env:"CERT_FILE" envDefault:"/bank_cert.pem"`
-	KeyFile             string        `env:"KEY_FILE" envDefault:"/bank_key.pem"`
+	Timeout             time.Duration `env:"TIMEOUT"               envDefault:"5s"`
+	RootCA              string        `env:"ROOT_CA"               envDefault:"/ca.pem"`
+	CertFile            string        `env:"CERT_FILE"             envDefault:"/bank_cert.pem"`
+	KeyFile             string        `env:"KEY_FILE"              envDefault:"/bank_key.pem"`
 	Spec                Spec          `env:"SPEC,required"`
 	GINMODE             string        `env:"GIN_MODE"`
 	UserIdentifierClaim string        `env:"USER_IDENTIFIER_CLAIM" envDefault:"sub"`

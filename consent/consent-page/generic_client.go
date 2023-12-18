@@ -134,6 +134,6 @@ func (c *GenericBankClient) accountsResponseToInternalAccounts(body []byte) (acc
 	return accounts, nil
 }
 
-func (c *GenericBankClient) GetInternalBalances(ctx context.Context, id string) (BalanceResponse, error) {
+func (c *GenericBankClient) GetInternalBalances(_ context.Context, _ string) (BalanceResponse, error) {
 	return BalanceResponse{}, nil
 }

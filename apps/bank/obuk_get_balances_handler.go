@@ -42,17 +42,17 @@ func (h *OBUKGetBalancesHandler) SetIntrospectionResponse(c *gin.Context) *Error
 	return nil
 }
 
-func (h *OBUKGetBalancesHandler) MapError(c *gin.Context, err *Error) (code int, resp interface{}) {
+func (h *OBUKGetBalancesHandler) MapError(_ *gin.Context, err *Error) (code int, resp interface{}) {
 	code, resp = OBUKMapError(err)
 	return
 }
 
-func (h *OBUKGetBalancesHandler) BuildResponse(c *gin.Context, data BankUserData) (interface{}, *Error) {
+func (h *OBUKGetBalancesHandler) BuildResponse(_ *gin.Context, data BankUserData) (interface{}, *Error) {
 	self := strfmt.URI(fmt.Sprintf("http://localhost:%s/balances", strconv.Itoa(h.Config.Port)))
 	return NewBalancesResponse(data.OBUKBalances, self), nil
 }
 
-func (h *OBUKGetBalancesHandler) Validate(c *gin.Context) *Error {
+func (h *OBUKGetBalancesHandler) Validate(_ *gin.Context) *Error {
 	scopes := strings.Split(h.introspectionResponse.Scope, " ")
 	if !has(scopes, "accounts") {
 		return ErrForbidden.WithMessage("token has no accounts scope granted")
@@ -65,11 +65,11 @@ func (h *OBUKGetBalancesHandler) Validate(c *gin.Context) *Error {
 	return nil
 }
 
-func (h *OBUKGetBalancesHandler) GetUserIdentifier(c *gin.Context) string {
+func (h *OBUKGetBalancesHandler) GetUserIdentifier(_ *gin.Context) string {
 	return h.introspectionResponse.Sub
 }
 
-func (h *OBUKGetBalancesHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
+func (h *OBUKGetBalancesHandler) Filter(_ *gin.Context, data BankUserData) BankUserData {
 	filteredBalances := []models.OBReadBalance1DataBalanceItems0{}
 
 	for _, balance := range data.OBUKBalances {

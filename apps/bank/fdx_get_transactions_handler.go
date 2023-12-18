@@ -27,16 +27,16 @@ func (h *FDXGetTransactionsHandler) SetIntrospectionResponse(c *gin.Context) *Er
 	return nil
 }
 
-func (h *FDXGetTransactionsHandler) MapError(c *gin.Context, err *Error) (code int, resp interface{}) {
+func (h *FDXGetTransactionsHandler) MapError(_ *gin.Context, err *Error) (code int, resp interface{}) {
 	code, resp = FDXMapError(err)
 	return
 }
 
-func (h *FDXGetTransactionsHandler) BuildResponse(c *gin.Context, data BankUserData) (interface{}, *Error) {
+func (h *FDXGetTransactionsHandler) BuildResponse(_ *gin.Context, data BankUserData) (interface{}, *Error) {
 	return NewFDXTransactionsResponse(data.FDXTransactions), nil
 }
 
-func (h *FDXGetTransactionsHandler) Validate(c *gin.Context) *Error {
+func (h *FDXGetTransactionsHandler) Validate(_ *gin.Context) *Error {
 	scopes := strings.Split(h.introspectionResponse.Scope, " ")
 	if !has(scopes, "fdx:transactions:read") {
 		return ErrForbidden.WithMessage("token has no TRANSACTIONS scope granted")
@@ -44,11 +44,11 @@ func (h *FDXGetTransactionsHandler) Validate(c *gin.Context) *Error {
 	return nil
 }
 
-func (h *FDXGetTransactionsHandler) GetUserIdentifier(c *gin.Context) string {
+func (h *FDXGetTransactionsHandler) GetUserIdentifier(_ *gin.Context) string {
 	return GetFDXUserIdentifierClaimFromIntrospectionResponse(h.Config, h.introspectionResponse)
 }
 
-func (h *FDXGetTransactionsHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
+func (h *FDXGetTransactionsHandler) Filter(_ *gin.Context, data BankUserData) BankUserData {
 	// TODO filter transactions but there is only 1 account so passing for now
 	return data
 }

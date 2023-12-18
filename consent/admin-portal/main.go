@@ -25,14 +25,14 @@ const (
 
 type Config struct {
 	SystemClientID         string        `env:"SYSTEM_CLIENT_ID,required"`
-	SystemClientSecret     string        `env:"SYSTEM_CLIENT_SECRET" envDefault:"v6yYaApda9juR_DrlI5mpdsdm9u2-D0rQIG9ynakyDE"`
+	SystemClientSecret     string        `env:"SYSTEM_CLIENT_SECRET"              envDefault:"v6yYaApda9juR_DrlI5mpdsdm9u2-D0rQIG9ynakyDE"`
 	SystemIssuerURL        *url.URL      `env:"SYSTEM_ISSUER_URL,required"`
 	OpenbankingWorkspaceID string        `env:"OPENBANKING_WORKSPACE_ID,required"`
-	Timeout                time.Duration `env:"TIMEOUT" envDefault:"5s"`
-	RootCA                 string        `env:"ROOT_CA" envDefault:"/ca.pem"`
-	CertFile               string        `env:"CERT_FILE" envDefault:"/bank_cert.pem"`
-	KeyFile                string        `env:"KEY_FILE" envDefault:"/bank_key.pem"`
-	Port                   int           `env:"PORT" envDefault:"8086"`
+	Timeout                time.Duration `env:"TIMEOUT"                           envDefault:"5s"`
+	RootCA                 string        `env:"ROOT_CA"                           envDefault:"/ca.pem"`
+	CertFile               string        `env:"CERT_FILE"                         envDefault:"/bank_cert.pem"`
+	KeyFile                string        `env:"KEY_FILE"                          envDefault:"/bank_key.pem"`
+	Port                   int           `env:"PORT"                              envDefault:"8086"`
 	Spec                   Spec          `env:"SPEC,required"`
 }
 

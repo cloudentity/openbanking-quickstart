@@ -28,21 +28,21 @@ func NewOBUKGetBalancesInternalHandler(server *Server) GetEndpointLogic {
 	return &OBUKGetBalancesInternalHandler{Server: server}
 }
 
-func (h *OBUKGetBalancesInternalHandler) SetIntrospectionResponse(c *gin.Context) *Error {
+func (h *OBUKGetBalancesInternalHandler) SetIntrospectionResponse(_ *gin.Context) *Error {
 	return nil
 }
 
-func (h *OBUKGetBalancesInternalHandler) MapError(c *gin.Context, err *Error) (code int, resp interface{}) {
+func (h *OBUKGetBalancesInternalHandler) MapError(_ *gin.Context, err *Error) (code int, resp interface{}) {
 	code, resp = OBUKMapError(err)
 	return
 }
 
-func (h *OBUKGetBalancesInternalHandler) BuildResponse(c *gin.Context, data BankUserData) (interface{}, *Error) {
+func (h *OBUKGetBalancesInternalHandler) BuildResponse(_ *gin.Context, data BankUserData) (interface{}, *Error) {
 	self := strfmt.URI(fmt.Sprintf("http://localhost:%s/balances", strconv.Itoa(h.Config.Port)))
 	return NewBalancesResponse(data.OBUKBalances, self), nil
 }
 
-func (h *OBUKGetBalancesInternalHandler) Validate(c *gin.Context) *Error {
+func (h *OBUKGetBalancesInternalHandler) Validate(_ *gin.Context) *Error {
 	return nil
 }
 
@@ -50,6 +50,6 @@ func (h *OBUKGetBalancesInternalHandler) GetUserIdentifier(c *gin.Context) strin
 	return c.Query("id")
 }
 
-func (h *OBUKGetBalancesInternalHandler) Filter(c *gin.Context, data BankUserData) BankUserData {
+func (h *OBUKGetBalancesInternalHandler) Filter(_ *gin.Context, data BankUserData) BankUserData {
 	return data
 }
