@@ -33,7 +33,7 @@ func (s *Server) Index() func(*gin.Context) {
 }
 
 type ConnectBankRequest struct {
-	Permissions []string `json:"permissions" binding:"required"`
+	Permissions []string `binding:"required" json:"permissions"`
 }
 
 func (s *Server) ConnectBank() func(*gin.Context) {

@@ -28,30 +28,30 @@ const (
 )
 
 type Config struct {
-	Port                        int    `env:"PORT" envDefault:"8091"`
-	DBFile                      string `env:"DB_FILE" envDefault:"/app/data/my.db"`
-	ACPURL                      string `env:"ACP_URL" validate:"required,url"`
-	ACPInternalURL              string `env:"ACP_MTLS_URL" validate:"required,url"`
-	AppHost                     string `env:"APP_HOST" validate:"required"`
-	Tenant                      string `env:"TENANT" validate:"required"`
-	UIURL                       string `env:"UI_URL" validate:"required,url"`
-	CertFile                    string `env:"CERT_FILE" envDefault:"/certs/tpp_cert.pem"`
-	KeyFile                     string `env:"KEY_FILE" envDefault:"/certs/tpp_key.pem"`
-	CookieHashKey               string `env:"COOKIE_HASH_KEY" envDefault:"secret-key"`
-	CookieBlockKey              string `env:"COOKIE_BLOCK_KEY" envDefault:"this-is-32-len-block-key"`
-	Spec                        Spec   `env:"SPEC" validate:"required"`
-	BankURL                     string `env:"BANK_URL" validate:"required"`
-	RootCA                      string `env:"ROOT_CA" envDefault:"/certs/ca.pem"`
-	ClientID                    string `env:"CLIENT_ID" envDefault:"bugkgm23g9kregtu051g"`
-	ClientSecret                string `env:"CLIENT_SECRET" envDefault:"-TlfoycUiE0qNi-XUBFDfTxMlhHTCjVxOF6pLrWZbQA"` // only required for fdx
-	ServerID                    string `env:"OPENBANKING_SERVER_ID" validate:"required"`
-	EnableTLSServer             bool   `env:"ENABLE_TLS_SERVER" envDefault:"true"`
+	Port                        int    `env:"PORT"                            envDefault:"8091"`
+	DBFile                      string `env:"DB_FILE"                         envDefault:"/app/data/my.db"`
+	ACPURL                      string `env:"ACP_URL"                         validate:"required,url"`
+	ACPInternalURL              string `env:"ACP_MTLS_URL"                    validate:"required,url"`
+	AppHost                     string `env:"APP_HOST"                        validate:"required"`
+	Tenant                      string `env:"TENANT"                          validate:"required"`
+	UIURL                       string `env:"UI_URL"                          validate:"required,url"`
+	CertFile                    string `env:"CERT_FILE"                       envDefault:"/certs/tpp_cert.pem"`
+	KeyFile                     string `env:"KEY_FILE"                        envDefault:"/certs/tpp_key.pem"`
+	CookieHashKey               string `env:"COOKIE_HASH_KEY"                 envDefault:"secret-key"`
+	CookieBlockKey              string `env:"COOKIE_BLOCK_KEY"                envDefault:"this-is-32-len-block-key"`
+	Spec                        Spec   `env:"SPEC"                            validate:"required"`
+	BankURL                     string `env:"BANK_URL"                        validate:"required"`
+	RootCA                      string `env:"ROOT_CA"                         envDefault:"/certs/ca.pem"`
+	ClientID                    string `env:"CLIENT_ID"                       envDefault:"bugkgm23g9kregtu051g"`
+	ClientSecret                string `env:"CLIENT_SECRET"                   envDefault:"-TlfoycUiE0qNi-XUBFDfTxMlhHTCjVxOF6pLrWZbQA"` // only required for fdx
+	ServerID                    string `env:"OPENBANKING_SERVER_ID"           validate:"required"`
+	EnableTLSServer             bool   `env:"ENABLE_TLS_SERVER"               envDefault:"true"`
 	Currency                    string `env:"CURRENCY"` // optional custom currency, one of=USD AUD GBP BRL EUR
-	AssertionSigningAlg         string `env:"ASSERTION_SIGNING_ALG" envDefault:"PS256"`
-	AssertionSigningKeyFile     string `env:"ASSERTION_SIGNING_KEY_FILE" envDefault:"/certs/private.ps.pem"`
-	RequestObjectSigningAlg     string `env:"REQUEST_OBJECT_SIGNING_ALG" envDefault:"ES256"`
+	AssertionSigningAlg         string `env:"ASSERTION_SIGNING_ALG"           envDefault:"PS256"`
+	AssertionSigningKeyFile     string `env:"ASSERTION_SIGNING_KEY_FILE"      envDefault:"/certs/private.ps.pem"`
+	RequestObjectSigningAlg     string `env:"REQUEST_OBJECT_SIGNING_ALG"      envDefault:"ES256"`
 	RequestObjectSigningKeyFile string `env:"REQUEST_OBJECT_SIGNING_KEY_FILE" envDefault:"/certs/private.es.pem"`
-	EnableDCR                   bool   `env:"ENABLE_DCR" envDefault:"false"`
+	EnableDCR                   bool   `env:"ENABLE_DCR"                      envDefault:"false"`
 	BanksConfigFile             string `env:"BANKS_CONFIG_FILE"`
 
 	ClientScopes []string
@@ -92,15 +92,15 @@ func (c *Config) SetImplicitValues() {
 }
 
 type BankConfig struct {
-	ID             BankID `json:"id" validate:"required"`
+	ID             BankID `json:"id"               validate:"required"`
 	Name           string `json:"name"`
 	IconURL        string `json:"icon_url"`
 	LogoURL        string `json:"logo_url"`
-	URL            string `json:"url" validate:"required,url"`
-	ACPURL         string `json:"acp_url" validate:"required,url"`
+	URL            string `json:"url"              validate:"required,url"`
+	ACPURL         string `json:"acp_url"          validate:"required,url"`
 	ACPInternalURL string `json:"acp_internal_url" validate:"required,url"`
-	Tenant         string `json:"tenant" validate:"required"`
-	Server         string `json:"server" validate:"required"`
+	Tenant         string `json:"tenant"           validate:"required"`
+	Server         string `json:"server"           validate:"required"`
 	EnableDCR      bool   `json:"enable_dcr"`
 	ClientID       string `json:"client_id"`
 }

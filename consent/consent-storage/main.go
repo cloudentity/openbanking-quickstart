@@ -19,16 +19,16 @@ import (
 var Validator = validator.New()
 
 type Config struct {
-	RootCA          string   `env:"ROOT_CA" envDefault:"/ca.pem"`
-	CertFile        string   `env:"CERT_FILE" envDefault:"/consent_storage_cert.pem"`
-	KeyFile         string   `env:"KEY_FILE" envDefault:"/consent_storage_key.pem"`
-	Port            int      `env:"PORT" envDefault:"8084"`
+	RootCA          string   `env:"ROOT_CA"           envDefault:"/ca.pem"`
+	CertFile        string   `env:"CERT_FILE"         envDefault:"/consent_storage_cert.pem"`
+	KeyFile         string   `env:"KEY_FILE"          envDefault:"/consent_storage_key.pem"`
+	Port            int      `env:"PORT"              envDefault:"8084"`
 	EnableTLSServer bool     `env:"ENABLE_TLS_SERVER" envDefault:"true"`
-	DBFile          string   `env:"DB_FILE" envDefault:"/app/data/my.db"`
-	IssuerURL       *url.URL `env:"ISSUER_URL" validate:"required,url"`
-	ServerID        string   `env:"SERVER" validate:"required"`
-	ClientID        string   `env:"CLIENT_ID" validate:"required"`
-	ClientSecret    string   `env:"CLIENT_SECRET" validate:"required"`
+	DBFile          string   `env:"DB_FILE"           envDefault:"/app/data/my.db"`
+	IssuerURL       *url.URL `env:"ISSUER_URL"        validate:"required,url"`
+	ServerID        string   `env:"SERVER"            validate:"required"`
+	ClientID        string   `env:"CLIENT_ID"         validate:"required"`
+	ClientSecret    string   `env:"CLIENT_SECRET"     validate:"required"`
 }
 
 func (c *Config) ClientConfig(scopes []string) acpclient.Config {
