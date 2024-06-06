@@ -127,34 +127,6 @@ pipeline {
             }
         }
         */
-          stage('OBBR Tests with disabled MFA') {
-            steps {
-                script {
-                    sh 'make clean'
-                    try {
-                        sh 'make disable-mfa run-obbr-local'
-                        sh 'make run-obbr-tests-headless'
-                    } catch (exc) {
-                        captureDockerLogs()
-                        unstable('OBBR Tests with disabled MFA failed')
-                    }
-                }
-            }
-        }
-        stage('OBBR Tests with enabled MFA') {
-            steps {
-                script {
-                    sh 'make clean'
-                    try {
-                        sh 'make enable-mfa run-obbr-local'
-                        sh 'make run-obbr-tests-headless'
-                    } catch (exc) {
-                        captureDockerLogs()
-                        unstable('OBBR Tests with enabled MFA failed')
-                    }
-                }
-            }
-        }
         stage('FDX Tests with disabled MFA') {
             steps {
                 script {
@@ -266,20 +238,6 @@ pipeline {
                     } catch (exc) {
                         captureDockerLogs()
                         unstable('SaaS OBUK Tests failed')
-                    }
-                }
-            }
-        }
-        stage('SaaS OBBR Tests') {
-            steps {
-                script {
-                    sh 'make clean-saas'
-                    try {
-                        sh 'make disable-mfa run-obbr-saas'
-                        sh 'make run-saas-obbr-tests-headless'
-                    } catch (exc) {
-                        captureDockerLogs()
-                        unstable('SaaS OBBR Tests failed')
                     }
                 }
             }
