@@ -38,10 +38,8 @@ export class FinancrooModalPage {
     cy.wait('@getAccounts', { timeout: 5000 })
       .then((xhr) => {
         cy.log(JSON.stringify(xhr.response.body))
-      })
-      .then((interception) => {
-        assert.isNotNull(interception.response.body, 'GET accounts api call has data')
-        assert.hasAnyKeys(interception.response.body, ['accounts'], 'GET accounts api call has accounts data')
+        assert.isNotNull(xhr.response.body, 'GET accounts api call has data')
+        assert.hasAnyKeys(xhr.response.body, ['accounts'], 'GET accounts api call has accounts data')
       })
   }
 
