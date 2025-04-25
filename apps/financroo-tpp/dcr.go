@@ -12,9 +12,9 @@ import (
 	"os"
 	"time"
 
+	"github.com/go-jose/go-jose/v4"
 	"github.com/pkg/errors"
 	bolt "go.etcd.io/bbolt"
-	"gopkg.in/square/go-jose.v2"
 
 	"github.com/cloudentity/openbanking-quickstart/shared"
 

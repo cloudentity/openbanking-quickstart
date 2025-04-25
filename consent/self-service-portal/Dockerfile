@@ -14,7 +14,7 @@ COPY consent/self-service-portal/web/app/src src
 
 RUN npm run build
 
-FROM golang:1.23 as go-builder
+FROM golang:1.24 as go-builder
 ARG GOPROXY
 
 ENV GOPROXY=${GOPROXY}

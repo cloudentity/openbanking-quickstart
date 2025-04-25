@@ -7,7 +7,7 @@ import (
 
 	"github.com/cloudentity/openbanking-quickstart/shared"
 	"github.com/gin-gonic/gin"
-	"gopkg.in/square/go-jose.v2"
+	"github.com/go-jose/go-jose/v4"
 
 	acpclient "github.com/cloudentity/acp-client-go"
 )

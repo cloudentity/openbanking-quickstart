@@ -7,7 +7,7 @@ import (
 	"text/template"
 
 	sprig "github.com/Masterminds/sprig/v3"
-	"gopkg.in/square/go-jose.v2"
+	"github.com/go-jose/go-jose/v4"
 )
 
 func CustomTemplateFuncs() template.FuncMap {

@@ -5,9 +5,9 @@ import (
 
 	"github.com/cloudentity/openbanking-quickstart/generated/obbr/accounts/client/accounts"
 	"github.com/gin-gonic/gin"
+	"github.com/go-jose/go-jose/v4"
 	"github.com/go-openapi/strfmt"
 	"github.com/pkg/errors"
-	"gopkg.in/square/go-jose.v2"
 
 	acpclient "github.com/cloudentity/acp-client-go"
 	obbrModels "github.com/cloudentity/acp-client-go/clients/obbr/client/o_b_b_r"

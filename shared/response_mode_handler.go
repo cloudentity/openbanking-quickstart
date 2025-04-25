@@ -4,8 +4,8 @@ import (
 	"errors"
 	"net/http"
 
+	"github.com/go-jose/go-jose/v4"
 	"github.com/golang-jwt/jwt/v4"
-	"gopkg.in/square/go-jose.v2"
 )
 
 type ResponseData struct {
