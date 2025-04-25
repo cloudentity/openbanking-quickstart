@@ -21,7 +21,7 @@ func (s *Server) RenderInternalServerError(c *gin.Context, err error) {
 
 func (s *Server) RenderError(c *gin.Context, statusCode int, msg interface{}, err error) {
 	if err != nil {
-		logrus.WithError(err).Errorf(err.Error())
+		logrus.WithError(err).Errorf("%s", err.Error())
 	}
 
 	c.HTML(statusCode, "error.tmpl", gin.H{

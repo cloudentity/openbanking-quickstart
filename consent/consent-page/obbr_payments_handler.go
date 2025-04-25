@@ -58,7 +58,7 @@ func (s *OBBRPaymentConsentHandler) ConfirmConsent(c *gin.Context, loginRequest 
 	if accept, err = s.Client.Obbr.Consentpage.AcceptOBBRCustomerPaymentConsentSystem(
 		obbrModels.NewAcceptOBBRCustomerPaymentConsentSystemParamsWithContext(c).
 			WithLogin(loginRequest.ID).
-			WithAcceptConsent(&obModels.AcceptConsentRequest{
+			WithAcceptConsent(&obModels.AcceptPaymentConsent{
 				AccountIds:    []string{wrapper.GetDebtorAccountNumber()},
 				GrantedScopes: s.GrantScopes(wrapper.GetRequestedScopes()),
 				LoginState:    loginRequest.State,

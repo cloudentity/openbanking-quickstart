@@ -8,8 +8,8 @@ import (
 	"encoding/pem"
 	"fmt"
 
+	"github.com/go-jose/go-jose/v4"
 	"github.com/pkg/errors"
-	"gopkg.in/square/go-jose.v2"
 )
 
 func ToPublicJWKs(c *x509.Certificate) (jose.JSONWebKeySet, error) {

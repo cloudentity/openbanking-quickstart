@@ -11,10 +11,10 @@ import (
 
 	"github.com/caarlos0/env/v6"
 	"github.com/gin-gonic/gin"
+	"github.com/go-jose/go-jose/v4"
 	"github.com/gorilla/securecookie"
 	"github.com/pkg/errors"
 	"github.com/sirupsen/logrus"
-	"gopkg.in/square/go-jose.v2"
 
 	"github.com/cloudentity/openbanking-quickstart/shared"
 
