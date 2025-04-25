@@ -1,6 +1,8 @@
 module github.com/cloudentity/openbanking-quickstart
 
-go 1.18
+go 1.23.0
+
+toolchain go1.24.1
 
 require (
 	github.com/Masterminds/sprig/v3 v3.2.3
@@ -28,7 +30,7 @@ require (
 	github.com/stretchr/testify v1.8.3
 	go.etcd.io/bbolt v1.3.6
 	golang.org/x/oauth2 v0.4.0
-	golang.org/x/text v0.21.0
+	golang.org/x/text v0.23.0
 	gopkg.in/square/go-jose.v2 v2.6.0
 )
 
@@ -76,9 +78,9 @@ require (
 	go.opentelemetry.io/otel v1.11.2 // indirect
 	go.opentelemetry.io/otel/trace v1.11.2 // indirect
 	golang.org/x/arch v0.3.0 // indirect
-	golang.org/x/crypto v0.31.0 // indirect
-	golang.org/x/net v0.33.0 // indirect
-	golang.org/x/sys v0.28.0 // indirect
+	golang.org/x/crypto v0.36.0 // indirect
+	golang.org/x/net v0.38.0 // indirect
+	golang.org/x/sys v0.31.0 // indirect
 	google.golang.org/appengine v1.6.7 // indirect
 	google.golang.org/protobuf v1.33.0 // indirect
 	gopkg.in/yaml.v2 v2.4.0 // indirect

@@ -14,7 +14,7 @@ COPY apps/financroo-tpp/web/app/src src
 
 RUN npm run build
 
-FROM golang:1.21.5 as go-builder
+FROM golang:1.23 as go-builder
 ARG GOPROXY
 
 ENV GOPROXY=${GOPROXY}
