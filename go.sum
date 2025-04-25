@@ -20,8 +20,8 @@ github.com/caarlos0/env/v6 v6.10.1/go.mod h1:hvp/ryKXKipEkcuYjs9mI4bBCg+UI0Yhgm5
 github.com/chenzhuoyu/base64x v0.0.0-20211019084208-fb5309c8db06/go.mod h1:DH46F32mSOjUmXrMHnKwZdA8wcEefY7UVqBKYGjpdQY=
 github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311 h1:qSGYFH7+jGhDF8vLC+iwCD4WpbV1EBDSzWkJODFLams=
 github.com/chenzhuoyu/base64x v0.0.0-20221115062448-fe3a3abad311/go.mod h1:b583jCggY9gE99b6G5LEC39OIiVsWj+R97kbl5odCEk=
-github.com/cloudentity/acp-client-go v0.0.0-20250425080716-212eed22a4f9 h1:wfpn4W2pA/tPZl0CGXOvgDf/NKWktYbhMjMEN2gXm5I=
-github.com/cloudentity/acp-client-go v0.0.0-20250425080716-212eed22a4f9/go.mod h1:GOrRWdLjClYa6PLpNzHw4lQ2fBsAeBLOtwPWhI8bSqA=
+github.com/cloudentity/acp-client-go v0.0.0-20250425094647-a4a107bb0e26 h1:ngBTO5DQD2GPLYSUTV7zBeCiyUy6nueyYUF/FTPiqgE=
+github.com/cloudentity/acp-client-go v0.0.0-20250425094647-a4a107bb0e26/go.mod h1:bDN2WQOAcMuBO9eQc1Le3zgyQ0RdsIcwVg3U+lR9Pgg=
 github.com/creack/pty v1.1.9/go.mod h1:oKZEueFk5CKHvIhNR5MUki03XCEU+Q6VDXinZuGJ33E=
 github.com/davecgh/go-spew v1.1.0/go.mod h1:J7Y8YcW2NihsgmVo/mv3lAwl/skON4iLHjSsI+c5H38=
 github.com/davecgh/go-spew v1.1.1 h1:vj9j/u1bqnvCEfJOwUhtlOARqs3+rkHYY13jYWTU97c=
