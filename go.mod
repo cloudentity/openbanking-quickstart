@@ -1,18 +1,16 @@
 module github.com/cloudentity/openbanking-quickstart
 
-go 1.24
-
-toolchain go1.24.1
+go 1.23.0
 
 require (
 	github.com/Masterminds/sprig/v3 v3.2.3
 	github.com/caarlos0/env/v6 v6.10.1
-	github.com/cloudentity/acp-client-go v0.0.0-20250425073157-01f3763ce383
+	github.com/cloudentity/acp-client-go v0.0.0-20250425080716-212eed22a4f9
 	github.com/dgrijalva/jwt-go v3.2.1-0.20200107013213-dc14462fd587+incompatible
 	github.com/ggicci/httpin v0.10.1
 	github.com/ghodss/yaml v1.0.0
 	github.com/gin-gonic/gin v1.9.1
-	github.com/go-jose/go-jose/v4 v4.1.0
+	github.com/go-jose/go-jose/v4 v4.0.5
 	github.com/go-openapi/errors v0.20.4
 	github.com/go-openapi/runtime v0.26.0
 	github.com/go-openapi/strfmt v0.21.7

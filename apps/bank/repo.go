@@ -2,7 +2,6 @@ package main
 
 import (
 	"encoding/json"
-	"fmt"
 	"os"
 	"time"
 
@@ -80,7 +79,7 @@ func (u *UserRepo) Get(sub string) (BankUserData, error) {
 			_, v = c.First()
 		}
 		if err = json.Unmarshal(v, &data); err != nil {
-			return errors.Wrapf(err, fmt.Sprintf("failed to unmarshal data for user %s", sub))
+			return errors.Wrapf(err, "failed to unmarshal data for user %s", sub)
 		}
 		return nil
 	}); err != nil {

@@ -342,9 +342,9 @@ func (s *Server) MFAHandler() func(*gin.Context) {
 			if err := s.MFAStrategy.Approve(mfaProviderArgs); err != nil {
 				switch err.Code {
 				case http.StatusInternalServerError:
-					s.RenderInternalServerError(c, errors.Wrapf(err.Err, err.Message))
+					s.RenderInternalServerError(c, errors.Wrapf(err.Err, "%s", err.Message))
 				default:
-					s.RenderError(c, err.Code, err.Err, errors.Wrapf(err.Err, err.Message))
+					s.RenderError(c, err.Code, err.Err, errors.Wrapf(err.Err, "%s", err.Message))
 					return
 				}
 			}

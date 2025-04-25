@@ -1,4 +1,4 @@
-FROM golang:1.24 as base
+FROM golang:1.23 as base
 ARG GOPROXY
 
 ENV GOPROXY=${GOPROXY}
@@ -23,6 +23,6 @@ RUN --mount=type=ssh,mode=777 go mod download
 
 # golangci-lint
 RUN curl -sfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh \
-  | sh -s -- -b $(go env GOPATH)/bin v1.54.1
+  | sh -s -- -b $(go env GOPATH)/bin v1.63.4
 
 USER ${USERNAME}

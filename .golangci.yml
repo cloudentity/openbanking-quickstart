@@ -1,9 +1,11 @@
 run:
+  go: 1.23
+
   # default concurrency is a available CPU number
-  concurrency: 4
+  # concurrency: 4
 
   # timeout for analysis, e.g. 30s, 5m, default is 1m
-  deadline: 2m
+  deadline: 1m
 
   # exit code when at least one issue was found, default is 1
   issues-exit-code: 1
@@ -38,18 +40,13 @@ run:
   # the dependency descriptions in go.mod.
   modules-download-mode: readonly
 
-
 # output configuration options
 output:
-  # colored-line-number|line-number|json|tab|checkstyle|code-climate, default is "colored-line-number"
-  format: colored-line-number
-
   # print lines of code with issue, default is true
   print-issued-lines: true
 
   # print linter name in the end of issue text, default is true
   print-linter-name: true
-
 
 # all available settings of specific linters
 linters-settings:
@@ -61,11 +58,6 @@ linters-settings:
     # report about assignment of errors to blank identifier: `num, _ := strconv.Atoi(numStr)`;
     # default is false: such cases aren't reported by default.
     check-blank: false
-
-    # [deprecated] comma-separated list of pairs of the form pkg:regex
-    # the regex is used to ignore names within pkg. (default "fmt:.*").
-    # see https://github.com/kisielk/errcheck#the-deprecated-method for details
-    ignore: fmt:.*,io/ioutil:^Read.*
 
     # path to a file containing a list of functions to exclude from checking
     # see https://github.com/kisielk/errcheck#excluding-functions for details
@@ -79,9 +71,6 @@ linters-settings:
     default-signifies-exhaustive: true
 
   govet:
-    # report about shadowed variables
-    check-shadowing: true
-
     # settings per analyzer
     settings:
       printf: # analyzer name, run `go tool vet help` to see all analyzers
@@ -98,16 +87,9 @@ linters-settings:
     disable:
       - shadow
     disable-all: false
-  golint:
-    # minimal confidence for issues, default is 0.8
-    min-confidence: 0
   gofmt:
     # simplify code: gofmt with `-s` option, true by default
     simplify: true
-  goimports:
-    # put imports beginning with prefix after 3rd-party packages;
-    # it's a comma-separated list of prefixes
-    local-prefixes: github.com/cloudentity/acp
   gocyclo:
     # minimal code complexity to report, 30 by default (but we recommend 10-20)
     min-complexity: 40
@@ -124,7 +106,7 @@ linters-settings:
     # minimal length of string constant, 3 by default
     min-len: 3
     # minimal occurrences count to trigger, 3 by default
-    min-occurrences: 5
+    min-occurrences: 8
 
   depguard:
     rules:
@@ -138,11 +120,9 @@ linters-settings:
     # Default is to use a neutral variety of English.
     # Setting locale to US will correct the British spelling of 'colour' to 'color'.
     locale: US
-    ignore-words: [
-      authorised,
-      Autorised,
-      instalments
-    ]
+    ignore-words:
+      - authorised
+      - organisation
   lll:
     # max line length, lines longer will be reported. Default is 120.
     # '\t' is counted as 1 character by default, and can be changed with the tab-width option
@@ -188,6 +168,7 @@ linters-settings:
       - sloppyReassign
       - rangeValCopy
       - singleCaseSwitch
+      - evalOrder
 
     # Enable multiple checks by tags, run `GL_DEBUG=gocritic golangci-lint run` to see all tags and checks.
     # Empty list by default. See https://github.com/go-critic/go-critic#usage -> section "Tags".
@@ -201,53 +182,86 @@ linters-settings:
     settings: # settings passed to gocritic
       captLocal: # must be valid enabled check name
         paramsOnly: true
-
+  godox:
+    # report any comments starting with keywords, this is useful for TODO or FIXME comments that
+    # might be left in the code accidentally and should be resolved before merging
+    # keywords: # default keywords are TODO, BUG, and FIXME, these can be overwritten by this setting
+    #   - NOTE
   dogsled:
     # checks assignments with too many blank identifiers; default is 2
     max-blank-identifiers: 2
 
   whitespace:
-    multi-if: false   # Enforces newlines (or comments) after every multi-line if statement
+    multi-if: false # Enforces newlines (or comments) after every multi-line if statement
     multi-func: false # Enforces newlines (or comments) after every multi-line function signature
 
 linters:
   enable-all: true
   disable:
-    - exhaustivestruct
+    - testifylint
+    - spancheck
+    - perfsprint
+    - protogetter
+    - canonicalheader
+    - copyloopvar
+    - mnd
+    - intrange
+    - inamedparam
+    - nosprintfhostport
+    - nonamedreturns
     - exhaustruct
+    - containedctx
+    - maintidx
+    - contextcheck
+    - ireturn
     - wrapcheck
     - noctx
     - nlreturn
+    - nilnil
     - godot
+    - varnamelen
     - nestif
-    - goerr113
+    - paralleltest
+    - errchkjson
+    - tagliatelle
+    - gci
+    - predeclared
+    - tparallel
+    - nilerr
+    - thelper
+    - forbidigo
+    - promlinter
+    - cyclop
+    - err113
+    - gomoddirectives
     - testpackage
     - gochecknoinits
     - gochecknoglobals
     - gocyclo
+    - nolintlint
+    - dupword
+    - interfacebloat
     - gocognit
-    - gocritic
     - lll
     - funlen
+    - revive
     - dupl
     - unparam
-    - maligned
     - prealloc
     - godox
     - gomnd
     - wsl
     - rowserrcheck
-    - interfacer
-    - tagliatelle 
-    - varnamelen
-    - nonamedreturns
-    - ireturn
-    - cyclop
-    - gci
-    - forbidigo
-    - nosnakecase
+    - gocritic
+    - forcetypeassert # FIXME
+    - usestdlibvars
+    - musttag
+    - recvcheck
+    - nilnesserr
+    - iface
+    - errname
+    - fatcontext
   fast: false
-  
 
 issues:
   # List of regexps of issue texts to exclude, empty list by default.
@@ -268,70 +282,67 @@ issues:
     - path: _test\.go
       linters:
         - noctx
-        - errorlint
-        - goconst
-        - paralleltest
-        - thelper
-
-    - path: _test\.go
-      linters:
+        - revive
+        - usetesting
+        - gosec
         - forcetypeassert
-      
-    - path: apps/bank/
-      linters:
-        - deadcode
-        - unused
+        - errorlint
+        - bodyclose
+        - wastedassign
+        - errchkjson
+        - errname
+        - predeclated
+        - goconst
 
     - path: fosite.+_test\.go
       linters:
-        - scopelint
         - staticcheck
         - bodyclose
         - ineffassign
         - gosec
-        - golint
         - stylecheck
         - govet
 
     - path: fosite
       linters:
         - gocritic
-        - golint
+        - revive
+        - makezero
         - stylecheck
 
     - path: dex
       linters:
         - goerr113
+        - predeclared
+        - gocritic
 
     - path: dex.+_test\.go
       linters:
         - goerr113
-        - scopelint
         - staticcheck
         - bodyclose
         - ineffassign
         - gosec
-        - golint
         - stylecheck
         - govet
 
-    - path: \.xo\.go
-      linters:
-        - interfacer
 
-    - path: _spec\.go
+    - path: oauth2.+_test\.go
       linters:
         - noctx
         - bodyclose
 
-    - path: _spec\.go
-      linters:
-        - golint
-      text: "context.Context should be the first parameter of a function"
-
     - linters:
         - gosec
       text: "G108"
+
+    - linters:
+        - gosec
+      text: "G114"
+
+    - linters:
+        - gosec
+      text: "G115"
 
     - linters:
         - gosec
@@ -344,6 +355,10 @@ issues:
     - linters:
         - staticcheck
       text: "SA1029:"
+
+    - linters:
+        - staticcheck
+      text: "SA1019:"
 
     # Exclude lll issues for long lines with go:generate
     - linters:
