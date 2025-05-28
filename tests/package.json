@@ -4,7 +4,7 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
-    "cypress": "^7.2.0",
+    "cypress": "^7.7.0",
     "dotenv": "^10.0.0",
     "typescript": "^4.2.4"
   }
