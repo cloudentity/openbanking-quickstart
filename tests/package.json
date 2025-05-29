@@ -9,6 +9,7 @@
     "typescript": "^4.2.4"
   },
   "resolutions": {
+    "cypress/@cypress/request": "3.0.0",
     "ansi-regex": "3.0.1",
     "json-schema": "0.4.0",
     "tough-cookie": "4.1.3"
