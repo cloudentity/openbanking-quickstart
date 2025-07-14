@@ -34,6 +34,7 @@ services:
       - FEATURES_SCRIPTS=true
       - FEATURES_CIBA=true
       - FEATURES_FDX=true
+      - FEATURES_TENANT_LEVEL_IDENTITY_POOL=true
       - SERVER_MTLS_URL=https://test-docker:8443
       - SERVER_URL=${ACP_URL}
       - LOGGING_LEVEL=debug
